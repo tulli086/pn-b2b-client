@@ -81,7 +81,7 @@ public class NewNotification implements CommandLineRunner {
                     .recipientType( NotificationRecipient.RecipientTypeEnum.PF )
                     .payment( new NotificationPaymentInfo()
                             .creditorTaxId("PaTaxId")
-                            .noticeCode("NotCode")
+                            .noticeCode( ""+ System.currentTimeMillis() )
                             .pagoPaForm( newAttachment( resourcePath ))
                             //.f24flatRate( newAttachment( resourcePath ) )
                             //.f24standard( newAttachment( resourcePath ) )
