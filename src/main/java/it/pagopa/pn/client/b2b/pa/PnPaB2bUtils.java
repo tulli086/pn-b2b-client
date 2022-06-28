@@ -196,4 +196,7 @@ public class PnPaB2bUtils {
         return Base64Utils.encodeToString( hash );
     }
 
+    public FullSentNotification getNotificationByIun(String iun) {
+        return client.getSentNotification( iun );
+    }
 }
