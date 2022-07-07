@@ -34,7 +34,7 @@ public class NewNotificationTest {
                 .senderTaxId("CFComuneMilano")
                 .notificationFeePolicy( NewNotificationRequest.NotificationFeePolicyEnum.FLAT_RATE )
                 .physicalCommunicationType( NewNotificationRequest.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 )
-                .paProtocolNumber("protocol" + System.currentTimeMillis())
+                .paProtocolNumber("" + System.currentTimeMillis())
                 .addDocumentsItem( newDocument( "classpath:/sample.pdf" ) )
                 .addRecipientsItem( newRecipient( "Ada", "LVLDAA85T50G702B","classpath:/sample.pdf"))
                 ;
@@ -61,7 +61,7 @@ public class NewNotificationTest {
                 .taxId( taxId )
                 .digitalDomicile( new NotificationDigitalAddress()
                         .type(NotificationDigitalAddress.TypeEnum.PEC)
-                        .address( prefix + "@works.demo.it")
+                        .address( "testpagopa2@pnpagopa.postecert.local")
                 )
                 .physicalAddress( new NotificationPhysicalAddress()
                         .address("Via senza nome")
