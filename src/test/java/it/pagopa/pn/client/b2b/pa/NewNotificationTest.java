@@ -5,6 +5,7 @@ import it.pagopa.pn.client.b2b.pa.impl.PnPaB2bExternalClientImpl;
 import it.pagopa.pn.client.b2b.pa.impl.PnPaB2bInternalClientImpl;
 import it.pagopa.pn.client.b2b.pa.springconfig.ApiKeysConfiguration;
 import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,10 +37,10 @@ public class NewNotificationTest {
                 .physicalCommunicationType( NewNotificationRequest.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 )
                 .paProtocolNumber("" + System.currentTimeMillis())
                 .addDocumentsItem( newDocument( "classpath:/sample.pdf" ) )
-                .addRecipientsItem( newRecipient( "Ada", "LVLDAA85T50G702B","classpath:/sample.pdf"))
+                .addRecipientsItem( newRecipient( "Ale", "MNZLSN99E05F205J","classpath:/sample.pdf"))
                 ;
 
-        utils.uploadNotification( request );
+        Assertions.assertDoesNotThrow(() -> utils.uploadNotification( request ));
     }
 
 
@@ -65,8 +66,9 @@ public class NewNotificationTest {
                 )
                 .physicalAddress( new NotificationPhysicalAddress()
                         .address("Via senza nome")
-                        .municipality("Bologna")
-                        .province("BO")
+                        .municipality("Milano")
+                        .province("MI")
+                        .foreignState("ITALIA")
                         .zip("40100")
                 )
                 .recipientType( NotificationRecipient.RecipientTypeEnum.PF )

@@ -2,6 +2,14 @@ package it.pagopa.pn.client.b2b.pa;
 
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -15,12 +23,21 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -44,13 +61,14 @@ public class PnPaB2bUtils {
     }
 
 
-    public void uploadNotification( NewNotificationRequest request) {
+    public void uploadNotification( NewNotificationRequest request) throws IOException {
 
-        request.setDocuments(
-                request.getDocuments().stream()
-                        .map( this::preloadDocument )
-                        .collect(Collectors.toList())
-        );
+        List<NotificationDocument> newdocs = new ArrayList<>();
+        for (NotificationDocument doc:
+             request.getDocuments()) {
+            newdocs.add(this.preloadDocument(doc));
+        }
+        request.setDocuments(newdocs);
 
         for( NotificationRecipient recipient: request.getRecipients() ) {
 
@@ -88,11 +106,52 @@ public class PnPaB2bUtils {
         String iun = status.getIun();
         FullSentNotification fsn = client.getSentNotification( iun );
 
+        for (NotificationDocument doc :
+                fsn.getDocuments()) {
+
+            var resp = client.getSentNotificationDocument(fsn.getIun(), new BigDecimal(doc.getDocIdx()));
+            byte[] content = downloadFile(resp.getUrl());
+            String sha256 = computeSha256(new ByteArrayInputStream(content));
+            assert sha256.equals(resp.getSha256());
+        }
+
+        int i = 0;
+        for (NotificationRecipient recipient : fsn.getRecipients()) {
+
+            var resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "PAGOPA");
+            byte[] content = downloadFile(resp.getUrl());
+            String sha256 = computeSha256(new ByteArrayInputStream(content));
+            assert sha256.equals(resp.getSha256());
+
+/*
+            resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_FLAT");
+            content = downloadFile(resp.getUrl());
+            sha256 = computeSha256(new ByteArrayInputStream(content));
+            assert sha256.equals(resp.getSha256());
+
+
+            resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_STANDARD");
+            content = downloadFile(resp.getUrl());
+            sha256 = computeSha256(new ByteArrayInputStream(content));
+            assert sha256.equals(resp.getSha256());
+*/
+            i++;
+        }
+
+        for (LegalFactsId legalFactsId:
+                fsn.getTimeline().get(0).getLegalFactsIds()) {
+            var resp = client.getLegalFact(fsn.getIun(), LegalFactCategory.SENDER_ACK, URLEncoder.encode(legalFactsId.getKey(), StandardCharsets.UTF_8.toString()) );
+            byte[] content = downloadFile(resp.getUrl());
+            String  pdfprefix = new String( Arrays.copyOfRange(content, 0, 10), StandardCharsets.UTF_8);
+            assert pdfprefix.contains("PDF");
+        }
+
+
         System.out.println( "Notifica ACCETTATA:" + fsn );
     }
 
 
-    private NotificationDocument preloadDocument( NotificationDocument document) {
+    private NotificationDocument preloadDocument( NotificationDocument document) throws IOException {
 
         String resourceName = document.getRef().getKey();
         String sha256 = computeSha256( resourceName );
@@ -114,7 +173,7 @@ public class PnPaB2bUtils {
         return document;
     }
 
-    private NotificationPaymentAttachment preloadAttachment( NotificationPaymentAttachment attachment) {
+    private NotificationPaymentAttachment preloadAttachment( NotificationPaymentAttachment attachment) throws IOException {
         if( attachment != null ) {
             String resourceName = attachment.getRef().getKey();
 
@@ -164,14 +223,19 @@ public class PnPaB2bUtils {
         ).get(0);
     }
 
-    private String computeSha256( String resName ) {
+    private String computeSha256( String resName ) throws IOException {
         Resource res = ctx.getResource( resName );
         return computeSha256( res );
     }
 
-    private String computeSha256( Resource res ) {
+    private String computeSha256( Resource res ) throws IOException {
 
-        try( InputStream inStrm = res.getInputStream() ) {
+        return computeSha256(res.getInputStream());
+    }
+
+    private String computeSha256(  InputStream inStrm) {
+
+        try(inStrm) {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedhash = digest.digest( StreamUtils.copyToByteArray( inStrm ) );
             return bytesToBase64( encodedhash );
@@ -190,6 +254,18 @@ public class PnPaB2bUtils {
             hexString.append(hex);
         }
         return hexString.toString();
+    }
+
+    private byte[] downloadFile(String surl) throws ClientProtocolException, IOException{
+        try {
+            URL url = new URL(surl);
+            return IOUtils.toByteArray(url);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            IOUtils.closeQuietly();
+        }
+
     }
 
     private static String bytesToBase64(byte[] hash) {
