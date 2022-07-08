@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.ApiClient;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api.LegalFactsApi;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api.NewNotificationApi;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api.SenderReadB2BApi;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.CxTypeAuthFleet;
@@ -14,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +28,7 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
     private final RestTemplate restTemplate;
     private final NewNotificationApi newNotificationApi;
     private final SenderReadB2BApi senderReadB2BApi;
+    private final LegalFactsApi legalFactsApi;
 
     private final String paId;
     private final String operatorId;
@@ -47,13 +50,52 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
         this.groups = Collections.emptyList();
 
         this.newNotificationApi = new NewNotificationApi( newApiClient( restTemplate, deliveryBasePath) );
-        this.senderReadB2BApi = new SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );;
+        this.senderReadB2BApi = new SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
+        this.legalFactsApi = new LegalFactsApi(newApiClient(restTemplate, deliveryBasePath));
     }
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath ) {
         ApiClient newApiClient = new ApiClient(restTemplate);
         newApiClient.setBasePath( basePath );
         return newApiClient;
+    }
+
+
+    public NotificationAttachmentDownloadMetadataResponse getSentNotificationDocument(String iun, BigDecimal docidx) {
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NotificationAttachmentDownloadMetadataResponse response =
+                senderReadB2BApi.getSentNotificationDocument(
+                    operatorId
+                    , CxTypeAuthFleet.PA
+                    , paId
+                    , iun
+                    , docidx
+                    , groups);
+
+        return deepCopy( response, NotificationAttachmentDownloadMetadataResponse.class );
+    }
+
+    public NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachment(String iun, BigDecimal recipientIdx, String attachname) {
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NotificationAttachmentDownloadMetadataResponse response =
+                senderReadB2BApi.getSentNotificationAttachment(
+                    operatorId
+                    , CxTypeAuthFleet.PA
+                    , paId
+                    , iun
+                    , recipientIdx
+                    , attachname
+                    , groups);
+
+        return deepCopy( response, NotificationAttachmentDownloadMetadataResponse.class );
+    }
+
+    public LegalFactDownloadMetadataResponse getLegalFact(String iun, LegalFactCategory legalFactType, String legalFactId) {
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.LegalFactDownloadMetadataResponse response =
+                legalFactsApi.getLegalFact(
+                        iun
+                        , deepCopy(legalFactType
+                        , it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.LegalFactCategory.class)
+                        , legalFactId);
+        return deepCopy(response, LegalFactDownloadMetadataResponse.class);
     }
 
     public List<PreLoadResponse> presignedUploadRequest(List<PreLoadRequest> preLoadRequest) {

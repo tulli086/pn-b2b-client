@@ -2,6 +2,7 @@ package it.pagopa.pn.client.b2b.pa.impl;
 
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IPnPaB2bClient {
@@ -15,4 +16,11 @@ public interface IPnPaB2bClient {
     FullSentNotification getSentNotification(String iun);
 
     NewNotificationRequestStatusResponse getNotificationRequestStatus(String notificationRequestId);
+
+
+    NotificationAttachmentDownloadMetadataResponse getSentNotificationDocument(String iun, BigDecimal docidx) ;
+
+    NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachment(String iun, BigDecimal recipientIdx, String attachname) ;
+
+    LegalFactDownloadMetadataResponse getLegalFact(String iun, LegalFactCategory legalFactType, String legalFactId) ;
 }
