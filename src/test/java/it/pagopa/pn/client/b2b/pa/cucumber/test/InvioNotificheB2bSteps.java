@@ -6,13 +6,23 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
 import org.junit.jupiter.api.Assertions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,6 +36,8 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
 
     private NewNotificationRequest notificationRequest;
     private FullSentNotification notificationResponseComplete;
+    private HttpClientErrorException notificationSentError;
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 
     @Given("viene predisposta una notifica con oggetto {string} mittente {string} destinatario {string} con codice fiscale {string}")
@@ -33,42 +45,67 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
                                                                             String mittente, 
                                                                             String destinatario, 
                                                                             String cf) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-
-        notificationRequest = new NewNotificationRequest()
-                .subject(oggetto+" "+ dateFormat.format(calendar.getTime()))
-                .cancelledIun("")
-                .group("")
-                ._abstract("Abstract della notifica")
-                .senderDenomination(mittente)
-                .senderTaxId("CFComuneMilano")
-                .notificationFeePolicy( NewNotificationRequest.NotificationFeePolicyEnum.DELIVERY_MODE )
-                .physicalCommunicationType( NewNotificationRequest.PhysicalCommunicationTypeEnum.SIMPLE_REGISTERED_LETTER )
-                .paProtocolNumber("" + System.currentTimeMillis())
-                .addDocumentsItem( newDocument( "classpath:/sample.pdf" ) )
-                .addRecipientsItem( newRecipient( destinatario, cf,"classpath:/sample.pdf"));
+        newNotificationRequest(oggetto,mittente,destinatario,cf,"","");
     }
 
+    @Given("viene predisposta una notifica con oggetto {string} mittente {string} destinatario {string} con codice fiscale {string} e idempotenceToken {string}")
+    public void vienePredispostaUnaNotificaConOggettoMittenteDestinatarioConCodiceFiscaleEIdempotenceToken(String oggetto,
+                                                                                                           String mittente,
+                                                                                                           String destinatario,
+                                                                                                           String cf,
+                                                                                                           String idempotenceToken)  {
+        newNotificationRequest(oggetto,mittente,destinatario,cf,idempotenceToken,"");
+    }
+
+    @And("viene predisposta e inviata una nuova notifica con uguale paProtocolNumber e idempotenceToken {string}")
+    public void vienePredispostaEInviataUnaNuovaNotificaConUgualePaProtocolNumberEIdempotenceToken(String idempotenceToken) {
+        newNotificationRequest(notificationRequest.getSubject(),
+                notificationRequest.getSenderDenomination(),
+                notificationRequest.getRecipients().get(0).getDenomination(),
+                notificationRequest.getRecipients().get(0).getTaxId(),
+                idempotenceToken,
+                notificationRequest.getPaProtocolNumber());
+    }
+
+
     @When("la notifica viene inviata e si riceve una risposta")
-    public void laNotificaVieneInviata() {
+    public void laNotificaVieneInviataOk() {
         Assertions.assertDoesNotThrow(() -> {
             NewNotificationResponse newNotificationRequest = utils.uploadNotification(notificationRequest);
             notificationResponseComplete = utils.waitForRequestAcceptation( newNotificationRequest );
         });
+        try {
+            Thread.sleep( 10 * 1000);
+        } catch (InterruptedException e) {
+            logger.error("Thread.sleep error retry");
+            System.exit(-1);
+        }
+    }
+
+    @When("la notifica viene inviata")
+    public void laNotificaVieneInviataKO() {
+        try {
+            NewNotificationResponse newNotificationRequest = utils.uploadNotification(notificationRequest);
+        } catch (HttpClientErrorException | IOException e) {
+            if(e instanceof HttpClientErrorException){
+                this.notificationSentError = (HttpClientErrorException)e;
+            }
+        }
+    }
+
+    @Then("l'invio della notifica ha prodotto un errore con status code {string}")
+    public void lInvioDellaNotificaHaProdottoUnErrore(String statusCode) {
+        Assertions.assertTrue((this.notificationSentError != null) &&
+                (this.notificationSentError.getStatusCode().toString().substring(0,3).equals(statusCode)));
     }
 
     @Then("la risposta di ricezione non presenta errori")
-    public void laNotificaÈStatoCorrettamenteInviata() {
-        Assertions.assertDoesNotThrow(() -> {
-            Thread.sleep( 10 * 1000);
-            utils.verifyNotification( notificationResponseComplete );
-        });
-        System.out.println("IUN notifica: "+notificationResponseComplete.getIun());
+    public void laNotificaCorrettamenteInviata() {
+        Assertions.assertDoesNotThrow(() -> utils.verifyNotification( notificationResponseComplete ));
     }
 
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN")
-    public void laNotificaPuòEssereCorrettamenteRecuperataDalSistemaTramiteCodiceIUN() {
+    public void laNotificaCorrettamenteRecuperataDalSistemaTramiteCodiceIUN() {
         AtomicReference<FullSentNotification> notificationByIun = new AtomicReference<>();
 
         Assertions.assertDoesNotThrow(() ->
@@ -76,6 +113,29 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
         );
 
         Assertions.assertNotNull(notificationByIun.get());
+    }
+
+
+    /* UTILITY */
+
+    private void newNotificationRequest(String oggetto, String mittente, String destinatario, String cf,
+                                        String idempotenceToken, String paProtocolNumber) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        notificationRequest = new NewNotificationRequest()
+                .subject(oggetto+" "+ dateFormat.format(calendar.getTime()))
+                .cancelledIun("")
+                .group("")
+                .idempotenceToken(idempotenceToken)
+                ._abstract("Abstract della notifica")
+                .senderDenomination(mittente)
+                .senderTaxId("CFComuneMilano")
+                .notificationFeePolicy( NewNotificationRequest.NotificationFeePolicyEnum.DELIVERY_MODE )
+                .physicalCommunicationType( NewNotificationRequest.PhysicalCommunicationTypeEnum.SIMPLE_REGISTERED_LETTER )
+                .paProtocolNumber((paProtocolNumber.equals("") ? "" + System.currentTimeMillis() : paProtocolNumber))
+                .addDocumentsItem( newDocument( "classpath:/sample.pdf" ) )
+                .addRecipientsItem( newRecipient( destinatario, cf,"classpath:/sample.pdf"));
     }
 
     private NotificationDocument newDocument(String resourcePath ) {
@@ -124,6 +184,7 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
                 .contentType("application/pdf")
                 .ref( new NotificationAttachmentBodyRef().key( resourcePath ));
     }
+
 
 
 }
