@@ -34,9 +34,14 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
     @Autowired
     private PnPaB2bUtils utils;
 
+    @Autowired
+    private IPnPaB2bClient client;
+
     private NewNotificationRequest notificationRequest;
     private FullSentNotification notificationResponseComplete;
     private HttpClientErrorException notificationSentError;
+    private String sha256DocumentDownload;
+    private NotificationAttachmentDownloadMetadataResponse downloadResponse;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 
@@ -45,7 +50,7 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
                                                                             String mittente, 
                                                                             String destinatario, 
                                                                             String cf) {
-        newNotificationRequest(oggetto,mittente,destinatario,cf,"","");
+        newNotificationRequest(oggetto,mittente,destinatario,cf,"","","","");
     }
 
     @Given("viene predisposta una notifica con oggetto {string} mittente {string} destinatario {string} con codice fiscale {string} e idempotenceToken {string}")
@@ -54,7 +59,37 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
                                                                                                            String destinatario,
                                                                                                            String cf,
                                                                                                            String idempotenceToken)  {
-        newNotificationRequest(oggetto,mittente,destinatario,cf,idempotenceToken,"");
+        newNotificationRequest(oggetto,mittente,destinatario,cf,idempotenceToken,"","","");
+    }
+
+    @Given("viene predisposta una notifica con oggetto {string} mittente {string} destinatario {string} con codice fiscale {string} e creditorTaxId {string}")
+    public void vienePredispostaUnaNotificaConOggettoMittenteDestinatarioConCodiceFiscaleECreditorTaxId(String oggetto, String mittente,
+                                                                                                        String destinatario, String cf,
+                                                                                                        String creditorTaxId) {
+        newNotificationRequest(oggetto,mittente,destinatario,cf,"","",creditorTaxId,"");
+    }
+
+    @And("viene predisposta e inviata una nuova notifica con uguale codice fiscale del creditore e diverso codice avviso")
+    public void vienePredispostaEInviataUnaNuovaNotificaConUgualeCodiceFiscaleDelCreditoreEDiversoCodiceAvviso() {
+        newNotificationRequest(notificationRequest.getSubject(),
+                notificationRequest.getSenderDenomination(),
+                notificationRequest.getRecipients().get(0).getDenomination(),
+                notificationRequest.getRecipients().get(0).getTaxId(),
+                "",
+                "",
+                notificationRequest.getRecipients().get(0).getPayment().getCreditorTaxId(),"");
+    }
+
+    @And("viene predisposta e inviata una nuova notifica con uguale codice fiscale del creditore e uguale codice avviso")
+    public void vienePredispostaEInviataUnaNuovaNotificaConUgualeCodiceFiscaleDelCreditoreEUgualeCodiceAvviso() {
+        newNotificationRequest(notificationRequest.getSubject(),
+                notificationRequest.getSenderDenomination(),
+                notificationRequest.getRecipients().get(0).getDenomination(),
+                notificationRequest.getRecipients().get(0).getTaxId(),
+                "",
+                "",
+                notificationRequest.getRecipients().get(0).getPayment().getCreditorTaxId(),
+                notificationRequest.getRecipients().get(0).getPayment().getNoticeCode());
     }
 
     @And("viene predisposta e inviata una nuova notifica con uguale paProtocolNumber e idempotenceToken {string}")
@@ -64,7 +99,8 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
                 notificationRequest.getRecipients().get(0).getDenomination(),
                 notificationRequest.getRecipients().get(0).getTaxId(),
                 idempotenceToken,
-                notificationRequest.getPaProtocolNumber());
+                notificationRequest.getPaProtocolNumber(),
+                "","");
     }
 
 
@@ -78,7 +114,7 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
             Thread.sleep( 10 * 1000);
         } catch (InterruptedException e) {
             logger.error("Thread.sleep error retry");
-            System.exit(-1);
+            throw new RuntimeException(e);
         }
     }
 
@@ -115,11 +151,46 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
         Assertions.assertNotNull(notificationByIun.get());
     }
 
+    @When("viene richiesto il download del documento di pagamento")
+    public void vieneRichiestoIlDownloadDelDocumentoDiPagamento() {
+        List<NotificationDocument> documents = notificationResponseComplete.getDocuments();
+        this.downloadResponse = client
+                .getSentNotificationDocument(notificationResponseComplete.getIun(), new BigDecimal(documents.get(0).getDocIdx()));
+
+        byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                utils.downloadFile(this.downloadResponse.getUrl()));
+        this.sha256DocumentDownload = utils.computeSha256(new ByteArrayInputStream(bytes));
+    }
+
+    @Then("il download si conclude correttamente")
+    public void ilDownloadSiConcludeCorrettamente() {
+        Assertions.assertTrue(this.sha256DocumentDownload.equals(this.downloadResponse.getSha256()));
+    }
+
+    @When("viene richiesto il download di un documento inesistente")
+    public void vieneRichiestoIlDownloadDiUnDocumentoInesistente() throws IOException {
+        List<NotificationDocument> documents = notificationResponseComplete.getDocuments();
+        try {
+            this.downloadResponse = client
+                    .getSentNotificationDocument(notificationResponseComplete.getIun(), new BigDecimal(100));
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            if(e instanceof HttpClientErrorException){
+                this.notificationSentError = (HttpClientErrorException)e;
+            }
+        }
+
+    }
+
+    @Then("il download ha prodotto un errore con status code {string}")
+    public void ilDownloadNonSiConclude(String statusCode) {
+        Assertions.assertTrue((this.notificationSentError != null) &&
+                (this.notificationSentError.getStatusCode().toString().substring(0,3).equals(statusCode)));
+    }
 
     /* UTILITY */
 
     private void newNotificationRequest(String oggetto, String mittente, String destinatario, String cf,
-                                        String idempotenceToken, String paProtocolNumber) {
+                                        String idempotenceToken, String paProtocolNumber,String creditorTaxId, String noticeCode ) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
@@ -131,11 +202,11 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
                 ._abstract("Abstract della notifica")
                 .senderDenomination(mittente)
                 .senderTaxId("CFComuneMilano")
-                .notificationFeePolicy( NewNotificationRequest.NotificationFeePolicyEnum.DELIVERY_MODE )
-                .physicalCommunicationType( NewNotificationRequest.PhysicalCommunicationTypeEnum.SIMPLE_REGISTERED_LETTER )
+                .notificationFeePolicy( NewNotificationRequest.NotificationFeePolicyEnum.FLAT_RATE )
+                .physicalCommunicationType( NewNotificationRequest.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 )
                 .paProtocolNumber((paProtocolNumber.equals("") ? "" + System.currentTimeMillis() : paProtocolNumber))
                 .addDocumentsItem( newDocument( "classpath:/sample.pdf" ) )
-                .addRecipientsItem( newRecipient( destinatario, cf,"classpath:/sample.pdf"));
+                .addRecipientsItem( newRecipient( destinatario, cf,"classpath:/sample.pdf",creditorTaxId,noticeCode));
     }
 
     private NotificationDocument newDocument(String resourcePath ) {
@@ -144,7 +215,7 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
                 .ref( new NotificationAttachmentBodyRef().key( resourcePath ));
     }
 
-    private NotificationRecipient newRecipient(String prefix, String taxId, String resourcePath ) {
+    private NotificationRecipient newRecipient(String prefix, String taxId, String resourcePath, String creditorTaxId, String noticeCode) {
         long epochMillis = System.currentTimeMillis();
 
         NotificationRecipient recipient = new NotificationRecipient()
@@ -163,8 +234,8 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
                 )
                 .recipientType( NotificationRecipient.RecipientTypeEnum.PF )
                 .payment( new NotificationPaymentInfo()
-                                .creditorTaxId("77777777777")
-                                .noticeCode( String.format("30201%13d", epochMillis ) )
+                                .creditorTaxId(creditorTaxId.equals("")?"77777777777":creditorTaxId)
+                                .noticeCode(noticeCode.trim().equals("")? String.format("30201%13d", epochMillis ):noticeCode )
                                 .noticeCodeOptional( String.format("30201%13d", epochMillis+1 ) )
                                 .pagoPaForm( newAttachment( resourcePath ))
                 );
@@ -173,6 +244,7 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
             Thread.sleep(10);
         }
         catch (InterruptedException exc) {
+            logger.error("Thread.sleep error retry");
             throw new RuntimeException(exc);
         }
 
