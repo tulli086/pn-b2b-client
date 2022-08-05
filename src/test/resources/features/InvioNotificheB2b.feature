@@ -42,7 +42,7 @@ Feature: invio notifiche b2b
     Given viene predisposta una notifica con oggetto "prova invio" mittente "comune di milano" destinatario "Prova" con codice fiscale "FRMTTR76M06B715E"
     And la notifica viene inviata e si riceve una risposta
     And la risposta di ricezione non presenta errori
-    When viene richiesto il download del documento di pagamento
+    When viene richiesto il download del documento notificato
     Then il download si conclude correttamente
 
 

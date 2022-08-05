@@ -151,7 +151,7 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
         Assertions.assertNotNull(notificationByIun.get());
     }
 
-    @When("viene richiesto il download del documento di pagamento")
+    @When("viene richiesto il download del documento notificato")
     public void vieneRichiestoIlDownloadDelDocumentoDiPagamento() {
         List<NotificationDocument> documents = notificationResponseComplete.getDocuments();
         this.downloadResponse = client
