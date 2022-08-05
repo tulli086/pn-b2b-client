@@ -249,7 +249,7 @@ public class PnPaB2bUtils {
         return computeSha256(res.getInputStream());
     }
 
-    private String computeSha256(  InputStream inStrm) {
+    public String computeSha256(InputStream inStrm) {
 
         try(inStrm) {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -272,7 +272,7 @@ public class PnPaB2bUtils {
         return hexString.toString();
     }
 
-    private byte[] downloadFile(String surl) throws ClientProtocolException, IOException{
+    public byte[] downloadFile(String surl) throws ClientProtocolException, IOException{
         try {
             URL url = new URL(surl);
             return IOUtils.toByteArray(url);
