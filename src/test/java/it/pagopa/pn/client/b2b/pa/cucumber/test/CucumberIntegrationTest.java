@@ -8,6 +8,6 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = "src/test/resources/features",
-        plugin = {"pretty"})
+        plugin = {"pretty", "json:target/cucumber-report.json"})
 public class CucumberIntegrationTest extends CucumberSpringIntegration {
 }
