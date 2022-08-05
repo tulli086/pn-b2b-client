@@ -29,7 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @PropertySource( value = "file:config/api-keys.properties", ignoreResourceNotFound = true )
-public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
+public class InvioNotificheB2bSteps  {
 
     @Autowired
     private PnPaB2bUtils utils;
@@ -46,26 +46,17 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
 
 
     @Given("viene predisposta una notifica con oggetto {string} mittente {string} destinatario {string} con codice fiscale {string}")
-    public void hoUnaNotificaConOggettoMittenteDestinatarioConCodiceFiscale(String oggetto, 
-                                                                            String mittente, 
-                                                                            String destinatario, 
-                                                                            String cf) {
+    public void NotificaOggettoMittenteDestinatarioConCodiceFiscale(String oggetto, String mittente, String destinatario, String cf) {
         newNotificationRequest(oggetto,mittente,destinatario,cf,"","","","");
     }
 
     @Given("viene predisposta una notifica con oggetto {string} mittente {string} destinatario {string} con codice fiscale {string} e idempotenceToken {string}")
-    public void vienePredispostaUnaNotificaConOggettoMittenteDestinatarioConCodiceFiscaleEIdempotenceToken(String oggetto,
-                                                                                                           String mittente,
-                                                                                                           String destinatario,
-                                                                                                           String cf,
-                                                                                                           String idempotenceToken)  {
+    public void NotificaOggettoMittenteDestinatarioConCodiceFiscaleIdempotenceToken(String oggetto, String mittente, String destinatario, String cf, String idempotenceToken)  {
         newNotificationRequest(oggetto,mittente,destinatario,cf,idempotenceToken,"","","");
     }
 
     @Given("viene predisposta una notifica con oggetto {string} mittente {string} destinatario {string} con codice fiscale {string} e creditorTaxId {string}")
-    public void vienePredispostaUnaNotificaConOggettoMittenteDestinatarioConCodiceFiscaleECreditorTaxId(String oggetto, String mittente,
-                                                                                                        String destinatario, String cf,
-                                                                                                        String creditorTaxId) {
+    public void NotificaOggettoMittenteDestinatarioConCodiceFiscaleCreditorTaxId(String oggetto, String mittente, String destinatario, String cf, String creditorTaxId) {
         newNotificationRequest(oggetto,mittente,destinatario,cf,"","",creditorTaxId,"");
     }
 
@@ -129,17 +120,6 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
         }
     }
 
-    @Then("l'invio della notifica ha prodotto un errore con status code {string}")
-    public void lInvioDellaNotificaHaProdottoUnErrore(String statusCode) {
-        Assertions.assertTrue((this.notificationSentError != null) &&
-                (this.notificationSentError.getStatusCode().toString().substring(0,3).equals(statusCode)));
-    }
-
-    @Then("la risposta di ricezione non presenta errori")
-    public void laNotificaCorrettamenteInviata() {
-        Assertions.assertDoesNotThrow(() -> utils.verifyNotification( notificationResponseComplete ));
-    }
-
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN")
     public void laNotificaCorrettamenteRecuperataDalSistemaTramiteCodiceIUN() {
         AtomicReference<FullSentNotification> notificationByIun = new AtomicReference<>();
@@ -162,10 +142,6 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
         this.sha256DocumentDownload = utils.computeSha256(new ByteArrayInputStream(bytes));
     }
 
-    @Then("il download si conclude correttamente")
-    public void ilDownloadSiConcludeCorrettamente() {
-        Assertions.assertTrue(this.sha256DocumentDownload.equals(this.downloadResponse.getSha256()));
-    }
 
     @When("viene richiesto il download di un documento inesistente")
     public void vieneRichiestoIlDownloadDiUnDocumentoInesistente() throws IOException {
@@ -181,11 +157,23 @@ public class InvioNotificheB2bSteps extends CucumberSpringIntegration {
 
     }
 
-    @Then("il download ha prodotto un errore con status code {string}")
-    public void ilDownloadNonSiConclude(String statusCode) {
+    @Then("il download si conclude correttamente")
+    public void ilDownloadSiConcludeCorrettamente() {
+        Assertions.assertEquals(this.sha256DocumentDownload,this.downloadResponse.getSha256());
+    }
+
+    @Then("l'operazione ha prodotto un errore con status code {string}")
+    public void operazioneHaProdottoUnErrore(String statusCode) {
         Assertions.assertTrue((this.notificationSentError != null) &&
                 (this.notificationSentError.getStatusCode().toString().substring(0,3).equals(statusCode)));
     }
+
+
+    @Then("la risposta di ricezione non presenta errori")
+    public void laNotificaCorrettamenteInviata() {
+        Assertions.assertDoesNotThrow(() -> utils.verifyNotification( notificationResponseComplete ));
+    }
+
 
     /* UTILITY */
 
