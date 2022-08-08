@@ -46,14 +46,14 @@ Feature: invio notifiche b2b
     Then il download si conclude correttamente
 
   #Scenari in errore
-  Scenario: B2B_7 : download errato documento notificato
-    Given viene predisposta una notifica con oggetto "invio notifica con cucumber" mittente "comune di milano" destinatario "Mario Cucumber" con codice fiscale "FRMTTR76M06B715E"
-    And la notifica viene inviata e si riceve una risposta
-    And la risposta di ricezione non presenta errori
-    When viene richiesto il download di un documento inesistente
-    Then l'operazione ha prodotto un errore con status code "400"
-
-  Scenario: B2B_8 : invio e recupero nuova notifica tramite api b2b con codice fiscale errato
-    Given viene predisposta una notifica con oggetto "invio notifica con cucumber" mittente "comune di milano" destinatario "Prova" con codice fiscale "a"
-    When la notifica viene inviata
-    Then l'operazione ha prodotto un errore con status code "400"
+#  Scenario: B2B_7 : download errato documento notificato
+#    Given viene predisposta una notifica con oggetto "invio notifica con cucumber" mittente "comune di milano" destinatario "Mario Cucumber" con codice fiscale "FRMTTR76M06B715E"
+#    And la notifica viene inviata e si riceve una risposta
+#    And la risposta di ricezione non presenta errori
+#    When viene richiesto il download di un documento inesistente
+#    Then l'operazione ha prodotto un errore con status code "400"
+#
+#  Scenario: B2B_8 : invio e recupero nuova notifica tramite api b2b con codice fiscale errato
+#    Given viene predisposta una notifica con oggetto "invio notifica con cucumber" mittente "comune di milano" destinatario "Prova" con codice fiscale "a"
+#    When la notifica viene inviata
+#    Then l'operazione ha prodotto un errore con status code "400"
