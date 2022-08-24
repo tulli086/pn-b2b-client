@@ -226,6 +226,8 @@ public class InvioNotificheB2bSteps  {
                                 .noticeCode(noticeCode.trim().equals("")? String.format("30201%13d", epochMillis ):noticeCode )
                                 .noticeCodeOptional( String.format("30201%13d", epochMillis+1 ) )
                                 .pagoPaForm( newAttachment( resourcePath ))
+                                .f24flatRate( newAttachment( resourcePath ))
+                                .f24standard( newAttachment( resourcePath ))
                 );
 
         try {

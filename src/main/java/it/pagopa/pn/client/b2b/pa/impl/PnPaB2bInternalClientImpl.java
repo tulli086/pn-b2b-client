@@ -2,16 +2,16 @@ package it.pagopa.pn.client.b2b.pa.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.ApiClient;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api.LegalFactsApi;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api.NewNotificationApi;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api.SenderReadB2BApi;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.CxTypeAuthFleet;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,8 +24,6 @@ import java.util.List;
 @ConditionalOnProperty( name = IPnPaB2bClient.IMPLEMENTATION_TYPE_PROPERTY, havingValue = "internal")
 public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
-    private final ApplicationContext ctx;
-    private final RestTemplate restTemplate;
     private final NewNotificationApi newNotificationApi;
     private final SenderReadB2BApi senderReadB2BApi;
     private final LegalFactsApi legalFactsApi;
@@ -33,25 +31,24 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
     private final String paId;
     private final String operatorId;
 
-    private final ObjectMapper objMapper = new ObjectMapper();
+    private final ObjectMapper objMapper = JsonMapper.builder()
+            .addModule(new JavaTimeModule())
+            .build();
     private final List<String> groups;
 
     public PnPaB2bInternalClientImpl(
-            ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.internal.delivery-base-url}") String deliveryBasePath,
+            @Value("${pn.internal.delivery-push-base-url}") String deliveryPushBasePath,
             @Value("${pn.internal.pa-id}") String paId
     ) {
-        this.ctx = ctx;
-        this.restTemplate = restTemplate;
-
         this.paId = paId;
         this.operatorId = "TestMv";
         this.groups = Collections.emptyList();
 
         this.newNotificationApi = new NewNotificationApi( newApiClient( restTemplate, deliveryBasePath) );
         this.senderReadB2BApi = new SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
-        this.legalFactsApi = new LegalFactsApi(newApiClient(restTemplate, deliveryBasePath));
+        this.legalFactsApi = new LegalFactsApi(newApiClient(restTemplate, deliveryPushBasePath));
     }
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath ) {
@@ -91,10 +88,14 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
     public LegalFactDownloadMetadataResponse getLegalFact(String iun, LegalFactCategory legalFactType, String legalFactId) {
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.LegalFactDownloadMetadataResponse response =
                 legalFactsApi.getLegalFact(
-                        iun
+                        operatorId
+                        , CxTypeAuthFleet.PA
+                        , paId
+                        , iun
                         , deepCopy(legalFactType
                         , it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.LegalFactCategory.class)
-                        , legalFactId);
+                        , legalFactId
+                        , groups);
         return deepCopy(response, LegalFactDownloadMetadataResponse.class);
     }
 
