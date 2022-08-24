@@ -35,7 +35,7 @@ public class NewNotificationTest {
         NewNotificationRequest request = new NewNotificationRequest()
                 .subject("Test inserimento " + dateFormat.format(calendar.getTime()))
                 .cancelledIun("")
-                .group("")
+                .group("Test gruppo")
                 ._abstract("Abstract della notifica")
                 .senderDenomination("Il comune di Milano")
                 .senderTaxId("CFComuneMilano")
@@ -90,8 +90,8 @@ public class NewNotificationTest {
                                 .noticeCode( String.format("30201%13d", epochMillis ) )
                                 .noticeCodeOptional( String.format("30201%13d", epochMillis+1 ) )
                                 .pagoPaForm( newAttachment( resourcePath ))
-                        //.f24flatRate( newAttachment( resourcePath ) )
-                        //.f24standard( newAttachment( resourcePath ) )
+                                .f24flatRate( newAttachment( resourcePath ) )
+                                .f24standard( newAttachment( resourcePath ) )
                 );
 
         try {

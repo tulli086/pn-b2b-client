@@ -105,7 +105,7 @@ public class PnPaB2bUtils {
     public void verifyNotification(FullSentNotification fsn) throws IOException, IllegalStateException {
 
         for (NotificationDocument doc: fsn.getDocuments()) {
-
+            log.debug("Check attachment {}", doc.getRef().getKey());
             NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationDocument(fsn.getIun(), new BigDecimal(doc.getDocIdx()));
             byte[] content = downloadFile(resp.getUrl());
             String sha256 = computeSha256(new ByteArrayInputStream(content));
@@ -119,15 +119,17 @@ public class PnPaB2bUtils {
         for (NotificationRecipient recipient : fsn.getRecipients()) {
 
             NotificationAttachmentDownloadMetadataResponse resp;
-
+            log.debug("Check attachment PAGOPA");
             resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "PAGOPA");
             checkAttachment( resp );
 
-            //resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_FLAT");
-            //checkAttachment( resp );
+            log.debug("Check attachment F24_FLAT");
+            resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_FLAT");
+            checkAttachment( resp );
 
-            //resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_STANDARD");
-            //checkAttachment( resp );
+            log.debug("Check attachment F24_STANDARD");
+            resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_STANDARD");
+            checkAttachment( resp );
 
             i++;
         }
@@ -139,7 +141,8 @@ public class PnPaB2bUtils {
             resp = client.getLegalFact(
                     fsn.getIun(),
                     LegalFactCategory.SENDER_ACK,
-                    URLEncoder.encode(legalFactsId.getKey(), StandardCharsets.UTF_8.toString())
+                    //URLEncoder.encode(legalFactsId.getKey(), StandardCharsets.UTF_8.toString())
+                    legalFactsId.getKey().substring(legalFactsId.getKey().lastIndexOf('/') + 1)
                 );
 
             byte[] content = downloadFile(resp.getUrl());
