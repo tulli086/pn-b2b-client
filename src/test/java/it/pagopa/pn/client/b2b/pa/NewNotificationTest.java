@@ -35,7 +35,7 @@ public class NewNotificationTest {
         NewNotificationRequest request = new NewNotificationRequest()
                 .subject("Test inserimento " + dateFormat.format(calendar.getTime()))
                 .cancelledIun("")
-                .group("Test gruppo")
+                .group("TestGroup")
                 ._abstract("Abstract della notifica")
                 .senderDenomination("Il comune di Milano")
                 .senderTaxId("CFComuneMilano")
