@@ -20,7 +20,7 @@ Feature: invio notifiche b2b
     And la risposta di ricezione non presenta errori
     And viene predisposta e inviata una nuova notifica con uguale paProtocolNumber e idempotenceToken "AME2E3626070001.1"
     When la notifica viene inviata
-    Then l'operazione ha prodotto un errore con status code "400"
+    Then l'operazione ha prodotto un errore con status code "409"
 
   Scenario: B2B_4 : invio notifiche con uguale codice fiscale del creditore e diverso codice avviso
     Given viene predisposta una notifica con oggetto "invio notifica con cucumber" mittente "comune di milano" destinatario "Mario Cucumber" con codice fiscale "FRMTTR76M06B715E" e creditorTaxId "77777777777"
@@ -36,7 +36,7 @@ Feature: invio notifiche b2b
     And la risposta di ricezione non presenta errori
     And viene predisposta e inviata una nuova notifica con uguale codice fiscale del creditore e uguale codice avviso
     When la notifica viene inviata
-    Then l'operazione ha prodotto un errore con status code "400"
+    Then l'operazione ha prodotto un errore con status code "409"
 
   Scenario: B2B_6 : download documento notificato
     Given viene predisposta una notifica con oggetto "invio notifica con cucumber" mittente "comune di milano" destinatario "Mario Cucumber" con codice fiscale "FRMTTR76M06B715E"
