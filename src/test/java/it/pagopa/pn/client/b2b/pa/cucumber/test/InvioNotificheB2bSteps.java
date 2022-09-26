@@ -184,7 +184,7 @@ public class InvioNotificheB2bSteps  {
 
         notificationRequest = new NewNotificationRequest()
                 .subject(oggetto+" "+ dateFormat.format(calendar.getTime()))
-                .cancelledIun("")
+                .cancelledIun(null)
                 .group("")
                 .idempotenceToken(idempotenceToken)
                 ._abstract("Abstract della notifica")
