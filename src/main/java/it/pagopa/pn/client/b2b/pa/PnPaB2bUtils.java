@@ -28,10 +28,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Component
 public class PnPaB2bUtils {
@@ -82,7 +80,8 @@ public class PnPaB2bUtils {
 
         log.info("Request status for " + response.getNotificationRequestId() );
         NewNotificationRequestStatusResponse status = null;
-        for( int i = 0; i < 10; i++ ) {
+        long startTime = System.currentTimeMillis();
+        for( int i = 0; i < 15; i++ ) {
 
             status = client.getNotificationRequestStatus( response.getNotificationRequestId() );
 
@@ -97,15 +96,17 @@ public class PnPaB2bUtils {
                 throw new RuntimeException( exc );
             }
         }
-
+        long endTime = System.currentTimeMillis();
+        log.info("Execution time {}ms",(endTime - startTime));
         String iun = status.getIun();
-        return client.getSentNotification( iun );
+
+        return iun == null? null : client.getSentNotification( iun );
     }
 
     public void verifyNotification(FullSentNotification fsn) throws IOException, IllegalStateException {
 
         for (NotificationDocument doc: fsn.getDocuments()) {
-            log.debug("Check attachment {}", doc.getRef().getKey());
+
             NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationDocument(fsn.getIun(), new BigDecimal(doc.getDocIdx()));
             byte[] content = downloadFile(resp.getUrl());
             String sha256 = computeSha256(new ByteArrayInputStream(content));
@@ -119,17 +120,15 @@ public class PnPaB2bUtils {
         for (NotificationRecipient recipient : fsn.getRecipients()) {
 
             NotificationAttachmentDownloadMetadataResponse resp;
-            log.debug("Check attachment PAGOPA");
+
             resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "PAGOPA");
             checkAttachment( resp );
 
-            log.debug("Check attachment F24_FLAT");
-            resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_FLAT");
-            checkAttachment( resp );
+            //resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_FLAT");
+            //checkAttachment( resp );
 
-            log.debug("Check attachment F24_STANDARD");
-            resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_STANDARD");
-            checkAttachment( resp );
+            //resp = client.getSentNotificationAttachment(fsn.getIun(), new BigDecimal(i), "F24_STANDARD");
+            //checkAttachment( resp );
 
             i++;
         }
@@ -141,8 +140,7 @@ public class PnPaB2bUtils {
             resp = client.getLegalFact(
                     fsn.getIun(),
                     LegalFactCategory.SENDER_ACK,
-                    //URLEncoder.encode(legalFactsId.getKey(), StandardCharsets.UTF_8.toString())
-                    legalFactsId.getKey().substring(legalFactsId.getKey().lastIndexOf('/') + 1)
+                    URLEncoder.encode(legalFactsId.getKey(), StandardCharsets.UTF_8.toString())
                 );
 
             byte[] content = downloadFile(resp.getUrl());
@@ -294,4 +292,22 @@ public class PnPaB2bUtils {
     public FullSentNotification getNotificationByIun(String iun) {
         return client.getSentNotification( iun );
     }
+
+
+    public NotificationDocument newDocument(String resourcePath ) {
+        return new NotificationDocument()
+                .contentType("application/pdf")
+                .ref( new NotificationAttachmentBodyRef().key( resourcePath ));
+    }
+
+
+    public NotificationPaymentAttachment newAttachment(String resourcePath ) {
+        return new NotificationPaymentAttachment()
+                .contentType("application/pdf")
+                .ref( new NotificationAttachmentBodyRef().key( resourcePath ));
+    }
+
+
+
+
 }
