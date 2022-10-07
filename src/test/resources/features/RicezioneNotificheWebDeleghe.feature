@@ -10,7 +10,6 @@ Feature: Ricezione notifiche destinate al delegante
     When viene generata una notifica per il test di ricezione
       | subject | invio notifica con cucumber |
       | senderDenomination | comune di milano |
-      | senderTaxId | CFComuneMilano |
     And destinatario alternativo
       | denomination | Mario Cucumber |
       | taxId | FRMTTR76M06B715E |
@@ -24,7 +23,6 @@ Feature: Ricezione notifiche destinate al delegante
     When viene generata una notifica per il test di ricezione
       | subject | invio notifica con cucumber |
       | senderDenomination | comune di milano |
-      | senderTaxId | CFComuneMilano |
     And destinatario alternativo
       | denomination | Mario Cucumber |
       | taxId | FRMTTR76M06B715E |
@@ -37,7 +35,7 @@ Feature: Ricezione notifiche destinate al delegante
     When viene generata una notifica per il test di ricezione
       | subject | invio notifica con cucumber |
       | senderDenomination | comune di milano |
-      | senderTaxId | CFComuneMilano |
+      | senderTaxId | 01199250158 |
     And destinatario alternativo
       | denomination | Mario Cucumber |
       | taxId | FRMTTR76M06B715E |
@@ -53,7 +51,7 @@ Feature: Ricezione notifiche destinate al delegante
     When viene generata una notifica per il test di ricezione
       | subject | invio notifica con cucumber |
       | senderDenomination | comune di milano |
-      | senderTaxId | CFComuneMilano |
+      | senderTaxId | 01199250158 |
     And destinatario alternativo
       | denomination | Mario Cucumber |
       | taxId | FRMTTR76M06B715E |
@@ -69,7 +67,7 @@ Feature: Ricezione notifiche destinate al delegante
     When viene generata una notifica per il test di ricezione
       | subject | invio notifica con cucumber |
       | senderDenomination | comune di milano |
-      | senderTaxId | CFComuneMilano |
+      | senderTaxId | 01199250158 |
     And destinatario alternativo
       | denomination | Mario Cucumber |
       | taxId | FRMTTR76M06B715E |
@@ -85,7 +83,7 @@ Feature: Ricezione notifiche destinate al delegante
     When viene generata una notifica per il test di ricezione
       | subject | invio notifica con cucumber |
       | senderDenomination | comune di milano |
-      | senderTaxId | CFComuneMilano |
+      | senderTaxId | 01199250158 |
     And destinatario alternativo
       | denomination | Mario Cucumber |
       | taxId | FRMTTR76M06B715E |
@@ -99,12 +97,16 @@ Feature: Ricezione notifiche destinate al delegante
     When viene generata una notifica per il test di ricezione
       | subject | invio notifica con cucumber |
       | senderDenomination | comune di milano |
-      | senderTaxId | CFComuneMilano |
+      | senderTaxId | 01199250158 |
     And destinatario alternativo
       | denomination | Mario Cucumber |
       | taxId | FRMTTR76M06B715E |
     And la notifica viene inviata e si riceve il relativo codice IUN valorizzato
     Then si tenta il recupero della notifica da parte del delegato che produce un errore con status code "404"
+
+  Scenario: [WEB-PF-MANDATE_7] Delega a se stesso _scenario negativo
+    Given Cristoforo Colombo viene delegato da "Cristoforo" "Colombo" con cf "CLMCST42R12D969Z"
+    Then l'operazione di delega ha prodotto un errore con status code "409"
 
 
   #Scenario: [WEB-PF-MANDATE_8] Invio notifica digitale altro destinatario con delega scaduta negativo
@@ -113,7 +115,7 @@ Feature: Ricezione notifiche destinate al delegante
     #When viene generata una notifica per il test di ricezione
       #| subject | invio notifica con cucumber |
       #| senderDenomination | comune di milano |
-      #| senderTaxId | CFComuneMilano |
+      #| senderTaxId | 01199250158 |
     #And destinatario alternativo
       #| denomination | Mario Cucumber |
       #| taxId | FRMTTR76M06B715E |
