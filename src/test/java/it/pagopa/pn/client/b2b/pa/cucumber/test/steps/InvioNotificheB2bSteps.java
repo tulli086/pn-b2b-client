@@ -5,10 +5,16 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.FullReceivedNotification;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
+import it.pagopa.pn.client.b2b.pa.testclient.IPnAppIOB2bClient;
+import it.pagopa.pn.client.b2b.pa.testclient.IPnWebUserAttributesClient;
 import it.pagopa.pn.client.b2b.pa.testclient.PnSafeStorageInfoExternalClientImpl;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.model.Consent;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.model.ConsentAction;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.model.ConsentType;
 import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +45,12 @@ public class InvioNotificheB2bSteps  {
     private PnSafeStorageInfoExternalClientImpl safeStorageClient;
 
     @Autowired
+    private IPnAppIOB2bClient iPnAppIOB2bClient;
+
+    @Autowired
+    private IPnWebUserAttributesClient iPnWebUserAttributesClient;
+
+    @Autowired
     private DataTableTypeUtil dataTableTypeUtil;
 
     @Value("${pn.retention.time.preload}")
@@ -54,6 +66,7 @@ public class InvioNotificheB2bSteps  {
     private String sha256DocumentDownload;
     private NotificationAttachmentDownloadMetadataResponse downloadResponse;
     private HttpClientErrorException notificationSentError;
+    private HttpServerErrorException notficationServerError;
 
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -324,5 +337,47 @@ public class InvioNotificheB2bSteps  {
             Assertions.assertEquals(this.notificationRequest.getTaxonomyCode(),this.notificationResponseComplete.getTaxonomyCode());
         }
 
+    }
+
+
+    @Then("la notifica può essere recuperata tramite AppIO")
+    public void laNotificaPuòEssereRecuperataTramiteAppIO() {
+        AtomicReference<FullReceivedNotification> notificationByIun = new AtomicReference<>();
+
+        Assertions.assertDoesNotThrow(() ->
+                notificationByIun.set(this.iPnAppIOB2bClient.getReceivedNotification(notificationResponseComplete.getIun(), notificationResponseComplete.getRecipients().get(0).getTaxId()))
+        );
+
+        Assertions.assertNotNull(notificationByIun.get());
+    }
+
+    @Then("il documento notificato può essere recuperata tramite AppIO")
+    public void ilDocumentoNotificatoPuòEssereRecuperataTramiteAppIO() {
+        List<NotificationDocument> documents = notificationResponseComplete.getDocuments();
+        it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.NotificationAttachmentDownloadMetadataResponse sentNotificationDocument =
+                iPnAppIOB2bClient.getSentNotificationDocument(notificationResponseComplete.getIun(), Integer.parseInt(documents.get(0).getDocIdx()), notificationResponseComplete.getRecipients().get(0).getTaxId());
+
+        byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                b2bUtils.downloadFile(sentNotificationDocument.getUrl()));
+        this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
+
+        Assertions.assertEquals(this.sha256DocumentDownload,sentNotificationDocument.getSha256());
+    }
+
+    @And("si tenta il recupero della notifica tramite AppIO")
+    public void siTentaIlRecuperoDellaNotificaTramiteAppIO() {
+        try {
+            this.iPnAppIOB2bClient.getReceivedNotification(notificationResponseComplete.getIun(), "FRMTTR76M06B715E");
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            if (e instanceof HttpServerErrorException) {
+                this.notficationServerError = (HttpServerErrorException) e;
+            }
+        }
+    }
+
+    @Then("il tentativo di recupero ha prodotto un errore con status code {string}")
+    public void ilTentativoDiRecuperoHaProdottoUnErroreConStatusCode(String statusCode) {
+        Assertions.assertTrue((this.notficationServerError != null) &&
+                (this.notficationServerError.getStatusCode().toString().substring(0,3).equals(statusCode)));
     }
 }

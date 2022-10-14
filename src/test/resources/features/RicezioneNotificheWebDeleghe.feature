@@ -105,7 +105,7 @@ Feature: Ricezione notifiche destinate al delegante
     And la notifica viene inviata e si riceve il relativo codice IUN valorizzato
     Then si tenta il recupero della notifica da parte del delegato che produce un errore con status code "404"
 
-  Scenario: [WEB-PF-MANDATE_7] Delega a se stesso _scenario negativo
+  Scenario: [WEB-PF-MANDATE_8] Delega a se stesso _scenario negativo
     Given Cristoforo Colombo viene delegato da "Cristoforo" "Colombo" con cf "CLMCST42R12D969Z"
     Then l'operazione di delega ha prodotto un errore con status code "409"
 

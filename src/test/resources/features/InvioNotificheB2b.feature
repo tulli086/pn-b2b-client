@@ -440,7 +440,7 @@ Feature: invio notifiche b2b
     And viene controllato la presenza del taxonomyCode
 
 
-  Scenario: [B2B-PA-SEND_30] Invio notifica digitale mono destinatario senza taxonomyCode (verifica Default)_scenario positivo
+  Scenario: [B2B-PA-SEND_30] Invio notifica digitale mono destinatario con taxonomyCode (verifica Default)_scenario positivo
     Given viene generata una notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -451,6 +451,8 @@ Feature: invio notifiche b2b
     When la notifica viene inviata tramite api b2b e si attende che venga accettata
     Then si verifica la corretta acquisizione della notifica
     And viene controllato la presenza del taxonomyCode
+
+
 
      #Scenario in errore
  # Scenario: [B2B-PA-SEND_19] invio notifica digitale mono destinatario (p.fisica)_scenario negativo
