@@ -1,18 +1,19 @@
 Feature: avanzamento notifiche webhook b2b
 
   Scenario: [B2B-STREAM_STATUS_1] Creazione stream notifica
-    Given nuovo stream "stream-test" con eventType "STATUS"
-    When viene creato il nuovo stream
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS"
+    When si crea il nuovo stream
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id
-    And viene cancellato lo stream creato
-    And viene verificata al corretta cancellazione
+    And si cancella lo stream creato
+    And viene verificata la corretta cancellazione
 
   Scenario: [B2B-STREAM_TIMELINE_1] Creazione stream notifica
-    Given nuovo stream "stream-test" con eventType "TIMELINE"
-    When viene creato il nuovo stream
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    When si crea il nuovo stream
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id
-    And viene cancellato lo stream creato
-    And viene verificata al corretta cancellazione
+    And si cancella lo stream creato
+    And viene verificata la corretta cancellazione
+
 
   @clean
   Scenario: [B2B-STREAM_TIMELINE_2] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
@@ -23,8 +24,8 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino allo stato "ACCEPTED"
 
@@ -38,8 +39,8 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "REQUEST_ACCEPTED"
 
@@ -84,8 +85,8 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "GET_ADDRESS"
 
@@ -99,8 +100,8 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino allo stato "DELIVERING"
 
@@ -114,8 +115,8 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "SEND_DIGITAL_DOMICILE"
 
@@ -129,8 +130,8 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi dello stream fino allo stato "DELIVERING"
     And il destinatario legge la notifica
@@ -146,8 +147,8 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi dello stream fino allo stato "DELIVERING"
     And il destinatario legge la notifica
@@ -163,11 +164,10 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino allo stato "DELIVERED"
-
 
 
   @svil @clean
@@ -179,13 +179,12 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino allo stato "DELIVERED"
     And il destinatario legge la notifica
     Then si verifica nello stream che la notifica abbia lo stato VIEWED
-
 
 
   @svil @clean
@@ -197,12 +196,27 @@ Feature: avanzamento notifiche webhook b2b
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | CLMCST42R12D969Z@pnpagopa.postecert.local |
-    And nuovo stream "stream-test" con eventType "TIMELINE"
-    And viene creato il nuovo stream
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si crea il nuovo stream
     When la notifica viene inviata e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino allo stato "DELIVERED"
     And il destinatario legge la notifica
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "NOTIFICATION_VIEWED"
+
+
+  Scenario: [B2B-STREAM_TIMELINE_14] Creazione multi stream notifica
+    Given si predispongono 6 nuovi stream denominati "stream-test" con eventType "STATUS"
+    When si creano i nuovi stream
+    Then l'ultima creazione ha prodotto un errore con status code "409"
+    And si cancellano gli stream creati
+    And viene verificata la corretta cancellazione
+
+  Scenario: [B2B-STREAM_TIMELINE_15] Creazione multi stream notifica
+    Given si predispongono 6 nuovi stream denominati "stream-test" con eventType "TIMELINE"
+    When si creano i nuovi stream
+    Then l'ultima creazione ha prodotto un errore con status code "409"
+    And si cancellano gli stream creati
+    And viene verificata la corretta cancellazione
 
 
   #@svil @clean
