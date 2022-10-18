@@ -18,7 +18,11 @@ import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+
 import java.lang.invoke.MethodHandles;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -36,31 +40,67 @@ public class AvanzamentoNotificheB2bSteps {
     @Autowired
     private PnPaB2bUtils b2bUtils;
 
-    private StreamCreationRequest streamCreationRequest;
-    private StreamMetadataResponse eventStream;
+    private List<StreamCreationRequest> streamCreationRequestList;
+    private List<StreamMetadataResponse> eventStreamList;
+    private Integer requestNumber;
+    private HttpClientErrorException clientError;
     private NewNotificationRequest notificationRequest;
     private NewNotificationResponse newNotificationRequest;
     private FullSentNotification notificationResponseComplete;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Given("nuovo stream {string} con eventType {string}")
-    public void nuovoStreamDiEventiConEventType(String title, String eventType) {
-        streamCreationRequest = new StreamCreationRequest();
-        streamCreationRequest.title(title);
-        //STATUS, TIMELINE
-        streamCreationRequest.eventType(eventType.equalsIgnoreCase("STATUS") ?
-                StreamCreationRequest.EventTypeEnum.STATUS : StreamCreationRequest.EventTypeEnum.TIMELINE);
+
+    @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream denominat(i)(o) {string} con eventType {string}")
+    public void vengonoPredispostiNuoviStreamDenominatiConEventType(int number, String title, String eventType) {
+        this.streamCreationRequestList = new LinkedList<>();
+        this.requestNumber = number;
+        for(int i = 0; i<number; i++){
+            StreamCreationRequest streamRequest = new StreamCreationRequest();
+            streamRequest.title(title);
+            //STATUS, TIMELINE
+            streamRequest.eventType(eventType.equalsIgnoreCase("STATUS") ?
+                    StreamCreationRequest.EventTypeEnum.STATUS : StreamCreationRequest.EventTypeEnum.TIMELINE);
+            streamCreationRequestList.add(streamRequest);
+        }
     }
 
-    @When("viene creato il nuovo stream")
+    @When("si crea(no) i(l) nuov(o)(i) stream")
     public void vieneCreatoUnNuovoStreamDiNotifica() {
-        this.eventStream = webhookB2bClient.createEventStream(streamCreationRequest);
+        this.eventStreamList = new LinkedList<>();
+        for(StreamCreationRequest request: streamCreationRequestList){
+            try{
+            StreamMetadataResponse eventStream = webhookB2bClient.createEventStream(request);
+            this.eventStreamList.add(eventStream);
+            }catch (HttpClientErrorException | HttpServerErrorException e) {
+                if (e instanceof HttpClientErrorException) {
+                    this.clientError = (HttpClientErrorException)e;
+                }
+            }
+        }
     }
+
+    @And("si cancella(no) (lo)(gli) stream creat(o)(i)")
+    public void vieneCancellatoLoStreamCreato() {
+        for(StreamMetadataResponse eventStream: eventStreamList){
+            webhookB2bClient.deleteEventStream(eventStream.getStreamId());
+        }
+
+    }
+
+    @And("viene verificata la corretta cancellazione")
+    public void vieneVerificataAlCorrettaCancellazione() {
+        List<StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
+        for(StreamMetadataResponse eventStream: eventStreamList){
+            StreamListElement streamListElement = streamListElements.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
+            Assertions.assertNull(streamListElement);
+        }
+    }
+
 
     @Then("lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id")
     public void laStreamEStatoCreatoEVieneCorrettamenteRecuperatoDalSistema() {
         Assertions.assertDoesNotThrow(() -> {
-            StreamMetadataResponse eventStream = webhookB2bClient.getEventStream(this.eventStream.getStreamId());
+            StreamMetadataResponse eventStream = webhookB2bClient.getEventStream(this.eventStreamList.get(0).getStreamId());
         });
     }
 
@@ -68,7 +108,7 @@ public class AvanzamentoNotificheB2bSteps {
     @And("vengono letti gli eventi dello stream")
     public void vengonoLettiGliEventiDelloStream() {
         Assertions.assertDoesNotThrow(() -> {
-            List<ProgressResponseElement> progressResponseElements = webhookB2bClient.consumeEventStream(this.eventStream.getStreamId(), null);
+            List<ProgressResponseElement> progressResponseElements = webhookB2bClient.consumeEventStream(this.eventStreamList.get(0).getStreamId(), null);
             logger.info("EventProgress: " + progressResponseElements);
         });
     }
@@ -137,7 +177,7 @@ public class AvanzamentoNotificheB2bSteps {
         int wait = 48;
         boolean finded = false;
         for (int i = 0; i < wait; i++) {
-            progressResponseElements = webhookB2bClient.consumeEventStream(this.eventStream.getStreamId(), null);
+            progressResponseElements = webhookB2bClient.consumeEventStream(this.eventStreamList.get(0).getStreamId(), null);
 
             progressResponseElement = progressResponseElements.stream().filter(elem -> (elem.getIun().equals(notificationResponseComplete.getIun()) && elem.getNewStatus().equals(notificationStatus))).findAny().orElse(null);
             notificationResponseComplete = b2bClient.getSentNotification(notificationResponseComplete.getIun());
@@ -208,7 +248,7 @@ public class AvanzamentoNotificheB2bSteps {
         int wait = 48;
         boolean finded = false;
         for (int i = 0; i < wait; i++) {
-            progressResponseElements = webhookB2bClient.consumeEventStream(this.eventStream.getStreamId(), null);
+            progressResponseElements = webhookB2bClient.consumeEventStream(this.eventStreamList.get(0).getStreamId(), null);
 
             progressResponseElement = progressResponseElements.stream().filter(elem -> (elem.getIun().equals(notificationResponseComplete.getIun()) && elem.getTimelineEventCategory().equals(timelineElementCategory))).findAny().orElse(null);
             notificationResponseComplete = b2bClient.getSentNotification(notificationResponseComplete.getIun());
@@ -358,32 +398,26 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si verifica nello stream che la notifica abbia lo stato VIEWED")
     public void siVerificaNelloStreamCheLaNotificaAbbiaLoStatoVIEWED() {
-        List<ProgressResponseElement> progressResponseElements = webhookB2bClient.consumeEventStream(this.eventStream.getStreamId(), null);
+        List<ProgressResponseElement> progressResponseElements = webhookB2bClient.consumeEventStream(this.eventStreamList.get(0).getStreamId(), null);
         Assertions.assertNotNull(progressResponseElements.stream().filter(elem -> (elem.getIun().equals(notificationResponseComplete.getIun()) && elem.getNewStatus().equals(NotificationStatus.VIEWED))).findAny().orElse(null));
     }
 
 
-    @And("viene cancellato lo stream creato")
-    public void vieneCancellatoLoStreamCreato() {
-        webhookB2bClient.deleteEventStream(eventStream.getStreamId());
-    }
-
-    @And("viene verificata al corretta cancellazione")
-    public void vieneVerificataAlCorrettaCancellazione() {
-        List<StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
-        StreamListElement streamListElement = streamListElements.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
-        Assertions.assertNull(streamListElement);
-    }
-
 
     @After("@clean")
     public void doSomethingAfter() {
-        webhookB2bClient.deleteEventStream(eventStream.getStreamId());
+        webhookB2bClient.deleteEventStream(this.eventStreamList.get(0).getStreamId());
         List<StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
-        StreamListElement streamListElement = streamListElements.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
+        StreamListElement streamListElement = streamListElements.stream().filter(elem -> elem.getStreamId() == this.eventStreamList.get(0).getStreamId()).findAny().orElse(null);
         logger.info("STREAM SIZE: " + streamListElements.size());
-        logger.info("UUID DELETED: " + eventStream.getStreamId());
+        logger.info("UUID DELETED: " + this.eventStreamList.get(0).getStreamId());
         Assertions.assertNull(streamListElement);
+    }
+
+    @Then("l'ultima creazione ha prodotto un errore con status code {string}")
+    public void lUltimaCreazioneHaProdottoUnErroreConStatusCode(String statusCode) {
+        Assertions.assertTrue((this.clientError != null) &&
+                (this.clientError.getStatusCode().toString().substring(0,3).equals(statusCode)) && (eventStreamList.size() == (requestNumber-1)));
     }
 
 }
