@@ -35,11 +35,11 @@ public class NewNotificationTest {
 
         NewNotificationRequest request = new NewNotificationRequest()
                 .subject("Test inserimento " + dateFormat.format(calendar.getTime()))
-                .cancelledIun("")
+                .cancelledIun(null)
                 .group("TestGroup")
                 ._abstract("Abstract della notifica")
-                .senderDenomination("Il comune di Milano")
-                .senderTaxId("CFComuneMilano")
+                .senderDenomination("Comune di Milano")
+                .senderTaxId("01199250158")
                 .notificationFeePolicy( NewNotificationRequest.NotificationFeePolicyEnum.FLAT_RATE )
                 .physicalCommunicationType( NewNotificationRequest.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 )
                 .paProtocolNumber("" + System.currentTimeMillis())
@@ -54,7 +54,6 @@ public class NewNotificationTest {
             utils.verifyNotification( newNotification );
         });
     }
-
 
     private NotificationDocument newDocument(String resourcePath ) {
         return new NotificationDocument()
