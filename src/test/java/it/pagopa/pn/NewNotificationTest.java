@@ -55,7 +55,6 @@ public class NewNotificationTest {
         });
     }
 
-
     private NotificationDocument newDocument(String resourcePath ) {
         return new NotificationDocument()
                 .contentType("application/pdf")
