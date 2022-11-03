@@ -1,12 +1,11 @@
 package it.pagopa.pn.client.b2b.pa.impl;
 
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.testclient.SettableApiKey;
 import org.springframework.web.client.RestClientException;
-
-import java.math.BigDecimal;
 import java.util.List;
 
-public interface IPnPaB2bClient {
+public interface IPnPaB2bClient extends SettableApiKey {
 
     String IMPLEMENTATION_TYPE_PROPERTY = "pn.api-type";
 
@@ -17,7 +16,6 @@ public interface IPnPaB2bClient {
     FullSentNotification getSentNotification(String iun);
 
     NewNotificationRequestStatusResponse getNotificationRequestStatus(String notificationRequestId);
-
 
     NotificationAttachmentDownloadMetadataResponse getSentNotificationDocument(String iun, Integer docidx) ;
 
