@@ -448,7 +448,7 @@ Feature: invio notifiche b2b
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
       | senderTaxId | 01199250158 |
-      | taxonomyCode |   020202201P   |
+      | taxonomyCode |   010202N   |
     And destinatario
       | denomination | Mario Cucumber |
     When la notifica viene inviata tramite api b2b e si attende che lo stato diventi ACCEPTED
@@ -489,7 +489,6 @@ Feature: invio notifiche b2b
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
       | senderTaxId | 01199250158 |
-      | taxonomyCode |   020202201P   |
     And destinatario
       | denomination | Mario Cucumber |
       | payment_creditorTaxId | 77777777777 |
