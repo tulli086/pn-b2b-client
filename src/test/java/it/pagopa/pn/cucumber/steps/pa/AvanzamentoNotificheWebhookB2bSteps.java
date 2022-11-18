@@ -272,7 +272,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         for(ProgressResponseElement elem: progressResponseElements){
             if(lastProgress == null){
                 lastProgress = elem;
-            }else if (lastProgress.getTimestamp().isBefore(elem.getTimestamp())){
+            }else if (lastProgress.getEventId().compareTo(elem.getEventId()) < 0){
                 lastProgress = elem;
             }
             if(elem.getIun().equals(sharedSteps.getSentNotification().getIun())){
