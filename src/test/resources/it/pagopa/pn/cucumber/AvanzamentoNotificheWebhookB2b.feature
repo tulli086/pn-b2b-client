@@ -194,7 +194,7 @@ Feature: avanzamento notifiche webhook b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "NOT_HANDLED"
 
-  @clean @dev
+  @ignore @clean @dev
   Scenario: [B2B-STREAM_TIMELINE_18] Invio notifica digitale ed attesa stato DELIVERED_scenario negativo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
