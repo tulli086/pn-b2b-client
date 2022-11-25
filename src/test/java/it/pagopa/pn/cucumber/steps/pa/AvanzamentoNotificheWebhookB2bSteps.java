@@ -227,6 +227,11 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategory.SCHEDULE_ANALOG_WORKFLOW;
                 break;
+            case "NOT_HANDLED":
+                timelineElementCategory = TimelineElementCategory.NOT_HANDLED;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategory.SCHEDULE_ANALOG_WORKFLOW;
+                break;
             default:
                 throw new IllegalArgumentException();
         }
