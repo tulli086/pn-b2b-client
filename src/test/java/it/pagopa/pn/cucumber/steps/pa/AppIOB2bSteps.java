@@ -8,6 +8,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.testclient.IPnAppIOB2bClient;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
+import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,32 +45,39 @@ public class AppIOB2bSteps {
     }
 
     @Then("la notifica può essere recuperata tramite AppIO")
-    public void laNotificaPuòEssereRecuperataTramiteAppIO() {
+    public void notificationCanBeRetrievedAppIO() {
         AtomicReference<FullReceivedNotification> notificationByIun = new AtomicReference<>();
+        try{
+            Assertions.assertDoesNotThrow(() ->
+                    notificationByIun.set(this.iPnAppIOB2bClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(),
+                            sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()))
+            );
+            Assertions.assertNotNull(notificationByIun.get());
+        }catch(AssertionFailedError assertionFailedError){
+                sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
 
-        Assertions.assertDoesNotThrow(() ->
-                notificationByIun.set(this.iPnAppIOB2bClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(),
-                        sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()))
-        );
-        Assertions.assertNotNull(notificationByIun.get());
     }
 
     @Then("il documento notificato può essere recuperata tramite AppIO")
-    public void ilDocumentoNotificatoPuòEssereRecuperataTramiteAppIO() {
+    public void notifiedDocumentCanBeRetrievedAppIO() {
         List<NotificationDocument> documents = sharedSteps.getSentNotification().getDocuments();
         it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.NotificationAttachmentDownloadMetadataResponse sentNotificationDocument =
                 iPnAppIOB2bClient.getSentNotificationDocument(sharedSteps.getSentNotification().getIun(), Integer.parseInt(documents.get(0).getDocIdx()),
                         sharedSteps.getSentNotification().getRecipients().get(0).getTaxId());
+        try {
+            byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                    b2bUtils.downloadFile(sentNotificationDocument.getUrl()));
+            this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
 
-        byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                b2bUtils.downloadFile(sentNotificationDocument.getUrl()));
-        this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
-
-        Assertions.assertEquals(this.sha256DocumentDownload,sentNotificationDocument.getSha256());
+            Assertions.assertEquals(this.sha256DocumentDownload, sentNotificationDocument.getSha256());
+        }catch (AssertionFailedError assertionFailedError){
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 
     @And("{string} tenta il recupero della notifica tramite AppIO")
-    public void siTentaIlRecuperoDellaNotificaTramiteAppIO(String recipient) {
+    public void attemptsNotificationRetrievalAppIO(String recipient) {
         try {
             this.iPnAppIOB2bClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), selectTaxIdUser(recipient));
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -80,7 +88,7 @@ public class AppIOB2bSteps {
     }
 
     @Then("il tentativo di recupero con appIO ha prodotto un errore con status code {string}")
-    public void ilTentativoDiRecuperoHaProdottoUnErroreConStatusCode(String statusCode) {
+    public void retrievalAttemptWithAppIOProducedAnErrorWithStatusCode(String statusCode) {
         Assertions.assertTrue((this.notficationServerError != null) &&
                 (this.notficationServerError.getStatusCode().toString().substring(0,3).equals(statusCode)));
     }
@@ -94,4 +102,6 @@ public class AppIOB2bSteps {
             throw new IllegalArgumentException();
         }
     }
+
+
 }

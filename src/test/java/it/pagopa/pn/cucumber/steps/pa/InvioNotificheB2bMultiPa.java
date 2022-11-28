@@ -6,6 +6,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
+import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +32,22 @@ public class InvioNotificheB2bMultiPa {
 
 
     @Then("la notifica può essere correttamente recuperata dal sistema tramite codice IUN dalla PA {string}")
-    public void laNotificaPuòEssereCorrettamenteRecuperataDalSistemaTramiteCodiceIUNDallaPA(String paType) {
+    public void notificationCanBeRetrievedWithIUNByPA(String paType) {
         sharedSteps.selectPA(paType);
         AtomicReference<FullSentNotification> notificationByIun = new AtomicReference<>();
+        try {
+            Assertions.assertDoesNotThrow(() ->
+                    notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotification().getIun()))
+            );
 
-        Assertions.assertDoesNotThrow(() ->
-                notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotification().getIun()))
-        );
-
-        Assertions.assertNotNull(notificationByIun.get());
+            Assertions.assertNotNull(notificationByIun.get());
+        }catch (AssertionFailedError assertionFailedError){
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 
     @Then("si tenta il recupero dal sistema tramite codice IUN dalla PA {string}")
-    public void siTentaIlRecuperoDalSistemaTramiteCodiceIUNDallaPA(String paType) {
+    public void retrievalAttemptedIUNFromPA(String paType) {
         sharedSteps.selectPA(paType);
         try{
             b2bUtils.getNotificationByIun(sharedSteps.getSentNotification().getIun());
@@ -55,7 +59,7 @@ public class InvioNotificheB2bMultiPa {
 
 
     @Then("(l'invio ha prodotto)(l'operazione ha generato) un errore con status code {string}")
-    public void lInvioHaProdottoUnErroreConStatusCode(String statusCode) {
+    public void operationProducedAnError(String statusCode) {
         HttpStatusCodeException httpStatusCodeException = this.sharedSteps.consumeNotificationError();
         Assertions.assertTrue((httpStatusCodeException != null) &&
                 (httpStatusCodeException.getStatusCode().toString().substring(0,3).equals(statusCode)));

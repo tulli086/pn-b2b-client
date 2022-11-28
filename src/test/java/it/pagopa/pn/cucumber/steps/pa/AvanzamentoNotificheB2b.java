@@ -12,9 +12,7 @@ import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.lang.invoke.MethodHandles;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class AvanzamentoNotificheB2b {
 
@@ -35,14 +33,14 @@ public class AvanzamentoNotificheB2b {
 
 
     @Then("vengono letti gli eventi fino allo stato della notifica {string} dalla PA {string}")
-    public void vengonoLettiGliEventiFinoAlloStatoDellaNotificaDallaPA(String status, String pa) {
+    public void readingEventsNotificationPA(String status, String pa) {
         sharedSteps.selectPA(pa);
-        vengonoLettiGliEventiDelloStreamFinoAlloStatoDellaNotifica(status);
+        readingEventUpToTheStatusOfNotification(status);
         sharedSteps.selectPA(SharedSteps.DEFAULT_PA);
     }
 
     @Then("vengono letti gli eventi fino allo stato della notifica {string}")
-    public void vengonoLettiGliEventiDelloStreamFinoAlloStatoDellaNotifica(String status) {
+    public void readingEventUpToTheStatusOfNotification(String status) {
         NotificationStatus notificationInternalStatus;
         switch (status) {
             case "ACCEPTED":
@@ -88,14 +86,14 @@ public class AvanzamentoNotificheB2b {
         try{
             Assertions.assertNotNull(notificationStatusHistoryElement);
         }catch (AssertionFailedError assertionFailedError){
-            throw new AssertionFailedError(assertionFailedError.getMessage()+" IUN: "+sharedSteps.getSentNotification().getIun());
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
 
 
     }
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string}")
-    public void vengonoLettiGliEventiDelloStreamFinoAllElementoDiTimelineDellaNotifica(String timelineEventCategory) {
+    public void readingEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
         TimelineElementCategory timelineElementInternalCategory;
         switch (timelineEventCategory) {
             case "REQUEST_ACCEPTED":
@@ -145,24 +143,24 @@ public class AvanzamentoNotificheB2b {
         try{
             Assertions.assertNotNull(timelineElement);
         }catch (AssertionFailedError assertionFailedError){
-            throw new AssertionFailedError(assertionFailedError.getMessage()+" IUN: "+sharedSteps.getSentNotification().getIun());
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
 
     }
 
     @Then("la PA richiede il download dell'attestazione opponibile {string}")
-    public void vieneRichiestoIlDownloadDellAttestazioneOpponibile(String legalFactCategory) {
+    public void paRequiresDownloadOfLegalFact(String legalFactCategory) {
         downloadLegalFact(legalFactCategory,true,false,false);
     }
 
 
     @Then("viene richiesto tramite appIO il download dell'attestazione opponibile {string}")
-    public void ilDestinatarioRichiedeTramiteAppIOIlDownloadDellAttestazioneOpponibile(String legalFactCategory) {
+    public void appIODownloadLegalFact(String legalFactCategory) {
         downloadLegalFact(legalFactCategory,false,true,false);
     }
 
     @Then("{string} richiede il download dell'attestazione opponibile {string}")
-    public void richiedeIlDownloadDellAttestazioneOpponibile(String user, String legalFactCategory) {
+    public void userDownloadLegalFact(String user, String legalFactCategory) {
         sharedSteps.selectUser(user);
         downloadLegalFact(legalFactCategory,false,false,true);
     }
@@ -201,51 +199,58 @@ public class AvanzamentoNotificheB2b {
             default:
                 throw new IllegalArgumentException();
         }
-        Assertions.assertNotNull(timelineElement.getLegalFactsIds());
-        Assertions.assertEquals(category,timelineElement.getLegalFactsIds().get(0).getCategory());
-        LegalFactCategory categorySearch = timelineElement.getLegalFactsIds().get(0).getCategory();
-        String key = timelineElement.getLegalFactsIds().get(0).getKey();
-        String keySearch = null;
-        if(key.contains("PN_LEGAL_FACTS")){
-            keySearch = key.substring(key.indexOf("PN_LEGAL_FACTS"));
-        }else if(key.contains("PN_NOTIFICATION_ATTACHMENTS")){
-            keySearch = key.substring(key.indexOf("PN_NOTIFICATION_ATTACHMENTS"));
-        }else if(key.contains("PN_EXTERNAL_LEGAL_FACTS")){
-            keySearch = key.substring(key.indexOf("PN_EXTERNAL_LEGAL_FACTS"));
-        }
-        String finalKeySearch = keySearch;
-        if(pa){
-            Assertions.assertDoesNotThrow(()-> this.b2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch, finalKeySearch));
-        }
-        if(appIO){
-            Assertions.assertDoesNotThrow(()->this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(),categorySearch.toString(), finalKeySearch,
-                    sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
-        }
-        if(webRecipient){
-            Assertions.assertDoesNotThrow(()->this.webRecipientClient.getLegalFact(sharedSteps.getSentNotification().getIun(),
-                    sharedSteps.deepCopy(categorySearch,
-                            it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactCategory.class),
-                    finalKeySearch
-            ));
+        try {
+            Assertions.assertNotNull(timelineElement.getLegalFactsIds());
+            Assertions.assertEquals(category, timelineElement.getLegalFactsIds().get(0).getCategory());
+            LegalFactCategory categorySearch = timelineElement.getLegalFactsIds().get(0).getCategory();
+            String key = timelineElement.getLegalFactsIds().get(0).getKey();
+            String keySearch = null;
+            if (key.contains("PN_LEGAL_FACTS")) {
+                keySearch = key.substring(key.indexOf("PN_LEGAL_FACTS"));
+            } else if (key.contains("PN_NOTIFICATION_ATTACHMENTS")) {
+                keySearch = key.substring(key.indexOf("PN_NOTIFICATION_ATTACHMENTS"));
+            } else if (key.contains("PN_EXTERNAL_LEGAL_FACTS")) {
+                keySearch = key.substring(key.indexOf("PN_EXTERNAL_LEGAL_FACTS"));
+            }
+            String finalKeySearch = keySearch;
+            if (pa) {
+                Assertions.assertDoesNotThrow(() -> this.b2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch, finalKeySearch));
+            }
+            if (appIO) {
+                Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
+                        sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
+            }
+            if (webRecipient) {
+                Assertions.assertDoesNotThrow(() -> this.webRecipientClient.getLegalFact(sharedSteps.getSentNotification().getIun(),
+                        sharedSteps.deepCopy(categorySearch,
+                                it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactCategory.class),
+                        finalKeySearch
+                ));
+            }
+        }catch (AssertionFailedError assertionFailedError){
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
-
 
 
     @Then("si verifica che la notifica abbia lo stato VIEWED")
-    public void siVerificaCheLaNotificaAbbiaLoStatoVIEWED() {
+    public void checksNotificationViewedStatus() {
         sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-        Assertions.assertNotNull(sharedSteps.getSentNotification().getNotificationStatusHistory().stream().filter(elem -> elem.getStatus().equals(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatus.VIEWED)).findAny().orElse(null));
+        try {
+            Assertions.assertNotNull(sharedSteps.getSentNotification().getNotificationStatusHistory().stream().filter(elem -> elem.getStatus().equals(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatus.VIEWED)).findAny().orElse(null));
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 
     @Then("vengono verificati costo = {string} e data di perfezionamento della notifica")
-    public void vengonoVerificatiCostoEDataDiPerfezionamentoDellaNotifica(String price) {
+    public void notificationPriceAndDateVerification(String price) {
         priceVerification(price,"");
     }
 
 
     @Then("viene verificato il costo = {string} della notifica")
-    public void vieneVerificatoIlCostoDellaNotifica(String price) {
+    public void notificationPriceVerification(String price) {
         priceVerification(price,null);
     }
 
@@ -253,17 +258,21 @@ public class AvanzamentoNotificheB2b {
     private void priceVerification(String price, String date){
         NotificationPriceResponse notificationPrice = this.b2bClient.getNotificationPrice(sharedSteps.getSentNotification().getRecipients().get(0).getPayment().getCreditorTaxId(),
                 sharedSteps.getSentNotification().getRecipients().get(0).getPayment().getNoticeCode());
-        Assertions.assertEquals(notificationPrice.getIun(), sharedSteps.getSentNotification().getIun());
-        if(price != null){
-            Assertions.assertEquals(notificationPrice.getAmount(),price);
-        }
-        if(date != null){
-            Assertions.assertNotNull(notificationPrice.getEffectiveDate());
+        try {
+            Assertions.assertEquals(notificationPrice.getIun(), sharedSteps.getSentNotification().getIun());
+            if (price != null) {
+                Assertions.assertEquals(notificationPrice.getAmount(), price);
+            }
+            if (date != null) {
+                Assertions.assertNotNull(notificationPrice.getEffectiveDate());
+            }
+        }catch (AssertionFailedError assertionFailedError){
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
 
     @And("{string} legge la notifica ricevuta")
-    public void ilDestinatarioLeggeLaNotificaRicevuta(String recipient) {
+    public void userReadReceivedNotification(String recipient) {
         sharedSteps.selectUser(recipient);
         Assertions.assertDoesNotThrow(() -> {
             webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
@@ -311,8 +320,12 @@ public class AvanzamentoNotificheB2b {
             default:
                 throw new IllegalArgumentException();
         }
-        Assertions.assertNotNull(timelineElement.getLegalFactsIds());
-        Assertions.assertEquals(category,timelineElement.getLegalFactsIds().get(0).getCategory());
-        Assertions.assertTrue(timelineElement.getLegalFactsIds().get(0).getKey().contains(key));
+        try {
+            Assertions.assertNotNull(timelineElement.getLegalFactsIds());
+            Assertions.assertEquals(category, timelineElement.getLegalFactsIds().get(0).getCategory());
+            Assertions.assertTrue(timelineElement.getLegalFactsIds().get(0).getKey().contains(key));
+        }catch (AssertionFailedError assertionFailedError){
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 }
