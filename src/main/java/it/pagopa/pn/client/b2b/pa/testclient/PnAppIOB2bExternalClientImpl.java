@@ -7,6 +7,7 @@ import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.api
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.IOReceivedNotification;
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.NotificationAttachmentDownloadMetadataResponse;
+import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.ThirdPartyMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -45,6 +46,7 @@ public class PnAppIOB2bExternalClientImpl implements IPnAppIOB2bClient{
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apikey ) {
         ApiClient newApiClient = new ApiClient( restTemplate );
+        newApiClient.addDefaultHeader("Accept", "application/io+json" );
         newApiClient.setBasePath( basePath );
         newApiClient.addDefaultHeader("x-api-key", apikey );
         return newApiClient;
@@ -60,8 +62,8 @@ public class PnAppIOB2bExternalClientImpl implements IPnAppIOB2bClient{
     }
 
 
-    public IOReceivedNotification getReceivedNotification(String iun, String xPagopaCxTaxid) throws RestClientException {
-        return this.appIoPnNotificationApi.getReceivedNotification(iun, xPagopaCxTaxid).getDetails();
+    public ThirdPartyMessage getReceivedNotification(String iun, String xPagopaCxTaxid) throws RestClientException {
+        return this.appIoPnNotificationApi.getReceivedNotification(iun, xPagopaCxTaxid);
     }
 
 }
