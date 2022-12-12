@@ -242,10 +242,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategory.SEND_ANALOG_DOMICILE;
                 break;
-            case "SEND_SIMPLE_REGISTERED_LETTER":
-                timelineElementCategory = TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER;
+            case "SEND_DIGITAL_PROGRESS":
+                timelineElementCategory = TimelineElementCategory.SEND_DIGITAL_PROGRESS;
                 timelineElementInternalCategory =
-                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER;
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategory.SEND_DIGITAL_PROGRESS;
                 break;
             case "PUBLIC_REGISTRY_CALL":
                 timelineElementCategory = TimelineElementCategory.PUBLIC_REGISTRY_CALL;
