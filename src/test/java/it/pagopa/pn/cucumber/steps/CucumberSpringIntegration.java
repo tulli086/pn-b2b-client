@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
         PnWebRecipientExternalClientImpl.class,
         PnWebhookB2bExternalClientImpl.class,
         PnWebMandateExternalClientImpl.class,
-        PnExternalServiceClientImpl.class,
+        PnSafeStorageInfoExternalClientImpl.class,
         PnWebUserAttributesExternalClientImpl.class,
         PnAppIOB2bExternalClientImpl.class,
         PnApiKeyManagerExternalClientImpl.class

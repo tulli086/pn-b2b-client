@@ -3,7 +3,6 @@ package it.pagopa.pn.cucumber.steps.pa;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.IOReceivedNotification;
-import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.ThirdPartyMessage;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationDocument;
 import it.pagopa.pn.client.b2b.pa.testclient.IPnAppIOB2bClient;
@@ -45,10 +44,9 @@ public class AppIOB2bSteps {
         this.marioGherkinTaxID = sharedSteps.getMarioGherkinTaxID();
     }
 
-
     @Then("la notifica può essere recuperata tramite AppIO")
     public void notificationCanBeRetrievedAppIO() {
-        AtomicReference<ThirdPartyMessage> notificationByIun = new AtomicReference<>();
+        AtomicReference<IOReceivedNotification> notificationByIun = new AtomicReference<>();
         try{
             Assertions.assertDoesNotThrow(() ->
                     notificationByIun.set(this.iPnAppIOB2bClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(),
