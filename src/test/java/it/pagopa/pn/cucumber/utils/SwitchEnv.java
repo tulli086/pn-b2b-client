@@ -43,6 +43,7 @@ public class SwitchEnv {
 
 
     private static boolean setted = false;
+    private static boolean switched = false;
 
     @Before
     public synchronized void before_all() {
@@ -84,8 +85,9 @@ public class SwitchEnv {
         return checked;
     }
 
-    private void switchBean(){
-        if(!setted) {
+    private synchronized void switchBean(){
+        if(!switched) {
+            switched = true;
             BeanDefinitionRegistry beanRegistry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
 
             beanRegistry.removeBeanDefinition("pnWebhookB2bExternalClientImpl");
