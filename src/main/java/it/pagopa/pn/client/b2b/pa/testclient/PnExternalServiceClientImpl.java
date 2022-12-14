@@ -1,6 +1,7 @@
 package it.pagopa.pn.client.b2b.pa.testclient;
 
 
+import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.ParameterizedTypeReference;
@@ -27,28 +28,78 @@ import java.util.Map;
 
 
 @Component
-public class PnSafeStorageInfoExternalClientImpl {
+public class PnExternalServiceClientImpl {
 
     private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
 
+    private final String apiKeyMvp1;
+    private final String apiKeyMvp2;
+    private final String apiKeyGa;
+
     private final String safeStorageBasePath;
+    private final String gruopInfoBasePath;
 
 
-    public PnSafeStorageInfoExternalClientImpl(
+    public PnExternalServiceClientImpl(
             ApplicationContext ctx,
             RestTemplate restTemplate,
-            @Value("${pn.safeStorage.base-url}") String safeStorageBasePath
+            @Value("${pn.safeStorage.base-url}") String safeStorageBasePath,
+            @Value("${pn.groupInfo.base-url}") String gruopInfoBasePath,
+            @Value("${pn.external.api-key}") String apiKeyMvp1,
+            @Value("${pn.external.api-key-2}") String apiKeyMvp2,
+            @Value("${pn.external.api-key-GA}") String apiKeyGa
     ) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.safeStorageBasePath = safeStorageBasePath;
-
+        this.gruopInfoBasePath = gruopInfoBasePath;
+        this.apiKeyMvp1 = apiKeyMvp1;
+        this.apiKeyMvp2 = apiKeyMvp2;
+        this.apiKeyGa = apiKeyGa;
     }
 
 
     public HashMap<String,String> safeStorageInfo(String fileKey) throws RestClientException {
         return safeStorageInfoWithHttpInfo(fileKey).getBody();
+    }
+
+    public List<HashMap<String,String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType) throws RestClientException {
+        switch (apiKeyType){
+            case MVP_1:
+                return paGroupInfoWithHttpInfo(apiKeyMvp1).getBody();
+            case MVP_2:
+                return paGroupInfoWithHttpInfo(apiKeyMvp2).getBody();
+            case GA:
+                return paGroupInfoWithHttpInfo(apiKeyGa).getBody();
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+
+    private ResponseEntity<List<HashMap<String,String>>> paGroupInfoWithHttpInfo(String apiKey) throws RestClientException {
+        Object postBody = null;
+
+
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        queryParams.add("metadataOnly","true");
+
+        final HttpHeaders headerParams = new HttpHeaders();
+        headerParams.add("x-api-key",apiKey);
+
+
+        final String[] localVarAccepts = {
+                "application/json", "application/problem+json"
+        };
+        final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
+        final MediaType localVarContentType = MediaType.APPLICATION_JSON;
+
+
+        ParameterizedTypeReference<List<HashMap<String,String>>> returnType = new ParameterizedTypeReference<>() {};
+        return invokeAPI(gruopInfoBasePath,"/unique/pa/v1/groups", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
     }
 
     private ResponseEntity<HashMap<String,String>> safeStorageInfoWithHttpInfo(String fileKey) throws RestClientException {

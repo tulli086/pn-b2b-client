@@ -13,6 +13,8 @@ import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.testclient.IPnWebRecipientClient;
+import it.pagopa.pn.client.b2b.pa.testclient.PnExternalServiceClientImpl;
+import it.pagopa.pn.client.b2b.pa.testclient.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.testclient.SettableBearerToken;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
@@ -27,6 +29,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
+import java.util.List;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SharedSteps {
@@ -35,6 +38,7 @@ public class SharedSteps {
     private final IPnPaB2bClient b2bClient;
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebRecipientClient webRecipientClient;
+    private final PnExternalServiceClientImpl pnExternalServiceClient;
 
     private NewNotificationResponse newNotificationResponse;
     private NewNotificationRequest notificationRequest;
@@ -64,11 +68,14 @@ public class SharedSteps {
     private String marioGherkinTaxID;
 
     @Autowired
-    public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient, PnPaB2bUtils b2bUtils,IPnWebRecipientClient webRecipientClient) {
+    public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
+                       PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
+                       PnExternalServiceClientImpl pnExternalServiceClient) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.b2bUtils = b2bUtils;
         this.webRecipientClient = webRecipientClient;
+        this.pnExternalServiceClient = pnExternalServiceClient;
     }
 
     @BeforeAll
@@ -229,7 +236,7 @@ public class SharedSteps {
 
         }catch(AssertionFailedError assertionFailedError){
             String message = assertionFailedError.getMessage()+
-                    "{RequestID: "+newNotificationResponse.getNotificationRequestId() +" }";
+                    "{RequestID: "+ (newNotificationResponse == null ? "NULL": newNotificationResponse.getNotificationRequestId()) +" }";
             throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
         }
     }
@@ -282,14 +289,28 @@ public class SharedSteps {
         switch (settedPa){
             case "Comune_1":
                 this.notificationRequest.setSenderTaxId(this.senderTaxId);
+                setGrup(SettableApiKey.ApiKeyType.MVP_1);
                 break;
             case "Comune_2":
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdTwo);
+                setGrup(SettableApiKey.ApiKeyType.MVP_2);
                 break;
             case "Comune_Multi":
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdGa);
+                setGrup(SettableApiKey.ApiKeyType.GA);
                 break;
         }
+
+    }
+
+    private void setGrup(SettableApiKey.ApiKeyType apiKeyType){
+        if(this.notificationRequest.getGroup() == null){
+            List<HashMap<String, String>> hashMaps = pnExternalServiceClient.paGroupInfo(apiKeyType);
+            if(hashMaps == null || hashMaps.size() == 0)return;
+            String id = hashMaps.get(0).get("id");
+            this.notificationRequest.setGroup(id);
+        }
+
     }
 
     public FullSentNotification getSentNotification() {
