@@ -222,23 +222,15 @@ Feature: avanzamento notifiche webhook b2b
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
+    And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "SEND_DIGITAL_PROGRESS"
 
-  @clean @dev
-  Scenario: [B2B-STREAM_TIMELINE_21] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_DOMICILE_scenario positivo
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi dello stream fino all'elemento di timeline "SEND_ANALOG_DOMICILE"
 
   @clean @dev
-  Scenario: [B2B-STREAM_TIMELINE_22] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
+  Scenario: [B2B-STREAM_TIMELINE_21] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -250,7 +242,7 @@ Feature: avanzamento notifiche webhook b2b
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "PUBLIC_REGISTRY_CALL"
 
   @clean @dev
-  Scenario: [B2B-STREAM_TIMELINE_23] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
+  Scenario: [B2B-STREAM_TIMELINE_22] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
