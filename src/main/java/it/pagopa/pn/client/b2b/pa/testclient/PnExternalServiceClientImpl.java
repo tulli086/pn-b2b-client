@@ -43,7 +43,7 @@ public class PnExternalServiceClientImpl {
             ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.safeStorage.base-url}") String safeStorageBasePath,
-            @Value("${pn.groupInfo.base-url}") String gruopInfoBasePath,
+            @Value("${pn.external.base-url}") String gruopInfoBasePath,
             @Value("${pn.external.api-key}") String apiKeyMvp1,
             @Value("${pn.external.api-key-2}") String apiKeyMvp2,
             @Value("${pn.external.api-key-GA}") String apiKeyGa
@@ -97,7 +97,7 @@ public class PnExternalServiceClientImpl {
 
 
         ParameterizedTypeReference<List<HashMap<String,String>>> returnType = new ParameterizedTypeReference<>() {};
-        return invokeAPI(gruopInfoBasePath,"/unique/pa/v1/groups", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
+        return invokeAPI(gruopInfoBasePath,"/ext-registry-b2b/pa/v1/groups", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
     }
 
     private ResponseEntity<HashMap<String,String>> safeStorageInfoWithHttpInfo(String fileKey) throws RestClientException {
