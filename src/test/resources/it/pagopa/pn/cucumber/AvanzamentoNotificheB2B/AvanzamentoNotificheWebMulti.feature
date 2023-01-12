@@ -54,6 +54,7 @@ Feature: avanzamento notifiche b2b multi
     And "Mario Cucumber" legge la notifica ricevuta
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
 
+  @dev
   Scenario: [B2B_PA_MULTI_6] Invio notifica multi destinatario SCHEDULE_ANALOG_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
@@ -63,7 +64,7 @@ Feature: avanzamento notifiche b2b multi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_ANALOG_WORKFLOW"
 
-  @clean @integrationTest
+  @dev @clean @integrationTest
   Scenario: [B2B-TIMELINE_MULTI_7] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -103,7 +104,7 @@ Feature: avanzamento notifiche b2b multi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "PUBLIC_REGISTRY_RESPONSE"
 
-  @dev
+  @clean @dev
   Scenario: [B2B-TIMELINE_MULTI_10] Invio notifica digitale ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -117,7 +118,7 @@ Feature: avanzamento notifiche b2b multi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "DIGITAL_FAILURE_WORKFLOW"
 
-  @dev
+  @clean @dev
   Scenario: [B2B-TIMELINE_MULTI_11] Invio notifica digitale ed attesa elemento di timeline SCHEDULE_ANALOG_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -131,6 +132,7 @@ Feature: avanzamento notifiche b2b multi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream fino all'elemento di timeline "SCHEDULE_ANALOG_WORKFLOW"
 
+  @dev
   Scenario: [B2B-TIMELINE_MULTI_12] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -142,6 +144,7 @@ Feature: avanzamento notifiche b2b multi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_PROGRESS"
 
+  @dev
   Scenario: [B2B-TIMELINE_MULTI_13] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
