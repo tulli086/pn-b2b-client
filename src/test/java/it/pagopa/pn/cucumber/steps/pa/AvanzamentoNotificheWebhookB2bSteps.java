@@ -396,19 +396,23 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @After("@clean")
     public void doSomethingAfter() {
-        for(StreamMetadataResponse eventStream: eventStreamList){
-            webhookB2bClient.deleteEventStream(eventStream.getStreamId());
-            List<StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
-            StreamListElement streamListElement = streamListElements.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
-            logger.info("STREAM SIZE: " + streamListElements.size());
-            logger.info("UUID DELETED: " + this.eventStreamList.get(0).getStreamId());
-            Assertions.assertNull(streamListElement);
-        }
+        setPaWebhook("Comune_1");
+        cleanWebhook();
     }
 
     @After("@cleanC2")
     public void cleanC2() {
         setPaWebhook("Comune_2");
+        cleanWebhook();
+    }
+
+    @After("@cleanC3")
+    public void cleanC3() {
+        setPaWebhook("Comune_Multi");
+        cleanWebhook();
+    }
+
+    private void cleanWebhook(){
         for(StreamMetadataResponse eventStream: eventStreamList){
             webhookB2bClient.deleteEventStream(eventStream.getStreamId());
             List<StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
