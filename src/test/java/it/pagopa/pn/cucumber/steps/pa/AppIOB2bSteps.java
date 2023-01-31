@@ -1,12 +1,15 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.IOReceivedNotification;
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.ThirdPartyMessage;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationDocument;
-import it.pagopa.pn.client.b2b.pa.testclient.IPnAppIOB2bClient;
+import it.pagopa.pn.client.b2b.pa.testclient.*;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.consents.model.ConsentAction;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.consents.model.ConsentType;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.io.model.IoCourtesyDigitalAddressActivation;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
@@ -26,6 +29,8 @@ public class AppIOB2bSteps {
 
 
     private final IPnAppIOB2bClient iPnAppIOB2bClient;
+    private final IPnIoUserAttributerExternaClientImpl ioUserAttributerExternaClient;
+    private final IPnWebUserAttributesClient userAttributesClient;
     private final SharedSteps sharedSteps;
     private final PnPaB2bUtils b2bUtils;
 
@@ -36,10 +41,15 @@ public class AppIOB2bSteps {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    public AppIOB2bSteps(IPnAppIOB2bClient iPnAppIOB2bClient, SharedSteps sharedSteps) {
+    public AppIOB2bSteps(IPnAppIOB2bClient iPnAppIOB2bClient,
+                         PnIoUserAttributerExternaClientImpl ioUserAttributerExternaClient,IPnWebUserAttributesClient iPnWebUserAttributesClient,
+                         SharedSteps sharedSteps) {
         this.iPnAppIOB2bClient = iPnAppIOB2bClient;
         this.sharedSteps = sharedSteps;
         this.b2bUtils = sharedSteps.getB2bUtils();
+
+        this.userAttributesClient = iPnWebUserAttributesClient;
+        this.ioUserAttributerExternaClient = ioUserAttributerExternaClient;
 
         this.marioCucumberTaxID = sharedSteps.getMarioCucumberTaxID();
         this.marioGherkinTaxID = sharedSteps.getMarioGherkinTaxID();
@@ -136,4 +146,27 @@ public class AppIOB2bSteps {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
+
+
+    /*
+    UTILE PER TEST AUDIT
+
+    @Given("viene {string} l'app IO per {string}")
+    public void vieneLAppIOPer(String onOff, String recipient) {
+        userAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
+        ConsentAction consentAction = new ConsentAction();
+        consentAction.setAction(ConsentAction.ActionEnum.ACCEPT);
+        System.out.println("TOS: "+userAttributesClient.getConsentByType(ConsentType.TOS,null));
+
+        //userAttributesClient.consentAction(ConsentType.TOS,consentAction,"0");
+        //userAttributesClient.consentAction(ConsentType.DATAPRIVACY,consentAction,null);
+        System.out.println("PRIVACY: "+userAttributesClient.getConsentByType(ConsentType.DATAPRIVACY,null));
+
+        //IoCourtesyDigitalAddressActivation ioCourtesyDigitalAddressActivation = new IoCourtesyDigitalAddressActivation();
+        //ioCourtesyDigitalAddressActivation.setActivationStatus(onOff.equalsIgnoreCase("abilitata")?true:false);
+        //ioUserAttributerExternaClient.setCourtesyAddressIo(selectTaxIdUser(recipient),ioCourtesyDigitalAddressActivation);
+        System.out.println("STATUS IO: "+ioUserAttributerExternaClient.getCourtesyAddressIo(selectTaxIdUser(recipient)));
+    }
+
+     */
 }

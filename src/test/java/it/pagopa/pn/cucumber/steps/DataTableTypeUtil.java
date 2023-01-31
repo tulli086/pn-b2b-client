@@ -56,9 +56,9 @@ public class DataTableTypeUtil {
                 .taxId(getValue(data,TAX_ID.key))
                 .internalId(getValue(data,INTERNAL_ID.key))
                 .digitalDomicile(getValue(data,DIGITAL_DOMICILE.key) == null? null : (new NotificationDigitalAddress()
-                        .type((getValue(data,DIGITAL_DOMICILE_TYPE.key) == null?
-                                null : NotificationDigitalAddress.TypeEnum.PEC ))
-                        .address( getValue(data,DIGITAL_DOMICILE_ADDRESS.key)))
+                .type((getValue(data,DIGITAL_DOMICILE_TYPE.key) == null?
+                        null : NotificationDigitalAddress.TypeEnum.PEC ))
+                .address( getValue(data,DIGITAL_DOMICILE_ADDRESS.key)))
                 )
                 .physicalAddress(getValue(data,PHYSICAL_ADDRES.key) == null? null: new NotificationPhysicalAddress()
                         .address(getValue(data,PHYSICAL_ADDRESS_ADDRESS.key))
@@ -90,6 +90,16 @@ public class DataTableTypeUtil {
                                         utils.newAttachment(getDefaultValue(PAYMENT_F24_STANDARD.key)):null))
                 )
         );
+        /* TEST
+        if(getValue(data,DIGITAL_DOMICILE.key) != null && !getValue(data,DIGITAL_DOMICILE.key).equalsIgnoreCase(EXCLUDE_VALUE)){
+            notificationRecipient = notificationRecipient.digitalDomicile(getValue(data,DIGITAL_DOMICILE.key) == null? null : (new NotificationDigitalAddress()
+                    .type((getValue(data,DIGITAL_DOMICILE_TYPE.key) == null?
+                            null : NotificationDigitalAddress.TypeEnum.PEC ))
+                    .address( getValue(data,DIGITAL_DOMICILE_ADDRESS.key)))
+            );
+        }
+
+         */
         try {
             Thread.sleep(2);
         } catch (InterruptedException e) {

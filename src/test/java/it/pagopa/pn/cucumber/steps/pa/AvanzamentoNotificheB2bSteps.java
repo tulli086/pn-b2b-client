@@ -141,6 +141,15 @@ public class AvanzamentoNotificheB2bSteps {
             case "SCHEDULE_ANALOG_WORKFLOW":
                 timelineElementInternalCategory = TimelineElementCategory.SCHEDULE_ANALOG_WORKFLOW;
                 break;
+            case "SEND_ANALOG_DOMICILE":
+                timelineElementInternalCategory = TimelineElementCategory.SEND_ANALOG_DOMICILE;
+                break;
+            case "PREPARE_SIMPLE_REGISTERED_LETTER":
+                timelineElementInternalCategory = TimelineElementCategory.PREPARE_SIMPLE_REGISTERED_LETTER;
+                break;
+            case "SEND_SIMPLE_REGISTERED_LETTER":
+                timelineElementInternalCategory = TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER;
+                break;
             case "PAYMENT":
                 timelineElementInternalCategory = TimelineElementCategory.PAYMENT;
                 break;

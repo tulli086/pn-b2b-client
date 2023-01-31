@@ -45,6 +45,7 @@ public enum NotificationValue {
     PAYMENT_F24_STANDARD("payment_f24standard","classpath:/sample.pdf",false);
 
     private static final String NULL_VALUE = "NULL";
+    public static final String EXCLUDE_VALUE = "NO";
 
     public final String key;
     private final String defaultValue;
@@ -66,6 +67,11 @@ public enum NotificationValue {
 
     public static String getValue(Map<String, String> data, String key){
         if(data.containsKey(key)){
+            /* TEST
+            if(data.get(key).equals(EXCLUDE_VALUE)){
+                return EXCLUDE_VALUE;
+            }
+             */
             return data.get(key).equals(NULL_VALUE) ? null : (data.get(key).contains("_CHAR")? getCharSeq(data.get(key)):data.get(key));
         }else{
             return getDefaultValue(key);
