@@ -17,7 +17,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin e:
-      | digitalDomicile | NO |
+      | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_SIMPLE_REGISTERED_LETTER"
 
@@ -27,7 +27,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin e:
-      | digitalDomicile | NO |
+      | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
