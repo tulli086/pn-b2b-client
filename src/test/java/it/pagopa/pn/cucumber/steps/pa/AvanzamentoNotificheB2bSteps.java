@@ -95,8 +95,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     }
 
-    @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string}")
-    public void readingEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
+    private TimelineElementCategory getTimelineElementCategory(String timelineEventCategory){
         TimelineElementCategory timelineElementInternalCategory;
         switch (timelineEventCategory) {
             case "REQUEST_ACCEPTED":
@@ -156,6 +155,13 @@ public class AvanzamentoNotificheB2bSteps {
             default:
                 throw new IllegalArgumentException();
         }
+        return timelineElementInternalCategory;
+    }
+
+    @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string}")
+    public void readingEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
+        TimelineElementCategory timelineElementInternalCategory = getTimelineElementCategory(timelineEventCategory);
+
         TimelineElement timelineElement = null;
 
         for (int i = 0; i < 10; i++) {
@@ -395,5 +401,18 @@ public class AvanzamentoNotificheB2bSteps {
         eventsRequestF24.setEvents(eventF24List);
 
         b2bClient.paymentEventsRequestF24(eventsRequestF24);
+    }
+
+    @And("si verifica che il timelineId dell'elemento {string} corrisponda a quello di {string}")
+    public void siVerificaCheLaDataDellElementoCorrispondaAQuelloDi(String timelineElementCategory, String timelineElementCategoryToCompare) {
+        TimelineElementCategory timelineElementCatFirst = getTimelineElementCategory(timelineElementCategory);
+        TimelineElementCategory timelineElementCatSecond = getTimelineElementCategory(timelineElementCategoryToCompare);
+
+        TimelineElement timelineElementFirst = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementCatFirst)).findAny().orElse(null);
+        TimelineElement timelineElementSecond = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementCatSecond)).findAny().orElse(null);
+        System.out.println("timelineElementFirst");
+        System.out.println(timelineElementFirst);
+        System.out.println("timelineElementSecond");
+        System.out.println(timelineElementSecond);
     }
 }
