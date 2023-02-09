@@ -122,7 +122,7 @@ Feature: avanzamento notifiche b2b
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Gherkin e:
+    And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOT_HANDLED"
@@ -230,3 +230,12 @@ Feature: avanzamento notifiche b2b
     And destinatario Mario Gherkin
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato il costo = "200" della notifica
+
+
+  Scenario: [B2B_TIMELINE_900] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Mario Gherkin
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
