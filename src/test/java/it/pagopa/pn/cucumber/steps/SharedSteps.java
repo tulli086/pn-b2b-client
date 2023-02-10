@@ -357,9 +357,16 @@ public class SharedSteps {
 
     private void setGrup(SettableApiKey.ApiKeyType apiKeyType){
         if(groupToSet && this.notificationRequest.getGroup() == null){
-            List<HashMap<String, String>> hashMaps = pnExternalServiceClient.paGroupInfo(apiKeyType);
-            if(hashMaps == null || hashMaps.size() == 0)return;
-            String id = hashMaps.get(0).get("id");
+            List<HashMap<String, String>> hashMapsList = pnExternalServiceClient.paGroupInfo(apiKeyType);
+            if(hashMapsList == null || hashMapsList.size() == 0)return;
+            String id = null;
+            for(HashMap<String,String> elem : hashMapsList){
+                if(elem.get("status").equalsIgnoreCase("ACTIVE")){
+                    id = elem.get("id");
+                    break;
+                }
+            }
+            if(id == null)return;
             this.notificationRequest.setGroup(id);
         }
 
