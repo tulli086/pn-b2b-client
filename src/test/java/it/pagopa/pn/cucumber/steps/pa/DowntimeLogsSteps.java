@@ -71,7 +71,7 @@ public class DowntimeLogsSteps {
             if(value == null && entry.getFileAvailable()){
                 value = entry;
             }
-            if(value.getEndDate().isBefore(entry.getEndDate()) && entry.getFileAvailable()){
+            if(value != null && value.getEndDate().isBefore(entry.getEndDate()) && entry.getFileAvailable()){
                 value = entry;
             }
         }

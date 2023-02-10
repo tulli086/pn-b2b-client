@@ -23,7 +23,8 @@ import org.springframework.boot.test.context.SpringBootTest;
         PnWebUserAttributesExternalClientImpl.class,
         PnAppIOB2bExternalClientImpl.class,
         PnApiKeyManagerExternalClientImpl.class,
-        PnDowntimeLogsExternalClientImpl.class
+        PnDowntimeLogsExternalClientImpl.class,
+        PnIoUserAttributerExternaClientImpl.class
 })
 public class CucumberSpringIntegration {
 }

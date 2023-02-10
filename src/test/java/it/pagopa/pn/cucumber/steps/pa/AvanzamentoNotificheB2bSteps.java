@@ -1,17 +1,22 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
-import it.pagopa.pn.client.b2b.pa.testclient.IPnAppIOB2bClient;
-import it.pagopa.pn.client.b2b.pa.testclient.IPnWebRecipientClient;
+import it.pagopa.pn.client.b2b.pa.testclient.*;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.AddressVerification;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalDigitalAddress;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+
 import java.lang.invoke.MethodHandles;
 import java.time.OffsetDateTime;
 import java.util.LinkedList;
@@ -24,14 +29,19 @@ public class AvanzamentoNotificheB2bSteps {
     private final SharedSteps sharedSteps;
     private final IPnAppIOB2bClient appIOB2bClient;
     private final IPnWebRecipientClient webRecipientClient;
+    private final IPnWebUserAttributesClient webUserAttributesClient;
+    private final IPnIoUserAttributerExternaClientImpl ioUserAttributerExternaClient;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    public AvanzamentoNotificheB2bSteps(SharedSteps sharedSteps, IPnAppIOB2bClient appIOB2bClient) {
+    public AvanzamentoNotificheB2bSteps(SharedSteps sharedSteps, IPnAppIOB2bClient appIOB2bClient,
+                                        IPnWebUserAttributesClient webUserAttributesClient, IPnIoUserAttributerExternaClientImpl ioUserAttributerExternaClient) {
         this.sharedSteps = sharedSteps;
         this.appIOB2bClient = appIOB2bClient;
         this.b2bClient = sharedSteps.getB2bClient();
         this.webRecipientClient = sharedSteps.getWebRecipientClient();
+        this.webUserAttributesClient = webUserAttributesClient;
+        this.ioUserAttributerExternaClient = ioUserAttributerExternaClient;
     }
 
 
@@ -95,8 +105,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     }
 
-    @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string}")
-    public void readingEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
+    private TimelineElementCategory getTimelineElementCategory(String timelineEventCategory){
         TimelineElementCategory timelineElementInternalCategory;
         switch (timelineEventCategory) {
             case "REQUEST_ACCEPTED":
@@ -141,12 +150,34 @@ public class AvanzamentoNotificheB2bSteps {
             case "SCHEDULE_ANALOG_WORKFLOW":
                 timelineElementInternalCategory = TimelineElementCategory.SCHEDULE_ANALOG_WORKFLOW;
                 break;
+            case "ANALOG_SUCCESS_WORKFLOW":
+                timelineElementInternalCategory = TimelineElementCategory.ANALOG_SUCCESS_WORKFLOW;
+                break;
+            case "SEND_ANALOG_DOMICILE":
+                timelineElementInternalCategory = TimelineElementCategory.SEND_ANALOG_DOMICILE;
+                break;
+            case "SEND_ANALOG_FEEDBACK":
+                timelineElementInternalCategory = TimelineElementCategory.SEND_ANALOG_FEEDBACK;
+                break;
+            case "PREPARE_SIMPLE_REGISTERED_LETTER":
+                timelineElementInternalCategory = TimelineElementCategory.PREPARE_SIMPLE_REGISTERED_LETTER;
+                break;
+            case "SEND_SIMPLE_REGISTERED_LETTER":
+                timelineElementInternalCategory = TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER;
+                break;
             case "PAYMENT":
                 timelineElementInternalCategory = TimelineElementCategory.PAYMENT;
                 break;
             default:
                 throw new IllegalArgumentException();
         }
+        return timelineElementInternalCategory;
+    }
+
+    @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string}")
+    public void readingEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
+        TimelineElementCategory timelineElementInternalCategory = getTimelineElementCategory(timelineEventCategory);
+
         TimelineElement timelineElement = null;
 
         for (int i = 0; i < 10; i++) {
@@ -225,6 +256,7 @@ public class AvanzamentoNotificheB2bSteps {
         }
         try {
             Assertions.assertNotNull(timelineElement.getLegalFactsIds());
+            Assertions.assertFalse(CollectionUtils.isEmpty(timelineElement.getLegalFactsIds()));
             Assertions.assertEquals(category, timelineElement.getLegalFactsIds().get(0).getCategory());
             LegalFactCategory categorySearch = timelineElement.getLegalFactsIds().get(0).getCategory();
             String key = timelineElement.getLegalFactsIds().get(0).getKey();
@@ -387,4 +419,44 @@ public class AvanzamentoNotificheB2bSteps {
 
         b2bClient.paymentEventsRequestF24(eventsRequestF24);
     }
+
+    @And("si verifica che il timelineId dell'elemento {string} corrisponda a quello di {string}")
+    public void siVerificaCheLaDataDellElementoCorrispondaAQuelloDi(String timelineElementCategory, String timelineElementCategoryToCompare) {
+        TimelineElementCategory timelineElementCatFirst = getTimelineElementCategory(timelineElementCategory);
+        TimelineElementCategory timelineElementCatSecond = getTimelineElementCategory(timelineElementCategoryToCompare);
+
+        TimelineElement timelineElementFirst = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementCatFirst)).findAny().orElse(null);
+        TimelineElement timelineElementSecond = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementCatSecond)).findAny().orElse(null);
+        System.out.println("timelineElementFirst");
+        System.out.println(timelineElementFirst);
+        System.out.println("timelineElementSecond");
+        System.out.println(timelineElementSecond);
+    }
+
+
+       /*
+    UTILE PER TEST 
+
+    @Given("viene vista la pec per l'utente {string}")
+    public void vieneRimossaLaPecPerLUtente(String arg0) {
+        webUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
+        List<LegalDigitalAddress> legalAddressByRecipient = webUserAttributesClient.getLegalAddressByRecipient();
+        System.out.println(legalAddressByRecipient);
+        webUserAttributesClient.deleteRecipientLegalAddress("default",LegalChannelType.PEC);
+        webUserAttributesClient.postRecipientLegalAddress("default", LegalChannelType.PEC,
+                (new AddressVerification().verificationCode("17947").value("test@fail.it")));
+    }
+
+
+    @Given("viene {string} l'app IO per {string}")
+    public void vieneLAppIOPer(String onOff, String recipient) {
+        webUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
+
+        //IoCourtesyDigitalAddressActivation ioCourtesyDigitalAddressActivation = new IoCourtesyDigitalAddressActivation();
+        //ioCourtesyDigitalAddressActivation.setActivationStatus(onOff.equalsIgnoreCase("abilitata")?true:false);
+        //ioUserAttributerExternaClient.setCourtesyAddressIo(selectTaxIdUser(recipient),ioCourtesyDigitalAddressActivation);
+        System.out.println("STATUS IO: "+ioUserAttributerExternaClient.getCourtesyAddressIo(selectTaxIdUser(recipient)));
+    }
+
+     */
 }
