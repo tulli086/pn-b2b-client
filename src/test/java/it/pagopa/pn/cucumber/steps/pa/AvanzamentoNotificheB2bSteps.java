@@ -433,6 +433,18 @@ public class AvanzamentoNotificheB2bSteps {
         System.out.println(timelineElementSecond);
     }
 
+    @Then("sono presenti {int} attestazioni opponibili RECIPIENT_ACCESS")
+    public void sonoPresentiAttestazioniOpponibili(int number) {
+        TimelineElementCategory timelineElementInternalCategory = TimelineElementCategory.NOTIFICATION_VIEWED;
+        List<TimelineElement> timeline = sharedSteps.getSentNotification().getTimeline();
+        System.out.println("TIMELINE: "+timeline);
+        int count = 0;
+        for(TimelineElement element: timeline){
+            if(element.getCategory().equals(timelineElementInternalCategory))count++;
+        }
+        Assertions.assertEquals(count,number);
+    }
+
 
        /*
     UTILE PER TEST 
