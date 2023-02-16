@@ -72,7 +72,7 @@ public class SharedSteps {
     private String marioGherkinTaxID;
 
     private String gherkinSpaTaxID = "15376371009";
-    private String cucumberSocietyTaxID = "CUPSOS66D44A199F";
+    private String cucumberSocietyTaxID = "MSSLGU51P10A087J";
 
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
