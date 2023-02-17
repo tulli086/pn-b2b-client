@@ -5,11 +5,7 @@ Feature: avanzamento b2b notifica multi destinatario persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "ACCEPTED"
 
@@ -19,11 +15,7 @@ Feature: avanzamento b2b notifica multi destinatario persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
 
@@ -33,11 +25,7 @@ Feature: avanzamento b2b notifica multi destinatario persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
 
@@ -47,11 +35,7 @@ Feature: avanzamento b2b notifica multi destinatario persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "GET_ADDRESS"
 
@@ -61,11 +45,7 @@ Feature: avanzamento b2b notifica multi destinatario persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERING"
 
@@ -75,11 +55,7 @@ Feature: avanzamento b2b notifica multi destinatario persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
 
@@ -89,11 +65,7 @@ Feature: avanzamento b2b notifica multi destinatario persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 

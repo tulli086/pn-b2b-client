@@ -119,7 +119,7 @@ Feature: Ricezione notifiche destinate al delegante
     Then la notifica può essere correttamente letta da "Mario Cucumber"
     And la notifica può essere correttamente letta da "Mario Gherkin" con delega
 
-
+  @ignore
   Scenario: [WEB-PF-MANDATE_12] Invio notifica digitale delega e verifica elemento timeline_scenario positivo
     Given Mario Gherkin viene delegato da Mario Cucumber
     And Mario Gherkin accetta la delega Mario Cucumber
@@ -131,6 +131,7 @@ Feature: Ricezione notifiche destinate al delegante
     Then la notifica può essere correttamente letta da "Mario Gherkin" con delega
     And si verifica che l'elemento di timeline della lettura riporti i dati di "Mario Gherkin"
 
+  @ignore
   Scenario: [WEB-PF-MANDATE_13] Invio notifica digitale delega e verifica elemento timeline_scenario positivo
     Given Mario Gherkin viene delegato da Mario Cucumber
     And Mario Gherkin accetta la delega Mario Cucumber

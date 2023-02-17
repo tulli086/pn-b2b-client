@@ -59,10 +59,10 @@ Feature: avanzamento notifiche b2b
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Gherkin
+    And destinatario Mario Cucumber
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino allo stato della notifica "DELIVERING"
-    And "Mario Gherkin" legge la notifica ricevuta
+    And "Mario Cucumber" legge la notifica ricevuta
     Then si verifica che la notifica abbia lo stato VIEWED
 
 
@@ -70,10 +70,10 @@ Feature: avanzamento notifiche b2b
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Gherkin
+    And destinatario Mario Cucumber
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino allo stato della notifica "DELIVERING"
-    And "Mario Gherkin" legge la notifica ricevuta
+    And "Mario Cucumber" legge la notifica ricevuta
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
 
   @SmokeTest
