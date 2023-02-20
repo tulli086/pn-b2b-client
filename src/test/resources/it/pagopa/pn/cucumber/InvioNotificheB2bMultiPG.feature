@@ -72,11 +72,7 @@ Feature: invio notifiche b2b con altre PA, multi-destinatario e senza pagamento 
     And destinatario Gherkin spa e:
       | digitalDomicile_address | testpagopa1@pnpagopa.postecert.local |
       | payment | NULL |
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl e:
       |     payment   |     NULL     |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere correttamente recuperata dal sistema tramite codice IUN dalla PA "Comune_Multi"
@@ -86,11 +82,7 @@ Feature: invio notifiche b2b con altre PA, multi-destinatario e senza pagamento 
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario Gherkin spa
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere correttamente recuperata dal sistema tramite codice IUN dalla PA "Comune_Multi"
 
@@ -100,11 +92,7 @@ Feature: invio notifiche b2b con altre PA, multi-destinatario e senza pagamento 
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And destinatario
-      |  denomination | Cucumber srl |
-      |     taxId     |  11176111009 |
-      | recipientType |      PG      |
-      | digitalDomicile_address | testpagopa2@pnpagopa.postecert.local |
+    And destinatario Cucumber srl
     When la notifica viene inviata dal "Comune_1"
     Then l'invio ha prodotto un errore con status code "400"
 

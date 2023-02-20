@@ -333,7 +333,9 @@ public class RicezioneNotificheWebDelegheSteps {
             default:
                 throw new IllegalArgumentException();
         }
-
+        Assertions.assertNotNull(timelineElement);
+        Assertions.assertNotNull(timelineElement.getDetails());
+        Assertions.assertNotNull(timelineElement.getDetails().getDelegateInfo());
         Assertions.assertEquals(userTaxId,timelineElement.getDetails().getDelegateInfo().getTaxId());
     }
 
@@ -348,7 +350,8 @@ public class RicezioneNotificheWebDelegheSteps {
 
         TimelineElement timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategory.NOTIFICATION_VIEWED)).findAny().orElse(null);
 
-
+        Assertions.assertNotNull(timelineElement);
+        Assertions.assertNotNull(timelineElement.getDetails());
         Assertions.assertNull(timelineElement.getDetails().getDelegateInfo());
     }
 }

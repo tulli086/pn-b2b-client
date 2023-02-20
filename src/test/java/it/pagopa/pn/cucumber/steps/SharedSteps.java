@@ -72,7 +72,8 @@ public class SharedSteps {
     private String marioGherkinTaxID;
 
     private String gherkinSpaTaxID = "15376371009";
-    private String cucumberSocietyTaxID = "CUPSOS66D44A199F";
+    private String cucumberSrlTaxID = "12345678903";
+    private String cucumberSocietyTaxID = "MSSLGU51P10A087J";
 
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
@@ -162,6 +163,27 @@ public class SharedSteps {
                         .denomination("Gherkin_spa")
                         .recipientType(NotificationRecipient.RecipientTypeEnum.PG)
                         .taxId(gherkinSpaTaxID));
+    }
+
+    @And("destinatario Cucumber srl")
+    public void destinatarioCucumberSrl() {
+        this.notificationRequest.addRecipientsItem(
+                dataTableTypeUtil.convertNotificationRecipient(new HashMap<>())
+                        .denomination("Cucumber_srl")
+                        .taxId(cucumberSrlTaxID)
+                        .recipientType(NotificationRecipient.RecipientTypeEnum.PG)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC )
+                                .address("testpagopa2@pnpagopa.postecert.local")));
+    }
+
+    @And("destinatario Cucumber srl e:")
+    public void destinatarioCucumberSrlParam(@Transpose NotificationRecipient recipient) {
+        this.notificationRequest.addRecipientsItem(
+                recipient
+                        .denomination("Cucumber_srl")
+                        .recipientType(NotificationRecipient.RecipientTypeEnum.PG)
+                        .taxId(cucumberSrlTaxID));
     }
 
 
