@@ -5,7 +5,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_ANALOG_WORKFLOW"
@@ -23,7 +23,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -35,7 +35,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok-Retry_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -48,7 +48,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
       | physicalCommunication |  AR_REGISTERED_LETTER |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -60,7 +60,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -71,7 +71,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -82,7 +82,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_RIR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -94,7 +94,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_RIS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -112,7 +112,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
       | physicalCommunication |  AR_REGISTERED_LETTER |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@fail_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -125,7 +125,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
       | physicalCommunication |  AR_REGISTERED_LETTER |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@fail_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -136,7 +136,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@fail_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -147,7 +147,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@fail_RIS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -159,7 +159,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@fail_RIR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
