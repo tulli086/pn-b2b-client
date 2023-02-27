@@ -183,7 +183,7 @@ public class AvanzamentoNotificheB2bSteps {
 
         TimelineElement timelineElement = null;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 16; i++) {
             sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
 
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
@@ -463,6 +463,35 @@ public class AvanzamentoNotificheB2bSteps {
             if(element.getCategory().equals(timelineElementInternalCategory))count++;
         }
         Assertions.assertEquals(count,number);
+    }
+
+    @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con eventCode {string}")
+    public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConEventCode(String timelineEventCategory, String code) {
+        TimelineElementCategory timelineElementInternalCategory = getTimelineElementCategory(timelineEventCategory);
+
+        TimelineElement timelineElement = null;
+
+        for (int i = 0; i < 16; i++) {
+            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+
+            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+
+            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().orElse(null);
+            if (timelineElement != null) {
+                break;
+            }
+            try {
+                Thread.sleep(sharedSteps.getWorkFlowWait());
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+        }
+        try{
+            Assertions.assertNotNull(timelineElement);
+            Assertions.assertEquals(timelineElement.getDetails().getEventCode(),code);
+        }catch (AssertionFailedError assertionFailedError){
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 
 
