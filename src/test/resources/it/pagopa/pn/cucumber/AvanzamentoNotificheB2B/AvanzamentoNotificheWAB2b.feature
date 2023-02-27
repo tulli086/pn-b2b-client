@@ -17,6 +17,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     #OK_RIR
     #OK_RIS
 
+
   @dev
   Scenario: [B2B_TIMELINE_ANALOG_5] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
     Given viene generata una nuova notifica
@@ -39,6 +40,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | physicalAddress_address | Via@ok-Retry_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
+
 
   @dev
   Scenario: [B2B_TIMELINE_ANALOG_7] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
@@ -162,3 +164,4 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | physicalAddress_address | Via@fail_RIR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"
+
