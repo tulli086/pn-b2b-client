@@ -153,6 +153,9 @@ public class AvanzamentoNotificheB2bSteps {
             case "ANALOG_SUCCESS_WORKFLOW":
                 timelineElementInternalCategory = TimelineElementCategory.ANALOG_SUCCESS_WORKFLOW;
                 break;
+            case "ANALOG_FAILURE_WORKFLOW":
+            timelineElementInternalCategory = TimelineElementCategory.ANALOG_FAILURE_WORKFLOW;
+            break;
             case "SEND_ANALOG_DOMICILE":
                 timelineElementInternalCategory = TimelineElementCategory.SEND_ANALOG_DOMICILE;
                 break;
