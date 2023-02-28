@@ -158,5 +158,3 @@ Feature: avanzamento b2b notifica multi destinatario persona giuridica
     And destinatario Cucumber Society
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "GET_ADDRESS"
-
-
