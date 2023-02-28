@@ -120,7 +120,7 @@ public class SharedSteps {
                         .denomination("Mario Cucumber")
                         .taxId(marioCucumberTaxID)
                         .digitalDomicile(new NotificationDigitalAddress()
-                                .type(NotificationDigitalAddress.TypeEnum.PEC )
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
                                 .address("testpagopa2@pnpagopa.postecert.local")));
     }
 
@@ -140,7 +140,7 @@ public class SharedSteps {
                         .denomination("Mario Gherkin")
                         .taxId(marioGherkinTaxID)
                         .digitalDomicile(new NotificationDigitalAddress()
-                                .type(NotificationDigitalAddress.TypeEnum.PEC )
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
                                 .address("testpagopa2@pnpagopa.postecert.local")));
     }
 
@@ -161,7 +161,7 @@ public class SharedSteps {
                         .taxId(gherkinSpaTaxID)
                         .recipientType(NotificationRecipient.RecipientTypeEnum.PG)
                         .digitalDomicile(new NotificationDigitalAddress()
-                                .type(NotificationDigitalAddress.TypeEnum.PEC )
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
                                 .address("testpagopa2@pnpagopa.postecert.local")));
     }
 
@@ -182,7 +182,7 @@ public class SharedSteps {
                         .taxId(cucumberSrlTaxID)
                         .recipientType(NotificationRecipient.RecipientTypeEnum.PG)
                         .digitalDomicile(new NotificationDigitalAddress()
-                                .type(NotificationDigitalAddress.TypeEnum.PEC )
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
                                 .address("testpagopa2@pnpagopa.postecert.local")));
     }
 
@@ -204,7 +204,7 @@ public class SharedSteps {
                         .taxId(cucumberSocietyTaxID)
                         .recipientType(NotificationRecipient.RecipientTypeEnum.PG)
                         .digitalDomicile(new NotificationDigitalAddress()
-                                .type(NotificationDigitalAddress.TypeEnum.PEC )
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
                                 .address("testpagopa2@pnpagopa.postecert.local")));
     }
 
@@ -228,18 +228,18 @@ public class SharedSteps {
     }
 
     @And("destinatario {string} con uguale codice avviso del destinario numero {int}")
-    public void destinatarioConUgualeCodiceAvvisoDelDestinarioN(String recipientName,int recipientNumber, @Transpose NotificationRecipient recipient) {
-        Assertions.assertDoesNotThrow(()->notificationRequest.getRecipients().get(recipientNumber-1).getPayment());
-        String noticeCode = notificationRequest.getRecipients().get(recipientNumber-1).getPayment().getNoticeCode();
+    public void destinatarioConUgualeCodiceAvvisoDelDestinarioN(String recipientName, int recipientNumber, @Transpose NotificationRecipient recipient) {
+        Assertions.assertDoesNotThrow(() -> notificationRequest.getRecipients().get(recipientNumber - 1).getPayment());
+        String noticeCode = notificationRequest.getRecipients().get(recipientNumber - 1).getPayment().getNoticeCode();
 
-        if(recipientName.trim().equalsIgnoreCase("mario cucumber")){
+        if (recipientName.trim().equalsIgnoreCase("mario cucumber")) {
             recipient = (recipient.denomination("Mario Cucumber")
                     .taxId(marioCucumberTaxID));
-        } else if (recipientName.trim().equalsIgnoreCase("mario gherkin")){
+        } else if (recipientName.trim().equalsIgnoreCase("mario gherkin")) {
             recipient = (recipient.denomination("Mario Gherkin")
                     .taxId(marioGherkinTaxID));
 
-        }else{
+        } else {
             throw new IllegalArgumentException();
         }
 
@@ -302,11 +302,11 @@ public class SharedSteps {
         sendNotificationWithError();
     }
 
-    private void sendNotification(){
-        try{
+    private void sendNotification() {
+        try {
             Assertions.assertDoesNotThrow(() -> {
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
-                notificationResponseComplete = b2bUtils.waitForRequestAcceptation( newNotificationResponse );
+                notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
             });
 
             try {
@@ -317,25 +317,24 @@ public class SharedSteps {
             }
             Assertions.assertNotNull(notificationResponseComplete);
 
-        }catch(AssertionFailedError assertionFailedError){
-            String message = assertionFailedError.getMessage()+
-                    "{RequestID: "+ (newNotificationResponse == null ? "NULL": newNotificationResponse.getNotificationRequestId()) +" }";
-            throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }
 
-    private void sendNotificationWithError(){
+    private void sendNotificationWithError() {
         try {
             this.newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
         } catch (HttpStatusCodeException | IOException e) {
-            if(e instanceof HttpStatusCodeException){
-                this.notificationError = (HttpStatusCodeException)e;
+            if (e instanceof HttpStatusCodeException) {
+                this.notificationError = (HttpStatusCodeException) e;
             }
         }
     }
 
-
-    private void generateNewNotification(){
+    private void generateNewNotification() {
         assert this.notificationRequest.getRecipients().get(0).getPayment() != null;
         this.notificationRequest = (dataTableTypeUtil.convertNotificationRequest(new HashMap<>())
                 .subject(notificationRequest.getSubject())
@@ -359,7 +358,7 @@ public class SharedSteps {
     }
 
     public HttpStatusCodeException consumeNotificationError() {
-        HttpStatusCodeException value =  notificationError;
+        HttpStatusCodeException value = notificationError;
         this.notificationError = null;
         return value;
     }
@@ -369,7 +368,7 @@ public class SharedSteps {
     }
 
     public void setSenderTaxIdFromProperties() {
-        switch (settedPa){
+        switch (settedPa) {
             case "Comune_1":
                 this.notificationRequest.setSenderTaxId(this.senderTaxId);
                 setGrup(SettableApiKey.ApiKeyType.MVP_1);
@@ -386,21 +385,33 @@ public class SharedSteps {
 
     }
 
-    private void setGrup(SettableApiKey.ApiKeyType apiKeyType){
-        if(groupToSet && this.notificationRequest.getGroup() == null){
+    public String getSenderTaxIdFromProperties(String settedPa) {
+        switch (settedPa) {
+            case "Comune_1":
+                return this.senderTaxId;
+            case "Comune_2":
+                return this.senderTaxIdTwo;
+            case "Comune_Multi":
+                return this.senderTaxIdGa;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    private void setGrup(SettableApiKey.ApiKeyType apiKeyType) {
+        if (groupToSet && this.notificationRequest.getGroup() == null) {
             List<HashMap<String, String>> hashMapsList = pnExternalServiceClient.paGroupInfo(apiKeyType);
-            if(hashMapsList == null || hashMapsList.size() == 0)return;
+            if (hashMapsList == null || hashMapsList.size() == 0) return;
             String id = null;
-            for(HashMap<String,String> elem : hashMapsList){
-                if(elem.get("status").equalsIgnoreCase("ACTIVE")){
+            for (HashMap<String, String> elem : hashMapsList) {
+                if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
                     id = elem.get("id");
                     break;
                 }
             }
-            if(id == null)return;
+            if (id == null) return;
             this.notificationRequest.setGroup(id);
         }
-
     }
 
     public FullSentNotification getSentNotification() {
@@ -416,7 +427,7 @@ public class SharedSteps {
     }
 
     public void selectPA(String apiKey) {
-        switch (apiKey){
+        switch (apiKey) {
             case "Comune_1":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_1);
                 break;
@@ -433,12 +444,12 @@ public class SharedSteps {
         this.settedPa = apiKey;
     }
 
-    public void selectUser(String recipient){
-        if(recipient.trim().equalsIgnoreCase("mario cucumber")){
+    public void selectUser(String recipient) {
+        if (recipient.trim().equalsIgnoreCase("mario cucumber")) {
             webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
-        } else if (recipient.trim().equalsIgnoreCase("mario gherkin")){
+        } else if (recipient.trim().equalsIgnoreCase("mario gherkin")) {
             webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
-        }else{
+        } else {
             throw new IllegalArgumentException();
         }
     }
@@ -463,20 +474,25 @@ public class SharedSteps {
         return marioGherkinTaxID;
     }
 
-    public void throwAssertFailerWithIUN(AssertionFailedError assertionFailedError){
-        String message = assertionFailedError.getMessage()+
-                "{IUN: "+notificationResponseComplete.getIun() +" }";
-        throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
+    public PnExternalServiceClientImpl getPnExternalServiceClient() {
+        return pnExternalServiceClient;
     }
 
-    public  <T> T deepCopy( Object obj, Class<T> toClass) {
+    public void throwAssertFailerWithIUN(AssertionFailedError assertionFailedError) {
+        String message = assertionFailedError.getMessage() +
+                "{IUN: " + notificationResponseComplete.getIun() + " }";
+        throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+    }
+
+    public <T> T deepCopy(Object obj, Class<T> toClass) {
         try {
-            String json = objMapper.writeValueAsString( obj );
-            return objMapper.readValue( json, toClass );
-        } catch (JsonProcessingException exc ) {
-            throw new RuntimeException( exc );
+            String json = objMapper.writeValueAsString(obj);
+            return objMapper.readValue(json, toClass);
+        } catch (JsonProcessingException exc) {
+            throw new RuntimeException(exc);
         }
     }
+
 
     public Integer getWorkFlowWait() {
         if(workFlowWait == null)return workFlowWaitDefault;
@@ -490,7 +506,60 @@ public class SharedSteps {
 
     @Before("@integrationTest")
     public void doSomethingAfter() {
-       this.groupToSet = false;
+        this.groupToSet = false;
+    }
+
+    public List<HashMap<String, String>> getGroupsByPa(String settedPa) {
+        List<HashMap<String, String>> hashMapsList = null;
+        switch (settedPa) {
+            case "Comune_1":
+                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.MVP_1);
+                break;
+            case "Comune_2":
+                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.MVP_2);
+                break;
+            case "Comune_Multi":
+                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.GA);
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+
+        Assertions.assertNotNull(hashMapsList);
+        Assertions.assertTrue(hashMapsList.size() > 0);
+        return hashMapsList;
+    }
+
+    public String getFirstGroupByPa(String settedPa) {
+        List<HashMap<String, String>> hashMapsList = getGroupsByPa(settedPa);
+
+        String id = null;
+        for (HashMap<String, String> elem : hashMapsList) {
+            if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
+                id = elem.get("id");
+                break;
+            }
+        }
+
+        Assertions.assertNotNull(id);
+        return id;
+    }
+
+    public String getLastGroupByPa(String settedPa) {
+        List<HashMap<String, String>> hashMapsList = getGroupsByPa(settedPa);
+
+        String id = null;
+        Integer count = 0;
+        for (HashMap<String, String> elem : hashMapsList) {
+            if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
+                id = elem.get("id");
+                count++;
+            }
+        }
+
+        Assertions.assertNotNull(id);
+        Assertions.assertTrue(count >= 2);
+        return id;
     }
 
 }

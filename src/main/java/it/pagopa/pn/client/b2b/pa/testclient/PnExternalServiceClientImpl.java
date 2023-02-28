@@ -58,12 +58,12 @@ public class PnExternalServiceClientImpl {
     }
 
 
-    public HashMap<String,String> safeStorageInfo(String fileKey) throws RestClientException {
+    public HashMap<String, String> safeStorageInfo(String fileKey) throws RestClientException {
         return safeStorageInfoWithHttpInfo(fileKey).getBody();
     }
 
-    public List<HashMap<String,String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType) throws RestClientException {
-        switch (apiKeyType){
+    public List<HashMap<String, String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType) throws RestClientException {
+        switch (apiKeyType) {
             case MVP_1:
                 return paGroupInfoWithHttpInfo(apiKeyMvp1).getBody();
             case MVP_2:
@@ -76,17 +76,17 @@ public class PnExternalServiceClientImpl {
     }
 
 
-    private ResponseEntity<List<HashMap<String,String>>> paGroupInfoWithHttpInfo(String apiKey) throws RestClientException {
+    private ResponseEntity<List<HashMap<String, String>>> paGroupInfoWithHttpInfo(String apiKey) throws RestClientException {
         Object postBody = null;
 
 
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
 
         final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-        queryParams.add("metadataOnly","true");
+        queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();
-        headerParams.add("x-api-key",apiKey);
+        headerParams.add("x-api-key", apiKey);
 
 
         final String[] localVarAccepts = {
@@ -96,11 +96,12 @@ public class PnExternalServiceClientImpl {
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
 
 
-        ParameterizedTypeReference<List<HashMap<String,String>>> returnType = new ParameterizedTypeReference<>() {};
-        return invokeAPI(gruopInfoBasePath,"/ext-registry-b2b/pa/v1/groups", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
+        ParameterizedTypeReference<List<HashMap<String, String>>> returnType = new ParameterizedTypeReference<>() {
+        };
+        return invokeAPI(gruopInfoBasePath, "/ext-registry-b2b/pa/v1/groups", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
     }
 
-    private ResponseEntity<HashMap<String,String>> safeStorageInfoWithHttpInfo(String fileKey) throws RestClientException {
+    private ResponseEntity<HashMap<String, String>> safeStorageInfoWithHttpInfo(String fileKey) throws RestClientException {
         Object postBody = null;
 
         if (fileKey == null) {
@@ -111,10 +112,10 @@ public class PnExternalServiceClientImpl {
         uriVariables.put("fileKey", fileKey);
 
         final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-        queryParams.add("metadataOnly","true");
+        queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();
-        headerParams.add("x-pagopa-safestorage-cx-id","pn-delivery-push");
+        headerParams.add("x-pagopa-safestorage-cx-id", "pn-delivery-push");
 
 
         final String[] localVarAccepts = {
@@ -124,13 +125,14 @@ public class PnExternalServiceClientImpl {
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
 
 
-        ParameterizedTypeReference<HashMap<String,String>> returnType = new ParameterizedTypeReference<>() {};
-        return invokeAPI(safeStorageBasePath,"/safe-storage/v1/files/{fileKey}", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
+        ParameterizedTypeReference<HashMap<String, String>> returnType = new ParameterizedTypeReference<>() {
+        };
+        return invokeAPI(safeStorageBasePath, "/safe-storage/v1/files/{fileKey}", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
     }
 
-    private <T> ResponseEntity<T> invokeAPI(String basePath,String path, HttpMethod method, Map<String, Object> pathParams, MultiValueMap<String, String> queryParams, Object body, HttpHeaders headerParams, List<MediaType> accept, MediaType contentType, ParameterizedTypeReference<T> returnType) throws RestClientException {
+    private <T> ResponseEntity<T> invokeAPI(String basePath, String path, HttpMethod method, Map<String, Object> pathParams, MultiValueMap<String, String> queryParams, Object body, HttpHeaders headerParams, List<MediaType> accept, MediaType contentType, ParameterizedTypeReference<T> returnType) throws RestClientException {
 
-        Map<String,Object> uriParams = new HashMap<>();
+        Map<String, Object> uriParams = new HashMap<>();
         uriParams.putAll(pathParams);
 
         String finalUri = path;
@@ -143,13 +145,13 @@ public class PnExternalServiceClientImpl {
         uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
         restTemplate.setUriTemplateHandler(uriBuilderFactory);
 
-        String expandedPath =  restTemplate.getUriTemplateHandler().expand(finalUri, uriParams).toString();
+        String expandedPath = restTemplate.getUriTemplateHandler().expand(finalUri, uriParams).toString();
         final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(basePath).path(expandedPath);
 
         URI uri;
         try {
             uri = new URI(builder.build().toUriString());
-        } catch (URISyntaxException ex)  {
+        } catch (URISyntaxException ex) {
             throw new RestClientException("Could not build URL: " + builder.toUriString(), ex);
         }
 
