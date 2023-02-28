@@ -562,6 +562,7 @@ public class AvanzamentoNotificheB2bSteps {
         }
     }
 
+
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con eventCode {string}")
     public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConEventCode(String timelineEventCategory, String code) {
         TimelineElementCategory timelineElementInternalCategory = getTimelineElementCategory(timelineEventCategory);
@@ -583,10 +584,10 @@ public class AvanzamentoNotificheB2bSteps {
                 throw new RuntimeException(exc);
             }
         }
-        try {
+        try{
             Assertions.assertNotNull(timelineElement);
-            Assertions.assertEquals(timelineElement.getDetails().getEventCode(), code);
-        } catch (AssertionFailedError assertionFailedError) {
+            Assertions.assertEquals(timelineElement.getDetails().getEventCode(),code);
+        }catch (AssertionFailedError assertionFailedError){
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
