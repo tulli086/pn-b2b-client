@@ -199,7 +199,7 @@ Feature: apiKey manager
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  # verificare comportamento corretto
+  @tbc
   Scenario: [API-KEY_17] generazione con gruppo e invio notifica con gruppo e lettura notifica con gruppo diverso ApiKey_scenario netagivo
     Given Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -277,7 +277,7 @@ Feature: apiKey manager
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @ignore
+  @ignore @tbc
   Scenario: [API-KEY_100] generazione con gruppo non valido ApiKey_scenario negativo
     Given Viene generata una nuova apiKey con il gruppo "AAAAAAAAAA"
     Then l'operazione ha sollevato un errore con status code "400"
