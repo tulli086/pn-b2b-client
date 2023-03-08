@@ -100,7 +100,6 @@ Feature: apiKey manager
     Then l'invio della notifica ha sollevato un errore di autenticazione "403"
     And l'apiKey viene cancellata
 
-  @ignore
   Scenario: [API-KEY_10] generazione con gruppo e cancellazione ApiKey_scenario positivo
     Given Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And vengono lette le apiKey esistenti
@@ -132,14 +131,13 @@ Feature: apiKey manager
       | senderDenomination | Comune di milano |
       | group              | NULL             |
     And viene settato il taxId della notifica con quello dell'apikey
-    And viene settato il primo gruppo valido per il comune "Comune_1"
+    And viene settato per la notifica corrente il primo gruppo valido del comune "Comune_1"
     And destinatario Mario Cucumber
     When la notifica viene inviata tramite api b2b
     Then l'invio della notifica non ha prodotto errori
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @ignore
   Scenario: [API-KEY_13] generazione con gruppo e invio notifica senza gruppo ApiKey_scenario negativo
     Given Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -154,7 +152,6 @@ Feature: apiKey manager
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @ignore
   Scenario: [API-KEY_14] generazione con gruppo e invio notifica con lo stesso gruppo ApiKey_scenario positivo
     Given Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -169,7 +166,6 @@ Feature: apiKey manager
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @ignore
   Scenario: [API-KEY_15] generazione con gruppo e invio notifica con un gruppo differente ApiKey_scenario negativo
     Given Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -184,7 +180,6 @@ Feature: apiKey manager
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @ignore
   Scenario: [API-KEY_16] generazione con gruppo e invio notifica con gruppo e lettura notifica senza gruppo ApiKey_scenario positivo
     Given Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -204,7 +199,6 @@ Feature: apiKey manager
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @ignore @tbc
   Scenario: [API-KEY_17] generazione con gruppo e invio notifica con gruppo e lettura notifica con gruppo diverso ApiKey_scenario netagivo
     Given Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -243,7 +237,6 @@ Feature: apiKey manager
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @ignore
   Scenario: [API-KEY_19] generazione con gruppo e invio notifica con gruppo e lettura notifica con gruppo ApiKey_scenario positivo
     Given Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -263,7 +256,6 @@ Feature: apiKey manager
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @ignore
   Scenario: [API-KEY_20] generazione senza gruppo e invio notifica con gruppo e lettura notifica con gruppo ApiKey_scenario positivo
     Given Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
@@ -272,7 +264,7 @@ Feature: apiKey manager
       | senderDenomination | Comune di milano |
       | group              | NULL             |
     And viene settato il taxId della notifica con quello dell'apikey
-    And viene settato il primo gruppo valido per il comune "Comune_1"
+    And viene settato per la notifica corrente il primo gruppo valido del comune "Comune_1"
     And destinatario Mario Cucumber
     And la notifica viene inviata tramite api b2b e si attende che lo stato diventi ACCEPTED
     And si verifica la corretta acquisizione della notifica
@@ -284,10 +276,55 @@ Feature: apiKey manager
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @ignore @tbc
-  Scenario: [API-KEY_100] generazione con gruppo non valido ApiKey_scenario negativo
+  Scenario: [API-KEY_21] generazione con gruppo non valido ApiKey_scenario negativo
     Given Viene generata una nuova apiKey con il gruppo "AAAAAAAAAA"
     Then l'operazione ha sollevato un errore con status code "400"
 
+  Scenario: [API-KEY_22] generazione con multi gruppi e invio notifica senza gruppo ApiKey_scenario negativo
+    Given Viene creata una nuova apiKey per il comune "Comune_1" con due gruppi
+    And viene impostata l'apikey appena generata
+    And viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+      | group              | NULL             |
+    And viene settato il taxId della notifica con quello dell'apikey
+    And destinatario Mario Cucumber
+    When la notifica viene inviata tramite api b2b
+    Then l'invio della notifica ha sollevato un errore "400"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+  Scenario: [API-KEY_23] generazione con multi gruppi e invio notifica con gruppo ApiKey_scenario positivo
+    Given Viene creata una nuova apiKey per il comune "Comune_1" con due gruppi
+    And viene impostata l'apikey appena generata
+    And viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And viene settato per la notifica corrente il primo gruppo valido del comune "Comune_1"
+    And viene settato il taxId della notifica con quello dell'apikey
+    And destinatario Mario Cucumber
+    When la notifica viene inviata tramite api b2b
+    Then l'invio della notifica non ha prodotto errori
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+  Scenario: [API-KEY_24] generazione con multi gruppi e invio notifica con gruppo e lettura notifica con gruppo ApiKey_scenario positivo
+    Given Viene creata una nuova apiKey per il comune "Comune_1" con due gruppi
+    And viene impostata l'apikey appena generata
+    And viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And viene settato il taxId della notifica con quello dell'apikey
+    And viene settato per la notifica corrente il primo gruppo valido del comune "Comune_1"
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b e si attende che lo stato diventi ACCEPTED
+    And si verifica la corretta acquisizione della notifica
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+    When Viene creata una nuova apiKey per il comune "Comune_1" con gruppo uguale del invio notifica
+    And viene impostata l'apikey appena generata
+    Then la notifica può essere correttamente recuperata dal sistema tramite codice IUN
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
 
 

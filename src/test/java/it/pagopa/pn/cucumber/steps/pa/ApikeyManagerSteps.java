@@ -5,14 +5,13 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.testclient.IPnApiKeyManagerClient;
-import it.pagopa.pn.client.b2b.pa.testclient.SettableApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.*;
+import it.pagopa.pn.cucumber.utils.GroupPosition;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class ApikeyManagerSteps {
@@ -180,9 +179,23 @@ public class ApikeyManagerSteps {
         requestNewApiKey = new RequestNewApiKey().name("CUCUMBER GROUP TEST");
 
         responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
-        firstGroupUsed = this.sharedSteps.getFirstGroupByPa(settedPa);
+        firstGroupUsed = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.FIRST);
 
         requestNewApiKey.setGroups(List.of(firstGroupUsed));
+        Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
+        Assertions.assertNotNull(responseNewApiKey);
+        System.out.println("New ApiKey: " + responseNewApiKey);
+    }
+
+    @Given("Viene creata una nuova apiKey per il comune {string} con due gruppi")
+    public void viene_creata_una_nuova_api_key_per_il_comune_con_due_gruppi(String settedPa) {
+        requestNewApiKey = new RequestNewApiKey().name("CUCUMBER GROUP TEST");
+
+        responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
+        firstGroupUsed = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.FIRST);
+        String lastGroupUsed = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.LAST);
+
+        requestNewApiKey.setGroups(List.of(firstGroupUsed,lastGroupUsed));
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
@@ -207,15 +220,15 @@ public class ApikeyManagerSteps {
         this.sharedSteps.getNotificationRequest().setSenderTaxId(this.responseNewApiKeyTaxId);
     }
 
-    @Given("viene settato il primo gruppo valido per il comune {string}")
+    @Given("viene settato per la notifica corrente il primo gruppo valido del comune {string}")
     public void vieneSettatoIlPrimoGruppoValidoPerIlComune(String settedPa) {
-        firstGroupUsed = this.sharedSteps.getFirstGroupByPa(settedPa);
+        firstGroupUsed = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.FIRST);
         this.sharedSteps.getNotificationRequest().setGroup(firstGroupUsed);
     }
 
     @Given("viene settato un gruppo differente da quello utilizzato nell'apikey per il comune {string}")
-    public void vieneSettatoUnGruppoDifferenteDaQuelloUtilizzatoNellApikey(String settedPa){
-        String group = this.sharedSteps.getLastGroupByPa(settedPa);
+    public void vieneSettatoUnGruppoDifferenteDaQuelloUtilizzatoNellApikey(String settedPa) {
+        String group = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.LAST);
         Assertions.assertNotNull(firstGroupUsed);
         Assertions.assertTrue(!firstGroupUsed.equals(group));
         this.sharedSteps.getNotificationRequest().setGroup(group);
@@ -223,7 +236,7 @@ public class ApikeyManagerSteps {
 
     @Given("Viene creata una nuova apiKey per il comune {string} con gruppo differente del invio notifica")
     public void viene_creata_una_nuova_api_key_per_il_comune_con_gruppo_differente_del_invio_notifica(String settedPa) {
-        String group = this.sharedSteps.getLastGroupByPa(settedPa);
+        String group = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.LAST);
         Assertions.assertNotNull(firstGroupUsed);
         Assertions.assertTrue(!firstGroupUsed.equals(group));
 
@@ -238,7 +251,7 @@ public class ApikeyManagerSteps {
 
     @Given("Viene creata una nuova apiKey per il comune {string} con gruppo uguale del invio notifica")
     public void viene_creata_una_nuova_api_key_per_il_comune_con_gruppo_uguale_del_invio_notifica(String settedPa) {
-        String group = this.sharedSteps.getFirstGroupByPa(settedPa);
+        String group = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.FIRST);
         Assertions.assertNotNull(firstGroupUsed);
         Assertions.assertTrue(firstGroupUsed.equals(group));
 

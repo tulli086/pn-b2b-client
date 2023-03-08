@@ -56,7 +56,7 @@ public class DowntimeLogsSteps {
         }
         List<PnFunctionality> pnFunctionalities = Arrays.asList(pnFunctionality);
 
-         this.pnDowntimeHistoryResponse = downtimeLogsClient.statusHistory(OffsetDateTime.now().minusDays(time), OffsetDateTime.now(),
+        this.pnDowntimeHistoryResponse = downtimeLogsClient.statusHistory(OffsetDateTime.now().minusDays(time), OffsetDateTime.now(),
                 pnFunctionalities, "0", "50");
     }
 
