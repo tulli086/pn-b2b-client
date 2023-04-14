@@ -145,3 +145,4 @@ Feature: invio notifiche b2b
       | payment_creditorTaxId | 77777777777 |
     When la notifica viene inviata dal "Comune_Multi"
     Then si verifica la corretta acquisizione della richiesta di invio notifica
+    
