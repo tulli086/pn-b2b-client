@@ -107,7 +107,7 @@ public class PnPaB2bUtils {
         log.info("New Notification Request {}", request);
         if (request.getDocuments()!= null && request.getDocuments().size()>0){
             NotificationDocument notificationDocument = request.getDocuments().get(0);
-            notificationDocument.getRef().setKey("PN_NOTIFICATION_ATTACHMENTS-00000000000000000000000000000000.pdf");
+            notificationDocument.getRef().setKey("PN_NOTIFICATION_ATTACHMENTS-zbeda19f8997469bb75d28ff12bdf321.pdf");
         }
 
         NewNotificationResponse response = client.sendNewNotification( request );
@@ -141,6 +141,38 @@ public class PnPaB2bUtils {
         String iun = status.getIun();
 
         return iun == null? null : client.getSentNotification( iun );
+    }
+
+
+    public String waitForRequestRefused( NewNotificationResponse response) {
+
+        log.info("Request status for " + response.getNotificationRequestId() );
+        NewNotificationRequestStatusResponse status = null;
+        long startTime = System.currentTimeMillis();
+        for( int i = 0; i < 2; i++ ) {
+
+            try {
+                Thread.sleep( getAcceptedWait());
+            } catch (InterruptedException exc) {
+                throw new RuntimeException( exc );
+            }
+
+            status = client.getNotificationRequestStatus( response.getNotificationRequestId() );
+
+            log.info("New Notification Request status {}", status.getNotificationRequestStatus());
+            if ( "REFUSED".equals( status.getNotificationRequestStatus() )) {
+                break;
+            }
+        }
+        long endTime = System.currentTimeMillis();
+        log.info("Execution time {}ms",(endTime - startTime));
+
+        String error = null;
+        if (status != null && status.getErrors()!= null && status.getErrors().size()>0) {
+            log.info("Detail status {}", status.getErrors().get(0).getDetail());
+            error = status.getErrors().get(0).getCode();
+        }
+        return error == null? null : error;
     }
 
     public void verifyNotification(FullSentNotification fsn) throws IOException, IllegalStateException {
