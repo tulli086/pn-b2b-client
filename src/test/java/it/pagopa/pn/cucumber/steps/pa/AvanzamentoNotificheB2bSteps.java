@@ -190,7 +190,12 @@ public class AvanzamentoNotificheB2bSteps {
             case "COMPLETELY_UNREACHABLE":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategory.COMPLETELY_UNREACHABLE, 16, sharedSteps.getWorkFlowWait());
                 break;
-
+            case "PREPARE_DIGITAL_DOMICILE":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.PREPARE_DIGITAL_DOMICILE, 2, waiting * 3);
+                break;
+            case "SCHEDULE_DIGITAL_WORKFLOW":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SCHEDULE_DIGITAL_WORKFLOW, 2,waiting * 3);
+                break;
             default:
                 throw new IllegalArgumentException();
         }
