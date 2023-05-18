@@ -62,21 +62,21 @@ public class PnExternalServiceClientImpl {
         return safeStorageInfoWithHttpInfo(fileKey).getBody();
     }
 
-    public List<HashMap<String, String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType) throws RestClientException {
+    public List<HashMap<String, String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType, String bearerToken) throws RestClientException {
         switch (apiKeyType) {
             case MVP_1:
-                return paGroupInfoWithHttpInfo(apiKeyMvp1).getBody();
+                return paGroupInfoWithHttpInfo(apiKeyMvp1, bearerToken).getBody();
             case MVP_2:
-                return paGroupInfoWithHttpInfo(apiKeyMvp2).getBody();
+                return paGroupInfoWithHttpInfo(apiKeyMvp2, bearerToken).getBody();
             case GA:
-                return paGroupInfoWithHttpInfo(apiKeyGa).getBody();
+                return paGroupInfoWithHttpInfo(apiKeyGa, bearerToken).getBody();
             default:
                 throw new IllegalArgumentException();
         }
     }
 
 
-    private ResponseEntity<List<HashMap<String, String>>> paGroupInfoWithHttpInfo(String apiKey) throws RestClientException {
+    private ResponseEntity<List<HashMap<String, String>>> paGroupInfoWithHttpInfo(String apiKey, String bearerToken) throws RestClientException {
         Object postBody = null;
 
 
@@ -87,6 +87,7 @@ public class PnExternalServiceClientImpl {
 
         final HttpHeaders headerParams = new HttpHeaders();
         headerParams.add("x-api-key", apiKey);
+        headerParams.add("Authorization","Bearer "+bearerToken);
 
 
         final String[] localVarAccepts = {

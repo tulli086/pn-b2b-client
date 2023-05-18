@@ -3,6 +3,7 @@ package it.pagopa.pn.client.b2b.pa.impl;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.ApiClient;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api.*;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.testclient.PnInteropTokenOauth2Client;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,13 +34,20 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
     private final String apiKeyGa;
     private ApiKeyType apiKeySetted = ApiKeyType.MVP_1;
 
+    private final PnInteropTokenOauth2Client pnInteropTokenOauth2Client;
+
+    private final String bearerTokenInterop;
+
     public PnPaB2bExternalClientImpl(
             ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.external.base-url}") String basePath,
             @Value("${pn.external.api-key}") String apiKeyMvp1,
             @Value("${pn.external.api-key-2}") String apiKeyMvp2,
-            @Value("${pn.external.api-key-GA}") String apiKeyGa
+            @Value("${pn.external.api-key-GA}") String apiKeyGa,
+            @Value("${pn.interop.base-url}") String interopBaseUrl,
+            @Value("${pn.interop.token-oauth2.path}") String tokenOauth2Path,
+            @Value("${pn.interop.token-oauth2.client-assertion}") String clientAssertion
     ) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
@@ -47,18 +55,20 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
         this.apiKeyMvp1 = apiKeyMvp1;
         this.apiKeyMvp2 = apiKeyMvp2;
         this.apiKeyGa = apiKeyGa;
-
-        this.newNotificationApi = new NewNotificationApi( newApiClient( restTemplate, basePath, apiKeyMvp1) );
-        this.senderReadB2BApi = new SenderReadB2BApi( newApiClient( restTemplate, basePath, apiKeyMvp1) );
-        this.legalFactsApi = new LegalFactsApi(newApiClient( restTemplate, basePath, apiKeyMvp1));
-        this.notificationPriceApi = new NotificationPriceApi(newApiClient( restTemplate, basePath, apiKeyMvp1));
-        this.paymentEventsApi = new PaymentEventsApi(newApiClient( restTemplate, basePath, apiKeyMvp1));
+        this.pnInteropTokenOauth2Client = new PnInteropTokenOauth2Client(restTemplate, interopBaseUrl, tokenOauth2Path, clientAssertion);
+        this.bearerTokenInterop = pnInteropTokenOauth2Client.getBearerToken();
+        this.newNotificationApi = new NewNotificationApi( newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop) );
+        this.senderReadB2BApi = new SenderReadB2BApi( newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop) );
+        this.legalFactsApi = new LegalFactsApi(newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop));
+        this.notificationPriceApi = new NotificationPriceApi(newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop));
+        this.paymentEventsApi = new PaymentEventsApi(newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop));
     }
 
-    private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apikey ) {
+    private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apikey, String bearerToken ) {
         ApiClient newApiClient = new ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
         newApiClient.addDefaultHeader("x-api-key", apikey );
+        newApiClient.addDefaultHeader("Authorization","Bearer "+bearerToken);
         return newApiClient;
     }
 
@@ -97,11 +107,11 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
     }
 
     public void setApiKey(String apiKey){
-        this.newNotificationApi.setApiClient(newApiClient(restTemplate, basePath, apiKey));
-        this.senderReadB2BApi.setApiClient(newApiClient(restTemplate, basePath, apiKey));
-        this.legalFactsApi.setApiClient(newApiClient(restTemplate, basePath, apiKey));
-        this.notificationPriceApi.setApiClient(newApiClient(restTemplate, basePath, apiKey));
-        this.paymentEventsApi.setApiClient(newApiClient( restTemplate, basePath, apiKey));
+        this.newNotificationApi.setApiClient(newApiClient(restTemplate, basePath, apiKey, bearerTokenInterop));
+        this.senderReadB2BApi.setApiClient(newApiClient(restTemplate, basePath, apiKey, bearerTokenInterop));
+        this.legalFactsApi.setApiClient(newApiClient(restTemplate, basePath, apiKey,bearerTokenInterop));
+        this.notificationPriceApi.setApiClient(newApiClient(restTemplate, basePath, apiKey,bearerTokenInterop));
+        this.paymentEventsApi.setApiClient(newApiClient( restTemplate, basePath, apiKey,bearerTokenInterop));
     }
 
     public NotificationAttachmentDownloadMetadataResponse getSentNotificationDocument(String iun, Integer docidx) {
