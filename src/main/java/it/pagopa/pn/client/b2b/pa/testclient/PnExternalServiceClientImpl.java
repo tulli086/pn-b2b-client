@@ -1,6 +1,7 @@
 package it.pagopa.pn.client.b2b.pa.testclient;
 
 
+import it.pagopa.pn.client.b2b.pa.impl.PnPaB2bExternalClientImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.ParameterizedTypeReference;
@@ -37,6 +38,14 @@ public class PnExternalServiceClientImpl {
 
     private final String safeStorageBasePath;
     private final String gruopInfoBasePath;
+    private String bearerTokenInterop;
+
+    private final String interopBaseUrl;
+
+    private final String tokenOauth2Path;
+
+    private final String clientAssertion;
+
     private final String enableInterop;
 
     public PnExternalServiceClientImpl(
@@ -47,6 +56,9 @@ public class PnExternalServiceClientImpl {
             @Value("${pn.external.api-key}") String apiKeyMvp1,
             @Value("${pn.external.api-key-2}") String apiKeyMvp2,
             @Value("${pn.external.api-key-GA}") String apiKeyGa,
+            @Value("${pn.interop.base-url}") String interopBaseUrl,
+            @Value("${pn.interop.token-oauth2.path}") String tokenOauth2Path,
+            @Value("${pn.interop.token-oauth2.client-assertion}") String clientAssertion,
             @Value("${pn.interop.enable}") String enableInterop
     ) {
         this.ctx = ctx;
@@ -57,11 +69,32 @@ public class PnExternalServiceClientImpl {
         this.apiKeyMvp2 = apiKeyMvp2;
         this.apiKeyGa = apiKeyGa;
         this.enableInterop = enableInterop;
+        this.interopBaseUrl = interopBaseUrl;
+        this.tokenOauth2Path = tokenOauth2Path;
+        this.clientAssertion = clientAssertion;
+        this.bearerTokenInterop = getBearerToken();
     }
 
 
     public SafeStorageResponse safeStorageInfo(String fileKey) throws RestClientException {
         return safeStorageInfoWithHttpInfo(fileKey).getBody();
+    }
+
+    public String getBearerToken() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        map.add("client_assertion", clientAssertion);
+        map.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+        map.add("grant_type", "client_credentials");
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        ResponseEntity<PnPaB2bExternalClientImpl.InteropResponse> response = this.restTemplate.postForEntity( interopBaseUrl + tokenOauth2Path, request , PnPaB2bExternalClientImpl.InteropResponse.class );
+
+        return (response.getStatusCode().is2xxSuccessful() ? response.getBody().getAccessToken() : null);
+
     }
 
     public List<HashMap<String, String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType, String bearerToken) throws RestClientException {
