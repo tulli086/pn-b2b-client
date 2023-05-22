@@ -461,17 +461,193 @@
 
 #### Persona giuridica
 
+##### Avanzamento notifiche b2b multi destinatario con persona fisica e giuridica
+
+- [B2B_TIMELINE_MULTI_PF_PG_01] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
+- [B2B_TIMELINE_MULTI_PF_PG_02] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+- [B2B_TIMELINE_MULTI_PF_PG_03] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
+- [B2B_TIMELINE_MULTI_PF_PG_04] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
+- [B2B_TIMELINE_MULTI_PF_PG_05] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+
+##### Avanzamento b2b notifica multi destinatario analogico
+
+- [B2B_TIMELINE_MULTI_RS_1] Invio notifica ed attesa elemento di timeline SEND_SIMPLE_REGISTERED_LETTER_scenario positivo
+- [B2B_TIMELINE_MULTI_RS_2] Invio notifica ed attesa elemento di timeline SEND_SIMPLE_REGISTERED_LETTER_scenario positivo
+- [B2B_TIMELINE_MULTI_RS_3] Invio notifica ed attesa elemento di timeline SEND_SIMPLE_REGISTERED_LETTER_scenario negativo
+- [B2B_TIMELINE_MULTI_RIS_1] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
+- [B2B_TIMELINE_MULTI_RIS_2] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
+- [B2B_TIMELINE_MULTI_ANALOG_1] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
+- [B2B_TIMELINE_MULTI_ANALOG_2] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
+- [B2B_TIMELINE_MULTI_ANALOG_3] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
+- [B2B_TIMELINE_MULTI_ANALOG_4] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
+- [B2B_TIMELINE_MULTI_ANALOG_5] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
+- [B2B_TIMELINE_MULTI_ANALOG_6] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
+- [B2B_TIMELINE_MULTI_ANALOG_7] Invio notifica e atteso stato DELIVERED_scenario positivo
+- [B2B_TIMELINE_MULTI_ANALOG_8] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_AR_scenario positivo
+- [B2B_TIMELINE_MULTI_ANALOG_9] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_890_scenario  positivo
+
+##### Costo notifica con workflow analogico per multi destinatario 890
+
+- [B2B_COSTO_ANALOG_890_MULTI_1] Invio notifica e verifica costo con FSU + @OK_890 + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_890_MULTI_2] Invio notifica e verifica costo con FSU + @OK_890 + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_890_MULTI_3] Invio notifica con allegato e verifica costo con FSU + @OK_890 + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_890_MULTI_4] Invio notifica con allegato e verifica costo con FCU + @OK_890 + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_890_MULTI_5] Invio notifica e verifica costo con RECAPITISTA + @OK_890 + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_890_MULTI_6] Invio notifica e verifica costo con RECAPITISTA + @OK_890 + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_890_MULTI_7] Invio notifica e verifica costo con RECAPITISTA + @OK_890 + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_890_MULTI_8] Invio notifica e verifica costo con RECAPITISTA + @OK_890 + FLAT_RATE positivo
+
+##### Costo notifica con workflow analogico per multi destinatario
+
+- [B2B_COSTO_ANALOG_MULTI_1] Invio notifica e verifica costo con FSU + @OK_AR + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_MULTI_2] Invio notifica e verifica costo con FSU + @OK_AR + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_MULTI_3] Invio notifica e verifica costo con FSU + @OK_RIR + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_MULTI_4] Invio notifica e verifica costo con FSU + @OK_RIR + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_MULTI_5] Invio notifica con allegato e verifica costo con FSU + @OK_AR + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_MULTI_6] Invio notifica con allegato e verifica costo con FSU + @OK_AR + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_MULTI_7] Invio notifica verifica con e allegato costo con FSU + @OK_RIR + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_MULTI_8] Invio notifica con allegato e verifica costo con FSU + @OK_RIR + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_MULTI_9] Invio notifica e verifica costo con RECAPITISTA + @OK_AR + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_MULTI_10] Invio notifica e verifica costo con RECAPITISTA + @OK_AR + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_MULTI_11] Invio notifica e verifica costo con RECAPITISTA + @OK_RIR + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_MULTI_12] Invio notifica e verifica costo con RECAPITISTA + @OK_RIR + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_MULTI_13] Invio notifica con allegato e verifica costo con RECAPITISTA + @OK_AR + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_MULTI_14] Invio notifica con allegato e verifica costo con RECAPITISTA + @OK_AR + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_MULTI_15] Invio notifica verifica con e allegato costo con RECAPITISTA + @OK_RIR + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_MULTI_16] Invio notifica con allegato e verifica costo con RECAPITISTA + @OK_RIR + FLAT_RATE positivo
+
+##### Costo notifica con workflow analogico per multi destinatario RS
+
+- [B2B_COSTO_ANALOG_RS_MULTI_1] Invio notifica verifica costo con FSU + @OK_RS + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_RS_MULTI_2] Invio notifica verifica costo con FSU + @OK_RS + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_RIS_MULTI_3] Invio notifica verifica costo con FSU + @OK_RIS + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_RIS_MULTI_4] Invio notifica e verifica costo con FSU + @OK_RIS + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_RS_MULTI_5] Invio notifica con allegato e verifica costo con FSU + @OK_RS + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_RS_MULTI_6] Invio notifica con allegato e verifica costo con FSU + @OK_RS + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_RIS_MULTI_7] Invio notifica verifica con allegato e costo con FSU + @OK_RIS + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_RIS_MULTI_8] Invio notifica con allegato e verifica costo con FSU + @OK_RIS + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_RS_MULTI_9] Invio notifica e verifica costo con RECAPITISTA + @OK_RS + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_RS_MULTI_10] Invio notifica e verifica costo con RECAPITISTA + @OK_RS + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_RIS_MULTI_11] Invio notifica e verifica costo con RECAPITISTA + @OK_RIS + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_RIS_MULTI_12] Invio notifica e verifica costo con RECAPITISTA + @OK_RIS + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_RS_MULTI_13] Invio notifica con allegato e verifica costo con RECAPITISTA + @OK_RS + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_RS_MULTI_14] Invio notifica con allegato e verifica costo con RECAPITISTA + @OK_RS + FLAT_RATE positivo
+- [B2B_COSTO_ANALOG_RIS_MULTI_15] Invio notifica verifica con e allegato costo con RECAPITISTA + @OK_RIS + DELIVERY_MODE positivo
+- [B2B_COSTO_ANALOG_RIS_MULTI_16] Invio notifica con allegato e verifica costo con RECAPITISTA + @OK_RIS + FLAT_RATE positivo
+
 ### Download
 
 #### Persona fisica
 
+##### Download legalFact
+
+- [B2B_PA_LEGALFACT_1] Invio notifica e download atto opponibile SENDER_ACK_scenario positivo
+- [B2B_PA_LEGALFACT_2] Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
+- [B2B_PA_LEGALFACT_3] Invio notifica e download atto opponibile PEC_RECEIPT_scenario positivo
+- [B2B_PA_LEGALFACT_4] Invio notifica e download atto opponibile RECIPIENT_ACCESS_scenario positivo
+- [B2B_PA_LEGALFACT_IO_1] Invio notifica e download atto opponibile SENDER_ACK_scenario positivo
+- [B2B_PA_LEGALFACT_IO_2] Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
+- [B2B_PA_LEGALFACT_IO_3] Invio notifica e download atto opponibile PEC_RECEIPT_scenario positivo
+- [B2B_PA_LEGALFACT_IO_4] Invio notifica e download atto opponibile RECIPIENT_ACCESS_scenario positivo
+- [B2B_WEB-RECIPIENT_LEGALFACT_1] Invio notifica e download atto opponibile SENDER_ACK_scenario positivo
+- [B2B_WEB-RECIPIENT_LEGALFACT_2] Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
+- [B2B_WEB-RECIPIENT_LEGALFACT_3] Invio notifica e download atto opponibile PEC_RECEIPT_scenario positivo
+- [B2B_WEB-RECIPIENT_LEGALFACT_4] Invio notifica e download atto opponibile RECIPIENT_ACCESS_scenario positivo
+- [B2B_PA_LEGALFACT_KEY_1] Invio notifica e download atto opponibile SENDER_ACK_scenario positivo
+- [B2B_PA_LEGALFACT_KEY_2] Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
+- [B2B_PA_LEGALFACT_KEY_3] Invio notifica e download atto opponibile PEC_RECEIPT_scenario positivo
+- [B2B_PA_LEGALFACT_KEY_4] Invio notifica e download atto opponibile RECIPIENT_ACCESS_scenario positivo
+
+##### Download legalFact analogico
+
+- [B2B_PA_ANALOGICO_LEGALFACT_1] Invio notifica con @fail_RS e download atto opponibile collegato a DIGITAL_FAILURE_WORKFLOW positivo
+- [B2B_PA_ANALOGICO_LEGALFACT_2] Invio notifica con @ok_RS e download atto opponibile collegato a DIGITAL_FAILURE_WORKFLOW positivo
+- [B2B_PA_ANALOGICO_LEGALFACT_3] Invio notifica con @fail_AR e download atto opponibile collegato a SEND_ANALOG_PROGRESS positivo
+  [B2B_PA_ANALOGICO_LEGALFACT_4] Invio notifica con @ok_890 e download atto opponibile collegato a SEND_ANALOG_PROGRESS positivo
+- [B2B_PA_ANALOGICO_LEGALFACT_5] Invio notifica con @fail_RIS e download atto opponibile collegato a DIGITAL_FAILURE_WORKFLOW positivo
+- [B2B_PA_ANALOGICO_LEGALFACT_6] Invio notifica con @ok_RIR e download atto opponibile collegato a SEND_ANALOG_PROGRESS positivo
+- [B2B_PA_ANALOGICO_LEGALFACT_7] Invio notifica con @fail_RIR e download atto opponibile collegato a SEND_ANALOG_PROGRESS positivo
+- [B2B_PA_ANALOGICO_LEGALFACT_8] Invio notifica con @fail_890 e download atto opponibile collegato a SEND_ANALOG_PROGRESS positivo
+- [B2B_PA_ANALOGICO_LEGALFACT_9_TEST] Invio notifica con @FAIL-Discovery_AR e download atto opponibile collegato a SEND_ANALOG_PROGRESS positivo
+- [B2B_PA_ANALOGICO_LEGALFACT_10_TEST] Invio notifica con @FAIL-Discovery_890 e download atto opponibile collegato a SEND_ANALOG_PROGRESS positivo
+- [B2B_PA_ANALOGICO_LEGALFACT_11_TEST] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR negativo
+
+##### Download legalFact multi destinatario
+
+- [B2B_WEB-MULTI-RECIPIENT_LEGALFACT_1] Invio notifica multi destinatario_scenario positivo
+
 #### Persona giuridica
+
+##### Download legalFact per la persona giuridica
+
+- [B2B_PA_LEGALFACT_PG_1] Invio notifica e download atto opponibile SENDER_ACK_scenario positivo
+- [B2B_PA_LEGALFACT_PG_2] Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
+- [B2B_PA_LEGALFACT_PG_3] Invio notifica e download atto opponibile PEC_RECEIPT_scenario positivo
+- [B2B_PA_LEGALFACT_KEY_PG_1] Invio notifica e download atto opponibile SENDER_ACK_scenario positivo
+- [B2B_PA_LEGALFACT_KEY_PG_2] Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
+- [B2B_PA_LEGALFACT_KEY_PG_3] Invio notifica e download atto opponibile PEC_RECEIPT_scenario positivo
 
 ### Webhook
 
 #### Persona fisica
 
+##### Avanzamento notifiche webhook b2b
+
+- [B2B-STREAM_STATUS_1] Creazione stream notifica
+- [B2B-STREAM_TIMELINE_1] Creazione stream notifica
+- [B2B-STREAM_TIMELINE_2] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
+- [B2B-STREAM_TIMELINE_3] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
+- [B2B-STREAM_TIMELINE_4] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
+- [B2B-STREAM_TIMELINE_6] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+- [B2B-STREAM_TIMELINE_7] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
+- [B2B-STREAM_TIMELINE_8] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
+- [B2B-STREAM_TIMELINE_9] Invio notifica digitale ed attesa stato DELIVERING-VIEWED_scenario positivo
+- [B2B-STREAM_TIMELINE_10] Invio notifica digitale ed attesa elemento di timeline DELIVERING-NOTIFICATION_VIEWED_scenario positivo
+- [B2B-STREAM_TIMELINE_11] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+- [B2B-STREAM_TIMELINE_12] Invio notifica digitale ed attesa stato DELIVERED-VIEWED_scenario positivo
+- [B2B-STREAM_TIMELINE_13] Invio notifica digitale ed attesa elemento di timeline DELIVERED-NOTIFICATION_VIEWED_scenario positivo
+- [B2B-STREAM_TIMELINE_14] Creazione multi stream notifica
+- [B2B-STREAM_TIMELINE_15] Creazione multi stream notifica
+- [B2B-STREAM_TIMELINE_16] Invio notifica digitale ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
+- [B2B-STREAM_TIMELINE_17] Invio notifica digitale ed attesa elemento di timeline NOT_HANDLED_scenario positivo
+- [B2B-STREAM_TIMELINE_19] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
+- [B2B-STREAM_TIMELINE_20] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
+- [B2B-STREAM_TIMELINE_21] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
+- [B2B-STREAM_TIMELINE_22] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
+- [B2B-STREAM_TIMELINE_23] Invio notifica  mono destinatario con documenti pre-caricati non trovati su safestorage scenario negativo
+
+#####  Avanzamento notifiche webhook b2b multi
+
+- [B2B-STREAM-TIMELINE_MULTI_1] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_2] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_3] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_4] Invio notifica digitale ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_5] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_6] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_PG_1] Invio notifica digitale multi PG ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_PG_2] Invio notifica digitale multi PG ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_PG_3] Invio notifica digitale multi PG ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_PG_4] Invio notifica digitale multi PG ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_PG_5] Invio notifica digitale multi PG ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
+- [B2B-STREAM-TIMELINE_MULTI_PG_6] Invio notifica digitale multi PG ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
+
 #### Persona giuridica
+
+##### Avanzamento notifiche webhook b2b per persona giuridica
+
+- [B2B-STREAM_TIMELINE_PG_1] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_2] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_3] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
+- [B2B-STREAM_TIMELINE_PG_4] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_5] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_6] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_7] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_8] Invio notifica digitale ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_9] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_10] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_11] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_12] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
+- [B2B-STREAM_TIMELINE_PG_13] Invio notifica  mono destinatario con documenti pre-caricati non trovati su safestorage scenario negativo
 
 ## Allegati
 
