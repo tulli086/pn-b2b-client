@@ -37,7 +37,7 @@ public class PnExternalServiceClientImpl {
 
     private final String safeStorageBasePath;
     private final String gruopInfoBasePath;
-
+    private final String enableInterop;
 
     public PnExternalServiceClientImpl(
             ApplicationContext ctx,
@@ -46,7 +46,8 @@ public class PnExternalServiceClientImpl {
             @Value("${pn.external.base-url}") String gruopInfoBasePath,
             @Value("${pn.external.api-key}") String apiKeyMvp1,
             @Value("${pn.external.api-key-2}") String apiKeyMvp2,
-            @Value("${pn.external.api-key-GA}") String apiKeyGa
+            @Value("${pn.external.api-key-GA}") String apiKeyGa,
+            @Value("${pn.interop.enable}") String enableInterop
     ) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
@@ -55,6 +56,7 @@ public class PnExternalServiceClientImpl {
         this.apiKeyMvp1 = apiKeyMvp1;
         this.apiKeyMvp2 = apiKeyMvp2;
         this.apiKeyGa = apiKeyGa;
+        this.enableInterop = enableInterop;
     }
 
 
@@ -87,7 +89,11 @@ public class PnExternalServiceClientImpl {
 
         final HttpHeaders headerParams = new HttpHeaders();
         headerParams.add("x-api-key", apiKey);
-        headerParams.add("Authorization","Bearer "+bearerToken);
+        if ("true".equalsIgnoreCase(enableInterop)) {
+            headerParams.add("Authorization","Bearer "+bearerToken);
+        }
+
+
 
 
         final String[] localVarAccepts = {

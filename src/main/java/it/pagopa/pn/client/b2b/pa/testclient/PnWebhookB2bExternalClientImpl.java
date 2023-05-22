@@ -32,6 +32,7 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
     private final PnInteropTokenOauth2Client pnInteropTokenOauth2Client =null;
     private final String bearerTokenInterop = null;
 
+    private final String enableInterop;
 
     public PnWebhookB2bExternalClientImpl(
             ApplicationContext ctx,
@@ -42,7 +43,8 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
             @Value("${pn.external.api-key-GA}") String apiKeyGa,
             @Value("${pn.interop.base-url}") String interopBaseUrl,
             @Value("${pn.interop.token-oauth2.path}") String tokenOauth2Path,
-            @Value("${pn.interop.token-oauth2.client-assertion}") String clientAssertion
+            @Value("${pn.interop.token-oauth2.client-assertion}") String clientAssertion,
+            @Value("${pn.interop.enable}") String enableInterop
     ) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
@@ -51,18 +53,21 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
         this.apiKeyGa = apiKeyGa;
         //this.pnInteropTokenOauth2Client = new PnInteropTokenOauth2Client(restTemplate, interopBaseUrl, tokenOauth2Path, clientAssertion);
         //this.bearerTokenInterop = pnInteropTokenOauth2Client.getBearerToken();
+        this.enableInterop = enableInterop;
         this.devBasePath = devBasePath;
 
-        this.eventsApi = new EventsApi( newApiClient( restTemplate, devBasePath, apiKeyMvp1, bearerTokenInterop) );
-        this.streamsApi = new StreamsApi( newApiClient( restTemplate, devBasePath, apiKeyMvp1, bearerTokenInterop) );
+        this.eventsApi = new EventsApi( newApiClient( restTemplate, devBasePath, apiKeyMvp1, bearerTokenInterop,enableInterop) );
+        this.streamsApi = new StreamsApi( newApiClient( restTemplate, devBasePath, apiKeyMvp1, bearerTokenInterop,enableInterop) );
     }
 
 
-    private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apikey, String bearerToken) {
+    private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apikey, String bearerToken, String enableInterop) {
         ApiClient newApiClient = new ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
         newApiClient.addDefaultHeader("x-api-key", apikey );
-        newApiClient.addDefaultHeader("Authorization","Bearer "+bearerToken);
+        if ("true".equalsIgnoreCase(enableInterop)) {
+            newApiClient.addDefaultHeader("Authorization", "Bearer " + bearerToken);
+        }
         return newApiClient;
     }
 
@@ -131,7 +136,7 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
     }
 
     public void setApiKey(String apiKey){
-        this.eventsApi.setApiClient(newApiClient(restTemplate, devBasePath, apiKey, bearerTokenInterop));
-        this.streamsApi.setApiClient(newApiClient(restTemplate, devBasePath, apiKey, bearerTokenInterop));
+        this.eventsApi.setApiClient(newApiClient(restTemplate, devBasePath, apiKey, bearerTokenInterop,enableInterop));
+        this.streamsApi.setApiClient(newApiClient(restTemplate, devBasePath, apiKey, bearerTokenInterop,enableInterop));
     }
 }
