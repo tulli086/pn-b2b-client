@@ -1,6 +1,10 @@
 package it.pagopa.pn.client.b2b.pa.testclient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,7 +17,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 @Component
 public class PnInteropTokenOauth2Client {
-    private final RestTemplate restTemplate;
+
+    private final ApplicationContext ctx;
+
+    private RestTemplate restTemplate;
 
     private final String interopBaseUrl;
 
@@ -21,12 +28,21 @@ public class PnInteropTokenOauth2Client {
 
     private final String clientAssertion;
 
+    /*@Value("${pn.interop.base-url}")
+    private String interopBaseUrl;
+    @Value("${pn.interop.token-oauth2.path}")
+    private String tokenOauth2Path;
+    @Value("${pn.interop.token-oauth2.client-assertion}")
+    private String clientAssertion;*/
+
     public PnInteropTokenOauth2Client(
+            ApplicationContext ctx,
             RestTemplate restTemplate,
-            String interopBaseUrl,
-            String tokenOauth2Path,
-            String clientAssertion
+            @Value("${pn.interop.base-url}") String interopBaseUrl,
+            @Value("${pn.interop.token-oauth2.path}") String tokenOauth2Path,
+            @Value("${pn.interop.token-oauth2.client-assertion}") String clientAssertion
     ) {
+        this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.interopBaseUrl = interopBaseUrl;
         this.tokenOauth2Path = tokenOauth2Path;
