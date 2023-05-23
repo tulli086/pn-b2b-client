@@ -106,13 +106,13 @@ public class SharedSteps {
     private String enableInterop;
 
     private final PnInteropTokenOauth2Client pnInteropTokenOauth2Client;
-    private  String bearerTokenInterop = null;
+    private final String bearerTokenInterop;
 
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
                        PnExternalServiceClientImpl pnExternalServiceClient,
-                       IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient, PnInteropTokenOauth2Client pnInteropTokenOauth2Client) {
+                       IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient,  PnInteropTokenOauth2Client pnInteropTokenOauth2Client) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.webClient = webClient;
@@ -121,10 +121,8 @@ public class SharedSteps {
         this.pnExternalServiceClient = pnExternalServiceClient;
         this.iPnWebUserAttributesClient = iPnWebUserAttributesClient;
         this.pnInteropTokenOauth2Client = pnInteropTokenOauth2Client;
+        this.bearerTokenInterop = pnInteropTokenOauth2Client.getBearerToken();
 
-        if ("true".equalsIgnoreCase(enableInterop)) {
-            this.bearerTokenInterop = pnInteropTokenOauth2Client.getBearerToken();
-        }
     }
 
     @BeforeAll
