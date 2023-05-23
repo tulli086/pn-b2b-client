@@ -102,9 +102,11 @@ public class SharedSteps {
     @Value("${pn.interop.token-oauth2.client-assertion}")
     private String clientAssertion;
 
-    private final PnInteropTokenOauth2Client pnInteropTokenOauth2Client;
-    private final String bearerTokenInterop = "";
+    @Value("${pn.interop.enable}")
+    private String enableInterop;
 
+    private final PnInteropTokenOauth2Client pnInteropTokenOauth2Client;
+    private  String bearerTokenInterop = null;
 
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
@@ -120,6 +122,9 @@ public class SharedSteps {
         this.iPnWebUserAttributesClient = iPnWebUserAttributesClient;
         this.pnInteropTokenOauth2Client = pnInteropTokenOauth2Client;
 
+        if ("true".equalsIgnoreCase(enableInterop)) {
+            this.bearerTokenInterop = pnInteropTokenOauth2Client.getBearerToken();
+        }
     }
 
     @BeforeAll
