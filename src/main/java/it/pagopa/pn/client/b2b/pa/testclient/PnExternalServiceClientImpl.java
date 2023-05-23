@@ -72,7 +72,9 @@ public class PnExternalServiceClientImpl {
         this.interopBaseUrl = interopBaseUrl;
         this.tokenOauth2Path = tokenOauth2Path;
         this.clientAssertion = clientAssertion;
-        this.bearerTokenInterop = getBearerToken();
+        if ("true".equalsIgnoreCase(enableInterop)) {
+            this.bearerTokenInterop = getBearerToken();
+        }
     }
 
 

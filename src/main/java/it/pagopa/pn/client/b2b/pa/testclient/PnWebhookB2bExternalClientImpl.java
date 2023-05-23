@@ -67,7 +67,9 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
         this.interopBaseUrl = interopBaseUrl;
         this.tokenOauth2Path = tokenOauth2Path;
         this.clientAssertion = clientAssertion;
-        this.bearerTokenInterop = getBearerToken();
+        if ("true".equalsIgnoreCase(enableInterop)) {
+            this.bearerTokenInterop = getBearerToken();
+        }
         this.devBasePath = devBasePath;
 
         this.eventsApi = new EventsApi( newApiClient( restTemplate, devBasePath, apiKeyMvp1, bearerTokenInterop,enableInterop) );

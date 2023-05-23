@@ -79,7 +79,9 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
         this.interopBaseUrl = interopBaseUrl;
         this.tokenOauth2Path = tokenOauth2Path;
         this.clientAssertion = clientAssertion;
-        this.bearerTokenInterop = getBearerToken();
+        if ("true".equalsIgnoreCase(enableInterop)) {
+            this.bearerTokenInterop = getBearerToken();
+        }
         this.newNotificationApi = new NewNotificationApi( newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop) );
         this.senderReadB2BApi = new SenderReadB2BApi( newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop) );
         this.legalFactsApi = new LegalFactsApi(newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop));
