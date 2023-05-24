@@ -102,7 +102,7 @@ public class SharedSteps {
     @Value("${pn.interop.token-oauth2.client-assertion}")
     private String clientAssertion;
 
-    //@Value("${pn.interop.enable}")
+   
     private String enableInterop;
 
     private final PnInteropTokenOauth2Client pnInteropTokenOauth2Client;
