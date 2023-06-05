@@ -317,10 +317,10 @@ public class AvanzamentoNotificheB2bSteps {
         try {
             Assertions.assertEquals(notificationPrice.getIun(), sharedSteps.getSentNotification().getIun());
             if (price != null) {
-                Assertions.assertEquals(notificationPrice.getAmount(), price);
+                Assertions.assertEquals(notificationPrice.getAmount(), Integer.parseInt(price));
             }
             if (date != null) {
-                Assertions.assertNotNull(notificationPrice.getEffectiveDate());
+                Assertions.assertNotNull(notificationPrice.getRefinementDate());
             }
         }catch (AssertionFailedError assertionFailedError){
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
@@ -392,7 +392,7 @@ public class AvanzamentoNotificheB2bSteps {
         PaymentEventPagoPa paymentEventPagoPa = new PaymentEventPagoPa();
         paymentEventPagoPa.setNoticeCode(sharedSteps.getSentNotification().getRecipients().get(0).getPayment().getNoticeCode());
         paymentEventPagoPa.setCreditorTaxId(sharedSteps.getSentNotification().getRecipients().get(0).getPayment().getCreditorTaxId());
-        paymentEventPagoPa.setPaymentDate(OffsetDateTime.now());
+        paymentEventPagoPa.setPaymentDate(String.valueOf(OffsetDateTime.now()));
 
         List<PaymentEventPagoPa> paymentEventPagoPaList = new LinkedList<>();
         paymentEventPagoPaList.add(paymentEventPagoPa);

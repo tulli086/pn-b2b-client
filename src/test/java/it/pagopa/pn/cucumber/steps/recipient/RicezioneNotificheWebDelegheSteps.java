@@ -29,6 +29,7 @@ import java.lang.invoke.MethodHandles;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -174,7 +175,7 @@ public class RicezioneNotificheWebDelegheSteps {
         NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationDocument(
                 sharedSteps.getSentNotification().getIun(),
                 Integer.parseInt(sharedSteps.getSentNotification().getDocuments().get(0).getDocIdx()),
-                mandateToSearch.getMandateId()
+                UUID.fromString(mandateToSearch.getMandateId())
         );
         AtomicReference<String> Sha256 = new AtomicReference<>("");
         Assertions.assertDoesNotThrow(() -> {
@@ -191,7 +192,7 @@ public class RicezioneNotificheWebDelegheSteps {
         NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
                 sharedSteps.getSentNotification().getIun(),
                 attachmentName,
-                mandateToSearch.getMandateId());
+                UUID.fromString(mandateToSearch.getMandateId()));
         AtomicReference<String> Sha256 = new AtomicReference<>("");
         Assertions.assertDoesNotThrow(() -> {
             byte[] bytes = Assertions.assertDoesNotThrow(() ->

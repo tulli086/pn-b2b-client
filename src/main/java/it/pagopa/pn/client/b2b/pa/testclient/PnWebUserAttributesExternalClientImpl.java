@@ -124,7 +124,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
 
 
     public void consentAction(ConsentType consentType, ConsentAction consentAction, String version) throws RestClientException {
-        this.ConsentsApi.consentAction(consentType, consentAction, version);
+        this.ConsentsApi.consentAction(consentType, version, consentAction);
     }
 
     public Consent getConsentByType(ConsentType consentType, String version) throws RestClientException {
@@ -147,7 +147,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
     }
 
 
-    public List<LegalDigitalAddress> getLegalAddressByRecipient() throws RestClientException {
+    public List<LegalAndUnverifiedDigitalAddress> getLegalAddressByRecipient() throws RestClientException {
         return legalApi.getLegalAddressByRecipient();
     }
 

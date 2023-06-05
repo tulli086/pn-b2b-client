@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
+import static it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationFeePolicy.DELIVERY_MODE;
+import static it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationFeePolicy.FLAT_RATE;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
 
@@ -32,8 +34,8 @@ public class DataTableTypeUtil {
                 .notificationFeePolicy(
                         (getValue(data,NOTIFICATION_FEE_POLICY.key) == null? null :
                                 (getValue(data,NOTIFICATION_FEE_POLICY.key).equalsIgnoreCase("FLAT_RATE")?
-                                        NewNotificationRequest.NotificationFeePolicyEnum.FLAT_RATE :
-                                        NewNotificationRequest.NotificationFeePolicyEnum.DELIVERY_MODE)))
+                                        FLAT_RATE :
+                                        DELIVERY_MODE)))
                 .physicalCommunicationType(
                         (getValue(data,PHYSICAL_COMMUNICATION_TYPE.key) == null? null :
                                 (getValue(data,PHYSICAL_COMMUNICATION_TYPE.key).equalsIgnoreCase("REGISTERED_LETTER_890")?
@@ -81,13 +83,13 @@ public class DataTableTypeUtil {
                         .pagoPaForm(getValue(data, PAYMENT_PAGOPA_FORM.key) == null ?
                                 null : utils.newAttachment(getDefaultValue(PAYMENT_PAGOPA_FORM.key)))
 
-                        .f24flatRate(getValue(data, PAYMENT_F24_FLAT.key) == null ? null :
-                                (getValue(data, PAYMENT_F24_FLAT.key).equalsIgnoreCase("SI")?
-                                        utils.newAttachment(getDefaultValue(PAYMENT_F24_FLAT.key)):null))
-
-                        .f24standard(getValue(data, PAYMENT_F24_STANDARD.key) == null ? null :
-                                (getValue(data, PAYMENT_F24_STANDARD.key).equalsIgnoreCase("SI")?
-                                        utils.newAttachment(getDefaultValue(PAYMENT_F24_STANDARD.key)):null))
+//                        .f24flatRate(getValue(data, PAYMENT_F24_FLAT.key) == null ? null :
+//                                (getValue(data, PAYMENT_F24_FLAT.key).equalsIgnoreCase("SI")?
+//                                        utils.newAttachment(getDefaultValue(PAYMENT_F24_FLAT.key)):null))
+//
+//                        .f24standard(getValue(data, PAYMENT_F24_STANDARD.key) == null ? null :
+//                                (getValue(data, PAYMENT_F24_STANDARD.key).equalsIgnoreCase("SI")?
+//                                        utils.newAttachment(getDefaultValue(PAYMENT_F24_STANDARD.key)):null))
                 )
         );
         /* TEST

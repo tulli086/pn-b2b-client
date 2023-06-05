@@ -15,6 +15,8 @@ import org.springframework.context.annotation.PropertySource;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationFeePolicy.FLAT_RATE;
+
 @SpringBootTest( classes = {
         PnPaB2bExternalClientImpl.class,
         PnPaB2bInternalClientImpl.class,
@@ -40,7 +42,7 @@ public class NewNotificationTest {
                 ._abstract("Abstract della notifica")
                 .senderDenomination("Comune di Milano")
                 .senderTaxId("01199250158")
-                .notificationFeePolicy( NewNotificationRequest.NotificationFeePolicyEnum.FLAT_RATE )
+                .notificationFeePolicy( FLAT_RATE )
                 .physicalCommunicationType( NewNotificationRequest.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 )
                 .paProtocolNumber("" + System.currentTimeMillis())
                 .addDocumentsItem( newDocument( "classpath:/sample.pdf" ) )
@@ -90,8 +92,8 @@ public class NewNotificationTest {
                                 .noticeCode( String.format("30201%13d", epochMillis ) )
                                 .noticeCodeAlternative( String.format("30201%13d", epochMillis+1 ) )
                                 .pagoPaForm( newAttachment( resourcePath ))
-                                .f24flatRate( newAttachment( resourcePath ) )
-                                .f24standard( newAttachment( resourcePath ) )
+//                                .f24flatRate( newAttachment( resourcePath ) )
+//                                .f24standard( newAttachment( resourcePath ) )
                 );
 
         try {
