@@ -36,8 +36,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
 
-import static it.pagopa.pn.cucumber.utils.NotificationValue.PAYMENT_NOTICE_CODE_OPTIONAL;
-import static it.pagopa.pn.cucumber.utils.NotificationValue.getValue;
+import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SharedSteps {
@@ -378,6 +377,15 @@ public class SharedSteps {
         generateNewNotification();
 
         this.notificationRequest.setPaProtocolNumber(paProtocolNumber);
+    }
+
+    @And("aggiungo {int} numero allegati")
+    public void aggiungoNumeroAllegati(int numAllegati) {
+        int i = 0;
+        while ( i < numAllegati) {
+            this.notificationRequest.addDocumentsItem( b2bUtils.newDocument(getDefaultValue(DOCUMENT.key)) );
+            i++;
+        }
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED")
