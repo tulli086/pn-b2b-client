@@ -114,6 +114,11 @@ public class DataTableTypeUtil {
 
     @DataTableType
     public synchronized DataTest convertTimelineElement(Map<String, String> data) throws JsonProcessingException {
+
+        if (data.size() == 1 && data.get("NULL") != null) {
+            return null;
+        }
+
         String recIndex = getValue(data, DETAILS_REC_INDEX.key);
         String sentAttemptMade = getValue(data, DETAILS_SENT_ATTEMPT_MADE.key);
         String retryNumber = getValue(data, DETAILS_RETRY_NUMBER.key);
@@ -126,16 +131,12 @@ public class DataTableTypeUtil {
         String pollingTime = getValue(data, POLLING_TIME.key);
         String numCheck = getValue(data, NUM_CHECK.key);
         String loadTimeline = getValue(data, LOAD_TIMELINE.key);
-
-        if (data.size() == 1 && data.get("NULL") != null) {
-            return null;
-        }
+        String detailsKey = data.keySet().stream().filter(elem -> elem.startsWith(DETAILS.key)).findFirst().orElse(null);
 
         DataTest dataTest = new DataTest();
-
         TimelineElement timelineElement = new TimelineElement()
                 .legalFactsIds(getListValue(LegalFactsId.class, data, LEGAL_FACT_IDS.key))
-                .details(getValue(data, DETAILS.key) == null ? null : new TimelineElementDetails()
+                .details(detailsKey == null ? null : new TimelineElementDetails()
                         .recIndex(recIndex != null ? Integer.parseInt(recIndex) : null)
                         .digitalAddress(getObjValue(DigitalAddress.class, data, DETAILS_DIGITAL_ADDRESS.key))
                         .refusalReasons(getListValue(NotificationRefusedError.class, data, DETAILS_REFUSAL_REASONS.key))

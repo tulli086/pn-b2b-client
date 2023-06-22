@@ -17,20 +17,16 @@ Feature: Notifica pagata
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
     And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGITAL_SUCCESS_WORKFLOW"
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 0 |
     And si attende che sia presente il perfezionamento per decorrenza termini
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "REFINEMENT" non esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
 
   @e2e @ignore
@@ -52,15 +48,12 @@ Feature: Notifica pagata
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "DIGITAL_FAILURE_WORKFLOW" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
     And viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" non esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER" non esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
 
   @e2e
@@ -82,7 +75,6 @@ Feature: Notifica pagata
     Then l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
     And viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" non esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
 

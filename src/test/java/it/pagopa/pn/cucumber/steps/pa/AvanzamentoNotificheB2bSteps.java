@@ -366,11 +366,12 @@ public class AvanzamentoNotificheB2bSteps {
                     Assertions.assertEquals(delegateInfoFromNotification.getDenomination(), delegateInfoFromTest.getDenomination());
                 }
             case "COMPLETELY_UNREACHABLE":
-                if(Objects.nonNull(elementFromTest.getLegalFactsIds()))
+                if(Objects.nonNull(elementFromTest.getLegalFactsIds())) {
                     Assertions.assertEquals(elementFromNotification.getLegalFactsIds().size(), elementFromTest.getLegalFactsIds().size());
-                for (int i = 0; i < elementFromNotification.getLegalFactsIds().size(); i++) {
-                    Assertions.assertEquals(elementFromNotification.getLegalFactsIds().get(i).getCategory(), elementFromTest.getLegalFactsIds().get(i).getCategory());
-                    Assertions.assertNotNull(elementFromNotification.getLegalFactsIds().get(i).getKey());
+                    for (int i = 0; i < elementFromNotification.getLegalFactsIds().size(); i++) {
+                        Assertions.assertEquals(elementFromNotification.getLegalFactsIds().get(i).getCategory(), elementFromTest.getLegalFactsIds().get(i).getCategory());
+                        Assertions.assertNotNull(elementFromNotification.getLegalFactsIds().get(i).getKey());
+                    }
                 }
         }
     }

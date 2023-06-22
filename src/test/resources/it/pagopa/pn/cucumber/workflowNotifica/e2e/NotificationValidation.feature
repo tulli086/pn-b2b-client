@@ -11,7 +11,6 @@ Feature: Validazione notifica e2e
         Then si verifica che la notifica non viene accettata causa "ALLEGATO"
         And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
             | loadTimeline | true |
-            | details | NOT_NULL |
             | details_refusalReasons | [{"errorCode": "FILE_NOTFOUND"}] |
 
     @e2e
@@ -25,7 +24,6 @@ Feature: Validazione notifica e2e
         Then si verifica che la notifica non viene accettata causa "SHA_256"
         And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
             | loadTimeline | true |
-            | details | NOT_NULL |
             | details_refusalReasons | [{"errorCode": "FILE_SHA_ERROR"}] |
 
     @e2e
@@ -39,7 +37,6 @@ Feature: Validazione notifica e2e
         Then si verifica che la notifica non viene accettata causa "EXTENSION"
         And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
             | loadTimeline | true |
-            | details | NOT_NULL |
             | details_refusalReasons | [{"errorCode": "FILE_PDF_INVALID_ERROR"}] |
 
 
@@ -54,7 +51,6 @@ Feature: Validazione notifica e2e
         Then si verifica che la notifica non viene accettata causa "ALLEGATO"
         And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
             | loadTimeline | true |
-            | details | NOT_NULL |
             | details_refusalReasons | [{"errorCode": "FILE_NOTFOUND"}] |
 
     @e2e @ignore
@@ -67,7 +63,6 @@ Feature: Validazione notifica e2e
         Then si verifica che la notifica non viene accettata causa "TAX_ID"
         And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
             | loadTimeline | true |
-            | details | NOT_NULL |
             | details_refusalReasons | [{"errorCode": "TAXID_NOT_VALID"}] |
 
     @e2e @ignore
@@ -82,7 +77,6 @@ Feature: Validazione notifica e2e
         Then si verifica che la notifica non viene accettata causa "ADDRESS"
         And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
             | loadTimeline | true |
-            | details | NOT_NULL |
             | details_refusalReasons | [{"errorCode": "NOT_VALID_ADDRESS"}] |
 
     @e2e
@@ -109,7 +103,6 @@ Feature: Validazione notifica e2e
         When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
         Then viene verificato che l'elemento di timeline "AAR_GENERATION" esista
             | loadTimeline | true |
-            | details | NOT_NULL |
             | details_recIndex | 0 |
             | details_generatedAarUrl | NOT_NULL |
         
