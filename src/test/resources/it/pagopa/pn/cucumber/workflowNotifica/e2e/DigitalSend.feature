@@ -2,14 +2,12 @@ Feature: Digital send e2e
 
   @e2e
   Scenario: [B2B_DIGITAL_SEND_1] Invio ad indirizzo di piattaforma successo al primo tentativo
-    Given si predispone addressbook per l'utente "Galileo Galilei"
+    Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@pecSuccess.it"
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario
-      | denomination | Galileo Galilei |
-      | taxId | GLLGLL64B15G702I |
+    And destinatario "Mr. IndirizzoPiattaforma"
       | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
@@ -62,13 +60,11 @@ Feature: Digital send e2e
 
   @e2e
   Scenario: [B2B_DIGITAL_SEND_2] Invio ad indirizzo di piattaforma fallimento al primo tentativo, successo al ritentativo e fallimento al secondo tentativo
-    Given si predispone addressbook per l'utente "Galileo Galilei"
+    Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@OK-pecFirstFailSecondSuccess.it"
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
-    And destinatario
-      | denomination | Galileo Galilei |
-      | taxId | GLLGLL64B15G702I |
+    And destinatario "Mr. IndirizzoPiattaforma"
       | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
@@ -182,14 +178,12 @@ Feature: Digital send e2e
 
   @e2e
   Scenario: [B2B_DIGITAL_SEND_3] Invio ad indirizzo di piattaforma fallimento al primo tentativo, successo al ritentativo e al secondo tentativo
-    Given si predispone addressbook per l'utente "Galileo Galilei"
+    Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@OK-pecFirstFailSecondSuccess.it"
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario
-      | denomination | Galileo Galilei |
-      | taxId | GLLGLL64B15G702I |
+    And destinatario "Mr. IndirizzoPiattaforma"
       | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
@@ -293,14 +287,12 @@ Feature: Digital send e2e
 
   @e2e
   Scenario: [B2B_DIGITAL_SEND_4] Invio ad indirizzo di piattaforma fallimento al primo tentativo e al ritentativo, successo al secondo tentativo
-    Given si predispone addressbook per l'utente "Galileo Galilei"
+    Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@FAIL-pecFirstKOSecondKO.it"
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario
-      | denomination | Galileo Galilei |
-      | taxId | GLLGLL64B15G702I |
+    And destinatario "Mr. IndirizzoPiattaforma"
       | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
@@ -404,15 +396,13 @@ Feature: Digital send e2e
 
   @e2e
   Scenario: [B2B_DIGITAL_SEND_5] Invio ad indirizzo di piattaforma fallimento al primo tentativo, al ritentativo e al secondo tentativo
-    Given si predispone addressbook per l'utente "Galileo Galilei"
+    Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@FAIL-pecFirstKOSecondKO.it"
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Galileo Galilei |
-      | taxId | GLLGLL64B15G702I |
+    And destinatario "Mr. IndirizzoPiattaforma"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED

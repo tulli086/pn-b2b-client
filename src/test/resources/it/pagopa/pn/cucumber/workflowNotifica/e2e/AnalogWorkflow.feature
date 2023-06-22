@@ -7,9 +7,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci|
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -53,9 +51,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-PersonaAbilitata_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -99,9 +95,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-Retry_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -150,9 +144,7 @@ Feature: Workflow analogico
     Given viene generata una nuova notifica
       | subject | notifica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -205,9 +197,7 @@ Feature: Workflow analogico
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@OK-Retry_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -255,9 +245,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-Giacenza-lte10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -301,9 +289,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-Giacenza-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -350,9 +336,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-Giacenza-gt10-23L_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -401,9 +385,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-GiacenzaDelegato-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -466,9 +448,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-GiacenzaDelegato-lte10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -512,9 +492,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-GiacenzaDelegato-gt10-23L_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -563,9 +541,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Giacenza-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -605,9 +581,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Giacenza-gt10-23L_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -647,9 +621,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-CompiutaGiacenza_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -707,9 +679,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | AR_REGISTERED_LETTER           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-Giacenza_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -763,9 +733,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -799,9 +767,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Giacenza-lte10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -851,9 +817,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Giacenza_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -908,9 +872,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -944,9 +906,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | AR_REGISTERED_LETTER |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-Giacenza-gt10_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1001,9 +961,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | AR_REGISTERED_LETTER |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Giacenza-gt10_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1058,9 +1016,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | AR_REGISTERED_LETTER |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-CompiutaGiacenza_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1115,9 +1071,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | AR_REGISTERED_LETTER |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-Retry_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1173,9 +1127,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | AR_REGISTERED_LETTER |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-NonRendicontabile_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1230,9 +1182,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | AR_REGISTERED_LETTER |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-CausaForzaMaggiore_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1287,9 +1237,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1340,9 +1288,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Irreperibile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1393,9 +1339,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Discovery_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1463,9 +1407,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-DiscoveryIrreperibile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1534,9 +1476,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-NonRendicontabile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1591,9 +1531,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-CausaForzaMaggiore_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1648,9 +1586,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK_RIS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1673,9 +1609,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL_RIS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1710,9 +1644,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci|
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK_RIR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1763,9 +1695,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL_RIR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1822,9 +1752,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1846,21 +1774,3 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRS002C |
       | details_deliveryFailureCause | M07 |
-
-  @e2e
-  Scenario: [E2E-WF-ANALOG-39] Invio notifica con percorso analogico. Fallimento consolidatore AR (FAIL_Consolidatore-AR).
-    Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication | AR_REGISTERED_LETTER |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via@FAIL_Consolidatore-AR |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
-      | loadTimeline | true |
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |

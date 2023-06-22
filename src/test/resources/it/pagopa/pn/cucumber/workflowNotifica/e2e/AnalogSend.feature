@@ -6,9 +6,7 @@ Feature: Analog send e2e
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-CompiutaGiacenza_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -53,9 +51,7 @@ Feature: Analog send e2e
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | via@FAIL-Discovery_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -103,9 +99,7 @@ Feature: Analog send e2e
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | via@FAIL-DiscoveryIrreperibile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED

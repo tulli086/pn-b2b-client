@@ -1304,7 +1304,8 @@ public class AvanzamentoNotificheB2bSteps {
     }
 
     @And("viene verificato che il destinatario {string} di tipo {string} sia nella tabella pn-paper-notification-failed")
-    public void vieneVerificatoDestinatarioInPnPaperNotificationFailed(String taxId, String recipientTye) {
+    public void vieneVerificatoDestinatarioInPnPaperNotificationFailed(String denomination, String recipientTye) {
+        String taxId = sharedSteps.getTaxIdFromDenomination(denomination);
         // get internal id from data-vault
         String internalId = externalClient.getInternalIdFromTaxId(recipientTye, taxId);
         // get notifications not delivered from delivery-push
@@ -1315,7 +1316,8 @@ public class AvanzamentoNotificheB2bSteps {
     }
 
     @And("viene verificato che il destinatario {string} di tipo {string} non sia nella tabella pn-paper-notification-failed")
-    public void vieneVerificatoDestinatarioNonInPnPaperNotificationFailed(String taxId, String recipientTye) {
+    public void vieneVerificatoDestinatarioNonInPnPaperNotificationFailed(String denomination, String recipientTye) {
+        String taxId = sharedSteps.getTaxIdFromDenomination(denomination);
         // get internal id from data-vault
         String internalId = externalClient.getInternalIdFromTaxId(recipientTye, taxId);
         // get notifications not delivered from delivery-push
