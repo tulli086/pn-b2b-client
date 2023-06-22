@@ -15,11 +15,9 @@ Feature: Notifica visualizzata
     And la notifica può essere correttamente recuperata da "Mario Cucumber"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
-      | details | NOT_NULL |
       | details_recIndex | 0 |
 
   @e2e
@@ -39,12 +37,10 @@ Feature: Notifica visualizzata
     And la notifica può essere correttamente letta da "Mario Gherkin" con delega
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
       | details_delegateInfo | {"taxId": "CLMCST42R12D969Z", "denomination": "Cristoforo Colombo", "delegateType": "PF"} |
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
-      | details | NOT_NULL |
       | details_recIndex | 0 |
 
   @e2e @ignore
@@ -62,18 +58,15 @@ Feature: Notifica visualizzata
     And la notifica può essere correttamente recuperata da "Ettore Fieramosca"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
     # seconda lettura
     And la notifica può essere correttamente recuperata da "Mario Cucumber"
     And verifico che l'atto opponibile a terzi di "NOTIFICATION_VIEWED" sia lo stesso
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
     And viene verificato che il numero di elementi di timeline "NOTIFICATION_VIEWED" della notifica sia di 1
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
-      | details | NOT_NULL |
       | details_recIndex | 0 |
 
   @e2e
@@ -88,13 +81,11 @@ Feature: Notifica visualizzata
       | loadTimeline | true |
       | pollingTime | 40000 |
       | numCheck    | 20     |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And viene verificato che il destinatario "Mr. NoIndirizzi" di tipo "PF" sia nella tabella pn-paper-notification-failed
     And la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
     And viene verificato che il destinatario "Mr. NoIndirizzi" di tipo "PF" non sia nella tabella pn-paper-notification-failed
@@ -112,7 +103,6 @@ Feature: Notifica visualizzata
       | loadTimeline | true |
       | pollingTime | 4000 |
       | numCheck    | 8    |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_retryNumber | 0 |
       | details_sentAttemptMade | 0 |
@@ -120,7 +110,6 @@ Feature: Notifica visualizzata
     And la notifica può essere correttamente recuperata da "Cristoforo Colombo"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
     And viene verificato che il numero di elementi di timeline "SCHEDULE_REFINEMENT" della notifica sia di 0
@@ -140,19 +129,15 @@ Feature: Notifica visualizzata
       | loadTimeline | true |
       | pollingTime | 30000 |
       | numCheck    | 7     |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And la notifica può essere correttamente recuperata da "Cristoforo Colombo"
     And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGITAL_SUCCESS_WORKFLOW"
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 0 |
     And si attende che sia presente il perfezionamento per decorrenza termini
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "REFINEMENT" non esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
 
   @e2e @ignore
@@ -170,14 +155,11 @@ Feature: Notifica visualizzata
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "DIGITAL_FAILURE_WORKFLOW" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And la notifica può essere correttamente recuperata da "Cristoforo Colombo"
     And viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" non esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER" non esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
 
   @e2e
@@ -193,7 +175,6 @@ Feature: Notifica visualizzata
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere correttamente recuperata da "Ettore Fieramosca"
     And viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" non esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
 
@@ -211,21 +192,16 @@ Feature: Notifica visualizzata
       | loadTimeline | true |
       | pollingTime | 40000 |
       | numCheck    | 16     |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     Then la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_FAILURE_WORKFLOW"
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 1 |
     And si attende che sia presente il perfezionamento per decorrenza termini
-      | details | NOT_NULL |
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "REFINEMENT" non esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
 
   @e2e @ignore
@@ -242,13 +218,11 @@ Feature: Notifica visualizzata
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
     Then la notifica può essere correttamente recuperata da "Cristoforo Colombo"
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
     Then viene verificato che il numero di elementi di timeline "SEND_ANALOG_DOMICILE" della notifica sia di 1

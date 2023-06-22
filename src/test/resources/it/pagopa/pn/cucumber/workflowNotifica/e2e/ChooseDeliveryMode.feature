@@ -7,10 +7,10 @@ Feature: Scelta canale di invio (Digitale o analogico)
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
     And destinatario "Mr. IndirizzoPiattaforma"
+      | NULL | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "GET_ADDRESS" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | PLATFORM |
       | details_sentAttemptMade | 0 |
@@ -27,13 +27,11 @@ Feature: Scelta canale di invio (Digitale o analogico)
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then  viene verificato che l'elemento di timeline "GET_ADDRESS" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | true |
     And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | PLATFORM |
       | details_sentAttemptMade | 0 |
@@ -51,19 +49,16 @@ Feature: Scelta canale di invio (Digitale o analogico)
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "GET_ADDRESS" esista
       | loadTimeline | true |
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | true |
     And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | false |
     And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | PLATFORM |
       | details_sentAttemptMade | 0 |
@@ -79,21 +74,18 @@ Feature: Scelta canale di invio (Digitale o analogico)
     Then viene verificato che l'elemento di timeline "SCHEDULE_ANALOG_WORKFLOW" esista
       | loadTimeline | true |
     And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_retryNumber | 0 |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | false |
     And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | PLATFORM |
       | details_retryNumber | 0 |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | false |
     And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
-      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_retryNumber | 0 |
