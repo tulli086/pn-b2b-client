@@ -98,6 +98,21 @@ public class SharedSteps {
     @Value("${pn.bearer-token.user5.taxID}")
     private String mrEmailCortesiaTaxID;
 
+    @Value("${pn.bearer-token.user6.taxID}")
+    private String mrIndirizzoGeneraleTaxID;
+
+    @Value("${pn.bearer-token.user7.taxID}")
+    private String mrGeneraleRitentativoTaxID;
+
+    @Value("${pn.bearer-token.user8.taxID}")
+    private String mrGeneraleRitentativoSecondoTaxID;
+
+    @Value("${pn.bearer-token.user9.taxID}")
+    private String mrGeneraleSecondoTaxID;
+
+    @Value("${pn.bearer-token.user10.taxID}")
+    private String mrGeneraleFallimentoTaxID;
+
     @Value("${pn.configuration.workflow.wait.millis:31000}")
     private Integer workFlowWait;
 
@@ -205,6 +220,16 @@ public class SharedSteps {
                 return mrIndirizzoPiattaformaTaxID;
             case "Mr. EmailCortesia":
                 return mrEmailCortesiaTaxID;
+            case "Mr. IndirizzoGenerale":
+                return mrIndirizzoGeneraleTaxID;
+            case "Mr. GeneraleRitentativo":
+                return mrGeneraleRitentativoTaxID;
+            case "Mr. GeneraleSecondo":
+                return mrGeneraleSecondoTaxID;
+            case "Mr. GeneraleRitentativoSecondo":
+                return mrGeneraleRitentativoSecondoTaxID;
+            case "Mr. GeneraleFallimento":
+                return mrGeneraleFallimentoTaxID;
         }
         return null;
     }
