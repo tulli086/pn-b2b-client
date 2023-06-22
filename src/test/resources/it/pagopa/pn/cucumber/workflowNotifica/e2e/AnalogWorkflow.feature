@@ -1488,28 +1488,39 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-38] Invio notifica con percorso analogico. Fallimento RS (FAIL_RS).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
     And destinatario "Mr. NoIndirizzi"
-      | digitalDomicile | NULL |
+      | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@FAIL_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
+    Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER" esista
       | loadTimeline | true |
+      | details | NOT_NULL |
       | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRS002B |
-      | details_attachments | [{"documentType": "Plico"}] |
+      | details_physicalAddress | {"address": "VIA@FAIL_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_analogCost | 133 |
     And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
+      | loadTimeline | true |
+      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | CON080  |
     And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
+      | loadTimeline | true |
+      | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRS002C |
       | details_deliveryFailureCause | M07 |
+    And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
+      | loadTimeline | true |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECRS002B |
+      | details_attachments | [{"documentType": "Plico"}] |
