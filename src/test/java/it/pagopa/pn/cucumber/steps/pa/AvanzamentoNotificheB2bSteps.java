@@ -1260,8 +1260,8 @@ public class AvanzamentoNotificheB2bSteps {
         }
 
         OffsetDateTime schedulingDate = notificationDate.plus(schedulingDaysRefinement);
-        Integer hour = schedulingDate.getHour();
-        Integer minutes = schedulingDate.getMinute();
+        Integer hour = schedulingDate.atZoneSameInstant(ZoneId.of("Europe/Rome")).getHour();
+        Integer minutes = schedulingDate.atZoneSameInstant(ZoneId.of("Europe/Rome")).getMinute();
         if ((hour == 21 && minutes > 0) || hour > 21) {
             Duration timeToAddInNonVisibilityTimeCase = sharedSteps.getTimeToAddInNonVisibilityTimeCase();
             schedulingDate = schedulingDate.plus(timeToAddInNonVisibilityTimeCase);
