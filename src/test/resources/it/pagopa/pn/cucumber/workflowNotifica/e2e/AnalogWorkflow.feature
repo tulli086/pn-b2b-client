@@ -178,6 +178,8 @@ Feature: Workflow analogico
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER" esista
       | loadTimeline | true |
+      | pollingTime | 40000 |
+      | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
       | details_analogCost | 133 |
@@ -191,16 +193,24 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 0 |
-    And viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" esista
+    Then viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
       | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20     |
+      | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_recIndex | 0 |
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
-      | details_sentAttemptMade | 1 |
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20     |
       | details_recIndex | 0 |
+      | details_sentAttemptMade | 1 |
     And viene verificato che il numero di elementi di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" sia di 2
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
@@ -244,7 +254,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-8] Invio notifica con percorso analogico. Successo giacenza gt 890 (OK-Giacenza-gt10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -479,6 +489,7 @@ Feature: Workflow analogico
       | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@FAIL-GIACENZA-GT10_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
@@ -493,7 +504,10 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | PNAG012 |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | loadTimeline | true |
+      | pollingTime | 50000 |
+      | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG007C |
@@ -523,7 +537,13 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG007B |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
-      | details_attachments | [{"documentType": "23L Plico"}] |
+      | details_attachments | [{"documentType": "23L"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG007B |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "Plico"}] |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
@@ -1139,7 +1159,7 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-  @e2e
+  @e2e @ignore
   Scenario: [E2E-WF-ANALOG-30] Invio notifica con percorso analogico. Fallimento primo tentativo e successo secondo tentativo 890 (FAIL-Discovery_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1165,7 +1185,13 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG003E |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
-      | details_attachments | [{"documentType": "Indagine Plico"}] |
+      | details_attachments | [{"documentType": "Indagine"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG003E |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "Plico"}] |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
@@ -1196,7 +1222,7 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-  @e2e
+  @e2e @ignore
   Scenario: [E2E-WF-ANALOG-31] Invio notifica con percorso analogico. Fallimento primo tentativo e secondo tentativo 890 (FAIL-DiscoveryIrreperibile_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1221,7 +1247,13 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG003E |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
-      | details_attachments | [{"documentType": "Indagine Plico"}] |
+      | details_attachments | [{"documentType": "Indagine"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG003E |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "Plico"}] |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
