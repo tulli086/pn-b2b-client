@@ -80,9 +80,7 @@ Feature: Notifica visualizzata
   Scenario: [E2E-NOTIFICATION-VIEWED-5] A valle della visualizzazione della notifica, il destinatario non deve essere nella tabella pn-paper-notification-failed
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | @FAIL-DiscoveryIrreperibile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -92,14 +90,14 @@ Feature: Notifica visualizzata
       | numCheck    | 20     |
       | details | NOT_NULL |
       | details_recIndex | 0 |
-    And viene verificato che il destinatario "DSRDNI00A01A225I" di tipo "PF" sia nella tabella pn-paper-notification-failed
-    And la notifica può essere correttamente recuperata da "Dino Sauro"
+    And viene verificato che il destinatario "Mr. NoIndirizzi" di tipo "PF" sia nella tabella pn-paper-notification-failed
+    And la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
-    And viene verificato che il destinatario "DSRDNI00A01A225I" di tipo "PF" non sia nella tabella pn-paper-notification-failed
+    And viene verificato che il destinatario "Mr. NoIndirizzi" di tipo "PF" non sia nella tabella pn-paper-notification-failed
 
   @e2e @ignore
   Scenario: [E2E-WF-INHIBITION-2] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
@@ -205,9 +203,7 @@ Feature: Notifica visualizzata
   un evento di timeline REFINEMENT.
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | @FAIL-DiscoveryIrreperibile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -220,7 +216,7 @@ Feature: Notifica visualizzata
     And viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
       | details | NOT_NULL |
       | details_recIndex | 0 |
-    Then la notifica può essere correttamente recuperata da "Leonardo da Vinci"
+    Then la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_FAILURE_WORKFLOW"
       | details | NOT_NULL |
       | details_recIndex | 0 |

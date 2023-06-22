@@ -155,8 +155,6 @@ Feature: Ricezione notifiche destinate al delegante
     Given viene generata una nuova notifica
       | subject            | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo          |
-    And destinatario
-      | denomination | Dino Sauro |
-      | taxId | DSRDNI00A01A225I |
+    And destinatario "Mr. EmailCortesia"
       | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED

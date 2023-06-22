@@ -2,13 +2,11 @@ Feature: Scelta canale di invio (Digitale o analogico)
 
   @e2e
   Scenario: [E2E-CHOOSE-DELIVERY-MODE-1] Invio notifica mono destinatario. L’utente ha configurato l’indirizzo di piattaforma
-    Given si predispone addressbook per l'utente "Galileo Galilei"
+    Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@pecSuccess.it"
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
-    And destinatario
-      | denomination | Galileo Galilei |
-      | taxId | GLLGLL64B15G702I |
+    And destinatario "Mr. IndirizzoPiattaforma"
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "GET_ADDRESS" esista
       | loadTimeline | true |
@@ -75,9 +73,7 @@ Feature: Scelta canale di invio (Digitale o analogico)
   Scenario: [E2E-CHOOSE-DELIVERY-MODE-4] Invio notifica mono destinatario. L’utente non ha configurato nessuno degli indirizzi digitali
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SCHEDULE_ANALOG_WORKFLOW" esista

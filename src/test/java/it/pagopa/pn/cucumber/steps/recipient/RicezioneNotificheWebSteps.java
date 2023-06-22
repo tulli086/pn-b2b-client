@@ -284,7 +284,7 @@ public class RicezioneNotificheWebSteps {
             case "Mario Gherkin":
                 this.iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 break;
-            case "Galileo Galilei":
+            case "Mr. IndirizzoPiattaforma":
                 this.iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_4);
                 break;
             default:

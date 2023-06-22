@@ -89,6 +89,15 @@ public class SharedSteps {
     @Value("${pn.bearer-token.user2.taxID}")
     private String marioGherkinTaxID;
 
+    @Value("${pn.bearer-token.user3.taxID}")
+    private String mrNoIndirizziTaxID;
+
+    @Value("${pn.bearer-token.user4.taxID}")
+    private String mrIndirizzoPiattaformaTaxID;
+
+    @Value("${pn.bearer-token.user5.taxID}")
+    private String mrEmailCortesiaTaxID;
+
     @Value("${pn.configuration.workflow.wait.millis:31000}")
     private Integer workFlowWait;
 
@@ -185,6 +194,25 @@ public class SharedSteps {
 
     @And("destinatario")
     public void destinatario(@Transpose NotificationRecipient recipient) {
+        this.notificationRequest.addRecipientsItem(recipient);
+    }
+
+    public String getTaxIdFromDenomination(String denomination) {
+        switch (denomination) {
+            case "Mr. NoIndirizzi":
+                return mrNoIndirizziTaxID;
+            case "Mr. IndirizzoPiattaforma":
+                return mrIndirizzoPiattaformaTaxID;
+            case "Mr. EmailCortesia":
+                return mrEmailCortesiaTaxID;
+        }
+        return null;
+    }
+
+    @And("destinatario {string}")
+    public void destinatario(String denomination, @Transpose NotificationRecipient recipient) {
+        recipient.setDenomination(denomination);
+        recipient.setTaxId(getTaxIdFromDenomination(denomination));
         this.notificationRequest.addRecipientsItem(recipient);
     }
 
@@ -769,11 +797,11 @@ public class SharedSteps {
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.PG_2);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.PG_2);
                 break;
-            case "leonardo da vinci":
+            case "mr. noindirizzi":
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_3);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_3);
                 break;
-            case "dino sauro":
+            case "mr. emailcortesia":
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_5);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_5);
                 break;
