@@ -42,6 +42,8 @@ import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
@@ -230,6 +232,8 @@ public class SharedSteps {
                 return mrGeneraleRitentativoSecondoTaxID;
             case "Mr. GeneraleFallimento":
                 return mrGeneraleFallimentoTaxID;
+            case "Cristoforo Colombo":
+                return marioGherkinTaxID;
         }
         return null;
     }
@@ -1131,7 +1135,27 @@ public class SharedSteps {
             if (timelineEventCategory.equals(TimelineElementCategory.SEND_ANALOG_PROGRESS.getValue()) || timelineEventCategory.equals(TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS.getValue())) {
                 TimelineElement timelineElementFromTest = dataFromTest.getTimelineElement();
                 TimelineElementDetails timelineElementDetails = timelineElementFromTest.getDetails();
-                return timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId) && elem.getDetails().getDeliveryDetailCode().equals(timelineElementDetails.getDeliveryDetailCode())).findAny().orElse(null);
+
+                List<TimelineElement> timelineElemList = timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId) && elem.getDetails().getDeliveryDetailCode().equals(timelineElementDetails.getDeliveryDetailCode())).collect(Collectors.toList());
+
+                // if size of list of SEND_ANALOG_PROGRESS timelineEvents is > 1 then check for docType
+                if(timelineEventCategory.equals(TimelineElementCategory.SEND_ANALOG_PROGRESS.getValue())
+                        && timelineElemList.size() > 1
+                        && Objects.nonNull(dataFromTest.getTimelineElement().getDetails().getAttachments())
+
+                ) {
+                    for (int i = 0; i < timelineElemList.size(); i++) {
+                        for (int j = 0; j < timelineElemList.get(i).getDetails().getAttachments().size(); j++) {
+                            if( timelineElemList.get(i).getDetails().getAttachments().get(j).getDocumentType().equals(dataFromTest.getTimelineElement().getDetails().getAttachments().get(j).getDocumentType()))
+                                return timelineElemList.get(i);
+                        }
+                    }
+                    return null;
+                }
+                else
+                    return timelineElemList != null && timelineElemList.size() > 0 ? timelineElemList.get(0) : null;
+
+                //return timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId) && elem.getDetails().getDeliveryDetailCode().equals(timelineElementDetails.getDeliveryDetailCode())).findAny().orElse(null);
             }
             return timelineElementList.stream().filter(elem -> elem.getElementId().equals(timelineEventId)).findAny().orElse(null);
         }
