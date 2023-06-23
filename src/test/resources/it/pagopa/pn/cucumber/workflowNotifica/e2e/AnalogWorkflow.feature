@@ -339,7 +339,7 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-10] Invio notifica con percorso analogico. Successo giacenza 890 gt 23L(OK-GiacenzaDelegato-gt10-23L_890).
+  Scenario: [E2E-WF-ANALOG-10] Invio notifica con percorso analogico. Successo giacenza 890 gt 10(OK-GiacenzaDelegato-gt10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -348,11 +348,11 @@ Feature: Workflow analogico
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-GiacenzaDelegato-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
       | loadTimeline | true |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | PNAG012 |
+      | details_physicalAddress | {"address": "VIA@OK-GIACENZADELEGATO-GT10_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
@@ -363,6 +363,10 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECAG011B |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
       | details_attachments | [{"documentType": "23L"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | PNAG012 |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
