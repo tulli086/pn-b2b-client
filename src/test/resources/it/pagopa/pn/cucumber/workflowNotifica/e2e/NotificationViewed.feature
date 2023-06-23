@@ -324,3 +324,24 @@ Feature: Notifica visualizzata
       | numCheck    | 20    |
       | details | NOT_NULL |
       | details_recIndex | 0 |
+
+  @e2e @ignore
+  Scenario: [E2E-WF-INHIBITION-9] Destinatario completamente irreperibile. Casistiche in cui la visualizzazione di una notifica inibisce parte del workflow di notifica - step 1
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | REGISTERED_LETTER_890 |
+    And destinatario
+      | denomination | Leonardo da Vinci |
+      | taxId | DVNLRD52D15M059P |
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@FAIL-DiscoveryIrreperibile_890 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" esista
+      | loadTimeline | true |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+    #And "Leonardo da Vinci" legge la notifica ricevuta
+    And la notifica può essere correttamente recuperata da "Leonardo da Vinci"
+    #And vengono l
