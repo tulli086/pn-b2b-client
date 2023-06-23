@@ -255,7 +255,7 @@ Feature: Notifica visualizzata
     And viene verificato che l'elemento di timeline "REFINEMENT" non esista
       | details_recIndex | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-INHIBITION-7] Invio notifica con percorso analogico. Notifica visualizzata tra un tentativo e l'altro
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -269,7 +269,7 @@ Feature: Notifica visualizzata
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" esista
       | loadTimeline | true |
-      | pollingTime | 10000 |
+      | pollingTime | 20000 |
       | numCheck    | 20    |
       | details | NOT_NULL |
       | details_recIndex | 0 |
@@ -282,7 +282,7 @@ Feature: Notifica visualizzata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" non esista
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" non esista
       | loadTimeline | true |
       | pollingTime | 20000 |
       | numCheck    | 20     |

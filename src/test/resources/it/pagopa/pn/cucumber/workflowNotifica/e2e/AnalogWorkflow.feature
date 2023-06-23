@@ -201,14 +201,14 @@ Feature: Workflow analogico
       | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
       | loadTimeline | true |
-      | pollingTime | 40000 |
-      | numCheck    | 20     |
+      | pollingTime | 50000 |
+      | numCheck    | 30     |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
       | loadTimeline | true |
-      | pollingTime | 40000 |
-      | numCheck    | 20     |
+      | pollingTime | 50000 |
+      | numCheck    | 30     |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 1 |
     And viene verificato che il numero di elementi di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" sia di 2
@@ -516,8 +516,6 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG007C |
-
-
 
   @e2e
   Scenario: [E2E-WF-ANALOG-15] Invio notifica con percorso analogico. Fallimento giacenza gt 23L 890 (FAIL-Giacenza-gt10-23L_890).
@@ -1176,7 +1174,7 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-30] Invio notifica con percorso analogico. Fallimento primo tentativo e successo secondo tentativo 890 (FAIL-Discovery_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1239,7 +1237,7 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-31] Invio notifica con percorso analogico. Fallimento primo tentativo e secondo tentativo 890 (FAIL-DiscoveryIrreperibile_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
