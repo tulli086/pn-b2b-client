@@ -376,9 +376,7 @@ public class AvanzamentoNotificheB2bSteps {
     }
 
     private TimelineElement getAndStoreTimeline(String timelineEventCategory, DataTest dataFromTest) {
-        List<TimelineElement> timelineElementList;
         String iun;
-        TimelineElement timelineElement;
 
         if (timelineEventCategory.equals(TimelineElementCategory.REQUEST_REFUSED.getValue())) {
             String requestId = sharedSteps.getNewNotificationResponse().getNotificationRequestId();
@@ -387,7 +385,7 @@ public class AvanzamentoNotificheB2bSteps {
             NewNotificationRequest newNotificationRequest = sharedSteps.getNotificationRequest();
             // get timeline from delivery-push
             NotificationHistoryResponse notificationHistory = this.pnPrivateDeliveryPushExternalClient.getNotificationHistory(iun, newNotificationRequest.getRecipients().size(), sharedSteps.getNotificationCreationDate());
-            timelineElementList = notificationHistory.getTimeline();
+            List<TimelineElement> timelineElementList = notificationHistory.getTimeline();
             FullSentNotification fullSentNotification = new FullSentNotification();
             fullSentNotification.setTimeline(timelineElementList);
             sharedSteps.setSentNotification(fullSentNotification);
@@ -395,17 +393,10 @@ public class AvanzamentoNotificheB2bSteps {
             // proceed with default flux
             iun = sharedSteps.getSentNotification().getIun();
             sharedSteps.setSentNotification(b2bClient.getSentNotification(iun));
-            timelineElementList = sharedSteps.getSentNotification().getTimeline();
         }
 
         // get timeline event id
-        if (dataFromTest != null && dataFromTest.getTimelineElement() != null) {
-            String timelineEventId = sharedSteps.getTimelineEventId(timelineEventCategory, iun, dataFromTest);
-            timelineElement = timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId)).findAny().orElse(null);
-        } else {
-            timelineElement = timelineElementList.stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).findAny().orElse(null);
-        }
-        return timelineElement;
+        return sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
     }
 
     private void loadTimeline(String timelineEventCategory, boolean existCheck, @Transpose DataTest dataFromTest) {
