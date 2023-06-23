@@ -332,7 +332,7 @@ Feature: Notifica visualizzata
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
     And destinatario
-      | denomination | Dino De Sauro |
+      | denomination | mr. noindirizzi |
       | taxId | DSRDNI00A01A225I |
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-DiscoveryIrreperibile_890 |
@@ -343,5 +343,5 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
     #And "Leonardo da Vinci" legge la notifica ricevuta
-    And la notifica può essere correttamente recuperata da "Dino De Sauro"
+    And la notifica può essere correttamente recuperata da "mr. noindirizzi"
     #And vengono l
