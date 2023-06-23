@@ -344,4 +344,4 @@ Feature: Notifica visualizzata
       | details_sentAttemptMade | 0 |
     #And "Leonardo da Vinci" legge la notifica ricevuta
     And la notifica può essere correttamente recuperata da "Leonardo da Vinci"
-    #And vengono l
+    #And vengono
