@@ -332,8 +332,7 @@ Feature: Notifica visualizzata
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
     And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
+      | denomination | Mr. NoIndirizzi |
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-DiscoveryIrreperibile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -343,5 +342,5 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
     #And "Leonardo da Vinci" legge la notifica ricevuta
-    And la notifica può essere correttamente recuperata da "Leonardo da Vinci"
+    And la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     #And vengono
