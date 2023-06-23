@@ -195,19 +195,19 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
     Then viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" esista
       | loadTimeline | true |
-      | pollingTime | 30000 |
+      | pollingTime | 40000 |
       | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
       | loadTimeline | true |
-      | pollingTime | 30000 |
+      | pollingTime | 40000 |
       | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
       | loadTimeline | true |
-      | pollingTime | 30000 |
+      | pollingTime | 40000 |
       | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 1 |
@@ -287,12 +287,14 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG005C |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
-      | loadTimeline | true |
-      | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20     |
+      | details_recIndex | 0 |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-9] Invio notifica con percorso analogico. Successo giacenza 890 gt 23L(OK-Giacenza-gt10-23L_890).
@@ -460,10 +462,6 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | PNAG012 |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECAG006C |
     And viene verificato che l'elemento di timeline "REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -472,8 +470,15 @@ Feature: Workflow analogico
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20     |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG006C |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-14] Invio notifica con percorso analogico. Fallimento giacenza gt 890 (FAIL-Giacenza-gt10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -506,13 +511,15 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | PNAG012 |
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | loadTimeline | true |
-      | pollingTime | 50000 |
+      | pollingTime | 30000 |
       | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG007C |
 
-  @e2e @ignore
+
+
+  @e2e
   Scenario: [E2E-WF-ANALOG-15] Invio notifica con percorso analogico. Fallimento giacenza gt 23L 890 (FAIL-Giacenza-gt10-23L_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -528,6 +535,7 @@ Feature: Workflow analogico
       | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@FAIL-GIACENZA-GT10-23L_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
@@ -537,23 +545,26 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG007B |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
-      | details_attachments | [{"documentType": "23L"}] |
+      | details_attachments | [{"documentType": "Plico"}] |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG007B |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
-      | details_attachments | [{"documentType": "Plico"}] |
+      | details_attachments | [{"documentType": "23L"}] |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | PNAG012 |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG007C |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-16] Invio notifica con percorso analogico. Compiuta giacenza 890 (OK-CompiutaGiacenza_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -569,7 +580,7 @@ Feature: Workflow analogico
       | numCheck    | 30    |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_physicalAddress | {"address": "VIA@OK-COMPIUTA-GIACENZA_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-COMPIUTAGIACENZA_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
@@ -580,20 +591,10 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECAG011B |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
       | details_attachments | [{"documentType": "23L"}] |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECAG008B |
-      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
-      | details_attachments | [{"documentType": "Plico"}] |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | PNAG012 |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECAG008C |
     And viene verificato che l'elemento di timeline "REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -602,6 +603,22 @@ Feature: Workflow analogico
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG008B |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "Plico"}] |
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20    |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG008C |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-17] Invio notifica con percorso analogico. Successo giacenza ar (OK-Giacenza_AR).
