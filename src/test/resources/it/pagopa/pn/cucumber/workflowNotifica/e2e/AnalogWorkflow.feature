@@ -30,14 +30,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG001C |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
-      | numCheck    | 20     |
+      | numCheck    | 30    |
       | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-2] Invio notifica con percorso analogico. Successo giacenza delegato 890 (OK-GiacenzaDelegato-lte10_890).
@@ -68,14 +73,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG002C |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
-      | numCheck    | 20     |
+      | numCheck    | 30    |
       | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-3] Invio notifica con percorso analogico 890. Successo al secondo tentativo invio 890.
@@ -111,14 +121,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG001C |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
-      | numCheck    | 20     |
+      | numCheck    | 30    |
       | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-4] Invio notifica con percorso analogico. Successo invio RS (OK_RS)
@@ -245,14 +260,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG005C |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
-      | numCheck    | 20     |
+      | numCheck    | 30    |
       | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-8] Invio notifica con percorso analogico. Successo giacenza gt 890 (OK-Giacenza-gt10_890).
@@ -283,13 +303,18 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | PNAG012 |
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "REFINEMENT" esista
       | loadTimeline | true |
-      | pollingTime | 30000 |
-      | numCheck    | 20     |
       | details_recIndex | 0 |
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | loadTimeline | true |
@@ -332,14 +357,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG005C |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
-      | numCheck    | 20     |
+      | numCheck    | 30    |
       | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-10] Invio notifica con percorso analogico. Successo giacenza 890 gt 10(OK-GiacenzaDelegato-gt10_890).
@@ -429,14 +459,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG006C |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
-      | numCheck    | 20     |
+      | numCheck    | 30    |
       | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-13] Invio notifica con percorso analogico. Successo giacenza delegato gt 23L 890 (OK-GiacenzaDelegato-gt10-23L_890).
@@ -467,14 +502,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | PNAG012 |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
-      | numCheck    | 20     |
+      | numCheck    | 30    |
       | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -514,6 +554,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | PNAG012 |
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
+    And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -559,6 +612,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | PNAG012 |
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
+    And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -598,14 +664,19 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | PNAG012 |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
-      | numCheck    | 20     |
+      | numCheck    | 30    |
       | details_recIndex | 0 |
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details_recIndex | 0 |
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | loadTimeline | true |
       | pollingTime | 30000 |

@@ -120,7 +120,7 @@ Feature: Notifica visualizzata
       | details | NOT_NULL |
       | details_recIndex | 0 |
 
-  @e2e #FAIL
+  @e2e
   Scenario: [E2E-WF-INHIBITION-3] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   La notifica viene letta subito dopo la generazione dell'evento di timeline SCHEDULE_REFINEMENT. Questa lettura non deve generare
   un evento di timeline REFINEMENT.
@@ -156,7 +156,7 @@ Feature: Notifica visualizzata
   Scenario: [E2E-WF-INHIBITION-4] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene visualizzata la notifica dopo la generazione del secondo evento di timeline SEND_DIGITAL_DOMICILE. Il pagamento non deve generare
   un evento di timeline PREPARE_SIMPLE_REGISTERED_LETTER e SEND_SIMPLE_REGISTERED_LETTER.
-  Viene verificata la presenza degli elementi SCHEDULE_REFINEMENT e REFINEMENT.
+  Viene verificata l'assenza degli elementi SCHEDULE_REFINEMENT e REFINEMENT.
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di Palermo |
@@ -282,7 +282,7 @@ Feature: Notifica visualizzata
   @e2e
   Scenario: [E2E-WF-INHIBITION-8] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene visualizzata la notifica subito dopo la generazione dell'evento di timeline SEND_SIMPLE_REGISTERED_LETTER.
-  Viene verificata l'assenza degli elementi SCHEDULE_REFINEMENT e REFINEMENT.
+  Viene verificata l'assenza dell'elemento REFINEMENT.
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |

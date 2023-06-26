@@ -205,13 +205,12 @@ Feature: Notifica pagata
       | details_sentAttemptMade | 0 |
     Then l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
-    And viene verificato che il destinatario "Cristoforo Colombo" di tipo "PF" non sia nella tabella pn-paper-notification-failed
+    And viene verificato che il destinatario "Mr. UtenteQualsiasi" di tipo "PF" non sia nella tabella pn-paper-notification-failed
 
   @e2e
   Scenario: [E2E-WF-INHIBITION-PAID-8b] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento dopo il primo SEND_ANALOG_DOMICILE.
-  Viene inoltre verificata l'assenza del record in tabella pn-paper-notification-failed e del secondo SEND_ANALOG_DOMICILE
-  e la presenza del REFINEMENT.
+  Viene inoltre verificata l'assenza del record in tabella pn-paper-notification-failed e del secondo SEND_ANALOG_DOMICILE.
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
@@ -246,7 +245,7 @@ Feature: Notifica pagata
       | numCheck    | 20    |
       | details | NOT_NULL |
       | details_recIndex | 0 |
-    And viene verificato che il destinatario "Cristoforo Colombo" di tipo "PF" non sia nella tabella pn-paper-notification-failed
+    And viene verificato che il destinatario "Mr. UtenteQualsiasi" di tipo "PF" non sia nella tabella pn-paper-notification-failed
 
   @e2e
   Scenario: [E2E-WF-INHIBITION-PAID-9] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
@@ -329,5 +328,5 @@ Feature: Notifica pagata
       | numCheck    | 20    |
       | details | NOT_NULL |
       | details_recIndex | 0 |
-    And viene verificato che il destinatario "Cristoforo Colombo" di tipo "PF" sia nella tabella pn-paper-notification-failed
+    And viene verificato che il destinatario "Mr. UtenteQualsiasi" di tipo "PF" sia nella tabella pn-paper-notification-failed
 
