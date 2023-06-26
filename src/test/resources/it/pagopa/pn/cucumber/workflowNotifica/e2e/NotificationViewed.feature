@@ -92,7 +92,7 @@ Feature: Notifica visualizzata
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile_address | testpagopa1@pnpagopa.postecert.local |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SEND_DIGITAL_DOMICILE" esista
@@ -105,7 +105,7 @@ Feature: Notifica visualizzata
       | details_isFirstSendRetry | false |
       | details_digitalAddressSource | SPECIAL |
       | details_digitalAddress | {"address": "testpagopa1@pnpagopa.postecert.local", "type": "PEC"} |
-    And la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
+    And la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     Then viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
       | details | NOT_NULL |
@@ -127,16 +127,16 @@ Feature: Notifica visualizzata
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
-    And destinatario "Mr. UtenteQualsiasi"
-      | NULL | NULL |
+    And destinatario "Mr. NoIndirizzi"
+      | digitalDomicile_address | testpagopa1@pnpagopa.postecert.local |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 1000 |
-      | numCheck    | 55     |
+      | numCheck    | 70     |
       | details | NOT_NULL |
       | details_recIndex | 0 |
-    And la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
+    And la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGITAL_SUCCESS_WORKFLOW"
       | details | NOT_NULL |
       | details_recIndex | 0 |
@@ -160,7 +160,7 @@ Feature: Notifica visualizzata
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di Palermo |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -174,7 +174,7 @@ Feature: Notifica visualizzata
       | details_isFirstSendRetry | false |
       | details_digitalAddressSource | SPECIAL |
       | details_digitalAddress | {"address": "test@fail.it", "type": "PEC"} |
-    And la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
+    And la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" non esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -206,11 +206,11 @@ Feature: Notifica visualizzata
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di Palermo |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via@ok_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
+    Then la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" non esista
       | loadTimeline | true |
       | pollingTime | 20000 |
@@ -251,7 +251,7 @@ Feature: Notifica visualizzata
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Discovery_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -262,7 +262,7 @@ Feature: Notifica visualizzata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-    Then la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
+    Then la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | loadTimeline | true |
       | pollingTime | 20000 |
@@ -288,7 +288,7 @@ Feature: Notifica visualizzata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
       | payment_pagoPaForm | SI |
@@ -304,7 +304,7 @@ Feature: Notifica visualizzata
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
       | details_analogCost | 133 |
-    Then la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
+    Then la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene verificato che l'elemento di timeline "REFINEMENT" non esista
       | loadTimeline | true |
       | pollingTime | 30000 |
