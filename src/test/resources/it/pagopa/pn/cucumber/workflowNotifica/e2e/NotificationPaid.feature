@@ -7,7 +7,7 @@ Feature: Notifica pagata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. UtenteQualsiasi2"
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -34,7 +34,7 @@ Feature: Notifica pagata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. UtenteQualsiasi2"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_AR |
       | payment_pagoPaForm | SI |
@@ -60,7 +60,7 @@ Feature: Notifica pagata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. UtenteQualsiasi2"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
       | payment_pagoPaForm | SI |
@@ -112,7 +112,7 @@ Feature: Notifica pagata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. UtenteQualsiasi2"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
       | payment_pagoPaForm | SI |
@@ -151,7 +151,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. UtenteQualsiasi2"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
       | payment_pagoPaForm | SI |
@@ -189,7 +189,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. UtenteQualsiasi2"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Irreperibile_890 |
       | payment_pagoPaForm | SI |
@@ -216,7 +216,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. UtenteQualsiasi2"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Discovery_890 |
       | payment_pagoPaForm | SI |
@@ -255,7 +255,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. UtenteQualsiasi2"
       | digitalDomicile | NULL |
       | physicalAddress_address | VIA@FAIL-Discovery_890 |
       | payment_pagoPaForm | SI |
@@ -293,7 +293,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario "Mr. UtenteQualsiasi"
+    And destinatario "Mr. UtenteQualsiasi2"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-DiscoveryIrreperibile_890 |
       | payment_pagoPaForm | SI |
