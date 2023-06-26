@@ -328,5 +328,5 @@ Feature: Notifica pagata
       | numCheck    | 20    |
       | details | NOT_NULL |
       | details_recIndex | 0 |
-    And viene verificato che il destinatario "Mr. UtenteQualsiasi" di tipo "PF" sia nella tabella pn-paper-notification-failed
+    And viene verificato che il destinatario "Mr. UtenteQualsiasi2" di tipo "PF" sia nella tabella pn-paper-notification-failed
 
