@@ -67,9 +67,11 @@ public class RicezioneNotificheWebDelegheSteps {
         String userTaxId;
         switch (user) {
             case "Mario Cucumber":
+            case "Mr. UtenteQualsiasi2":
                 userTaxId = marioCucumberTaxID;
                 break;
             case "Mario Gherkin":
+            case "Mr. UtenteQualsiasi":
                 userTaxId = marioGherkinTaxID;
                 break;
             case "GherkinSrl":
@@ -122,6 +124,22 @@ public class RicezioneNotificheWebDelegheSteps {
                         .companyName("cucumberspa")
                         .person(false);
                 break;
+            case "mr. utentequalsiasi2":
+                userDto = new UserDto()
+                        .displayName("Mr. UtenteQualsiasi2")
+                        .firstName("Mr.")
+                        .lastName("UtenteQualsiasi2")
+                        .fiscalCode(marioCucumberTaxID)
+                        .person(true);
+                break;
+            case "mr. utentequalsiasi":
+                userDto = new UserDto()
+                        .displayName("Mr. UtenteQualsiasi")
+                        .firstName("Mr.")
+                        .lastName("UtenteQualsiasi")
+                        .fiscalCode(marioGherkinTaxID)
+                        .person(true);
+                break;
             default:
                 throw new IllegalArgumentException();
         }
@@ -133,9 +151,11 @@ public class RicezioneNotificheWebDelegheSteps {
         boolean beenSet = false;
         switch (user.trim().toLowerCase()) {
             case "mario cucumber":
+            case "mr. utentequalsiasi":
                 beenSet = webMandateClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
                 break;
             case "mario gherkin":
+            case "mr. utentequalsiasi2":
                 beenSet = webMandateClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 break;
             case "gherkinsrl":

@@ -4,15 +4,14 @@ Feature: Notifica visualizzata
   Scenario: [E2E-NOTIFICATION-VIEWED-1] Visualizzazione da parte del destinatario della notifica
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
-    And destinatario
-      | denomination | Ettore Fieramosca |
-      | taxId        | FRMTTR76M06B715E  |
+    And destinatario "Mr. UtenteQualsiasi2"
+      | NULL | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "REQUEST_ACCEPTED" esista
       | loadTimeline | true |
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
-    And la notifica può essere correttamente recuperata da "Mario Cucumber"
+    And la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi2"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
       | details_recIndex | 0 |
@@ -22,24 +21,23 @@ Feature: Notifica visualizzata
 
   @e2e
   Scenario: [E2E-NOTIFICATION-VIEWED-2] Visualizzazione da parte del delegato della notifica
-    Given "Mario Gherkin" viene delegato da "Mario Cucumber"
-    And "Mario Gherkin" accetta la delega "Mario Cucumber"
+    Given "Mr. UtenteQualsiasi" viene delegato da "Mr. UtenteQualsiasi2"
+    And "Mr. UtenteQualsiasi" accetta la delega "Mr. UtenteQualsiasi2"
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
-    And destinatario
-      | denomination | Ettore Fieramosca |
-      | taxId        | FRMTTR76M06B715E  |
+    And destinatario "Mr. UtenteQualsiasi2"
+      | NULL | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "REQUEST_ACCEPTED" esista
       | loadTimeline | true |
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
-    And la notifica può essere correttamente letta da "Mario Gherkin" con delega
+    And la notifica può essere correttamente letta da "Mr. UtenteQualsiasi" con delega
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
-      | details_delegateInfo | {"taxId": "CLMCST42R12D969Z", "denomination": "Cristoforo Colombo", "delegateType": "PF"} |
+      | details_delegateInfo | {"denomination": "Mr. UtenteQualsiasi", "delegateType": "PF"} |
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
       | details_recIndex | 0 |
 
@@ -47,21 +45,20 @@ Feature: Notifica visualizzata
   Scenario: [E2E-NOTIFICATION-VIEWED-4] A valle della visualizzazione della notifica non deve essere generato un nuovo elemento di timeline NOTIFICATION VIEWED
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
-    And destinatario
-      | denomination | Ettore Fieramosca |
-      | taxId        | FRMTTR76M06B715E  |
+    And destinatario "Mr. UtenteQualsiasi2"
+      | NULL | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "REQUEST_ACCEPTED" esista
       | loadTimeline | true |
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
-    And la notifica può essere correttamente recuperata da "Ettore Fieramosca"
+    And la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi2"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
     # seconda lettura
-    And la notifica può essere correttamente recuperata da "Mario Cucumber"
+    And la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
     And verifico che l'atto opponibile a terzi di "NOTIFICATION_VIEWED" sia lo stesso
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
@@ -95,9 +92,7 @@ Feature: Notifica visualizzata
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile_address | testpagopa1@pnpagopa.postecert.local |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SEND_DIGITAL_DOMICILE" esista
@@ -110,7 +105,7 @@ Feature: Notifica visualizzata
       | details_isFirstSendRetry | false |
       | details_digitalAddressSource | SPECIAL |
       | details_digitalAddress | {"address": "testpagopa1@pnpagopa.postecert.local", "type": "PEC"} |
-    And la notifica può essere correttamente recuperata da "Cristoforo Colombo"
+    And la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
     Then viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
       | details | NOT_NULL |
@@ -132,9 +127,8 @@ Feature: Notifica visualizzata
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
+      | NULL | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
@@ -142,7 +136,7 @@ Feature: Notifica visualizzata
       | numCheck    | 55     |
       | details | NOT_NULL |
       | details_recIndex | 0 |
-    And la notifica può essere correttamente recuperata da "Cristoforo Colombo"
+    And la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
     And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGITAL_SUCCESS_WORKFLOW"
       | details | NOT_NULL |
       | details_recIndex | 0 |
@@ -166,9 +160,7 @@ Feature: Notifica visualizzata
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di Palermo |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -182,7 +174,7 @@ Feature: Notifica visualizzata
       | details_isFirstSendRetry | false |
       | details_digitalAddressSource | SPECIAL |
       | details_digitalAddress | {"address": "test@fail.it", "type": "PEC"} |
-    And la notifica può essere correttamente recuperata da "Cristoforo Colombo"
+    And la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
     And viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" non esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -214,13 +206,11 @@ Feature: Notifica visualizzata
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di Palermo |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then la notifica può essere correttamente recuperata da "Cristoforo Colombo"
+    Then la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
     And viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" non esista
       | loadTimeline | true |
       | pollingTime | 20000 |
@@ -261,9 +251,7 @@ Feature: Notifica visualizzata
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Discovery_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -274,7 +262,7 @@ Feature: Notifica visualizzata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-    Then la notifica può essere correttamente recuperata da "Cristoforo Colombo"
+    Then la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | loadTimeline | true |
       | pollingTime | 20000 |
@@ -299,9 +287,7 @@ Feature: Notifica visualizzata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
       | payment_pagoPaForm | SI |
@@ -317,7 +303,7 @@ Feature: Notifica visualizzata
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
       | details_analogCost | 133 |
-    Then la notifica può essere correttamente recuperata da "Cristoforo Colombo"
+    Then la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
     And viene verificato che l'elemento di timeline "REFINEMENT" non esista
       | loadTimeline | true |
       | pollingTime | 30000 |
