@@ -62,7 +62,7 @@ Feature: Notifica visualizzata
     And verifico che l'atto opponibile a terzi di "NOTIFICATION_VIEWED" sia lo stesso
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
-    And viene verificato che il numero di elementi di timeline "NOTIFICATION_VIEWED" della notifica sia di 1
+    And viene verificato che il numero di elementi di timeline "NOTIFICATION_VIEWED" sia di 1
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
       | details_recIndex | 0 |
 
@@ -277,7 +277,8 @@ Feature: Notifica visualizzata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 1 |
-    Then viene verificato che il numero di elementi di timeline "SEND_ANALOG_DOMICILE" della notifica sia di 1
+    Then viene verificato che il numero di elementi di timeline "SEND_ANALOG_DOMICILE" sia di 1
+      | NULL | NULL |
 
   @e2e
   Scenario: [E2E-WF-INHIBITION-8] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.

@@ -178,7 +178,8 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
-    And viene verificato che il numero di elementi di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" della notifica sia di 0
+    And viene verificato che il numero di elementi di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" sia di 0
+      | NULL | NULL |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-6] Invio notifica con percorso analogico. Successo al secondo tentativo invio RS (OK-Retry_RS).
@@ -1717,7 +1718,6 @@ Feature: Workflow analogico
       | seq3 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "CON080", "recIndex": 0, "sent_attempt_made": 1} |
       | seq4 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "RECRN002E", "recIndex": 0, "sent_attempt_made": 1, "attachments": [{"documentType": "Plico"}]} |
       | seq5 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN002F", "recIndex": 0, "sent_attempt_made": 1, "deliveryFailureCause": "M03"} |
-
 
   @e2e
   Scenario: [E2E-WF-ANALOG-42] Partenza workflow cartaceo se non viene inviato un messaggio di cortesia
