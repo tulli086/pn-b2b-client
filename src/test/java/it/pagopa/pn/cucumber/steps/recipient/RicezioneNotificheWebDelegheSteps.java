@@ -67,11 +67,11 @@ public class RicezioneNotificheWebDelegheSteps {
         String userTaxId;
         switch (user) {
             case "Mario Cucumber":
-            case "Mr. UtenteQualsiasi2":
+            case "Mr. UtenteQualsiasi":
                 userTaxId = marioCucumberTaxID;
                 break;
             case "Mario Gherkin":
-            case "Mr. UtenteQualsiasi":
+            case "Mr. UtenteQualsiasi2":
                 userTaxId = marioGherkinTaxID;
                 break;
             case "GherkinSrl":
@@ -124,19 +124,19 @@ public class RicezioneNotificheWebDelegheSteps {
                         .companyName("cucumberspa")
                         .person(false);
                 break;
-            case "mr. utentequalsiasi2":
-                userDto = new UserDto()
-                        .displayName("Mr. UtenteQualsiasi2")
-                        .firstName("Mr.")
-                        .lastName("UtenteQualsiasi2")
-                        .fiscalCode(marioCucumberTaxID)
-                        .person(true);
-                break;
             case "mr. utentequalsiasi":
                 userDto = new UserDto()
                         .displayName("Mr. UtenteQualsiasi")
                         .firstName("Mr.")
                         .lastName("UtenteQualsiasi")
+                        .fiscalCode(marioCucumberTaxID)
+                        .person(true);
+                break;
+            case "mr. utentequalsiasi2":
+                userDto = new UserDto()
+                        .displayName("Mr. UtenteQualsiasi2")
+                        .firstName("Mr.")
+                        .lastName("UtenteQualsiasi2")
                         .fiscalCode(marioGherkinTaxID)
                         .person(true);
                 break;

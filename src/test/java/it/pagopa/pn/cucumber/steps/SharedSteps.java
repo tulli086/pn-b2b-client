@@ -19,10 +19,7 @@ import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
 import it.pagopa.pn.client.b2b.pa.testclient.*;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
-import it.pagopa.pn.cucumber.utils.DataTest;
-import it.pagopa.pn.cucumber.utils.EventId;
-import it.pagopa.pn.cucumber.utils.GroupPosition;
-import it.pagopa.pn.cucumber.utils.TimelineEventId;
+import it.pagopa.pn.cucumber.utils.*;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
@@ -49,7 +46,6 @@ import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SharedSteps {
-
 
     private final DataTableTypeUtil dataTableTypeUtil;
     private final IPnPaB2bClient b2bClient;
@@ -233,9 +229,9 @@ public class SharedSteps {
             case "Mr. GeneraleFallimento":
                 return mrGeneraleFallimentoTaxID;
             case "Mr. UtenteQualsiasi":
-                return marioGherkinTaxID;
-            case "Mr. UtenteQualsiasi2":
                 return marioCucumberTaxID;
+            case "Mr. UtenteQualsiasi2":
+                return marioGherkinTaxID;
         }
         return null;
     }
@@ -811,12 +807,12 @@ public class SharedSteps {
     public void selectUser(String recipient) {
         switch (recipient.trim().toLowerCase()){
             case "mario cucumber":
-            case "mr. utentequalsiasi2":
+            case "mr. utentequalsiasi":
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
                 break;
             case "mario gherkin":
-            case "mr. utentequalsiasi":
+            case "mr. utentequalsiasi2":
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 break;
@@ -1054,6 +1050,108 @@ public class SharedSteps {
         this.idOrganizationCucumberSpa = idOrganizationCucumberSpa;
     }
 
+    public TimelineElementWait getTimelineElementCategory(String timelineEventCategory) {
+        TimelineElementWait timelineElementWait;
+        switch (timelineEventCategory) {
+            case "REQUEST_ACCEPTED":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.REQUEST_ACCEPTED, 2, workFlowWait);
+                break;
+            case "AAR_GENERATION":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.AAR_GENERATION, 2, workFlowWait * 2);
+                break;
+            case "GET_ADDRESS":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.GET_ADDRESS, 2, workFlowWait * 2);
+                break;
+            case "SEND_DIGITAL_DOMICILE":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SEND_DIGITAL_DOMICILE, 2, workFlowWait * 2);
+                break;
+            case "NOTIFICATION_VIEWED":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.NOTIFICATION_VIEWED, 2, workFlowWait * 2);
+                break;
+            case "SEND_COURTESY_MESSAGE":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SEND_COURTESY_MESSAGE, 15, workFlowWait);
+                break;
+            case "DIGITAL_SUCCESS_WORKFLOW":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.DIGITAL_SUCCESS_WORKFLOW, 3, workFlowWait * 3);
+                break;
+            case "DIGITAL_FAILURE_WORKFLOW":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.DIGITAL_FAILURE_WORKFLOW, 15, workFlowWait * 3);
+                break;
+            case "NOT_HANDLED":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.NOT_HANDLED, 15, workFlowWait);
+                break;
+            case "SEND_DIGITAL_FEEDBACK":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SEND_DIGITAL_FEEDBACK, 2, workFlowWait * 3);
+                break;
+            case "SEND_DIGITAL_PROGRESS":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SEND_DIGITAL_PROGRESS, 2, workFlowWait * 3);
+                break;
+            case "PUBLIC_REGISTRY_CALL":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.PUBLIC_REGISTRY_CALL, 2, workFlowWait * 4);
+                break;
+            case "PUBLIC_REGISTRY_RESPONSE":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.PUBLIC_REGISTRY_RESPONSE, 2, workFlowWait * 4);
+                break;
+            case "SCHEDULE_ANALOG_WORKFLOW":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SCHEDULE_ANALOG_WORKFLOW, 2, workFlowWait * 3);
+                break;
+            case "ANALOG_SUCCESS_WORKFLOW":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.ANALOG_SUCCESS_WORKFLOW, 5, workFlowWait * 4);
+                break;
+            case "ANALOG_FAILURE_WORKFLOW":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.ANALOG_FAILURE_WORKFLOW, 15, workFlowWait);
+                break;
+            case "SEND_ANALOG_DOMICILE":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SEND_ANALOG_DOMICILE, 4, workFlowWait * 3);
+                break;
+            case "SEND_ANALOG_PROGRESS":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SEND_ANALOG_PROGRESS, 4, workFlowWait * 3);
+                break;
+            case "SEND_ANALOG_FEEDBACK":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SEND_ANALOG_FEEDBACK, 4, workFlowWait * 3);
+                break;
+            case "PREPARE_SIMPLE_REGISTERED_LETTER":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.PREPARE_SIMPLE_REGISTERED_LETTER, 16, workFlowWait * 3);
+                break;
+            case "SEND_SIMPLE_REGISTERED_LETTER":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER, 16, workFlowWait * 3);
+                break;
+            case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS, 16, workFlowWait * 3);
+                break;
+            case "PAYMENT":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.PAYMENT, 15, workFlowWait);
+                break;
+            case "PREPARE_ANALOG_DOMICILE":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.PREPARE_ANALOG_DOMICILE, 4, workFlowWait * 5);
+                break;
+            case "COMPLETELY_UNREACHABLE":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.COMPLETELY_UNREACHABLE, 15, workFlowWait);
+                break;
+            case "COMPLETELY_UNREACHABLE_CREATION_REQUEST":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.COMPLETELY_UNREACHABLE_CREATION_REQUEST, 15, workFlowWait);
+                break;
+            case "PREPARE_DIGITAL_DOMICILE":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.PREPARE_DIGITAL_DOMICILE, 2, workFlowWait * 3);
+                break;
+            case "SCHEDULE_DIGITAL_WORKFLOW":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SCHEDULE_DIGITAL_WORKFLOW, 2,workFlowWait * 3);
+                break;
+            case "SCHEDULE_REFINEMENT":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.SCHEDULE_REFINEMENT, 3, workFlowWait);
+                break;
+            case "REFINEMENT":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.REFINEMENT, 2, workFlowWait);
+                break;
+            case "REQUEST_REFUSED":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategory.REQUEST_REFUSED, 2, workFlowWait);
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        return timelineElementWait;
+    }
+
     public String getTimelineEventId(String timelineEventCategory, String iun, DataTest dataFromTest) {
         TimelineElement timelineElement = dataFromTest.getTimelineElement();
         TimelineElementDetails timelineElementDetails = timelineElement.getDetails();
@@ -1120,7 +1218,7 @@ public class SharedSteps {
         return null;
     }
 
-    public TimelineElement getTimelineElementByEventId (String timelineEventCategory, DataTest dataFromTest) {
+    public TimelineElement getTimelineElementByEventId(String timelineEventCategory, DataTest dataFromTest) {
         List<TimelineElement> timelineElementList = notificationResponseComplete.getTimeline();
         String iun;
         if (timelineEventCategory.equals(TimelineElementCategory.REQUEST_REFUSED.getValue())) {
@@ -1156,8 +1254,6 @@ public class SharedSteps {
                 }
                 else
                     return timelineElemList != null && timelineElemList.size() > 0 ? timelineElemList.get(0) : null;
-
-                //return timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId) && elem.getDetails().getDeliveryDetailCode().equals(timelineElementDetails.getDeliveryDetailCode())).findAny().orElse(null);
             }
             return timelineElementList.stream().filter(elem -> elem.getElementId().equals(timelineEventId)).findAny().orElse(null);
         }

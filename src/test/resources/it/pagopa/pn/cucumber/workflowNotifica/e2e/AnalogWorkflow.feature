@@ -178,7 +178,8 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
-    And viene verificato che il numero di elementi di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" della notifica sia di 0
+    And viene verificato che il numero di elementi di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" sia di 0
+      | NULL | NULL |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-6] Invio notifica con percorso analogico. Successo al secondo tentativo invio RS (OK-Retry_RS).
@@ -912,13 +913,17 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRN011 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | PNRN012 |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRN003B |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
       | details_attachments | [{"documentType": "AR"}] |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRN003C |
@@ -933,7 +938,7 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-23] Invio notifica con percorso analogico. Fallimento giacenza gt 10 AR (FAIL-Giacenza-gt10_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -958,13 +963,17 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRN011 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | PNRN012 |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRN004B |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
       | details_attachments | [{"documentType": "Plico"}] |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRN004C |
@@ -979,7 +988,7 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-24] Invio notifica con percorso analogico. Fallimento compiuta giacenza AR (FAIL-CompiutaGiacenza_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -989,7 +998,7 @@ Feature: Workflow analogico
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-CompiutaGiacenza_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
       | numCheck    | 30    |
@@ -1014,16 +1023,6 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRN005C |
-    And viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
-      | details_recIndex | 0 |
-    And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-    And si attende che sia presente il perfezionamento per decorrenza termini
-      | details_recIndex | 0 |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
-      | loadTimeline | true |
-      | details_recIndex | 0 |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-25] Invio notifica con percorso analogico. Successo seconda raccomandata AR (OK-Retry_AR).
@@ -1207,7 +1206,7 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-29] Invio notifica con percorso analogico. Fallimento irreperibile 890 (FAIL-Irreperibile_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1238,17 +1237,6 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG003F |
       | details_deliveryFailureCause | M03 |
-    And viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
-      | loadTimeline | true |
-      | details_recIndex | 0 |
-    And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_FAILURE_WORKFLOW"
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-    And si attende che sia presente il perfezionamento per decorrenza termini
-      | details_recIndex | 0 |
-    And viene verificato che l'elemento di timeline "REFINEMENT" esista
-      | loadTimeline | true |
-      | details_recIndex | 0 |
 
   @e2e
   Scenario: [E2E-WF-ANALOG-30] Invio notifica con percorso analogico. Fallimento primo tentativo e successo secondo tentativo 890 (FAIL-Discovery_890).
@@ -1730,7 +1718,6 @@ Feature: Workflow analogico
       | seq3 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "CON080", "recIndex": 0, "sent_attempt_made": 1} |
       | seq4 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "RECRN002E", "recIndex": 0, "sent_attempt_made": 1, "attachments": [{"documentType": "Plico"}]} |
       | seq5 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN002F", "recIndex": 0, "sent_attempt_made": 1, "deliveryFailureCause": "M03"} |
-
 
   @e2e
   Scenario: [E2E-WF-ANALOG-42] Partenza workflow cartaceo se non viene inviato un messaggio di cortesia

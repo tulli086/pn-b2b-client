@@ -279,9 +279,11 @@ public class RicezioneNotificheWebSteps {
     public void siPredisponeAddressbook(String user) {
         switch (user) {
             case "Mario Cucumber":
+            case "Mr. UtenteQualsiasi":
                 this.iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
                 break;
             case "Mario Gherkin":
+            case "Mr. UtenteQualsiasi2":
                 this.iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 break;
             case "Mr. IndirizzoPiattaforma":
