@@ -25,10 +25,172 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static java.time.OffsetDateTime.now;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Awaitility.with;
+
+
+class AttachmentSpec {
+    public String documentType;
+
+    public String toReportString() {
+        return "documentType " + this.documentType;
+    }
+    public boolean matchesAttachmentDetails(List<AttachmentDetails> attachmentDetails) {
+        return attachmentDetails.stream().anyMatch(attachment -> attachment.getDocumentType().equals(this.documentType));
+    }
+}
+
+
+interface TimelineEventSpec {
+    public List<String> toReportString();
+    public void checkTimelineElement(TimelineElement fullElement);
+    public boolean isExhausted();
+}
+
+class SimpleTimelineEventSpec implements TimelineEventSpec {
+    public String category;
+    public String deliveryDetailCode;
+
+    public Integer recIndex;
+
+    public Integer sent_attempt_made;
+
+    public String deliveryFailureCause;
+
+    public List<AttachmentSpec> attachments;
+
+    public boolean exhausted = false;
+
+    public List<String> toReportString() {
+        List<String> result = new ArrayList<String>();
+        if (this.category != null) {
+            result.add("Category - " + this.category);
+        }
+        if (this.deliveryDetailCode != null) {
+            result.add("deliveryDetailCode - " + this.deliveryDetailCode);
+        }
+        if (this.recIndex != null) {
+            result.add("recIndex - " + this.recIndex);
+        }
+        if (this.sent_attempt_made != null) {
+            result.add("sent_attempt_made - " + this.sent_attempt_made);
+        }
+        if (this.deliveryFailureCause != null) {
+            result.add("deliveryFailureCause - " + this.deliveryFailureCause);
+        }
+        if (this.attachments != null) {
+            result.add("attachments - " + this.attachments.stream().reduce("", (reportString, attachment) -> reportString + attachment.toReportString() + " / ", String::concat));
+        }
+        return result;
+    }
+
+    public void checkTimelineElement(TimelineElement fullElement) {
+        if (!this.exhausted && this.matchesTimelineElement(fullElement)) {
+            this.exhausted = true;
+        }
+    }
+
+    public boolean isExhausted() {
+        return this.exhausted;
+    }
+
+    public boolean matchesTimelineElement(TimelineElement fullElement) {
+        boolean result = true;
+        if (this.category != null) {
+            result = result && this.category.equals(fullElement.getCategory().getValue());
+        }
+        if (this.deliveryDetailCode != null) {
+            result = result && this.deliveryDetailCode.equals(fullElement.getDetails().getDeliveryDetailCode());
+        }
+        if (this.recIndex != null) {
+            result = result && this.recIndex.equals(fullElement.getDetails().getRecIndex());
+        }
+        if (this.sent_attempt_made != null) {
+            result = result && this.sent_attempt_made.equals(this.getSentAttemptMade(fullElement));
+        }
+        if (this.deliveryFailureCause != null) {
+            result = result && this.deliveryFailureCause.equals(fullElement.getDetails().getDeliveryFailureCause());
+        }
+        if (this.attachments != null) {
+            result = result && fullElement.getDetails().getAttachments() != null && this.attachments.stream().allMatch(attachment -> attachment.matchesAttachmentDetails(fullElement.getDetails().getAttachments()));
+        }
+        return result;
+    }
+
+    private Integer getSentAttemptMade(TimelineElement timelineElement) {
+        if (timelineElement.getDetails().getSentAttemptMade() != null) {
+            return timelineElement.getDetails().getSentAttemptMade();
+        } else if (timelineElement.getElementId().contains("ATTEMPT_")) {
+            int attemptIndex = timelineElement.getElementId().indexOf("ATTEMPT_") + "ATTEMPT_".length();
+            return Integer.valueOf(timelineElement.getElementId().substring(attemptIndex, attemptIndex+1));
+        } else {
+            return null;
+        }
+    }
+}
+
+
+class ParallelTimelineEventSpec implements TimelineEventSpec {
+    public List<SimpleTimelineEventSpec> simpleSpecs = new ArrayList<SimpleTimelineEventSpec>();
+
+    ParallelTimelineEventSpec(SimpleTimelineEventSpec spec1, SimpleTimelineEventSpec spec2) {
+        this.simpleSpecs.add(spec1);
+        this.simpleSpecs.add(spec2);
+    }
+
+    public List<String> toReportString() {
+        List<String> result = new ArrayList<String>();
+        if (simpleSpecs.size() == 0) {
+            result.add("Empty parallel step");
+        } else {
+            result.add("Parallel step with " + simpleSpecs.size() + " elements, showing the first one");
+            result.addAll(this.simpleSpecs.get(0).toReportString());
+        }
+        return result;
+    }
+
+    public void checkTimelineElement(TimelineElement fullElement) {
+        this.simpleSpecs.stream().forEach(simpleSpec -> simpleSpec.checkTimelineElement(fullElement));
+    }
+
+    public boolean isExhausted() {
+        return this.simpleSpecs.stream().allMatch(simpleSpec -> simpleSpec.isExhausted());
+    }
+}
+
+
+class AlternativeTimelineEventSpec implements TimelineEventSpec {
+    public List<SimpleTimelineEventSpec> simpleSpecs = new ArrayList<SimpleTimelineEventSpec>();
+
+    AlternativeTimelineEventSpec(SimpleTimelineEventSpec spec1, SimpleTimelineEventSpec spec2) {
+        this.simpleSpecs.add(spec1);
+        this.simpleSpecs.add(spec2);
+    }
+
+    public List<String> toReportString() {
+        List<String> result = new ArrayList<String>();
+        if (simpleSpecs.size() == 0) {
+            result.add("Empty alternative step");
+        } else {
+            result.add("Alternative step with " + simpleSpecs.size() + " elements, showing the first one");
+            result.addAll(this.simpleSpecs.get(0).toReportString());
+        }
+        return result;
+    }
+
+    public void checkTimelineElement(TimelineElement fullElement) {
+        this.simpleSpecs.stream().forEach(simpleSpec -> simpleSpec.checkTimelineElement(fullElement));
+    }
+
+    public boolean isExhausted() {
+        return this.simpleSpecs.stream().anyMatch(simpleSpec -> simpleSpec.isExhausted());
+    }
+}
+
 
 public class AvanzamentoNotificheB2bSteps {
 
@@ -342,7 +504,7 @@ public class AvanzamentoNotificheB2bSteps {
                 break;
             case "ANALOG_SUCCESS_WORKFLOW":
             case "PREPARE_SIMPLE_REGISTERED_LETTER":
-                if (detailsFromTest != null) {
+                if (detailsFromTest != null && detailsFromTest.getPhysicalAddress() != null) {
                     Assertions.assertEquals(detailsFromNotification.getPhysicalAddress(), detailsFromTest.getPhysicalAddress());
                 }
                 break;
@@ -1216,6 +1378,60 @@ public class AvanzamentoNotificheB2bSteps {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
+
+    @And("vengono verificati gli eventi precedenti in ordine")
+    public void vengonoVerificatiEventiPrecedenti(Map<String, String> rowData) {
+        List<TimelineEventSpec> eventData = generateEventData(rowData);
+        List<TimelineElement> timelineElements = sharedSteps.getSentNotification().getTimeline();
+        this.checkEventsAgainstTimelineEvents(eventData, timelineElements);
+    }
+
+    private List<TimelineEventSpec> generateEventData(Map<String, String> rowData) {
+        int index = 0;
+        List<TimelineEventSpec> result = new ArrayList<TimelineEventSpec>();
+
+        String keyInData = "seq" + index;
+        while (rowData.get(keyInData) != null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                SimpleTimelineEventSpec newSpec = objectMapper.readValue(rowData.get(keyInData), SimpleTimelineEventSpec.class);
+                if (rowData.get(keyInData + "-parallel") != null) {
+                    SimpleTimelineEventSpec secondSpec = objectMapper.readValue(rowData.get(keyInData + "-parallel"), SimpleTimelineEventSpec.class);
+                    result.add(new ParallelTimelineEventSpec(newSpec, secondSpec));
+                } else if (rowData.get(keyInData + "-alternative") != null) {
+                        SimpleTimelineEventSpec secondSpec = objectMapper.readValue(rowData.get(keyInData + "-alternative"), SimpleTimelineEventSpec.class);
+                        result.add(new AlternativeTimelineEventSpec(newSpec, secondSpec));
+                } else {
+                    result.add(newSpec);
+                }
+                index++;
+                keyInData = "seq" + index;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                Assertions.fail("Wrong specification of steps");
+            }
+        }
+        return result;
+    }
+
+    private void checkEventsAgainstTimelineEvents(List<TimelineEventSpec> eventData, List<TimelineElement> timelineElements) {
+        int eventIndex = 0;
+        int timelineIndex = 0;
+        while (eventIndex < eventData.size() && timelineIndex < timelineElements.size()) {
+            eventData.get(eventIndex).checkTimelineElement(timelineElements.get(timelineIndex));
+            if (eventData.get(eventIndex).isExhausted()) {
+                eventIndex++;
+            }
+            timelineIndex++;
+        }
+        boolean allEventsFound = eventIndex == eventData.size();
+        if (!allEventsFound) {
+            System.out.println("Failed to arrive to this element");
+            System.out.println(eventData.get(eventIndex).toReportString());
+            Assertions.fail("Failed to verify the given elements in order");
+        }
+    }
+
 
     @And("viene schedulato il perfezionamento per decorrenza termini per il caso {string}")
     public void vieneSchedulatoIlPerfezionamento(String timelineCategory, @Transpose DataTest dataFromTest) {

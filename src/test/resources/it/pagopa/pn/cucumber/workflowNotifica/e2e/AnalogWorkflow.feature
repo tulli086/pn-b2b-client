@@ -1580,3 +1580,95 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECRS002B |
       | details_attachments | [{"documentType": "Plico"}] |
+
+
+  @e2e
+  Scenario: [E2E-WF-ANALOG-39] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo non viene eseguito.
+  (sequenza FAIL-Irreperibile_AR)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | AR_REGISTERED_LETTER |
+    And destinatario
+      | denomination | Leonardo da Vinci |
+      | taxId | DVNLRD52D15M059P |
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@FAIL-Irreperibile_AR |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+    And vengono verificati gli eventi precedenti in ordine
+      | seq0 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "CON080", "recIndex": 0} |
+      | seq1 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "RECRN002E", "recIndex": 0, "attachments": [{"documentType": "Plico"}]} |
+      | seq2 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN002F", "recIndex": 0, "sent_attempt_made": 0, "deliveryFailureCause": "M04"} |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" non esista
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 1 |
+      | progressIndex | 1 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" non esista
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 1 |
+
+  @e2e
+  Scenario: [E2E-WF-ANALOG-40] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo viene eseguito va a buon fine.
+  (sequenza FAIL-Discovery_AR)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | AR_REGISTERED_LETTER |
+    And destinatario
+      | denomination | Leonardo da Vinci |
+      | taxId | DVNLRD52D15M059P |
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@FAIL-Discovery_AR |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+    And vengono verificati gli eventi precedenti in ordine
+      | seq0 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "CON080", "recIndex": 0, "sent_attempt_made": 0} |
+      | seq1 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "RECRN002E", "recIndex": 0, "sent_attempt_made": 0, "attachments": [{"documentType": "Plico"}]} |
+      | seq1-parallel | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "RECRN002E", "recIndex": 0, "sent_attempt_made": 0, "attachments": [{"documentType": "Indagine"}]} |
+      | seq2 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN002F", "recIndex": 0, "sent_attempt_made": 0, "deliveryFailureCause": "M01"} |
+      | seq3 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "CON080", "recIndex": 0, "sent_attempt_made": 1} |
+      | seq4 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "RECRN001B", "recIndex": 0, "sent_attempt_made": 1, "attachments": [{"documentType": "AR"}]} |
+      | seq5 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN001C", "recIndex": 0, "sent_attempt_made": 1} |
+
+  @e2e
+  Scenario: [E2E-WF-ANALOG-41] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo viene eseguito e fallisce anche lui.
+  (sequenza FAIL-DiscoveryIrreperibile_AR)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | AR_REGISTERED_LETTER |
+    And destinatario
+      | denomination | Leonardo da Vinci |
+      | taxId | DVNLRD52D15M059P |
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@FAIL-DiscoveryIrreperibile_AR |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+    And vengono verificati gli eventi precedenti in ordine
+      | seq0 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "CON080", "recIndex": 0, "sent_attempt_made": 0} |
+      | seq1 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "RECRN002E", "recIndex": 0, "sent_attempt_made": 0, "attachments": [{"documentType": "Plico"}]} |
+      | seq1-parallel | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "RECRN002E", "recIndex": 0, "sent_attempt_made": 0, "attachments": [{"documentType": "Indagine"}]} |
+      | seq2 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN002F", "recIndex": 0, "sent_attempt_made": 0, "deliveryFailureCause": "M01"} |
+      | seq3 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "CON080", "recIndex": 0, "sent_attempt_made": 1} |
+      | seq4 | {"category": "SEND_ANALOG_PROGRESS", "deliveryDetailCode": "RECRN002E", "recIndex": 0, "sent_attempt_made": 1, "attachments": [{"documentType": "Plico"}]} |
+      | seq5 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN002F", "recIndex": 0, "sent_attempt_made": 1, "deliveryFailureCause": "M03"} |
+
+
