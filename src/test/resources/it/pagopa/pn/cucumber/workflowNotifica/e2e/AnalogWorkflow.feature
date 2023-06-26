@@ -1648,7 +1648,6 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECRS002B |
       | details_attachments | [{"documentType": "Plico"}] |
 
-
   @e2e
   Scenario: [E2E-WF-ANALOG-39] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo non viene eseguito.
   (sequenza FAIL-Irreperibile_AR)
@@ -1733,3 +1732,31 @@ Feature: Workflow analogico
       | seq5 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN002F", "recIndex": 0, "sent_attempt_made": 1, "deliveryFailureCause": "M03"} |
 
 
+  @e2e
+  Scenario: [E2E-WF-ANALOG-42] Partenza workflow cartaceo se non viene inviato un messaggio di cortesia
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | REGISTERED_LETTER_890 |
+    And destinatario
+      | denomination | Cristoforo Colombo |
+      | taxId | CLMCST42R12D969Z |
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_address | Via@OK-GiacenzaDelegato-gt10_890 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" esista
+      | loadTimeline            | true     |
+      | pollingTime             | 360000   |
+      | numCheck                | 20       |
+      | details                 | NOT_NULL |
+      | details_recIndex        | 0        |
+      | details_sentAttemptMade | 0        |
+    And viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" non esista
+      | details | NOT_NULL |
+      | details_digitalAddress | {"address": "provaemail@test.it", "type": "EMAIL"} |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+    And viene verificato che l'elemento di timeline "SCHEDULE_ANALOG_WORKFLOW" esista
+      | NULL | NULL |
+#    And controlla che il timestamp di "SEND_ANALOG_DOMICILE" sia prima di quello del invio e di attesa di lettura del messaggio di cortesia
+#      | NULL | NULL |
