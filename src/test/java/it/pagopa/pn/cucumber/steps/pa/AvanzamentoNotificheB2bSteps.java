@@ -360,7 +360,7 @@ public class AvanzamentoNotificheB2bSteps {
                     Assertions.assertNotNull(elementFromNotification.getLegalFactsIds().get(i).getKey());
                 }
                 if (delegateInfoFromTest != null) {
-                    Assertions.assertEquals(delegateInfoFromNotification.getTaxId(), delegateInfoFromTest.getTaxId());
+                    Assertions.assertEquals(delegateInfoFromNotification.getTaxId(), sharedSteps.getTaxIdFromDenomination(delegateInfoFromTest.getDenomination()));
                     Assertions.assertEquals(delegateInfoFromNotification.getDelegateType(), delegateInfoFromTest.getDelegateType());
                     Assertions.assertEquals(delegateInfoFromNotification.getDenomination(), delegateInfoFromTest.getDenomination());
                 }

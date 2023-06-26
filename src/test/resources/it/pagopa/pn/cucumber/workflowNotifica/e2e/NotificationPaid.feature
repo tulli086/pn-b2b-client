@@ -7,9 +7,7 @@ Feature: Notifica pagata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -36,9 +34,7 @@ Feature: Notifica pagata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_AR |
       | payment_pagoPaForm | SI |
@@ -64,9 +60,7 @@ Feature: Notifica pagata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
       | payment_pagoPaForm | SI |
@@ -118,9 +112,7 @@ Feature: Notifica pagata
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
       | payment_pagoPaForm | SI |
@@ -159,9 +151,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
       | payment_pagoPaForm | SI |
@@ -199,9 +189,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Irreperibile_890 |
       | payment_pagoPaForm | SI |
@@ -229,9 +217,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Discovery_890 |
       | payment_pagoPaForm | SI |
@@ -262,7 +248,6 @@ Feature: Notifica pagata
       | details_recIndex | 0 |
     And viene verificato che il destinatario "Cristoforo Colombo" di tipo "PF" non sia nella tabella pn-paper-notification-failed
 
-
   @e2e
   Scenario: [E2E-WF-INHIBITION-PAID-9] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento dopo il secondo SEND_ANALOG_DOMICILE e viene verificata la presenza degli elementi SCHEDULE_REFINEMENT e REFINEMENT
@@ -271,9 +256,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile | NULL |
       | physicalAddress_address | VIA@FAIL-Discovery_890 |
       | payment_pagoPaForm | SI |
@@ -311,9 +294,7 @@ Feature: Notifica pagata
       | senderDenomination | Comune di Palermo |
       | physicalCommunication | REGISTERED_LETTER_890           |
       | feePolicy | DELIVERY_MODE |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-DiscoveryIrreperibile_890 |
       | payment_pagoPaForm | SI |

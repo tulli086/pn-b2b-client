@@ -232,8 +232,10 @@ public class SharedSteps {
                 return mrGeneraleRitentativoSecondoTaxID;
             case "Mr. GeneraleFallimento":
                 return mrGeneraleFallimentoTaxID;
-            case "Cristoforo Colombo":
+            case "Mr. UtenteQualsiasi":
                 return marioGherkinTaxID;
+            case "Mr. UtenteQualsiasi2":
+                return marioCucumberTaxID;
         }
         return null;
     }
@@ -809,12 +811,12 @@ public class SharedSteps {
     public void selectUser(String recipient) {
         switch (recipient.trim().toLowerCase()){
             case "mario cucumber":
-            case "ettore fieramosca":
+            case "mr. utentequalsiasi2":
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
                 break;
             case "mario gherkin":
-            case "cristoforo colombo":
+            case "mr. utentequalsiasi":
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 break;

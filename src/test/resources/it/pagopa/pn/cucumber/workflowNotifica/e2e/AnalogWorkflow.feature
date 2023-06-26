@@ -154,13 +154,11 @@ Feature: Workflow analogico
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then la notifica può essere correttamente recuperata da "Cristoforo Colombo"
+    Then la notifica può essere correttamente recuperata da "Mr. UtenteQualsiasi"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
       | details_recIndex | 0 |
@@ -383,9 +381,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario "Mr. UtenteQualsiasi"
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@OK-GiacenzaDelegato-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
