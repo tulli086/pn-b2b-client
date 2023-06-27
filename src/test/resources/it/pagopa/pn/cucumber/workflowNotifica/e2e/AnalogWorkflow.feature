@@ -1725,7 +1725,7 @@ Feature: Workflow analogico
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
       | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario "Mr. NoIndirizzi"
+    And destinatario "Mr. EmailCortesia"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK-GiacenzaDelegato-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1735,12 +1735,7 @@ Feature: Workflow analogico
       | numCheck                | 20       |
       | details_recIndex        | 0        |
       | details_sentAttemptMade | 0        |
-    And viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" non esista
-      | details | NOT_NULL |
-      | details_digitalAddress | {"address": "provaemail@test.it", "type": "EMAIL"} |
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
     And viene verificato che l'elemento di timeline "SCHEDULE_ANALOG_WORKFLOW" esista
       | NULL | NULL |
-#    And controlla che il timestamp di "SEND_ANALOG_DOMICILE" sia prima di quello del invio e di attesa di lettura del messaggio di cortesia
-#      | NULL | NULL |
+    And controlla che il timestamp di "SEND_ANALOG_DOMICILE" sia dopo quello di invio e di attesa di lettura del messaggio di cortesia
+      | NULL | NULL |
