@@ -1,7 +1,7 @@
 Feature: Notifica visualizzata
 
   @e2e
-  Scenario: [E2E-NOTIFICATION-VIEWED-1] Visualizzazione da parte del destinatario della notifica
+  Scenario: [E2E-PF-NOTIFICATION-VIEWED-1] Visualizzazione da parte del destinatario della notifica
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
     And destinatario "Mr. UtenteQualsiasi2"
@@ -20,7 +20,7 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-NOTIFICATION-VIEWED-2] Visualizzazione da parte del delegato della notifica
+  Scenario: [E2E-PF-NOTIFICATION-VIEWED-2] Visualizzazione da parte del delegato della notifica
     Given "Mr. UtenteQualsiasi" viene delegato da "Mr. UtenteQualsiasi2"
     And "Mr. UtenteQualsiasi" accetta la delega "Mr. UtenteQualsiasi2"
     And viene generata una nuova notifica
@@ -42,7 +42,7 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
 
   @e2e @ignore
-  Scenario: [E2E-NOTIFICATION-VIEWED-4] A valle della visualizzazione della notifica non deve essere generato un nuovo elemento di timeline NOTIFICATION VIEWED
+  Scenario: [E2E-PF-NOTIFICATION-VIEWED-4] A valle della visualizzazione della notifica non deve essere generato un nuovo elemento di timeline NOTIFICATION VIEWED
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
     And destinatario "Mr. UtenteQualsiasi2"
@@ -67,7 +67,7 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-NOTIFICATION-VIEWED-5] A valle della visualizzazione della notifica, il destinatario non deve essere nella tabella pn-paper-notification-failed
+  Scenario: [E2E-PF-NOTIFICATION-VIEWED-5] A valle della visualizzazione della notifica, il destinatario non deve essere nella tabella pn-paper-notification-failed
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
     And destinatario "Mr. NoIndirizzi"
@@ -88,7 +88,7 @@ Feature: Notifica visualizzata
     And viene verificato che il destinatario "Mr. NoIndirizzi" di tipo "PF" non sia nella tabella pn-paper-notification-failed
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-2] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-2] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -121,7 +121,7 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-3] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-3] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   La notifica viene letta subito dopo la generazione dell'evento di timeline SCHEDULE_REFINEMENT. Questa lettura non deve generare
   un evento di timeline REFINEMENT.
     Given viene generata una nuova notifica
@@ -153,7 +153,7 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-4] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-4] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene visualizzata la notifica dopo la generazione del secondo evento di timeline SEND_DIGITAL_DOMICILE. Il pagamento non deve generare
   un evento di timeline PREPARE_SIMPLE_REGISTERED_LETTER e SEND_SIMPLE_REGISTERED_LETTER.
   Viene verificata l'assenza degli elementi SCHEDULE_REFINEMENT e REFINEMENT.
@@ -201,7 +201,7 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-5] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-5] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   La notifica viene letta subito dopo essere stata accettata. Questa lettura non deve generare un evento di timeline SEND_ANALOG_DOMICILE.
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -220,7 +220,7 @@ Feature: Notifica visualizzata
       | details_sentAttemptMade | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-6] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-6] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   La notifica viene letta subito dopo la generazione dell'evento di timeline ANALOG_FAILURE_WORKFLOW. Questa lettura non deve generare
   un evento di timeline REFINEMENT.
     Given viene generata una nuova notifica
@@ -246,7 +246,7 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-7] Invio notifica con percorso analogico. Notifica visualizzata tra un tentativo e l'altro
+  Scenario: [E2E-PF-WF-INHIBITION-7] Invio notifica con percorso analogico. Notifica visualizzata tra un tentativo e l'altro
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di Palermo |
@@ -281,7 +281,7 @@ Feature: Notifica visualizzata
       | NULL | NULL |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-8] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-8] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene visualizzata la notifica subito dopo la generazione dell'evento di timeline SEND_SIMPLE_REGISTERED_LETTER.
   Viene verificata l'assenza dell'elemento REFINEMENT.
     Given viene generata una nuova notifica
@@ -313,7 +313,7 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-9] Destinatario completamente irreperibile. Casistiche in cui la visualizzazione di una notifica inibisce parte del workflow di notifica - step 1
+  Scenario: [E2E-PF-WF-INHIBITION-9] Destinatario completamente irreperibile. Casistiche in cui la visualizzazione di una notifica inibisce parte del workflow di notifica - step 1
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |

@@ -1,7 +1,7 @@
 Feature: Analog send e2e
 
   @e2e
-  Scenario: [PF_B2B_ANALOG_SEND_1] Invio ad indirizzo fisico successo al primo tentativo
+  Scenario: [E2E-PF_B2B_ANALOG_SEND_1] Invio ad indirizzo fisico successo al primo tentativo
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -39,7 +39,7 @@ Feature: Analog send e2e
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [PF_B2B_ANALOG_SEND_2] Invio ad indirizzo fisico fallimento al primo tentativo e successo al secondo tentativo
+  Scenario: [E2E-PF_B2B_ANALOG_SEND_2] Invio ad indirizzo fisico fallimento al primo tentativo e successo al secondo tentativo
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -80,7 +80,7 @@ Feature: Analog send e2e
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [PF_B2B_ANALOG_SEND_3] Invio ad indirizzo fisico fallimento al primo tentativo e al secondo tentativo
+  Scenario: [E2E-PF_B2B_ANALOG_SEND_3] Invio ad indirizzo fisico fallimento al primo tentativo e al secondo tentativo
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |

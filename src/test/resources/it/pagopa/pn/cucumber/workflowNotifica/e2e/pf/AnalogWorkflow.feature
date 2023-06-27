@@ -1,7 +1,7 @@
 Feature: Workflow analogico
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-1] Invio notifica con percorso analogico 890 con verifica elementi di timeline SEND_ANALOG_PROGRESS con legalFactId di category ANALOG_DELIVERY
+  Scenario: [E2E-PF_WF-ANALOG-1] Invio notifica con percorso analogico 890 con verifica elementi di timeline SEND_ANALOG_PROGRESS con legalFactId di category ANALOG_DELIVERY
   e documentType 23L, SEND_ANALOG_FEEDBACK e ANALOG_SUCCESS_WORKFLOW
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -45,7 +45,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-2] Invio notifica con percorso analogico. Successo giacenza delegato 890 (OK-GiacenzaDelegato-lte10_890).
+  Scenario: [E2E-PF_WF-ANALOG-2] Invio notifica con percorso analogico. Successo giacenza delegato 890 (OK-GiacenzaDelegato-lte10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -88,7 +88,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-3] Invio notifica con percorso analogico 890. Successo al secondo tentativo invio 890.
+  Scenario: [E2E-PF_WF-ANALOG-3] Invio notifica con percorso analogico 890. Successo al secondo tentativo invio 890.
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -136,7 +136,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-4] Invio notifica con percorso analogico. Successo invio RS (OK_RS)
+  Scenario: [E2E-PF_WF-ANALOG-4] Invio notifica con percorso analogico. Successo invio RS (OK_RS)
     Given viene generata una nuova notifica
       | subject | notifica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -164,7 +164,7 @@ Feature: Workflow analogico
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-5] Invio notifica con percorso analogico. Successo invio RS (OK_RS) in cui la notifica viene visualizzata prima
+  Scenario: [E2E-PF_WF-ANALOG-5] Invio notifica con percorso analogico. Successo invio RS (OK_RS) in cui la notifica viene visualizzata prima
   dell’evento SEND_SIMPLE_REGISTERED_LETTER
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -182,7 +182,7 @@ Feature: Workflow analogico
       | NULL | NULL |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-6] Invio notifica con percorso analogico. Successo al secondo tentativo invio RS (OK-Retry_RS).
+  Scenario: [E2E-PF_WF-ANALOG-6] Invio notifica con percorso analogico. Successo al secondo tentativo invio RS (OK-Retry_RS).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -233,7 +233,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | CON080 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-7] Invio notifica con percorso analogico. Successo giacenza lte 890 (OK-Giacenza-lte10_890).
+  Scenario: [E2E-PF_WF-ANALOG-7] Invio notifica con percorso analogico. Successo giacenza lte 890 (OK-Giacenza-lte10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -276,7 +276,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-8] Invio notifica con percorso analogico. Successo giacenza gt 890 (OK-Giacenza-gt10_890).
+  Scenario: [E2E-PF_WF-ANALOG-8] Invio notifica con percorso analogico. Successo giacenza gt 890 (OK-Giacenza-gt10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -326,7 +326,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECAG005C |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-9] Invio notifica con percorso analogico. Successo giacenza 890 gt 23L(OK-Giacenza-gt10-23L_890).
+  Scenario: [E2E-PF_WF-ANALOG-9] Invio notifica con percorso analogico. Successo giacenza 890 gt 23L(OK-Giacenza-gt10-23L_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -373,7 +373,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-10] Invio notifica con percorso analogico. Successo giacenza 890 gt 10(OK-GiacenzaDelegato-gt10_890).
+  Scenario: [E2E-PF_WF-ANALOG-10] Invio notifica con percorso analogico. Successo giacenza 890 gt 10(OK-GiacenzaDelegato-gt10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -407,7 +407,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECAG006C |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-11] Partenza workflow cartaceo se viene inviato un messaggio di cortesia
+  Scenario: [E2E-PF_WF-ANALOG-11] Partenza workflow cartaceo se viene inviato un messaggio di cortesia
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -432,7 +432,7 @@ Feature: Workflow analogico
       | NULL | NULL |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-12] Invio notifica con percorso analogico. Successo giacenza delegato 890 (OK-GiacenzaDelegato-lte10_890).
+  Scenario: [E2E-PF_WF-ANALOG-12] Invio notifica con percorso analogico. Successo giacenza delegato 890 (OK-GiacenzaDelegato-lte10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -475,7 +475,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-13] Invio notifica con percorso analogico. Successo giacenza delegato gt 23L 890 (OK-GiacenzaDelegato-gt10-23L_890).
+  Scenario: [E2E-PF_WF-ANALOG-13] Invio notifica con percorso analogico. Successo giacenza delegato gt 23L 890 (OK-GiacenzaDelegato-gt10-23L_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -525,7 +525,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECAG006C |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-14] Invio notifica con percorso analogico. Fallimento giacenza gt 890 (FAIL-Giacenza-gt10_890).
+  Scenario: [E2E-PF_WF-ANALOG-14] Invio notifica con percorso analogico. Fallimento giacenza gt 890 (FAIL-Giacenza-gt10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -577,7 +577,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECAG007C |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-15] Invio notifica con percorso analogico. Fallimento giacenza gt 23L 890 (FAIL-Giacenza-gt10-23L_890).
+  Scenario: [E2E-PF_WF-ANALOG-15] Invio notifica con percorso analogico. Fallimento giacenza gt 23L 890 (FAIL-Giacenza-gt10-23L_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -635,7 +635,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECAG007C |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-16] Invio notifica con percorso analogico. Compiuta giacenza 890 (OK-CompiutaGiacenza_890).
+  Scenario: [E2E-PF_WF-ANALOG-16] Invio notifica con percorso analogico. Compiuta giacenza 890 (OK-CompiutaGiacenza_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -696,7 +696,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECAG008C |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-17] Invio notifica con percorso analogico. Successo giacenza ar (OK-Giacenza_AR).
+  Scenario: [E2E-PF_WF-ANALOG-17] Invio notifica con percorso analogico. Successo giacenza ar (OK-Giacenza_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -741,7 +741,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-18] Successo invio raccomandata semplice
+  Scenario: [E2E-PF_WF-ANALOG-18] Successo invio raccomandata semplice
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -771,7 +771,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECRN001C |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-19] Invio notifica con percorso analogico. Fallimento giacenza lte 890 (FAIL-Giacenza-lte10_890).
+  Scenario: [E2E-PF_WF-ANALOG-19] Invio notifica con percorso analogico. Fallimento giacenza lte 890 (FAIL-Giacenza-lte10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -813,7 +813,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-20] Invio notifica con percorso analogico. Fallimento giacenza AR (FAIL-Giacenza_AR).
+  Scenario: [E2E-PF_WF-ANALOG-20] Invio notifica con percorso analogico. Fallimento giacenza AR (FAIL-Giacenza_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -859,7 +859,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-21] Fallimento invio raccomandata semplice
+  Scenario: [E2E-PF_WF-ANALOG-21] Fallimento invio raccomandata semplice
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -889,7 +889,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECRN002C |
 
   @e2e @ignore
-  Scenario: [E2E-WF-ANALOG-22] Invio notifica con percorso analogico. Successo giacenza gt 10 AR (OK-Giacenza-gt10_AR).
+  Scenario: [E2E-PF_WF-ANALOG-22] Invio notifica con percorso analogico. Successo giacenza gt 10 AR (OK-Giacenza-gt10_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -939,7 +939,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-23] Invio notifica con percorso analogico. Fallimento giacenza gt 10 AR (FAIL-Giacenza-gt10_AR).
+  Scenario: [E2E-PF_WF-ANALOG-23] Invio notifica con percorso analogico. Fallimento giacenza gt 10 AR (FAIL-Giacenza-gt10_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -989,7 +989,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-24] Invio notifica con percorso analogico. Fallimento compiuta giacenza AR (FAIL-CompiutaGiacenza_AR).
+  Scenario: [E2E-PF_WF-ANALOG-24] Invio notifica con percorso analogico. Fallimento compiuta giacenza AR (FAIL-CompiutaGiacenza_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1025,7 +1025,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECRN005C |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-25] Invio notifica con percorso analogico. Successo seconda raccomandata AR (OK-Retry_AR).
+  Scenario: [E2E-PF_WF-ANALOG-25] Invio notifica con percorso analogico. Successo seconda raccomandata AR (OK-Retry_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1072,7 +1072,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-26] Invio notifica con percorso analogico. Successo non rendicontabile AR (OK-NonRendicontabile_AR).
+  Scenario: [E2E-PF_WF-ANALOG-26] Invio notifica con percorso analogico. Successo non rendicontabile AR (OK-NonRendicontabile_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1118,7 +1118,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-27] Invio notifica con percorso analogico. Successo causa forza maggiore AR (OK-CausaForzaMaggiore_AR).
+  Scenario: [E2E-PF_WF-ANALOG-27] Invio notifica con percorso analogico. Successo causa forza maggiore AR (OK-CausaForzaMaggiore_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1164,7 +1164,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-28] Invio notifica con percorso analogico. Fallimento 890 (FAIL_890).
+  Scenario: [E2E-PF_WF-ANALOG-28] Invio notifica con percorso analogico. Fallimento 890 (FAIL_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1207,7 +1207,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-29] Invio notifica con percorso analogico. Fallimento irreperibile 890 (FAIL-Irreperibile_890).
+  Scenario: [E2E-PF_WF-ANALOG-29] Invio notifica con percorso analogico. Fallimento irreperibile 890 (FAIL-Irreperibile_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1239,7 +1239,7 @@ Feature: Workflow analogico
       | details_deliveryFailureCause | M03 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-30] Invio notifica con percorso analogico. Fallimento primo tentativo e successo secondo tentativo 890 (FAIL-Discovery_890).
+  Scenario: [E2E-PF_WF-ANALOG-30] Invio notifica con percorso analogico. Fallimento primo tentativo e successo secondo tentativo 890 (FAIL-Discovery_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1302,7 +1302,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-31] Invio notifica con percorso analogico. Fallimento primo tentativo e secondo tentativo 890 (FAIL-DiscoveryIrreperibile_890).
+  Scenario: [E2E-PF_WF-ANALOG-31] Invio notifica con percorso analogico. Fallimento primo tentativo e secondo tentativo 890 (FAIL-DiscoveryIrreperibile_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1366,7 +1366,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-32] Invio notifica con percorso analogico. Successo non rendicontabile 890 (OK-NonRendicontabile_890).
+  Scenario: [E2E-PF_WF-ANALOG-32] Invio notifica con percorso analogico. Successo non rendicontabile 890 (OK-NonRendicontabile_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1412,7 +1412,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-33] Invio notifica con percorso analogico. Successo causa forza maggiore 890 (OK-CausaForzaMaggiore_890).
+  Scenario: [E2E-PF_WF-ANALOG-33] Invio notifica con percorso analogico. Successo causa forza maggiore 890 (OK-CausaForzaMaggiore_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1458,7 +1458,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-34] Invio notifica con percorso analogico. Successo RIS (OK_RIS).
+  Scenario: [E2E-PF_WF-ANALOG-34] Invio notifica con percorso analogico. Successo RIS (OK_RIS).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1480,7 +1480,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | CON080  |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-35] Invio notifica con percorso analogico. Fallimento RIS (FAIL_RIS).
+  Scenario: [E2E-PF_WF-ANALOG-35] Invio notifica con percorso analogico. Fallimento RIS (FAIL_RIS).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1511,7 +1511,7 @@ Feature: Workflow analogico
       | details_deliveryDetailCode | RECRSI004C |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-36] Invio notifica con percorso analogico. Successo RIR (OK_RIR).
+  Scenario: [E2E-PF_WF-ANALOG-36] Invio notifica con percorso analogico. Successo RIR (OK_RIR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1553,7 +1553,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-37] Invio notifica con percorso analogico. Fallimento RIR (FAIL_RIR).
+  Scenario: [E2E-PF_WF-ANALOG-37] Invio notifica con percorso analogico. Fallimento RIR (FAIL_RIR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1600,7 +1600,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-38] Invio notifica con percorso analogico. Fallimento RS (FAIL_RS).
+  Scenario: [E2E-PF_WF-ANALOG-38] Invio notifica con percorso analogico. Fallimento RS (FAIL_RS).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -1637,7 +1637,7 @@ Feature: Workflow analogico
       | details_attachments | [{"documentType": "Plico"}] |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-39] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo non viene eseguito.
+  Scenario: [E2E-PF_WF-ANALOG-39] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo non viene eseguito.
   (sequenza FAIL-Irreperibile_AR)
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1668,7 +1668,7 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 1 |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-40] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo viene eseguito va a buon fine.
+  Scenario: [E2E-PF_WF-ANALOG-40] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo viene eseguito va a buon fine.
   (sequenza FAIL-Discovery_AR)
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1694,7 +1694,7 @@ Feature: Workflow analogico
       | seq5 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN001C", "recIndex": 0, "sent_attempt_made": 1} |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-41] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo viene eseguito e fallisce anche lui.
+  Scenario: [E2E-PF_WF-ANALOG-41] Invio notifica con percorso analogico. Primo tentativo fallisce, secondo viene eseguito e fallisce anche lui.
   (sequenza FAIL-DiscoveryIrreperibile_AR)
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1720,7 +1720,7 @@ Feature: Workflow analogico
       | seq5 | {"category": "SEND_ANALOG_FEEDBACK", "deliveryDetailCode": "RECRN002F", "recIndex": 0, "sent_attempt_made": 1, "deliveryFailureCause": "M03"} |
 
   @e2e
-  Scenario: [E2E-WF-ANALOG-42] Partenza workflow cartaceo se non viene inviato un messaggio di cortesia
+  Scenario: [E2E-PF_WF-ANALOG-42] Partenza workflow cartaceo se non viene inviato un messaggio di cortesia
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |

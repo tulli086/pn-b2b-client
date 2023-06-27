@@ -1,7 +1,7 @@
 Feature: Digital send e2e
 
   @e2e
-  Scenario: [B2B_DIGITAL_SEND_1] Invio ad indirizzo di piattaforma successo al primo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_1] Invio ad indirizzo di piattaforma successo al primo tentativo
     Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@pecSuccess.it"
     And viene generata una nuova notifica
@@ -49,7 +49,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [B2B_DIGITAL_SEND_2] Invio ad indirizzo di piattaforma fallimento al primo tentativo, successo al ritentativo e fallimento al secondo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_2] Invio ad indirizzo di piattaforma fallimento al primo tentativo, successo al ritentativo e fallimento al secondo tentativo
     Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@OK-pecFirstFailSecondSuccess.it"
     And viene generata una nuova notifica
@@ -150,7 +150,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [B2B_DIGITAL_SEND_3] Invio ad indirizzo di piattaforma fallimento al primo tentativo, successo al ritentativo e al secondo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_3] Invio ad indirizzo di piattaforma fallimento al primo tentativo, successo al ritentativo e al secondo tentativo
     Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@OK-pecFirstFailSecondSuccess.it"
     And viene generata una nuova notifica
@@ -243,7 +243,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [B2B_DIGITAL_SEND_4] Invio ad indirizzo di piattaforma fallimento al primo tentativo e al ritentativo, successo al secondo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_4] Invio ad indirizzo di piattaforma fallimento al primo tentativo e al ritentativo, successo al secondo tentativo
     Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@FAIL-pecFirstKOSecondKO.it"
     And viene generata una nuova notifica
@@ -336,7 +336,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [B2B_DIGITAL_SEND_5] Invio ad indirizzo di piattaforma fallimento al primo tentativo, al ritentativo e al secondo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_5] Invio ad indirizzo di piattaforma fallimento al primo tentativo, al ritentativo e al secondo tentativo
     Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
     And viene inserito un recapito legale "example@FAIL-pecFirstKOSecondKO.it"
     And viene generata una nuova notifica
@@ -438,7 +438,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [B2B_DIGITAL_SEND_6] Invio ad indirizzo speciale successo al primo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_6] Invio ad indirizzo speciale successo al primo tentativo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -489,7 +489,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e @ignore @OnlyEnvTest
-  Scenario: [B2B_DIGITAL_SEND_7] Invio ad indirizzo speciale fallimento al primo tentativo e successo al secondo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_7] Invio ad indirizzo speciale fallimento al primo tentativo e successo al secondo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -570,7 +570,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e @ignore @OnlyEnvTest
-  Scenario: [B2B_DIGITAL_SEND_8] Invio ad indirizzo speciale fallimento al primo tentativo e fallimento al secondo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_8] Invio ad indirizzo speciale fallimento al primo tentativo e fallimento al secondo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -662,7 +662,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e @ignore @OnlyEnvTest
-  Scenario: [B2B_DIGITAL_SEND_9] Invio ad indirizzo generale successo al primo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_9] Invio ad indirizzo generale successo al primo tentativo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -718,7 +718,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e @ignore @OnlyEnvTest
-  Scenario: [B2B_DIGITAL_SEND_10] Invio ad indirizzo generale fallimento al primo tentativo, successo al ritentativo e fallimento al secondo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_10] Invio ad indirizzo generale fallimento al primo tentativo, successo al ritentativo e fallimento al secondo tentativo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -841,7 +841,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e @ignore @OnlyEnvTest
-  Scenario: [B2B_DIGITAL_SEND_11] Invio ad indirizzo generale fallimento al primo tentativo, successo al ritentativo e al secondo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_11] Invio ad indirizzo generale fallimento al primo tentativo, successo al ritentativo e al secondo tentativo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -963,7 +963,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e @ignore @OnlyEnvTest
-  Scenario: [B2B_DIGITAL_SEND_12] Invio ad indirizzo generale fallimento al primo tentativo e al ritentativo, successo al secondo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_12] Invio ad indirizzo generale fallimento al primo tentativo e al ritentativo, successo al secondo tentativo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -1085,7 +1085,7 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
 
   @e2e @ignore @OnlyEnvTest
-  Scenario: [B2B_DIGITAL_SEND_13] Invio ad indirizzo generale fallimento al primo tentativo, al ritentativo e al secondo tentativo
+  Scenario: [E2E-PF-B2B_DIGITAL_SEND_13] Invio ad indirizzo generale fallimento al primo tentativo, al ritentativo e al secondo tentativo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |
