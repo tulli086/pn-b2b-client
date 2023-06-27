@@ -14,9 +14,8 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
-import it.pagopa.pn.cucumber.utils.DataTest;
+import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequenceElement;
 import org.junit.jupiter.api.Assertions;
-import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -329,7 +328,7 @@ public class RicezioneNotificheWebSteps {
     }
 
     @And("verifico che l'atto opponibile a terzi di {string} sia lo stesso")
-    public void verificoAttoOpponibileSiaUguale(String timelineEventCategory, @Transpose DataTest dataFromTest) {
+    public void verificoAttoOpponibileSiaUguale(String timelineEventCategory, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
          it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElement timelineElement =
                  sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
         // get new timeline

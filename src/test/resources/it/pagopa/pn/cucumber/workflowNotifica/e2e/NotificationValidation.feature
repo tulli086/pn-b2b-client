@@ -1,31 +1,37 @@
 Feature: Validazione notifica e2e
 
     @e2e
-    Scenario: [E2E-NOTIFICATION_VALIDATION_ATTACHMENT_1] validazione fallita allegati notifica - file non caricato su SafeStorage
+    Scenario: [E2E-PF_NOTIFICATION_VALIDATION_ATTACHMENT_1] validazione fallita allegati notifica - file non caricato su SafeStorage
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
         And destinatario "Mr. UtenteQualsiasi"
             | NULL | NULL |
         When la notifica viene inviata tramite api b2b senza preload allegato dal "Comune_Multi" e si attende che lo stato diventi REFUSED
         Then si verifica che la notifica non viene accettata causa "ALLEGATO"
-        And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
-            | loadTimeline | true |
+        And viene inizializzata la sequence per il controllo sulla timeline
+            | pollingTime | 20000 |
+            | numCheck    | 2  |
+        And si aggiunge alla sequence il controllo che "REQUEST_REFUSED" esista
             | details_refusalReasons | [{"errorCode": "FILE_NOTFOUND"}] |
+        And viene verificata la sequence
 
     @e2e
-    Scenario: [E2E-NOTIFICATION_VALIDATION_ATTACHMENT_2] validazione fallita allegati notifica - Sha256 differenti
+    Scenario: [E2E-PF_NOTIFICATION_VALIDATION_ATTACHMENT_2] validazione fallita allegati notifica - Sha256 differenti
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
         And destinatario "Mr. UtenteQualsiasi"
             | NULL | NULL |
         When la notifica viene inviata tramite api b2b con sha256 differente dal "Comune_Multi" e si attende che lo stato diventi REFUSED
         Then si verifica che la notifica non viene accettata causa "SHA_256"
-        And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
-            | loadTimeline | true |
+        And viene inizializzata la sequence per il controllo sulla timeline
+            | pollingTime | 20000 |
+            | numCheck    | 2  |
+        And si aggiunge alla sequence il controllo che "REQUEST_REFUSED" esista
             | details_refusalReasons | [{"errorCode": "FILE_SHA_ERROR"}] |
+        And viene verificata la sequence
 
     @e2e
-    Scenario: [E2E-NOTIFICATION_VALIDATION_ATTACHMENT_3] validazione fallita allegati notifica - estensione errata
+    Scenario: [E2E-PF_NOTIFICATION_VALIDATION_ATTACHMENT_3] validazione fallita allegati notifica - estensione errata
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
         And destinatario "Mr. UtenteQualsiasi"
@@ -37,7 +43,7 @@ Feature: Validazione notifica e2e
             | details_refusalReasons | [{"errorCode": "FILE_PDF_INVALID_ERROR"}] |
 
     @e2e
-    Scenario: [E2E-NOTIFICATION_VALIDATION_ATTACHMENT_4] validazione fallita allegati notifica - file non caricato su SafeStorage
+    Scenario: [E2E-PF_NOTIFICATION_VALIDATION_ATTACHMENT_4] validazione fallita allegati notifica - file non caricato su SafeStorage
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
         And destinatario "Mr. UtenteQualsiasi"
@@ -49,7 +55,7 @@ Feature: Validazione notifica e2e
             | details_refusalReasons | [{"errorCode": "FILE_NOTFOUND"}] |
 
     @e2e @ignore
-    Scenario: [E2E-NOTIFICATION_VALIDATION_TAXID] Invio notifica mono destinatario con taxId non valido scenario negativo
+    Scenario: [E2E-PF_NOTIFICATION_VALIDATION_TAXID] Invio notifica mono destinatario con taxId non valido scenario negativo
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
         And destinatario
@@ -61,7 +67,7 @@ Feature: Validazione notifica e2e
             | details_refusalReasons | [{"errorCode": "TAXID_NOT_VALID"}] |
 
     @e2e @ignore
-    Scenario: [E2E-NOTIFICATION_VALIDATION_PHYSICAL_ADDRESS] Invio notifica mono destinatario con indirizzo fisico non valido scenario negativo
+    Scenario: [E2E-PF_NOTIFICATION_VALIDATION_PHYSICAL_ADDRESS] Invio notifica mono destinatario con indirizzo fisico non valido scenario negativo
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
         And destinatario "Mr. UtenteQualsiasi"
@@ -73,7 +79,7 @@ Feature: Validazione notifica e2e
             | details_refusalReasons | [{"errorCode": "NOT_VALID_ADDRESS"}] |
 
     @e2e
-    Scenario: [E2E-NOTIFICATION_VALIDATION_ASINC_OK] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED e controllo che sia presente nel campo legalFactsIds l'atto opponibile a terzi con category SENDER_ACK positivo
+    Scenario: [E2E-PF_NOTIFICATION_VALIDATION_ASINC_OK] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED e controllo che sia presente nel campo legalFactsIds l'atto opponibile a terzi con category SENDER_ACK positivo
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
             | senderDenomination | Comune di milano |
@@ -85,7 +91,7 @@ Feature: Validazione notifica e2e
             | legalFactsIds | [{"category": "SENDER_ACK"}] |
 
     @e2e
-    Scenario: [E2E-NOTIFICATION_VALIDATION_AAR_GENERATION] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION sia presente il campo generatedAarUrl valorizzato positivo
+    Scenario: [E2E-PF_NOTIFICATION_VALIDATION_AAR_GENERATION] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION sia presente il campo generatedAarUrl valorizzato positivo
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
             | senderDenomination | Comune di milano |
