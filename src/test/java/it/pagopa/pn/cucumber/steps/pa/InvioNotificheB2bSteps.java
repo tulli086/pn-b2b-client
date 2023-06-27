@@ -13,7 +13,7 @@ import it.pagopa.pn.client.b2b.pa.testclient.IPnWebPaClient;
 import it.pagopa.pn.client.b2b.pa.testclient.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
-import it.pagopa.pn.cucumber.utils.DataTest;
+import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequenceElement;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
@@ -26,7 +26,6 @@ import java.io.ByteArrayInputStream;
 import java.lang.invoke.MethodHandles;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -202,7 +201,7 @@ public class InvioNotificheB2bSteps {
     }
 
     @And("viene effettuato un controllo sulla durata della retention di {string} per l'elemento di timeline {string}")
-    public void retentionCheckLoadForTimelineElement(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws InterruptedException {
+    public void retentionCheckLoadForTimelineElement(String documentType, String timelineEventCategory, @Transpose TimelineWorkflowSequenceElement dataFromTest) throws InterruptedException {
         TimelineElement timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
         switch (documentType) {
             case "ATTACHMENTS":

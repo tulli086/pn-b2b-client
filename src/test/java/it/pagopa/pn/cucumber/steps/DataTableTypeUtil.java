@@ -4,11 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.DataTableType;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
-import it.pagopa.pn.cucumber.utils.DataTest;
+import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequenceElement;
+import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequence;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
@@ -113,7 +114,7 @@ public class DataTableTypeUtil {
     }
 
     @DataTableType
-    public synchronized DataTest convertTimelineElement(Map<String, String> data) throws JsonProcessingException {
+    public synchronized TimelineWorkflowSequenceElement convertTimelineElement(Map<String, String> data) throws JsonProcessingException {
 
         if (data.size() == 1 && data.get("NULL") != null) {
             return null;
@@ -133,7 +134,7 @@ public class DataTableTypeUtil {
         String loadTimeline = getValue(data, LOAD_TIMELINE.key);
         String detailsKey = data.keySet().stream().filter(elem -> elem.startsWith(DETAILS.key)).findFirst().orElse(null);
 
-        DataTest dataTest = new DataTest();
+        TimelineWorkflowSequenceElement timelineWorkflowSequenceElement = new TimelineWorkflowSequenceElement();
         TimelineElement timelineElement = new TimelineElement()
                 .legalFactsIds(getListValue(LegalFactsId.class, data, LEGAL_FACT_IDS.key))
                 .details(detailsKey == null ? null : new TimelineElementDetails()
@@ -157,15 +158,33 @@ public class DataTableTypeUtil {
 
         // IMPORTANT: no empty data check; enrich with new checks if it is needed
         if (timelineElement.getDetails() != null || timelineElement.getLegalFactsIds() != null) {
-            dataTest.setTimelineElement(timelineElement);
+            timelineWorkflowSequenceElement.setTimelineElement(timelineElement);
         }
-        dataTest.setFirstSendRetry(isFirstRetry != null ? Boolean.valueOf(isFirstRetry) : null);
-        dataTest.setProgressIndex(progressIndex != null ? Integer.parseInt(progressIndex) : null);
-        dataTest.setPollingTime(pollingTime != null ? Integer.parseInt(pollingTime) : null);
-        dataTest.setNumCheck(numCheck != null ? Integer.parseInt(numCheck) : null);
-        dataTest.setLoadTimeline(loadTimeline != null ? Boolean.valueOf(loadTimeline) : null);
+        timelineWorkflowSequenceElement.setFirstSendRetry(isFirstRetry != null ? Boolean.valueOf(isFirstRetry) : null);
+        timelineWorkflowSequenceElement.setProgressIndex(progressIndex != null ? Integer.parseInt(progressIndex) : null);
+        timelineWorkflowSequenceElement.setPollingTime(pollingTime != null ? Integer.parseInt(pollingTime) : null);
+        timelineWorkflowSequenceElement.setNumCheck(numCheck != null ? Integer.parseInt(numCheck) : null);
+        timelineWorkflowSequenceElement.setLoadTimeline(loadTimeline != null ? Boolean.valueOf(loadTimeline) : null);
 
-        return dataTest;
+        return timelineWorkflowSequenceElement;
+    }
+
+    @DataTableType
+    public synchronized TimelineWorkflowSequence convertTimelineWorkFlowSequence(Map<String, String> data) {
+
+        if (data.size() == 1 && data.get("NULL") != null) {
+            return null;
+        }
+
+        String pollingTime = getValue(data, POLLING_TIME.key);
+        String numCheck = getValue(data, NUM_CHECK.key);
+
+        TimelineWorkflowSequence timelineWorkflowSequence = new TimelineWorkflowSequence();
+        timelineWorkflowSequence.setPollingTime(pollingTime != null ? Integer.parseInt(pollingTime) : null);
+        timelineWorkflowSequence.setNumCheck(numCheck != null ? Integer.parseInt(numCheck) : null);
+        timelineWorkflowSequence.setSequence(new TreeMap<>());
+
+        return timelineWorkflowSequence;
     }
 
 

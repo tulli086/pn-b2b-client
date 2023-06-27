@@ -2,13 +2,14 @@ package it.pagopa.pn.cucumber.utils;
 
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElement;
 
-public class DataTest {
+public class TimelineWorkflowSequenceElement {
     TimelineElement timelineElement;
     boolean isFirstSendRetry;
     Integer progressIndex;
     Integer pollingTime;
     Integer numCheck;
     boolean loadTimeline;
+    SequenceAction action;
 
     public boolean getIsFirstSendRetry() {
         return isFirstSendRetry;
@@ -56,5 +57,13 @@ public class DataTest {
 
     public void setLoadTimeline(boolean loadTimeline) {
         this.loadTimeline = loadTimeline;
+    }
+
+    public SequenceAction getAction() {
+        return action;
+    }
+
+    public void setAction(SequenceAction action) {
+        this.action = action;
     }
 }

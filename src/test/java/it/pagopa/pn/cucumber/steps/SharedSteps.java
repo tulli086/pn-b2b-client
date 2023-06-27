@@ -1152,7 +1152,7 @@ public class SharedSteps {
         return timelineElementWait;
     }
 
-    public String getTimelineEventId(String timelineEventCategory, String iun, DataTest dataFromTest) {
+    public String getTimelineEventId(String timelineEventCategory, String iun, TimelineWorkflowSequenceElement dataFromTest) {
         TimelineElement timelineElement = dataFromTest.getTimelineElement();
         TimelineElementDetails timelineElementDetails = timelineElement.getDetails();
         DigitalAddress digitalAddress = timelineElementDetails == null ? null : timelineElementDetails.getDigitalAddress();
@@ -1218,7 +1218,7 @@ public class SharedSteps {
         return null;
     }
 
-    public TimelineElement getTimelineElementByEventId(String timelineEventCategory, DataTest dataFromTest) {
+    public TimelineElement getTimelineElementByEventId(String timelineEventCategory, TimelineWorkflowSequenceElement dataFromTest) {
         List<TimelineElement> timelineElementList = notificationResponseComplete.getTimeline();
         String iun;
         if (timelineEventCategory.equals(TimelineElementCategory.REQUEST_REFUSED.getValue())) {

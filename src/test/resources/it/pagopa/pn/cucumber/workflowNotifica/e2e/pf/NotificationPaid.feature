@@ -1,7 +1,7 @@
 Feature: Notifica pagata
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-PAID-3] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-PAID-3] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento subito dopo la generazione dell'evento di timeline SCHEDULE_REFINEMENT.
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -28,7 +28,7 @@ Feature: Notifica pagata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-PAID-4] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-PAID-4] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento subito dopo che la notifica è stata accettata. Il pagamento non deve generare un evento di timeline SEND_ANALOG_DOMICILE.
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -52,7 +52,7 @@ Feature: Notifica pagata
       | details_sentAttemptMade | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-PAID-5] Casistica in cui il pagamento di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-PAID-5] Casistica in cui il pagamento di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento subito dopo la generazione del secondo evento di timeline SEND_DIGITAL_DOMICILE. Il pagamento non deve generare
   un evento di timeline PREPARE_SIMPLE_REGISTERED_LETTER e SEND_SIMPLE_REGISTERED_LETTER.
   Viene verificata la presenza degli elementi SCHEDULE_REFINEMENT e REFINEMENT.
@@ -105,7 +105,7 @@ Feature: Notifica pagata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-PAID-6] Casistica in cui il pagamento di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-PAID-6] Casistica in cui il pagamento di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento subito dopo la generazione dell'evento di timeline SEND_SIMPLE_REGISTERED_LETTER.
   Viene verificata la presenza degli elementi SCHEDULE_REFINEMENT e REFINEMENT.
     Given viene generata una nuova notifica
@@ -144,7 +144,7 @@ Feature: Notifica pagata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-PAID-7] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-PAID-7] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento dopo il primo SEND_ANALOG_DOMICILE e viene verificata la presenza degli elementi SCHEDULE_REFINEMENT e REFINEMENT.
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -181,7 +181,7 @@ Feature: Notifica pagata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-PAID-8a] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-PAID-8a] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento dopo il primo SEND_ANALOG_DOMICILE
   Viene inoltre verificata l'assenza del record in tabella pn-paper-notification-failed.
     Given viene generata una nuova notifica
@@ -208,7 +208,7 @@ Feature: Notifica pagata
     And viene verificato che il destinatario "Mr. UtenteQualsiasi" di tipo "PF" non sia nella tabella pn-paper-notification-failed
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-PAID-8b] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-PAID-8b] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento dopo il primo SEND_ANALOG_DOMICILE.
   Viene inoltre verificata l'assenza del record in tabella pn-paper-notification-failed e del secondo SEND_ANALOG_DOMICILE.
     Given viene generata una nuova notifica
@@ -248,7 +248,7 @@ Feature: Notifica pagata
     And viene verificato che il destinatario "Mr. UtenteQualsiasi" di tipo "PF" non sia nella tabella pn-paper-notification-failed
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-PAID-9] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-PAID-9] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento dopo il secondo SEND_ANALOG_DOMICILE e viene verificata la presenza degli elementi SCHEDULE_REFINEMENT e REFINEMENT
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -285,7 +285,7 @@ Feature: Notifica pagata
       | details_recIndex | 0 |
 
   @e2e
-  Scenario: [E2E-WF-INHIBITION-PAID-10] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
+  Scenario: [E2E-PF-WF-INHIBITION-PAID-10] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.
   Viene effettuato il pagamento dopo il secondo SEND_ANALOG_DOMICILE e viene verificata la presenza degli elementi COMPLETELY_UNREACHABLE, SCHEDULE_REFINEMENT e REFINEMENT.
   Viene inoltre verificata la presenza del record in tabella pn-paper-notification-failed.
     Given viene generata una nuova notifica

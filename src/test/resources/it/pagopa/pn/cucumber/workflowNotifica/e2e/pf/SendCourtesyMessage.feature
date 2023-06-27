@@ -1,6 +1,6 @@
 Feature: Invio messaggi cortesia e2e
     @e2e
-    Scenario: [E2E-SEND_COURTESY_MESSAGE_1] invio messaggio di cortesia - invio per email
+    Scenario: [E2E-PF-SEND_COURTESY_MESSAGE_1] invio messaggio di cortesia - invio per email
         Given si predispone addressbook per l'utente "Mr. IndirizzoPiattaforma"
         And viene inserito un recapito legale "example@pecSuccess.it"
         And viene generata una nuova notifica
@@ -15,7 +15,7 @@ Feature: Invio messaggi cortesia e2e
             | details_recIndex | 0 |
 
     @e2e
-    Scenario: [E2E-SEND_COURTESY_MESSAGE_2] invio messaggio di cortesia - invio per SMS
+    Scenario: [E2E-PF-SEND_COURTESY_MESSAGE_2] invio messaggio di cortesia - invio per SMS
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
         And destinatario
@@ -30,7 +30,7 @@ Feature: Invio messaggi cortesia e2e
             | details_recIndex | 0 |
 
     @e2e @ignore
-    Scenario: [E2E-SEND_COURTESY_MESSAGE_3] invio messaggio di cortesia - invio per AppIO
+    Scenario: [E2E-PF-SEND_COURTESY_MESSAGE_3] invio messaggio di cortesia - invio per AppIO
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
         And destinatario
@@ -45,7 +45,7 @@ Feature: Invio messaggi cortesia e2e
             | details_recIndex | 0 |
 
     @e2e
-    Scenario: [E2E-SEND-COURTESY-MESSAGE-4] Invio notifica mono destinatario con messaggio di cortesia non configurato
+    Scenario: [E2E-PF-SEND-COURTESY-MESSAGE-4] Invio notifica mono destinatario con messaggio di cortesia non configurato
         Given viene generata una nuova notifica
             | subject | invio notifica con cucumber |
         And destinatario "Mr. NoIndirizzi"
