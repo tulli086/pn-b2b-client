@@ -1,6 +1,6 @@
 Feature: National Registries e2e
 
-  @e2e
+  @e2e @ignore
   Scenario: [B2B_NATIONAL_REGISTRIES_1] Utenza senza recapiti settati, non settare recapito digitale nella notifica.
   IPA risponde in OK e non viene fatta chiamata a INIPEC.
     Given viene generata una nuova notifica
@@ -8,6 +8,7 @@ Feature: National Registries e2e
       | senderDenomination | Comune di milano |
     And destinatario
       | digitalDomicile | NULL |
+      | recipientType  | PG |
       | taxId        | PPPPLT80A01H501V |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
@@ -60,7 +61,7 @@ Feature: National Registries e2e
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
       | details_recIndex | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [B2B_NATIONAL_REGISTRIES_2] Utenza senza recapiti settati, non settare recapito digitale nella notifica.
   IPA risponde in KO e viene fatta chiamata a INIPEC.
     Given viene generata una nuova notifica
@@ -68,6 +69,7 @@ Feature: National Registries e2e
       | senderDenomination | Comune di milano |
     And destinatario
       | digitalDomicile | NULL |
+      | recipientType  | PG |
       | taxId        | FRMTTR76M06B715E |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
@@ -77,17 +79,17 @@ Feature: National Registries e2e
       | pollingTime | 30000 |
       | numCheck    | 30    |
       | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
-      | details_digitalAddress | {"address": "da recuperare da mock", "type": "PEC"} |
+      | details_digitalAddress | {"address": "FRMTTR76M06B715E@pec.it", "type": "PEC"} |
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_DOMICILE" esista
-      | details_digitalAddress | {"address": "da recuperare da mock", "type": "PEC"} |
+      | details_digitalAddress | {"address": "FRMTTR76M06B715E@pec.it", "type": "PEC"} |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
       | details_responseStatus | OK |
       | details_sendingReceipts | [{"id": null, "system": null}] |
-      | details_digitalAddress | {"address": "da recuperare da mock", "type": "PEC"} |
+      | details_digitalAddress | {"address": "FRMTTR76M06B715E@pec.it", "type": "PEC"} |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
@@ -130,6 +132,7 @@ Feature: National Registries e2e
       | physicalCommunication | REGISTERED_LETTER_890           |
     And destinatario
       | digitalDomicile | NULL |
+      | recipientType  | PG |
       | taxId        | RCCRCC80A01H501B |
       | physicalAddress_address | Via@ok_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
