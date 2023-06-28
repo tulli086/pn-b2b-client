@@ -1739,3 +1739,83 @@ Feature: Workflow analogico
       | NULL | NULL |
     And controlla che il timestamp di "SEND_ANALOG_DOMICILE" sia dopo quello di invio e di attesa di lettura del messaggio di cortesia
       | NULL | NULL |
+
+  @e2e
+  Scenario: [E2E-PF_WF-ANALOG-43] Invio analogico fallimento al primo tentativo e Ok al secondo recuperato da ANPR.
+  (sequence FAIL-Irreperibile_AR)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | REGISTERED_LETTER_890 |
+    And destinatario "Mr. UtenteIndirizzoANPRGiusto"
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@FAIL-Irreperibile_AR |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+    And vengono verificati gli eventi precedenti in ordine
+      | seq0 | {"category": "SEND_ANALOG_FEEDBACK", "recIndex": 0, "sent_attempt_made": 0, "deliveryDetailCode": "RECRN002F", "deliveryFailureCause": "M04"} |
+      | seq1 | {"category": "SEND_ANALOG_FEEDBACK", "recIndex": 0, "sent_attempt_made": 1, "deliveryDetailCode": "RECAG001C"} |
+
+  @e2e
+  Scenario: [E2E-PF_WF-ANALOG-44] Invio analogico fallimento al primo tentativo e indirizzo di ANPR è uguale a quello del primo tentativo
+  (sequence FAIL-Irreperibile_AR)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | REGISTERED_LETTER_890 |
+    And destinatario "Mr. UtenteIndirizzoANPRIrreperibile"
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @FAIL-Irreperibile_AR 5 |
+      | physicalAddress_at | [blank] |
+      | physicalAddress_addressDetails | [blank] |
+      | physicalAddress_zip | 20122 |
+      | physicalAddress_municipality | MILANO |
+      | physicalAddress_municipalityDetails | [blank] |
+      | physicalAddress_province | MI |
+      | physicalAddress_State | Italia |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+    And vengono verificati gli eventi precedenti in ordine
+      | seq0 | {"category": "SEND_ANALOG_FEEDBACK", "recIndex": 0, "sent_attempt_made": 0, "deliveryDetailCode": "RECRN002F", "deliveryFailureCause": "M04"} |
+      | seq1 | {"category": "PREPARE_ANALOG_DOMICILE", "recIndex": 0, "sent_attempt_made": 1} |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" non esista
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 1 |
+      | progressIndex | 1 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" non esista
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 1 |
+
+  @e2e
+  Scenario: [E2E-PF_WF-ANALOG-45] Invio analogico fallimento al primo tentativo e Ok al secondo recuperato da ANPR.
+  (sequence FAIL-Irreperibile_AR)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | REGISTERED_LETTER_890 |
+    And destinatario "Mr. UtenteIndirizzoANPRIrreperibile"
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@FAIL-Irreperibile_AR 10 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+    And vengono verificati gli eventi precedenti in ordine
+      | seq0 | {"category": "SEND_ANALOG_FEEDBACK", "recIndex": 0, "sent_attempt_made": 0, "deliveryDetailCode": "RECRN002F", "deliveryFailureCause": "M04"} |
+      | seq1 | {"category": "PREPARE_ANALOG_DOMICILE", "recIndex": 0, "sent_attempt_made": 1 } |
+      | seq2 | {"category": "SEND_ANALOG_FEEDBACK", "recIndex": 0, "sent_attempt_made": 1 } |

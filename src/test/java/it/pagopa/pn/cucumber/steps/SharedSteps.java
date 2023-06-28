@@ -111,6 +111,9 @@ public class SharedSteps {
     @Value("${pn.bearer-token.user10.taxID}")
     private String mrGeneraleFallimentoTaxID;
 
+    @Value("${pn.bearer-token.user11.taxID}")
+    private String mrIndirizzoANPRIrreperibileTaxID;
+
     @Value("${pn.configuration.workflow.wait.millis:31000}")
     private Integer workFlowWait;
 
@@ -232,6 +235,25 @@ public class SharedSteps {
                 return marioCucumberTaxID;
             case "Mr. UtenteQualsiasi2":
                 return marioGherkinTaxID;
+//          un utente per il cui la richiesta d'indirizzo verso ANPR fornisce un indirizzo giusto,
+//          cioè sul quale l'invio analogico va a buon fine
+            case "Mr. UtenteIndirizzoANPRGiusto":
+                return marioGherkinTaxID;
+//          un utente per il cui la richiesta d'indirizzo verso ANPR fornisce un indirizzo irreperibile,
+//          cioè sul quale l'invio analogico fallisce
+//          più precisamente, questo indirizzo dovrebbe essere esattamente (cfr test E2E-PF_WF-ANALOG-44)
+//            {
+//                "at": "",
+//                    "address": "Via NationalRegistries @FAIL-Irreperibile_AR 5",
+//                    "addressDetail": "",
+//                    "zip": "20122",
+//                    "municipality": "MILANO",
+//                    "municipalityDetails": "",
+//                    "province": "MI",
+//                    "foreignState": ""
+//            }
+            case "Mr. UtenteIndirizzoANPRIrreperibile":
+                return mrIndirizzoANPRIrreperibileTaxID;
         }
         return null;
     }

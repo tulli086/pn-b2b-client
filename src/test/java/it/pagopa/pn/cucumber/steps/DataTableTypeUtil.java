@@ -53,7 +53,7 @@ public class DataTableTypeUtil {
         return notificationRequest;
     }
 
-    @DataTableType
+    @DataTableType(replaceWithEmptyString = "[blank]")
     public synchronized NotificationRecipient convertNotificationRecipient(Map<String, String> data){
         NotificationRecipient notificationRecipient =  (new NotificationRecipient()
                 .denomination(getValue(data,DENOMINATION.key))

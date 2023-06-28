@@ -37,7 +37,7 @@ public enum NotificationValue {
     PHYSICAL_ADDRESS_ADDRESS("physicalAddress_address","Via senza nome",false),
     PHYSICAL_ADDRESS_MUNICIPALITY("physicalAddress_municipality","Milano",false),
     PHYSICAL_ADDRESS_MUNICIPALITYDETAILS("physicalAddress_municipalityDetails","Milano",false),
-    PHYSICAL_ADDRESS_AT("at","Presso",false),
+    PHYSICAL_ADDRESS_AT("physicalAddress_at","Presso",false),
 
     PHYSICAL_ADDRESS_DETAILS("physicalAddress_addressDetails","scala b",false),
     PHYSICAL_ADDRESS_PROVINCE("physicalAddress_province","MI",false),
