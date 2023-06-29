@@ -40,6 +40,7 @@ import java.lang.invoke.MethodHandles;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Base64;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -126,9 +127,10 @@ public class SharedSteps {
     private final Duration secondNotificationWorkflowWaitingTimeDefault = DurationStyle.detectAndParse("6m");
     private final Duration waitingForReadCourtesyMessageDefault = DurationStyle.detectAndParse("5m");
 
-    private String gherkinSpaTaxID = "15376371009";
-    private String cucumberSrlTaxID = "12345678903";
-    private String cucumberSocietyTaxID = "MSSLGU51P10A087J";
+
+    private String gherkinSpaTaxID = "12666810299";
+    private String cucumberSrlTaxID = "SCTPTR04A01C352E";
+    private String cucumberSocietyTaxID = "DNNGRL83A01C352D";
     private String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
     private String gherkinSrltaxId = "CCRMCT06A03A433H";
     private String cucumberSpataxId = "20517490320";
@@ -483,6 +485,27 @@ public class SharedSteps {
         sendNotificationWithWrongExtension();
     }
 
+    @When("la notifica viene inviata tramite api b2b oversize preload allegato dal {string} e si attende che lo stato diventi REFUSED")
+    public void laNotificaVieneInviataPreloadAllegatoOverSize(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationRefusedOverSizeAllegato();
+    }
+
+    @When("la notifica viene inviata tramite api b2b injection preload allegato dal {string} e si attende che lo stato diventi REFUSED")
+    public void laNotificaVieneInviataPreloadAllegatoInjection(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationRefusedInjectionAllegato();
+    }
+
+    @When("la notifica viene inviata tramite api b2b over 15 preload allegato dal {string} e si attende che lo stato diventi REFUSED")
+    public void laNotificaVieneInviataPreloadAllegatoOver15(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationRefusedOver15Allegato();
+    }
+
 
     @When("la notifica viene inviata tramite api b2b e si attende che lo stato diventi ACCEPTED")
     public void laNotificaVieneInviataOk() {
@@ -568,6 +591,7 @@ public class SharedSteps {
 
     }
 
+
     private void sendNotificationWithErrorSha() {
         try {
             Assertions.assertDoesNotThrow(() -> {
@@ -597,6 +621,7 @@ public class SharedSteps {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotificationWrongExtension(notificationRequest);
+
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
@@ -636,6 +661,75 @@ public class SharedSteps {
             String message = assertionFailedError.getMessage() +
                     "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+    private void sendNotificationRefusedOverSizeAllegato() {
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                newNotificationResponse = b2bUtils.uploadNotificationOverSizeAllegato(notificationRequest);
+                errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
+            });
+
+            try {
+                Thread.sleep(getWorkFlowWait());
+            } catch (InterruptedException e) {
+                logger.error("Thread.sleep error retry");
+                throw new RuntimeException(e);
+            }
+            Assertions.assertNotNull(errorCode);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+    private void sendNotificationRefusedInjectionAllegato() {
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                newNotificationResponse = b2bUtils.uploadNotificationInjectionAllegato(notificationRequest);
+                errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
+            });
+
+            try {
+                Thread.sleep(getWorkFlowWait());
+            } catch (InterruptedException e) {
+                logger.error("Thread.sleep error retry");
+                throw new RuntimeException(e);
+            }
+            Assertions.assertNotNull(errorCode);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+    private void sendNotificationRefusedOver15Allegato() {
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                newNotificationResponse = b2bUtils.uploadNotificationOver15Allegato(notificationRequest);
+                errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
+            });
+
+            try {
+                Thread.sleep(getWorkFlowWait());
+            } catch (InterruptedException e) {
+                logger.error("Thread.sleep error retry");
+                throw new RuntimeException(e);
+            }
+            Assertions.assertNotNull(errorCode);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            Assertions.assertTrue((message != null) && (message.contains("400") && message.contains("Max attachment count reached")));
+            errorCode = "INVALID_PARAMETER_MAX_ATTACHMENT";
+
+
         }
     }
 
@@ -978,6 +1072,11 @@ public class SharedSteps {
                 break;
             case "ADDRESS":
                 Assertions.assertTrue("NOT_VALID_ADDRESS".equalsIgnoreCase(errorCode));
+            case "INVALID_PARAMETER_MAX_ATTACHMENT":
+                Assertions.assertTrue("INVALID_PARAMETER_MAX_ATTACHMENT".equalsIgnoreCase(errorCode));
+                break;
+            case "FILE_PDF_INVALID_ERROR":
+                Assertions.assertTrue("FILE_PDF_INVALID_ERROR".equalsIgnoreCase(errorCode));
                 break;
             default:
                 throw new IllegalArgumentException();
