@@ -2,11 +2,11 @@
 
 1. Recarsi alla root del progetto e buildare il progetto con il comando:
    - ```shell
-     ./mvnw clean package`
+     ./mvnw clean package
      ```
      (ambiente Unix)
    - ```shell 
-     mvnw.cmd clean package`
+     mvnw.cmd clean package
      ```
      (ambiente Windows)
    
