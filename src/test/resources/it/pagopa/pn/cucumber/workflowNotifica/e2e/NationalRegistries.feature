@@ -1,6 +1,6 @@
 Feature: National Registries e2e
 
-  @e2e @ignore
+  @e2e
   Scenario: [B2B_NATIONAL_REGISTRIES_1] Utenza senza recapiti settati, non settare recapito digitale nella notifica.
   IPA risponde in OK e non viene fatta chiamata a INIPEC.
     Given viene generata una nuova notifica
@@ -9,7 +9,7 @@ Feature: National Registries e2e
     And destinatario
       | digitalDomicile | NULL |
       | recipientType  | PG |
-      | taxId        | PPPPLT80A01H501V |
+      | taxId        | TSTGNN80A01F839X |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
@@ -18,17 +18,17 @@ Feature: National Registries e2e
       | pollingTime | 30000 |
       | numCheck    | 30    |
       | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
-      | details_digitalAddress | {"address": "example@pec.it", "type": "PEC"} |
+      | details_digitalAddress | {"address": "TSTGNN80A01F839X@pec.it", "type": "PEC"} |
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_DOMICILE" esista
-      | details_digitalAddress | {"address": "example@pec.it", "type": "PEC"} |
+      | details_digitalAddress | {"address": "TSTGNN80A01F839X@pec.it", "type": "PEC"} |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
       | details_responseStatus | OK |
       | details_sendingReceipts | [{"id": null, "system": null}] |
-      | details_digitalAddress | {"address": "example@pec.it", "type": "PEC"} |
+      | details_digitalAddress | {"address": "TSTGNN80A01F839X@pec.it", "type": "PEC"} |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
@@ -123,7 +123,7 @@ Feature: National Registries e2e
       | details_recIndex | 0 |
 
 
-  @e2e @ignore
+  @e2e
   Scenario: [B2B_NATIONAL_REGISTRIES_3] Utenza senza recapiti settati, non settare recapito digitale nella notifica.
   IPA risponde in KO e viene fatta chiamata a INIPEC che risponde KO. Viene inviata notifica analogica.
     Given viene generata una nuova notifica
