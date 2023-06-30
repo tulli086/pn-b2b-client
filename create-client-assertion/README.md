@@ -20,7 +20,7 @@
     --subject=$iss \
     --audience=$audience \
     --purposeId=$purposeId \
-    --keyPath=keys/client-pn-${ENV}.rsa.priv
+    --keyPath=<path to private key>
    ```
 
 In alternativa è possibile da IDE avviare direttamente la classe `it.pagopa.pdnd.CreateClientAssertionApp` (sempre con le options opportune)
