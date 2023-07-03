@@ -276,12 +276,6 @@ Feature: Workflow analogico
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
-      | loadTimeline | true |
-      | pollingTime | 30000 |
-      | numCheck    | 30    |
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
     Then viene verificato che l'elemento di timeline "SCHEDULE_ANALOG_WORKFLOW" esista
       | loadTimeline | true |
       | pollingTime | 10000 |
@@ -292,16 +286,22 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | pollingTime | 30000 |
       | numCheck    | 30    |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | CON080 |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" non esista
       | loadTimeline | true |
       | pollingTime | 30000 |
       | numCheck    | 15     |
       | details_recIndex | 1 |
       | details_sentAttemptMade | 0 |
+    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | CON080 |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
