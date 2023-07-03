@@ -1,5 +1,6 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
+import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
@@ -7,6 +8,7 @@ import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.testclient.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.TimelineElementWait;
+import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequenceElement;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
@@ -20,6 +22,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.time.OffsetDateTime.now;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.awaitility.Awaitility.await;
 
 public class AvanzamentoNotificheB2bSteps {
 
@@ -829,6 +833,122 @@ public class AvanzamentoNotificheB2bSteps {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
 
+    }
+
+    @Then("l'avviso pagopa viene pagato correttamente per il destinatario con recIndex {int}")
+    public void laNotificaVienePagataPerDestinatarioRecIndex(Integer recIndex) {
+        NotificationPriceResponse notificationPrice = this.b2bClient.getNotificationPrice(sharedSteps.getSentNotification().getRecipients().get(recIndex).getPayment().getCreditorTaxId(),
+                sharedSteps.getSentNotification().getRecipients().get(recIndex).getPayment().getNoticeCode());
+
+        PaymentEventsRequestPagoPa eventsRequestPagoPa = new PaymentEventsRequestPagoPa();
+
+        PaymentEventPagoPa paymentEventPagoPa = new PaymentEventPagoPa();
+        paymentEventPagoPa.setNoticeCode(sharedSteps.getSentNotification().getRecipients().get(recIndex).getPayment().getNoticeCode());
+        paymentEventPagoPa.setCreditorTaxId(sharedSteps.getSentNotification().getRecipients().get(recIndex).getPayment().getCreditorTaxId());
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        paymentEventPagoPa.setPaymentDate(fmt.format(now().atZoneSameInstant(ZoneId.of("UTC"))));
+        paymentEventPagoPa.setAmount(notificationPrice.getAmount());
+
+        List<PaymentEventPagoPa> paymentEventPagoPaList = new LinkedList<>();
+        paymentEventPagoPaList.add(paymentEventPagoPa);
+
+        eventsRequestPagoPa.setEvents(paymentEventPagoPaList);
+
+        b2bClient.paymentEventsRequestPagoPa(eventsRequestPagoPa);
+    }
+
+    @Then("si verifica che lo stato della notifica sia {string}")
+    public void verificaEsisteStatoNotifica(String status, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
+        NotificationStatus notificationInternalStatus = getNotificationInternalStatus(status);
+
+        boolean mustLoadNotification = dataFromTest != null ? dataFromTest.getLoadTimeline() : false;
+        if (mustLoadNotification) {
+            loadNotificationByStatus(notificationInternalStatus, true, dataFromTest);
+        }
+        try {
+            List<NotificationStatusHistoryElement> notificationStatusHistoryElements = sharedSteps.getSentNotification().getNotificationStatusHistory();
+            logger.info("NOTIFICATION_STATUS_HISTORY: " + notificationStatusHistoryElements);
+            Assertions.assertNotNull(notificationStatusHistoryElements);
+
+            NotificationStatusHistoryElement notificationStatusHistoryElement = sharedSteps.getSentNotification().getNotificationStatusHistory().stream().filter(elem -> elem.getStatus().equals(notificationInternalStatus)).findAny().orElse(null);
+
+            Assertions.assertNotNull(notificationStatusHistoryElement);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+    @Then("si verifica che lo stato della notifica non sia {string}")
+    public void verificaNonEsisteStatoNotifica(String status, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
+        NotificationStatus notificationInternalStatus = getNotificationInternalStatus(status);
+
+        boolean mustLoadNotification = dataFromTest != null ? dataFromTest.getLoadTimeline() : false;
+        if (mustLoadNotification) {
+            loadNotificationByStatus(notificationInternalStatus, false, dataFromTest);
+        }
+        try {
+            List<NotificationStatusHistoryElement> notificationStatusHistoryElements = sharedSteps.getSentNotification().getNotificationStatusHistory();
+            logger.info("NOTIFICATION_STATUS_HISTORY: " + notificationStatusHistoryElements);
+            Assertions.assertNotNull(notificationStatusHistoryElements);
+
+            NotificationStatusHistoryElement notificationStatusHistoryElement = sharedSteps.getSentNotification().getNotificationStatusHistory().stream().filter(elem -> elem.getStatus().equals(notificationInternalStatus)).findAny().orElse(null);
+
+            Assertions.assertNull(notificationStatusHistoryElement);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+    private void loadNotificationByStatus(NotificationStatus notificationInternalStatus, boolean existCheck, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
+        // calc how much time wait
+        Integer pollingTime = dataFromTest != null ? dataFromTest.getPollingTime() : null;
+        Integer numCheck = dataFromTest != null ? dataFromTest.getNumCheck() : null;
+        Integer defaultPollingTime = sharedSteps.getWorkFlowWait();
+        Integer defaultNumCheck = 5;
+        Integer waitingTime = (pollingTime != null ? pollingTime : defaultPollingTime) * (numCheck != null ? numCheck : defaultNumCheck);
+
+        await()
+                .atMost(waitingTime, MILLISECONDS)
+                .with()
+                .pollInterval(pollingTime != null ? pollingTime : defaultPollingTime, MILLISECONDS)
+                .pollDelay(0, MILLISECONDS)
+                .ignoreExceptions()
+                .untilAsserted(() -> {
+                    sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+
+                    logger.info("NOTIFICATION_STATUS_HISTORY: " + sharedSteps.getSentNotification().getNotificationStatusHistory());
+
+                    NotificationStatusHistoryElement notificationStatusHistoryElement = sharedSteps.getSentNotification().getNotificationStatusHistory().stream().filter(elem -> elem.getStatus().equals(notificationInternalStatus)).findAny().orElse(null);
+
+                    if (existCheck) {
+                        Assertions.assertNotNull(notificationStatusHistoryElement);
+                    } else {
+                        Assertions.assertNull(notificationStatusHistoryElement);
+                    }
+                });
+    }
+
+    NotificationStatus getNotificationInternalStatus(String status) {
+        switch (status) {
+            case "ACCEPTED":
+                return NotificationStatus.ACCEPTED;
+            case "DELIVERING":
+                return NotificationStatus.DELIVERING;
+            case "DELIVERED":
+                return NotificationStatus.DELIVERED;
+            case "VIEWED":
+                return NotificationStatus.VIEWED;
+            case "CANCELLED":
+                return NotificationStatus.CANCELLED;
+            case "EFFECTIVE_DATE":
+                return NotificationStatus.EFFECTIVE_DATE;
+            case "COMPLETELY_UNREACHABLE":
+                return NotificationStatus.UNREACHABLE;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     /*
