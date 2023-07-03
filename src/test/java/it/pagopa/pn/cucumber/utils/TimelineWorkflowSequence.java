@@ -1,18 +1,27 @@
 package it.pagopa.pn.cucumber.utils;
 
-import java.util.NavigableMap;
+import java.util.LinkedHashMap;
 
 public class TimelineWorkflowSequence {
-    Integer pollingTime;
+    Float pollingTime;
+    Float pollingTimeMultiplier;
     Integer numCheck;
-    NavigableMap<String, TimelineWorkflowSequenceElement> sequence;
+    LinkedHashMap<String, TimelineWorkflowSequenceElement> sequence;
 
-    public Integer getPollingTime() {
+    public Float getPollingTime() {
         return pollingTime;
     }
 
-    public void setPollingTime(Integer pollingTime) {
+    public void setPollingTime(Float pollingTime) {
         this.pollingTime = pollingTime;
+    }
+
+    public Float getPollingTimeMultiplier() {
+        return pollingTimeMultiplier;
+    }
+
+    public void setPollingTimeMultiplier(Float pollingTimeMultiplier) {
+        this.pollingTimeMultiplier = pollingTimeMultiplier;
     }
 
     public Integer getNumCheck() {
@@ -23,11 +32,11 @@ public class TimelineWorkflowSequence {
         this.numCheck = numCheck;
     }
 
-    public NavigableMap<String, TimelineWorkflowSequenceElement> getSequence() {
+    public LinkedHashMap<String, TimelineWorkflowSequenceElement> getSequence() {
         return sequence;
     }
 
-    public void setSequence(NavigableMap<String, TimelineWorkflowSequenceElement> sequence) {
+    public void setSequence(LinkedHashMap<String, TimelineWorkflowSequenceElement> sequence) {
         this.sequence = sequence;
     }
 }

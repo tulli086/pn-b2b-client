@@ -20,6 +20,7 @@ import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Duration;
@@ -189,6 +190,9 @@ class AlternativeTimelineEventSpec implements TimelineEventSpec {
 
 public class WorkflowNotificheB2BSteps {
 
+    @Value("${pn.configuration.workflow.polling.millis:10000}")
+    private Integer polling;
+
     private final SharedSteps sharedSteps;
     private final IPnPaB2bClient b2bClient;
     private final PnExternalServiceClientImpl externalClient;
@@ -196,6 +200,17 @@ public class WorkflowNotificheB2BSteps {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private TimelineWorkflowSequence timelineWorkflowSequence;
 
+    private Map.Entry<String, TimelineWorkflowSequenceElement> getLast(LinkedHashMap<String, TimelineWorkflowSequenceElement> LinkedHMap) {
+        int count = 1;
+
+        for (Map.Entry<String, TimelineWorkflowSequenceElement> it:LinkedHMap.entrySet()){
+            if (count == LinkedHMap.size()) {
+                return it;
+            }
+            count++;
+        }
+        return null;
+    }
 
     @Autowired
     public WorkflowNotificheB2BSteps(SharedSteps sharedSteps, IPnPrivateDeliveryPushExternalClientImpl pnPrivateDeliveryPushExternalClient) {
@@ -377,37 +392,45 @@ public class WorkflowNotificheB2BSteps {
     }
 
     private void loadTimeline(String timelineEventCategory, boolean existCheck, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
+        logger.info("LOADING TIMELINE");
         // calc how much time wait
-        Integer pollingTime = dataFromTest != null ? dataFromTest.getPollingTime() : null;
+        Float pollingTime = dataFromTest != null ? dataFromTest.getPollingTime() : null;
         Integer numCheck = dataFromTest != null ? dataFromTest.getNumCheck() : null;
         TimelineElementWait timelineElementWait = sharedSteps.getTimelineElementCategory(timelineEventCategory);
         Integer defaultPollingTime = timelineElementWait.getWaiting();
         Integer defaultNumCheck = timelineElementWait.getNumCheck();
-        Integer waitingTime = (pollingTime != null ? pollingTime : defaultPollingTime) * (numCheck != null ? numCheck : defaultNumCheck);
+        Float waitingTime = (pollingTime != null ? pollingTime : defaultPollingTime) * (numCheck != null ? numCheck : defaultNumCheck);
 
         await()
-                .atMost(waitingTime, MILLISECONDS)
-                .with()
-                .pollInterval(pollingTime != null ? pollingTime : defaultPollingTime, MILLISECONDS)
-                .pollDelay(0, MILLISECONDS)
-                .ignoreExceptions()
-                .untilAsserted(() -> {
-                    TimelineElement timelineElement = getAndStoreTimeline(timelineEventCategory, dataFromTest);
-                    List<TimelineElement> timelineElementList = sharedSteps.getSentNotification().getTimeline();
+            .atMost(waitingTime.longValue(), MILLISECONDS)
+            .with()
+            .pollInterval(pollingTime != null ? pollingTime.longValue() : defaultPollingTime, MILLISECONDS)
+            .pollDelay(0, MILLISECONDS)
+            .ignoreException(AssertionFailedError.class)
+            .conditionEvaluationListener(condition -> {
+                Long remainingTime = condition.getRemainingTimeInMS();
+                if (remainingTime <= pollingTime) {
+                    logger.info("TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+                    logger.info("TIMELINE CATEGORY: " + timelineEventCategory);
+                }
+            })
+            .untilAsserted(() -> {
+                TimelineElement timelineElement = getAndStoreTimeline(timelineEventCategory, dataFromTest);
+                List<TimelineElement> timelineElementList = sharedSteps.getSentNotification().getTimeline();
+                Assertions.assertNotNull(timelineElementList);
+                Assertions.assertNotEquals(timelineElementList.size(), 0);
+                if (existCheck) {
+                    Assertions.assertNotNull(timelineElement);
+                } else {
+                    Assertions.assertNull(timelineElement);
+                }
+            });
 
-                    logger.info("NOTIFICATION_TIMELINE: " + timelineElementList);
-                    Assertions.assertNotNull(timelineElementList);
-                    Assertions.assertNotEquals(timelineElementList.size(), 0);
-                    if (existCheck) {
-                        Assertions.assertNotNull(timelineElement);
-                    } else {
-                        Assertions.assertNull(timelineElement);
-                    }
-                });
     }
 
     @Then("viene inizializzata la sequence per il controllo sulla timeline")
     public void vieneInizializzatoControlloTimeline(@Transpose TimelineWorkflowSequence timelineWorkflowSequence) {
+        timelineWorkflowSequence.setPollingTime((float) polling * timelineWorkflowSequence.getPollingTimeMultiplier());
         this.timelineWorkflowSequence = timelineWorkflowSequence;
     }
 
@@ -417,7 +440,11 @@ public class WorkflowNotificheB2BSteps {
             throw new RuntimeException("Sequence not initialized. Add \"viene inizializzata la sequence per il controllo sulla timeline\" before this step");
         }
         sequenceElement.setAction(SequenceAction.EXIST);
-        timelineWorkflowSequence.getSequence().put(timelineCategory, sequenceElement);
+        TimelineElementCategory timelineElementCategory = TimelineElementCategory.valueOf(timelineCategory);
+        sequenceElement.getTimelineElement().setCategory(timelineElementCategory);
+        LinkedHashMap<String, TimelineWorkflowSequenceElement> sequence = timelineWorkflowSequence.getSequence();
+        Integer sequenceNumber = sequence.size();
+        timelineWorkflowSequence.getSequence().put("seg-" + sequenceNumber, sequenceElement);
     }
 
     @And("si aggiunge alla sequence il controllo che {string} non esista")
@@ -434,26 +461,39 @@ public class WorkflowNotificheB2BSteps {
         if (timelineWorkflowSequence == null) {
             throw new RuntimeException("Sequence not initialized. Add \"viene inizializzata la sequence per il controllo sulla timeline\" before this step");
         }
-        NavigableMap<String, TimelineWorkflowSequenceElement> sequence = timelineWorkflowSequence.getSequence();
+        LinkedHashMap<String, TimelineWorkflowSequenceElement> sequence = timelineWorkflowSequence.getSequence();
         if (sequence.isEmpty()) {
             throw new RuntimeException("Sequence empty. Add a step that starts with \"si aggiunge alla sequence...\" before this step");
         }
         // get last timeline element and load timeline
-        Map.Entry<String, TimelineWorkflowSequenceElement> lastEntry = sequence.lastEntry();
+        Map.Entry<String, TimelineWorkflowSequenceElement> lastEntry = getLast(sequence);
         TimelineWorkflowSequenceElement timelineWorkflowSequenceElement = lastEntry.getValue();
         // TODO: it will be removed
         timelineWorkflowSequenceElement.setPollingTime(timelineWorkflowSequence.getPollingTime());
         timelineWorkflowSequenceElement.setNumCheck(timelineWorkflowSequence.getNumCheck());
         //
-        loadTimeline(lastEntry.getKey(), !lastEntry.getValue().getAction().equals(SequenceAction.NOT_EXIST), lastEntry.getValue());
+        loadTimeline(timelineWorkflowSequenceElement.getTimelineElement().getCategory().getValue(), !timelineWorkflowSequenceElement.getAction().equals(SequenceAction.NOT_EXIST), timelineWorkflowSequenceElement);
         // check the sequence
+        OffsetDateTime lastTimeStamp = null;
         for (Map.Entry<String, TimelineWorkflowSequenceElement> pair : sequence.entrySet()) {
-            String timelineEventCategory = pair.getKey();
             TimelineWorkflowSequenceElement sequenceElement = pair.getValue();
+            String timelineEventCategory = sequenceElement.getTimelineElement().getCategory().getValue();
             SequenceAction action = sequenceElement.getAction();
             switch (action) {
                 case EXIST:
-                    vieneVerificatoElementoTimeline(timelineEventCategory, sequenceElement);
+                    TimelineElement timelineElement = vieneVerificatoElementoTimeline(timelineEventCategory, sequenceElement);
+                    if (lastTimeStamp != null) {
+                        try {
+                            logger.info("CHECK THAT THE TIMELINE EVENT IS AFTER OR EQUAL TO THE PREVIOUS ONE");
+                            logger.info("PREVIOUS: " + lastTimeStamp + " CURRENT: " + timelineElement.getTimestamp());
+                            Assertions.assertTrue(lastTimeStamp.isBefore(timelineElement.getTimestamp()) ||
+                                    lastTimeStamp.isEqual(timelineElement.getTimestamp())
+                            );
+                        } catch (AssertionFailedError assertionFailedError) {
+                            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+                        }
+                    }
+                    lastTimeStamp = timelineElement.getTimestamp();
                     break;
                 case NOT_EXIST:
                     vieneVerificatoCheElementoTimelineNonEsista(timelineEventCategory, sequenceElement);
@@ -478,7 +518,11 @@ public class WorkflowNotificheB2BSteps {
             timelineElementForDateCalculation = sharedSteps.getTimelineElementByEventId(TimelineElementCategory.SEND_ANALOG_FEEDBACK.getValue(), dataFromTest);
         }
 
-        Assertions.assertNotNull(timelineElementForDateCalculation);
+        try {
+            Assertions.assertNotNull(timelineElementForDateCalculation);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
 
         OffsetDateTime notificationDate = null;
         Duration schedulingDaysRefinement = null;
@@ -503,11 +547,17 @@ public class WorkflowNotificheB2BSteps {
             Duration timeToAddInNonVisibilityTimeCase = sharedSteps.getTimeToAddInNonVisibilityTimeCase();
             schedulingDate = schedulingDate.plus(timeToAddInNonVisibilityTimeCase);
         }
-        Assertions.assertEquals(timelineElement.getDetails().getSchedulingDate(), schedulingDate);
+        try {
+            logger.info("CHECK THAT SCHEDULING DATE IS EQUAL TO CALCULATED ONE");
+            Assertions.assertEquals(timelineElement.getDetails().getSchedulingDate(), schedulingDate);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 
     @And("si attende che sia presente il perfezionamento per decorrenza termini")
     public void siAttendePresenzaPerfezionamentoDecorrenzaTermini(@Transpose TimelineWorkflowSequenceElement dataFromTest) throws InterruptedException {
+        logger.info("WAITING FOR REFINEMENT");
         String iun = sharedSteps.getSentNotification().getIun();
         if (dataFromTest != null && dataFromTest.getTimelineElement() != null) {
             TimelineElement timelineElement = sharedSteps.getTimelineElementByEventId(TimelineElementCategory.SCHEDULE_REFINEMENT.getValue(), dataFromTest);
@@ -524,6 +574,7 @@ public class WorkflowNotificheB2BSteps {
 
     @And("si attende che si ritenti l'invio dopo l'evento {string}")
     public void siAttendeCheSiRitentiInvio(String timelineEventCategory, @Transpose TimelineWorkflowSequenceElement dataFromTest) throws InterruptedException {
+        logger.info("WAITING FOR THE RETRY OF THE FIRST SEND");
         String iun = sharedSteps.getSentNotification().getIun();
         if (dataFromTest != null && dataFromTest.getTimelineElement() != null) {
             TimelineElement timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
@@ -542,6 +593,7 @@ public class WorkflowNotificheB2BSteps {
 
     @And("viene verificato che il destinatario {string} di tipo {string} sia nella tabella pn-paper-notification-failed")
     public void vieneVerificatoDestinatarioInPnPaperNotificationFailed(String denomination, String recipientTye) {
+        logger.info("CHECK THAT USER IS COMPLETELY UNREACHABLE");
         String taxId = sharedSteps.getTaxIdFromDenomination(denomination);
         // get internal id from data-vault
         String internalId = externalClient.getInternalIdFromTaxId(recipientTye, taxId);
@@ -549,11 +601,16 @@ public class WorkflowNotificheB2BSteps {
         List<ResponsePaperNotificationFailedDto> notificationFailedList = this.pnPrivateDeliveryPushExternalClient.getPaperNotificationFailed(internalId, true);
         String iun = sharedSteps.getSentNotification().getIun();
         ResponsePaperNotificationFailedDto notificationFailed = notificationFailedList.stream().filter(elem -> elem.getIun().equals(iun)).findFirst().orElse(null);
-        Assertions.assertNotNull(notificationFailed);
+        try {
+            Assertions.assertNotNull(notificationFailed);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 
     @And("viene verificato che il destinatario {string} di tipo {string} non sia nella tabella pn-paper-notification-failed")
     public void vieneVerificatoDestinatarioNonInPnPaperNotificationFailed(String denomination, String recipientTye) {
+        logger.info("CHECK THAT USER ISN'T COMPLETELY UNREACHABLE");
         String taxId = sharedSteps.getTaxIdFromDenomination(denomination);
         // get internal id from data-vault
         String internalId = externalClient.getInternalIdFromTaxId(recipientTye, taxId);
@@ -561,25 +618,31 @@ public class WorkflowNotificheB2BSteps {
         List<ResponsePaperNotificationFailedDto> notificationFailedList = pnPrivateDeliveryPushExternalClient.getPaperNotificationFailed(internalId, true);
         String iun = sharedSteps.getSentNotification().getIun();
         ResponsePaperNotificationFailedDto notificationFailed = notificationFailedList.stream().filter(elem -> elem.getIun().equals(iun)).findFirst().orElse(null);
-        Assertions.assertNull(notificationFailed);
+        try {
+            Assertions.assertNull(notificationFailed);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 
     @Then("viene verificato che l'elemento di timeline {string} esista")
-    public void vieneVerificatoElementoTimeline(String timelineEventCategory, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
+    public TimelineElement vieneVerificatoElementoTimeline(String timelineEventCategory, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
         boolean mustLoadTimeline = dataFromTest != null ? dataFromTest.getLoadTimeline() : false;
         if (mustLoadTimeline) {
             loadTimeline(timelineEventCategory, true, dataFromTest);
         }
         try {
             TimelineElement timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
-            logger.info("TIMELINE_ELEMENT: " + timelineElement);
+            logger.info("CHECK IF TIMELINE ELEMENT EXISTS: " + timelineEventCategory);
             Assertions.assertNotNull(timelineElement);
             if (dataFromTest != null && dataFromTest.getTimelineElement() != null) {
                 checkTimelineElementEquality(timelineEventCategory, timelineElement, dataFromTest);
             }
+            return timelineElement;
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
+        return null;
     }
 
     @And("viene verificato che l'elemento di timeline {string} non esista")
@@ -587,7 +650,7 @@ public class WorkflowNotificheB2BSteps {
         loadTimeline(timelineEventCategory, false, dataFromTest);
         TimelineElement timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
         try {
-            logger.info("TIMELINE_ELEMENT: " + timelineElement);
+            logger.info("CHECK IF TIMELINE ELEMENT DOESN'T EXIST: " + timelineEventCategory);
             Assertions.assertNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
@@ -626,18 +689,23 @@ public class WorkflowNotificheB2BSteps {
             // proceed with default flux
             iun = sharedSteps.getSentNotification().getIun();
         }
-        if (dataFromTest != null && dataFromTest.getTimelineElement() != null) {
-            // get timeline event id
-            String timelineEventId = sharedSteps.getTimelineEventId(timelineEventCategory, iun, dataFromTest);
-            if (timelineEventCategory.equals(TimelineElementCategory.SEND_ANALOG_PROGRESS.getValue())) {
-                TimelineElement timelineElementFromTest = dataFromTest.getTimelineElement();
-                TimelineElementDetails timelineElementDetails = timelineElementFromTest.getDetails();
-                Assertions.assertEquals(size, timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId) && elem.getDetails().getDeliveryDetailCode().equals(timelineElementDetails.getDeliveryDetailCode())).count());
+        try {
+            logger.info("CHECK THAT THE NUMBER OF THE TIMELINE ELEMENTS IS: " + size);
+            if (dataFromTest != null && dataFromTest.getTimelineElement() != null) {
+                // get timeline event id
+                String timelineEventId = sharedSteps.getTimelineEventId(timelineEventCategory, iun, dataFromTest);
+                if (timelineEventCategory.equals(TimelineElementCategory.SEND_ANALOG_PROGRESS.getValue())) {
+                    TimelineElement timelineElementFromTest = dataFromTest.getTimelineElement();
+                    TimelineElementDetails timelineElementDetails = timelineElementFromTest.getDetails();
+                    Assertions.assertEquals(size, timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId) && elem.getDetails().getDeliveryDetailCode().equals(timelineElementDetails.getDeliveryDetailCode())).count());
+                } else {
+                    Assertions.assertEquals(size, timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId)).count());
+                }
             } else {
-                Assertions.assertEquals(size, timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId)).count());
+                Assertions.assertEquals(size, timelineElementList.stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).count());
             }
-        } else {
-            Assertions.assertEquals(size, timelineElementList.stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).count());
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
 

@@ -9,12 +9,15 @@ Feature: Scelta canale di invio (Digitale o analogico)
     And destinatario "Mr. IndirizzoPiattaforma"
       | NULL | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "GET_ADDRESS" esista
-      | loadTimeline | true |
+    Then viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 1.5 |
+      | numCheck    | 3    |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | PLATFORM |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | true |
+    And viene verificata la sequence
 
   @e2e
   Scenario: [E2E-PF-CHOOSE-DELIVERY-MODE-2] Invio notifica mono destinatario. L’utente NON ha configurato l’indirizzo di piattaforma MA ha valorizzato l’indirizzo Speciale
@@ -23,17 +26,20 @@ Feature: Scelta canale di invio (Digitale o analogico)
     And destinatario "Mr. NoIndirizzi"
       | digitalDomicile_address | testpagopa1@pnpagopa.postecert.local |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then  viene verificato che l'elemento di timeline "GET_ADDRESS" esista
-      | loadTimeline | true |
+    Then viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 1.5 |
+      | numCheck    | 3    |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | true |
-    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | PLATFORM |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | false |
+    And viene verificata la sequence
 
   @e2e @OnlyEnvTest
   Scenario: [E2E-PF-CHOOSE-DELIVERY-MODE-3] Invio notifica mono destinatario. L’utente NON ha configurato l’indirizzo di piattaforma,
@@ -43,22 +49,25 @@ Feature: Scelta canale di invio (Digitale o analogico)
     And destinatario "Mr. IndirizzoGenerale"
       | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "GET_ADDRESS" esista
-      | loadTimeline | true |
+    Then viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 1.5 |
+      | numCheck    | 3    |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | true |
-    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | false |
-    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | PLATFORM |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | false |
+    And viene verificata la sequence
 
   @e2e
   Scenario: [E2E-PF-CHOOSE-DELIVERY-MODE-4] Invio notifica mono destinatario. L’utente non ha configurato nessuno degli indirizzi digitali
@@ -67,24 +76,29 @@ Feature: Scelta canale di invio (Digitale o analogico)
     And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "SCHEDULE_ANALOG_WORKFLOW" esista
-      | loadTimeline | true |
-    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+    Then viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2 |
+      | numCheck    | 8    |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_retryNumber | 0 |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | false |
-    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | PLATFORM |
       | details_retryNumber | 0 |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | false |
-    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_retryNumber | 0 |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "SCHEDULE_ANALOG_WORKFLOW" esista
+      | details_recIndex | 0 |
+    And viene verificata la sequence
+
 

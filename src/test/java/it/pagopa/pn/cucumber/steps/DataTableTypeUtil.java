@@ -8,8 +8,8 @@ import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequenceElement;
 import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequence;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
@@ -156,13 +156,10 @@ public class DataTableTypeUtil {
                         .delegateInfo(getObjValue(DelegateInfo.class, data, DETAILS_DELEGATE_INFO.key))
                 );
 
-        // IMPORTANT: no empty data check; enrich with new checks if it is needed
-        if (timelineElement.getDetails() != null || timelineElement.getLegalFactsIds() != null) {
-            timelineWorkflowSequenceElement.setTimelineElement(timelineElement);
-        }
+        timelineWorkflowSequenceElement.setTimelineElement(timelineElement);
         timelineWorkflowSequenceElement.setFirstSendRetry(isFirstRetry != null ? Boolean.valueOf(isFirstRetry) : null);
         timelineWorkflowSequenceElement.setProgressIndex(progressIndex != null ? Integer.parseInt(progressIndex) : null);
-        timelineWorkflowSequenceElement.setPollingTime(pollingTime != null ? Integer.parseInt(pollingTime) : null);
+        timelineWorkflowSequenceElement.setPollingTime(pollingTime != null ? Float.parseFloat(pollingTime) : null);
         timelineWorkflowSequenceElement.setNumCheck(numCheck != null ? Integer.parseInt(numCheck) : null);
         timelineWorkflowSequenceElement.setLoadTimeline(loadTimeline != null ? Boolean.valueOf(loadTimeline) : null);
 
@@ -176,13 +173,13 @@ public class DataTableTypeUtil {
             return null;
         }
 
-        String pollingTime = getValue(data, POLLING_TIME.key);
+        String pollingTimeMultiplier = getValue(data, POLLING_TIME_MULTIPLIER.key);
         String numCheck = getValue(data, NUM_CHECK.key);
 
         TimelineWorkflowSequence timelineWorkflowSequence = new TimelineWorkflowSequence();
-        timelineWorkflowSequence.setPollingTime(pollingTime != null ? Integer.parseInt(pollingTime) : null);
+        timelineWorkflowSequence.setPollingTimeMultiplier(pollingTimeMultiplier != null ? Float.parseFloat(pollingTimeMultiplier) : null);
         timelineWorkflowSequence.setNumCheck(numCheck != null ? Integer.parseInt(numCheck) : null);
-        timelineWorkflowSequence.setSequence(new TreeMap<>());
+        timelineWorkflowSequence.setSequence(new LinkedHashMap<>());
 
         return timelineWorkflowSequence;
     }

@@ -6,7 +6,7 @@ public class TimelineWorkflowSequenceElement {
     TimelineElement timelineElement;
     boolean isFirstSendRetry;
     Integer progressIndex;
-    Integer pollingTime;
+    Float pollingTime;
     Integer numCheck;
     boolean loadTimeline;
     SequenceAction action;
@@ -35,11 +35,11 @@ public class TimelineWorkflowSequenceElement {
         this.progressIndex = progressIndex;
     }
 
-    public Integer getPollingTime() {
+    public Float getPollingTime() {
         return pollingTime;
     }
 
-    public void setPollingTime(Integer pollingTime) {
+    public void setPollingTime(Float pollingTime) {
         this.pollingTime = pollingTime;
     }
 
