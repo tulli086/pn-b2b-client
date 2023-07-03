@@ -175,7 +175,7 @@ Feature: Workflow analogico
       | physicalCommunication | REGISTERED_LETTER_890           |
     And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
-      | physicalAddress_address | Via@ok_890 |
+      | physicalAddress_address | Via@FAIL-Irreperibile_AR |
     And destinatario "Mr. EmailCortesia"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Irreperibile_AR |
