@@ -8,6 +8,7 @@ config/bearer-token-*.properties
 config/api-keys.properties
 config/bearer-token.properties
 
+scripts/TokenGeneratorLambda/*.zip
 
 ### Node ###
 **/node_modules/
