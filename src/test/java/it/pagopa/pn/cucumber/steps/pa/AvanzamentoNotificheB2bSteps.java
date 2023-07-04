@@ -903,16 +903,16 @@ public class AvanzamentoNotificheB2bSteps {
 
     private void loadNotificationByStatus(NotificationStatus notificationInternalStatus, boolean existCheck, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
         // calc how much time wait
-        Float pollingTime = dataFromTest != null ? dataFromTest.getPollingTime() : null;
+        Integer pollingTime = dataFromTest != null ? dataFromTest.getPollingTime().intValue() : null;
         Integer numCheck = dataFromTest != null ? dataFromTest.getNumCheck() : null;
         Integer defaultPollingTime = sharedSteps.getWorkFlowWait();
         Integer defaultNumCheck = 5;
-        Float waitingTime = (pollingTime != null ? pollingTime : defaultPollingTime) * (numCheck != null ? numCheck : defaultNumCheck);
+        Integer waitingTime = (pollingTime != null ? pollingTime : defaultPollingTime) * (numCheck != null ? numCheck : defaultNumCheck);
 
         await()
-                .atMost(waitingTime.longValue(), MILLISECONDS)
+                .atMost(waitingTime, MILLISECONDS)
                 .with()
-                .pollInterval(pollingTime != null ? pollingTime.longValue() : defaultPollingTime, MILLISECONDS)
+                .pollInterval(pollingTime != null ? pollingTime : defaultPollingTime, MILLISECONDS)
                 .pollDelay(0, MILLISECONDS)
                 .ignoreExceptions()
                 .untilAsserted(() -> {

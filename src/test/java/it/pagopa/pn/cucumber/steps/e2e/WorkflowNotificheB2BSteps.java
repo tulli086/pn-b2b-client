@@ -273,6 +273,7 @@ public class WorkflowNotificheB2BSteps {
             case "SEND_DIGITAL_DOMICILE":
                 if (detailsFromTest != null) {
                     Assertions.assertEquals(detailsFromNotification.getDigitalAddress(), detailsFromTest.getDigitalAddress());
+                    Assertions.assertEquals(detailsFromNotification.getRecIndex(), detailsFromTest.getRecIndex());
                 }
                 break;
             case "DIGITAL_SUCCESS_WORKFLOW":
