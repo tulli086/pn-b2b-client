@@ -1,6 +1,9 @@
 package it.pagopa.pn.cucumber.steps.e2e;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cucumber.java.Before;
+import io.cucumber.java.BeforeStep;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -428,6 +431,11 @@ public class WorkflowNotificheB2BSteps {
 
     }
 
+    @BeforeStep
+    public void checkSequence(Scenario scenario) {
+        logger.info(scenario.getName());
+    }
+
     @Then("viene inizializzata la sequence per il controllo sulla timeline")
     public void vieneInizializzatoControlloTimeline(@Transpose TimelineWorkflowSequence timelineWorkflowSequence) {
         timelineWorkflowSequence.setPollingTime((float) polling * timelineWorkflowSequence.getPollingTimeMultiplier());
@@ -465,6 +473,7 @@ public class WorkflowNotificheB2BSteps {
         if (sequence.isEmpty()) {
             throw new RuntimeException("Sequence empty. Add a step that starts with \"si aggiunge alla sequence...\" before this step");
         }
+        logger.info("START SEQUENCE CHECK");
         // get last timeline element and load timeline
         Map.Entry<String, TimelineWorkflowSequenceElement> lastEntry = getLast(sequence);
         TimelineWorkflowSequenceElement timelineWorkflowSequenceElement = lastEntry.getValue();

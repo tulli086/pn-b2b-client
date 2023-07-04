@@ -95,12 +95,6 @@ Feature: Digital send e2e
     And viene inizializzata la sequence per il controllo sulla timeline
       | pollingTimeMultiplier | 2 |
       | numCheck | 8 |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | isFirstSendRetry | true |
-      | details_isAvailable | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -197,11 +191,6 @@ Feature: Digital send e2e
     And viene inizializzata la sequence per il controllo sulla timeline
       | pollingTimeMultiplier | 2 |
       | numCheck | 8 |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -222,7 +211,6 @@ Feature: Digital send e2e
       | details_digitalAddressSource | PLATFORM |
       | details_sentAttemptMade | 1 |
       | details_isAvailable | true |
-      | isFirstSendRetry | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -298,11 +286,6 @@ Feature: Digital send e2e
     And viene inizializzata la sequence per il controllo sulla timeline
       | pollingTimeMultiplier | 2 |
       | numCheck | 8 |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -323,7 +306,6 @@ Feature: Digital send e2e
       | details_digitalAddressSource | PLATFORM |
       | details_sentAttemptMade | 1 |
       | details_isAvailable | true |
-      | isFirstSendRetry | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -401,11 +383,6 @@ Feature: Digital send e2e
     And viene inizializzata la sequence per il controllo sulla timeline
       | pollingTimeMultiplier | 2.5 |
       | numCheck | 10 |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -426,7 +403,6 @@ Feature: Digital send e2e
       | details_digitalAddressSource | PLATFORM |
       | details_sentAttemptMade | 1 |
       | details_isAvailable | true |
-      | isFirstSendRetry | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@FAIL-pecFirstKO.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -545,11 +521,6 @@ Feature: Digital send e2e
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | false |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "test@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -563,10 +534,11 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
-      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
-      | details_digitalAddress | {"address": "test@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
     # secondo tentativo
     And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
@@ -590,6 +562,10 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
       | details_digitalAddressSource | SPECIAL |
       | details_sentAttemptMade | 1 |
+    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
+      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
+      | details_digitalAddress | {"address": "test@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
+      | details_recIndex | 0 |
     And si aggiunge alla sequence il controllo che "SCHEDULE_REFINEMENT" esista
       | details_recIndex | 0 |
     And viene verificata la sequence
@@ -713,23 +689,9 @@ Feature: Digital send e2e
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
-    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
-      | loadTimeline | true |
-      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
-      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
-      | details_recIndex | 0 |
-    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
-      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_FEEDBACK" esista
-      | details_responseStatus | OK |
-      | details_sendingReceipts | [{"id": null, "system": null}] |
-      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2.5 |
+      | numCheck | 8 |
     And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
       | details_digitalAddressSource | PLATFORM |
@@ -745,17 +707,36 @@ Feature: Digital send e2e
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
       | details_isAvailable | true |
+    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
+      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
+    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_FEEDBACK" esista
+      | details_responseStatus | OK |
+      | details_sendingReceipts | [{"id": null, "system": null}] |
+      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
+    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
+      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
+      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
+      | details_recIndex | 0 |
     And si aggiunge alla sequence il controllo che "SCHEDULE_REFINEMENT" esista
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGITAL_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
     And si attende che sia presente il perfezionamento per decorrenza termini
       | details_recIndex | 0 |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | numCheck | 1 |
     And si aggiunge alla sequence il controllo che "REFINEMENT" esista
-      | loadTimeline | true |
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
       | details_recIndex | 0 |
 
@@ -769,29 +750,55 @@ Feature: Digital send e2e
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2.5 |
+      | numCheck | 8 |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | true |
+    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
+      | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_FEEDBACK" esista
-      | loadTimeline | true |
       | details_responseStatus | KO |
       | details_sendingReceipts | [{"id": null, "system": null}] |
       | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
-      | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
+    And viene verificata la sequence
     # si ritenta l'invio
     And si attende che si ritenti l'invio dopo l'evento "SEND_DIGITAL_DOMICILE"
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
-      | loadTimeline | true |
-      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
-      | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2.5 |
+      | numCheck | 10 |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | false |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -807,6 +814,11 @@ Feature: Digital send e2e
       | details_sentAttemptMade | 1 |
       | isFirstSendRetry | true |
     # secondo invio
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@FAIL-pecFirstKO.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -819,56 +831,13 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 1 |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
+      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
+      | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | isFirstSendRetry | true |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 1 |
-      | isFirstSendRetry | true |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 1 |
-      | isFirstSendRetry | true |
-      | details_isAvailable | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
     And si aggiunge alla sequence il controllo che "SCHEDULE_REFINEMENT" esista
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGITAL_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
@@ -876,9 +845,12 @@ Feature: Digital send e2e
       | isFirstSendRetry | true |
     And si attende che sia presente il perfezionamento per decorrenza termini
       | details_recIndex | 0 |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2 |
+      | numCheck | 4 |
     And si aggiunge alla sequence il controllo che "REFINEMENT" esista
-      | loadTimeline | true |
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
       | details_recIndex | 0 |
 
@@ -892,29 +864,55 @@ Feature: Digital send e2e
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2.5 |
+      | numCheck | 8 |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | true |
+    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
+      | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_FEEDBACK" esista
-      | loadTimeline | true |
       | details_responseStatus | KO |
       | details_sendingReceipts | [{"id": null, "system": null}] |
       | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
-      | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
+    And viene verificata la sequence
     # si ritenta l'invio
     And si attende che si ritenti l'invio dopo l'evento "SEND_DIGITAL_DOMICILE"
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
-      | loadTimeline | true |
-      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
-      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2.5 |
+      | numCheck | 10 |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | false |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -930,6 +928,11 @@ Feature: Digital send e2e
       | details_sentAttemptMade | 1 |
       | isFirstSendRetry | true |
     # secondo invio
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -942,65 +945,24 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 1 |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
+      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
+      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-      | isFirstSendRetry | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-      | isFirstSendRetry | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
-      | isFirstSendRetry | true |
     And si aggiunge alla sequence il controllo che "SCHEDULE_REFINEMENT" esista
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGITAL_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 1 |
     And si attende che sia presente il perfezionamento per decorrenza termini
       | details_recIndex | 0 |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | numCheck | 1 |
     And si aggiunge alla sequence il controllo che "REFINEMENT" esista
-      | loadTimeline | true |
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
       | details_recIndex | 0 |
 
@@ -1014,29 +976,55 @@ Feature: Digital send e2e
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2.5 |
+      | numCheck | 8 |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | true |
+    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
+      | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_FEEDBACK" esista
-      | loadTimeline | true |
       | details_responseStatus | KO |
       | details_sendingReceipts | [{"id": null, "system": null}] |
       | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
-      | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
+    And viene verificata la sequence
     # si ritenta l'invio
     And si attende che si ritenti l'invio dopo l'evento "SEND_DIGITAL_DOMICILE"
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
-      | loadTimeline | true |
-      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
-      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2.5 |
+      | numCheck | 10 |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | false |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -1052,6 +1040,11 @@ Feature: Digital send e2e
       | details_sentAttemptMade | 1 |
       | isFirstSendRetry | true |
     # secondo invio
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -1064,65 +1057,24 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 1 |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+    And si aggiunge alla sequence il controllo che "DIGITAL_SUCCESS_WORKFLOW" esista
+      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
+      | details_digitalAddress | {"address": "example@OK-pecSuccess.it", "type": "PEC"} |
       | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-      | isFirstSendRetry | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-      | isFirstSendRetry | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
-      | isFirstSendRetry | true |
     And si aggiunge alla sequence il controllo che "SCHEDULE_REFINEMENT" esista
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGITAL_SUCCESS_WORKFLOW"
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 1 |
     And si attende che sia presente il perfezionamento per decorrenza termini
       | details_recIndex | 0 |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | numCheck | 1 |
     And si aggiunge alla sequence il controllo che "REFINEMENT" esista
-      | loadTimeline | true |
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
       | details_recIndex | 0 |
 
@@ -1138,28 +1090,55 @@ Feature: Digital send e2e
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2.5 |
+      | numCheck | 8 |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | true |
+    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
+      | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 0 |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_FEEDBACK" esista
-      | loadTimeline | true |
       | details_responseStatus | KO |
       | details_sendingReceipts | [{"id": null, "system": null}] |
       | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
-      | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
+    And viene verificata la sequence
     # si ritenta l'invio
     And si attende che si ritenti l'invio dopo l'evento "SEND_DIGITAL_DOMICILE"
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 0 |
-    And si aggiunge alla sequence il controllo che "DIGITAL_FAILURE_WORKFLOW" esista
-      | loadTimeline | true |
-      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | pollingTimeMultiplier | 2.5 |
+      | numCheck | 10 |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
       | details_recIndex | 0 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | false |
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | false |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@FAIL-pecFirstKOSecondKO.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -1175,6 +1154,11 @@ Feature: Digital send e2e
       | details_sentAttemptMade | 1 |
       | isFirstSendRetry | true |
     # secondo invio
+    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+      | details_recIndex | 0 |
+      | details_digitalAddressSource | GENERAL |
+      | details_sentAttemptMade | 1 |
+      | details_isAvailable | true |
     And si aggiunge alla sequence il controllo che "SEND_DIGITAL_DOMICILE" esista
       | details_digitalAddress | {"address": "example@FAIL-pecFirstKO.it", "type": "PEC"} |
       | details_recIndex | 0 |
@@ -1187,73 +1171,30 @@ Feature: Digital send e2e
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 1 |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
+    And si aggiunge alla sequence il controllo che "DIGITAL_FAILURE_WORKFLOW" esista
+      | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
       | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 0 |
-      | details_isAvailable | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | PLATFORM |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-      | isFirstSendRetry | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | SPECIAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | false |
-      | isFirstSendRetry | true |
-    And si aggiunge alla sequence il controllo che "GET_ADDRESS" esista
-      | details_recIndex | 0 |
-      | details_digitalAddressSource | GENERAL |
-      | details_sentAttemptMade | 1 |
-      | details_isAvailable | true |
-      | isFirstSendRetry | true |
-    And si aggiunge alla sequence il controllo che "SEND_SIMPLE_REGISTERED_LETTER" esista
-      | loadTimeline | true |
-      | details_recIndex | 0 |
-      | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
     And si aggiunge alla sequence il controllo che "SCHEDULE_REFINEMENT" esista
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGITAL_FAILURE_WORKFLOW"
       | details_recIndex | 0 |
       | details_digitalAddressSource | GENERAL |
       | details_sentAttemptMade | 1 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene inizializzata la sequence per il controllo sulla timeline
+      | numCheck | 1 |
     And si aggiunge alla sequence il controllo che "PREPARE_SIMPLE_REGISTERED_LETTER" esista
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-    And si attende che sia presente il perfezionamento per decorrenza termini
+    And si aggiunge alla sequence il controllo che "SEND_SIMPLE_REGISTERED_LETTER" esista
       | details_recIndex | 0 |
+      | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_analogCost | 133 |
     And si aggiunge alla sequence il controllo che "REFINEMENT" esista
-      | loadTimeline | true |
       | details_recIndex | 0 |
+    And viene verificata la sequence
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
       | details_recIndex | 0 |
 
