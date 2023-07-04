@@ -395,7 +395,46 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-
+  @dev
+  Scenario: [E2E-PF_WF-ANALOG-MULTI-7] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+    And destinatario "Mr. UtenteQualsiasi"
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@OK_AR |
+    And destinatario "Mr. UtenteQualsiasi2"
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@OK_AR |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 1 |
+      | details_sentAttemptMade | 0 |
+    Then si verifica che lo stato della notifica sia "DELIVERED"
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | CON080 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 1 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | CON080 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECRN002E |
 
 
 
