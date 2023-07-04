@@ -342,10 +342,12 @@ public class WorkflowNotificheB2BSteps {
                     Assertions.assertEquals(detailsFromNotification.getPhysicalAddress(), detailsFromTest.getPhysicalAddress());
                 }
                 break;
+            case "SEND_ANALOG_DOMICILE":
             case "SEND_SIMPLE_REGISTERED_LETTER":
                 if (detailsFromTest != null) {
                     Assertions.assertEquals(detailsFromNotification.getPhysicalAddress(), detailsFromTest.getPhysicalAddress());
                     Assertions.assertEquals(detailsFromNotification.getAnalogCost(), detailsFromTest.getAnalogCost());
+                    Assertions.assertEquals(detailsFromNotification.getRecIndex(), detailsFromTest.getRecIndex());
                 }
                 break;
             case "NOTIFICATION_VIEWED":
