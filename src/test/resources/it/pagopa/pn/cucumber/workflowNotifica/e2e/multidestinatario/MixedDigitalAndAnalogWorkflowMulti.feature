@@ -399,3 +399,361 @@ Feature: Workflow digitale multidestinatario
       | pollingTime  | 30000 |
       | numCheck    | 10    |
       | details_recIndex | 1 |
+
+  @e2e
+  Scenario: [E2E-PF-B2B_DIGITAL_ANALOG_MULTI_5_D0_OK-D1_OK] Successo raccomandata semplice + Successo pec, inibizione per visualizzazione
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | AR_REGISTERED_LETTER |
+    And destinatario "Mr. NoIndirizzi"
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@OK_AR |
+    #NB: sequence con un delay per cercare di allineare le tempistiche con l'analogico
+    And destinatario "Mr. EmailCortesia"
+      | digitalDomicile_address | testpagopa2@sequence.60s-C000.5s-C001.5s-C005.5s-C003.it |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    # Recipient 1 - digitale
+    Then viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" esista
+      | loadTimeline | true |
+      | pollingTime | 20000 |
+      | numCheck    | 20    |
+      | details_recIndex | 1 |
+      | details_digitalAddress | {"address": "testEmail@email.it", "type": "EMAIL"} |
+    And la notifica può essere correttamente recuperata da "Mr. EmailCortesia"
+    Then si verifica che lo stato della notifica sia "VIEWED"
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+      | details_recIndex | 1 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+      | details_recIndex | 1 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | true |
+    # Recipient 0 - analogico
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" esista
+      | loadTimeline | true |
+      | pollingTime  | 30000 |
+      | numCheck    | 5    |
+      | details_recIndex | 0 |
+      | details_physicalAddress | {"address": "VIA@OK_AR", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_sentAttemptMade | 0 |
+      | details_analogCost | 167 |
+    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@OK_AR", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | CON080 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECRN001B |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "AR"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECRN001C |
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20    |
+      | details_recIndex | 0 |
+    And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime  | 30000 |
+      | numCheck    | 10    |
+      | details_recIndex | 0 |
+    Then si verifica che lo stato della notifica non sia "EFFECTIVE_DATE"
+      | loadTimeline | true |
+      | pollingTime | 50000 |
+      | numCheck    | 2    |
+
+  @e2e
+  Scenario: [E2E-PF-B2B_DIGITAL_ANALOG_MULTI_6_D0_KO-D1_OK] Fallimento raccomandata semplice + Successo pec, inibizione per visualizzazione
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | AR_REGISTERED_LETTER |
+    And destinatario "Mr. NoIndirizzi"
+      | digitalDomicile | NULL |
+      | physicalAddress_address | VIA@FAIL-Irreperibile_AR |
+    #NB: sequence con un delay per cercare di allineare le tempistiche con l'analogico
+    And destinatario "Mr. EmailCortesia"
+      | digitalDomicile_address | testpagopa2@sequence.120s-C000.5s-C001.5s-C005.5s-C003.it |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    # Recipient 1 - digitale
+    Then viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" esista
+      | loadTimeline | true |
+      | pollingTime | 20000 |
+      | numCheck    | 20    |
+      | details_recIndex | 1 |
+      | details_digitalAddress | {"address": "testEmail@email.it", "type": "EMAIL"} |
+    And la notifica può essere correttamente recuperata da "Mr. EmailCortesia"
+    Then si verifica che lo stato della notifica sia "VIEWED"
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+      | details_recIndex | 1 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+      | details_recIndex | 1 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | true |
+    # Recipient 0 - analogico
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" esista
+      | loadTimeline | true |
+      | pollingTime  | 30000 |
+      | numCheck    | 5    |
+      | details_recIndex | 0 |
+      | details_physicalAddress | {"address": "VIA@FAIL-IRREPERIBILE_AR", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_sentAttemptMade | 0 |
+      | details_analogCost | 167 |
+    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@FAIL-IRREPERIBILE_AR", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | CON080 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECRN002E |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "Plico"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECRN002F |
+      | details_deliveryFailureCause | M04 |
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20    |
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20    |
+      | details_recIndex | 0 |
+    Then si verifica che lo stato della notifica non sia "EFFECTIVE_DATE"
+      | loadTimeline | true |
+      | pollingTime | 50000 |
+      | numCheck    | 2    |
+
+  @e2e
+  Scenario: [E2E-PF-B2B_DIGITAL_ANALOG_MULTI_7_D0_OK-D1_OK] Successo raccomandata semplice + Fallimento pec, inibizione per pagamento
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | AR_REGISTERED_LETTER |
+    And destinatario "Mr. NoIndirizzi"
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@OK_AR |
+    #NB: sequence con un delay per cercare di allineare le tempistiche con l'analogico
+    And destinatario "Mr. EmailCortesia"
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_address | Via@ok_RS |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    # Recipient 1 - digitale
+    Then viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" esista
+      | loadTimeline | true |
+      | pollingTime | 20000 |
+      | numCheck    | 20    |
+      | details_recIndex | 1 |
+      | details_digitalAddress | {"address": "testEmail@email.it", "type": "EMAIL"} |
+    Then l'avviso pagopa viene pagato correttamente per il destinatario con recIndex 1
+    And si attende il corretto pagamento della notifica
+    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+      | details_recIndex | 1 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+      | details_recIndex | 1 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | true |
+    Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER" non esista
+      | loadTimeline | true |
+      | pollingTime | 50000 |
+      | numCheck    | 3     |
+      | details | NOT_NULL |
+      | details_recIndex | 1 |
+      | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_analogCost | 133 |
+    Then viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime  | 30000 |
+      | numCheck    | 20    |
+      | details_recIndex | 1 |
+    # Recipient 0 - analogico
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" esista
+      | loadTimeline | true |
+      | pollingTime  | 30000 |
+      | numCheck    | 5    |
+      | details_recIndex | 0 |
+      | details_physicalAddress | {"address": "VIA@OK_AR", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_sentAttemptMade | 0 |
+      | details_analogCost | 177 |
+    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@OK_AR", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | CON080 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG001B |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "AR"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG001C |
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20    |
+      | details_recIndex | 0 |
+    And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+    And si attende che sia presente il perfezionamento per decorrenza termini
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime  | 30000 |
+      | numCheck    | 10    |
+      | details_recIndex | 0 |
+    Then si verifica che lo stato della notifica sia "EFFECTIVE_DATE"
+      | loadTimeline | true |
+      | pollingTime | 50000 |
+      | numCheck    | 2    |
+
+  @e2e
+  Scenario: [E2E-PF-B2B_DIGITAL_ANALOG_MULTI_8_D0_KO-D1_OK] Fallimento raccomandata semplice + Fallimento pec, inibizione per pagamento
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | AR_REGISTERED_LETTER |
+    And destinatario "Mr. NoIndirizzi"
+      | digitalDomicile | NULL |
+      | physicalAddress_address | VIA@FAIL-Irreperibile_AR |
+    #NB: sequence con un delay per cercare di allineare le tempistiche con l'analogico
+    And destinatario "Mr. EmailCortesia"
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_address | Via@ok_RS |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    # Recipient 1 - digitale
+    Then viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" esista
+      | loadTimeline | true |
+      | pollingTime | 20000 |
+      | numCheck    | 20    |
+      | details_recIndex | 1 |
+      | details_digitalAddress | {"address": "testEmail@email.it", "type": "EMAIL"} |
+    Then l'avviso pagopa viene pagato correttamente per il destinatario con recIndex 1
+    And si attende il corretto pagamento della notifica
+    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+      | details_recIndex | 1 |
+      | details_digitalAddressSource | PLATFORM |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | false |
+    And viene verificato che l'elemento di timeline "GET_ADDRESS" esista
+      | details_recIndex | 1 |
+      | details_digitalAddressSource | SPECIAL |
+      | details_sentAttemptMade | 0 |
+      | details_isAvailable | true |
+    Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER" non esista
+      | loadTimeline | true |
+      | pollingTime | 50000 |
+      | numCheck    | 3     |
+      | details | NOT_NULL |
+      | details_recIndex | 1 |
+      | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_analogCost | 133 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime  | 30000 |
+      | numCheck    | 10    |
+      | details_recIndex | 0 |
+    # Recipient 0 - analogico
+    Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" esista
+      | loadTimeline | true |
+      | pollingTime  | 30000 |
+      | numCheck    | 5    |
+      | details_recIndex | 0 |
+      | details_physicalAddress | {"address": "VIA@FAIL-IRREPERIBILE_AR", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_sentAttemptMade | 0 |
+      | details_analogCost | 167 |
+    Then viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@FAIL-IRREPERIBILE_AR", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | CON080 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECRN002E |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "Plico"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECRN002F |
+      | details_deliveryFailureCause | M04 |
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20    |
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20    |
+      | details_recIndex | 0 |
+    Then si verifica che lo stato della notifica sia "EFFECTIVE_DATE"
+      | loadTimeline | true |
+      | pollingTime | 50000 |
+      | numCheck    | 2    |
+
+

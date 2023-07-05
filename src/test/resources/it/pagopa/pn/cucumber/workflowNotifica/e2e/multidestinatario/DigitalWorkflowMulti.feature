@@ -333,7 +333,7 @@ Feature: Workflow digitale multidestinatario
       | details_analogCost | 133 |
 
 
-  @e2e 
+  @e2e
   Scenario: [E2E-PF-B2B_DIGITAL_MULTI_4_D0_KO-D1_OK] Invio notifica multi destinatario con percorso digitale.
   Fallimento pec + Successo pec, inibizione per visualizzazione.
     Given viene generata una nuova notifica

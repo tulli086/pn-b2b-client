@@ -7,6 +7,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.testclient.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
+import it.pagopa.pn.cucumber.utils.PollingData;
 import it.pagopa.pn.cucumber.utils.TimelineElementWait;
 import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequenceElement;
 import org.junit.jupiter.api.Assertions;
@@ -858,12 +859,12 @@ public class AvanzamentoNotificheB2bSteps {
     }
 
     @Then("si verifica che lo stato della notifica sia {string}")
-    public void verificaEsisteStatoNotifica(String status, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
+    public void verificaEsisteStatoNotifica(String status, @Transpose PollingData pollingData) {
         NotificationStatus notificationInternalStatus = getNotificationInternalStatus(status);
 
-        boolean mustLoadNotification = dataFromTest != null ? dataFromTest.getLoadTimeline() : false;
+        boolean mustLoadNotification = pollingData != null ? pollingData.getLoadTimeline() : false;
         if (mustLoadNotification) {
-            loadNotificationByStatus(notificationInternalStatus, true, dataFromTest);
+            loadNotificationByStatus(notificationInternalStatus, true, pollingData);
         }
         try {
             List<NotificationStatusHistoryElement> notificationStatusHistoryElements = sharedSteps.getSentNotification().getNotificationStatusHistory();
@@ -880,12 +881,12 @@ public class AvanzamentoNotificheB2bSteps {
     }
 
     @Then("si verifica che lo stato della notifica non sia {string}")
-    public void verificaNonEsisteStatoNotifica(String status, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
+    public void verificaNonEsisteStatoNotifica(String status, @Transpose PollingData pollingData) {
         NotificationStatus notificationInternalStatus = getNotificationInternalStatus(status);
 
-        boolean mustLoadNotification = dataFromTest != null ? dataFromTest.getLoadTimeline() : false;
+        boolean mustLoadNotification = pollingData != null ? pollingData.getLoadTimeline() : false;
         if (mustLoadNotification) {
-            loadNotificationByStatus(notificationInternalStatus, false, dataFromTest);
+            loadNotificationByStatus(notificationInternalStatus, false, pollingData);
         }
         try {
             List<NotificationStatusHistoryElement> notificationStatusHistoryElements = sharedSteps.getSentNotification().getNotificationStatusHistory();
@@ -901,10 +902,10 @@ public class AvanzamentoNotificheB2bSteps {
         }
     }
 
-    private void loadNotificationByStatus(NotificationStatus notificationInternalStatus, boolean existCheck, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
+    private void loadNotificationByStatus(NotificationStatus notificationInternalStatus, boolean existCheck, @Transpose PollingData pollingData) {
         // calc how much time wait
-        Float pollingTime = dataFromTest != null ? dataFromTest.getPollingTime() : null;
-        Integer numCheck = dataFromTest != null ? dataFromTest.getNumCheck() : null;
+        Float pollingTime = pollingData != null ? pollingData.getPollingTime() : null;
+        Integer numCheck = pollingData != null ? pollingData.getNumCheck() : null;
         Integer defaultPollingTime = sharedSteps.getWorkFlowWait();
         Integer defaultNumCheck = 5;
         Float waitingTime = (pollingTime != null ? pollingTime : defaultPollingTime) * (numCheck != null ? numCheck : defaultNumCheck);

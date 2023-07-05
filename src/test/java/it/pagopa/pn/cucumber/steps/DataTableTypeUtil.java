@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.DataTableType;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.cucumber.utils.PollingData;
 import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequenceElement;
 import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequence;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,6 +183,25 @@ public class DataTableTypeUtil {
         timelineWorkflowSequence.setSequence(new LinkedHashMap<>());
 
         return timelineWorkflowSequence;
+    }
+
+    @DataTableType
+    public synchronized PollingData convertPollingData(Map<String, String> data) {
+
+        if (data.size() == 1 && data.get("NULL") != null) {
+            return null;
+        }
+
+        String pollingTime = getValue(data, POLLING_TIME.key);
+        String numCheck = getValue(data, NUM_CHECK.key);
+        String loadTimeline = getValue(data, LOAD_TIMELINE.key);
+
+        PollingData pollingData = new PollingData();
+        pollingData.setPollingTime(pollingTime != null ? Float.parseFloat(pollingTime) : null);
+        pollingData.setNumCheck(numCheck != null ? Integer.parseInt(numCheck) : null);
+        pollingData.setLoadTimeline(loadTimeline != null ? Boolean.valueOf(loadTimeline) : null);
+
+        return pollingData;
     }
 
 
