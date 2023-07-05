@@ -156,8 +156,7 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
                 paId,
                 "B2B",
                 request,
-                groups,
-                null
+                groups
             );
 
         return deepCopy( response, NewNotificationResponse.class );
