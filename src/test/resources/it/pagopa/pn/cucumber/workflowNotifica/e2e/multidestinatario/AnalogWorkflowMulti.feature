@@ -396,47 +396,66 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
 
-  @dev
-  Scenario: [E2E-PF_WF-ANALOG-MULTI-7] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
+  @e2e
+  Scenario: [E2E-PF_WF-ANALOG-MULTI-7] Invio notifica multi destinatario con percorso analogico.
+  Successo raccomandata semplice + Successo raccomandata semplice, inibizione per visualizzazione.
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario "Mr. UtenteQualsiasi"
+      | physicalCommunication | AR_REGISTERED_LETTER |
+    And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK_AR |
-    And destinatario "Mr. UtenteQualsiasi2"
+    And destinatario "Mr. EmailCortesia"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+    Then viene verificato che l'elemento di timeline "SCHEDULE_ANALOG_WORKFLOW" esista
       | loadTimeline | true |
-      | pollingTime | 30000 |
-      | numCheck    | 30    |
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
-      | loadTimeline | true |
-      | pollingTime | 30000 |
+      | pollingTime | 10000 |
       | numCheck    | 30    |
       | details_recIndex | 1 |
-      | details_sentAttemptMade | 0 |
-    Then si verifica che lo stato della notifica sia "DELIVERED"
+    And la notifica può essere correttamente recuperata da "Mr. EmailCortesia"
+    Then si verifica che lo stato della notifica sia "VIEWED"
       | loadTimeline | true |
       | pollingTime | 30000 |
       | numCheck    | 30    |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" non esista
+      | loadTimeline | true |
+      | pollingTime | 450000 |
+      | numCheck    | 1     |
+      | details_recIndex | 1 |
+      | details_sentAttemptMade | 0 |
+    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 1    |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | CON080 |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
-      | details_recIndex | 1 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | CON080 |
-    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRN002E |
-
-
-
-    
+      | details_deliveryDetailCode | RECRN001B |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "AR"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECRN001C |
+    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 5    |
+      | details_recIndex | 0 |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | pollingTime | 30000 |
+      | numCheck    | 20    |
+      | details_recIndex | 0 |
+    Then si verifica che lo stato della notifica sia "VIEWED"
+      | pollingTime | 30000 |
+      | numCheck    | 30    |
