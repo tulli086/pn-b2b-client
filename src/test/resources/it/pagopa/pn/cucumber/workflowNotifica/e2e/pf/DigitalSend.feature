@@ -435,7 +435,7 @@ Feature: Digital send e2e
     And si aggiunge alla sequence il controllo che "SEND_SIMPLE_REGISTERED_LETTER" esista
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     And si aggiunge alla sequence il controllo che "REFINEMENT" esista
       | details_recIndex | 0 |
     And viene verificata la sequence
@@ -1191,7 +1191,7 @@ Feature: Digital send e2e
     And si aggiunge alla sequence il controllo che "SEND_SIMPLE_REGISTERED_LETTER" esista
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     And si aggiunge alla sequence il controllo che "REFINEMENT" esista
       | details_recIndex | 0 |
     And viene verificata la sequence

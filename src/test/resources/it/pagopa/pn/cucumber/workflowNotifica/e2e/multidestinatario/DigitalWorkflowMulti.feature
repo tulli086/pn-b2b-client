@@ -200,7 +200,7 @@ Feature: Workflow digitale multidestinatario
     And si aggiunge alla sequence il controllo che "SEND_SIMPLE_REGISTERED_LETTER" esista
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA SENZA NOME", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
 
 
   @e2e
@@ -323,14 +323,14 @@ Feature: Workflow digitale multidestinatario
     And si aggiunge alla sequence il controllo che "SEND_SIMPLE_REGISTERED_LETTER" esista
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA SENZA NOME", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     And si aggiunge alla sequence il controllo che "PREPARE_SIMPLE_REGISTERED_LETTER" esista
       | details_recIndex | 1 |
       | details_physicalAddress | {"address": "VIA SENZA NOME", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     And si aggiunge alla sequence il controllo che "SEND_SIMPLE_REGISTERED_LETTER" esista
       | details_recIndex | 1 |
       | details_physicalAddress | {"address": "VIA SENZA NOME", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
 
 
   @e2e
@@ -372,7 +372,7 @@ Feature: Workflow digitale multidestinatario
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -425,7 +425,7 @@ Feature: Workflow digitale multidestinatario
       | details_recIndex | 1 |
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     Then viene verificato che l'elemento di timeline "DIGITAL_FAILURE_WORKFLOW" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -441,7 +441,7 @@ Feature: Workflow digitale multidestinatario
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -502,7 +502,7 @@ Feature: Workflow digitale multidestinatario
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -556,7 +556,7 @@ Feature: Workflow digitale multidestinatario
       | details_recIndex | 1 |
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     Then viene verificato che l'elemento di timeline "DIGITAL_FAILURE_WORKFLOW" esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -572,7 +572,7 @@ Feature: Workflow digitale multidestinatario
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
       | pollingTime | 30000 |

@@ -415,7 +415,7 @@ public class WorkflowNotificheB2BSteps {
             .ignoreException(AssertionFailedError.class)
             .conditionEvaluationListener(condition -> {
                 Long remainingTime = condition.getRemainingTimeInMS();
-                if (remainingTime <= pollingTime) {
+                if (remainingTime <= (pollingTime != null ? pollingTime : defaultPollingTime)) {
                     logger.info("TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
                     logger.info("TIMELINE CATEGORY: " + timelineEventCategory);
                 }

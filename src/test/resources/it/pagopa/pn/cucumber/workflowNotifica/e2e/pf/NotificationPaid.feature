@@ -127,7 +127,7 @@ Feature: Notifica pagata
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     And l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista

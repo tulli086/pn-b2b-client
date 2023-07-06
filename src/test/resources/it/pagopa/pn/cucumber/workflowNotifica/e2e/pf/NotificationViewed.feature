@@ -303,7 +303,7 @@ Feature: Notifica visualizzata
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     Then la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene verificato che l'elemento di timeline "REFINEMENT" non esista
       | loadTimeline | true |

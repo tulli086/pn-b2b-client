@@ -148,7 +148,7 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     And viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "DIGITAL_FAILURE_WORKFLOW" esista
@@ -196,7 +196,7 @@ Feature: Workflow analogico
       | numCheck    | 20     |
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     And viene verificato che l'elemento di timeline "DIGITAL_FAILURE_WORKFLOW" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
@@ -1472,7 +1472,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
       | details_physicalAddress | {"address": "VIA@OK_RIS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
       | loadTimeline | true |
       | details_recIndex | 0 |
@@ -1614,7 +1614,7 @@ Feature: Workflow analogico
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@FAIL_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | details_analogCost | 181 |
     And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
       | loadTimeline | true |
       | details | NOT_NULL |
