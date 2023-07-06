@@ -9,10 +9,12 @@ Feature: Invio messaggi cortesia e2e
             | digitalDomicile | NULL |
         When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
         Then si verifica la corretta acquisizione della notifica
-        And viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" esista
-            | loadTimeline | true |
+        And viene inizializzata la sequence per il controllo sulla timeline
+            | numCheck    | 1    |
+        And si aggiunge alla sequence il controllo che "SEND_COURTESY_MESSAGE" esista
             | details_digitalAddress | {"address": "provaemail@test.it", "type": "EMAIL"} |
             | details_recIndex | 0 |
+        And viene verificata la sequence
 
     @e2e
     Scenario: [E2E-PF-SEND_COURTESY_MESSAGE_2] invio messaggio di cortesia - invio per SMS
@@ -24,10 +26,12 @@ Feature: Invio messaggi cortesia e2e
             | digitalDomicile | NULL |
         When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
         Then si verifica la corretta acquisizione della notifica
-        And viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" esista
-            | loadTimeline | true |
+        And viene inizializzata la sequence per il controllo sulla timeline
+            | numCheck    | 1    |
+        And si aggiunge alla sequence il controllo che "SEND_COURTESY_MESSAGE" esista
             | details_digitalAddress | {"address": "+393214210000", "type": "SMS"} |
             | details_recIndex | 0 |
+        And viene verificata la sequence
 
     @e2e @ignore
     Scenario: [E2E-PF-SEND_COURTESY_MESSAGE_3] invio messaggio di cortesia - invio per AppIO
@@ -39,10 +43,12 @@ Feature: Invio messaggi cortesia e2e
             | digitalDomicile | NULL |
         When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
         Then si verifica la corretta acquisizione della notifica
-        And viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" esista
-            | loadTimeline | true |
+        And viene inizializzata la sequence per il controllo sulla timeline
+            | numCheck    | 1    |
+        And si aggiunge alla sequence il controllo che "SEND_COURTESY_MESSAGE" esista
             | details_digitalAddress | {"address": "...", "type": "APPIO"} |
             | details_recIndex | 0 |
+        And viene verificata la sequence
 
     @e2e
     Scenario: [E2E-PF-SEND-COURTESY-MESSAGE-4] Invio notifica mono destinatario con messaggio di cortesia non configurato
@@ -52,5 +58,8 @@ Feature: Invio messaggi cortesia e2e
             | digitalDomicile | NULL |
         When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
         Then si verifica la corretta acquisizione della notifica
-        And viene verificato che l'elemento di timeline "SEND_COURTESY_MESSAGE" non esista
-            | loadTimeline | true |
+        And viene inizializzata la sequence per il controllo sulla timeline
+            | numCheck    | 1    |
+        And si aggiunge alla sequence il controllo che "SEND_COURTESY_MESSAGE" non esista
+            | details_recIndex | 0 |
+        And viene verificata la sequence
