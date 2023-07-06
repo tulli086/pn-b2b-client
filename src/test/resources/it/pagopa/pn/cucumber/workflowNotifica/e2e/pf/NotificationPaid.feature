@@ -316,7 +316,7 @@ Feature: Notifica pagata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 1 |
-      | details_analogCost | 790 |
+      | details_analogCost | 700 |
       | details_physicalAddress | {"address": "VIA@SEQUENCE.5S-CON080.5S-RECAG003D[FAILCAUSE:M03].5S-RECAG003E[DOC:PLICO].5S-RECAG003F", "municipality": "MILAN", "municipalityDetails": null, "at": null, "addressDetails": null, "province": "MI", "zip": "20121", "foreignState": "ITALY"} |
     Then l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
