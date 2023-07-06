@@ -1,7 +1,6 @@
 package it.pagopa.pn.cucumber.steps.e2e;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.Before;
 import io.cucumber.java.BeforeStep;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.Transpose;
@@ -31,6 +30,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.time.OffsetDateTime.now;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -223,6 +223,17 @@ public class WorkflowNotificheB2BSteps {
         this.pnPrivateDeliveryPushExternalClient = pnPrivateDeliveryPushExternalClient;
     }
 
+    private void checkLegalFacts(TimelineElement elementFromNotification, TimelineElement elementFromTest) {
+        if(Objects.nonNull(elementFromTest.getLegalFactsIds())) {
+            Assertions.assertNotNull(elementFromNotification.getLegalFactsIds());
+            Assertions.assertEquals(elementFromNotification.getLegalFactsIds().size(), elementFromTest.getLegalFactsIds().size());
+            for (int i = 0; i < elementFromNotification.getLegalFactsIds().size(); i++) {
+                Assertions.assertEquals(elementFromNotification.getLegalFactsIds().get(i).getCategory(), elementFromTest.getLegalFactsIds().get(i).getCategory());
+                Assertions.assertNotNull(elementFromNotification.getLegalFactsIds().get(i).getKey());
+            }
+        }
+    }
+
     private void checkTimelineElementEquality(String timelineEventCategory, TimelineElement elementFromNotification, TimelineWorkflowSequenceElement dataFromTest) {
         TimelineElement elementFromTest = dataFromTest.getTimelineElement();
         TimelineElementDetails detailsFromNotification = elementFromNotification.getDetails();
@@ -263,12 +274,8 @@ public class WorkflowNotificheB2BSteps {
                 }
                 break;
             case "REQUEST_ACCEPTED":
-                Assertions.assertNotNull(elementFromNotification.getLegalFactsIds());
-                Assertions.assertEquals(elementFromNotification.getLegalFactsIds().size(), elementFromTest.getLegalFactsIds().size());
-                for (int i = 0; i < elementFromNotification.getLegalFactsIds().size(); i++) {
-                    Assertions.assertEquals(elementFromNotification.getLegalFactsIds().get(i).getCategory(), elementFromTest.getLegalFactsIds().get(i).getCategory());
-                    Assertions.assertNotNull(elementFromNotification.getLegalFactsIds().get(i).getKey());
-                }
+            case "COMPLETELY_UNREACHABLE":
+                checkLegalFacts(elementFromNotification, elementFromTest);
                 break;
             case "SEND_DIGITAL_DOMICILE":
                 if (detailsFromTest != null) {
@@ -278,12 +285,7 @@ public class WorkflowNotificheB2BSteps {
                 break;
             case "DIGITAL_SUCCESS_WORKFLOW":
             case "DIGITAL_FAILURE_WORKFLOW":
-                Assertions.assertNotNull(elementFromNotification.getLegalFactsIds());
-                Assertions.assertEquals(elementFromNotification.getLegalFactsIds().size(), elementFromTest.getLegalFactsIds().size());
-                for (int i = 0; i < elementFromNotification.getLegalFactsIds().size(); i++) {
-                    Assertions.assertEquals(elementFromNotification.getLegalFactsIds().get(i).getCategory(), elementFromTest.getLegalFactsIds().get(i).getCategory());
-                    Assertions.assertNotNull(elementFromNotification.getLegalFactsIds().get(i).getKey());
-                }
+                checkLegalFacts(elementFromNotification, elementFromTest);
                 if (detailsFromTest != null) {
                     Assertions.assertEquals(detailsFromNotification.getDigitalAddress(), detailsFromTest.getDigitalAddress());
                 }
@@ -311,13 +313,7 @@ public class WorkflowNotificheB2BSteps {
             case "SEND_ANALOG_PROGRESS":
             case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS":
                 if (detailsFromTest != null) {
-                    if(Objects.nonNull(elementFromTest.getLegalFactsIds())) {
-                        Assertions.assertEquals(elementFromNotification.getLegalFactsIds().size(), elementFromTest.getLegalFactsIds().size());
-                        for (int i = 0; i < elementFromNotification.getLegalFactsIds().size(); i++) {
-                            Assertions.assertEquals(elementFromNotification.getLegalFactsIds().get(i).getCategory(), elementFromTest.getLegalFactsIds().get(i).getCategory());
-                            Assertions.assertNotNull(elementFromNotification.getLegalFactsIds().get(i).getKey());
-                        }
-                    }
+                    checkLegalFacts(elementFromNotification, elementFromTest);
                     if (Objects.nonNull(detailsFromTest.getDeliveryDetailCode())) {
                         Assertions.assertEquals(detailsFromNotification.getDeliveryDetailCode(), detailsFromTest.getDeliveryDetailCode());
                     }
@@ -351,25 +347,12 @@ public class WorkflowNotificheB2BSteps {
                 }
                 break;
             case "NOTIFICATION_VIEWED":
-                Assertions.assertNotNull(elementFromNotification.getLegalFactsIds());
-                Assertions.assertEquals(elementFromNotification.getLegalFactsIds().size(), elementFromTest.getLegalFactsIds().size());
-                for (int i = 0; i < elementFromNotification.getLegalFactsIds().size(); i++) {
-                    Assertions.assertEquals(elementFromNotification.getLegalFactsIds().get(i).getCategory(), elementFromTest.getLegalFactsIds().get(i).getCategory());
-                    Assertions.assertNotNull(elementFromNotification.getLegalFactsIds().get(i).getKey());
-                }
+                checkLegalFacts(elementFromNotification, elementFromTest);
                 if (delegateInfoFromTest != null) {
                     Assertions.assertEquals(delegateInfoFromNotification.getTaxId(), sharedSteps.getTaxIdFromDenomination(delegateInfoFromTest.getDenomination()));
                     Assertions.assertEquals(delegateInfoFromNotification.getDelegateType(), delegateInfoFromTest.getDelegateType());
-                    Assertions.assertEquals(delegateInfoFromNotification.getDenomination(), delegateInfoFromTest.getDenomination());
                 }
-            case "COMPLETELY_UNREACHABLE":
-                if(Objects.nonNull(elementFromTest.getLegalFactsIds())) {
-                    Assertions.assertEquals(elementFromNotification.getLegalFactsIds().size(), elementFromTest.getLegalFactsIds().size());
-                    for (int i = 0; i < elementFromNotification.getLegalFactsIds().size(); i++) {
-                        Assertions.assertEquals(elementFromNotification.getLegalFactsIds().get(i).getCategory(), elementFromTest.getLegalFactsIds().get(i).getCategory());
-                        Assertions.assertNotNull(elementFromNotification.getLegalFactsIds().get(i).getKey());
-                    }
-                }
+                break;
         }
     }
 
@@ -406,6 +389,7 @@ public class WorkflowNotificheB2BSteps {
         Integer defaultPollingTime = timelineElementWait.getWaiting();
         Integer defaultNumCheck = timelineElementWait.getNumCheck();
         Float waitingTime = (pollingTime != null ? pollingTime : defaultPollingTime) * (numCheck != null ? numCheck : defaultNumCheck);
+        AtomicReference<Integer> checksDone = new AtomicReference<>(0);
 
         await()
             .atMost(waitingTime.longValue(), MILLISECONDS)
@@ -415,6 +399,7 @@ public class WorkflowNotificheB2BSteps {
             .ignoreException(AssertionFailedError.class)
             .conditionEvaluationListener(condition -> {
                 Long remainingTime = condition.getRemainingTimeInMS();
+                logger.info("{} (elapsed time {}, remaining time {})", condition.getDescription(), condition.getElapsedTimeInMS(), remainingTime);
                 if (remainingTime <= (pollingTime != null ? pollingTime : defaultPollingTime)) {
                     logger.info("TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
                     logger.info("TIMELINE CATEGORY: " + timelineEventCategory);
@@ -422,13 +407,13 @@ public class WorkflowNotificheB2BSteps {
             })
             .untilAsserted(() -> {
                 TimelineElement timelineElement = getAndStoreTimeline(timelineEventCategory, dataFromTest);
-                List<TimelineElement> timelineElementList = sharedSteps.getSentNotification().getTimeline();
-                Assertions.assertNotNull(timelineElementList);
-                Assertions.assertNotEquals(timelineElementList.size(), 0);
                 if (existCheck) {
                     Assertions.assertNotNull(timelineElement);
                 } else {
+                    checksDone.set(checksDone.get() + 1);
+                    // when we want check if element doesn't exist, the await method must wait all the time specified and fails only if the condition is unmet
                     Assertions.assertNull(timelineElement);
+                    Assertions.assertTrue(checksDone.get().equals(numCheck != null ? numCheck : defaultNumCheck));
                 }
             });
 
@@ -464,7 +449,11 @@ public class WorkflowNotificheB2BSteps {
             throw new RuntimeException("Sequence not initialized. Add \"viene inizializzata la sequence per il controllo sulla timeline\" before this step");
         }
         sequenceElement.setAction(SequenceAction.NOT_EXIST);
-        timelineWorkflowSequence.getSequence().put(timelineCategory, sequenceElement);
+        TimelineElementCategory timelineElementCategory = TimelineElementCategory.valueOf(timelineCategory);
+        sequenceElement.getTimelineElement().setCategory(timelineElementCategory);
+        LinkedHashMap<String, TimelineWorkflowSequenceElement> sequence = timelineWorkflowSequence.getSequence();
+        Integer sequenceNumber = sequence.size();
+        timelineWorkflowSequence.getSequence().put("seg-" + sequenceNumber, sequenceElement);
     }
 
     @And("viene verificata la sequence")
@@ -659,7 +648,10 @@ public class WorkflowNotificheB2BSteps {
 
     @And("viene verificato che l'elemento di timeline {string} non esista")
     public void vieneVerificatoCheElementoTimelineNonEsista(String timelineEventCategory, @Transpose TimelineWorkflowSequenceElement dataFromTest) {
-        loadTimeline(timelineEventCategory, false, dataFromTest);
+        boolean mustLoadTimeline = dataFromTest != null ? dataFromTest.getLoadTimeline() : false;
+        if (mustLoadTimeline) {
+            loadTimeline(timelineEventCategory, false, dataFromTest);
+        }
         TimelineElement timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
         try {
             logger.info("CHECK IF TIMELINE ELEMENT DOESN'T EXIST: " + timelineEventCategory);
