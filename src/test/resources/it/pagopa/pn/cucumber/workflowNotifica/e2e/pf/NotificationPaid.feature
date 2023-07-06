@@ -165,6 +165,8 @@ Feature: Notifica pagata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_analogCost | 790 |
     Then l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
@@ -203,6 +205,8 @@ Feature: Notifica pagata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+      | details_analogCost | 790 |
+      | details_physicalAddress | {"address": "VIA@FAIL-IRREPERIBILE_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     Then l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
     And viene verificato che il destinatario "Mr. UtenteQualsiasi" di tipo "PF" non sia nella tabella pn-paper-notification-failed
@@ -230,6 +234,8 @@ Feature: Notifica pagata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
+      | details_analogCost | 790 |
+      | details_physicalAddress | {"address": "VIA@FAIL-DISCOVERY_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     Then l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
     Then viene verificato che l'elemento di timeline "SEND_ANALOG_DOMICILE" non esista
@@ -239,6 +245,8 @@ Feature: Notifica pagata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 1 |
+      | details_analogCost | 790 |
+      | details_physicalAddress | {"address": "VIA@FAIL-DISCOVERY_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     Then viene verificato che l'elemento di timeline "REFINEMENT" non esista
       | loadTimeline | true |
       | pollingTime | 30000 |
@@ -269,6 +277,7 @@ Feature: Notifica pagata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 1 |
+      | details_physicalAddress | {"address": "VIA@SEQUENCE.5S-CON080.5S-RECAG001A.5S-RECAG001B[DOC:23L].5S-RECAG001C", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     Then l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
@@ -307,6 +316,7 @@ Feature: Notifica pagata
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 1 |
+      | details_physicalAddress | {"address": "VIA@SEQUENCE.5S-CON080.5S-RECAG003D[FAILCAUSE:M03].5S-RECAG003E[DOC:PLICO].5S-RECAG003F", "municipality": "MILAN", "municipalityDetails": null, "at": null, "addressDetails": null, "province": "MI", "zip": "20121", "foreignState": "ITALY"} |
     Then l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
     Then viene verificato che l'elemento di timeline "COMPLETELY_UNREACHABLE" esista
