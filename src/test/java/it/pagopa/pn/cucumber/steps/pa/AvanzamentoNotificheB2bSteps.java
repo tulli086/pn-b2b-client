@@ -945,7 +945,7 @@ public class AvanzamentoNotificheB2bSteps {
                 return NotificationStatus.CANCELLED;
             case "EFFECTIVE_DATE":
                 return NotificationStatus.EFFECTIVE_DATE;
-            case "COMPLETELY_UNREACHABLE":
+            case "UNREACHABLE":
                 return NotificationStatus.UNREACHABLE;
             default:
                 throw new IllegalArgumentException();

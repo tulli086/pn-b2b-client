@@ -1,4 +1,4 @@
-Feature: Workflow analogico
+Feature: Workflow analogico multidestinatario
 
   @e2e
   Scenario: [E2E-PF_WF-ANALOG-MULTI-1] Invio notifica multi destinatario con percorso analogico.
@@ -91,7 +91,6 @@ Feature: Workflow analogico
       | numCheck    | 10    |
       | details_recIndex | 1 |
 
-
   @e2e
   Scenario: [E2E-PF_WF-ANALOG-MULTI-2] Invio notifica multi destinatario con percorso analogico.
   Successo raccomandata semplice + Fallimento raccomandata semplice.
@@ -178,7 +177,7 @@ Feature: Workflow analogico
       | numCheck    | 30    |
       | details_recIndex | 1 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-PF_WF-ANALOG-MULTI-3] Invio notifica multi destinatario con percorso analogico.
   Fallimento raccomandata semplice + Fallimento raccomandata semplice.
     Given viene generata una nuova notifica
@@ -187,7 +186,7 @@ Feature: Workflow analogico
       | physicalCommunication | AR_REGISTERED_LETTER           |
     And destinatario "Mr. NoIndirizzi"
       | digitalDomicile | NULL |
-      | physicalAddress_address | VIA@SEQUENCE.360S-CON080.5S-RECAG003D[FAILCAUSE:M03].5S-RECAG003E[DOC:PLICO].5S-RECAG003F |
+      | physicalAddress_address | VIA@@SEQUENCE.360S-CON080.5S-RECRN002D[FAILCAUSE:M04].5S-RECRN002E[DOC:PLICO].5S-RECRN002F |
     And destinatario "Mr. EmailCortesia"
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Irreperibile_AR |
@@ -198,7 +197,7 @@ Feature: Workflow analogico
       | numCheck    | 30    |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-    Then si verifica che lo stato della notifica sia "DELIVERED"
+    Then si verifica che lo stato della notifica sia "UNREACHABLE"
       | loadTimeline | true |
       | pollingTime | 30000 |
       | numCheck    | 30    |
@@ -219,24 +218,24 @@ Feature: Workflow analogico
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRN003E |
+      | details_deliveryDetailCode | RECRN002E |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
       | details_attachments | [{"documentType": "Plico"}] |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details_recIndex | 1 |
       | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRN003E |
+      | details_deliveryDetailCode | RECRN002E |
       | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
       | details_attachments | [{"documentType": "Plico"}] |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRN003F |
-      | details_deliveryFailureCause | M03 |
+      | details_deliveryDetailCode | RECRN002F |
+      | details_deliveryFailureCause | M04 |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
       | details_recIndex | 1 |
       | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRN003F |
+      | details_deliveryDetailCode | RECRN002F |
       | details_deliveryFailureCause | M04 |
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | loadTimeline | true |
@@ -250,9 +249,13 @@ Feature: Workflow analogico
       | details_recIndex | 1 |
     And viene verificato che l'elemento di timeline "REFINEMENT" esista
       | loadTimeline | true |
+      | pollingTime | 20000 |
+      | numCheck    | 10    |
       | details_recIndex | 0 |
     And viene verificato che l'elemento di timeline "REFINEMENT" esista
       | loadTimeline | true |
+      | pollingTime | 20000 |
+      | numCheck    | 10    |
       | details_recIndex | 1 |
 
   @e2e
