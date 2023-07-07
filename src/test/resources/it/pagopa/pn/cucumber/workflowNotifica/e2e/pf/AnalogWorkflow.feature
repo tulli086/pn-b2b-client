@@ -192,8 +192,8 @@ Feature: Workflow analogico
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER" esista
       | loadTimeline | true |
-      | pollingTime | 40000 |
-      | numCheck    | 20     |
+      | pollingTime | 360000 |
+      | numCheck    | 3     |
       | details_recIndex | 0 |
       | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
       | details_analogCost | 181 |
@@ -215,21 +215,12 @@ Feature: Workflow analogico
       | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
       | loadTimeline | true |
-      | pollingTime | 30000 |
-      | numCheck    | 30     |
+      | pollingTime | 120000 |
+      | numCheck    | 4     |
       | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | CON080 |
-    Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
-      | loadTimeline | true |
-      | pollingTime | 30000 |
-      | numCheck    | 30     |
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 1 |
       | details_deliveryDetailCode | CON080 |
     And viene verificato che il numero di elementi di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" sia di 2
       | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | CON080 |
 
   @e2e

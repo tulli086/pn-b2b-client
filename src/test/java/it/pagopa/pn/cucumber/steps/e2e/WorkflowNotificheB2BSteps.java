@@ -698,7 +698,7 @@ public class WorkflowNotificheB2BSteps {
             if (dataFromTest != null && dataFromTest.getTimelineElement() != null) {
                 // get timeline event id
                 String timelineEventId = sharedSteps.getTimelineEventId(timelineEventCategory, iun, dataFromTest);
-                if (timelineEventCategory.equals(TimelineElementCategory.SEND_ANALOG_PROGRESS.getValue())) {
+                if (timelineEventCategory.equals(TimelineElementCategory.SEND_ANALOG_PROGRESS.getValue()) || timelineEventCategory.equals(TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS.getValue())) {
                     TimelineElement timelineElementFromTest = dataFromTest.getTimelineElement();
                     TimelineElementDetails timelineElementDetails = timelineElementFromTest.getDetails();
                     Assertions.assertEquals(size, timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId) && elem.getDetails().getDeliveryDetailCode().equals(timelineElementDetails.getDeliveryDetailCode())).count());
