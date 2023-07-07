@@ -1,4 +1,4 @@
-Feature: Workflow digitale multidestinatario
+Feature: Workflow mix digitale analogico multidestinatario
 
   @e2e
   Scenario: [E2E-PF-B2B_DIGITAL_ANALOG_MULTI_1_D0_OK-D1_OK] Invio a raccomandata semplice con successo e pec speciale con successo
