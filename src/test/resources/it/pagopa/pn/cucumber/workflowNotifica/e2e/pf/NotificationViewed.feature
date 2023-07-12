@@ -338,10 +338,13 @@ Feature: Notifica visualizzata
     And la notifica può essere correttamente recuperata da "Mr. NoIndirizzi"
     And viene inizializzata la sequence per il controllo sulla timeline
       | pollingTimeMultiplier | 2 |
-      | numCheck    | 4   |
+      | numCheck    | 6   |
     And si aggiunge alla sequence il controllo che "NOTIFICATION_VIEWED" esista
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
-    And si aggiunge alla sequence il controllo che "COMPLETELY_UNREACHABLE" non esista
+    And si aggiunge alla sequence il controllo che "COMPLETELY_UNREACHABLE" esista
       | details_recIndex | 0 |
     And viene verificata la sequence
+    And viene verificato che il destinatario "Mr. NoIndirizzi" di tipo "PF" non sia nella tabella pn-paper-notification-failed
+    And si verifica che lo stato della notifica sia "VIEWED"
+      | numCheck    | 1    |

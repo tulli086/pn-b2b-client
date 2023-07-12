@@ -1,11 +1,16 @@
 package it.pagopa.pn.cucumber.steps.e2e;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.BeforeStep;
+import io.cucumber.core.backend.TestCaseState;
+import io.cucumber.core.gherkin.Pickle;
+import io.cucumber.core.gherkin.Step;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import io.cucumber.plugin.event.TestCase;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.testclient.IPnPrivateDeliveryPushExternalClientImpl;
@@ -13,10 +18,7 @@ import it.pagopa.pn.client.b2b.pa.testclient.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationHistoryResponse;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.ResponsePaperNotificationFailedDto;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
-import it.pagopa.pn.cucumber.utils.SequenceAction;
-import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequenceElement;
-import it.pagopa.pn.cucumber.utils.TimelineElementWait;
-import it.pagopa.pn.cucumber.utils.TimelineWorkflowSequence;
+import it.pagopa.pn.cucumber.utils.*;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -202,6 +205,7 @@ public class WorkflowNotificheB2BSteps {
     private final IPnPrivateDeliveryPushExternalClientImpl pnPrivateDeliveryPushExternalClient;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private TimelineWorkflowSequence timelineWorkflowSequence;
+    private OffsetDateTime lastTimeStamp = null;
 
     private Map.Entry<String, TimelineWorkflowSequenceElement> getLast(LinkedHashMap<String, TimelineWorkflowSequenceElement> LinkedHMap) {
         int count = 1;
@@ -243,6 +247,7 @@ public class WorkflowNotificheB2BSteps {
 
         switch (timelineEventCategory) {
             case "SEND_COURTESY_MESSAGE":
+            case "SEND_DIGITAL_DOMICILE":
                 if (detailsFromTest != null) {
                     Assertions.assertEquals(detailsFromNotification.getDigitalAddress(), detailsFromTest.getDigitalAddress());
                     Assertions.assertEquals(detailsFromNotification.getRecIndex(), detailsFromTest.getRecIndex());
@@ -276,12 +281,6 @@ public class WorkflowNotificheB2BSteps {
             case "REQUEST_ACCEPTED":
             case "COMPLETELY_UNREACHABLE":
                 checkLegalFacts(elementFromNotification, elementFromTest);
-                break;
-            case "SEND_DIGITAL_DOMICILE":
-                if (detailsFromTest != null) {
-                    Assertions.assertEquals(detailsFromNotification.getDigitalAddress(), detailsFromTest.getDigitalAddress());
-                    Assertions.assertEquals(detailsFromNotification.getRecIndex(), detailsFromTest.getRecIndex());
-                }
                 break;
             case "DIGITAL_SUCCESS_WORKFLOW":
             case "DIGITAL_FAILURE_WORKFLOW":
@@ -341,8 +340,10 @@ public class WorkflowNotificheB2BSteps {
             case "SEND_ANALOG_DOMICILE":
             case "SEND_SIMPLE_REGISTERED_LETTER":
                 if (detailsFromTest != null) {
-                    Assertions.assertEquals(detailsFromNotification.getPhysicalAddress(), detailsFromTest.getPhysicalAddress());
-                    Assertions.assertEquals(detailsFromNotification.getAnalogCost(), detailsFromTest.getAnalogCost());
+                    if(Objects.nonNull(detailsFromTest.getPhysicalAddress()))
+                        Assertions.assertEquals(detailsFromNotification.getPhysicalAddress(), detailsFromTest.getPhysicalAddress());
+                    if(Objects.nonNull(detailsFromTest.getAnalogCost()))
+                        Assertions.assertEquals(detailsFromNotification.getAnalogCost(), detailsFromTest.getAnalogCost());
                     Assertions.assertEquals(detailsFromNotification.getRecIndex(), detailsFromTest.getRecIndex());
                 }
                 break;
@@ -419,9 +420,104 @@ public class WorkflowNotificheB2BSteps {
 
     }
 
-    @BeforeStep
-    public void checkSequence(Scenario scenario) {
-        logger.info(scenario.getName());
+    private void loadNotificationByStatus(NotificationStatus notificationInternalStatus, boolean existCheck, @Transpose PollingData pollingData) {
+        // calc how much time wait
+        Float pollingTime = pollingData != null ? pollingData.getPollingTime() : null;
+        Integer numCheck = pollingData != null ? pollingData.getNumCheck() : null;
+        Integer defaultPollingTime = sharedSteps.getWorkFlowWait();
+        Integer defaultNumCheck = 5;
+        Float waitingTime = (pollingTime != null ? pollingTime : defaultPollingTime) * (numCheck != null ? numCheck : defaultNumCheck);
+        AtomicReference<Integer> checksDone = new AtomicReference<>(0);
+
+        await()
+            .atMost(waitingTime.longValue(), MILLISECONDS)
+            .with()
+            .pollInterval(pollingTime != null ? pollingTime.longValue() : defaultPollingTime, MILLISECONDS)
+            .pollDelay(0, MILLISECONDS)
+            .ignoreExceptions()
+            .untilAsserted(() -> {
+                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+
+                logger.info("NOTIFICATION_STATUS_HISTORY: " + sharedSteps.getSentNotification().getNotificationStatusHistory());
+
+                NotificationStatusHistoryElement notificationStatusHistoryElement = sharedSteps.getSentNotification().getNotificationStatusHistory().stream().filter(elem -> elem.getStatus().equals(notificationInternalStatus)).findAny().orElse(null);
+
+                if (existCheck) {
+                    Assertions.assertNotNull(notificationStatusHistoryElement);
+                } else {
+                    checksDone.set(checksDone.get() + 1);
+                    Assertions.assertNull(notificationStatusHistoryElement);
+                    Assertions.assertTrue(checksDone.get().equals(numCheck != null ? numCheck : defaultNumCheck));
+                }
+            });
+    }
+
+    NotificationStatus getNotificationInternalStatus(String status) {
+        switch (status) {
+            case "ACCEPTED":
+                return NotificationStatus.ACCEPTED;
+            case "DELIVERING":
+                return NotificationStatus.DELIVERING;
+            case "DELIVERED":
+                return NotificationStatus.DELIVERED;
+            case "VIEWED":
+                return NotificationStatus.VIEWED;
+            case "CANCELLED":
+                return NotificationStatus.CANCELLED;
+            case "EFFECTIVE_DATE":
+                return NotificationStatus.EFFECTIVE_DATE;
+            case "UNREACHABLE":
+                return NotificationStatus.UNREACHABLE;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    @Before
+    public void validateScenario(Scenario scenario) throws Exception {
+        // get scenario steps
+        Field delegate = scenario.getClass().getDeclaredField("delegate");
+        delegate.setAccessible(true);
+        TestCaseState state = (TestCaseState) delegate.get(scenario);
+        Field testCaseF = state.getClass().getDeclaredField("testCase");
+        testCaseF.setAccessible(true);
+        TestCase testCase = (TestCase) testCaseF.get(state);
+        Field pickle = testCase.getClass().getDeclaredField("pickle");
+        pickle.setAccessible(true);
+        Pickle pickleState = (Pickle) pickle.get(testCase);
+        List<Step> steps = pickleState.getSteps();
+        Boolean isSequence = false;
+        Boolean isEmptySequence = false;
+        for(Step step: steps) {
+            String stepText = step.getText();
+            if (stepText.equals("viene inizializzata la sequence per il controllo sulla timeline")) {
+                isSequence = true;
+                isEmptySequence = true;
+            } else if (stepText.startsWith("si aggiunge alla sequence il controllo che")) {
+                if (!isSequence)
+                    throw new RuntimeException("Sequence not initialized. Add \"viene inizializzata la sequence per il controllo sulla timeline\" before the step: " + stepText);
+                isEmptySequence = false;
+            } else if (stepText.equals("viene verificata la sequence")) {
+                if (!isSequence)
+                    throw new RuntimeException("Sequence not initialized. Add \"viene inizializzata la sequence per il controllo sulla timeline\" before the step: " + stepText);
+                if (isEmptySequence)
+                    throw new RuntimeException("Sequence empty. Add a step that starts with \"si aggiunge alla sequence...\" before this step: " + stepText);
+                isSequence = false;
+                isEmptySequence = false;
+            } else if (isSequence) { // step that mustn't be in the sequence
+                throw new RuntimeException("Sequence initialized and the step \"" + stepText + "\" cannot be in. Close the sequence with \"viene verificata la sequence\" before this step.");
+            }
+        }
+        // sequence not closed
+        if (isSequence) {
+            throw new RuntimeException("Sequence not closed. Close the sequence with \"viene verificata la sequence\".");
+        }
+    }
+
+    @After
+    public void clean() {
+        lastTimeStamp = null;
+        timelineWorkflowSequence = null;
     }
 
     @Then("viene inizializzata la sequence per il controllo sulla timeline")
@@ -432,9 +528,6 @@ public class WorkflowNotificheB2BSteps {
 
     @And("si aggiunge alla sequence il controllo che {string} esista")
     public void aggiungoSequenceCheEsista(String timelineCategory, @Transpose TimelineWorkflowSequenceElement sequenceElement) {
-        if (timelineWorkflowSequence == null) {
-            throw new RuntimeException("Sequence not initialized. Add \"viene inizializzata la sequence per il controllo sulla timeline\" before this step");
-        }
         sequenceElement.setAction(SequenceAction.EXIST);
         TimelineElementCategory timelineElementCategory = TimelineElementCategory.valueOf(timelineCategory);
         sequenceElement.getTimelineElement().setCategory(timelineElementCategory);
@@ -445,9 +538,6 @@ public class WorkflowNotificheB2BSteps {
 
     @And("si aggiunge alla sequence il controllo che {string} non esista")
     public void aggiungoSequenceCheNonEsista(String timelineCategory, @Transpose TimelineWorkflowSequenceElement sequenceElement) {
-        if (timelineWorkflowSequence == null) {
-            throw new RuntimeException("Sequence not initialized. Add \"viene inizializzata la sequence per il controllo sulla timeline\" before this step");
-        }
         sequenceElement.setAction(SequenceAction.NOT_EXIST);
         TimelineElementCategory timelineElementCategory = TimelineElementCategory.valueOf(timelineCategory);
         sequenceElement.getTimelineElement().setCategory(timelineElementCategory);
@@ -458,13 +548,7 @@ public class WorkflowNotificheB2BSteps {
 
     @And("viene verificata la sequence")
     public void verificaSequence() {
-        if (timelineWorkflowSequence == null) {
-            throw new RuntimeException("Sequence not initialized. Add \"viene inizializzata la sequence per il controllo sulla timeline\" before this step");
-        }
         LinkedHashMap<String, TimelineWorkflowSequenceElement> sequence = timelineWorkflowSequence.getSequence();
-        if (sequence.isEmpty()) {
-            throw new RuntimeException("Sequence empty. Add a step that starts with \"si aggiunge alla sequence...\" before this step");
-        }
         logger.info("START SEQUENCE CHECK");
         // get last timeline element and load timeline
         Map.Entry<String, TimelineWorkflowSequenceElement> lastEntry = getLast(sequence);
@@ -475,7 +559,6 @@ public class WorkflowNotificheB2BSteps {
         //
         loadTimeline(timelineWorkflowSequenceElement.getTimelineElement().getCategory().getValue(), !timelineWorkflowSequenceElement.getAction().equals(SequenceAction.NOT_EXIST), timelineWorkflowSequenceElement);
         // check the sequence
-        OffsetDateTime lastTimeStamp = null;
         for (Map.Entry<String, TimelineWorkflowSequenceElement> pair : sequence.entrySet()) {
             TimelineWorkflowSequenceElement sequenceElement = pair.getValue();
             String timelineEventCategory = sequenceElement.getTimelineElement().getCategory().getValue();
@@ -708,6 +791,50 @@ public class WorkflowNotificheB2BSteps {
             } else {
                 Assertions.assertEquals(size, timelineElementList.stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).count());
             }
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+    @Then("si verifica che lo stato della notifica sia {string}")
+    public void verificaEsisteStatoNotifica(String status, @Transpose PollingData pollingData) {
+        NotificationStatus notificationInternalStatus = getNotificationInternalStatus(status);
+
+        boolean mustLoadNotification = pollingData != null ? pollingData.getLoadTimeline() : false;
+        if (mustLoadNotification) {
+            loadNotificationByStatus(notificationInternalStatus, true, pollingData);
+        }
+        try {
+            List<NotificationStatusHistoryElement> notificationStatusHistoryElements = sharedSteps.getSentNotification().getNotificationStatusHistory();
+            logger.info("NOTIFICATION_STATUS_HISTORY: " + notificationStatusHistoryElements);
+            Assertions.assertNotNull(notificationStatusHistoryElements);
+
+            NotificationStatusHistoryElement notificationStatusHistoryElement = sharedSteps.getSentNotification().getNotificationStatusHistory().stream().filter(elem -> elem.getStatus().equals(notificationInternalStatus)).findAny().orElse(null);
+
+            Assertions.assertNotNull(notificationStatusHistoryElement);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+    @Then("si verifica che lo stato della notifica non sia {string}")
+    public void verificaNonEsisteStatoNotifica(String status, @Transpose PollingData pollingData) {
+        NotificationStatus notificationInternalStatus = getNotificationInternalStatus(status);
+
+        boolean mustLoadNotification = pollingData != null ? pollingData.getLoadTimeline() : false;
+        if (mustLoadNotification) {
+            loadNotificationByStatus(notificationInternalStatus, false, pollingData);
+        }
+        try {
+            List<NotificationStatusHistoryElement> notificationStatusHistoryElements = sharedSteps.getSentNotification().getNotificationStatusHistory();
+            logger.info("NOTIFICATION_STATUS_HISTORY: " + notificationStatusHistoryElements);
+            Assertions.assertNotNull(notificationStatusHistoryElements);
+
+            NotificationStatusHistoryElement notificationStatusHistoryElement = sharedSteps.getSentNotification().getNotificationStatusHistory().stream().filter(elem -> elem.getStatus().equals(notificationInternalStatus)).findAny().orElse(null);
+
+            Assertions.assertNull(notificationStatusHistoryElement);
+
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }

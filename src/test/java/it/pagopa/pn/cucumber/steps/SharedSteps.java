@@ -1254,7 +1254,8 @@ public class SharedSteps {
         if (dataFromTest != null && dataFromTest.getTimelineElement() != null) {
             // get timeline event id
             String timelineEventId = getTimelineEventId(timelineEventCategory, iun, dataFromTest);
-            if (timelineEventCategory.equals(TimelineElementCategory.SEND_ANALOG_PROGRESS.getValue()) || timelineEventCategory.equals(TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS.getValue())) {
+            logger.info("CALCULATED TIMELINE EVENT ID: " + timelineEventId);
+            if (dataFromTest.getProgressIndex() == -1 && (timelineEventCategory.equals(TimelineElementCategory.SEND_ANALOG_PROGRESS.getValue()) || timelineEventCategory.equals(TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS.getValue()))) {
                 TimelineElement timelineElementFromTest = dataFromTest.getTimelineElement();
                 TimelineElementDetails timelineElementDetails = timelineElementFromTest.getDetails();
 
