@@ -2,9 +2,7 @@ package it.pagopa.pn.client.b2b.pa.testclient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,39 +12,31 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
+
 @Component
-public class PnInteropTokenOauth2Client {
+public class InteropTokenSingleton {
 
+    public final static String ENEBLED_INTEROP = "true";
+    private static String tokenInterop;
+    private OffsetDateTime tokenCreationDate;
     private final ApplicationContext ctx;
-
-    private RestTemplate restTemplate;
-
+    private final RestTemplate restTemplate;
+    private final String clientAssertion;
+    private final String interopClientId;
+    private final String tokenOauth2Path;
     private final String interopBaseUrl;
 
-    private final String tokenOauth2Path;
-
-    private final String clientAssertion;
-
-    private final String interopClientId;
-
-
-
-    /*@Value("${pn.interop.base-url}")
-    private String interopBaseUrl;
-    @Value("${pn.interop.token-oauth2.path}")
-    private String tokenOauth2Path;
-    @Value("${pn.interop.token-oauth2.client-assertion}")
-    private String clientAssertion;*/
-
-    public PnInteropTokenOauth2Client(
-            ApplicationContext ctx,
+    public InteropTokenSingleton(
             RestTemplate restTemplate,
+            ApplicationContext ctx,
             @Value("${pn.interop.base-url}") String interopBaseUrl,
             @Value("${pn.interop.token-oauth2.path}") String tokenOauth2Path,
             @Value("${pn.interop.token-oauth2.client-assertion}") String clientAssertion,
-            @Value("${interop.clientId}") String interopClientId
-    ) {
+            @Value("${interop.clientId}") String interopClientId){
+
         this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.interopBaseUrl = interopBaseUrl;
@@ -55,7 +45,17 @@ public class PnInteropTokenOauth2Client {
         this.interopClientId = interopClientId;
     }
 
-    public String getBearerToken() {
+    public String getTokenInterop(){
+        if(tokenInterop != null && (Duration.between(tokenCreationDate, OffsetDateTime.now()).getSeconds() < (60*9)) ){
+            return tokenInterop;
+        }else{
+            this.tokenInterop = getBearerToken();
+            this.tokenCreationDate = OffsetDateTime.now();
+            return tokenInterop;
+        }
+    }
+
+    private String getBearerToken() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -67,13 +67,13 @@ public class PnInteropTokenOauth2Client {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
-        ResponseEntity<InteropResponse> response = restTemplate.postForEntity( interopBaseUrl + tokenOauth2Path, request , InteropResponse.class );
+        ResponseEntity<InteropResponse> response = this.restTemplate.postForEntity( interopBaseUrl + tokenOauth2Path, request , InteropResponse.class );
 
         return (response.getStatusCode().is2xxSuccessful() ? response.getBody().getAccessToken() : null);
 
     }
 
-    public static class InteropResponse {
+    private static class InteropResponse {
         private String correlationId;
         private Integer status;
         private String title;
@@ -116,7 +116,7 @@ public class PnInteropTokenOauth2Client {
         }
     }
 
-    public static class Error {
+    private static class Error {
         private String code;
         private String detail;
 
@@ -128,4 +128,6 @@ public class PnInteropTokenOauth2Client {
             return detail;
         }
     }
+
+
 }
