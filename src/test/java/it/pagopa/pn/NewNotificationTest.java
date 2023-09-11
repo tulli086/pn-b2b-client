@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.context.TestPropertySource;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,7 +23,7 @@ import java.util.Calendar;
         RestTemplateConfiguration.class,
         PnPaB2bUtils.class
 })
-@PropertySource( value = "file:config/api-keys.properties", ignoreResourceNotFound = true )
+@TestPropertySource(properties = {"spring.profiles.active=dev"})
 public class NewNotificationTest {
 
     @Autowired
@@ -36,11 +37,10 @@ public class NewNotificationTest {
         NewNotificationRequest request = new NewNotificationRequest()
                 .subject("Test inserimento " + dateFormat.format(calendar.getTime()))
                 .cancelledIun(null)
-                .group("TestGroup")
                 ._abstract("Abstract della notifica")
                 .senderDenomination("Comune di Milano")
                 .senderTaxId("01199250158")
-                .notificationFeePolicy( NewNotificationRequest.NotificationFeePolicyEnum.FLAT_RATE )
+                .notificationFeePolicy( NotificationFeePolicy.FLAT_RATE )
                 .physicalCommunicationType( NewNotificationRequest.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 )
                 .paProtocolNumber("" + System.currentTimeMillis())
                 .addDocumentsItem( newDocument( "classpath:/sample.pdf" ) )
@@ -75,7 +75,7 @@ public class NewNotificationTest {
                 .taxId( taxId )
                 .digitalDomicile( new NotificationDigitalAddress()
                         .type(NotificationDigitalAddress.TypeEnum.PEC)
-                        .address( "FRMTTR76M06B715E@pnpagopa.postecert.local")
+                        .address( "FRMTTR76M06B715E@pec.pagopa.it")
                 )
                 .physicalAddress( new NotificationPhysicalAddress()
                         .address("Via senza nome")
@@ -90,8 +90,8 @@ public class NewNotificationTest {
                                 .noticeCode( String.format("30201%13d", epochMillis ) )
                                 .noticeCodeAlternative( String.format("30201%13d", epochMillis+1 ) )
                                 .pagoPaForm( newAttachment( resourcePath ))
-                                .f24flatRate( newAttachment( resourcePath ) )
-                                .f24standard( newAttachment( resourcePath ) )
+//                                .f24flatRate( newAttachment( resourcePath ) )
+//                                .f24standard( newAttachment( resourcePath ) )
                 );
 
         try {

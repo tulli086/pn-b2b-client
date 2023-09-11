@@ -17,12 +17,20 @@ public interface IPnPaB2bClient extends SettableApiKey {
 
     NewNotificationRequestStatusResponse getNotificationRequestStatus(String notificationRequestId);
 
+    NewNotificationRequestStatusResponse getNotificationRequestStatusAllParam(String notificationRequestId,String paProtocolNumber, String idempotenceToken);
+
     NotificationAttachmentDownloadMetadataResponse getSentNotificationDocument(String iun, Integer docidx) ;
 
     NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachment(String iun, Integer recipientIdx, String attachname) ;
 
     LegalFactDownloadMetadataResponse getLegalFact(String iun, LegalFactCategory legalFactType, String legalFactId) ;
 
+    LegalFactDownloadMetadataResponse getDownloadLegalFact(String iun, String legalFactId) ;
+
     NotificationPriceResponse getNotificationPrice(String paTaxId, String noticeCode) throws RestClientException;
+
+    void paymentEventsRequestPagoPa(PaymentEventsRequestPagoPa paymentEventsRequestPagoPa) throws RestClientException;
+
+    void paymentEventsRequestF24(PaymentEventsRequestF24 paymentEventsRequestF24) throws RestClientException;
 
 }

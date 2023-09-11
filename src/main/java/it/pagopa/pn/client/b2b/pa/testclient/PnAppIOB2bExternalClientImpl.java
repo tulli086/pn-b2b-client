@@ -4,9 +4,10 @@ import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.Api
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.api.AppIoPnDocumentsApi;
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.api.AppIoPnLegalFactsApi;
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.api.AppIoPnNotificationApi;
-import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.FullReceivedNotification;
+import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.IOReceivedNotification;
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.NotificationAttachmentDownloadMetadataResponse;
+import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.ThirdPartyMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -45,23 +46,24 @@ public class PnAppIOB2bExternalClientImpl implements IPnAppIOB2bClient{
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apikey ) {
         ApiClient newApiClient = new ApiClient( restTemplate );
+        newApiClient.addDefaultHeader("Accept", "application/io+json" );
         newApiClient.setBasePath( basePath );
         newApiClient.addDefaultHeader("x-api-key", apikey );
         return newApiClient;
     }
 
     public NotificationAttachmentDownloadMetadataResponse getSentNotificationDocument(String iun, Integer docIdx, String xPagopaCxTaxid) throws RestClientException {
-        return this.appIoPnDocumentsApi.getSentNotificationDocument(iun, docIdx, xPagopaCxTaxid);
+        return this.appIoPnDocumentsApi.getReceivedNotificationDocument(iun, docIdx, xPagopaCxTaxid,null,null,null,null,null,null,null,null,null);
     }
 
 
     public LegalFactDownloadMetadataResponse getLegalFact(String iun, String legalFactType, String legalFactId, String xPagopaCxTaxid) throws RestClientException {
-        return this.appIoPnLegalFactsApi.getLegalFact(iun, legalFactType, legalFactId, xPagopaCxTaxid);
+        return this.appIoPnLegalFactsApi.getLegalFact(iun, legalFactType, legalFactId, xPagopaCxTaxid,null,null,null,null,null,null,null,null,null);
     }
 
 
-    public FullReceivedNotification getReceivedNotification(String iun, String xPagopaCxTaxid) throws RestClientException {
-        return this.appIoPnNotificationApi.getReceivedNotification(iun, xPagopaCxTaxid);
+    public ThirdPartyMessage getReceivedNotification(String iun, String xPagopaCxTaxid) throws RestClientException {
+        return this.appIoPnNotificationApi.getReceivedNotification(iun, xPagopaCxTaxid,null,null,null,null,null,null,null,null,null);
     }
 
 }
