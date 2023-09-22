@@ -35,6 +35,7 @@ import org.springframework.boot.convert.DurationStyle;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.HttpStatusCodeException;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.Duration;
@@ -60,7 +61,7 @@ public class SharedSteps {
 
     private NewNotificationResponse newNotificationResponse;
     private NewNotificationRequest notificationRequest;
-    private FullSentNotification notificationResponseComplete;
+    private FullSentNotificationV20 notificationResponseComplete;
     private HttpStatusCodeException notificationError;
     private OffsetDateTime notificationCreationDate;
     public static final String DEFAULT_PA = "Comune_1";
@@ -129,11 +130,15 @@ public class SharedSteps {
 
 
     private String gherkinSpaTaxID = "12666810299";
-    private String cucumberSrlTaxID = "SCTPTR04A01C352E";
-    private String cucumberSocietyTaxID = "DNNGRL83A01C352D";
+  //  private String cucumberSrlTaxID = "SCTPTR04A01C352E";
+    private String cucumberSrlTaxID = "20517490320";
+
+    private String cucumberSocietyTaxID = "20517490320" ;// "DNNGRL83A01C352D";
     private String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
-    private String gherkinSrltaxId = "CCRMCT06A03A433H";
-    private String cucumberSpataxId = "20517490320";
+   // private String gherkinSrltaxId = "CCRMCT06A03A433H";
+
+    private String gherkinSrltaxId = "12666810299";
+    private String cucumberSpataxId = "20517490320"; //
 
     @Value("${pn.interop.base-url}")
     private String interopBaseUrl;
@@ -169,6 +174,7 @@ public class SharedSteps {
         this.webRecipientClient = webRecipientClient;
         this.pnExternalServiceClient = pnExternalServiceClient;
         this.iPnWebUserAttributesClient = iPnWebUserAttributesClient;
+
     }
 
     @BeforeAll
@@ -439,6 +445,29 @@ public class SharedSteps {
         sendNotification();
     }
 
+    @And("la notifica può essere annullata dal sistema tramite codice IUN dal comune {string}")
+    public void notificationCanBeCanceledWithIUNByComune(String paType) {
+        selectPA(paType);
+        Assertions.assertDoesNotThrow(() -> {
+            RequestStatus resp =  Assertions.assertDoesNotThrow(() ->
+                    this.b2bClient.notificationCancellation(getSentNotification().getIun()));
+
+            Assertions.assertNotNull(resp);
+            Assertions.assertNotNull(resp.getDetails());
+            Assertions.assertTrue(resp.getDetails().size()>0);
+            Assertions.assertTrue("NOTIFICATION_CANCELLATION_ACCEPTED".equalsIgnoreCase(resp.getDetails().get(0).getCode()));
+
+        });
+
+    }
+
+    @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED e successivamente annullata")
+    public void laNotificaVieneInviataOkAndCancelled(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationAndCancell();
+    }
+
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataRefused(String paType) {
         selectPA(paType);
@@ -525,6 +554,14 @@ public class SharedSteps {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
+
+                try {
+                    Thread.sleep(getWorkFlowWait());
+                } catch (InterruptedException e) {
+                    logger.error("Thread.sleep error retry");
+                    throw new RuntimeException(e);
+                }
+
                 notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
             });
 
@@ -535,6 +572,50 @@ public class SharedSteps {
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseComplete);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+
+    private void sendNotificationAndCancell() {
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                notificationCreationDate = OffsetDateTime.now();
+                newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
+
+                try {
+                    Thread.sleep(getWorkFlowWait());
+                } catch (InterruptedException e) {
+                    logger.error("Thread.sleep error retry");
+                    throw new RuntimeException(e);
+                }
+
+                notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
+
+            });
+
+            try {
+                Thread.sleep(getWorkFlowWait());
+            } catch (InterruptedException e) {
+                logger.error("Thread.sleep error retry");
+                throw new RuntimeException(e);
+            }
+            Assertions.assertNotNull(notificationResponseComplete);
+
+            Assertions.assertDoesNotThrow(() -> {
+                RequestStatus resp =  Assertions.assertDoesNotThrow(() ->
+                        b2bClient.notificationCancellation(notificationResponseComplete.getIun()));
+
+                Assertions.assertNotNull(resp);
+                Assertions.assertNotNull(resp.getDetails());
+                Assertions.assertTrue(resp.getDetails().size()>0);
+                Assertions.assertTrue("NOTIFICATION_CANCELLATION_ACCEPTED".equalsIgnoreCase(resp.getDetails().get(0).getCode()));
+
+            });
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -805,7 +886,7 @@ public class SharedSteps {
         }
     }
 
-    public FullSentNotification getSentNotification() {
+    public FullSentNotificationV20 getSentNotification() {
         return notificationResponseComplete;
     }
 
@@ -819,7 +900,7 @@ public class SharedSteps {
         this.notificationRequest = notificationRequest;
     }
 
-    public void setSentNotification(FullSentNotification notificationResponseComplete) {
+    public void setSentNotification(FullSentNotificationV20 notificationResponseComplete) {
         this.notificationResponseComplete = notificationResponseComplete;
     }
 
@@ -877,6 +958,7 @@ public class SharedSteps {
     public IPnPaB2bClient getB2bClient() {
         return b2bClient;
     }
+
 
     public IPnWebPaClient getWebPaClient() {
         return webClient;
@@ -1067,6 +1149,9 @@ public class SharedSteps {
             case "FILE_PDF_INVALID_ERROR":
                 Assertions.assertTrue("FILE_PDF_INVALID_ERROR".equalsIgnoreCase(errorCode));
                 break;
+            case "NOT_VALID_ADDRESS":
+                Assertions.assertTrue("NOT_VALID_ADDRESS".equalsIgnoreCase(errorCode));
+                break;
             default:
                 throw new IllegalArgumentException();
         }
@@ -1098,8 +1183,8 @@ public class SharedSteps {
     }
 
     public String getTimelineEventId(String timelineEventCategory, String iun, DataTest dataFromTest) {
-        TimelineElement timelineElement = dataFromTest.getTimelineElement();
-        TimelineElementDetails timelineElementDetails = timelineElement.getDetails();
+        TimelineElementV20 timelineElement = dataFromTest.getTimelineElement();
+        TimelineElementDetailsV20 timelineElementDetails = timelineElement.getDetails();
         DigitalAddress digitalAddress = timelineElementDetails == null ? null : timelineElementDetails.getDigitalAddress();
         DigitalAddressSource digitalAddressSource = timelineElementDetails == null ? null : timelineElementDetails.getDigitalAddressSource();
 
@@ -1163,10 +1248,10 @@ public class SharedSteps {
         return null;
     }
 
-    public TimelineElement getTimelineElementByEventId (String timelineEventCategory, DataTest dataFromTest) {
-        List<TimelineElement> timelineElementList = notificationResponseComplete.getTimeline();
+    public TimelineElementV20 getTimelineElementByEventId (String timelineEventCategory, DataTest dataFromTest) {
+        List<TimelineElementV20> timelineElementList = notificationResponseComplete.getTimeline();
         String iun;
-        if (timelineEventCategory.equals(TimelineElementCategory.REQUEST_REFUSED.getValue())) {
+        if (timelineEventCategory.equals(TimelineElementCategoryV20.REQUEST_REFUSED.getValue())) {
             String requestId = newNotificationResponse.getNotificationRequestId();
             byte[] decodedBytes = Base64.getDecoder().decode(requestId);
             iun = new String(decodedBytes);
@@ -1177,9 +1262,9 @@ public class SharedSteps {
         if (dataFromTest != null && dataFromTest.getTimelineElement() != null) {
             // get timeline event id
             String timelineEventId = getTimelineEventId(timelineEventCategory, iun, dataFromTest);
-            if (timelineEventCategory.equals(TimelineElementCategory.SEND_ANALOG_PROGRESS.getValue()) || timelineEventCategory.equals(TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS.getValue())) {
-                TimelineElement timelineElementFromTest = dataFromTest.getTimelineElement();
-                TimelineElementDetails timelineElementDetails = timelineElementFromTest.getDetails();
+            if (timelineEventCategory.equals(TimelineElementCategoryV20.SEND_ANALOG_PROGRESS.getValue()) || timelineEventCategory.equals(TimelineElementCategoryV20.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS.getValue())) {
+                TimelineElementV20 timelineElementFromTest = dataFromTest.getTimelineElement();
+                TimelineElementDetailsV20 timelineElementDetails = timelineElementFromTest.getDetails();
                 return timelineElementList.stream().filter(elem -> elem.getElementId().startsWith(timelineEventId) && elem.getDetails().getDeliveryDetailCode().equals(timelineElementDetails.getDeliveryDetailCode())).findAny().orElse(null);
             }
             return timelineElementList.stream().filter(elem -> elem.getElementId().equals(timelineEventId)).findAny().orElse(null);
