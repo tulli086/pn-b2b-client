@@ -304,7 +304,7 @@ public class AvanzamentoNotificheB2bSteps {
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.PREPARE_ANALOG_DOMICILE, 4, waiting * 5);
                 break;
             case "COMPLETELY_UNREACHABLE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.COMPLETELY_UNREACHABLE, 20, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.COMPLETELY_UNREACHABLE, 25, sharedSteps.getWorkFlowWait());
                 break;
             case "COMPLETELY_UNREACHABLE_CREATION_REQUEST":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.COMPLETELY_UNREACHABLE_CREATION_REQUEST, 15, sharedSteps.getWorkFlowWait());
@@ -316,10 +316,10 @@ public class AvanzamentoNotificheB2bSteps {
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SCHEDULE_DIGITAL_WORKFLOW, 2,waiting * 3);
                 break;
             case "SCHEDULE_REFINEMENT":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SCHEDULE_REFINEMENT, 3, waiting);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SCHEDULE_REFINEMENT, 5, waiting);
                 break;
             case "REFINEMENT":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.REFINEMENT, 4, waiting);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.REFINEMENT, 10, waiting);
                 break;
             case "REQUEST_REFUSED":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.REQUEST_REFUSED, 2, waiting);
@@ -608,6 +608,36 @@ public class AvanzamentoNotificheB2bSteps {
         }
         try {
             Assertions.assertNotNull(timelineElement);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+
+    @Then("viene controllato che l'elemento di timeline della notifica {string} non esiste")
+    public void readingNotEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
+        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+
+        TimelineElementV20 timelineElement = null;
+
+        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+            try {
+                Thread.sleep(timelineElementWait.getWaiting());
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+
+            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+
+            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+
+            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+            if (timelineElement != null) {
+                break;
+            }
+        }
+        try {
+            Assertions.assertNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -2513,6 +2543,24 @@ public class AvanzamentoNotificheB2bSteps {
         }
     }
 
+
+    @Then("viene verificato che nell'elemento di timeline della notifica {string} sia presente il campo notRefinedRecipientIndex")
+    public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoNotRefinedRecipientIndex(String timelineEventCategory) {
+        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+
+        TimelineElementV20 timelineElement = null;
+
+        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+        try {
+            logger.info("TIMELINE_ELEMENT: " + timelineElement);
+            Assertions.assertNotNull(timelineElement);
+            Assertions.assertNotNull(timelineElement.getDetails().getNotRefinedRecipientIndexes());
+            Assertions.assertTrue(timelineElement.getDetails().getNotRefinedRecipientIndexes().size()>0);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
 
 
 
