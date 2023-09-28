@@ -58,6 +58,11 @@ public class SharedSteps {
     private final IPnWebRecipientClient webRecipientClient;
     private final PnExternalServiceClientImpl pnExternalServiceClient;
     private final IPnWebUserAttributesClient iPnWebUserAttributesClient;
+    private final PnServiceDeskClientImpl serviceDeskClient;
+
+    private final PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey;
+
+    private final PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey;
 
     private NewNotificationResponse newNotificationResponse;
     private NewNotificationRequest notificationRequest;
@@ -143,11 +148,13 @@ public class SharedSteps {
 
     private String gherkinSpaTaxID = "12666810299";
   //  private String cucumberSrlTaxID = "SCTPTR04A01C352E";
+
     private String cucumberSrlTaxID = "20517490320";
 
     private String cucumberSocietyTaxID = "20517490320" ;// "DNNGRL83A01C352D";
     private String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
    // private String gherkinSrltaxId = "CCRMCT06A03A433H";
+
 
     private String gherkinSrltaxId = "12666810299";
     private String cucumberSpataxId = "20517490320"; //
@@ -178,7 +185,7 @@ public class SharedSteps {
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
                        PnExternalServiceClientImpl pnExternalServiceClient,
-                       IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient) {
+                       IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient, PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey, PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.webClient = webClient;
@@ -186,6 +193,9 @@ public class SharedSteps {
         this.webRecipientClient = webRecipientClient;
         this.pnExternalServiceClient = pnExternalServiceClient;
         this.iPnWebUserAttributesClient = iPnWebUserAttributesClient;
+        this.serviceDeskClient=serviceDeskClient;
+        this.serviceDeskClientImplNoApiKey=serviceDeskClientImplNoApiKey;
+        this.serviceDeskClientImplWrongApiKey=serviceDeskClientImplWrongApiKey;
 
     }
 
@@ -1002,6 +1012,19 @@ public class SharedSteps {
         return webRecipientClient;
     }
 
+    public PnServiceDeskClientImpl getServiceDeskClient(){
+        return serviceDeskClient;
+    }
+
+
+    public PnServiceDeskClientImplNoApiKey getServiceDeskClientNoApiKey(){
+        return serviceDeskClientImplNoApiKey;
+    }
+
+    public PnServiceDeskClientImplWrongApiKey getServiceDeskClientWrongApiKey(){
+        return serviceDeskClientImplWrongApiKey;
+    }
+
     public String getMarioCucumberTaxID() {
         return marioCucumberTaxID;
     }
@@ -1305,6 +1328,7 @@ public class SharedSteps {
         return timelineElementList.stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).findAny().orElse(null);
     }
 
+
     public List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.ProgressResponseElement> getProgressResponseElements() {
         return progressResponseElements;
     }
@@ -1321,7 +1345,5 @@ public class SharedSteps {
         if (schedulingDaysSuccessDigitalRefinementString == null) return schedulingDaysSuccessDigitalRefinementDefaultString;
         return schedulingDaysSuccessDigitalRefinementString;
     }
-
-
 
 }
