@@ -55,6 +55,7 @@ public class SharedSteps {
     private final DataTableTypeUtil dataTableTypeUtil;
     private final IPnPaB2bClient b2bClient;
     private final IPnWebPaClient webClient;
+    private final PnGPDClientImpl pnGPDClientImpl;
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebRecipientClient webRecipientClient;
     private final PnExternalServiceClientImpl pnExternalServiceClient;
@@ -186,7 +187,9 @@ public class SharedSteps {
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
                        PnExternalServiceClientImpl pnExternalServiceClient,
-                       IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient, PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey, PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey) {
+                       IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient,
+                       PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey,
+                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey,PnGPDClientImpl pnGPDClientImpl) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.webClient = webClient;
@@ -197,7 +200,7 @@ public class SharedSteps {
         this.serviceDeskClient=serviceDeskClient;
         this.serviceDeskClientImplNoApiKey=serviceDeskClientImplNoApiKey;
         this.serviceDeskClientImplWrongApiKey=serviceDeskClientImplWrongApiKey;
-
+        this.pnGPDClientImpl=pnGPDClientImpl;
     }
 
     @BeforeAll
@@ -1006,7 +1009,9 @@ public class SharedSteps {
     public IPnWebPaClient getWebPaClient() {
         return webClient;
     }
-
+    public PnGPDClientImpl getPnGPDClientImpl() {
+        return pnGPDClientImpl;
+    }
     public PnPaB2bUtils getB2bUtils() {
         return b2bUtils;
     }
