@@ -52,7 +52,7 @@ public class InvioNotificheB2bSteps {
     private final PnExternalServiceClientImpl safeStorageClient;
     private final SharedSteps sharedSteps;
     private final PnGPDClientImpl pnGPDClientImpl;
-    private PaymentPositionModel paymentPositionModelResponse;
+    private PaymentPositionModel paymentPositionModel;
     private PaymentPositionModelBaseResponse paymentPositionModelBaseResponse;
     private String DeleteGDPresponse;
     private Long amountGPD;
@@ -453,16 +453,16 @@ public class InvioNotificheB2bSteps {
 
 
 
-    private void priceVerificationGPD(String date, Integer destinatario) {
+    private void priceVerificationGPD() {
 
         List<PaymentOptionModelResponse> listPaymentOptionModelResponse = paymentPositionModelBaseResponse.getPaymentOption();
         if (listPaymentOptionModelResponse != null){
             for (PaymentOptionModelResponse paymentOptionModelResponse: listPaymentOptionModelResponse) {
-                NotificationPriceResponse notificationPrice = this.b2bClient.getNotificationPrice("","");//serve un taxID e un noticeCode
+                NotificationPriceResponse notificationPrice = this.b2bClient.getNotificationPrice(paymentPositionModel.getFiscalCode(),paymentPositionModel.getPaymentOption().get(0).getIuv());//serve un taxID e un noticeCode
                 try {
                     Assertions.assertEquals(notificationPrice.getIun(), sharedSteps.getSentNotification().getIun());
                     if (amountGPD != null) {
-                        logger.info("Costo notifica: {} destinatario: {}", notificationPrice.getAmount(), destinatario);
+                        logger.info("Costo notifica: {}", notificationPrice.getAmount());
                         Assertions.assertEquals(notificationPrice.getAmount(), amountGPD);
                     }
                 } catch (AssertionFailedError assertionFailedError) {
@@ -476,7 +476,7 @@ public class InvioNotificheB2bSteps {
 
         String iuv = String.format("47%13d44", System.currentTimeMillis());
 
-        PaymentPositionModel paymentPositionModel = new PaymentPositionModel()
+        PaymentPositionModel paymentPositionModelSend = new PaymentPositionModel()
                 .iupd(String.format(organitationCode + "-%16" + iuv, System.currentTimeMillis()))
                 .type(PaymentPositionModel.TypeEnum.F)
                 .companyName("Automation")
@@ -500,14 +500,14 @@ public class InvioNotificheB2bSteps {
         try {
 
             Assertions.assertDoesNotThrow(() -> {
-                paymentPositionModelResponse = pnGPDClientImpl.createPosition(organitationCode, paymentPositionModel, null, false);
+                paymentPositionModel = pnGPDClientImpl.createPosition(organitationCode, paymentPositionModelSend, null, true);
             });
-            Assertions.assertNotNull(paymentPositionModelResponse);
+            Assertions.assertNotNull(paymentPositionModel);
 
         } catch (AssertionFailedError assertionFailedError) {
 
             String message = assertionFailedError.getMessage() +
-                    "{la posizione debitoria " + (paymentPositionModelResponse == null ? "NULL" : paymentPositionModelResponse.toString()) + " }";
+                    "{la posizione debitoria " + (paymentPositionModel == null ? "NULL" : paymentPositionModel.toString()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
 
         }
@@ -520,11 +520,11 @@ public class InvioNotificheB2bSteps {
         try {
 
             Assertions.assertDoesNotThrow(() -> {
-                paymentPositionModelBaseResponse =pnGPDClientImpl.getOrganizationDebtPositionByIUPD(paymentPositionModelResponse.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(),paymentPositionModelResponse.getIupd(),null);
+                paymentPositionModelBaseResponse =pnGPDClientImpl.getOrganizationDebtPositionByIUPD(paymentPositionModel.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(),paymentPositionModel.getIupd(),null);
             });
-            Assertions.assertNotNull(paymentPositionModelResponse);
+            Assertions.assertNotNull(paymentPositionModelBaseResponse);
 
-            amountGPD=paymentPositionModelResponse.getPaymentOption().get(0).getAmount();
+            amountGPD=paymentPositionModelBaseResponse.getPaymentOption().get(0).getAmount();
 
         } catch (AssertionFailedError assertionFailedError) {
 
@@ -540,7 +540,7 @@ public class InvioNotificheB2bSteps {
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                DeleteGDPresponse = pnGPDClientImpl.deletePosition(paymentPositionModelResponse.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(), paymentPositionModelResponse.getIupd(), null);
+                DeleteGDPresponse = pnGPDClientImpl.deletePosition(paymentPositionModel.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(), paymentPositionModel.getIupd(), null);
             });
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -550,6 +550,32 @@ public class InvioNotificheB2bSteps {
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
 
         }
+    }
+
+    @And("viene effettuato il confronto del amount del GPD con quello della notifica")
+    public void vieneEffettuatoIlConfrontoDelAmountDelGPDConQuelloDellaNotifica() {
+        try {
+            Thread.sleep(sharedSteps.getWait());
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
         }
+            priceVerificationGPD();
+    }
+
+    @And("viene effettuato il controllo del amount di GPD = 0")
+    public void vieneEffettuatoIlControlloDelAmountDiGPD() {
+
+        try {
+            Assertions.assertEquals(amountGPD,0);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentPositionModelBaseResponse == null ? "NULL" : paymentPositionModelBaseResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
+
 
 }
