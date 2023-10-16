@@ -56,6 +56,8 @@ public class SharedSteps {
     private final IPnPaB2bClient b2bClient;
     private final IPnWebPaClient webClient;
     private final PnGPDClientImpl pnGPDClientImpl;
+    private final PnPaymentInfoClientImpl pnPaymentInfoClient;
+
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebRecipientClient webRecipientClient;
     private final PnExternalServiceClientImpl pnExternalServiceClient;
@@ -189,7 +191,7 @@ public class SharedSteps {
                        PnExternalServiceClientImpl pnExternalServiceClient,
                        IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient,
                        PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey,
-                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey,PnGPDClientImpl pnGPDClientImpl) {
+                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey,PnGPDClientImpl pnGPDClientImpl, PnPaymentInfoClientImpl pnPaymentInfoClient) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.webClient = webClient;
@@ -201,6 +203,7 @@ public class SharedSteps {
         this.serviceDeskClientImplNoApiKey=serviceDeskClientImplNoApiKey;
         this.serviceDeskClientImplWrongApiKey=serviceDeskClientImplWrongApiKey;
         this.pnGPDClientImpl=pnGPDClientImpl;
+        this.pnPaymentInfoClient=pnPaymentInfoClient;
     }
 
     @BeforeAll
@@ -1012,6 +1015,11 @@ public class SharedSteps {
     public PnGPDClientImpl getPnGPDClientImpl() {
         return pnGPDClientImpl;
     }
+
+    public PnPaymentInfoClientImpl getPnPaymentInfoClientImpl() {
+        return pnPaymentInfoClient;
+    }
+
     public PnPaB2bUtils getB2bUtils() {
         return b2bUtils;
     }

@@ -174,3 +174,10 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And destinatario Mario Gherkin e:
       | payment_creditorTaxId | 77777777777 |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
+
+
+
+  Scenario: [B2B_PROVA_INTEGRAZIONE_GPD] Viene creata una posizione debitoria, interrogata e cancellata
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
+    And  lettura amount posizione debitoria
+    When viene canellata la posizione debitoria

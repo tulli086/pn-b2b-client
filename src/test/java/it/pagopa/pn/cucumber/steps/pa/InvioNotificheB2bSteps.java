@@ -12,7 +12,9 @@ import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.testclient.IPnWebPaClient;
 import it.pagopa.pn.client.b2b.pa.testclient.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.testclient.PnGPDClientImpl;
+import it.pagopa.pn.client.b2b.pa.testclient.PnPaymentInfoClientImpl;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.*;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.PaymentInfo;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.DataTest;
@@ -27,12 +29,11 @@ import org.springframework.web.client.RestClientException;
 
 import java.io.ByteArrayInputStream;
 import java.lang.invoke.MethodHandles;
+import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.time.OffsetDateTime.now;
@@ -52,10 +53,19 @@ public class InvioNotificheB2bSteps {
     private final PnExternalServiceClientImpl safeStorageClient;
     private final SharedSteps sharedSteps;
     private final PnGPDClientImpl pnGPDClientImpl;
+
+    private final PnPaymentInfoClientImpl pnPaymentInfoClient;
     private PaymentPositionModel paymentPositionModel;
     private PaymentPositionModelBaseResponse paymentPositionModelBaseResponse;
+
+    private PaymentInfo paymentInfo;
+
+    private List<Object> paymentInfoV21;
+
+
+
     private String DeleteGDPresponse;
-    private Long amountGPD;
+    private Integer amountGPD;
     private NotificationDocument notificationDocumentPreload;
     private NotificationPaymentAttachment notificationPaymentAttachmentPreload;
 
@@ -73,6 +83,7 @@ public class InvioNotificheB2bSteps {
         this.b2bClient = sharedSteps.getB2bClient();
         this.webPaClient = sharedSteps.getWebPaClient();
         this.pnGPDClientImpl = sharedSteps.getPnGPDClientImpl();
+        this.pnPaymentInfoClient=sharedSteps.getPnPaymentInfoClientImpl();
     }
 
 
@@ -472,31 +483,51 @@ public class InvioNotificheB2bSteps {
         }
     }
     @And("viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore {string} e amount {string} per {string} con (CF)(Piva) {string}")
-    public void vieneCreataUnaPosizioneDebitoria(String organitationCode,Long amount,String name,String taxId) {
+    public void vieneCreataUnaPosizioneDebitoria(String organitationCode,String amount,String name,String taxId) {
 
         String iuv = String.format("47%13d44", System.currentTimeMillis());
+        logger.info("Iuv generato: " + iuv);
+        logger.info("IUPD generate: " + organitationCode +"-64c8e41bfec846e04"+ iuv, System.currentTimeMillis());
+
+
+ //       Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 30);  // number of days to add
+
+ //       OffsetDateTime dt = OffsetDateTime.parse(date);
+ //       SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ssZ");
+ //       Calendar c = Calendar.getInstance();
+ //       c.add(Calendar.DATE, 30);  // number of days to add
+        String date = dateFormat.format(c.getTime());
+
+ //       OffsetDateTime dt = OffsetDateTime.parse(date);
+ //       DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+ //       OffsetDateTime dt = OffsetDateTime.parse(date);
+
 
         PaymentPositionModel paymentPositionModelSend = new PaymentPositionModel()
-                .iupd(String.format(organitationCode + "-%16" + iuv, System.currentTimeMillis()))
+                .iupd(String.format(organitationCode+"-64c8e41bfec846e04"+  iuv, System.currentTimeMillis()))
                 .type(PaymentPositionModel.TypeEnum.F)
                 .companyName("Automation")
                 .fullName(name)
                 .fiscalCode(taxId)
                 .addPaymentOptionItem(new PaymentOptionModel()
                         .iuv(iuv)
-                        .amount(amount)
+                        .amount(Long.parseLong(amount))
                         .description("Test Automation")
                         .isPartialPayment(false)
-                        .dueDate(OffsetDateTime.now())
-                        .retentionDate(OffsetDateTime.now())
+                        .dueDate(new StringBuilder("2050-09-30T15:30:00"))
+                        .retentionDate(new StringBuilder("2050-09-30T15:30:00"))
                         .addTransferItem(new TransferModel()
+                                .idTransfer(TransferModel.IdTransferEnum._1)
                                 .organizationFiscalCode(organitationCode)
-                                .amount(amount)
+                                .amount(Long.parseLong(amount))
                                 .remittanceInformation("Test Automation")
                                 .category("9/0301100TS/")
                                 .iban("IT30N0103076271000001823603")));
 
-
+        logger.info("Request: " + paymentPositionModelSend.toString());
         try {
 
             Assertions.assertDoesNotThrow(() -> {
@@ -516,20 +547,22 @@ public class InvioNotificheB2bSteps {
     @And("lettura amount posizione debitoria")
     public void letturaAmountPosizioneDebitoria() {
 
-
         try {
 
             Assertions.assertDoesNotThrow(() -> {
-                paymentPositionModelBaseResponse =pnGPDClientImpl.getOrganizationDebtPositionByIUPD(paymentPositionModel.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(),paymentPositionModel.getIupd(),null);
+               // paymentInfo=pnPaymentInfoClient.getPaymentInfoV21("a");
+               // paymentInfoV21.get(0).toString();
             });
-            Assertions.assertNotNull(paymentPositionModelBaseResponse);
+            Assertions.assertNotNull(paymentInfo);
 
-            amountGPD=paymentPositionModelBaseResponse.getPaymentOption().get(0).getAmount();
+            amountGPD=paymentInfo.getAmount();
+            logger.info("Amount: " + amountGPD);
+
 
         } catch (AssertionFailedError assertionFailedError) {
 
             String message = assertionFailedError.getMessage() +
-                    "{la posizione debitoria " + (paymentPositionModelBaseResponse == null ? "NULL" : paymentPositionModelBaseResponse.toString()) + " }";
+                    "{la posizione debitoria " + (paymentInfo == null ? "NULL" : paymentInfo.toString()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
 
         }
@@ -538,6 +571,7 @@ public class InvioNotificheB2bSteps {
     @And("viene canellata la posizione debitoria")
     public void vieneCanvellataLaPosizioneDebitoria() {
 
+        logger.info("Iuv da Cancellare: " + paymentPositionModel.getIupd());
         try {
             Assertions.assertDoesNotThrow(() -> {
                 DeleteGDPresponse = pnGPDClientImpl.deletePosition(paymentPositionModel.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(), paymentPositionModel.getIupd(), null);

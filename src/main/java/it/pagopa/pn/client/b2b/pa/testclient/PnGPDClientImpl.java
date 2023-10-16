@@ -28,7 +28,7 @@ public class PnGPDClientImpl implements IPnGPDClientImpl{
 
     private final String basePath;
 
-    private final String apiKey;
+    private final String key;
 
     private final DebtPositionsApiApi debtPositionsApiApi;
 
@@ -44,35 +44,34 @@ public class PnGPDClientImpl implements IPnGPDClientImpl{
 
  */
 
-    private final String paId;
+   // private final String paId;
     private final String operatorId;
 
     public PnGPDClientImpl(
             ApplicationContext ctx,
             RestTemplate restTemplate,
-            @Value("${pn.externalChannels.base-url.pagopa}") String deliveryBasePath ,
-            @Value("${pn.external.api-keys.service-desk}") String apiKeyBase ,
-            @Value("${pn.internal.pa-id}") String paId
+            @Value("${pn.internal.gpd-base-url}") String deliveryBasePath ,
+            @Value("${pn.external.api-subscription-key}") String key
     ) {
 
-        this.paId = paId;
+       // this.paId = paId;
         this.operatorId = "AutomationMv";
         this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.basePath = deliveryBasePath;
-        this.apiKey=apiKeyBase;
-        this.debtPositionsApiApi = new DebtPositionsApiApi(newApiClient( restTemplate, basePath,apiKey));
+        this.key=key;
+        this.debtPositionsApiApi = new DebtPositionsApiApi(newApiClient( restTemplate, basePath,key));
 
 
 
 
     }
 
-    private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apiKey) {
+    private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String key) {
  //private static ApiClient newApiClient(RestTemplate restTemplate, String basePath) {
         ApiClient newApiClient = new ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
-        newApiClient.addDefaultHeader("Ocp-Apim-Subscription-Key", apiKey );
+        newApiClient.addDefaultHeader("Ocp-Apim-Subscription-Key", key );
         newApiClient.addDefaultHeader("Content-Type", "application/json" );
         return newApiClient;
     }
