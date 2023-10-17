@@ -44,8 +44,9 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | pagoPaIntMode      | ASYNC                       |
       | paFee              | 100                         |
     And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+      | denomination          | Cristoforo Colombo |
+      | taxId                 | CLMCST42R12D969Z   |
+      | payment_creditorTaxId | 77777777777        |
     When la notifica viene inviata tramite api b2b con sha256 differente dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
     And  lettura amount posizione debitoria
@@ -63,8 +64,9 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | pagoPaIntMode      | ASYNC                       |
       | paFee              | 100                         |
     And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+      | denomination          | Cristoforo Colombo |
+      | taxId                 | CLMCST42R12D969Z   |
+      | payment_creditorTaxId | 77777777777        |
     When la notifica viene inviata tramite api b2b con sha256 differente dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
     And  lettura amount posizione debitoria
@@ -109,7 +111,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
 
     #Da vedere come gestire il multi se mettere 2 posizione debitorie
   #Vedere se aggiungere step che cancellano la posizione in base al nome del destinatario e si crea una lista di posizioni debitorie
-  Scenario: [B2B_ASYNC_17] Notifica mono PF/PG-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“
+  Scenario: [B2B_ASYNC_17] Notifica multi PF/PG-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cucumber Society" con CF "20517490320"
     Given viene generata una nuova notifica
@@ -228,6 +230,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | physicalAddress_address | Via@ok_RS    |
       | payment_creditorTaxId   | 77777777777  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And la notifica viene inviata tramite api b2b
     Then lettura amount posizione debitoria
     And  viene effettuato il confronto del amount del GPD con quello della notifica
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
