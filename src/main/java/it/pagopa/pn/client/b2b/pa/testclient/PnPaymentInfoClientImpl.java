@@ -34,7 +34,7 @@ public class PnPaymentInfoClientImpl implements IPnPaymentInfoClientImpl{
     public PnPaymentInfoClientImpl(
             ApplicationContext ctx,
             RestTemplate restTemplate,
-            @Value("${pn.internal.ext-registry-base-url}") String deliveryBasePath ,
+            @Value("${pn.webapi.external.base-url.pagopa}") String deliveryBasePath ,
             @Value("${pn.external.bearer-token-payinfo}") String key
     ) {
 
@@ -54,12 +54,14 @@ public class PnPaymentInfoClientImpl implements IPnPaymentInfoClientImpl{
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String key) {
         ApiClient newApiClient = new ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
-        newApiClient.addDefaultHeader("Authorization", key );
+        newApiClient.setBearerToken(key);
         return newApiClient;
     }
 
 
-
+    public PaymentInfo getPaymentInfo(String paTaxId, String noticeNumber) throws RestClientException {
+        return paymentInfoApi.getPaymentInfoWithHttpInfo(paTaxId, noticeNumber).getBody();
+    }
 
     @Override
     public List<Object> getPaymentInfoV21(List<Object> requestBody) throws RestClientException {

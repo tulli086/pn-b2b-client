@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface IPnPaymentInfoClientImpl {
 
+    public PaymentInfo getPaymentInfo(String paTaxId, String noticeNumber) throws RestClientException;
+
     public List<Object> getPaymentInfoV21(List<Object> requestBody) throws RestClientException ;
 
 

@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
@@ -57,6 +58,8 @@ public class InvioNotificheB2bSteps {
     private final PnPaymentInfoClientImpl pnPaymentInfoClient;
     private PaymentPositionModel paymentPositionModel;
     private PaymentPositionModelBaseResponse paymentPositionModelBaseResponse;
+
+    private List<Object> paymentInfoResponse;
 
     private PaymentInfo paymentInfo;
 
@@ -489,23 +492,6 @@ public class InvioNotificheB2bSteps {
         logger.info("Iuv generato: " + iuv);
         logger.info("IUPD generate: " + organitationCode +"-64c8e41bfec846e04"+ iuv, System.currentTimeMillis());
 
-
- //       Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 30);  // number of days to add
-
- //       OffsetDateTime dt = OffsetDateTime.parse(date);
- //       SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ssZ");
- //       Calendar c = Calendar.getInstance();
- //       c.add(Calendar.DATE, 30);  // number of days to add
-        String date = dateFormat.format(c.getTime());
-
- //       OffsetDateTime dt = OffsetDateTime.parse(date);
- //       DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
- //       OffsetDateTime dt = OffsetDateTime.parse(date);
-
-
         PaymentPositionModel paymentPositionModelSend = new PaymentPositionModel()
                 .iupd(String.format(organitationCode+"-64c8e41bfec846e04"+  iuv, System.currentTimeMillis()))
                 .type(PaymentPositionModel.TypeEnum.F)
@@ -547,16 +533,39 @@ public class InvioNotificheB2bSteps {
     @And("lettura amount posizione debitoria")
     public void letturaAmountPosizioneDebitoria() {
 
+        String organitationCode=paymentPositionModel.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode();
+        logger.info("Creditore da cercare: " + organitationCode);
+
+
+
+        String noticeCode="3"+paymentPositionModel.getPaymentOption().get(0).getIuv();
+        logger.info("NoticeCode da cercare: " + noticeCode);
+
+        //Object messageJson="[{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \""+noticeCode+"\"}]";
+        Object messageJson="{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \""+noticeCode+"\"}";
+        //Object messageJson="{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \"+noticeCode+"\"}";
+        logger.info("Messaggio json da allegare: " + messageJson);
+
+
+
+           List<Object> messaggioObj = new ArrayList<Object>();
+           messaggioObj.add(messageJson);
+
+        logger.info("Messaggio json da allegare: " + messaggioObj.toString());
+
+
         try {
-
             Assertions.assertDoesNotThrow(() -> {
-               // paymentInfo=pnPaymentInfoClient.getPaymentInfoV21("a");
-               // paymentInfoV21.get(0).toString();
+                List<Object> paymentInfoResponse=pnPaymentInfoClient.getPaymentInfoV21(messaggioObj);
+                logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
+                //paymentInfoV21.get(0).toString();
+                //paymentInfo=pnPaymentInfoClient.getPaymentInfo(organitationCode,noticeCode);
             });
-            Assertions.assertNotNull(paymentInfo);
+            Assertions.assertNotNull(paymentInfoResponse);
+            //Assertions.assertNotNull(paymentInfo);
 
-            amountGPD=paymentInfo.getAmount();
-            logger.info("Amount: " + amountGPD);
+            //amountGPD=paymentInfo.getAmount();
+            //logger.info("Amount: " + amountGPD);
 
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -568,15 +577,15 @@ public class InvioNotificheB2bSteps {
         }
     }
 
-    @And("viene canellata la posizione debitoria")
-    public void vieneCanvellataLaPosizioneDebitoria() {
+    @And("viene cancellata la posizione debitoria")
+    public void vieneCancellataLaPosizioneDebitoria() {
 
         logger.info("Iuv da Cancellare: " + paymentPositionModel.getIupd());
         try {
             Assertions.assertDoesNotThrow(() -> {
                 DeleteGDPresponse = pnGPDClientImpl.deletePosition(paymentPositionModel.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(), paymentPositionModel.getIupd(), null);
             });
-
+            logger.info("Risposta evento cancellazione: " + DeleteGDPresponse);
         } catch (AssertionFailedError assertionFailedError) {
 
             String message = assertionFailedError.getMessage() +
