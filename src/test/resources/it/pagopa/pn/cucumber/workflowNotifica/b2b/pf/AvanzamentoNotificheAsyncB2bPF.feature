@@ -16,7 +16,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
     And  lettura amount posizione debitoria
     And  viene effettuato il controllo del amount di GPD = 0
-    Then viene canellata la posizione debitoria
+    Then viene cancellata la posizione debitoria
 
 
   Scenario: [B2B_ASYNC_9] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “REQUEST_REFUSED“
@@ -34,7 +34,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
     And  lettura amount posizione debitoria
     And  viene effettuato il controllo del amount di GPD = 0
-    Then viene canellata la posizione debitoria
+    Then viene cancellata la posizione debitoria
 
 
   Scenario: [B2B_ASYNC_12] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“
@@ -52,7 +52,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
     And  lettura amount posizione debitoria
     And  viene effettuato il controllo del amount di GPD = 0
-    Then viene canellata la posizione debitoria
+    Then viene cancellata la posizione debitoria
 
 
   Scenario: [B2B_ASYNC_15] Notifica mono PG-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“
@@ -70,7 +70,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
     And  lettura amount posizione debitoria
     And  viene effettuato il controllo del amount di GPD = 0
-    Then viene canellata la posizione debitoria
+    Then viene cancellata la posizione debitoria
 
 
   Scenario: [B2B_ASYNC_20] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “VALIDATION“
@@ -86,7 +86,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then lettura amount posizione debitoria
     And  viene effettuato il confronto del amount del GPD con quello della notifica
-    Then viene canellata la posizione debitoria
+    Then viene cancellata la posizione debitoria
 
 
   Scenario: [B2B_ASYNC_21] Notifica mono PF-Verifica amount GPD per notifica ASYNC fino a "SEND_ANALOG_DOMICILE" al primo tentativo
@@ -107,7 +107,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
     And  lettura amount posizione debitoria
     And  viene effettuato il confronto del amount del GPD con quello della notifica
-    Then viene canellata la posizione debitoria
+    Then viene cancellata la posizione debitoria
 
 
   Scenario: [B2B_ASYNC_22] Notifica mono PF-Verifica amount GPD per notifica ASYNC fino a "SEND_ANALOG_DOMICILE" al secondo tentativo
@@ -131,7 +131,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_1"
     And  lettura amount posizione debitoria
     And  viene effettuato il confronto del amount del GPD con quello della notifica
-    Then viene canellata la posizione debitoria
+    Then viene cancellata la posizione debitoria
 
 
   Scenario: [B2B_ASYNC_23] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “SEND_SIMPLE_REGISTERED_LETTER“
@@ -151,7 +151,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And  lettura amount posizione debitoria
     And  viene effettuato il confronto del amount del GPD con quello della notifica
-    Then viene canellata la posizione debitoria
+    Then viene cancellata la posizione debitoria
 
 
   Scenario: [B2B_ASYNC_24] Notifica mono PF-Verifica notifica async senza posizione debitoria
@@ -180,4 +180,4 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
   Scenario: [B2B_PROVA_INTEGRAZIONE_GPD] Viene creata una posizione debitoria, interrogata e cancellata
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     And  lettura amount posizione debitoria
-    When viene canellata la posizione debitoria
+    When viene cancellata la posizione debitoria
