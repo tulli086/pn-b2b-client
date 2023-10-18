@@ -1,90 +1,45 @@
 Feature: avanzamento notifiche asincrone b2b - controllo costi
 
-  Scenario: [B2B_ASYNC_2] Notifica mono PF- senza verifica amount GPD per notifica ASYNC e campo feePolicy a FLAT_RATE
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
+  Scenario: [B2B_ASYNC_1] Notifica mono PF-Caso creazione Notifica di tipo non ASYNC, validazione non prevista
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | SYNC                        |
+      | paFee              | NULL                        |
+    And destinatario
+      | denomination | Cristoforo Colombo |
+      | taxId | CLMCST42R12D969Z |
+      | payment_creditorTaxId | 77777777777 |
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+
+
+  Scenario: [B2B_ASYNC_2] Notifica mono PF-Senza verifica amount GPD per notifica ASYNC e campo feePolicy a FLAT_RATE
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
       | feePolicy          | FLAT_RATE                   |
       | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 0                           |
     And destinatario
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
-    And  lettura amount posizione debitoria
-    Then viene cancellata la posizione debitoria
 
-  Scenario: [B2B_ASYNC_3] Notifica mono PF- senza verifica amount GPD per notifica ASYNC e campo feePolicy a FLAT_RATE
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
+
+  Scenario: [B2B_ASYNC_3] Notifica mono PF-Rifiuto in caso di notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi non abilitati alla modalità asincrona
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
       | pagoPaIntMode      | ASYNC                       |
       | paFee              | 100                         |
-      | apply_cost_pagopa  | SI                          |
     And destinatario
       | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
-    And  lettura amount posizione debitoria
-    Then viene cancellata la posizione debitoria
-
-  Scenario: [B2B_ASYNC_4] Notifica mono PF- senza verifica amount GPD per notifica ASYNC e campo feePolicy a FLAT_RATE
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-      | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 100                         |
-      | apply_cost_pagopa  | NO                          |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
-    And  lettura amount posizione debitoria
-    Then viene cancellata la posizione debitoria
-
-  Scenario: [B2B_ASYNC_5] Notifica mono PF-Verifica amount GPD per notifica ASYNC e campo paFee non popolato - Refused
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-      | pagoPaIntMode      | ASYNC                       |
-      | paFee              | NULL                        |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+      | taxId        | CLMCST42R12D969Z   |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED"
-    And  lettura amount posizione debitoria
-    And  viene effettuato il controllo del amount di GPD = 0
-    Then viene cancellata la posizione debitoria
 
 
-  Scenario: [B2B_ASYNC_7] Notifica mono PG-Verifica amount GPD per notifica non ASYNC validazione non prevista
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "GherkinSrl" con CF "12666810299"
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 100                         |
-    And destinatario Cucumber Society e:
-      | payment_creditorTaxId | 77777777777 |
-    When la notifica viene inviata tramite api b2b con sha256 differente dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED"
-    And  lettura amount posizione debitoria
-    And  viene effettuato il controllo del amount di GPD = 0
-    Then viene cancellata la posizione debitoria
-
-
-  Scenario: [B2B_ASYNC_9] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “REQUEST_REFUSED“
+  Scenario: [B2B_ASYNC_4] Notifica mono PF-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -96,10 +51,106 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And l'avviso pagopa viene pagato correttamente
+    Then viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | 100                         |
+    And destinatario
+      | denomination          | Cristoforo Colombo |
+      | taxId                 | CLMCST42R12D969Z   |
+      | payment_creditorTaxId | 77777777777        |
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
+    Then viene cancellata la posizione debitoria
+
+
+  Scenario: [B2B_ASYNC_5] Notifica mono PF-Senza verifica amount GPD per notifica ASYNC e campo paFee non popolato - Refused
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | NULL                        |
+    And destinatario
+      | denomination          | Cristoforo Colombo |
+      | taxId                 | CLMCST42R12D969Z   |
+      | payment_creditorTaxId | 77777777777        |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
+
+
+  Scenario: [B2B_ASYNC_6] Notifica multi PF/PG-Rifiuto di notifiche con modalità asincrona di integrazione al cui interno risultano avvisi non abilitati alla modalità asincrona
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | 100                         |
+    And destinatario
+      | denomination          | Cristoforo Colombo |
+      | taxId                 | CLMCST42R12D969Z   |
+      | payment_creditorTaxId | 77777777777        |
+    And destinatario Cucumber Society e:
+      | payment_creditorTaxId | 77777777777      |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
+
+
+  Scenario: [B2B_ASYNC_7] Notifica mono PG-Caso creazione Notifica di tipo non ASYNC, validazione non prevista
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | SYNC                        |
+      | paFee              | NULL                        |
+    And destinatario Cucumber Society e:
+      | payment_creditorTaxId | 77777777777 |
     When la notifica viene inviata tramite api b2b con sha256 differente dal "Comune_Multi" e si attende che lo stato diventi REFUSED
+
+
+  Scenario: [B2B_ASYNC_8] Notifica mono PG-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cucumber Society" con CF "20517490320"
+    And viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | 100                         |
+    And destinatario Cucumber Society e:
+      | payment_creditorTaxId | 77777777777      |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And l'avviso pagopa viene pagato correttamente
+    Then viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | 100                         |
+    And destinatario Cucumber Society e:
+      | payment_creditorTaxId | 77777777777      |
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED"
+    Then viene cancellata la posizione debitoria
+
+
+  Scenario: [B2B_ASYNC_9] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “REQUEST_REFUSED“
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | 10                           |
+    And destinatario
+      | denomination            | Cristoforo Colombo |
+      | taxId                   | CLMCST42R12D969Z   |
+      | payment_creditorTaxId   | 77777777777        |
+      | physicalAddress_address | 0000               |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED"
     And  lettura amount posizione debitoria
-    And  viene effettuato il controllo del amount di GPD = 0
+    And  viene effettuato il controllo del amount di GPD = "100"
     Then viene cancellata la posizione debitoria
 
 
@@ -132,6 +183,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then viene cancellata la posizione debitoria per "Cristoforo Colombo"
     And viene cancellata la posizione debitoria per "Cucumber Society"
 
+
  #Si potrebbe aggiungere uno step che faccia il tentativo di lettura cosi possiamo prenderci il KO
  #Capire se per amount aggiornato a 0 intende la notifica non la posiozione debitoria
   Scenario: [B2B_ASYNC_11] Notifica mono PF-Verifica amount GPD per notifica ASYNC con posizione debitoria non presente
@@ -151,6 +203,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And  l'operazione ha prodotto un errore con status code "404"
     And viene verificato il costo = "0" della notifica
 
+
   Scenario: [B2B_ASYNC_12] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Mario Gherkin" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -165,7 +218,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     When la notifica può essere annullata dal sistema tramite codice IUN
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
     And  lettura amount posizione debitoria
-    And  viene effettuato il controllo del amount di GPD = 0
+    And  viene effettuato il controllo del amount di GPD = "0"
     Then viene cancellata la posizione debitoria
 
 
@@ -369,6 +422,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then viene cancellata la posizione debitoria per "Cristoforo Colombo"
     And viene cancellata la posizione debitoria per "Cucumber Society"
 
+
   Scenario: [B2B_ASYNC_27] Notifica mono PF-Verifica amount GPD per notifica ASYNC cancellazione posizione debitoria dopo validazione della notifica
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -387,7 +441,6 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And  viene effettuato il confronto del amount del GPD con quello della notifica
 
 
-
   Scenario: [B2B_ASYNC_40] Notifica mono PF-Verifica notifica async senza posizione debitoria
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -399,6 +452,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_creditorTaxId | 77777777777 |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
 
+
   Scenario: [B2B_ASYNC_41] Notifica mono PF-Verifica notifica async senza posizione debitoria
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -408,7 +462,6 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And destinatario Mario Gherkin e:
       | payment_creditorTaxId | 77777777777 |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
-
 
 
   Scenario: [B2B_PROVA_INTEGRAZIONE_GPD] Viene creata una posizione debitoria, interrogata e cancellata

@@ -614,11 +614,11 @@ public class InvioNotificheB2bSteps {
             priceVerificationGPD();
     }
 
-    @And("viene effettuato il controllo del amount di GPD = 0")
-    public void vieneEffettuatoIlControlloDelAmountDiGPD() {
+    @And("viene effettuato il controllo del amount di GPD = {string}")
+    public void vieneEffettuatoIlControlloDelAmountDiGPD(String amount) {
 
         try {
-            Assertions.assertEquals(amountGPD,0);
+            Assertions.assertEquals(amountGPD,amount);
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
