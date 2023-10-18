@@ -1,6 +1,8 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -542,21 +544,28 @@ public class InvioNotificheB2bSteps {
         logger.info("NoticeCode da cercare: " + noticeCode);
 
         //Object messageJson="[{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \""+noticeCode+"\"}]";
-        Object messageJson="{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \""+noticeCode+"\"}";
+        //Object messageJson="{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \""+noticeCode+"\"}";
         //Object messageJson="{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \"+noticeCode+"\"}";
-        logger.info("Messaggio json da allegare: " + messageJson);
+        //logger.info("Messaggio json da allegare: " + messageJson);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        ObjectNode jsonNode = objectMapper.createObjectNode();
+        jsonNode.put("creditorTaxId", "77777777777");
+        jsonNode.put("noticeCode", noticeCode);
+
+        logger.info("Messaggio json da allegare: " + jsonNode);
 
 
-
-           List<Object> messaggioObj = new ArrayList<Object>();
-           messaggioObj.add(messageJson);
+            List<Object> messaggioObj = new ArrayList<Object>();
+            messaggioObj.add(jsonNode);
 
         logger.info("Messaggio json da allegare: " + messaggioObj.toString());
 
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                List<Object> paymentInfoResponse=pnPaymentInfoClient.getPaymentInfoV21(messaggioObj);
+                paymentInfoResponse=pnPaymentInfoClient.getPaymentInfoV21(messaggioObj);
                 logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
                 //paymentInfoV21.get(0).toString();
                 //paymentInfo=pnPaymentInfoClient.getPaymentInfo(organitationCode,noticeCode);
