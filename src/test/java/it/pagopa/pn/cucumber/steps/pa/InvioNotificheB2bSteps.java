@@ -58,22 +58,15 @@ public class InvioNotificheB2bSteps {
     private final PnGPDClientImpl pnGPDClientImpl;
 
     private final PnPaymentInfoClientImpl pnPaymentInfoClient;
-    private PaymentPositionModel paymentPositionModel;
+    private List<PaymentPositionModel> paymentPositionModel;
     private PaymentPositionModelBaseResponse paymentPositionModelBaseResponse;
-
     private List<Object> paymentInfoResponse;
-
     private PaymentInfo paymentInfo;
-
     private List<Object> paymentInfoV21;
-
-
-
     private String DeleteGDPresponse;
     private Integer amountGPD;
     private NotificationDocument notificationDocumentPreload;
     private NotificationPaymentAttachment notificationPaymentAttachmentPreload;
-
     private String sha256DocumentDownload;
     private NotificationAttachmentDownloadMetadataResponse downloadResponse;
 
@@ -470,7 +463,7 @@ public class InvioNotificheB2bSteps {
 
 
     private void priceVerificationGPD() {
-
+/*
         List<PaymentOptionModelResponse> listPaymentOptionModelResponse = paymentPositionModelBaseResponse.getPaymentOption();
         if (listPaymentOptionModelResponse != null){
             for (PaymentOptionModelResponse paymentOptionModelResponse: listPaymentOptionModelResponse) {
@@ -486,6 +479,8 @@ public class InvioNotificheB2bSteps {
                 }
             }
         }
+ */
+
     }
     @And("viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore {string} e amount {string} per {string} con (CF)(Piva) {string}")
     public void vieneCreataUnaPosizioneDebitoria(String organitationCode,String amount,String name,String taxId) {
@@ -519,10 +514,10 @@ public class InvioNotificheB2bSteps {
         try {
 
             Assertions.assertDoesNotThrow(() -> {
-                paymentPositionModel = pnGPDClientImpl.createPosition(organitationCode, paymentPositionModelSend, null, true);
+                 paymentPositionModel.add(pnGPDClientImpl.createPosition(organitationCode, paymentPositionModelSend, null, true));
             });
             Assertions.assertNotNull(paymentPositionModel);
-
+            logger.info("Request: " + paymentPositionModel);
         } catch (AssertionFailedError assertionFailedError) {
 
             String message = assertionFailedError.getMessage() +
@@ -532,16 +527,19 @@ public class InvioNotificheB2bSteps {
         }
     }
 
-    @And("lettura amount posizione debitoria")
-    public void letturaAmountPosizioneDebitoria() {
+    @And("lettura amount posizione debitoria di {string}")
+    public void letturaAmountPosizioneDebitoria(String user) {
 
-        String organitationCode=paymentPositionModel.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode();
-        logger.info("Creditore da cercare: " + organitationCode);
+        PaymentPositionModel postionUser = new PaymentPositionModel();
 
+        for(PaymentPositionModel position: paymentPositionModel){
+            if(position.getFullName().equalsIgnoreCase(user)){
+                postionUser=position;
+            }
+        }
 
-
-        String noticeCode="3"+paymentPositionModel.getPaymentOption().get(0).getIuv();
-        logger.info("NoticeCode da cercare: " + noticeCode);
+        String organitationCode=postionUser.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode();
+        String noticeCode="3"+postionUser.getPaymentOption().get(0).getIuv();
 
         //Object messageJson="[{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \""+noticeCode+"\"}]";
         //Object messageJson="{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \""+noticeCode+"\"}";
@@ -551,10 +549,8 @@ public class InvioNotificheB2bSteps {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ObjectNode jsonNode = objectMapper.createObjectNode();
-        jsonNode.put("creditorTaxId", "77777777777");
+        jsonNode.put("creditorTaxId", organitationCode);
         jsonNode.put("noticeCode", noticeCode);
-
-        logger.info("Messaggio json da allegare: " + jsonNode);
 
 
             List<Object> messaggioObj = new ArrayList<Object>();
@@ -586,15 +582,26 @@ public class InvioNotificheB2bSteps {
         }
     }
 
-    @And("viene cancellata la posizione debitoria")
-    public void vieneCancellataLaPosizioneDebitoria() {
+    @And("viene cancellata la posizione debitoria di {string}")
+    public void vieneCancellataLaPosizioneDebitoria(String user) {
 
-        logger.info("Iuv da Cancellare: " + paymentPositionModel.getIupd());
+
+        PaymentPositionModel postionUser = new PaymentPositionModel();
+
         try {
-            Assertions.assertDoesNotThrow(() -> {
-                DeleteGDPresponse = pnGPDClientImpl.deletePosition(paymentPositionModel.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(), paymentPositionModel.getIupd(), null);
-            });
+
+        for(PaymentPositionModel position: paymentPositionModel){
+            if(position.getFullName().equalsIgnoreCase(user)){
+                Assertions.assertDoesNotThrow(() -> {
+                    DeleteGDPresponse = pnGPDClientImpl.deletePosition(position.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(), position.getIupd(), null);
+                });
+            }
+
+        }
+
+            Assertions.assertNotNull(DeleteGDPresponse);
             logger.info("Risposta evento cancellazione: " + DeleteGDPresponse);
+
         } catch (AssertionFailedError assertionFailedError) {
 
             String message = assertionFailedError.getMessage() +
