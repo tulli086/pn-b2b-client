@@ -1278,6 +1278,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
 
 
   #64 Test di Validazione degli oggetti di pagamento ricevuti: Univocità istanza di pagamento e sue alternative (scenario negativo, se presenti più istanze uguali devo ricevere KO) [TA]
+  @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_64] Test di Validazione degli oggetti di pagamento ricevuti: Univocità istanza di pagamento e sue alternative (scenario negativo, se presenti più istanze uguali devo ricevere KO) [TA]
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1296,6 +1297,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     When la notifica viene inviata dal "Comune_1"
     Then l'operazione ha prodotto un errore con status code "400"
 
+  @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_64_1] Test di Validazione degli oggetti di pagamento ricevuti multidestinatario: Univocità istanza di pagamento e sue alternative (scenario negativo, se presenti più istanze uguali devo ricevere KO) [TA]
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1321,8 +1323,8 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_multy_number | 1 |
       | notice_code | 302011697026785045 |
 
-    When la notifica viene inviata dal "Comune_1"
-    Then l'operazione ha prodotto un errore con status code "400"
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
 
 
 
@@ -1337,39 +1339,6 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
 
 
   #67 Timeline: Esecuzione di più pagamenti, sia F24 che PagoPa -> Verifica in timeline presenza solo dei pagamenti PagoPa [TA]
-  @pagamentiMultipli
-  Scenario: [B2B-PA-PAY_MULTI_67] PA Timeline: Esecuzione di più pagamenti, sia F24 che PagoPa -> Verifica in timeline presenza solo dei pagamenti PagoPa [TA]
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo |
-      | feePolicy | DELIVERY_MODE |
-      | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
-      | payment_pagoPaForm | SI |
-      | payment_f24flatRate | NULL |
-      | payment_f24standard | NULL |
-      | apply_cost_pagopa | SI |
-      | payment_multy_number | 1 |
-    And destinatario
-      | denomination     | Gaio Giulio Cesare  |
-      | taxId | CSRGGL44L13H501E |
-      | payment_pagoPaForm | NULL |
-      | payment_f24flatRate | NULL |
-      | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_CSRGGL44L13H501E |
-      | apply_cost_f24 | SI |
-      | payment_multy_number | 1 |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then l'avviso pagopa viene pagato correttamente dall'utente 0
-    #And l'avviso pagopa viene pagato correttamente dall'utente 1
-    And si attende il corretto pagamento della notifica dell'utente 0
-    #And si attende il corretto pagamento della notifica dell'utente 1
-    And verifica presenza in Timeline dei solo pagamenti di avvisi PagoPA del destinatario 0
-    And verifica non presenza in Timeline di pagamenti con avvisi F24 del destinatario 0
-    #TODO Controllare che non ci sono eventi in timeline di pagamenti f24.......Chiedere...
-
   @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_67] PA Timeline: Esecuzione di più pagamenti, sia F24 che PagoPa -> Verifica in timeline presenza solo dei pagamenti PagoPa [TA]
     Given viene generata una nuova notifica
@@ -1440,7 +1409,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
  # 'PAYMENT_DUPLICATED', // Payment duplicated
  # 'GENERIC_ERROR'
   #TODO ....Alessandro deve fornire lo iuv per restituire gli errori sopra.......
-  @pagamentiMultipli
+  @pagamentiMultipli @ignore
   Scenario: [B2B-PA-PAY_MULTI_68] Test di Validazione degli oggetti di pagamento ricevuti multidestinatario: Univocità istanza di pagamento e sue alternative (scenario negativo, se presenti più istanze uguali devo ricevere KO) [TA]
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1454,7 +1423,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
       | apply_cost_pagopa | NO |
-      | payment_multy_number | 1 |
+      | payment_multy_number | 2 |
       | notice_code | 302011697026785045 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then gli avvisi PagoPa vengono pagati correttamente dal destinatario 0

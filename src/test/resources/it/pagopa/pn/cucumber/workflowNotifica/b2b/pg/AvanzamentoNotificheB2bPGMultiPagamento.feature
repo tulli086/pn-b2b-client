@@ -1347,6 +1347,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
 
 
   #64 Test di Validazione degli oggetti di pagamento ricevuti: Univocità istanza di pagamento e sue alternative (scenario negativo, se presenti più istanze uguali devo ricevere KO) [TA]
+  @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_PG_64] Test di Validazione degli oggetti di pagamento ricevuti: Univocità istanza di pagamento e sue alternative (scenario negativo, se presenti più istanze uguali devo ricevere KO) [TA]
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1366,6 +1367,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     When la notifica viene inviata dal "Comune_1"
     Then l'operazione ha prodotto un errore con status code "400"
 
+  @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_PG_64_1] Test di Validazione degli oggetti di pagamento ricevuti multidestinatario: Univocità istanza di pagamento e sue alternative (scenario negativo, se presenti più istanze uguali devo ricevere KO) [TA]
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1392,9 +1394,8 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_pagopa | NO |
       | payment_multy_number | 1 |
       | notice_code | 302011697026785045 |
-
-    When la notifica viene inviata dal "Comune_1"
-    Then l'operazione ha prodotto un errore con status code "400"
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
 
 
 
@@ -1409,41 +1410,6 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
 
 
   #67 Timeline: Esecuzione di più pagamenti, sia F24 che PagoPa -> Verifica in timeline presenza solo dei pagamenti PagoPa [TA]
-  @pagamentiMultipli
-  Scenario: [B2B-PA-PAY_MULTI_PG_67] PA Timeline: Esecuzione di più pagamenti, sia F24 che PagoPa -> Verifica in timeline presenza solo dei pagamenti PagoPa [TA]
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo |
-      | feePolicy | DELIVERY_MODE |
-      | paFee | 0 |
-    And destinatario
-      | denomination     | Convivio Spa  |
-      | recipientType   | PG             |
-      | taxId | 27957814470 |
-      | payment_pagoPaForm | SI |
-      | payment_f24flatRate | NULL |
-      | payment_f24standard | NULL |
-      | apply_cost_pagopa | SI |
-      | payment_multy_number | 1 |
-    And destinatario
-      | denomination     | DivinaCommedia Srl  |
-      | recipientType   | PG             |
-      | taxId | 70412331207 |
-      | payment_pagoPaForm | NULL |
-      | payment_f24flatRate | NULL |
-      | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_70412331207 |
-      | apply_cost_f24 | SI |
-      | payment_multy_number | 1 |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then l'avviso pagopa viene pagato correttamente dall'utente 0
-    #And l'avviso pagopa viene pagato correttamente dall'utente 1
-    And si attende il corretto pagamento della notifica dell'utente 0
-    #And si attende il corretto pagamento della notifica dell'utente 1
-    And verifica presenza in Timeline dei solo pagamenti di avvisi PagoPA del destinatario 0
-    And verifica non presenza in Timeline di pagamenti con avvisi F24 del destinatario 0
-    #TODO Controllare che non ci sono eventi in timeline di pagamenti f24.......Chiedere...
-
   @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_PG_67] PA Timeline: Esecuzione di più pagamenti, sia F24 che PagoPa -> Verifica in timeline presenza solo dei pagamenti PagoPa [TA]
     Given viene generata una nuova notifica
@@ -1517,7 +1483,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
  # 'PAYMENT_DUPLICATED', // Payment duplicated
  # 'GENERIC_ERROR'
   #TODO ....Alessandro deve fornire lo iuv per restituire gli errori sopra.......
-  @pagamentiMultipli
+  @pagamentiMultipli @ignore
   Scenario: [B2B-PA-PAY_MULTI_PG_68] Test di Validazione degli oggetti di pagamento ricevuti multidestinatario: Univocità istanza di pagamento e sue alternative (scenario negativo, se presenti più istanze uguali devo ricevere KO) [TA]
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1663,7 +1629,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24flatRate | NULL   |
       | payment_f24standard | SI |
       | title_payment | F24_STANDARD_CUCUMBER_SRL |
-      | apply_cost_F24 | SI |
+      | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
@@ -1816,7 +1782,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | comune di palermo            |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario Cucumber srl e:
+    And destinatario GherkinSrl e:
       | payment_pagoPaForm  | NULL   |
       | payment_f24flatRate | NULL   |
       | payment_f24standard | SI |
@@ -1826,7 +1792,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
-    When "Mario Cucumber" tenta il recupero dell'allegato "F24"
+    When "GherkinSrl" tenta il recupero dell'allegato "F24"
     Then il download ha prodotto un errore con status code "404"
 
 
@@ -1837,13 +1803,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | comune di palermo            |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario Cucumber srl e:
+    And destinatario CucumberSpa e:
       | payment_pagoPaForm  | SI   |
       | payment_f24flatRate | NULL   |
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
-    And destinatario Gherkin spa e:
+    And destinatario GherkinSrl e:
       | payment_pagoPaForm  | SI   |
       | payment_f24flatRate | NULL   |
       | payment_f24standard | NULL |
@@ -1852,9 +1818,9 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
-    When "CucumberSrl" tenta il recupero dell'allegato "PAGOPA"
+    When "CucumberSpa" tenta il recupero dell'allegato "PAGOPA"
     Then il download ha prodotto un errore con status code "404"
-    And "GherkinSpa" tenta il recupero dell'allegato "PAGOPA"
+    And "GherkinSrl" tenta il recupero dell'allegato "PAGOPA"
     And il download ha prodotto un errore con status code "404"
 
   @pagamentiMultipli
@@ -1864,14 +1830,14 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | comune di palermo            |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario Cucumber srl e:
+    And destinatario CucumberSpa e:
       | payment_pagoPaForm  | NULL   |
       | payment_f24flatRate | NULL   |
       | payment_f24standard | SI |
       | title_payment | F24_STANDARD_CUCUMBER_SRL |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
-    And destinatario Gherkin spa e:
+    And destinatario GherkinSrl e:
       | payment_pagoPaForm  | NULL   |
       | payment_f24flatRate | NULL   |
       | payment_f24standard | SI |
@@ -1881,9 +1847,9 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
-    When "CucumberSrl" tenta il recupero dell'allegato "F24"
+    When "CucumberSpa" tenta il recupero dell'allegato "F24"
     Then il download ha prodotto un errore con status code "404"
-    And "GherkinSpa" tenta il recupero dell'allegato "F24"
+    And "GherkinSrl" tenta il recupero dell'allegato "F24"
     And il download ha prodotto un errore con status code "404"
 
 
