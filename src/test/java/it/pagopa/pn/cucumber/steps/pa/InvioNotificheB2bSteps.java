@@ -82,6 +82,7 @@ public class InvioNotificheB2bSteps {
         this.webPaClient = sharedSteps.getWebPaClient();
         this.pnGPDClientImpl = sharedSteps.getPnGPDClientImpl();
         this.pnPaymentInfoClient=sharedSteps.getPnPaymentInfoClientImpl();
+        this.paymentPositionModel=new ArrayList<>();
     }
 
 
@@ -514,8 +515,9 @@ public class InvioNotificheB2bSteps {
         try {
 
             Assertions.assertDoesNotThrow(() -> {
-                 paymentPositionModel.add(pnGPDClientImpl.createPosition(organitationCode, paymentPositionModelSend, null, true));
+                paymentPositionModel.add(pnGPDClientImpl.createPosition(organitationCode, paymentPositionModelSend, null, true));
             });
+
             Assertions.assertNotNull(paymentPositionModel);
             logger.info("Request: " + paymentPositionModel);
         } catch (AssertionFailedError assertionFailedError) {
@@ -541,10 +543,6 @@ public class InvioNotificheB2bSteps {
         String organitationCode=postionUser.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode();
         String noticeCode="3"+postionUser.getPaymentOption().get(0).getIuv();
 
-        //Object messageJson="[{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \""+noticeCode+"\"}]";
-        //Object messageJson="{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \""+noticeCode+"\"}";
-        //Object messageJson="{\"creditorTaxId\": \"77777777777\",\"noticeCode\": \"+noticeCode+"\"}";
-        //logger.info("Messaggio json da allegare: " + messageJson);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -556,7 +554,8 @@ public class InvioNotificheB2bSteps {
             List<Object> messaggioObj = new ArrayList<Object>();
             messaggioObj.add(jsonNode);
 
-        logger.info("Messaggio json da allegare: " + messaggioObj.toString());
+        logger.info("User: " + postionUser);
+        logger.info("Messaggio json da allegare: " + messaggioObj);
 
 
         try {
@@ -567,7 +566,6 @@ public class InvioNotificheB2bSteps {
                 //paymentInfo=pnPaymentInfoClient.getPaymentInfo(organitationCode,noticeCode);
             });
             Assertions.assertNotNull(paymentInfoResponse);
-            //Assertions.assertNotNull(paymentInfo);
 
             //amountGPD=paymentInfo.getAmount();
             //logger.info("Amount: " + amountGPD);
