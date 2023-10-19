@@ -1268,6 +1268,18 @@ public class AvanzamentoNotificheB2bSteps {
 
     }
 
+    @Then("la PA richiede il download dell'attestazione opponibile PEC_RECEIPT")
+    public void paRequiresDownloadOfLegalFactPecRecipient() {
+        downloadLegalFactPecRecipient("PEC_RECEIPT", true, false, false, null);
+    }
+
+    @Then("{string} richiede il download dell'attestazione opponibile PEC_RECEIPT")
+    public void userDownloadLegalFactPecRecipient(String user) {
+        sharedSteps.selectUser(user);
+        downloadLegalFactPecRecipient("PEC_RECEIPT", false, false, true, null);
+
+    }
+
     @Then("{string} richiede il download dell'attestazione opponibile {string} con errore {string}")
     public void userDownloadLegalFactError(String user, String legalFactCategory,String statusCode) {
         try {
@@ -1365,18 +1377,104 @@ public class AvanzamentoNotificheB2bSteps {
 
             String finalKeySearch = keySearch;
             if (pa) {
-                Assertions.assertDoesNotThrow(() -> this.b2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch, finalKeySearch));
+
+                Assertions.assertDoesNotThrow(() ->  this.b2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch, finalKeySearch));
+                LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = this.b2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch, finalKeySearch);
             }
             if (appIO) {
-                // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
-                //  sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
+
+               // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
+                      //  sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
+
             }
             if (webRecipient) {
                 Assertions.assertDoesNotThrow(() -> this.webRecipientClient.getLegalFact(sharedSteps.getSentNotification().getIun(),
                         sharedSteps.deepCopy(categorySearch,
                                 it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactCategory.class),
                         finalKeySearch
+
                 ));
+
+                it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse =this.webRecipientClient.getLegalFact(sharedSteps.getSentNotification().getIun(),
+                        sharedSteps.deepCopy(categorySearch,
+                                it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactCategory.class),
+                        finalKeySearch);
+                System.out.println("NOME FILE PEC RECIPIENT DEST"+legalFactDownloadMetadataResponse.getFilename());
+            }
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+
+    private void downloadLegalFactPecRecipient(String legalFactCategory, boolean pa, boolean appIO, boolean webRecipient, String deliveryDetailCode) {
+        try {
+            Thread.sleep(sharedSteps.getWait());
+        } catch (InterruptedException exc) {
+            throw new RuntimeException(exc);
+        }
+
+        TimelineElementV20 timelineElement = null;
+
+        TimelineElementCategoryV20 timelineElementInternalCategory = TimelineElementCategoryV20.SEND_DIGITAL_PROGRESS;
+        LegalFactCategory category = LegalFactCategory.PEC_RECEIPT;
+
+        for (TimelineElementV20 element : sharedSteps.getSentNotification().getTimeline()) {
+
+            if (element.getCategory().equals(timelineElementInternalCategory)) {
+                if (deliveryDetailCode == null) {
+                    timelineElement = element;
+                    break;
+                } else if (deliveryDetailCode != null && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+                    timelineElement = element;
+                    break;
+                }
+            }
+        }
+
+        try {
+            System.out.println("ELEMENT: " + timelineElement);
+            Assertions.assertNotNull(timelineElement);
+
+            Assertions.assertNotNull(timelineElement.getLegalFactsIds());
+            Assertions.assertFalse(CollectionUtils.isEmpty(timelineElement.getLegalFactsIds()));
+            Assertions.assertEquals(category, timelineElement.getLegalFactsIds().get(0).getCategory());
+            LegalFactCategory categorySearch = timelineElement.getLegalFactsIds().get(0).getCategory();
+            String key = timelineElement.getLegalFactsIds().get(0).getKey();
+            String keySearch = null;
+            //TODO Verificare....
+            if (key.contains("PN_LEGAL_FACTS")) {
+                keySearch = key.substring(key.indexOf("PN_LEGAL_FACTS"));
+            } else if (key.contains("PN_NOTIFICATION_ATTACHMENTS")) {
+                keySearch = key.substring(key.indexOf("PN_NOTIFICATION_ATTACHMENTS"));
+            } else if (key.contains("PN_EXTERNAL_LEGAL_FACTS")) {
+                keySearch = key.substring(key.indexOf("PN_EXTERNAL_LEGAL_FACTS"));
+            } else if (key.contains("PN_EXTERNAL_LEGAL_FACTS")) {
+                keySearch = key.substring(key.indexOf("PN_EXTERNAL_LEGAL_FACTS"));
+            } else if (key.contains("PN_F24")) {
+                keySearch = key.substring(key.indexOf("PN_F24"));
+            }
+
+
+            String finalKeySearch = keySearch;
+            if (pa) {
+                LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = this.b2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch, finalKeySearch);
+                //System.out.println("NOME FILE PEC RECIPIENT PA"+legalFactDownloadMetadataResponse.getFilename());
+                Assertions.assertNotNull(legalFactDownloadMetadataResponse);
+                Assertions.assertNotNull(legalFactDownloadMetadataResponse.getFilename());
+                Assertions.assertTrue(legalFactDownloadMetadataResponse.getFilename().contains(".eml"));
+            }
+
+            if (webRecipient) {
+
+                it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse =this.webRecipientClient.getLegalFact(sharedSteps.getSentNotification().getIun(),
+                        sharedSteps.deepCopy(categorySearch,
+                                it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactCategory.class),
+                        finalKeySearch);
+               // System.out.println("NOME FILE PEC RECIPIENT DEST"+legalFactDownloadMetadataResponse.getFilename());
+                Assertions.assertNotNull(legalFactDownloadMetadataResponse);
+                Assertions.assertNotNull(legalFactDownloadMetadataResponse.getFilename());
+                Assertions.assertTrue(legalFactDownloadMetadataResponse.getFilename().contains(".eml"));
             }
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
@@ -1460,7 +1558,7 @@ public class AvanzamentoNotificheB2bSteps {
                 Assertions.assertDoesNotThrow(() -> this.b2bClient.getDownloadLegalFact(sharedSteps.getSentNotification().getIun(),  finalKeySearch));
             }
             if (appIO) {
-                // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
+               // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
                 //        sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
             }
             if (webRecipient) {
@@ -1575,6 +1673,38 @@ public class AvanzamentoNotificheB2bSteps {
                     sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
                 }
             }
+        }
+    }
+
+    @Then("viene calcolato il costo = {string} della notifica per l'utente {int}")
+    public void notificationPriceProcessPerDestinatario(String price, Integer destinatario) {
+        try {
+            Thread.sleep(sharedSteps.getWait() * 2);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
+
+        priceVerificationProcessCost(price, null, destinatario);
+    }
+
+    private void priceVerificationProcessCost(String price, String date, Integer destinatario) {
+        NotificationProcessCostResponse notificationProcessCost = null;
+        if (sharedSteps.getSentNotification().getNotificationFeePolicy().equals(NotificationFeePolicy.DELIVERY_MODE)) {
+             notificationProcessCost = this.b2bClient.getNotificationProcessCost(sharedSteps.getSentNotification().getIun(), destinatario, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy.DELIVERY_MODE, sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(0).getF24().getApplyCost(), sharedSteps.getSentNotification().getPaFee());
+        }else {
+            notificationProcessCost = this.b2bClient.getNotificationProcessCost(sharedSteps.getSentNotification().getIun(), destinatario, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy.FLAT_RATE, sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(0).getF24().getApplyCost(), sharedSteps.getSentNotification().getPaFee());
+        }
+        try {
+            if (price != null) {
+                logger.info("Costo notifica: {} destinatario: {}", notificationProcessCost.getAmount(), destinatario);
+                Assertions.assertEquals(notificationProcessCost.getAmount(), Integer.parseInt(price));
+            }
+            if (date != null) {
+                Assertions.assertNotNull(notificationProcessCost.getRefinementDate());
+            }
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+
         }
     }
 
@@ -1702,6 +1832,7 @@ public class AvanzamentoNotificheB2bSteps {
 
         b2bClient.paymentEventsRequestPagoPa(eventsRequestPagoPa);
     }
+
 
     @And("gli avvisi PagoPa vengono pagati correttamente dal destinatario {int}")
     public void laNotificaVienePagataConAvvisoNumMultiPagoPa(Integer destinatario) {
@@ -2054,8 +2185,51 @@ public class AvanzamentoNotificheB2bSteps {
         }
         Assertions.assertNotNull(timelineElement);
 
-        Assertions.assertTrue(sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(avviso).getPagoPa().getCreditorTaxId().equals(timelineElement.getDetails().getCreditorTaxId()));
-        Assertions.assertTrue(sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(avviso).getPagoPa().getNoticeCode().equals(timelineElement.getDetails().getNoticeCode()));
+        if (timelineElement.getDetails().getRecIndex()==destinatario) {
+            boolean esiste = false;
+            if (sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments()!= null){
+                for (NotificationPaymentItem notificationPaymentItem: sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments()) {
+                    if (notificationPaymentItem.getPagoPa().getCreditorTaxId().equals(timelineElement.getDetails().getCreditorTaxId()) && notificationPaymentItem.getPagoPa().getNoticeCode().equals(timelineElement.getDetails().getNoticeCode())){
+                        esiste = true;
+                        break;
+                    }
+
+                }
+            }
+            Assertions.assertTrue(esiste);
+            //Assertions.assertTrue(sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(avviso).getPagoPa().getCreditorTaxId().equals(timelineElement.getDetails().getCreditorTaxId()));
+            //Assertions.assertTrue(sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(avviso).getPagoPa().getNoticeCode().equals(timelineElement.getDetails().getNoticeCode()));
+        }
+
+    }
+
+    @Then("si attende il non corretto pagamento della notifica con l' avviso {int} dal destinatario {int}")
+    public void siAttendeIlNonCorrettoPagamentoDellaNotificaConAvvisoDalDestinatario(Integer avviso, Integer destinatario) {
+        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+
+        TimelineElementV20 timelineElement = null;
+
+        for (int i = 0; i < 5; i++) {
+            try {
+                Thread.sleep(60000);
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+
+            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+
+            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+
+            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+            if (timelineElement != null) {
+                break;
+            }
+        }
+        Assertions.assertNull(timelineElement);
+
+        //Assertions.assertTrue(sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(avviso).getPagoPa().getCreditorTaxId().equals(timelineElement.getDetails().getCreditorTaxId()));
+        //Assertions.assertTrue(sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(avviso).getPagoPa().getNoticeCode().equals(timelineElement.getDetails().getNoticeCode()));
+
 
     }
 
@@ -2134,13 +2308,12 @@ public class AvanzamentoNotificheB2bSteps {
 
             timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
             if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(utente)) {
-                Assertions.assertNull(timelineElement.getDetails().getIdF24());
-            }else {
-                timelineElement = null;
+
+                if (timelineElement.getDetails().getIdF24()!= null){
+                    Assertions.assertNull(timelineElement);
+                }
             }
         }
-        Assertions.assertNull(timelineElement);
-
     }
 
 

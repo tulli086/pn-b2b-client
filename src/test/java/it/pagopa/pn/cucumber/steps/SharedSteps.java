@@ -438,7 +438,9 @@ public class SharedSteps {
     @And("viene configurato noticeCodeAlternative diversi a noticeCode")
     public void vieneConfiguratoNoticeCodeAlternativeDiversiNoticeCode() {
         //TODO Controllare...........
+
         // this.notificationRequest.getRecipients().get(0).getPayments().get(0).getPagoPa().setNoticeCodeAlternative(getValue(new HashMap<>(), PAYMENT_NOTICE_CODE_OPTIONAL.key));
+
     }
 
     @And("viene generata una nuova notifica con uguale paProtocolNumber e idempotenceToken {string}")

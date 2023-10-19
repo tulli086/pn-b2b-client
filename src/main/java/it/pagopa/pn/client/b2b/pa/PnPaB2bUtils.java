@@ -94,7 +94,8 @@ public class PnPaB2bUtils {
                         paymentInfo.getF24().setMetadataAttachment(preloadMetadataAttachment(paymentInfo.getF24().getMetadataAttachment()));
                     }
                 }
-                // paymentInfo.setPagoPaForm(preloadAttachment(paymentInfo.getPagoPaForm()));
+
+               // paymentInfo.setPagoPaForm(preloadAttachment(paymentInfo.getPagoPaForm()));
 //                paymentInfo.setF24flatRate(preloadAttachment(paymentInfo.getF24flatRate()));
 //                paymentInfo.setF24standard(preloadAttachment(paymentInfo.getF24standard()));
             }
@@ -103,6 +104,13 @@ public class PnPaB2bUtils {
         log.info("New Notification Request {}", request);
         NewNotificationResponse response = client.sendNewNotification( request );
         log.info("New Notification Request response {}", response);
+        if (response != null)
+        {
+            try {
+                log.info("New Notification\n IUN {}", new String(Base64Utils.decodeFromString(response.getNotificationRequestId())));
+            } catch (Exception e) {
+            }
+        }
         return response;
     }
 
@@ -126,8 +134,18 @@ public class PnPaB2bUtils {
                     paymentInfo.getPagoPa().setAttachment(preloadAttachment(paymentInfo.getPagoPa().getAttachment()));
                     paymentInfo.getF24().setMetadataAttachment(preloadMetadataAttachment(paymentInfo.getF24().getMetadataAttachment()));
                 }
+
             }
         }
+
+        //for (NotificationRecipientV21 recipient : request.getRecipients()) {
+            /**
+            NotificationPaymentInfo paymentInfo = recipient.getPayment();
+            if(paymentInfo != null){
+                paymentInfo.setPagoPaForm(preloadAttachment(paymentInfo.getPagoPaForm()));
+            }
+             **/
+        //}
 
         //for (NotificationRecipientV21 recipient : request.getRecipients()) {
         /**
@@ -164,8 +182,18 @@ public class PnPaB2bUtils {
                     paymentInfo.getPagoPa().setAttachment(preloadAttachment(paymentInfo.getPagoPa().getAttachment()));
                     paymentInfo.getF24().setMetadataAttachment(preloadMetadataAttachment(paymentInfo.getF24().getMetadataAttachment()));
                 }
+
             }
         }
+
+       // for (NotificationRecipientV21 recipient : request.getRecipients()) {
+            /**
+            NotificationPaymentInfo paymentInfo = recipient.getPayment();
+            if(paymentInfo != null){
+                paymentInfo.setPagoPaForm(preloadAttachment(paymentInfo.getPagoPaForm()));
+            }
+             **/
+        //}
 
         // for (NotificationRecipientV21 recipient : request.getRecipients()) {
         /**
@@ -210,8 +238,20 @@ public class PnPaB2bUtils {
                     paymentInfo.getPagoPa().setAttachment(preloadAttachment(paymentInfo.getPagoPa().getAttachment()));
                     paymentInfo.getF24().setMetadataAttachment(preloadMetadataAttachment(paymentInfo.getF24().getMetadataAttachment()));
                 }
+
             }
         }
+
+       // for (NotificationRecipientV21 recipient : request.getRecipients()) {
+            /**
+            NotificationPaymentInfo paymentInfo = recipient.getPayment();
+            if(paymentInfo != null){
+                paymentInfo.setPagoPaForm(preloadAttachment(paymentInfo.getPagoPaForm()));
+//                paymentInfo.setF24flatRate(preloadAttachment(paymentInfo.getF24flatRate()));
+//                paymentInfo.setF24standard(preloadAttachment(paymentInfo.getF24standard()));
+            }
+             **/
+       // }
 
         // for (NotificationRecipientV21 recipient : request.getRecipients()) {
         /**
@@ -252,6 +292,17 @@ public class PnPaB2bUtils {
             }
         }
 
+       // for (NotificationRecipientV21 recipient : request.getRecipients()) {
+            /**
+            NotificationPaymentInfo paymentInfo = recipient.getPayment();
+            if(paymentInfo != null){
+                paymentInfo.setPagoPaForm(preloadAttachment(paymentInfo.getPagoPaForm()));
+//                paymentInfo.setF24flatRate(preloadAttachment(paymentInfo.getF24flatRate()));
+//                paymentInfo.setF24standard(preloadAttachment(paymentInfo.getF24standard()));
+            }
+             **/
+       // }
+
         // for (NotificationRecipientV21 recipient : request.getRecipients()) {
         /**
          NotificationPaymentInfo paymentInfo = recipient.getPayment();
@@ -286,8 +337,21 @@ public class PnPaB2bUtils {
                     paymentInfo.getPagoPa().setAttachment(preloadAttachment(paymentInfo.getPagoPa().getAttachment()));
                     paymentInfo.getF24().setMetadataAttachment(preloadMetadataAttachment(paymentInfo.getF24().getMetadataAttachment()));
                 }
+
             }
         }
+
+
+    //    for (NotificationRecipientV21 recipient : request.getRecipients()) {
+            /**
+            NotificationPaymentInfo paymentInfo = recipient.getPayment();
+            if(paymentInfo != null){
+                paymentInfo.setPagoPaForm(preloadAttachment(paymentInfo.getPagoPaForm()));
+//                paymentInfo.setF24flatRate(preloadAttachment(paymentInfo.getF24flatRate()));
+//                paymentInfo.setF24standard(preloadAttachment(paymentInfo.getF24standard()));
+            }
+             **/
+       // }
 
 
         //    for (NotificationRecipientV21 recipient : request.getRecipients()) {
@@ -328,6 +392,17 @@ public class PnPaB2bUtils {
                 }
             }
         }
+
+      //  for (NotificationRecipientV21 recipient : request.getRecipients()) {
+            /**
+            NotificationPaymentInfo paymentInfo = recipient.getPayment();
+            if(paymentInfo != null){
+                paymentInfo.setPagoPaForm(preloadAttachment(paymentInfo.getPagoPaForm()));
+//                paymentInfo.setF24flatRate(preloadAttachment(paymentInfo.getF24flatRate()));
+//                paymentInfo.setF24standard(preloadAttachment(paymentInfo.getF24standard()));
+            }
+             **/
+       // }
 
         //  for (NotificationRecipientV21 recipient : request.getRecipients()) {
         /**
@@ -436,9 +511,15 @@ public class PnPaB2bUtils {
                     fsn.getRecipients().get(i).getPayments().get(0).getF24() != null){
                 NotificationAttachmentDownloadMetadataResponse resp;
 
-                resp = client.getSentNotificationAttachment(fsn.getIun(), i, "F24" ,0);
-
-                checkAttachment( resp );
+               resp = client.getSentNotificationAttachment(fsn.getIun(), i, "F24" ,0);
+                if (resp!= null && resp.getRetryAfter()!= null && resp.getRetryAfter()>0){
+                    try {
+                        Thread.sleep(resp.getRetryAfter()*3);
+                        resp = client.getSentNotificationAttachment(fsn.getIun(), i, "F24" ,0);
+                    } catch (InterruptedException exc) {
+                        throw new RuntimeException(exc);
+                    }
+                }
             }
 
             i++;
@@ -763,14 +844,14 @@ public class PnPaB2bUtils {
         for (NotificationRecipientV21 recipient : fsn.getRecipients()) {
 
             /**
-             if(fsn.getRecipients().get(i).getPayment() != null &&
-             fsn.getRecipients().get(i).getPayment().getPagoPaForm() != null){
-             NotificationAttachmentDownloadMetadataResponse resp;
+            if(fsn.getRecipients().get(i).getPayment() != null &&
+                    fsn.getRecipients().get(i).getPayment().getPagoPaForm() != null){
+                NotificationAttachmentDownloadMetadataResponse resp;
 
-             resp = client.getSentNotificationAttachment(fsn.getIun(), i, "PAGOPA");
-             checkAttachment( resp );
-             }
-             i++;
+                resp = client.getSentNotificationAttachment(fsn.getIun(), i, "PAGOPA");
+                checkAttachment( resp );
+            }
+            i++;
              **/
 
         }

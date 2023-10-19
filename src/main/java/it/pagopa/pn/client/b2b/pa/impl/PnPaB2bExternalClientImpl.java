@@ -193,7 +193,6 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
     }
 
 
-
     public List<PreLoadResponse> presignedUploadRequest(List<PreLoadRequest> preLoadRequest) {
         refreshTokenInteropClient();
         return newNotificationApi.presignedUploadRequest( preLoadRequest );
