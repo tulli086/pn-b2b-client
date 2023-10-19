@@ -224,9 +224,9 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then viene cancellata la posizione debitoria di "Mario Gherkin"
 
 
-    #da vedere come fare il multipagamento
-  Scenario: [B2B_ASYNC_13] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“
+  Scenario: [B2B_ASYNC_13] Notifica mono PF Multipagamento-Verifica amount GPD notifica async dopo pagamento di un solo pagamento poi annullata la notifica il secondo pagamento amount non azzerrato
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -236,14 +236,49 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And destinatario
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
-      | payment_creditorTaxId | 77777777777 |
+      | payment_creditorTaxId | 77777777777        |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 2                  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    When la notifica può essere annullata dal sistema tramite codice IUN
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
-    Then lettura amount posizione debitoria di "Mario Gherkin"
-    And  viene effettuato il controllo del amount di GPD = "0"
-    And viene verificato il costo = "0" della notifica
-    Then viene cancellata la posizione debitoria di "Mario Gherkin"
+    Then l'avviso pagopa 0 viene pagato correttamente dall'utente 0
+    And viene cancellata la posizione debitoria del pagamento 0
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" e successivamente annullata
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
+    And lettura amount posizione debitoria per pagamento 1
+    And viene effettuato il controllo del amount di GPD = "110"
+    And viene verificato il costo = "110" della notifica
+    Then viene cancellata la posizione debitoria del pagamento 1
+
+
+  Scenario: [B2B_ASYNC_14] Notifica mono PF Multipagamento-Verifica amount GPD notifica async dopo pagamento tutti i pagamenti poi annullata la notifica il secondo pagamento amount non azzerrato
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | 10                         |
+    And destinatario
+      | denomination          | Cristoforo Colombo |
+      | taxId                 | CLMCST42R12D969Z   |
+      | payment_creditorTaxId | 77777777777        |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 2                  |
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then l'avviso pagopa 0 viene pagato correttamente dall'utente 0
+    And l'avviso pagopa 1 viene pagato correttamente dall'utente 0
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" e successivamente annullata
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
+    And viene verificato il costo = "110" della notifica
+    And viene cancellata la posizione debitoria del pagamento 0
+    Then viene cancellata la posizione debitoria del pagamento 1
 
 
   Scenario: [B2B_ASYNC_15] Notifica mono PG-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“
@@ -331,6 +366,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | physicalAddress_address | via@FAIL-Discovery_AR |
       | payment_creditorTaxId   | 77777777777           |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     Then lettura amount posizione debitoria di "Mario Gherkin"
     #And  viene effettuato il confronto del amount del GPD con quello della notifica
     And viene effettuato il controllo del amount di GPD = "210"
@@ -386,10 +422,10 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | physicalAddress_address | Via@ok_RS    |
       | payment_creditorTaxId   | 77777777777  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And viene aggiunto il costo della notifica totale del utente 0
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
-    Then  lettura amount posizione debitoria di "Mario Gherkin"
-    And viene effettuato il controllo del amount di GPD = "210"
-    And viene verificato il costo = "210" della notifica
+    Then lettura amount posizione debitoria di "Cristoforo Colombo"
+    And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_SIMPLE_REGISTERED_LETTER" del utente 0
     Then viene cancellata la posizione debitoria di "Mario Gherkin"
 
 
@@ -408,10 +444,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | physicalAddress_address | Via@ok_RS    |
       | payment_creditorTaxId   | 77777777777  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    And la notifica viene inviata tramite api b2b
+    And viene aggiunto il costo della notifica totale del utente 0
+    Then viene effettuato il controllo del cambiamento del amount nella timeline "REQUEST_ACCEPTED" del utente 0
     Then lettura amount posizione debitoria di "Mario Gherkin"
-    And viene effettuato il controllo del amount di GPD = "210"
-    And viene verificato il costo = "210" della notifica
+    And viene effettuato il controllo del amount di GPD = "110"
+    And viene verificato il costo = "110" della notifica
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And  lettura amount posizione debitoria di "Mario Gherkin"
     And viene effettuato il controllo del amount di GPD = "310"
