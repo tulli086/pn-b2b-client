@@ -654,7 +654,7 @@
                     </goals>
                     <phase>process-resources</phase>
                     <configuration>
-                        <inputSpec>https://raw.githubusercontent.com/pagopa/pn-external-registries/develop/docs/openapi/pn-payment-info-external-v1.yaml</inputSpec>
+                        <inputSpec>https://raw.githubusercontent.com/pagopa/pn-external-registries/9aba1b03d8d0c9d0dd53bf3cd49eab2f39d62717/docs/openapi/pn-payment-info-external-v1.yaml</inputSpec>
                         <generatorName>java</generatorName>
                         <library>resttemplate</library>
                         <generateApiTests>false</generateApiTests>

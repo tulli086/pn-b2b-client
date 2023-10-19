@@ -17,6 +17,8 @@ import it.pagopa.pn.client.b2b.pa.testclient.PnGPDClientImpl;
 import it.pagopa.pn.client.b2b.pa.testclient.PnPaymentInfoClientImpl;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.*;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.PaymentInfo;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.PaymentInfoRequest;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.PaymentInfoV21;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.DataTest;
@@ -60,7 +62,7 @@ public class InvioNotificheB2bSteps {
     private final PnPaymentInfoClientImpl pnPaymentInfoClient;
     private List<PaymentPositionModel> paymentPositionModel;
     private PaymentPositionModelBaseResponse paymentPositionModelBaseResponse;
-    private List<Object> paymentInfoResponse;
+    private List<PaymentInfoV21> paymentInfoResponse;
     private PaymentInfo paymentInfo;
     private List<Object> paymentInfoV21;
     private String DeleteGDPresponse;
@@ -540,41 +542,32 @@ public class InvioNotificheB2bSteps {
             }
         }
 
-        String organitationCode=postionUser.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode();
-        String noticeCode="3"+postionUser.getPaymentOption().get(0).getIuv();
+List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoRequest>();
 
+        PaymentInfoRequest paymentInfoRequest = new PaymentInfoRequest()
+                .creditorTaxId(postionUser.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode())
+                .noticeCode("3"+postionUser.getPaymentOption().get(0).getIuv());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        ObjectNode jsonNode = objectMapper.createObjectNode();
-        jsonNode.put("creditorTaxId", organitationCode);
-        jsonNode.put("noticeCode", noticeCode);
-
-
-            List<Object> messaggioObj = new ArrayList<Object>();
-            messaggioObj.add(jsonNode);
+        paymentInfoRequestList.add(paymentInfoRequest);
 
         logger.info("User: " + postionUser);
-        logger.info("Messaggio json da allegare: " + messaggioObj);
+        logger.info("Messaggio json da allegare: " + paymentInfoRequest);
 
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                paymentInfoResponse=pnPaymentInfoClient.getPaymentInfoV21(messaggioObj);
+                paymentInfoResponse=pnPaymentInfoClient.getPaymentInfoV21(paymentInfoRequestList);
                 logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
-                //paymentInfoV21.get(0).toString();
-                //paymentInfo=pnPaymentInfoClient.getPaymentInfo(organitationCode,noticeCode);
             });
             Assertions.assertNotNull(paymentInfoResponse);
 
-            //amountGPD=paymentInfo.getAmount();
-            //logger.info("Amount: " + amountGPD);
-
+            amountGPD=paymentInfoResponse.get(0).getAmount();
+            Assertions.assertNotNull(amountGPD);
 
         } catch (AssertionFailedError assertionFailedError) {
 
             String message = assertionFailedError.getMessage() +
-                    "{la posizione debitoria " + (paymentInfo == null ? "NULL" : paymentInfo.toString()) + " }";
+                    "{la posizione debitoria " + (paymentInfoResponse == null ? "NULL" : paymentInfoResponse.toString()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
 
         }
@@ -583,8 +576,6 @@ public class InvioNotificheB2bSteps {
     @And("viene cancellata la posizione debitoria di {string}")
     public void vieneCancellataLaPosizioneDebitoria(String user) {
 
-
-        PaymentPositionModel postionUser = new PaymentPositionModel();
 
         try {
 
@@ -633,6 +624,22 @@ public class InvioNotificheB2bSteps {
         }
     }
 
+    @And("viene effettuato il controllo del cambiamento del amount nella timeline {string}")
+    public void vieneEffettuatoIlControlloDelCambiamentoDelAmount(String timelineEventCategory,@Transpose DataTest dataFromTest) {
+        TimelineElementV20 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,dataFromTest);
+
+
+        try {
+            Assertions.assertNotNull(timelineElement.getDetails().getAnalogCost());
+            Assertions.assertEquals(amountGPD,timelineElement.getDetails().getAnalogCost());
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentPositionModelBaseResponse == null ? "NULL" : paymentPositionModelBaseResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
 
 
 }
