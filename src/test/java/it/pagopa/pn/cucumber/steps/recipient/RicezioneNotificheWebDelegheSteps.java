@@ -10,7 +10,7 @@ import it.pagopa.pn.client.b2b.pa.testclient.IPnWebMandateClient;
 import it.pagopa.pn.client.b2b.pa.testclient.IPnWebRecipientClient;
 import it.pagopa.pn.client.b2b.pa.testclient.SettableBearerToken;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalMandate.model.*;
-import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.FullReceivedNotification;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.FullReceivedNotificationV21;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.apache.commons.lang.time.DateUtils;
@@ -372,18 +372,35 @@ public class RicezioneNotificheWebDelegheSteps {
 
     @Then("l'allegato {string} può essere correttamente recuperato da {string} con delega")
     public void attachmentCanBeCorrectlyRetrievedFromWithMandate(String attachmentName, String recipient) {
+        //TODO Modificare attachmentIdx al momento e 0...............
         sharedSteps.selectUser(recipient);
         NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
                 sharedSteps.getSentNotification().getIun(),
                 attachmentName,
-                UUID.fromString(mandateToSearch.getMandateId()));
-        AtomicReference<String> Sha256 = new AtomicReference<>("");
-        Assertions.assertDoesNotThrow(() -> {
-            byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                    b2bUtils.downloadFile(downloadResponse.getUrl()));
-            Sha256.set(b2bUtils.computeSha256(new ByteArrayInputStream(bytes)));
-        });
-        Assertions.assertEquals(Sha256.get(), downloadResponse.getSha256());
+                UUID.fromString(mandateToSearch.getMandateId()),0);
+
+        if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
+            try {
+                Thread.sleep(downloadResponse.getRetryAfter()*3);
+                 downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
+                        sharedSteps.getSentNotification().getIun(),
+                        attachmentName,
+                        UUID.fromString(mandateToSearch.getMandateId()),0);
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+        }
+        if(!"F24".equalsIgnoreCase(attachmentName)){
+            AtomicReference<String> Sha256 = new AtomicReference<>("");
+            NotificationAttachmentDownloadMetadataResponse finalDownloadResponse = downloadResponse;
+            Assertions.assertDoesNotThrow(() -> {
+                byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                        b2bUtils.downloadFile(finalDownloadResponse.getUrl()));
+                Sha256.set(b2bUtils.computeSha256(new ByteArrayInputStream(bytes)));
+            });
+            Assertions.assertEquals(Sha256.get(), downloadResponse.getSha256());
+        }
+
     }
 
     @And("{string} revoca la delega a {string}")
@@ -435,7 +452,7 @@ public class RicezioneNotificheWebDelegheSteps {
         sharedSteps.selectUser(recipient);
         HttpClientErrorException httpClientErrorException = null;
         try {
-            FullReceivedNotification receivedNotification =
+            FullReceivedNotificationV21 receivedNotification =
                     webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), mandateToSearch.getMandateId());
         } catch (HttpClientErrorException e) {
             httpClientErrorException = e;

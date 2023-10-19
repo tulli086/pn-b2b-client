@@ -70,7 +70,7 @@ public class RicezioneNotificheWebSteps {
     @Then("la notifica non può essere correttamente recuperata da {string}")
     public void notificationCanNotBeCorrectlyReadby(String recipient) {
         sharedSteps.selectUser(recipient);
-        FullReceivedNotification fullNotification = webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
+        FullReceivedNotificationV21 fullNotification = webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
         Assertions.assertNull(fullNotification);
 
     }
@@ -109,18 +109,36 @@ public class RicezioneNotificheWebSteps {
 
     @Then("l'allegato {string} può essere correttamente recuperato da {string}")
     public void attachmentCanBeCorrectlyRetrievedBy(String attachmentName, String recipient) {
+        //TODO Modificare
         sharedSteps.selectUser(recipient);
         NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
                 sharedSteps.getSentNotification().getIun(),
                 attachmentName,
-                null);
-        AtomicReference<String> Sha256 = new AtomicReference<>("");
-        Assertions.assertDoesNotThrow(() -> {
-            byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                    b2bUtils.downloadFile(downloadResponse.getUrl()));
-            Sha256.set(b2bUtils.computeSha256(new ByteArrayInputStream(bytes)));
-        });
-        Assertions.assertEquals(Sha256.get(), downloadResponse.getSha256());
+                null,0);
+
+        if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
+            try {
+                Thread.sleep(downloadResponse.getRetryAfter()*3);
+                 downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
+                        sharedSteps.getSentNotification().getIun(),
+                        attachmentName,
+                        null,0);
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+        }
+
+        if (!"F24".equalsIgnoreCase(attachmentName)){
+            AtomicReference<String> Sha256 = new AtomicReference<>("");
+            NotificationAttachmentDownloadMetadataResponse finalDownloadResponse = downloadResponse;
+            Assertions.assertDoesNotThrow(() -> {
+                byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                        b2bUtils.downloadFile(finalDownloadResponse.getUrl()));
+                Sha256.set(b2bUtils.computeSha256(new ByteArrayInputStream(bytes)));
+            });
+            Assertions.assertEquals(Sha256.get(), downloadResponse.getSha256());
+        }
+
     }
 
     @And("{string} tenta il recupero dell'allegato {string}")
@@ -128,10 +146,23 @@ public class RicezioneNotificheWebSteps {
         this.notificationError = null;
         sharedSteps.selectUser(recipient);
         try {
-            webRecipientClient.getReceivedNotificationAttachment(
+            NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
                     sharedSteps.getSentNotification().getIun(),
                     attachmentName,
-                    null);
+                    null, 0);
+
+
+            if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
+                try {
+                    Thread.sleep(downloadResponse.getRetryAfter()*3);
+                    downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
+                            sharedSteps.getSentNotification().getIun(),
+                            attachmentName,
+                            null,0);
+                } catch (InterruptedException exc) {
+                    throw new RuntimeException(exc);
+                }
+            }
         } catch (HttpStatusCodeException e) {
             this.notificationError = e;
         }
@@ -142,10 +173,22 @@ public class RicezioneNotificheWebSteps {
         this.notificationError = null;
         sharedSteps.selectUser(recipient);
         try {
-            webRecipientClient.getReceivedNotificationAttachment(
+            NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
                     sharedSteps.getSentNotification().getIun(),
                     attachmentName,
-                    null);
+                    null, 0);
+
+            if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
+                try {
+                    Thread.sleep(downloadResponse.getRetryAfter()*3);
+                    downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
+                            sharedSteps.getSentNotification().getIun(),
+                            attachmentName,
+                            null,0);
+                } catch (InterruptedException exc) {
+                    throw new RuntimeException(exc);
+                }
+            }
         } catch (HttpStatusCodeException e) {
             this.notificationError = e;
         }
@@ -155,6 +198,11 @@ public class RicezioneNotificheWebSteps {
     public void operationProducedErrorWithStatusCode(String statusCode) {
         Assertions.assertTrue((this.notificationError != null) &&
                 (this.notificationError.getStatusCode().toString().substring(0, 3).equals(statusCode)));
+    }
+
+    @Then("(il download)(il recupero) non ha prodotto errori")
+    public void operationProducedErrorWithStatusCode() {
+        Assertions.assertTrue((this.notificationError == null) );
     }
 
 
