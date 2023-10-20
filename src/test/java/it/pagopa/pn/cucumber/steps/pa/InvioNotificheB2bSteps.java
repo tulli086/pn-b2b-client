@@ -705,7 +705,6 @@ public class InvioNotificheB2bSteps {
                                 .iban("IT30N0103076271000001823603")));
 
         logger.info("Request: " + paymentPositionModelSend.toString());
-        amountNotifica.add(Integer.parseInt(amount));
         try {
 
             Assertions.assertDoesNotThrow(() -> {
@@ -861,7 +860,24 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
 
         try {
 
-            Assertions.assertEquals(amountGPD,amount);
+            Assertions.assertEquals(amountGPD,Integer.parseInt(amount));
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentPositionModelBaseResponse == null ? "NULL" : paymentPositionModelBaseResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
+
+    @And("viene effettuato il controllo del amount di GPD con amount notifica del utente {int}")
+    public void vieneEffettuatoIlControlloDelAmountDiGPDConAmountNotifica(Integer user) {
+
+        try {
+
+            Assertions.assertEquals(amountGPD,amountNotifica.get(user));
 
         } catch (AssertionFailedError assertionFailedError) {
 
