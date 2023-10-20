@@ -622,7 +622,7 @@
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>https://raw.githubusercontent.com/pagopa/pagopa-api/25bb06dea8f8481e48617855e918fbb923afce8a/openapi/gpd.yaml</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pagopa-api/develop/openapi/gpd.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
                             <generateApiTests>false</generateApiTests>
