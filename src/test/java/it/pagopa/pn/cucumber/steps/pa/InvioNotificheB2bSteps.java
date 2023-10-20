@@ -64,7 +64,6 @@ public class InvioNotificheB2bSteps {
     private PaymentPositionModelBaseResponse paymentPositionModelBaseResponse;
     private List<PaymentInfoV21> paymentInfoResponse;
     private PaymentInfo paymentInfo;
-    private List<Object> paymentInfoV21;
     private String DeleteGDPresponse;
     private Integer amountGPD;
     private List<Integer> amountNotifica;
@@ -86,7 +85,8 @@ public class InvioNotificheB2bSteps {
         this.webPaClient = sharedSteps.getWebPaClient();
         this.pnGPDClientImpl = sharedSteps.getPnGPDClientImpl();
         this.pnPaymentInfoClient=sharedSteps.getPnPaymentInfoClientImpl();
-        this.paymentPositionModel=new ArrayList<>();
+        this.paymentPositionModel=new ArrayList<PaymentPositionModel>();
+        this.amountNotifica=new ArrayList<Integer>();
     }
 
 
@@ -705,6 +705,7 @@ public class InvioNotificheB2bSteps {
                                 .iban("IT30N0103076271000001823603")));
 
         logger.info("Request: " + paymentPositionModelSend.toString());
+        amountNotifica.add(0);
         try {
 
             Assertions.assertDoesNotThrow(() -> {
@@ -854,6 +855,31 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
         }
     }
 
+    @And("vengono cancellate le posizioni debitorie")
+    public void vengonoCancellateLaPosizioniDebitorie() {
+
+
+        try {
+
+            for(PaymentPositionModel paymentPositionModelUser :paymentPositionModel) {
+                Assertions.assertDoesNotThrow(() -> {
+                    DeleteGDPresponse = pnGPDClientImpl.deletePosition(paymentPositionModelUser.getPaymentOption().get(0).getTransfer().get(0).getOrganizationFiscalCode(), paymentPositionModelUser.getIupd(), null);
+                });
+            }
+
+            Assertions.assertNotNull(DeleteGDPresponse);
+            logger.info("Risposta evento cancellazione: " + DeleteGDPresponse);
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (DeleteGDPresponse == null ? "NULL" : DeleteGDPresponse) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
+
 
     @And("viene effettuato il controllo del amount di GPD = {string}")
     public void vieneEffettuatoIlControlloDelAmountDiGPD(String amount) {
@@ -872,7 +898,7 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
     }
 
 
-    @And("viene effettuato il controllo del amount di GPD con amount notifica del utente {int}")
+    @And("viene effettuato il controllo del amount di GPD con amount notifica del (utente)(pagamento) {int}")
     public void vieneEffettuatoIlControlloDelAmountDiGPDConAmountNotifica(Integer user) {
 
         try {
@@ -888,7 +914,7 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
         }
     }
 
-    @Then("viene effettuato il controllo del cambiamento del amount nella timeline {string} del utente {int}")
+    @Then("viene effettuato il controllo del cambiamento del amount nella timeline {string} del (utente)(pagamento) {int}")
     public void vieneEffettuatoIlControlloDelCambiamentoDelAmount(String timelineEventCategory,@Transpose DataTest dataFromTest,Integer user) {
         TimelineElementV20 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,dataFromTest);
 
@@ -913,11 +939,32 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
 
         try {
 
-            Assertions.assertDoesNotThrow(() -> {
-                amountNotifica.set(user, sharedSteps.getSentNotification().getAmount() + sharedSteps.getSentNotification().getPaFee());
-            });
-
+            for(int i=0;i<amountNotifica.size();i++) {
+                Assertions.assertDoesNotThrow(() -> {
+                    amountNotifica.set(user, sharedSteps.getSentNotification().getAmount() + sharedSteps.getSentNotification().getPaFee());
+                });
+            }
             Assertions.assertNotNull(amountNotifica.get(user));
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentPositionModelBaseResponse == null ? "NULL" : paymentPositionModelBaseResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
+    @And("viene aggiunto il costo della notifica totale")
+    public void vieneAggiuntoIlCostoDellaNotificaTotale(Integer user) {
+
+        try {
+
+            for(int i=0;i<amountNotifica.size();i++) {
+                    amountNotifica.set(i, sharedSteps.getSentNotification().getAmount() + sharedSteps.getSentNotification().getPaFee());
+            }
+
+            Assertions.assertNotNull(amountNotifica);
 
         } catch (AssertionFailedError assertionFailedError) {
 

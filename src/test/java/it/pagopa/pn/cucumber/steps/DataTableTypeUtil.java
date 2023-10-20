@@ -45,10 +45,10 @@ public class DataTableTypeUtil {
 
                 .paFee(getValue(data, PA_FEE.key) == null ?  null : Integer.parseInt(getValue(data, PA_FEE.key)))
                 .pagoPaIntMode(
-                        (getValue(data,PAGOPAINTMODE.key) == null? null :
-                                (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("SYNC")?
-                                        NewNotificationRequestV21.PagoPaIntModeEnum.SYNC:
-                                        NewNotificationRequestV21.PagoPaIntModeEnum.ASYNC
+                        (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("SYNC")?
+                                NewNotificationRequestV21.PagoPaIntModeEnum.SYNC :
+                                (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("ASYNC")?
+                                        NewNotificationRequestV21.PagoPaIntModeEnum.ASYNC:null
         )))
 
 
