@@ -74,8 +74,44 @@ public class InvioNotificheB2bSteps {
     public void notificationCanBeRetrievedWithIUN() {
         AtomicReference<FullSentNotificationV21> notificationByIun = new AtomicReference<>();
         try {
+            if (sharedSteps.getSentNotification()!= null) {
+
+                Assertions.assertDoesNotThrow(() ->
+                        notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotification().getIun()))
+                );
+                Assertions.assertNotNull(notificationByIun.get());
+            } else if (sharedSteps.getSentNotificationV1()!= null) {
+                Assertions.assertDoesNotThrow(() ->
+                        notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotificationV1().getIun()))
+                );
+                Assertions.assertNotNull(notificationByIun.get());
+            }else {
+                Assertions.assertNotNull(notificationByIun.get());
+            }
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+    @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1")
+    public void notificationCanBeRetrievedWithIUNV1() {
+        AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification> notificationByIun = new AtomicReference<>();
+        try {
             Assertions.assertDoesNotThrow(() ->
-                    notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotification().getIun()))
+                    notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotification().getIun()))
+            );
+            Assertions.assertNotNull(notificationByIun.get());
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+    @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V20")
+    public void notificationCanBeRetrievedWithIUNV20() {
+        AtomicReference<FullSentNotificationV20> notificationByIun = new AtomicReference<>();
+        try {
+            Assertions.assertDoesNotThrow(() ->
+                    notificationByIun.set(b2bUtils.getNotificationByIunV20(sharedSteps.getSentNotification().getIun()))
             );
             Assertions.assertNotNull(notificationByIun.get());
         } catch (AssertionFailedError assertionFailedError) {
@@ -527,6 +563,11 @@ public class InvioNotificheB2bSteps {
     @Then("si verifica la corretta acquisizione della notifica")
     public void correctAcquisitionNotification() {
         Assertions.assertDoesNotThrow(() -> b2bUtils.verifyNotification(sharedSteps.getSentNotification()));
+    }
+
+    @Then("si verifica la corretta acquisizione della notifica V1")
+    public void correctAcquisitionNotificationV1() {
+        Assertions.assertDoesNotThrow(() -> b2bUtils.verifyNotificationV1(sharedSteps.getSentNotificationV1()));
     }
 
     @Then("si verifica la corretta acquisizione della notifica con verifica sha256 del allegato di pagamento {string}")
