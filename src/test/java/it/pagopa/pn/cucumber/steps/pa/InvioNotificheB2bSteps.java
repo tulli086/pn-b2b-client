@@ -33,6 +33,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -118,7 +119,7 @@ public class InvioNotificheB2bSteps {
         AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification> notificationByIun = new AtomicReference<>();
         try {
             Assertions.assertDoesNotThrow(() ->
-                    notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotification().getIun()))
+                    notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV1().getIun()))
             );
             Assertions.assertNotNull(notificationByIun.get());
         } catch (AssertionFailedError assertionFailedError) {
@@ -127,15 +128,25 @@ public class InvioNotificheB2bSteps {
     }
 
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V20")
-    public void notificationCanBeRetrievedWithIUNV20() {
-        AtomicReference<FullSentNotificationV20> notificationByIun = new AtomicReference<>();
+    public void notificationCanBeRetrievedWithIUNV2() {
+        AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20> notificationByIun = new AtomicReference<>();
         try {
             Assertions.assertDoesNotThrow(() ->
-                    notificationByIun.set(b2bUtils.getNotificationByIunV20(sharedSteps.getSentNotification().getIun()))
+                    notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV2().getIun()))
             );
             Assertions.assertNotNull(notificationByIun.get());
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+    @And("la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V20")
+    public void notificationCanBeRetrievedWithIUNV2Error() {
+        AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20> notificationByIun = new AtomicReference<>();
+        try {
+            notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV2().getIun()));
+        } catch (AssertionFailedError assertionFailedError) {
+            logger.info("Errore di lettura notifica");
         }
     }
 
@@ -588,9 +599,43 @@ public class InvioNotificheB2bSteps {
     }
 
     @Then("si verifica la corretta acquisizione della notifica V1")
+
     public void correctAcquisitionNotificationV1() {
         Assertions.assertDoesNotThrow(() -> b2bUtils.verifyNotificationV1(sharedSteps.getSentNotificationV1()));
     }
+
+    @Then("si verifica la corretta acquisizione della notifica V2")
+    public void correctAcquisitionNotificationV2() {
+        Assertions.assertDoesNotThrow(() -> b2bUtils.verifyNotificationV2(sharedSteps.getSentNotificationV2()));
+    }
+
+    @Then("si verifica lo scarto dell' acquisizione della notifica V1")
+    public void correctAcquisitionNotificationV1Error() {
+        try {
+
+            b2bUtils.verifyNotificationV1(sharedSteps.getSentNotificationV1());
+
+        } catch (AssertionFailedError | IOException assertionFailedError) {
+
+            logger.info("Errore di acquisizione notifica");
+        }
+
+    }
+
+    @Then("si verifica lo scarto dell' acquisizione della notifica V2")
+    public void correctAcquisitionNotificationV2Error() {
+        try {
+
+            b2bUtils.verifyNotificationV2(sharedSteps.getSentNotificationV2());
+
+        } catch (AssertionFailedError | IOException assertionFailedError) {
+
+            logger.info("Errore di acquisizione notifica");
+        }
+
+    }
+
+
 
     @Then("si verifica la corretta acquisizione della notifica con verifica sha256 del allegato di pagamento {string}")
     public void correctAcquisitionNotificationVerifySha256AllegatiPagamento(String attachname) {

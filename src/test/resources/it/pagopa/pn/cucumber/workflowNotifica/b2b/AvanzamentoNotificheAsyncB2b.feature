@@ -64,7 +64,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-    Then viene cancellata la posizione debitoria
+    Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
 
   Scenario: [B2B_ASYNC_5] Notifica mono PF-Senza verifica amount GPD per notifica ASYNC e campo paFee non popolato - Refused
@@ -726,7 +726,44 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
     Then vengono cancellate le posizioni debitorie
 
-  Scenario: [B2B_ASYNC_30] Notifica mono PF-Verifica scarto notifica se si invia notifica async con v2.1 e si tenta la lettura con la v.1
+  @version
+  Scenario: [B2B_ASYNC_30] Creazione notifica ASYNC con V1 - Errore
+    Given viene generata una nuova notifica V1
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | 10                          |
+    And destinatario Mario Cucumber V1
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED V1
+    Then si verifica lo scarto dell' acquisizione della notifica V1
+
+  @version
+  Scenario: [B2B_ASYNC_31] Creazione notifica ASYNC con V2 - Errore
+    Given viene generata una nuova notifica V2
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | 10                          |
+    And destinatario Mario Cucumber V2
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED V2
+    Then si verifica lo scarto dell' acquisizione della notifica V1
+
+  @version
+  Scenario: [B2B_ASYNC_32] Creazione notifica ASYNC con V2.1 e recupero tramite codice IUN V2.0 (p.fisica)_scenario positivo
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+      | pagoPaIntMode      | ASYNC                       |
+      | paFee              | 10                          |
+    And destinatario Mario Cucumber
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then si verifica la corretta acquisizione della notifica
+    And la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V20
+
+  Scenario: [B2B_ASYNC_XXX] Notifica mono PF-Verifica scarto notifica se si invia notifica async con v2.1 e si tenta la lettura con la v.1
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     And viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -767,6 +804,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And destinatario Mario Gherkin e:
       | payment_creditorTaxId | 77777777777 |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
+
 
 
   Scenario: [B2B_PROVA_INTEGRAZIONE_GPD] Viene creata una posizione debitoria, interrogata e cancellata
