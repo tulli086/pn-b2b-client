@@ -145,6 +145,12 @@ public class RicezioneNotificheWebSteps {
                 Sha256.set(b2bUtils.computeSha256(new ByteArrayInputStream(bytes)));
             });
             Assertions.assertEquals(Sha256.get(), downloadResponse.getSha256());
+        }else {
+            NotificationAttachmentDownloadMetadataResponse finalDownloadResponse = downloadResponse;
+            Assertions.assertDoesNotThrow(() -> {
+                byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                        b2bUtils.downloadFile(finalDownloadResponse.getUrl()));
+            });
         }
     }
 
