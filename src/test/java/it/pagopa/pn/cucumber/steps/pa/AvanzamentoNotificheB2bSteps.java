@@ -1696,6 +1696,7 @@ public class AvanzamentoNotificheB2bSteps {
                 Assertions.assertDoesNotThrow(() -> this.b2bClient.getDownloadLegalFact(sharedSteps.getSentNotification().getIun(),  finalKeySearch));
             }
             if (appIO) {
+
                // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
                 //        sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
             }
@@ -2348,6 +2349,7 @@ public class AvanzamentoNotificheB2bSteps {
             }
         }
         Assertions.assertNotNull(timelineElement);
+
 
         if (timelineElement.getDetails().getRecIndex()==destinatario) {
             boolean esiste = false;

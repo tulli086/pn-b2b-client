@@ -122,6 +122,7 @@ public class NewNotificationTest {
                 .ref( new NotificationAttachmentBodyRef().key( resourcePath ));
     }
 
+
     private enum RECIPIENT_TYPE_DIGITAL{
         NO_DIGITAL, DIGITAL_OK, DIGITAL_KO
     }
@@ -132,6 +133,7 @@ public class NewNotificationTest {
     }
 
     private NotificationRecipientV21 newRecipient(boolean withapplycost, String prefix, String taxId, String resourcePath, String resourcePathf24, RECIPIENT_TYPE_DIGITAL recipientTypeDigital, RECIPIENT_TYPE_ANALOG recipientTypeAnalog ) {
+
         long epochMillis = System.currentTimeMillis();
 
         NotificationRecipientV21 recipient = new NotificationRecipientV21()
