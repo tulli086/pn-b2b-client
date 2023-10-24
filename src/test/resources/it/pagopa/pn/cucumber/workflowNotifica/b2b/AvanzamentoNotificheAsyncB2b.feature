@@ -748,10 +748,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | paFee              | 10                          |
     And destinatario Mario Cucumber V2
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED V2
-    Then si verifica lo scarto dell' acquisizione della notifica V1
+    Then si verifica lo scarto dell' acquisizione della notifica V2
 
   @version
-  Scenario: [B2B_ASYNC_32] Creazione notifica ASYNC con V2.1 e recupero tramite codice IUN V2.0 (p.fisica)_scenario positivo
+  Scenario: [B2B_ASYNC_32] Creazione notifica ASYNC con V2.1 e recupero tramite codice IUN V2.0 (p.fisica)_scenario negativo
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -762,51 +763,9 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then si verifica la corretta acquisizione della notifica
     And la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V20
-
-  Scenario: [B2B_ASYNC_XXX] Notifica mono PF-Verifica scarto notifica se si invia notifica async con v2.1 e si tenta la lettura con la v.1
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
-    And viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-      | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 10                          |
-    And destinatario
-      | denomination            | Cristoforo Colombo |
-      | taxId                   | CLMCST42R12D969Z   |
-      | digitalDomicile_address | test@fail.it       |
-      | physicalAddress_address | Via@ok_RS          |
-      | payment_pagoPaForm      | SI                 |
-      | payment_f24flatRate     | NULL               |
-      | payment_f24standard     | NULL               |
-      | payment_multy_number    | 1                  |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
     Then vengono cancellate le posizioni debitorie
 
-  Scenario: [B2B_ASYNC_40] Notifica mono PF-Verifica notifica async senza posizione debitoria
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-      | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 100                         |
-    And destinatario Mario Gherkin e:
-      | payment_creditorTaxId | 77777777777 |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
-
-
-  Scenario: [B2B_ASYNC_41] Notifica mono PF-Verifica notifica async senza posizione debitoria
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-      | pagoPaIntMode      | ASYNC                       |
-    And destinatario Mario Gherkin e:
-      | payment_creditorTaxId | 77777777777 |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
-
-
-
+    @testIntegrazione
   Scenario: [B2B_PROVA_INTEGRAZIONE_GPD] Viene creata una posizione debitoria, interrogata e cancellata
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"

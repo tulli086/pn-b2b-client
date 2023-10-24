@@ -11,11 +11,11 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @SelectClasspathResource("it/pagopa/pn/cucumber/workflowNotifica/AvanzamentoNotificheAsyncB2b.feature")
 @ConfigurationParameters({
         @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty"),
-        @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "json:target/cucumber-report-20231003-UAT-ASYNC.json"),
-        @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "html:target/cucumber-report-20231003-UAT-ASYNC.html"),
+        @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "json:target/cucumber-report-XXXXXXXX-ENV-ASYNC.json"),
+        @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "html:target/cucumber-report-XXXXXXXX-ENV-ASYNC.html"),
         @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "it.pagopa.pn.cucumber.steps")
 })
-//@ExcludeTags({"svil","ignore"})
+@ExcludeTags({"testIntegrazione"})
 //@IncludeTags({"testLite"})
 public class CucumberDevIntegrationAsync {
 }
