@@ -25,6 +25,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | senderDenomination | Comune di milano            |
       | feePolicy          | FLAT_RATE                   |
       | pagoPaIntMode      | ASYNC                       |
+      | paFee              | NULL                         |
     And destinatario
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
@@ -32,7 +33,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_pagoPaForm    | SI                 |
       | payment_f24flatRate   | NULL               |
       | payment_f24standard   | NULL               |
-      | apply_cost_pagopa     | SI                 |
+      | apply_cost_pagopa     | NO               |
       | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
@@ -73,8 +74,10 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria alla posizione 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And viene aggiunto il costo della notifica totale
+    And  lettura amount posizione debitoria di "Cristoforo Colombo"
     And l'avviso pagopa viene pagato correttamente
     Then viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -150,7 +153,12 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | paFee              | NULL                        |
     And destinatario Cucumber Society e:
       | payment_creditorTaxId | 77777777777 |
-    When la notifica viene inviata tramite api b2b con sha256 differente dal "Comune_Multi" e si attende che lo stato diventi REFUSED
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
 
   Scenario: [B2B_ASYNC_8] Notifica mono PG-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato

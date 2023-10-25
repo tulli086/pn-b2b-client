@@ -258,7 +258,7 @@ public class SharedSteps {
         //for(int i=0;i<numberofPayment;i++)
         //this.notificationRequest.getRecipients().get(0).getPayments().get(0).getPagoPa().setNoticeCode(getIuvGPD());
         //this.notificationRequest.getRecipients().get(0).getPayments().get(i).getPagoPa().setNoticeCode(getIuvGPD().get(i))
-        this.notificationRequest.getRecipients().get(0).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD().get(posizione));
+        this.notificationRequest.getRecipients().get(0).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD(posizione));
     }
 
 
@@ -1620,14 +1620,14 @@ public class SharedSteps {
         this.iuvGPD.add("3"+iuvGPD);
     }
 
-    public List<String> getIuvGPD() {
-        return this.iuvGPD;
+    public String getIuvGPD(int posizione) {
+        return this.iuvGPD.get(posizione);
     }
 
     @And("al destinatario viene associato lo iuv creato mediante partita debitoria per {string} alla posizione {int}")
     public void destinatarioAddIuvGPD(String denominazione,Integer posizione) {
 
-        this.notificationRequest.getRecipients().get(0).denomination(denominazione).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD().get(posizione));
+        this.notificationRequest.getRecipients().get(0).denomination(denominazione).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD(posizione));
     }
 
 

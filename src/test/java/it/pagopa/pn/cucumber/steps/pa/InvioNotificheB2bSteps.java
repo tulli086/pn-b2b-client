@@ -853,6 +853,7 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
             Assertions.assertNotNull(paymentInfoResponse);
 
             amountGPD=paymentInfoResponse.get(0).getAmount();
+            logger.info("Amount GPD: " + amountGPD);
             Assertions.assertNotNull(amountGPD);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1054,11 +1055,13 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
     }
 
     @And("viene aggiunto il costo della notifica totale")
-    public void vieneAggiuntoIlCostoDellaNotificaTotale(Integer user) {
+    public void vieneAggiuntoIlCostoDellaNotificaTotale() {
 
         try {
 
             for(int i=0;i<amountNotifica.size();i++) {
+
+                    logger.info("Amount+costo base:"+sharedSteps.getSentNotification().getAmount()+ sharedSteps.getSentNotification().getPaFee());
                     amountNotifica.set(i, sharedSteps.getSentNotification().getAmount() + sharedSteps.getSentNotification().getPaFee());
             }
 
