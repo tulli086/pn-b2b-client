@@ -150,6 +150,16 @@ public class InvioNotificheB2bSteps {
         }
     }
 
+    @And("la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V10")
+    public void notificationCanBeRetrievedWithIUNV1Error() {
+        AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification> notificationByIun = new AtomicReference<>();
+        try {
+            notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV1().getIun()));
+        } catch (AssertionFailedError assertionFailedError) {
+            logger.info("Errore di lettura notifica");
+        }
+    }
+
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN web PA")
     public void notificationCanBeRetrievedWithIUNWebPA() {
         AtomicReference<NotificationSearchResponse> notificationByIun = new AtomicReference<>();
@@ -766,8 +776,10 @@ public class InvioNotificheB2bSteps {
     public void vieneCreataUnaPosizioneDebitoria(String organitationCode,String amount,String name,String taxId) {
 
         String iuv = String.format("47%13d44", System.currentTimeMillis());
+        //String iuv=sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode();
         logger.info("Iuv generato: " + iuv);
         logger.info("IUPD generate: " + organitationCode +"-64c8e41bfec846e04"+ iuv, System.currentTimeMillis());
+        sharedSteps.addIuvGPD(iuv);
 
         PaymentPositionModel paymentPositionModelSend = new PaymentPositionModel()
                 .iupd(String.format(organitationCode+"-64c8e41bfec846e04"+  iuv, System.currentTimeMillis()))

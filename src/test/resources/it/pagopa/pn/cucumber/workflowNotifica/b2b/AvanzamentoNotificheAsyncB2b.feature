@@ -11,6 +11,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | payment_creditorTaxId | 77777777777 |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
 
 
@@ -23,6 +28,12 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And destinatario
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
+      | payment_creditorTaxId | 77777777777 |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
 
@@ -36,6 +47,12 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And destinatario
       | denomination | Cristoforo Colombo |
       | taxId        | CLMCST42R12D969Z   |
+      | payment_creditorTaxId | 77777777777 |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
 
@@ -51,6 +68,12 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
+    And al destinatario viene associato lo iuv creato mediante partita debitoria alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And l'avviso pagopa viene pagato correttamente
     Then viene generata una nuova notifica
@@ -63,6 +86,12 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
+    And al destinatario viene associato lo iuv creato mediante partita debitoria alla posizione 0
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
@@ -78,6 +107,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
 
@@ -92,8 +126,18 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     And destinatario Cucumber Society e:
       | payment_creditorTaxId | 77777777777      |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
 
@@ -119,6 +163,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | paFee              | 10                         |
     And destinatario Cucumber Society e:
       | payment_creditorTaxId | 77777777777      |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And l'avviso pagopa viene pagato correttamente
     Then viene generata una nuova notifica
@@ -129,6 +178,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | paFee              | 10                         |
     And destinatario Cucumber Society e:
       | payment_creditorTaxId | 77777777777      |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED"
     Then viene cancellata la posizione debitoria di "Cucumber Society"
@@ -147,6 +201,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | taxId                   | CLMCST42R12D969Z   |
       | payment_creditorTaxId   | 77777777777        |
       | physicalAddress_address | 0000               |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED"
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
@@ -168,11 +227,21 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | taxId                   | CLMCST42R12D969Z   |
       | payment_creditorTaxId   | 77777777777        |
       | physicalAddress_address | 0000               |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     And destinatario
       | denomination            | Cucumber Society |
       | taxId                   | 20517490320      |
       | payment_creditorTaxId   | 77777777777      |
       | physicalAddress_address | 0000             |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED" per l'utente 0
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
@@ -198,6 +267,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
     And viene verificato il costo = "100" della notifica
@@ -215,6 +289,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777 |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere annullata dal sistema tramite codice IUN
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
@@ -291,6 +370,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And destinatario Cucumber Society e:
       | digitalDomicile       | NULL        |
       | payment_creditorTaxId | 77777777777 |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere annullata dal sistema tramite codice IUN
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
@@ -341,9 +425,20 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
       | digitalDomicile       | NULL               |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
     And destinatario Cucumber Society e:
       | digitalDomicile       | NULL        |
       | payment_creditorTaxId | 77777777777 |
+      | payment_pagoPaForm    | SI                 |
+      | payment_f24flatRate   | NULL               |
+      | payment_f24standard   | NULL               |
+      | apply_cost_pagopa     | SI                 |
+      | payment_multy_number  | 1                  |
+
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED" per l'utente 0
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
@@ -739,16 +834,19 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then si verifica lo scarto dell' acquisizione della notifica V1
 
   @version
-  Scenario: [B2B_ASYNC_31] Creazione notifica ASYNC con V2 - Errore
-    Given viene generata una nuova notifica V2
+  Scenario: [B2B_ASYNC_31] Creazione notifica ASYNC con V2.1 e recupero tramite codice IUN V1 (p.fisica)_scenario negativo
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
+    Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
       | pagoPaIntMode      | ASYNC                       |
       | paFee              | 10                          |
-    And destinatario Mario Cucumber V2
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED V2
-    Then si verifica lo scarto dell' acquisizione della notifica V2
+    And destinatario Mario Cucumber
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then si verifica la corretta acquisizione della notifica
+    And la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V10
+    Then vengono cancellate le posizioni debitorie
 
   @version
   Scenario: [B2B_ASYNC_32] Creazione notifica ASYNC con V2.1 e recupero tramite codice IUN V2.0 (p.fisica)_scenario negativo

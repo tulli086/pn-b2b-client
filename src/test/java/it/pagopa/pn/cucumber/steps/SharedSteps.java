@@ -58,6 +58,10 @@ public class SharedSteps {
     private final PnGPDClientImpl pnGPDClientImpl;
     private final PnPaymentInfoClientImpl pnPaymentInfoClient;
 
+    //private  String iuvGPD;
+
+    private List<String> iuvGPD;
+
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebRecipientClient webRecipientClient;
     private final PnExternalServiceClientImpl pnExternalServiceClient;
@@ -218,6 +222,7 @@ public class SharedSteps {
         this.serviceDeskClientImplWrongApiKey=serviceDeskClientImplWrongApiKey;
         this.pnGPDClientImpl=pnGPDClientImpl;
         this.pnPaymentInfoClient=pnPaymentInfoClient;
+        this.iuvGPD=new ArrayList<String>();
     }
 
     @BeforeAll
@@ -245,6 +250,15 @@ public class SharedSteps {
     @And("destinatario")
     public void destinatario(@Transpose NotificationRecipientV21 recipient) {
         this.notificationRequest.addRecipientsItem(recipient);
+    }
+
+    @And("al destinatario viene associato lo iuv creato mediante partita debitoria alla posizione {int}")
+    public void destinatarioAddIuvGPD(Integer posizione) {
+        //int numberofPayment=notificationRequest.getRecipients().get(0).getPayments().size();
+        //for(int i=0;i<numberofPayment;i++)
+        //this.notificationRequest.getRecipients().get(0).getPayments().get(0).getPagoPa().setNoticeCode(getIuvGPD());
+        //this.notificationRequest.getRecipients().get(0).getPayments().get(i).getPagoPa().setNoticeCode(getIuvGPD().get(i))
+        this.notificationRequest.getRecipients().get(0).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD().get(posizione));
     }
 
 
@@ -288,6 +302,7 @@ public class SharedSteps {
                 recipient
                         .denomination("Mario Cucumber")
                         .taxId(marioCucumberTaxID));
+
     }
 
 
@@ -1600,5 +1615,15 @@ public class SharedSteps {
         if (schedulingDaysSuccessDigitalRefinementString == null) return schedulingDaysSuccessDigitalRefinementDefaultString;
         return schedulingDaysSuccessDigitalRefinementString;
     }
+
+    public void addIuvGPD(String iuvGPD) {
+        this.iuvGPD.add("3"+iuvGPD);
+    }
+
+    public List<String> getIuvGPD() {
+        return this.iuvGPD;
+    }
+
+
 
 }
