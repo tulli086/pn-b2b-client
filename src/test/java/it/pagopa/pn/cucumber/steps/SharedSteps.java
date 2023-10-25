@@ -1624,6 +1624,11 @@ public class SharedSteps {
         return this.iuvGPD;
     }
 
+    @And("al destinatario viene associato lo iuv creato mediante partita debitoria per {string} alla posizione {int}")
+    public void destinatarioAddIuvGPD(String denominazione,Integer posizione) {
+
+        this.notificationRequest.getRecipients().get(0).denomination(denominazione).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD().get(posizione));
+    }
 
 
 }
