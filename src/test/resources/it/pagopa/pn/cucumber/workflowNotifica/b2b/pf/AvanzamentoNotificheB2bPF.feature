@@ -268,3 +268,6 @@ Feature: avanzamento notifiche b2b persona fisica
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
 
+
+
+
