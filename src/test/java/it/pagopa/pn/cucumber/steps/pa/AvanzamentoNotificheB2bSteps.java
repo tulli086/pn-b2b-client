@@ -2704,8 +2704,10 @@ public class AvanzamentoNotificheB2bSteps {
                 }
             }
             Assertions.assertNotNull(timelineElement);
+
         }else {
-            TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+
+            TimelineElementWait timelineElementWait = getTimelineElementCategoryV1("PAYMENT");
 
             it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement = null;
 
