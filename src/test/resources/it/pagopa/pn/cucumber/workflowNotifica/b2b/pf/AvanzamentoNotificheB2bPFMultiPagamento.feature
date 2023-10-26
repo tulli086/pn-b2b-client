@@ -754,6 +754,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
 
 
   #42 Notifica mono destinatario pagata - verifica posizione debitoria (IUV) dopo aver effettuato il pagamento [TA]
+  @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_42] Notifica mono destinatario pagata - verifica posizione debitoria (IUV) dopo aver effettuato il pagamento [TA]
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -819,6 +820,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
 
   #TODO TEST MANUALE.........INFO
   #44 Destinatario - notifica mono destinatario con presenza contemporanea di avviso pagoPA e F24: pagamento di uno degli avvisi (PagoPa)
+  @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_44] Destinatario - notifica mono destinatario con presenza contemporanea di avviso pagoPA e F24: pagamento di uno degli avvisi (PagoPa)
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
