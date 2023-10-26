@@ -53,6 +53,9 @@ public class InvioNotificheB2bSteps {
     @Value("${pn.retention.time.load}")
     private Integer retentionTimeLoad;
 
+    @Value("${pn.external.costo_base_notifica}")
+    private Integer costoBaseNotifica;
+
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebPaClient webPaClient;
     private final IPnPaB2bClient b2bClient;
@@ -984,6 +987,8 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
     public void vieneEffettuatoIlControlloDelAmountDiGPD(String amount) {
 
         try {
+            int importoGPD=amountGPD;
+            logger.info("Amount GPD: "+amountGPD);
 
             Assertions.assertEquals(amountGPD,Integer.parseInt(amount));
 
@@ -1033,6 +1038,29 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
         }
     }
 
+    @Then("viene effettuato il controllo dell'aggiornamento del costo totale del utente {int}")
+    public void vieneEffettuatoIlControlloDelCambiamentoDelCostoTotale(Integer user) {
+
+
+        amountNotifica.set(user,amountNotifica.get(user) + costoBaseNotifica);
+
+
+        try {
+
+            logger.info("Costo base presente su Notifica"+amountNotifica.get(user));
+            logger.info("Costo base presente su GPD"+amountGPD);
+
+            Assertions.assertEquals(amountGPD,amountNotifica.get(user));
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentPositionModelBaseResponse == null ? "NULL" : paymentPositionModelBaseResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
     @And("viene aggiunto il costo della notifica totale del utente {int}")
     public void vieneAggiuntoIlCostoDellaNotificaTotaleAlUtente(Integer user) {
 
@@ -1060,9 +1088,9 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
         try {
 
             for(int i=0;i<amountNotifica.size();i++) {
-
-                    logger.info("Amount+costo base:"+sharedSteps.getSentNotification().getAmount()+ sharedSteps.getSentNotification().getPaFee());
-                    amountNotifica.set(i, sharedSteps.getSentNotification().getAmount() + sharedSteps.getSentNotification().getPaFee());
+                    int costototale=costoBaseNotifica+ sharedSteps.getSentNotification().getPaFee();
+                    logger.info("Amount+costo base:"+costototale);
+                    amountNotifica.set(i, costototale);
             }
 
             Assertions.assertNotNull(amountNotifica);

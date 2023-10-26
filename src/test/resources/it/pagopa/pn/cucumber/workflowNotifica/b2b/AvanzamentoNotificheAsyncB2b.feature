@@ -77,7 +77,8 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And viene aggiunto il costo della notifica totale
-    And  lettura amount posizione debitoria di "Cristoforo Colombo"
+    And lettura amount posizione debitoria di "Cristoforo Colombo"
+    And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
     And l'avviso pagopa viene pagato correttamente
     Then viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -94,7 +95,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria alla posizione 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 0
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
@@ -176,7 +177,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And viene aggiunto il costo della notifica totale
+    And lettura amount posizione debitoria di "Cucumber Society"
+    And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
     And l'avviso pagopa viene pagato correttamente
     Then viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -191,8 +196,8 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED"
     Then viene cancellata la posizione debitoria di "Cucumber Society"
 
 
@@ -214,6 +219,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED"
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
@@ -240,6 +246,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 0
     And destinatario
       | denomination            | Cucumber Society |
       | taxId                   | 20517490320      |
@@ -250,6 +257,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED" per l'utente 0
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
@@ -280,6 +288,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
     And viene verificato il costo = "100" della notifica
