@@ -98,7 +98,7 @@ Feature: verifica compatibilità tra verioni
     And destinatario Mario Gherkin V1 e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_AR |
-    When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED V1
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED V1
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW" V1
 
   @version
