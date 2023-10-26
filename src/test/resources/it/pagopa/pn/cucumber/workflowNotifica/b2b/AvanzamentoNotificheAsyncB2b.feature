@@ -213,7 +213,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination            | Cristoforo Colombo |
       | taxId                   | CLMCST42R12D969Z   |
       | payment_creditorTaxId   | 77777777777        |
-      | physicalAddress_address | 0000               |
+      | physicalAddress_zip   | 0000               |
       | payment_pagoPaForm    | SI                 |
       | payment_f24flatRate   | NULL               |
       | payment_f24standard   | NULL               |
@@ -305,19 +305,25 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And destinatario
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
+      | digitalDomicile_address | test@fail.it       |
+      | physicalAddress_address | Via@ok_RS          |
       | payment_creditorTaxId | 77777777777 |
       | payment_pagoPaForm    | SI                 |
       | payment_f24flatRate   | NULL               |
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 0
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And viene aggiunto il costo della notifica totale
+    And lettura amount posizione debitoria di "Cristoforo Colombo"
+    And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
     Then la notifica può essere annullata dal sistema tramite codice IUN
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
-    Then lettura amount posizione debitoria di "Mario Gherkin"
+    Then lettura amount posizione debitoria di "Cristoforo Colombo"
     And  viene effettuato il controllo del amount di GPD = "0"
     And viene verificato il costo = "0" della notifica
-    Then viene cancellata la posizione debitoria di "Mario Gherkin"
+    Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
 
   Scenario: [B2B_ASYNC_13] Notifica mono PF Multipagamento-Verifica amount GPD notifica async dopo pagamento di un solo pagamento poi annullata la notifica il secondo pagamento amount non azzerrato
@@ -333,12 +339,16 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
+      | digitalDomicile_address | test@fail.it       |
+      | physicalAddress_address | Via@ok_RS          |
       | payment_pagoPaForm    | SI                 |
       | payment_f24flatRate   | NULL               |
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 2                  |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 1
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then l'avviso pagopa 0 viene pagato correttamente dall'utente 0
     And viene cancellata la posizione debitoria del pagamento 0
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" e successivamente annullata
@@ -367,7 +377,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 2                  |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then l'avviso pagopa 0 viene pagato correttamente dall'utente 0
     And l'avviso pagopa 1 viene pagato correttamente dall'utente 0
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" e successivamente annullata
@@ -392,7 +402,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere annullata dal sistema tramite codice IUN
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
     Then lettura amount posizione debitoria di "Cucumber Society"
@@ -416,7 +426,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 2                  |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then l'avviso pagopa 0 viene pagato correttamente dall'utente 0
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER" e successivamente annullata
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
@@ -456,7 +466,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
 
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED" per l'utente 0
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
     And  viene effettuato il controllo del amount di GPD = "0"
@@ -497,7 +507,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL        |
       | apply_cost_pagopa     | SI          |
       | payment_multy_number  | 2           |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And viene aggiunto il costo della notifica totale
     Then l'avviso pagopa 0 viene pagato correttamente dall'utente 0
     And la notifica può essere annullata dal sistema tramite codice IUN
@@ -527,13 +537,14 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | denomination          | Cristoforo Colombo |
       | taxId                 | CLMCST42R12D969Z   |
       | payment_creditorTaxId | 77777777777        |
-      | digitalDomicile       | NULL               |
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_address | Via@ok_RS |
       | payment_pagoPaForm    | SI                 |
       | payment_f24flatRate   | NULL               |
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And viene aggiunto il costo della notifica totale
     Then viene effettuato il controllo del cambiamento del amount nella timeline "REQUEST_ACCEPTED" del pagamento 0
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
