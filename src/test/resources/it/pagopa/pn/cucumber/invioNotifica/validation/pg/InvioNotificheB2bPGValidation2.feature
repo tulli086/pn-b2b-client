@@ -185,7 +185,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | denomination  | <denominationPF> |
       | recipientType | PF               |
       | taxId         | FRMTTR76M06B715E |
-    And destinatario
+    And destinatario altro
       | denomination  | <denominationPG> |
       | recipientType | PG               |
       | taxId         | 15376371009      |
@@ -206,7 +206,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | subject            | invio notifica con cucumber |
       | senderDenomination | comune di milano            |
     And destinatario Mario Cucumber
-    And destinatario
+    And destinatario altro
       | denomination  | <denomination> |
       | recipientType | PG             |
       | taxId         | 15376371009    |

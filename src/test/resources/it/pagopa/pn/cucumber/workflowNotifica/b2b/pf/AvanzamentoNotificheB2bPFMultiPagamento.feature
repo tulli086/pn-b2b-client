@@ -12,6 +12,8 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And destinatario
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
+      | payment_creditorTaxId | 77777777777 |
+      | payment_noticeCode | 402000118000019102 |
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -20,7 +22,6 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato il costo = "100" della notifica
-
 
   @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_24_1] PA - inserimento notifica mono destinatario con un solo avviso pagoPA e costi di notifica inclusi  modalità DELIVERY_MODE (scenario positivo)
@@ -78,7 +79,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_pagopa | SI |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -386,7 +387,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Giovanna D'arco  |
       | taxId | DRCGNN12A46A326K |
       | payment_pagoPaForm | SI |
@@ -440,7 +441,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -470,7 +471,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | title_payment | F24_STANDARD_LVLDAA85T50G702B |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -498,7 +499,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | title_payment | F24_STANDARD_LVLDAA85T50G702B |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -527,7 +528,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 2 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -559,7 +560,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | title_payment | F24_STANDARD_LVLDAA85T50G702B |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | NULL |
@@ -640,7 +641,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | NULL |
@@ -700,7 +701,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 2 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -731,7 +732,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | title_payment | F24_STANDARD_LVLDAA85T50G702B |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_f24flatRate | NULL |
@@ -949,7 +950,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 2 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -1013,7 +1014,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -1047,7 +1048,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 2 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -1220,7 +1221,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -1251,7 +1252,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -1283,7 +1284,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | title_payment | F24_STANDARD_LVLDAA85T50G702B |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | NULL |
@@ -1313,7 +1314,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | title_payment | F24_STANDARD_LVLDAA85T50G702B |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | NULL |
@@ -1342,7 +1343,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard | NULL |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | NULL |
@@ -1406,7 +1407,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_pagopa | NO |
       | payment_multy_number | 1 |
       | notice_code | 302011697026785045 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |
@@ -1449,7 +1450,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | SI |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 2 |
-    And destinatario
+    And destinatario altro
       | denomination     | Gaio Giulio Cesare  |
       | taxId | CSRGGL44L13H501E |
       | payment_pagoPaForm | SI |

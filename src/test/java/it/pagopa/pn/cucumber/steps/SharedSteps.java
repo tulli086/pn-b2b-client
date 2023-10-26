@@ -195,6 +195,9 @@ public class SharedSteps {
     @Value("${pn.external.utilized.pec:testpagopa3@pec.pagopa.it}")
     private String digitalAddress;
 
+    @Value("${pn.external.utilized.pec.alt:testpagopa3@pec.pagopa.it}")
+    private String digitalAddressAlt;
+
     private String defaultDigitalAddress = "testpagopa3@pec.pagopa.it";
 
 
@@ -244,8 +247,21 @@ public class SharedSteps {
 
     @And("destinatario")
     public void destinatario(@Transpose NotificationRecipientV21 recipient) {
-        this.notificationRequest.addRecipientsItem(recipient);
+        this.notificationRequest.addRecipientsItem(recipient
+                .digitalDomicile(new NotificationDigitalAddress()
+                        .type(NotificationDigitalAddress.TypeEnum.PEC)
+                        .address(getDigitalAddressValue())));
     }
+
+    @And("destinatario altro")
+    public void destinatarioAltro(@Transpose NotificationRecipientV21 recipient) {
+        this.notificationRequest.addRecipientsItem(recipient
+                .digitalDomicile(new NotificationDigitalAddress()
+                        .type(NotificationDigitalAddress.TypeEnum.PEC)
+                        .address(getDigitalAddressValueAlt())));
+
+    }
+
 
     @And("destinatario V1")
     public void destinatario(@Transpose it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationRecipient recipient) {
@@ -291,7 +307,10 @@ public class SharedSteps {
         this.notificationRequest.addRecipientsItem(
                 recipient
                         .denomination("Mario Cucumber")
-                        .taxId(marioCucumberTaxID));
+                        .taxId(marioCucumberTaxID)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValue())));
     }
 
 
@@ -303,7 +322,7 @@ public class SharedSteps {
                         .taxId(marioGherkinTaxID)
                         .digitalDomicile(new NotificationDigitalAddress()
                                 .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                .address(getDigitalAddressValue())));
+                                .address(getDigitalAddressValueAlt())));
     }
 
     @And("destinatario Mario Gherkin V1 e:")
@@ -319,7 +338,10 @@ public class SharedSteps {
         this.notificationRequest.addRecipientsItem(
                 recipient
                         .denomination("Mario Gherkin")
-                        .taxId(marioGherkinTaxID));
+                        .taxId(marioGherkinTaxID)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                        .type(NotificationDigitalAddress.TypeEnum.PEC)
+                        .address(getDigitalAddressValueAlt())));
     }
 
 
@@ -332,7 +354,7 @@ public class SharedSteps {
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
                         .digitalDomicile(new NotificationDigitalAddress()
                                 .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                .address(getDigitalAddressValue())));
+                                .address(getDigitalAddressValueAlt())));
     }
 
     @And("destinatario GherkinSrl")
@@ -344,7 +366,7 @@ public class SharedSteps {
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
                         .digitalDomicile(new NotificationDigitalAddress()
                                 .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                .address(getDigitalAddressValue())));
+                                .address(getDigitalAddressValueAlt())));
     }
 
     @And("destinatario GherkinSrl e:")
@@ -353,7 +375,10 @@ public class SharedSteps {
                 recipient
                         .denomination("GherkinSrl")
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(gherkinSrltaxId));
+                        .taxId(gherkinSrltaxId)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValueAlt())));
     }
 
     @And("destinatario CucumberSpa e:")
@@ -362,7 +387,10 @@ public class SharedSteps {
                 recipient
                         .denomination("CucumberSpa")
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(cucumberSpataxId));
+                        .taxId(cucumberSpataxId)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValue())));
     }
 
 
@@ -385,7 +413,10 @@ public class SharedSteps {
                 recipient
                         .denomination("GherkinSpa")
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(gherkinSpaTaxID));
+                        .taxId(gherkinSpaTaxID)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValueAlt())));
     }
 
     @And("destinatario Cucumber srl")
@@ -406,7 +437,10 @@ public class SharedSteps {
                 recipient
                         .denomination("CucumberSrl")
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(cucumberSrlTaxID));
+                        .taxId(cucumberSrlTaxID)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValue())));
     }
 
     @And("destinatario Cucumber Society")
@@ -427,7 +461,10 @@ public class SharedSteps {
                 recipient
                         .denomination("Cucumber_Society")
                         .taxId(cucumberSocietyTaxID)
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG));
+                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValue())));
     }
 
     @And("destinatario Cucumber Analogic e:")
@@ -435,7 +472,10 @@ public class SharedSteps {
         this.notificationRequest.addRecipientsItem(
                 recipient
                         .denomination("Cucumber Analogic")
-                        .taxId(cucumberAnalogicTaxID));
+                        .taxId(cucumberAnalogicTaxID)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValue())));
     }
 
     @And("destinatario Cristoforo Colombo")
@@ -1348,6 +1388,11 @@ public class SharedSteps {
     public String getDigitalAddressValue() {
         if (digitalAddress == null || digitalAddress.equalsIgnoreCase("${pn.external.digitalDomicile.address}")) return defaultDigitalAddress;
         return digitalAddress;
+    }
+
+    public String getDigitalAddressValueAlt() {
+        if (digitalAddressAlt == null || digitalAddressAlt.equalsIgnoreCase("${pn.external.digitalDomicile.address.alt}")) return defaultDigitalAddress;
+        return digitalAddressAlt;
     }
 
     public Duration getSchedulingDaysSuccessDigitalRefinement() {
