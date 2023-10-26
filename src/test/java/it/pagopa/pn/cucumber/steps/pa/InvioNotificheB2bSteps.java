@@ -109,6 +109,11 @@ public class InvioNotificheB2bSteps {
                         notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotificationV1().getIun()))
                 );
                 Assertions.assertNotNull(notificationByIun.get());
+            } else if (sharedSteps.getSentNotificationV2()!= null) {
+                Assertions.assertDoesNotThrow(() ->
+                        notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotificationV2().getIun()))
+                );
+                Assertions.assertNotNull(notificationByIun.get());
             }else {
                 Assertions.assertNotNull(notificationByIun.get());
             }
@@ -124,6 +129,22 @@ public class InvioNotificheB2bSteps {
             Assertions.assertDoesNotThrow(() ->
                     notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV1().getIun()))
             );
+            if(sharedSteps.getSentNotificationV1()!= null) {
+                Assertions.assertDoesNotThrow(() ->
+                        notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV1().getIun()))
+                );
+            }else if(sharedSteps.getSentNotificationV2()!= null){
+                Assertions.assertDoesNotThrow(() ->
+                        notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV2().getIun()))
+                );
+            }else if(sharedSteps.getSentNotification()!= null){
+                Assertions.assertDoesNotThrow(() ->
+                        notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotification().getIun()))
+                );
+            }else {
+                Assertions.assertNotNull(notificationByIun.get());
+            }
+
             Assertions.assertNotNull(notificationByIun.get());
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
@@ -137,6 +158,21 @@ public class InvioNotificheB2bSteps {
             Assertions.assertDoesNotThrow(() ->
                     notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV2().getIun()))
             );
+                if(sharedSteps.getSentNotificationV1()!= null) {
+                    Assertions.assertDoesNotThrow(() ->
+                            notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV1().getIun()))
+                    );
+                }else if(sharedSteps.getSentNotificationV2()!= null){
+                    Assertions.assertDoesNotThrow(() ->
+                            notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV2().getIun()))
+                    );
+                }else if(sharedSteps.getSentNotification()!= null){
+                    Assertions.assertDoesNotThrow(() ->
+                            notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotification().getIun()))
+                    );
+                }else {
+                    Assertions.assertNotNull(notificationByIun.get());
+                }
             Assertions.assertNotNull(notificationByIun.get());
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
@@ -989,7 +1025,6 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
         try {
             int importoGPD=amountGPD;
             logger.info("Amount GPD: "+amountGPD);
-
             Assertions.assertEquals(amountGPD,Integer.parseInt(amount));
 
         } catch (AssertionFailedError assertionFailedError) {

@@ -465,7 +465,6 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
-
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED" per l'utente 0
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
