@@ -1654,6 +1654,11 @@ public class SharedSteps {
 
         this.notificationRequest.getRecipients().get(0).denomination(denominazione).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD(posizione));
     }
+    @And("al destinatario viene associato lo iuv creato mediante partita debitoria per {string} per utente {int} del pagamento {int}")
+    public void destinatarioAddIuvGPDperUtente(String denominazione,Integer utente,Integer posizione) {
 
+        this.notificationRequest.getRecipients().get(utente).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD(utente));
+        logger.info("Richiesta Notifica:" + this.notificationRequest.toString() );
+    }
 
 }

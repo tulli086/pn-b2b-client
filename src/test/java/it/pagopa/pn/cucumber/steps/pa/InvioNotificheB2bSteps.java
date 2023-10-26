@@ -1058,7 +1058,8 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
         TimelineElementV20 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,dataFromTest);
 
                 amountNotifica.set(user,amountNotifica.get(user) + timelineElement.getDetails().getAnalogCost());
-
+                 logger.info("Amount GPD: "+amountGPD);
+                logger.info("Amount Notifica: "+amountNotifica.get(user));
 
         try {
 
