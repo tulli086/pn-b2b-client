@@ -39,6 +39,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Base64;
@@ -91,6 +92,8 @@ public class SharedSteps {
     private boolean groupToSet = true;
 
     private String errorCode = null;
+
+
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -149,6 +152,10 @@ public class SharedSteps {
 
     private final Integer workFlowWaitDefault = 31000;
     private final Integer waitDefault = 10000;
+
+    private final SecureRandom secureRandom = new SecureRandom();
+    private final Integer WORKFLOW_WAIT_UPPER_BOUND = 2000;
+    private final Integer WAIT_UPPER_BOUND = 500;
 
     private final String schedulingDaysSuccessDigitalRefinementDefaultString = "6m";
     private final String schedulingDaysFailureDigitalRefinementDefaultString = "6m";
@@ -1336,13 +1343,13 @@ public class SharedSteps {
 
 
     public Integer getWorkFlowWait() {
-        if (workFlowWait == null) return workFlowWaitDefault;
-        return workFlowWait;
+        if (workFlowWait == null) return workFlowWaitDefault + secureRandom.nextInt(WORKFLOW_WAIT_UPPER_BOUND);
+        return workFlowWait + secureRandom.nextInt(WORKFLOW_WAIT_UPPER_BOUND);
     }
 
     public Integer getWait() {
-        if (wait == null) return waitDefault;
-        return wait;
+        if (wait == null) return waitDefault + secureRandom.nextInt(WAIT_UPPER_BOUND);
+        return wait + secureRandom.nextInt(WAIT_UPPER_BOUND);
     }
 
     public String getDigitalAddressValue() {
