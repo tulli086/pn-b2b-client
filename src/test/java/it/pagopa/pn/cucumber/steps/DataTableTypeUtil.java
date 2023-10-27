@@ -186,12 +186,13 @@ public class DataTableTypeUtil {
                     }
                     NotificationPaymentItem addPaymentsItem = new NotificationPaymentItem();
                     addPaymentsItem.pagoPa(getValue(data, PAYMENT_PAGOPA_FORM.key) == null ? null :
-                            (getValue(data, PAYMENT_PAGOPA_FORM.key).equalsIgnoreCase("SI") ?
+                            (getValue(data, PAYMENT_PAGOPA_FORM.key).equalsIgnoreCase("NO") ?
+                                    null :
                                     new PagoPaPayment()
                                             .creditorTaxId(getValue(data, PAYMENT_CREDITOR_TAX_ID.key))
                                             .noticeCode(getValue(data, PAYMENT_NOTICE_CODE.key))
                                             .applyCost(getValue(data, PAYMENT_APPLY_COST_PAGOPA.key).equalsIgnoreCase("SI") ? true : false)
-                                            .attachment(utils.newAttachment(getDefaultValue(PAYMENT_PAGOPA_FORM.key))) : null));
+                                            .attachment(utils.newAttachment(getDefaultValue(PAYMENT_PAGOPA_FORM.key)))));
                     if(getValue(data, PAYMENT_F24_STANDARD.key) != null) {
                         addPaymentsItem.f24(getValue(data, PAYMENT_F24_STANDARD.key) == null ? null :
                                 (getValue(data, PAYMENT_F24_STANDARD.key).equalsIgnoreCase("SI") ?
@@ -294,8 +295,9 @@ public class DataTableTypeUtil {
 
                     listPayment.add(addPaymentsItem);
                 }
-
+            notificationRecipient.setPayments(listPayment);
         }
+        /*
             if (getValue(data,PAYMENT.key)!= null && (listPayment==null || (listPayment!= null && listPayment.isEmpty()))){
                 listPayment = new ArrayList<NotificationPaymentItem>();
                 NotificationPaymentItem addPaymentsItem = new NotificationPaymentItem();
@@ -318,9 +320,8 @@ public class DataTableTypeUtil {
                 listPayment.add(addPaymentsItem);
             }
 
+         */
 
-
-        notificationRecipient.setPayments(listPayment);
 
         /* TEST
         if(getValue(data,DIGITAL_DOMICILE.key) != null && !getValue(data,DIGITAL_DOMICILE.key).equalsIgnoreCase(EXCLUDE_VALUE)){

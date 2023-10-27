@@ -83,7 +83,7 @@ Feature: avanzamento notifiche b2b persona fisica
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | CLMCST42R12D969Z@pec.pagopa.it |
-      | payment_pagoPaForm      | NULL              |
+      | payment     | NULL              |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
