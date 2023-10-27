@@ -1054,12 +1054,36 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
     }
 
     @Then("viene effettuato il controllo del cambiamento del amount nella timeline {string} del (utente)(pagamento) {int}")
-    public void vieneEffettuatoIlControlloDelCambiamentoDelAmount(String timelineEventCategory,@Transpose DataTest dataFromTest,Integer user) {
+    public void vieneEffettuatoIlControlloDelCambiamentoDelAmount(String timelineEventCategory,Integer user) {
+
+        TimelineElementV20 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,null);
+
+        amountNotifica.set(user,amountNotifica.get(user) + timelineElement.getDetails().getAnalogCost());
+
+
+        try {
+
+            Assertions.assertEquals(amountGPD,amountNotifica.get(user));
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentPositionModelBaseResponse == null ? "NULL" : paymentPositionModelBaseResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
+    @Then("viene effettuato il controllo del cambiamento del amount nella timeline {string} del (utente)(pagamento) {int} al tentativo {int}")
+    public void vieneEffettuatoIlControlloDelCambiamentoDelAmountAlTentativo(String timelineEventCategory,Integer user,Integer attemps) {
+
+        DataTest dataFromTest=new DataTest();
+        dataFromTest.setNumCheck(attemps);
+
         TimelineElementV20 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,dataFromTest);
 
-                amountNotifica.set(user,amountNotifica.get(user) + timelineElement.getDetails().getAnalogCost());
-                 logger.info("Amount GPD: "+amountGPD);
-                logger.info("Amount Notifica: "+amountNotifica.get(user));
+        amountNotifica.set(user,amountNotifica.get(user) + timelineElement.getDetails().getAnalogCost());
+
 
         try {
 
