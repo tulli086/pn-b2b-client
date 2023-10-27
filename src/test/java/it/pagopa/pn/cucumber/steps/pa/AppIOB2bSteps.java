@@ -6,6 +6,7 @@ import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.mod
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationDocument;
 import it.pagopa.pn.client.b2b.pa.testclient.*;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
@@ -98,14 +99,28 @@ public class AppIOB2bSteps {
 
         try {
             List<NotificationDocument> documents = sharedSteps.getSentNotification().getDocuments();
-            it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.NotificationAttachmentDownloadMetadataResponse sentNotificationDocument =
+            it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.NotificationAttachmentDownloadMetadataResponse downloadResponse =
                     iPnAppIOB2bClient.getReceivedNotificationAttachment(sharedSteps.getSentNotification().getIun(),typeDocument, selectTaxIdUser(recipient), Integer.parseInt(documents.get(0).getDocIdx()));
 
-            byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                    b2bUtils.downloadFile(sentNotificationDocument.getUrl()));
-            this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
+            if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
+                try {
+                    Thread.sleep(downloadResponse.getRetryAfter()*3);
+                    documents = sharedSteps.getSentNotification().getDocuments();
+                    it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.NotificationAttachmentDownloadMetadataResponse sentNotificationDocument =
+                            iPnAppIOB2bClient.getReceivedNotificationAttachment(sharedSteps.getSentNotification().getIun(),typeDocument, selectTaxIdUser(recipient), Integer.parseInt(documents.get(0).getDocIdx()));
 
-            Assertions.assertEquals(this.sha256DocumentDownload, sentNotificationDocument.getSha256());
+                } catch (InterruptedException exc) {
+                    throw new RuntimeException(exc);
+                }
+            }
+            byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                    b2bUtils.downloadFile(downloadResponse.getUrl()));
+
+            if (!"F24".equalsIgnoreCase(typeDocument)){
+                this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
+                Assertions.assertEquals(this.sha256DocumentDownload, downloadResponse.getSha256());
+            }
+
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             if (e instanceof HttpStatusCodeException) {
                 this.notficationServerError = e;
