@@ -2,6 +2,7 @@ Feature: Api Service Desk
 
           #stato operation OK= Notifica recapitata
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_UNREACHABLE_5] Invocazione del servizio UNREACHABLE per CF con sole notifiche in stato IRR TOT
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>"
     When viene invocato il servizio UNREACHABLE
@@ -11,6 +12,7 @@ Feature: Api Service Desk
       | CF   |
       | TMTCRL80A41A662H |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_UNREACHABLE_7] Invocazione del servizio UNREACHABLE per CF con una sola notifica in stato IRR TOT
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>"
     When viene invocato il servizio UNREACHABLE
@@ -20,7 +22,7 @@ Feature: Api Service Desk
       | CF   |
       | TMTSFS80A01H703K |
 
-  @propedeutico
+  @CallCenterEvoluto
   Scenario Outline: [E2E_46] Inserimento di una nuova richista di reinvio pratiche con stato operation id OK
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -40,6 +42,7 @@ Feature: Api Service Desk
       | TMTSFS80A01H703K| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
       | TMTCRL80A41A662H| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_UNREACHABLE_4] Invocazione del servizio UNREACHABLE per CF senza notifiche in stato IRR TOT
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>"
     When viene invocato il servizio UNREACHABLE
@@ -50,6 +53,7 @@ Feature: Api Service Desk
       | CPNTMS85T15H703W |
 
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_UNREACHABLE_6] Invocazione del servizio UNREACHABLE per CF più notifiche non consegnate sia per IRR TOT che per altre motivazioni
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>"
     When viene invocato il servizio UNREACHABLE
@@ -59,6 +63,7 @@ Feature: Api Service Desk
       | CF   |
       | FRMTTR76M06B715E |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_UNREACHABLE_8] Invocazione del servizio UNREACHABLE per CF con sole notifiche presenti in stato IRR TOT con ultima tentativo di consegna >120g
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>"
     When viene invocato il servizio UNREACHABLE
@@ -68,11 +73,13 @@ Feature: Api Service Desk
       | CF   |
       | TMTMRC66A01H703L |
 
+  @CallCenterEvoluto
   Scenario: [API-SERVICE_DESK_UNREACHABLE_9] Invocazione del servizio UNREACHABLE per CF vuoto
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE con cf vuoto
     When viene invocato il servizio UNREACHABLE con errore
     Then il servizio risponde con errore "500"
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_UNREACHABLE_10] Invocazione del servizio UNREACHABLE per CF non formalmente corretto
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>"
     When viene invocato il servizio UNREACHABLE con errore
@@ -82,6 +89,7 @@ Feature: Api Service Desk
       | CF               |
       | CPNTMS85T15H703WCPNTMS85T15H703W! |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_14] Invocazione del servizio CREATE_OPERATION per CF vuoto
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con cf vuoto
@@ -92,6 +100,7 @@ Feature: Api Service Desk
        | FULLNAME | NAMEROW2 | ADDRESS  |ADDRESSROW2 | CAP | CITY | CITY2 | PR | COUNTRY |
        | CICCIO PASTICCIO | SIGN. | Via@ok_RS | INTERNO 2| 80100 | NAPOLI | XXX | NA| ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_15] Invocazione del servizio CREATE_OPERATION per CF che non ha notifiche da consegnare per irr tot
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -102,6 +111,7 @@ Feature: Api Service Desk
       |CF| FULLNAME |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP |CITY | CITY2 | PR |COUNTRY|
       |CPNTMS85T15H703W|CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX|NA|ITALIA|
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_16] Invocazione del servizio CREATE_OPERATION per CF errato
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -112,6 +122,7 @@ Feature: Api Service Desk
       |CF| FULLNAME |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP |CITY | CITY2 | PR |COUNTRY|
       |CPNTMS85T15H703WCPNTMS85T15H703W!|CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX|NA|ITALIA|
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_17] Invocazione del servizio CREATE_OPERATION con indirizzo vuoto
     Given viene comunicato il nuovo indirizzo con campo indirizzo vuoto
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -141,7 +152,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTGMN76L05A944V| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80100|NAPOLI|SOCCAVO |NA|ITALIA |
 
-
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_SEARCH_18_1] Invocazione del servizio CREATE_OPERATION con indirizzo errato
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -162,7 +173,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTGMN76L05A944V| CICCIO PASTICCIO|SIGN.   |Via@FAIL-Irreperibile_AR| INTERNO 2  |80100|NAPOLI|SOCCAVO |NA|ITALIA |
 
-
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_19] Invocazione del servizio CREATE_OPERATION con ticket id vuoto
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION per con "<CF>" "ticketid_vuoto" "<OPERATION_TICKED_ID>"
@@ -173,6 +184,7 @@ Feature: Api Service Desk
       | CF              | OPERATION_TICKED_ID     | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTSFS80A01H703K| 1233443322              | CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA|
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_20] Invocazione del servizio CREATE_OPERATION con ticket id non formalmente corretto
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION per con "<CF>" "ticketid_errato" "<OPERATION_TICKED_ID>"
@@ -183,6 +195,7 @@ Feature: Api Service Desk
       | CF               | OPERATION_TICKED_ID     | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTSFS80A01H703K| 1233443322              | CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_21] Invocazione del servizio CREATE_OPERATION con operation ticket id non formalmente corretto
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION per con "<CF>" "<TICKET_ID>" "ticketoperationid_errato"
@@ -193,6 +206,7 @@ Feature: Api Service Desk
       | CF               | TICKET_ID | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTSFS80A01H703K| 1233443322| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_22] Invocazione del servizio CREATE_OPERATION con coppia ticket id ed operation ticket id già usati in precedenza
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION per con "<CF>" "<TICKET_ID>" "<OPERATION_TICKED_ID>"
@@ -204,6 +218,7 @@ Feature: Api Service Desk
    #TEST   | TMTSFS80A01H703K| AUTYV7JIYJ40WXC| AUT6DBGNT0      | CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
       | TMTSFS80A01H703K| AUT6B0D3CP3PGCG| AUT6CS4IU0      | CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_23] Invocazione del servizio CREATE_OPERATION inserimento richiesta corretta con creazione operation id
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -214,6 +229,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTGVR80D44A783O| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_PREUPLOAD_VIDEO_24] Invocazione del servizio UPLOAD VIDEO con operation id non esistente
     Given viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO
     When viene invocato il servizio UPLOAD VIDEO con "<OPERATION_ID>" con errore
@@ -223,11 +239,13 @@ Feature: Api Service Desk
       | OPERATION_ID|
       |abcedred|
 
+  @CallCenterEvoluto
   Scenario: [API-SERVICE_PREUPLOAD_VIDEO_25] Invocazione del servizio UPLOAD VIDEO con operation id vuoto
     Given viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO
     When  viene invocato il servizio UPLOAD VIDEO con operationid vuoto
     Then il servizio risponde con errore "400"
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_PREUPLOAD_VIDEO_26] Invocazione del servizio UPLOAD VIDEO con sha256 vuoto
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -241,6 +259,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | FRMTTR76M06B715E| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_PREUPLOAD_VIDEO_27] Invocazione del servizio UPLOAD VIDEO con preloadidx vuoto
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -254,6 +273,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | FRMTTR76M06B715E| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_PREUPLOAD_VIDEO_28] Invocazione del servizio UPLOAD VIDEO con sha256 errato
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -283,6 +303,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTSFS80A01H703K| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_PREUPLOAD_VIDEO_30] Invocazione del servizio UPLOAD VIDEO con esito positivo
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -326,17 +347,19 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | MNTMRA03M71C615V| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
 
-
+  @CallCenterEvoluto
   Scenario: [API-SERVICE_SEARCH_34] Invocazione del servizio SEARCH con CF vuoto
     Given viene creata una nuova richiesta per invocare il servizio SEARCH per il "CF_vuoto"
     When viene invocato il servizio SEARCH con errore
     Then il servizio risponde con errore "400"
 
+  @CallCenterEvoluto
   Scenario: [API-SERVICE_SEARCH_35] Invocazione del servizio SEARCH con CF non formalmente corretto
     Given viene creata una nuova richiesta per invocare il servizio SEARCH per il "CF_errato"
     When viene invocato il servizio SEARCH con errore
     Then il servizio risponde con errore "400"
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_SEARCH_36] Invocazione del servizio SEARCH con CF corretto
     Given viene creata una nuova richiesta per invocare il servizio SEARCH per il "<CF>"
     When viene invocato il servizio SEARCH
@@ -346,6 +369,7 @@ Feature: Api Service Desk
       | CF   |
       | TMTDMA00T07G273O |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_SEARCH_37] Invocazione del servizio SEARCH con CF senza notifiche in stato IRR TOT
     Given viene creata una nuova richiesta per invocare il servizio SEARCH per il "<CF>"
     When viene invocato il servizio SEARCH
@@ -355,6 +379,7 @@ Feature: Api Service Desk
       | CF   |
       | CPNTMS85T15H704W |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_SEARCH_38] Invocazione del servizio SEARCH con CF con una sola notifica reinviata per irreperibilità totale
     Given viene creata una nuova richiesta per invocare il servizio SEARCH per il "<CF>"
     When viene invocato il servizio SEARCH
@@ -364,6 +389,7 @@ Feature: Api Service Desk
       | CF   |
       | TMTSFS80A01H703K |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_SEARCH_39] Invocazione del servizio SEARCH con CF con sole notifiche reinviate per irreperibilità con ultimo tentativo di consegna >120g
     Given viene creata una nuova richiesta per invocare il servizio SEARCH per il "<CF>"
     When viene invocato il servizio SEARCH
@@ -373,6 +399,7 @@ Feature: Api Service Desk
       | CF   |
       | TMTCRL80A41A662H |
 
+  @CallCenterEvoluto
   Scenario Outline: [E2E_40] Inserimento di una nuova richista di reinvio pratiche con stato operation id OK con notifiche in irr tot con ultimo tentativo >120 gg
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -392,6 +419,7 @@ Feature: Api Service Desk
       | TMTMRC66A01H703L| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
 
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_SEARCH_41] Invocazione del servizio SEARCH con CF con sole notifiche reinviate per irreperibilità totale- notifica multidestinatario
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF1>"
@@ -438,7 +466,9 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | FRMTTR76M06B715E| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
 
+
     #stato operation CREATING= Operazione in attesa di caricamento del video
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_SEARCH_42_1] Inserimento di una nuova richista di reinvio pratiche con stato operation id in CREATED
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -458,7 +488,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTGNR83L06C351I| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
 
-
+  @CallCenterEvoluto
   Scenario Outline: [E2E_47] Invocazione del servizio CREATE_OPERATION con nuovo tantativo consegna non recapitata(KO)
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -478,6 +508,7 @@ Feature: Api Service Desk
 
 
             #stato operation OK= Notifica recapitata
+  @CallCenterEvoluto
   Scenario Outline: [E2E_48] Inserimento di una nuova richista di reinvio pratiche con stato operation id OK per uno dei multidestinatari
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF1>"
@@ -499,6 +530,7 @@ Feature: Api Service Desk
       | TMTCRL80A01F205A| CLMCST42R12D969Z| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
 
       #stato operation KO= Notifica in errore di spedizione o in errore di validazione
+  @CallCenterEvoluto
   Scenario Outline: [E2E_50_1] CF per il quale una consegna per irreperibilità totale è andata  KO e si reinserisce nuova richiesta
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>"
     When viene invocato il servizio UNREACHABLE
@@ -568,6 +600,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CAP2|CITY |CITY2|PR|COUNTRY|
       | TMTGRD80A04A662I| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80100|80121 |NAPOLI|SOCCAVO |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_PREUPLOAD_VIDEO_51] Inserimento di una nuova richista di reinvio pratiche con stato caricamento video su SafeStorage e verifica retention
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -583,7 +616,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTFNC42M05M082F| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80121|NAPOLI|SOCCAVO |NA|ITALIA |
 
-
+  @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_PREUPLOAD_VIDEO_54] Invocazione del servizio UPLOAD VIDEO con ContentType vuoto
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
@@ -598,7 +631,7 @@ Feature: Api Service Desk
       | TMTFNC42M05M082F| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
 
 
-
+  @CallCenterEvoluto
   Scenario Outline: [API-AUTH_55] Connessione al client senza API KEY
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>" senza API Key
     When viene invocato il servizio UNREACHABLE con errore senza API Key
@@ -618,6 +651,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTSFS80A01H703K| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80121|NAPOLI|SOCCAVO |NA|ITALIA |
 
+  @CallCenterEvoluto
   Scenario Outline: [API-AUTH_56] Connessione al client con api key errata
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>" con API Key errata
     When viene invocato il servizio UNREACHABLE con errore con API Key errata
@@ -637,7 +671,7 @@ Feature: Api Service Desk
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
       | TMTSFS80A01H703K| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80121|NAPOLI|SOCCAVO |NA|ITALIA |
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_SERVICE_DESK_UNREACHABLE_5_1] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -652,7 +686,7 @@ Feature: Api Service Desk
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_SERVICE_DESK_UNREACHABLE_5_2] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_890_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -665,7 +699,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_SERVICE_DESK_UNREACHABLE_5_3] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -679,7 +713,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_SERVICE_DESK_UNREACHABLE_6_1] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -693,7 +727,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_SERVICE_DESK_UNREACHABLE_6_2] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_890_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -706,7 +740,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_SERVICE_DESK_UNREACHABLE_6_3] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -719,7 +753,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_SERVICE_DESK_UNREACHABLE_7_1] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -733,7 +767,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-SERVICE_DESK_CREATE_OPERATION_23] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -747,7 +781,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-SERVICE_SEARCH_18_1] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -761,7 +795,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-SERVICE_PREUPLOAD_VIDEO_30] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -777,7 +811,7 @@ Feature: Api Service Desk
 
 
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-SERVICE_SEARCH_41] Notifica multi destinatario con workflow analogico con un destinatario irreperibile
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -806,7 +840,7 @@ Feature: Api Service Desk
       #Ritardare Il Perfezionamento per lo stato DELIVERED
  #   And vengono letti gli eventi fino allo stato della notifica "EFFECTIVE_DATE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-SERVICE_SEARCH_42_1] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -820,7 +854,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-E2E_46] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -834,7 +868,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-E2E_47] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -849,7 +883,7 @@ Feature: Api Service Desk
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_E2E_48] Notifica multi destinatario con workflow analogico con un destinatario irreperibile
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -875,7 +909,7 @@ Feature: Api Service Desk
     And vengono letti gli eventi fino allo stato della notifica "EFFECTIVE_DATE"
 
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-E2E_50] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -889,7 +923,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-E2E_51] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -903,7 +937,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dp
+  @dpCallCenterEvoluto
   Scenario: [DP_API-SERVICE_PREUPLOAD_VIDEO_54] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
