@@ -1152,8 +1152,42 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then l'avviso pagopa 0 viene pagato correttamente dall'utente 0
+    And si attende il corretto pagamento della notifica dell'utente 0
+
+  @pagamentiMultipli
+  Scenario: [B2B-PA-PAY_MULTI_PG_50_1] Destinatario 1 - notifica multi destinatario con presenza contemporanea di avviso pagoPA e F24 (PagoPa)
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo |
+      | feePolicy | DELIVERY_MODE |
+      | paFee | 0 |
+    And destinatario
+      | denomination     | Convivio Spa  |
+      | recipientType   | PG             |
+      | taxId | 27957814470 |
+      | payment_pagoPaForm | SI |
+      | payment_f24flatRate | NULL |
+      | payment_f24standard | SI |
+      | title_payment | F24_STANDARD_27957814470 |
+      | apply_cost_f24 | SI |
+      | apply_cost_pagopa | SI |
+      | payment_multy_number | 1 |
+    And destinatario altro
+      | denomination     | DivinaCommedia Srl  |
+      | recipientType   | PG             |
+      | taxId | 70412331207 |
+      | payment_pagoPaForm | SI |
+      | payment_f24flatRate | NULL |
+      | payment_f24standard | SI |
+      | title_payment | F24_STANDARD_70412331207 |
+      | apply_cost_pagopa | SI |
+      | apply_cost_f24 | SI |
+      | payment_multy_number | 1 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato il costo = "100" della notifica per l'utente 0
     And viene verificato il costo = "100" della notifica per l'utente 0
+
 
 
 
