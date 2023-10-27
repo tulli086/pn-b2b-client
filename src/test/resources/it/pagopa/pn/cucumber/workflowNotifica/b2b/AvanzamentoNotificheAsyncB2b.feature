@@ -1,5 +1,6 @@
 Feature: avanzamento notifiche asincrone b2b - controllo costi
 
+  @Async
   Scenario: [B2B_ASYNC_1] Notifica mono PF-Caso creazione Notifica di tipo non ASYNC, validazione non prevista
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -18,7 +19,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
 
-
+  @Async
   Scenario: [B2B_ASYNC_2] Notifica mono PF-Senza verifica amount GPD per notifica ASYNC e campo feePolicy a FLAT_RATE
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -37,7 +38,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
-
+  @Async
   Scenario: [B2B_ASYNC_3] Notifica mono PF-Rifiuto in caso di notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi non abilitati alla modalità asincrona
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -56,7 +57,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
-
+  @Async
   Scenario: [B2B_ASYNC_4] Notifica mono PF-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -100,7 +101,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
-
+  @Async
   Scenario: [B2B_ASYNC_5] Notifica mono PF-Senza verifica amount GPD per notifica ASYNC e campo paFee non popolato - Refused
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -119,7 +120,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
-
+  @Async
   Scenario: [B2B_ASYNC_6] Notifica multi PF/PG-Rifiuto di notifiche con modalità asincrona di integrazione al cui interno risultano avvisi non abilitati alla modalità asincrona
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -145,7 +146,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
-
+  @Async
   Scenario: [B2B_ASYNC_7] Notifica mono PG-Caso creazione Notifica di tipo non ASYNC, validazione non prevista
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -163,8 +164,9 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
 
+  @Async
   Scenario: [B2B_ASYNC_8] Notifica mono PG-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     And viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -178,10 +180,10 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And viene aggiunto il costo della notifica totale
-    And lettura amount posizione debitoria di "Cucumber Society"
+    And lettura amount posizione debitoria di "Cucumber_Society"
     And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
     And l'avviso pagopa viene pagato correttamente
     Then la notifica può essere annullata dal sistema tramite codice IUN
@@ -198,11 +200,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" alla posizione 0
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-    Then viene cancellata la posizione debitoria di "Cucumber Society"
+    Then viene cancellata la posizione debitoria di "Cucumber_Society"
 
-
+  @Async
   Scenario: [B2B_ASYNC_9] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “REQUEST_REFUSED“
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -227,10 +229,10 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And  viene effettuato il controllo del amount di GPD = "100"
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
-
+  @Async
   Scenario: [B2B_ASYNC_10] Notifica multi PF/PG-Verifica amount GPD in fase "REQUEST_REFUSED" costo aggiornato a 0
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
-    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     Then viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -248,9 +250,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
     And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 0
-    And destinatario
-      | denomination            | Cucumber Society |
-      | taxId                   | 20517490320      |
+    And destinatario Cucumber Society e:
       | payment_creditorTaxId   | 77777777777      |
       | physicalAddress_address | 0000             |
       | payment_pagoPaForm    | SI                 |
@@ -258,21 +258,21 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard   | NULL               |
       | apply_cost_pagopa     | SI                 |
       | payment_multy_number  | 1                  |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi REFUSED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED" per l'utente 0
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
     And  viene effettuato il controllo del amount di GPD = "100"
     And  viene verificato il costo = "100" della notifica per l'utente 0
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_REFUSED" per l'utente 1
-    And  lettura amount posizione debitoria di "Cucumber Society"
+    And  lettura amount posizione debitoria di "Cucumber_Society"
     And  viene effettuato il controllo del amount di GPD = "100"
     And  viene verificato il costo = "100" della notifica per l'utente 1
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
-    And viene cancellata la posizione debitoria di "Cucumber Society"
+    And viene cancellata la posizione debitoria di "Cucumber_Society"
 
 
-
+  @Async
   Scenario: [B2B_ASYNC_11] Notifica mono PF-Aggiornamento costi KO per posizione debitoria non presente
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -291,7 +291,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_multy_number  | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
-
+  @Async
   Scenario: [B2B_ASYNC_12] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -323,7 +323,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And  viene effettuato il controllo del amount di GPD = "100"
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
-
+  @Async
   Scenario: [B2B_ASYNC_13] Notifica mono PF Multipagamento-Verifica amount GPD notifica async dopo pagamento di un solo pagamento poi annullata la notifica il secondo pagamento amount non azzerrato
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
@@ -355,7 +355,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And viene effettuato il controllo del amount di GPD = "100"
     Then viene cancellata la posizione debitoria del pagamento 1
 
-
+  @Async
   Scenario: [B2B_ASYNC_14] Notifica mono PF Multipagamento-Verifica amount GPD notifica async dopo pagamento tutti i pagamenti poi annullata la notifica il secondo pagamento amount non azzerrato
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
@@ -390,9 +390,9 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And viene effettuato il controllo del amount di GPD = "100"
     Then vengono cancellate le posizioni debitorie
 
-
+  @Async
   Scenario: [B2B_ASYNC_15] Notifica mono PG-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -400,25 +400,26 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | pagoPaIntMode      | ASYNC                       |
       | paFee              | 10                         |
     And destinatario Cucumber Society e:
-      | payment_creditorTaxId   | 77777777777 |
-      | digitalDomicile_address | test@fail.it        |
+      | payment_creditorTaxId   | 77777777777  |
+      | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok_RIR   |
-      | payment_pagoPaForm      | SI          |
-      | payment_f24flatRate     | NULL        |
-      | payment_f24standard     | NULL        |
-      | apply_cost_pagopa       | SI          |
-      | payment_multy_number    | 1           |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
+      | payment_pagoPaForm      | SI           |
+      | payment_f24flatRate     | NULL         |
+      | payment_f24standard     | NULL         |
+      | apply_cost_pagopa       | SI           |
+      | payment_multy_number    | 1            |
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER" e successivamente annullata
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
-    Then lettura amount posizione debitoria di "Cucumber Society"
+    Then lettura amount posizione debitoria di "Cucumber_Society"
     And  viene effettuato il controllo del amount di GPD = "100"
-    Then viene cancellata la posizione debitoria di "Cucumber Society"
+    Then viene cancellata la posizione debitoria di "Cucumber_Society"
 
+  @Async
   Scenario: [B2B_ASYNC_16] Notifica mono PG Multipagamento-Verifica amount GPD notifica async dopo pagamento tutti i pagamenti poi annullata la notifica il secondo pagamento amount non azzerrato
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
-    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -434,8 +435,8 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard     | NULL         |
       | apply_cost_pagopa       | SI           |
       | payment_multy_number    | 2            |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 1
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" alla posizione 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" alla posizione 1
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then l'avviso pagopa 0 viene pagato correttamente dall'utente 0
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER" e successivamente annullata
@@ -446,10 +447,10 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And viene effettuato il controllo del amount di GPD con amount notifica del utente 1
     Then vengono cancellate le posizioni debitorie
 
-
+  @Async
   Scenario: [B2B_ASYNC_17] Notifica multi PF/PG-Verifica amount GPD per notifica ASYNC in stato "NOTIFICATION_CANCELLED"
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
-    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -475,22 +476,22 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard     | NULL         |
       | apply_cost_pagopa       | SI           |
       | payment_multy_number    | 1            |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" per utente 0 del pagamento 0
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" per utente 1 del pagamento 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" per la posizione debitoria 0 del pagamento 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" per la posizione debitoria 1 del pagamento 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
     And  viene effettuato il controllo del amount di GPD = "100"
-    And  lettura amount posizione debitoria di "Cucumber Society"
+    And  lettura amount posizione debitoria di "Cucumber_Society"
     And  viene effettuato il controllo del amount di GPD = "100"
     Then vengono cancellate le posizioni debitorie
 
-
+  @Async
   Scenario: [B2B_ASYNC_18] Notifica multi PF/PG-Verifica amount GPD per notifica ASYNC per Multipagamento
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
-    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
-    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -508,8 +509,8 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard     | NULL               |
       | apply_cost_pagopa       | SI                 |
       | payment_multy_number    | 2                  |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 0
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" alla posizione 1
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" per la posizione debitoria 0 del pagamento 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" per la posizione debitoria 1 del pagamento 1
     And destinatario Cucumber Society e:
       | payment_creditorTaxId   | 77777777777  |
       | digitalDomicile_address | test@fail.it |
@@ -519,8 +520,8 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard     | NULL         |
       | apply_cost_pagopa       | SI           |
       | payment_multy_number    | 2            |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 1
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" per la posizione debitoria 2 del pagamento 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" per la posizione debitoria 3 del pagamento 1
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And viene aggiunto il costo della notifica totale
     Then l'avviso pagopa 0 viene pagato correttamente dall'utente 0
@@ -537,7 +538,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And  viene effettuato il controllo del amount di GPD = "100"
     Then vengono cancellate le posizioni debitorie
 
-
+  @Async
   Scenario: [B2B_ASYNC_19] Notifica mono PF-Verifica amount GPD per notifica ASYNC per Multipagamento
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -567,7 +568,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then viene effettuato il controllo del cambiamento del amount nella timeline "SEND_SIMPLE_REGISTERED_LETTER" del pagamento 0
     And viene cancellata la posizione debitoria del pagamento 0
 
-
+  @Async
   Scenario: [B2B_ASYNC_20] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “VALIDATION“
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -594,7 +595,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
-
+  @Async
   Scenario: [B2B_ASYNC_21] Notifica mono PF-Verifica amount GPD per notifica ASYNC fino a "SEND_ANALOG_DOMICILE" al primo tentativo
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -624,7 +625,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_ANALOG_DOMICILE" del utente 0 al tentativo 0
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
-
+  @Async
   Scenario: [B2B_ASYNC_22] Notifica mono PF-Verifica amount GPD per notifica ASYNC fino a "SEND_ANALOG_DOMICILE" al secondo tentativo
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -657,7 +658,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_ANALOG_DOMICILE" del utente 0 al tentativo 1
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
-
+  @Async
   Scenario: [B2B_ASYNC_23] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “SEND_SIMPLE_REGISTERED_LETTER“
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -677,7 +678,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard     | NULL               |
       | apply_cost_pagopa       | SI                 |
       | payment_multy_number    | 1                  |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" per utente 0 del pagamento 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cristoforo Colombo" per la posizione debitoria 0 del pagamento 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene aggiunto il costo della notifica totale
     When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
@@ -685,7 +686,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_SIMPLE_REGISTERED_LETTER" del utente 0
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
-
+  @Async
   Scenario: [B2B_ASYNC_24] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato "VALIDATION" --> “SEND_SIMPLE_REGISTERED_LETTER“
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -715,8 +716,9 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_SIMPLE_REGISTERED_LETTER" del utente 0
     Then viene cancellata la posizione debitoria di "Cristoforo Colombo"
 
+  @Async
   Scenario: [B2B_ASYNC_25] Notifica mono PG-Verifica amount GPD per notifica ASYNC fino a "SEND_ANALOG_DOMICILE" al secondo tentativo
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -732,23 +734,23 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
       | payment_f24standard     | NULL                  |
       | apply_cost_pagopa       | SI                    |
       | payment_multy_number    | 1                     |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Society" alla posizione 0
+    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber_Society" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And viene aggiunto il costo della notifica totale
-    Then  lettura amount posizione debitoria di "Cucumber Society"
+    Then  lettura amount posizione debitoria di "Cucumber_Society"
     And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
-    And  lettura amount posizione debitoria di "Cucumber Society"
+    And  lettura amount posizione debitoria di "Cucumber_Society"
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_ANALOG_DOMICILE" del utente 0 al tentativo 1
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_1"
-    And  lettura amount posizione debitoria di "Cucumber Society"
+    And  lettura amount posizione debitoria di "Cucumber_Society"
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_ANALOG_DOMICILE" del utente 0 al tentativo 1
-    Then viene cancellata la posizione debitoria di "Cucumber Society"
+    Then viene cancellata la posizione debitoria di "Cucumber_Society"
 
-
+  @Async
   Scenario: [B2B_ASYNC_26] Notifica multi PF/PG-Verifica amount GPD per notifica ASYNC in stato “SEND_SIMPLE_REGISTERED_LETTER“
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
-    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -781,11 +783,11 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And  lettura amount posizione debitoria di "Cristoforo Colombo"
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_SIMPLE_REGISTERED_LETTER" del utente 0
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER" per l'utente 1
-    And  lettura amount posizione debitoria di "Cucumber Society"
+    And  lettura amount posizione debitoria di "Cucumber_Society"
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_SIMPLE_REGISTERED_LETTER" del utente 1
     Then vengono cancellate le posizioni debitorie
 
-
+  @Async
   Scenario: [B2B_ASYNC_27] Notifica mono PF-Verifica amount GPD per notifica ASYNC cancellazione posizione debitoria dopo validazione della notifica
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -812,7 +814,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And  viene cancellata la posizione debitoria di "Cristoforo Colombo"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
-
+  @Async
   Scenario: [B2B_ASYNC_28] Notifica mono PF-Verifica scarto notifica se applyCostFlag a false
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
@@ -837,11 +839,12 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And l'operazione ha prodotto un errore con status code "400"
     Then vengono cancellate le posizioni debitorie
 
+  @Async
   Scenario: [B2B_ASYNC_29] Notifica mono PF/PG-Verifica scarto notifica se applyCostFlag a false
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
-    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
-    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
+    And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     And viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -870,7 +873,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And l'operazione ha prodotto un errore con status code "400"
     Then vengono cancellate le posizioni debitorie
 
-  @version
+  @version @Async
   Scenario: [B2B_ASYNC_30] Creazione notifica ASYNC con V1 - Errore
     Given viene generata una nuova notifica V1
       | subject            | invio notifica con cucumber |
@@ -882,7 +885,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED V1
     Then si verifica lo scarto dell' acquisizione della notifica V1
 
-  @version
+  @version @Async
   Scenario: [B2B_ASYNC_31] Creazione notifica ASYNC con V2.1 e recupero tramite codice IUN V1 (p.fisica)_scenario negativo
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -897,7 +900,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V10
     Then vengono cancellate le posizioni debitorie
 
-  @version
+  @version @Async
   Scenario: [B2B_ASYNC_32] Creazione notifica ASYNC con V2.1 e recupero tramite codice IUN V2.0 (p.fisica)_scenario negativo
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Given viene generata una nuova notifica
@@ -914,8 +917,8 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
 
     @testIntegrazione
   Scenario: [B2B_PROVA_INTEGRAZIONE_GPD] Viene creata una posizione debitoria, interrogata e cancellata
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber Society" con Piva "20517490320"
+    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cristoforo Colombo" con CF "CLMCST42R12D969Z"
     Then lettura amount posizione debitoria di "Cristoforo Colombo"
-    And lettura amount posizione debitoria di "Cucumber Society"
+    And lettura amount posizione debitoria di "Cucumber_Society"
     Then vengono cancellate le posizioni debitorie
