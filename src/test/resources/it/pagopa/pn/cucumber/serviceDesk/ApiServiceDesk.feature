@@ -160,7 +160,7 @@ Feature: Api Service Desk
 
     Examples:
       | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
-      | TMTGMN76L05A944V| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80100|NAPOLI|SOCCAVO |NA|ITALIA |
+      | TMTGMN76L05A944V| CICCIO PASTICCIO|SIGN.   |Via@FAIL-Irreperibile_AR| INTERNO 2  |80100|NAPOLI|SOCCAVO |NA|ITALIA |
 
 
   Scenario Outline: [API-SERVICE_DESK_CREATE_OPERATION_19] Invocazione del servizio CREATE_OPERATION con ticket id vuoto
@@ -353,7 +353,7 @@ Feature: Api Service Desk
 
     Examples:
       | CF   |
-      | CPNTMS85T15H703W |
+      | CPNTMS85T15H704W |
 
   Scenario Outline: [API-SERVICE_SEARCH_38] Invocazione del servizio SEARCH con CF con una sola notifica reinviata per irreperibilità totale
     Given viene creata una nuova richiesta per invocare il servizio SEARCH per il "<CF>"
@@ -418,7 +418,7 @@ Feature: Api Service Desk
     Examples:
       | CF1             | CF2               | IUN|FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
    # Test   | TMTYRU80A07H703E| TMTRCC80A01A509O|QAQN-LJXG-YTNA-202309-Q-1  | CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
-      | TMTYRU80A07H703E| TMTRCC80A01A509O|LNZH-GWPW-KHDU-202310-N-1| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
+      | TMTYRU80A07H703E| TMTRCC80A01A509O|WQUW-ZTGZ-HGVG-202310-W-1| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
 
   @ignore
     #stato operation CREATING= Operazione in attesa di caricamento del video
@@ -517,7 +517,7 @@ Feature: Api Service Desk
     Given viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il "<CF>"
     When viene invocato il servizio UNREACHABLE
     Then la risposta del servizio UNREACHABLE è 1
-    Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP2>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
+    Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS2>" "<ADDRESSROW2>" "<CAP2>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
     When viene invocato il servizio CREATE_OPERATION
     Then la risposta del servizio CREATE_OPERATION risponde con esito positivo
@@ -534,8 +534,8 @@ Feature: Api Service Desk
 
 
     Examples:
-      | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CAP2|CITY |CITY2|PR|COUNTRY|
-      | TMTGRD80A04A662I| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80100|80121 |NAPOLI|SOCCAVO |NA|ITALIA |
+      | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESS2|ADDRESSROW2|CAP  |CAP2|CITY |CITY2|PR|COUNTRY|
+      | TMTGRD80A04A662I| CICCIO PASTICCIO|SIGN.   |Via@FAIL-Irreperibile_AR|Via@ok_RS| INTERNO 2  |80100|80121 |NAPOLI|SOCCAVO |NA|ITALIA |
 
   @ignore
           #stato operation KO= Notifica in errore di spedizione o in errore di validazione
@@ -651,6 +651,7 @@ Feature: Api Service Desk
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
+
   @dp
   Scenario: [DP_SERVICE_DESK_UNREACHABLE_5_2] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_890_scenario negativo
     Given viene generata una nuova notifica
@@ -661,6 +662,20 @@ Feature: Api Service Desk
       | taxId | TMTCRL80A41A662H |
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@FAIL-Irreperibile_890 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+
+  @dp
+  Scenario: [DP_SERVICE_DESK_UNREACHABLE_5_3] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario
+      | denomination | Test AR Fail 2 |
+      | taxId | FRMTTR76M06B715E |
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@FAIL-Irreperibile_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
