@@ -80,6 +80,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And lettura amount posizione debitoria di "Cristoforo Colombo"
     And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
     And l'avviso pagopa viene pagato correttamente
+    Then la notifica può essere annullata dal sistema tramite codice IUN
     Then viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -183,6 +184,7 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     And lettura amount posizione debitoria di "Cucumber Society"
     And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
     And l'avviso pagopa viene pagato correttamente
+    Then la notifica può essere annullata dal sistema tramite codice IUN
     Then viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -809,7 +811,6 @@ Feature: avanzamento notifiche asincrone b2b - controllo costi
     Then lettura amount posizione debitoria di "Cristoforo Colombo"
     And  viene cancellata la posizione debitoria di "Cristoforo Colombo"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
-    And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
 
 
   Scenario: [B2B_ASYNC_28] Notifica mono PF-Verifica scarto notifica se applyCostFlag a false
