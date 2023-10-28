@@ -46,7 +46,7 @@ public enum NotificationValue {
     RECIPIENT_TYPE("recipientType","PF",false),
     PAYMENT("payment","",false),
     PAYMENT_MULTY("payment_multy","",false),
-    PAYMENT_MULTY_NUMBER("payment_multy_number","0",false),
+    PAYMENT_MULTY_NUMBER("payment_multy_number","1",false),
     PAYMENT_CREDITOR_TAX_ID("payment_creditorTaxId","77777777777",false),
     PAYMENT_NOTICE_CODE("payment_noticeCode","",true),
     PAYMENT_NOTICE_CODE_OPTIONAL("payment_noticeCodeOptional","",true),
@@ -127,16 +127,16 @@ public enum NotificationValue {
                 Arrays.stream(NotificationValue.values()).filter(value -> value.key.equals(key)).findFirst().orElse(null);
         String threadNumber = (Thread.currentThread().getId()+"");
 
-        /*
-         String numberOfThread = threadNumber.length() < 2 ? "0"+threadNumber: threadNumber.substring(0, 2);
+        String numberOfThread = threadNumber.length() < 2 ? "0"+threadNumber: threadNumber.substring(0, 2);
         String timeNano = System.nanoTime()+"";
-        String finalNumber = "" + String.format("30" + numberOfThread + "%13s", timeNano.substring(0, timeNano.length()-2));
-        logger.error("GENERATED NUMBER: "+finalNumber);
-        return (notificationValue == null ? null : (notificationValue.addCurrentTime? (notificationValue.defaultValue + finalNumber ) : notificationValue.defaultValue));
-         */
+        String finalNumber = "" + String.format("30" + numberOfThread + "%14s", timeNano.substring(0, timeNano.length()-1));
 
+        return (notificationValue == null ? null : (notificationValue.addCurrentTime? (notificationValue.defaultValue + finalNumber ) : notificationValue.defaultValue));
+
+        /*
         String number = threadNumber.length() < 2 ? "0"+threadNumber: threadNumber.substring(0, 2);
         return (notificationValue == null ? null : (notificationValue.addCurrentTime? (notificationValue.defaultValue + (""+String.format("302"+number+"%13d",System.currentTimeMillis()))) : notificationValue.defaultValue));
+         */
     }
 
     public static String getValue(Map<String, String> data, String key){
