@@ -55,6 +55,10 @@ public class SharedSteps {
     private final PnGPDClientImpl pnGPDClientImpl;
     private final PnPaymentInfoClientImpl pnPaymentInfoClient;
 
+    //private  String iuvGPD;
+
+    private List<String> iuvGPD;
+
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebRecipientClient webRecipientClient;
     private final PnExternalServiceClientImpl pnExternalServiceClient;
@@ -221,6 +225,7 @@ public class SharedSteps {
         this.serviceDeskClientImplWrongApiKey=serviceDeskClientImplWrongApiKey;
         this.pnGPDClientImpl=pnGPDClientImpl;
         this.pnPaymentInfoClient=pnPaymentInfoClient;
+        this.iuvGPD=new ArrayList<String>();
     }
 
     @BeforeAll
@@ -250,6 +255,15 @@ public class SharedSteps {
         NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest, notificationRecipientV21 ,data);
         //this.notificationRequest.addRecipientsItem(recipient);
+    }
+
+    @And("al destinatario viene associato lo iuv creato mediante partita debitoria alla posizione {int}")
+    public void destinatarioAddIuvGPD(Integer posizione) {
+        //int numberofPayment=notificationRequest.getRecipients().get(0).getPayments().size();
+        //for(int i=0;i<numberofPayment;i++)
+        //this.notificationRequest.getRecipients().get(0).getPayments().get(0).getPagoPa().setNoticeCode(getIuvGPD());
+        //this.notificationRequest.getRecipients().get(0).getPayments().get(i).getPagoPa().setNoticeCode(getIuvGPD().get(i))
+        this.notificationRequest.getRecipients().get(0).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD(posizione));
     }
 
     @And("destinatario V1")
@@ -1785,6 +1799,29 @@ public class SharedSteps {
     public String getSchedulingDaysSuccessDigitalRefinementString() {
         if (schedulingDaysSuccessDigitalRefinementString == null) return schedulingDaysSuccessDigitalRefinementDefaultString;
         return schedulingDaysSuccessDigitalRefinementString;
+    }
+
+    public void addIuvGPD(String iuvGPD) {
+        this.iuvGPD.add("3"+iuvGPD);
+    }
+
+    public String getIuvGPD(int posizione) {
+        return this.iuvGPD.get(posizione);
+    }
+
+    @And("al destinatario viene associato lo iuv creato mediante partita debitoria per {string} alla posizione {int}")
+    public void destinatarioAddIuvGPD(String denominazione,Integer posizione) {
+
+        this.notificationRequest.getRecipients().get(0).denomination(denominazione).getPayments().get(posizione).getPagoPa().setNoticeCode(getIuvGPD(posizione));
+    }
+    @And("al destinatario viene associato lo iuv creato mediante partita debitoria per {string} per la posizione debitoria {int} del pagamento {int}")
+    public void destinatarioAddIuvGPDperUtente(String denominazione,Integer posizioneDebitoria,Integer pagamento) {
+
+        for(NotificationRecipientV21 recipient : this.notificationRequest.getRecipients()){
+            if(recipient.getDenomination().equalsIgnoreCase(denominazione)){
+                recipient.getPayments().get(pagamento).getPagoPa().setNoticeCode(getIuvGPD(posizioneDebitoria));
+            }
+        }
     }
 
 }

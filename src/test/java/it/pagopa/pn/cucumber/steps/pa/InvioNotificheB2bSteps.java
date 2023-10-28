@@ -53,6 +53,9 @@ public class InvioNotificheB2bSteps {
     @Value("${pn.retention.time.load}")
     private Integer retentionTimeLoad;
 
+    @Value("${pn.external.costo_base_notifica}")
+    private Integer costoBaseNotifica;
+
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebPaClient webPaClient;
     private final IPnPaB2bClient b2bClient;
@@ -123,6 +126,9 @@ public class InvioNotificheB2bSteps {
     public void notificationCanBeRetrievedWithIUNV1() {
         AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification> notificationByIun = new AtomicReference<>();
         try {
+            Assertions.assertDoesNotThrow(() ->
+                    notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV1().getIun()))
+            );
             if(sharedSteps.getSentNotificationV1()!= null) {
                 Assertions.assertDoesNotThrow(() ->
                         notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV1().getIun()))
@@ -149,6 +155,9 @@ public class InvioNotificheB2bSteps {
     public void notificationCanBeRetrievedWithIUNV2() {
         AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20> notificationByIun = new AtomicReference<>();
         try {
+            Assertions.assertDoesNotThrow(() ->
+                    notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV2().getIun()))
+            );
                 if(sharedSteps.getSentNotificationV1()!= null) {
                     Assertions.assertDoesNotThrow(() ->
                             notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV1().getIun()))
@@ -164,7 +173,6 @@ public class InvioNotificheB2bSteps {
                 }else {
                     Assertions.assertNotNull(notificationByIun.get());
                 }
-
             Assertions.assertNotNull(notificationByIun.get());
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
@@ -176,6 +184,16 @@ public class InvioNotificheB2bSteps {
         AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20> notificationByIun = new AtomicReference<>();
         try {
             notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV2().getIun()));
+        } catch (AssertionFailedError assertionFailedError) {
+            logger.info("Errore di lettura notifica");
+        }
+    }
+
+    @And("la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V10")
+    public void notificationCanBeRetrievedWithIUNV1Error() {
+        AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification> notificationByIun = new AtomicReference<>();
+        try {
+            notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV1().getIun()));
         } catch (AssertionFailedError assertionFailedError) {
             logger.info("Errore di lettura notifica");
         }
@@ -797,8 +815,10 @@ public class InvioNotificheB2bSteps {
     public void vieneCreataUnaPosizioneDebitoria(String organitationCode,String amount,String name,String taxId) {
 
         String iuv = String.format("47%13d44", System.currentTimeMillis());
+        //String iuv=sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode();
         logger.info("Iuv generato: " + iuv);
         logger.info("IUPD generate: " + organitationCode +"-64c8e41bfec846e04"+ iuv, System.currentTimeMillis());
+        sharedSteps.addIuvGPD(iuv);
 
         PaymentPositionModel paymentPositionModelSend = new PaymentPositionModel()
                 .iupd(String.format(organitationCode+"-64c8e41bfec846e04"+  iuv, System.currentTimeMillis()))
@@ -872,6 +892,7 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
             Assertions.assertNotNull(paymentInfoResponse);
 
             amountGPD=paymentInfoResponse.get(0).getAmount();
+            logger.info("Amount GPD: " + amountGPD);
             Assertions.assertNotNull(amountGPD);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1002,7 +1023,8 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
     public void vieneEffettuatoIlControlloDelAmountDiGPD(String amount) {
 
         try {
-
+            int importoGPD=amountGPD;
+            logger.info("Amount GPD: "+amountGPD);
             Assertions.assertEquals(amountGPD,Integer.parseInt(amount));
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1032,13 +1054,61 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
     }
 
     @Then("viene effettuato il controllo del cambiamento del amount nella timeline {string} del (utente)(pagamento) {int}")
-    public void vieneEffettuatoIlControlloDelCambiamentoDelAmount(String timelineEventCategory,@Transpose DataTest dataFromTest,Integer user) {
-        TimelineElementV20 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,dataFromTest);
+    public void vieneEffettuatoIlControlloDelCambiamentoDelAmount(String timelineEventCategory,Integer user) {
 
-                amountNotifica.set(user,amountNotifica.get(user) + timelineElement.getDetails().getAnalogCost());
+        TimelineElementV20 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,null);
+
+        amountNotifica.set(user,amountNotifica.get(user) + timelineElement.getDetails().getAnalogCost());
 
 
         try {
+
+            Assertions.assertEquals(amountGPD,amountNotifica.get(user));
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentPositionModelBaseResponse == null ? "NULL" : paymentPositionModelBaseResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
+    @Then("viene effettuato il controllo del cambiamento del amount nella timeline {string} del (utente)(pagamento) {int} al tentativo {int}")
+    public void vieneEffettuatoIlControlloDelCambiamentoDelAmountAlTentativo(String timelineEventCategory,Integer user,Integer attemps) {
+
+        DataTest dataFromTest=new DataTest();
+        dataFromTest.setNumCheck(attemps);
+
+        TimelineElementV20 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,dataFromTest);
+
+        amountNotifica.set(user,amountNotifica.get(user) + timelineElement.getDetails().getAnalogCost());
+
+
+        try {
+
+            Assertions.assertEquals(amountGPD,amountNotifica.get(user));
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentPositionModelBaseResponse == null ? "NULL" : paymentPositionModelBaseResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
+    @Then("viene effettuato il controllo dell'aggiornamento del costo totale del utente {int}")
+    public void vieneEffettuatoIlControlloDelCambiamentoDelCostoTotale(Integer user) {
+
+
+        amountNotifica.set(user,amountNotifica.get(user) + costoBaseNotifica);
+
+
+        try {
+
+            logger.info("Costo base presente su Notifica"+amountNotifica.get(user));
+            logger.info("Costo base presente su GPD"+amountGPD);
 
             Assertions.assertEquals(amountGPD,amountNotifica.get(user));
 
@@ -1073,12 +1143,14 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
     }
 
     @And("viene aggiunto il costo della notifica totale")
-    public void vieneAggiuntoIlCostoDellaNotificaTotale(Integer user) {
+    public void vieneAggiuntoIlCostoDellaNotificaTotale() {
 
         try {
 
             for(int i=0;i<amountNotifica.size();i++) {
-                    amountNotifica.set(i, sharedSteps.getSentNotification().getAmount() + sharedSteps.getSentNotification().getPaFee());
+                    int costototale=costoBaseNotifica+ sharedSteps.getSentNotification().getPaFee();
+                    logger.info("Amount+costo base:"+costototale);
+                    amountNotifica.set(i, costototale);
             }
 
             Assertions.assertNotNull(amountNotifica);
