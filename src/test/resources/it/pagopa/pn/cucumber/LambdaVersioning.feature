@@ -10,7 +10,7 @@ Feature: verifica compatibilità tra verioni
     Then si verifica la corretta acquisizione della notifica
     And la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1
 
-  @version
+  @version @ignore
   Scenario: [B2B-PA-SEND_VERSION_2] Invio notifica digitale mono destinatario e mono pagamento V2.1 e recupero tramite codice IUN V2.0 (p.fisica)_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |

@@ -845,7 +845,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} V1")
     public void readingEventUpToTheTimelineElementOfNotificationV1(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+        TimelineElementWait timelineElementWait = getTimelineElementCategoryV1(timelineEventCategory);
 
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement = null;
 
@@ -859,16 +859,16 @@ public class AvanzamentoNotificheB2bSteps {
             if (sharedSteps.getSentNotification()!= null) {
                 sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
 
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+                logger.info("NOTIFICATION_TIMELINE : " + sharedSteps.getSentNotification().getTimeline());
 
                 timelineElement = sharedSteps.getSentNotificationV1().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
                 if (timelineElement != null) {
                     break;
                 }
             } else if (sharedSteps.getSentNotificationV1()!= null) {
-                sharedSteps.setSentNotificationV2(b2bClient.getSentNotificationV2(sharedSteps.getSentNotificationV1().getIun()));
+                sharedSteps.setSentNotificationV1(b2bClient.getSentNotificationV1(sharedSteps.getSentNotificationV1().getIun()));
 
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+                logger.info("NOTIFICATION_TIMELINE V1 : " + sharedSteps.getSentNotificationV1().getTimeline());
 
                 timelineElement = sharedSteps.getSentNotificationV1().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategoryV1())).findAny().orElse(null);
                 if (timelineElement != null) {
@@ -2006,7 +2006,9 @@ public class AvanzamentoNotificheB2bSteps {
 
     private void priceVerification(String price, String date, Integer destinatario) {
 
-        List<NotificationPaymentItem> listNotificationPaymentItem = sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments();
+        if(sharedSteps.getSentNotification()!=null) {
+            List<NotificationPaymentItem> listNotificationPaymentItem = sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments();
+
         if (listNotificationPaymentItem != null){
             for (NotificationPaymentItem notificationPaymentItem: listNotificationPaymentItem) {
                 NotificationPriceResponse notificationPrice = this.b2bClient.getNotificationPrice(notificationPaymentItem.getPagoPa().getCreditorTaxId(), notificationPaymentItem.getPagoPa().getNoticeCode());
@@ -2023,6 +2025,9 @@ public class AvanzamentoNotificheB2bSteps {
                     sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
                 }
             }
+        }
+        }else if(sharedSteps.getSentNotificationV1()!=null) {
+            priceVerificationV1(price,date,destinatario);
         }
     }
 
@@ -2699,8 +2704,10 @@ public class AvanzamentoNotificheB2bSteps {
                 }
             }
             Assertions.assertNotNull(timelineElement);
+
         }else {
-            TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+
+            TimelineElementWait timelineElementWait = getTimelineElementCategoryV1("PAYMENT");
 
             it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement = null;
 
