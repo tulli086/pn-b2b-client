@@ -117,8 +117,8 @@ Feature: annullamento notifiche b2b
       | denomination     | Ada  |
       | taxId | LVLDAA85T50G702B |
       | payment_pagoPaForm | SI |
-      | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
+      | apply_cost_f24      | SI |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And l'avviso pagopa viene pagato correttamente
     And si attende il corretto pagamento della notifica
