@@ -1063,7 +1063,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
   #50 Destinatario 1 - notifica multi destinatario con presenza contemporanea di avviso pagoPA e F24: pagamento di uno degli avvisi (PagoPa)
   #TODO Non è possibile effettuare il pagamento lato Destinatario
   @pagamentiMultipli
-  Scenario: [B2B-PA-PAY_MULTI_50] Destinatario 1 - notifica multi destinatario con presenza contemporanea di avviso pagoPA e F24: pagamento di uno degli avvisi (PagoPa)
+  Scenario: [B2B-PA-PAY_MULTI_50] Destinatario 1 - notifica multi destinatario con presenza contemporanea di avviso pagoPA e F24: pagamento di uno degli avvisi e costi inclusi (PagoPa)
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
@@ -1092,6 +1092,38 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato il costo = "100" della notifica per l'utente 0
     And viene verificato il costo = "100" della notifica per l'utente 0
+
+
+  @pagamentiMultipli
+  Scenario: [B2B-PA-PAY_MULTI_50_2] Destinatario 1 - notifica multi destinatario con presenza contemporanea di avviso pagoPA e F24: pagamento di uno degli avvisi e costi non inclusi (PagoPa)
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo |
+      | feePolicy | FLAT_RATE |
+      | paFee | 0 |
+    And destinatario
+      | denomination     | Ada Lovelace  |
+      | taxId | LVLDAA85T50G702B |
+      | payment_pagoPaForm | SI |
+      | payment_f24flatRate | SI |
+      | payment_f24standard | NULL |
+      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | apply_cost_f24 | NO |
+      | apply_cost_pagopa | NO |
+      | payment_multy_number | 1 |
+    And destinatario
+      | denomination     | Giovanna D'arco  |
+      | taxId | DRCGNN12A46A326K |
+      | payment_pagoPaForm | SI |
+      | payment_f24flatRate | SI |
+      | payment_f24standard | NULL |
+      | title_payment | F24_STANDARD_DRCGNN12A46A326K |
+      | apply_cost_pagopa | NO |
+      | apply_cost_f24 | NO |
+      | payment_multy_number | 1 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato il costo = "0" della notifica per l'utente 0
+    And viene verificato il costo = "0" della notifica per l'utente 0
 
   @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_50_1] Destinatario 1 - notifica multi destinatario con presenza contemporanea di avviso pagoPA e F24: pagamento di uno degli avvisi (PagoPa)
