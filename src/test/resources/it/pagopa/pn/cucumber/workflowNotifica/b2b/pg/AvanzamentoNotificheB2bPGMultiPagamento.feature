@@ -181,7 +181,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
 
   @pagamentiMultipli
-  Scenario: [B2B-PA-PAY_MULTI_PG_25_2] PA - inserimento notifica mono destinatario con un solo avviso PagoPa e F24 e costi di notifica non  inclusi
+  Scenario: [B2B-PA-PAY_MULTI_PG_25_2] PA - inserimento notifica mono destinatario con un solo avviso PagoPa e F24 e costi di notifica  inclusi
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
