@@ -19,7 +19,7 @@ Feature: address validation feature
       | physicalAddress_State | <foreignState> |
     Then la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi <notificationValidationStatus>
     Examples:
-      | denomination | at | address | adddressDetails | zip | municipality | municipalityDetails | province | foreignState | notificationValidationStatus |
+      | denomination | at | address | addressDetails | zip | municipality | municipalityDetails | province | foreignState | notificationValidationStatus |
       | TEST_NORMALIZZATORE_02 | NULL | EPASA-ITAC | NULL | NULL | marotta@cert.epasa-itaco | NULL | it | NULL | REFUSED |
       | TEST_NORMALIZZATORE_05 | NULL | VIA DON DINO BIANCARDI,60 | NULL | 46030 | SUSTINENTE | NULL | NULL | NULL | ACCEPTED |
       | TEST_NORMALIZZATORE_06 | NULL | VIA REPUBBLICA,57 | NULL | 20843 | VERANO B | NULL | ZA | NULL | ACCEPTED |
