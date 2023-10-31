@@ -202,6 +202,9 @@ public class SharedSteps {
     @Value("${pn.external.utilized.pec:testpagopa3@pec.pagopa.it}")
     private String digitalAddress;
 
+    @Value("${pn.external.utilized.pec.alt:testpagopa3@pec.pagopa.it}")
+    private String digitalAddressAlt;
+
     private String defaultDigitalAddress = "testpagopa3@pec.pagopa.it";
 
 
@@ -251,10 +254,28 @@ public class SharedSteps {
 
 
     @And("destinatario")
-    public void destinatario(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
-        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
-        addRecipientToNotification(this.notificationRequest, notificationRecipientV21 ,data);
-        //this.notificationRequest.addRecipientsItem(recipient);
+    public void destinatario(@Transpose NotificationRecipientV21 recipient) {
+        if (recipient.getDigitalDomicile()!=null && recipient.getDigitalDomicile().getAddress().isEmpty()) {
+            this.notificationRequest.addRecipientsItem(recipient
+                    .digitalDomicile(new NotificationDigitalAddress()
+                            .type(NotificationDigitalAddress.TypeEnum.PEC)
+                            .address(getDigitalAddressValue())));
+        }else {
+            this.notificationRequest.addRecipientsItem(recipient);
+        }
+    }
+
+    @And("destinatario altro")
+    public void destinatarioAltro(@Transpose NotificationRecipientV21 recipient) {
+        if (recipient.getDigitalDomicile()!=null && recipient.getDigitalDomicile().getAddress().isEmpty()) {
+            this.notificationRequest.addRecipientsItem(recipient
+                    .digitalDomicile(new NotificationDigitalAddress()
+                            .type(NotificationDigitalAddress.TypeEnum.PEC)
+                            .address(getDigitalAddressValueAlt())));
+        }else {
+            this.notificationRequest.addRecipientsItem(recipient);
+        }
+
     }
 
     @And("al destinatario viene associato lo iuv creato mediante partita debitoria alla posizione {int}")
@@ -317,20 +338,21 @@ public class SharedSteps {
     }
 
     @And("destinatario Mario Cucumber e:")
-    public void destinatarioMarioCucumberParam(Map<String, String> data) { // @Transpose NotificationRecipientV21 recipient
-        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
-        addRecipientToNotification(this.notificationRequest,
-                (notificationRecipientV21
-                .denomination("Mario Cucumber")
-                .taxId(marioCucumberTaxID))
-                ,data);
-        /*
-        this.notificationRequest.addRecipientsItem(
-                notificationRecipientV21
-                        .denomination("Mario Cucumber")
-                        .taxId(marioCucumberTaxID));
-
-         */
+    public void destinatarioMarioCucumberParam(@Transpose NotificationRecipientV21 recipient) {
+        if (recipient.getDigitalDomicile()!=null && recipient.getDigitalDomicile().getAddress().isEmpty()) {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("Mario Cucumber")
+                            .taxId(marioCucumberTaxID)
+                            .digitalDomicile(new NotificationDigitalAddress()
+                                    .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                    .address(getDigitalAddressValue())));
+        }else {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("Mario Cucumber")
+                            .taxId(marioCucumberTaxID));
+        }
     }
 
     private void addRecipientToNotification(NewNotificationRequestV21 notificationRequest, NotificationRecipientV21 notificationRecipient , Map<String, String> recipientData){
@@ -357,7 +379,7 @@ public class SharedSteps {
                         .taxId(marioGherkinTaxID)
                         .digitalDomicile(new NotificationDigitalAddress()
                                 .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                .address(getDigitalAddressValue()))), new HashMap<>());
+                                .address(getDigitalAddressValueAlt()))), new HashMap<>());
     }
 
     @And("destinatario Mario Gherkin V1 e:")
@@ -369,12 +391,22 @@ public class SharedSteps {
     }
 
     @And("destinatario Mario Gherkin e:")
-    public void destinatarioMarioGherkinParam(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
-        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
-        addRecipientToNotification(this.notificationRequest,
-                (notificationRecipientV21.denomination("Mario Gherkin")
-                .taxId(marioGherkinTaxID)),
-                data);
+    public void destinatarioMarioGherkinParam(@Transpose NotificationRecipientV21 recipient) {
+
+        if (recipient.getDigitalDomicile()!=null && recipient.getDigitalDomicile().getAddress().isEmpty()) {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("Mario Gherkin")
+                            .taxId(marioGherkinTaxID)
+                            .digitalDomicile(new NotificationDigitalAddress()
+                                    .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                    .address(getDigitalAddressValueAlt())));
+        }else {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("Mario Gherkin")
+                            .taxId(marioGherkinTaxID));
+        }
     }
 
 
@@ -388,7 +420,7 @@ public class SharedSteps {
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
                         .digitalDomicile(new NotificationDigitalAddress()
                                 .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                .address(getDigitalAddressValue()))), new HashMap<>());
+                                .address(getDigitalAddressValueAlt()))), new HashMap<>());
         /*
         this.notificationRequest.addRecipientsItem(
                 dataTableTypeUtil.convertNotificationRecipient(new HashMap<>())
@@ -410,7 +442,7 @@ public class SharedSteps {
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
                         .digitalDomicile(new NotificationDigitalAddress()
                                 .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                .address(getDigitalAddressValue()))), new HashMap<>());
+                                .address(getDigitalAddressValueAlt()))), new HashMap<>());
         /*
         this.notificationRequest.addRecipientsItem(
                 dataTableTypeUtil.convertNotificationRecipient(new HashMap<>())
@@ -424,40 +456,44 @@ public class SharedSteps {
     }
 
     @And("destinatario GherkinSrl e:")
-    public void destinatarioPg1param(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
-        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
-        addRecipientToNotification(this.notificationRequest,
-                (notificationRecipientV21
-                        .denomination("GherkinSrl")
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(gherkinSrltaxId)),
-                data);
-        /*
-        this.notificationRequest.addRecipientsItem(
-                recipient
-                        .denomination("GherkinSrl")
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(gherkinSrltaxId));
-
-         */
+    public void destinatarioPg1param(@Transpose NotificationRecipientV21 recipient) {
+        if (recipient.getDigitalDomicile()!=null && recipient.getDigitalDomicile().getAddress().isEmpty()) {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("GherkinSrl")
+                            .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                            .taxId(gherkinSrltaxId)
+                            .digitalDomicile(new NotificationDigitalAddress()
+                                    .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                    .address(getDigitalAddressValueAlt())));
+        }else {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("GherkinSrl")
+                            .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                            .taxId(gherkinSrltaxId)
+            );
+        }
     }
 
     @And("destinatario CucumberSpa e:")
-    public void destinatarioPg2param(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
-        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
-        addRecipientToNotification(this.notificationRequest,
-                (notificationRecipientV21
-                        .denomination("CucumberSpa")
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(cucumberSpataxId)),
-                data);
-        /*
-        this.notificationRequest.addRecipientsItem(
-                recipient
-                        .denomination("CucumberSpa")
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(cucumberSpataxId));
-         */
+    public void destinatarioPg2param(@Transpose NotificationRecipientV21 recipient) {
+        if (recipient.getDigitalDomicile()!=null && recipient.getDigitalDomicile().getAddress().isEmpty()) {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("CucumberSpa")
+                            .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                            .taxId(cucumberSpataxId)
+                            .digitalDomicile(new NotificationDigitalAddress()
+                                    .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                    .address(getDigitalAddressValue())));
+        }else {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("CucumberSpa")
+                            .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                            .taxId(cucumberSpataxId));
+        }
     }
 
 
@@ -486,22 +522,23 @@ public class SharedSteps {
 
 
     @And("destinatario Gherkin spa e:")
-    public void destinatarioGherkinSpaParam(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
-        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
-        addRecipientToNotification(this.notificationRequest,
-                (notificationRecipientV21
-                        .denomination("GherkinSpa")
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(gherkinSpaTaxID)),
-                data);
-        /*
-        this.notificationRequest.addRecipientsItem(
-                recipient
-                        .denomination("GherkinSpa")
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(gherkinSpaTaxID));
-
-         */
+    public void destinatarioGherkinSpaParam(@Transpose NotificationRecipientV21 recipient) {
+        if (recipient.getDigitalDomicile()!=null && recipient.getDigitalDomicile().getAddress().isEmpty()) {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("GherkinSpa")
+                            .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                            .taxId(gherkinSpaTaxID)
+                            .digitalDomicile(new NotificationDigitalAddress()
+                                    .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                    .address(getDigitalAddressValueAlt())));
+        }else {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("GherkinSpa")
+                            .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                            .taxId(gherkinSpaTaxID));
+        }
     }
 
     @And("destinatario Cucumber srl")
@@ -528,23 +565,25 @@ public class SharedSteps {
     }
 
     @And("destinatario Cucumber srl e:")
-    public void destinatarioCucumberSrlParam(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
-        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
-        addRecipientToNotification(this.notificationRequest,
-                (notificationRecipientV21
-                        .denomination("CucumberSrl")
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(cucumberSrlTaxID)),
-                data);
-        /*
-        this.notificationRequest.addRecipientsItem(
-                recipient
-                        .denomination("CucumberSrl")
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
-                        .taxId(cucumberSrlTaxID));
-
-         */
+    public void destinatarioCucumberSrlParam(@Transpose NotificationRecipientV21 recipient) {
+        if (recipient.getDigitalDomicile()!=null && recipient.getDigitalDomicile().getAddress().isEmpty()) {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("CucumberSrl")
+                            .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                            .taxId(cucumberSrlTaxID)
+                            .digitalDomicile(new NotificationDigitalAddress()
+                                    .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                    .address(getDigitalAddressValue())));
+        }else {
+            this.notificationRequest.addRecipientsItem(
+                    recipient
+                            .denomination("CucumberSrl")
+                            .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                            .taxId(cucumberSrlTaxID));
+        }
     }
+
 
     @And("destinatario Cucumber Society")
     public void destinatarioCucumberSociety() {
@@ -570,39 +609,26 @@ public class SharedSteps {
     }
 
     @And("destinatario Cucumber Society e:")
-    public void destinatarioCucumberSocietyParam(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
-        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
-        addRecipientToNotification(this.notificationRequest,
-                (notificationRecipientV21
-                        .denomination("Cucumber_Society")
-                        .taxId(cucumberSocietyTaxID)
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)),
-                data);
-        /*
+    public void destinatarioCucumberSocietyParam(@Transpose NotificationRecipientV21 recipient) {
         this.notificationRequest.addRecipientsItem(
                 recipient
                         .denomination("Cucumber_Society")
                         .taxId(cucumberSocietyTaxID)
-                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG));
-
-         */
+                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValue())));
     }
 
     @And("destinatario Cucumber Analogic e:")
-    public void destinatarioCucumberAnalogicParam(Map<String, String> data) {//@Transpose NotificationRecipientV21 recipient
-        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
-        addRecipientToNotification(this.notificationRequest,
-                (notificationRecipientV21
-                        .denomination("Cucumber Analogic")
-                        .taxId(cucumberAnalogicTaxID)),
-                data);
-        /*
+    public void destinatarioCucumberAnalogicParam(@Transpose NotificationRecipientV21 recipient) {
         this.notificationRequest.addRecipientsItem(
                 recipient
                         .denomination("Cucumber Analogic")
-                        .taxId(cucumberAnalogicTaxID));
-
-         */
+                        .taxId(cucumberAnalogicTaxID)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValue())));
     }
 
     @And("destinatario Cristoforo Colombo")
@@ -1523,6 +1549,11 @@ public class SharedSteps {
     public String getDigitalAddressValue() {
         if (digitalAddress == null || digitalAddress.equalsIgnoreCase("${pn.external.digitalDomicile.address}")) return defaultDigitalAddress;
         return digitalAddress;
+    }
+
+    public String getDigitalAddressValueAlt() {
+        if (digitalAddressAlt == null || digitalAddressAlt.equalsIgnoreCase("${pn.external.digitalDomicile.address.alt}")) return defaultDigitalAddress;
+        return digitalAddressAlt;
     }
 
     public Duration getSchedulingDaysSuccessDigitalRefinement() {
