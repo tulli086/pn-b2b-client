@@ -117,7 +117,7 @@ Feature: avanzamento notifiche b2b multi destinatario con persona fisica e giuri
       | digitalDomicile | NULL |
       | physicalAddress_zip     | 16121       |
       | physicalAddress_address | Via@ok_AR |
-    And destinatario
+      And destinatario altro
       | denomination     | Polo  |
       | taxId | PLOMRC01P30L736Y |
       | digitalDomicile | NULL |
@@ -141,7 +141,7 @@ Feature: avanzamento notifiche b2b multi destinatario con persona fisica e giuri
       | digitalDomicile         | NULL       |
       | physicalAddress_zip     | 16121       |
       | physicalAddress_address | Via@ok_890 |
-    And destinatario
+    And destinatario altro
       | denomination     | Polo  |
       | taxId | PLOMRC01P30L736Y |
       | payment_pagoPaForm      | SI         |
