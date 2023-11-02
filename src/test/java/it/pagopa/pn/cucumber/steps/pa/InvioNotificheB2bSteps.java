@@ -816,13 +816,24 @@ public class InvioNotificheB2bSteps {
         //Assertions.assertNull(assertionFailedError);
     }
 
+    private String generateRandomIuv(){
+        int randomSleepToRandomize = new Random().nextInt(100);
+        try {
+            Thread.sleep(randomSleepToRandomize);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        String threadNumber = (Thread.currentThread().getId()+"");
+        String numberOfThread = threadNumber.length() < 2 ? "0"+threadNumber: threadNumber.substring(0, 2);
+        String timeNano = System.nanoTime()+"";
+        String iuv = String.format("47%13s44", (numberOfThread+timeNano).substring(0,13));
+        logger.info("Iuv generato: " + iuv);
+        return iuv;
+    }
 
     @And("viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore {string} e amount {string} per {string} con (CF)(Piva) {string}")
     public void vieneCreataUnaPosizioneDebitoria(String organitationCode,String amount,String name,String taxId) {
-
-        String iuv = String.format("47%13d44", System.currentTimeMillis());
-        //String iuv=sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode();
-        logger.info("Iuv generato: " + iuv);
+        String iuv = generateRandomIuv();
         logger.info("IUPD generate: " + organitationCode +"-64c8e41bfec846e04"+ iuv, System.currentTimeMillis());
         sharedSteps.addIuvGPD(iuv);
 
