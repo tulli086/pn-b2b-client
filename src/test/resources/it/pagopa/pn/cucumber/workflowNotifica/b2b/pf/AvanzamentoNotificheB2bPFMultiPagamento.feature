@@ -1974,7 +1974,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
   @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_80_1_1] PA - Invio RS DELIVERY_MODE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità DELIVERY_MODE (scenario positivo)
@@ -1995,7 +1995,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
   @pagamentiMultipli @cartaceoF24 @mockPec
@@ -2017,7 +2017,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
 
@@ -2040,7 +2040,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
 
@@ -2064,7 +2064,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
   @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_81_1] PA - Invio RS DELIVERY_MODE Costi inclusi - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica non inclusi
@@ -2086,7 +2086,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
   @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_81_1_1] PA - Invio RS DELIVERY_MODE Costi inclusi - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica non inclusi
@@ -2108,7 +2108,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
   @pagamentiMultipli @cartaceoF24 @mockPec
@@ -2131,7 +2131,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
   @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_81_3] PA - Invio RS FLAT_RATE - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica  inclusi
@@ -2153,7 +2153,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
 
