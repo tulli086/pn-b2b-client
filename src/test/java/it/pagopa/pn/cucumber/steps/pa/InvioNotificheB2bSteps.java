@@ -859,7 +859,7 @@ public class InvioNotificheB2bSteps {
                                 .iban("IT30N0103076271000001823603")));
 
         logger.info("Request: " + paymentPositionModelSend.toString());
-        amountNotifica.add(0);
+        amountNotifica.add(Integer.parseInt(amount));
         try {
 
             Assertions.assertDoesNotThrow(() -> {
@@ -1040,7 +1040,6 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
     public void vieneEffettuatoIlControlloDelAmountDiGPD(String amount) {
 
         try {
-            int importoGPD=amountGPD;
             logger.info("Amount GPD: "+amountGPD);
             Assertions.assertEquals(amountGPD,Integer.parseInt(amount));
 
@@ -1091,7 +1090,7 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
         }
     }
 
-    @Then("viene effettuato il controllo del cambiamento del amount nella timeline {string} del (utente)(pagamento) {int} al tentativo:")
+    @Then("viene effettuato il controllo del cambiamento del amount nella timeline {string} del (utente)(pagamento) {int} (al tentativo):")
     public void vieneEffettuatoIlControlloDelCambiamentoDelAmountAlTentativo(String timelineEventCategory,Integer user,@Transpose DataTest dataFromTest ) {
 
         TimelineElementV20 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,dataFromTest);
@@ -1114,10 +1113,6 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
 
     @Then("viene effettuato il controllo dell'aggiornamento del costo totale del utente {int}")
     public void vieneEffettuatoIlControlloDelCambiamentoDelCostoTotale(Integer user) {
-
-
-        amountNotifica.set(user,amountNotifica.get(user) + costoBaseNotifica);
-
 
         try {
 
@@ -1164,7 +1159,7 @@ List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoReques
             for(int i=0;i<amountNotifica.size();i++) {
                     int costototale=costoBaseNotifica+ sharedSteps.getSentNotification().getPaFee();
                     logger.info("Amount+costo base:"+costototale);
-                    amountNotifica.set(i, costototale);
+                    amountNotifica.set(i, amountNotifica.get(i) + costototale);
             }
 
             Assertions.assertNotNull(amountNotifica);
