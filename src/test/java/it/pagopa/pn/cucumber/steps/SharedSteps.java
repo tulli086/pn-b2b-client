@@ -154,8 +154,8 @@ public class SharedSteps {
     private final Integer waitDefault = 10000;
 
     private final SecureRandom secureRandom = new SecureRandom();
-    private final Integer WORKFLOW_WAIT_UPPER_BOUND = 2000;
-    private final Integer WAIT_UPPER_BOUND = 500;
+    private final Integer WORKFLOW_WAIT_UPPER_BOUND = 2500;
+    private final Integer WAIT_UPPER_BOUND = 750;
 
     private final String schedulingDaysSuccessDigitalRefinementDefaultString = "6m";
     private final String schedulingDaysFailureDigitalRefinementDefaultString = "6m";
@@ -865,7 +865,6 @@ public class SharedSteps {
     private void sendNotification() {
         try {
             Assertions.assertDoesNotThrow(() -> {
-                Thread.sleep(new Random().nextInt(1000));
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
 
