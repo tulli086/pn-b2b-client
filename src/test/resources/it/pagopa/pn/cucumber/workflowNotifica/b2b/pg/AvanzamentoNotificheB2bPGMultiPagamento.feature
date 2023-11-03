@@ -1898,7 +1898,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     Then l'operazione ha generato un errore con status code "404"
 
 
-  @pagamentiMultipli @digitaleF24
+  @pagamentiMultipli @digitaleF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_PG_91] PA - Invio DELIVERY_MODE costi non inclusi -   Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1909,6 +1909,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Convivio Spa  |
       | recipientType   | PG             |
       | taxId | 27957814470 |
+      | digitalDomicile_address |   test@pecOk.it  |
       |payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
@@ -1919,7 +1920,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
 
-  @pagamentiMultipli @digitaleF24
+  @pagamentiMultipli @digitaleF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_PG_92] PA - Invio DELIVERY_MODE costi  inclusi -   Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1930,6 +1931,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Convivio Spa  |
       | recipientType   | PG             |
       | taxId | 27957814470 |
+      | digitalDomicile_address |   test@pecOk.it  |
       |payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
@@ -1961,7 +1963,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
 
-  @pagamentiMultipli @digitaleF24
+  @pagamentiMultipli @digitaleF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_PG_94] PA - Invio FLAT_RATE costi  inclusi -   Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1972,6 +1974,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Convivio Spa  |
       | recipientType   | PG             |
       | taxId | 27957814470 |
+      | digitalDomicile_address | test@ok.it |
       | title_payment | F24_FLAT_27957814470 |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |

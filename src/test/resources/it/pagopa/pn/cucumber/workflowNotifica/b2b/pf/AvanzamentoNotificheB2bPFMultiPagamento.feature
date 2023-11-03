@@ -1670,7 +1670,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
 
 
   #72 Verifica retention allegati di pagamento (120gg da data perfezionamento Notifica) - F24 [TA]
-  @pagamentiMultipli
+  @pagamentiMultipli @mockPec
   Scenario: [B2B-PA-PAY_MULTI_72] Verifica retention allegati di pagamento (120gg da data perfezionamento Notifica) - F24 [TA]
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1681,6 +1681,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_pagoPaForm  | NULL   |
       | payment_f24flatRate | NULL   |
       | payment_f24standard | SI |
+      | digitalDomicile_address |   test@pecOk.it  |
       | title_payment | F24_STANDARD_MARIO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -1954,7 +1955,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
 
 
 
-  @pagamentiMultipli @cartaceoF24
+  @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_80] PA - Invio RS DELIVERY_MODE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità DELIVERY_MODE (scenario positivo)
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1965,7 +1966,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1973,9 +1974,9 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
-  @pagamentiMultipli @cartaceoF24
+  @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_80_1_1] PA - Invio RS DELIVERY_MODE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità DELIVERY_MODE (scenario positivo)
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -1994,10 +1995,10 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
-  @pagamentiMultipli @cartaceoF24
+  @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_80_2] PA - Invio RS DELIVERY_MODE con Costi inclusi - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità DELIVERY_MODE (scenario positivo)
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2008,7 +2009,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -2016,11 +2017,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
 
-  @pagamentiMultipli @cartaceoF24
+  @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_80_3] PA - Invio RS FLATE_RATE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità DELIVERY_MODE (scenario positivo)
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2031,7 +2032,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -2039,11 +2040,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
 
-  @pagamentiMultipli @cartaceoF24
+  @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_81] PA - Invio RS DELIVERY_MODE - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica non inclusi
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2054,7 +2055,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
@@ -2063,9 +2064,9 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
-  @pagamentiMultipli @cartaceoF24
+  @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_81_1] PA - Invio RS DELIVERY_MODE Costi inclusi - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica non inclusi
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2076,7 +2077,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
@@ -2085,9 +2086,9 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
-  @pagamentiMultipli @cartaceoF24
+  @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_81_1_1] PA - Invio RS DELIVERY_MODE Costi inclusi - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica non inclusi
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2107,10 +2108,10 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
-  @pagamentiMultipli @cartaceoF24
+  @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_81_2] PA - Invio RS FLAT_RATE - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica non inclusi
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2121,7 +2122,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
@@ -2130,9 +2131,9 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
-  @pagamentiMultipli @cartaceoF24
+  @pagamentiMultipli @cartaceoF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_81_3] PA - Invio RS FLAT_RATE - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica  inclusi
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2143,7 +2144,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok-Retry_RS |
+      | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
@@ -2152,7 +2153,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
 
 
@@ -2178,7 +2179,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
   @pagamentiMultipli @cartaceoF24
-  Scenario: [B2B-PA-PAY_MULTI_82_1] PA - Invio RS DELIVERY_MODE con Costi inclusi - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità DELIVERY_MODE (scenario positivo)
+  Scenario: [B2B-PA-PAY_MULTI_82_1] PA - Invio AR DELIVERY_MODE con Costi inclusi - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità DELIVERY_MODE (scenario positivo)
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
@@ -2199,7 +2200,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
   @pagamentiMultipli @cartaceoF24
-  Scenario: [B2B-PA-PAY_MULTI_82_3] PA - Invio RS FLATE_RATE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità DELIVERY_MODE (scenario positivo)
+  Scenario: [B2B-PA-PAY_MULTI_82_3] PA - Invio AR FLATE_RATE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità DELIVERY_MODE (scenario positivo)
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
@@ -2491,7 +2492,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
-      | physicalCommunication | REGISTERED_LETTER_890           |
+      | physicalCommunication | REGISTERED_LETTER_890 |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
     And destinatario
@@ -2516,7 +2517,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
-      | physicalCommunication | REGISTERED_LETTER_890           |
+      | physicalCommunication | REGISTERED_LETTER_890 |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
     And destinatario
@@ -2584,7 +2585,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
     #--------------------------DIGITALE---------------------------------
-  @pagamentiMultipli @digitaleF24
+  @pagamentiMultipli @digitaleF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_91] PA - Invio DELIVERY_MODE costi non inclusi -   Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2594,6 +2595,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And destinatario
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
+      | digitalDomicile_address |   test@pecOk.it  |
       |payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
@@ -2604,7 +2606,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
 
-  @pagamentiMultipli @digitaleF24
+  @pagamentiMultipli @digitaleF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_92] PA - Invio DELIVERY_MODE costi  inclusi -   Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2614,6 +2616,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And destinatario
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
+      | digitalDomicile_address |   test@pecOk.it  |
       |payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
@@ -2644,7 +2647,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
 
-  @pagamentiMultipli @digitaleF24
+  @pagamentiMultipli @digitaleF24 @mockPec
   Scenario: [B2B-PA-PAY_MULTI_94] PA - Invio FLAT_RATE costi  inclusi -   Invio notifica e download atto opponibile DIGITAL_DELIVERY_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -2654,6 +2657,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     And destinatario
       | denomination     | Ada Lovelace  |
       | taxId | LVLDAA85T50G702B |
+      | digitalDomicile_address |   test@pecOk.it  |
       | title_payment | F24_FLAT_LVLDAA85T50G702B |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |

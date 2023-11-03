@@ -78,6 +78,11 @@ public class PnPaB2bUtils {
         //PRELOAD DOCUMENTI NOTIFICA
         List<NotificationDocument> newdocs = new ArrayList<>();
         for (NotificationDocument doc : request.getDocuments()) {
+            try {
+                Thread.sleep(new Random().nextInt(250));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             newdocs.add(this.preloadDocument(doc));
         }
         request.setDocuments(newdocs);
@@ -87,7 +92,11 @@ public class PnPaB2bUtils {
             List<NotificationPaymentItem> paymentList = recipient.getPayments();
             if(paymentList != null){
                 for (NotificationPaymentItem paymentInfo: paymentList) {
-
+                    try {
+                        Thread.sleep(new Random().nextInt(250));
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     if (paymentInfo.getPagoPa()!= null) {
                         paymentInfo.getPagoPa().setAttachment(preloadAttachment(paymentInfo.getPagoPa().getAttachment()));
                     }
