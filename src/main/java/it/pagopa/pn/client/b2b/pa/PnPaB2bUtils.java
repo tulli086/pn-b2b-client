@@ -79,7 +79,7 @@ public class PnPaB2bUtils {
         List<NotificationDocument> newdocs = new ArrayList<>();
         for (NotificationDocument doc : request.getDocuments()) {
             try {
-                Thread.sleep(new Random().nextInt(250));
+                Thread.sleep(new Random().nextInt(350));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -93,7 +93,7 @@ public class PnPaB2bUtils {
             if(paymentList != null){
                 for (NotificationPaymentItem paymentInfo: paymentList) {
                     try {
-                        Thread.sleep(new Random().nextInt(250));
+                        Thread.sleep(new Random().nextInt(350));
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

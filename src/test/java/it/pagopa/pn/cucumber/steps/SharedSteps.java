@@ -156,8 +156,8 @@ public class SharedSteps {
     private final Integer waitDefault = 10000;
 
     private final SecureRandom secureRandom = new SecureRandom();
-    private final Integer WORKFLOW_WAIT_UPPER_BOUND = 2500;
-    private final Integer WAIT_UPPER_BOUND = 750;
+    private final Integer WORKFLOW_WAIT_UPPER_BOUND = 2900;
+    private final Integer WAIT_UPPER_BOUND = 950;
 
     private final String schedulingDaysSuccessDigitalRefinementDefaultString = "6m";
     private final String schedulingDaysFailureDigitalRefinementDefaultString = "6m";
