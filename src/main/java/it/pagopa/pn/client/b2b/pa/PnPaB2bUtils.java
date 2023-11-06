@@ -20,6 +20,7 @@ import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -1037,24 +1038,33 @@ public class PnPaB2bUtils {
 
 
     private void loadToPresigned( String url, String secret, String sha256, String resource ) {
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-type", "application/pdf");
-        headers.add("x-amz-checksum-sha256", sha256);
-        headers.add("x-amz-meta-secret", secret);
-
-        HttpEntity<Resource> req = new HttpEntity<>( ctx.getResource( resource), headers);
-        restTemplate.exchange( URI.create(url), HttpMethod.PUT, req, Object.class);
+        loadToPresigned(url,secret,sha256,resource,"application/pdf",0);
     }
 
     private void loadToPresignedMetadati( String url, String secret, String sha256, String resource ) {
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-type", "application/json");
-        headers.add("x-amz-checksum-sha256", sha256);
-        headers.add("x-amz-meta-secret", secret);
-
-        HttpEntity<Resource> req = new HttpEntity<>( ctx.getResource( resource), headers);
-        restTemplate.exchange( URI.create(url), HttpMethod.PUT, req, Object.class);
+        loadToPresigned(url,secret,sha256,resource,"application/json",0);
     }
+
+
+    private void loadToPresigned( String url, String secret, String sha256, String resource,String resourceType, int depth ) {
+        if(depth >= 5){
+            throw new ResourceAccessException("max depth, PUT not working");
+        }
+        try{
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+            headers.add("Content-type", resourceType);
+            headers.add("x-amz-checksum-sha256", sha256);
+            headers.add("x-amz-meta-secret", secret);
+
+            HttpEntity<Resource> req = new HttpEntity<>( ctx.getResource( resource), headers);
+            restTemplate.exchange( URI.create(url), HttpMethod.PUT, req, Object.class);
+        }catch (Exception e){
+            loadToPresigned(url,secret,sha256,resource,resourceType,depth+1);
+        }
+    }
+
+
+
 
 
     private PreLoadResponse getPreLoadResponse(String sha256) {
