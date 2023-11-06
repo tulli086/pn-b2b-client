@@ -84,7 +84,7 @@ Feature: avanzamento notifiche b2b persona fisica
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | CLMCST42R12D969Z@pec.pagopa.it |
       | payment     | NULL              |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
   @testLite @workflowDigitale @mockPec

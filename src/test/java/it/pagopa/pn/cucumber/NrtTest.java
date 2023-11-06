@@ -15,9 +15,9 @@ import static io.cucumber.junit.platform.engine.Constants.*;
         @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "it.pagopa.pn.cucumber.steps"),
         @ConfigurationParameter(key = EXECUTION_MODE_FEATURE_PROPERTY_NAME, value = "concurrent"),
 })
-@ExcludeTags({"ignore","uat"})
+@ExcludeTags({"ignore","uat","realPec"})
 @IncludeTags({"workflowDigitale","workflowAnalogico",
-        "pagamentiMultipli","costoAnalogico",
+        "pagamentiMultipli","costoAnalogico","Async",
         "f24","version","AOO_UO", "Annullamento"})
 public class NrtTest {
 }
