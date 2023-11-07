@@ -187,7 +187,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
 
 
   @dev @costoAnalogico
-  Scenario: [B2B_COSTO_ANALOG_PG_7] Invio notifica e verifica costo con ZONE_3 + @OK_RIR + DELIVERY_MODE positivo
+  Scenario: [B2B_COSTO_ANALOG_PG_9] Invio notifica e verifica costo con ZONE_3 + @OK_RIR + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -206,7 +206,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
     And viene verificato il costo = "1095" della notifica
 
   @dev @costoAnalogico
-  Scenario: [B2B_COSTO_ANALOG_PG_8] Invio notifica e verifica costo con ZONE_3 + @OK_RIR + FLAT_RATE positivo
+  Scenario: [B2B_COSTO_ANALOG_PG_10] Invio notifica e verifica costo con ZONE_3 + @OK_RIR + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
