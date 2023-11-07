@@ -71,8 +71,7 @@ Feature: Allegati notifica
     And viene effettuato un controllo sulla durata della retention di "PAGOPA"
 
 
-    #Test introdotto come regression del bug 8120 GA2.1
-  @ignore
+        #Test introdotto come regression del bug 8120 GA2.1
   Scenario: [B2B_PN8120_1] Analizzando una notifica digitale perfezionata, verificare che la retention degli allegati non venga modificata anche post visualizzazione
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -87,15 +86,6 @@ Feature: Allegati notifica
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
-      | NULL | NULL |
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
-    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-    And si attende che sia presente il perfezionamento per decorrenza termini
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     Then viene verificato che l'elemento di timeline "REFINEMENT" esista
       | loadTimeline | true |
@@ -114,90 +104,9 @@ Feature: Allegati notifica
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
       | details | NOT_NULL |
       | details_recIndex | 0 |
-
-
-        #Test introdotto come regression del bug 8120 GA2.1
-  Scenario: [B2B_PN8120_1_1] Analizzando una notifica digitale perfezionata, verificare che la retention degli allegati non venga modificata anche post visualizzazione
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo |
-      | feePolicy | DELIVERY_MODE |
-      | paFee | 0 |
-    And destinatario Mario Cucumber e:
-      | digitalDomicile_address |   test@pecOk.it  |
-      | payment_pagoPaForm | SI |
-      | payment_f24flatRate | NULL |
-      | payment_f24standard | NULL |
-      | apply_cost_pagopa | SI |
-      | payment_multy_number | 1 |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
-    Then viene verificato che l'elemento di timeline "REFINEMENT" esista
-      | loadTimeline | true |
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-    And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-    And la notifica può essere correttamente recuperata da "Mario Cucumber"
-#    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
-    And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
-      | loadTimeline | true |
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-      | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
-    Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-
 
     #Test introdotto come regression del bug 8120 GA2.1
-  @ignore
   Scenario: [B2B_PN8120_2] Analizzando una notifica analogica perfezionata, verificare che la retention degli allegati non venga modificata anche post visualizzazione
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                         |
-    And destinatario Mario Cucumber e:
-      | digitalDomicile_address | test@fail.it       |
-      | payment_pagoPaForm      | SI                 |
-      | payment_f24flatRate     | NULL               |
-      | payment_f24standard     | NULL               |
-      | apply_cost_pagopa       | SI                 |
-      | payment_multy_number    | 1                  |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
-      | NULL | NULL |
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
-    Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-    And si attende che sia presente il perfezionamento per decorrenza termini
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
-    Then viene verificato che l'elemento di timeline "REFINEMENT" esista
-      | loadTimeline | true |
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-    And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-    Then la notifica può essere correttamente recuperata da "Mario Cucumber"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
-    And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
-      | loadTimeline | true |
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-      | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
-    Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-
-
-    #Test introdotto come regression del bug 8120 GA2.1
-  Scenario: [B2B_PN8120_2_1] Analizzando una notifica analogica perfezionata, verificare che la retention degli allegati non venga modificata anche post visualizzazione
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo |
