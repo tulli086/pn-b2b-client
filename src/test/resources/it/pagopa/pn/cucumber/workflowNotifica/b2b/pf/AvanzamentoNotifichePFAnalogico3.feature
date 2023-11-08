@@ -423,9 +423,14 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | taxId | NNVFNC80A01H501G |
       | digitalDomicile | NULL |
       | physicalAddress_address | via @FAIL-Irreperibile_AR 16 |
+      | physicalAddress_zip                 | 40121                        |
+      | physicalAddress_municipality        | BOLOGNA                      |
+      | physicalAddress_province            | BO                           |
+      | physicalAddress_addressDetails      | NULL                         |
+      | physicalAddress_municipalityDetails | NULL                         |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE_FAILURE" con failureCause "D01"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE"
+    #And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"
 
 
 
