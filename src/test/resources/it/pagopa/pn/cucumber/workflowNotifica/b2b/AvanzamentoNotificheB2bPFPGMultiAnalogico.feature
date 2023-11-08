@@ -230,6 +230,11 @@ Feature: avanzamento b2b notifica multi destinatario analogico
       | taxId                   | NNVFNC80A01H501G          |
       | digitalDomicile         | NULL                      |
       | physicalAddress_address | Via@FAIL-Irreperibile_890 |
+      | physicalAddress_zip                 | 40121                        |
+      | physicalAddress_municipality        | BOLOGNA                      |
+      | physicalAddress_province            | BO                           |
+      | physicalAddress_addressDetails      | NULL                         |
+      | physicalAddress_municipalityDetails | NULL                         |
     And destinatario Cucumber Society
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE" per l'utente 0
