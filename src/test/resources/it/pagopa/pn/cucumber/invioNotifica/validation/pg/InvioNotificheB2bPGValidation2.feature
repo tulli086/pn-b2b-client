@@ -175,7 +175,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | 7500777500779987 |
        #1) 15 max Length
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_1] Invio notifica digitale con multi destinatario corretto e recupero tramite codice IUN scenario positivo
 
     Given viene generata una nuova notifica
@@ -199,7 +199,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | SALVATOR DALI                 | SRL AZIENDA         |
       | Ilaria-D'Amico/.@_            | l'azienda-@_ /C.R.L |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_2] Invio notifica digitale con multi destinatario errati scenario negativo
 
     Given viene generata una nuova notifica
@@ -218,7 +218,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | srlNicola&Rossi :"()=?*+;,!^& |
 
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_3] Invio notifica digitale mono destinatario con physicalAddress_address e physicalAddress_addressDetails corretto scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -235,7 +235,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | VIA ADIGE  VIA TORINO           |
       | via adige 01234 via adige 56789 |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_4] Invio notifica digitale mono destinatario con physicalAddress_municipality corretto scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -251,7 +251,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | PARIGI             |
       | MILANO 01234 56789 |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_5] Invio notifica digitale mono destinatario con physicalAddress_municipalityDetails corretto scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -267,7 +267,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | PARIGI             |
       | MILANO 01234 56789 |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_6] Invio notifica digitale mono destinatario con physicalAddress_state corretto scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -283,7 +283,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | FRANCIA            |
       | ITALIA 01234 56789 |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_7] Invio notifica digitale mono destinatario con physicalAddress_zip corretto scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -303,7 +303,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | 0123456789 | Paris  | Paris    | FRANCIA |
 
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_8] Invio notifica digitale mono destinatario con physicalAddress_province corretto scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -320,7 +320,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | MI 01234 56789 |
 
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_9] Invio notifica digitale multi destinatario con physicalAddress_address errato scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -335,7 +335,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | via dà via è via ì via ò     |
       | via dell`adige :"()=?*+;,!^& |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_10] Invio notifica digitale multi destinatario con physicalAddress_addressDetails errato scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -350,7 +350,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | via dà via è via ì via ò     |
       | via dell adige :"()=?*+;,!^& |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_11] Invio notifica digitale multi destinatario con physicalAddress_municipality errato scenario negativo
 
     Given viene generata una nuova notifica
@@ -366,7 +366,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | san donà Erbè Forlì Nardò Brùsaporto |
       | san dona :"()=?*+;,!^&               |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_12] Invio notifica digitale multi destinatario con physicalAddress_municipalityDetails errato scenario negativo
 
     Given viene generata una nuova notifica
@@ -382,7 +382,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | san donà Erbè Forlì Nardò Brùsaporto |
       | san dona :"()=?*+;,!^&                            |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_13] Invio notifica digitale multi destinatario con physicalAddress_State errato scenario negativo
 
     Given viene generata una nuova notifica
@@ -398,7 +398,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | Città d'Avòrio Rénmín Mùrìtaniya |
       | Citta d`Avorio :"()=?*+;,!^&     |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_14] Invio notifica digitale multi destinatario con physicalAddress_zip errato scenario negativo
 
     Given viene generata una nuova notifica
@@ -414,7 +414,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | via dà via è via ì via ò     |
       | via dell`adige :"()=?*+;,!^& |
 
-  @7621
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_15] Invio notifica digitale multi destinatario con physicalAddress_province errato scenario negativo
 
     Given viene generata una nuova notifica
