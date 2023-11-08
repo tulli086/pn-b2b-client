@@ -25,7 +25,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario
-      | denomination | OK-GiacenzaDelegato-gt10_890 |
+      | denomination | Signor giacenza |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile | NULL |
       | physicalAddress_address | via@OK-GiacenzaDelegato-gt10_890 |
@@ -81,7 +81,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
   Scenario: [B2B_TIMELINE_ANALOG_45] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECRN015 AR momentaneamente non rendicontabile positivo PN-6079
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
+      | senderDenomination | Comune di palermo    |
     And destinatario
       | denomination | OK-CausaForzaMaggiore_AR |
       | taxId | LVLDAA85T50G702B |
@@ -100,7 +100,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario
-      | denomination            | via@OK-NonRendicontabile_AR |
+      | denomination            | signor nonRendicontabile    |
       | taxId                   | DVNLRD52D15M059P            |
       | digitalDomicile         | NULL                        |
       | physicalAddress_address | via@OK-NonRendicontabile_AR |

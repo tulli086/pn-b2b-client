@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public enum NotificationValue {
 
@@ -79,6 +80,7 @@ public enum NotificationValue {
 
     private static final String NULL_VALUE = "NULL";
     public static final String EXCLUDE_VALUE = "NO";
+    private static final Integer NOTICE_CODE_LENGTH = 18;
 
     public final String key;
     private final String defaultValue;
@@ -93,21 +95,35 @@ public enum NotificationValue {
         this.addCurrentTime = addCurrentTime;
     }
 
+
     public static String getDefaultValue(String key) {
         NotificationValue notificationValue =
                 Arrays.stream(NotificationValue.values()).filter(value -> value.key.equals(key)).findFirst().orElse(null);
-        String threadNumber = (Thread.currentThread().getId()+"");
+
+
+        return (notificationValue == null ? null : (notificationValue.addCurrentTime? (notificationValue.defaultValue + generateRandomNumber() ) : notificationValue.defaultValue));
 
         /*
-         String numberOfThread = threadNumber.length() < 2 ? "0"+threadNumber: threadNumber.substring(0, 2);
-        String timeNano = System.nanoTime()+"";
-        String finalNumber = "" + String.format("30" + numberOfThread + "%13s", timeNano.substring(0, timeNano.length()-2));
-        logger.error("GENERATED NUMBER: "+finalNumber);
-        return (notificationValue == null ? null : (notificationValue.addCurrentTime? (notificationValue.defaultValue + finalNumber ) : notificationValue.defaultValue));
-         */
-
         String number = threadNumber.length() < 2 ? "0"+threadNumber: threadNumber.substring(0, 2);
         return (notificationValue == null ? null : (notificationValue.addCurrentTime? (notificationValue.defaultValue + (""+String.format("302"+number+"%13d",System.currentTimeMillis()))) : notificationValue.defaultValue));
+         */
+    }
+
+    private static String  generateRandomNumber(){
+        String threadNumber = (Thread.currentThread().getId()+"");
+        String numberOfThread = threadNumber.length() < 2 ? "0"+threadNumber: threadNumber.substring(0, 2);
+        String timeNano = System.nanoTime()+"";
+        String randomClassePagamento = new Random().nextInt(14)+"";
+        randomClassePagamento = randomClassePagamento.length() < 2 ? "0"+randomClassePagamento : randomClassePagamento;
+        String finalNumber = "" + String.format("302" +randomClassePagamento + numberOfThread + timeNano.substring(0, timeNano.length()-4));
+        if(finalNumber.length() > NOTICE_CODE_LENGTH){
+            finalNumber = finalNumber.substring(0,NOTICE_CODE_LENGTH);
+        }else{
+            int remainingLength = NOTICE_CODE_LENGTH - finalNumber.length();
+            String paddingString = String.valueOf(new Random().nextInt(9)).repeat(remainingLength);
+            finalNumber = finalNumber + paddingString;
+        }
+        return finalNumber;
     }
 
     public static String getValue(Map<String, String> data, String key){
