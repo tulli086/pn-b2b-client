@@ -197,7 +197,9 @@ Feature: avanzamento b2b notifica analogico difgitale
       #Ritardare Il Perfezionamento per lo stato DELIVERED
     And vengono letti gli eventi fino allo stato della notifica "EFFECTIVE_DATE"
 
-  @workflowDigitale @mockPec
+    
+    #TODO Creare una sequence che rallenta l'irreperibile
+  @workflowDigitale @mockPec @ignore
   Scenario: [B2B_TIMELINE_FIX_7179_8_2] Notifica multi destinatario con workflow analogico con un destinatario irreperibile
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
