@@ -409,8 +409,7 @@ Feature: Validazione campi invio notifiche b2b
     Examples:
       | denomination                                                 |
       | Nicolò Rossi Raffaella Carrà Salvator Dalì Bruno Nicolè dudù |
-
-      | Nicola Rossi :"()=?*+;,!^&                                   |
+      | Nicola Rossi :"()=?*+;,!^&@_                                   |
 
 
   @validation @testLite

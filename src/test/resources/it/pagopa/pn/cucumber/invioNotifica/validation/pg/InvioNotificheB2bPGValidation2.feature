@@ -214,7 +214,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
     Examples:
       | denomination                  |
       | àzìèndà òù                    |
-      | srlNicola&Rossi :"()=?*+;,!^& |
+      | srlNicola&Rossi :"()=?*+;,!^&@_ |
 
 
   @validation
