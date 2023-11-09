@@ -71,7 +71,7 @@ Feature: Allegati notifica
     And viene effettuato un controllo sulla durata della retention di "PAGOPA"
 
 
-        #Test introdotto come regression del bug 8120 GA2.1
+   #Test introdotto come regression del bug 8120 GA2.1
   Scenario: [B2B_PN8120_1] Analizzando una notifica digitale perfezionata, verificare che la retention degli allegati non venga modificata anche post visualizzazione
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -113,7 +113,8 @@ Feature: Allegati notifica
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                         |
     And destinatario Mario Cucumber e:
-      | digitalDomicile_address | test@fail.it       |
+      | digitalDomicile | NULL       |
+      | physicalAddress_address | Via@ok_RS |
       | payment_pagoPaForm      | SI                 |
       | payment_f24flatRate     | NULL               |
       | payment_f24standard     | NULL               |
