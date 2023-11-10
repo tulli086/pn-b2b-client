@@ -72,6 +72,7 @@ Feature: Allegati notifica
 
 
    #Test introdotto come regression del bug 8120 GA2.1
+  @RetentionAllegati
   Scenario: [B2B_PN8120_1] Analizzando una notifica digitale perfezionata, verificare che la retention degli allegati non venga modificata anche post visualizzazione
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -95,7 +96,6 @@ Feature: Allegati notifica
       | details | NOT_NULL |
       | details_recIndex | 0 |
     And la notifica può essere correttamente recuperata da "Mario Cucumber"
-#    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
       | details | NOT_NULL |
@@ -106,6 +106,7 @@ Feature: Allegati notifica
       | details_recIndex | 0 |
 
     #Test introdotto come regression del bug 8120 GA2.1
+  @RetentionAllegati
   Scenario: [B2B_PN8120_2] Analizzando una notifica analogica perfezionata, verificare che la retention degli allegati non venga modificata anche post visualizzazione
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -130,7 +131,6 @@ Feature: Allegati notifica
       | details | NOT_NULL |
       | details_recIndex | 0 |
     Then la notifica può essere correttamente recuperata da "Mario Cucumber"
-#    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" esista
       | loadTimeline | true |
       | details | NOT_NULL |
@@ -142,6 +142,7 @@ Feature: Allegati notifica
 
 
   #Test introdotto come regression del bug 8120 GA2.1
+  @RetentionAllegati
   Scenario: [B2B_PN8120_3] Visualizzazione da parte del destinatario della notifica non perfezionata e verifica che la retenion dell'allegato non cambi
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
