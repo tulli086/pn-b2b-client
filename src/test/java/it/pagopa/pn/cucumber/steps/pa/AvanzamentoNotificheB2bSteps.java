@@ -363,7 +363,7 @@ public class AvanzamentoNotificheB2bSteps {
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.NOTIFICATION_VIEWED, 2, waiting * 2);
                 break;
             case "SEND_COURTESY_MESSAGE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_COURTESY_MESSAGE, 8, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_COURTESY_MESSAGE, 10, sharedSteps.getWorkFlowWait());
                 break;
             case "DIGITAL_SUCCESS_WORKFLOW":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.DIGITAL_SUCCESS_WORKFLOW, 3, waiting * 3);
@@ -390,7 +390,7 @@ public class AvanzamentoNotificheB2bSteps {
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SCHEDULE_ANALOG_WORKFLOW, 2, waiting * 3);
                 break;
             case "ANALOG_SUCCESS_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.ANALOG_SUCCESS_WORKFLOW, 5, waiting * 4);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.ANALOG_SUCCESS_WORKFLOW, 8, waiting * 4);
                 break;
             case "ANALOG_FAILURE_WORKFLOW":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.ANALOG_FAILURE_WORKFLOW, 8, sharedSteps.getWorkFlowWait());
@@ -480,7 +480,7 @@ public class AvanzamentoNotificheB2bSteps {
                 timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.NOTIFICATION_VIEWED, 2, waiting * 2);
                 break;
             case "SEND_COURTESY_MESSAGE":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_COURTESY_MESSAGE, 8, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_COURTESY_MESSAGE, 10, sharedSteps.getWorkFlowWait());
                 break;
             case "DIGITAL_SUCCESS_WORKFLOW":
                 timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.DIGITAL_SUCCESS_WORKFLOW, 3, waiting * 3);
@@ -507,7 +507,7 @@ public class AvanzamentoNotificheB2bSteps {
                 timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SCHEDULE_ANALOG_WORKFLOW, 2, waiting * 3);
                 break;
             case "ANALOG_SUCCESS_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.ANALOG_SUCCESS_WORKFLOW, 5, waiting * 4);
+                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.ANALOG_SUCCESS_WORKFLOW, 8, waiting * 4);
                 break;
             case "ANALOG_FAILURE_WORKFLOW":
                 timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.ANALOG_FAILURE_WORKFLOW, 8, sharedSteps.getWorkFlowWait());

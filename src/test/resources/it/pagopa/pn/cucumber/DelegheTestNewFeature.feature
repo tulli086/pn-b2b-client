@@ -50,7 +50,8 @@ Feature: deleghe test new feature
 
   @deleghe1 @AOO_UO
   Scenario: [WEB-PF-MANDATE_20] Invio notifica da parte di ente padre e lettura da delegato
-    Given "Mario Gherkin" viene delegato da "Mario Cucumber" per comune "Comune_Root"
+    Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
+    And "Mario Gherkin" viene delegato da "Mario Cucumber" per comune "Comune_Root"
     And "Mario Gherkin" accetta la delega "Mario Cucumber"
     Given viene generata una nuova notifica
       | subject            | invio notifica GA cucumber |
