@@ -746,10 +746,10 @@ Feature: annullamento notifiche b2b
   #Configurare il timing riducendo il tempo di wait nel seguente modo:
   # pn.configuration.workflow.wait.accepted.millis.pagopa=21000
   # pn.configuration.workflow.wait.millis.pagopa=11000
-  @Annullamento
+  @Annullamento @mockPec
   Scenario:  [B2B-PA-ANNULLAMENTO_28_1] PA mittente: annullamento notifica inibizione invio mail di cortesia
     Given si predispone addressbook per l'utente "Galileo Galilei"
-    And viene inserito un recapito legale "example@pecSuccess.it"
+    And viene inserito un recapito legale "example@sequence.90s-C000.90s-C001.90s-C005.90s-C003"
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
     And destinatario
@@ -1006,7 +1006,8 @@ Feature: annullamento notifiche b2b
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Mario Gherkin
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address |   test@sequence.90s-C000.90s-C001.90s-C005.90s-C003  |
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     When vengono letti gli eventi fino all'elemento di timeline della notifica annullata "NOTIFICATION_CANCELLATION_REQUEST"
     Then viene controllato che l'elemento di timeline della notifica "SEND_DIGITAL_PROGRESS" non esiste

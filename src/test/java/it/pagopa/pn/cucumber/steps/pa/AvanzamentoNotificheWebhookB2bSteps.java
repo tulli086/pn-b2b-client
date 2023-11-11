@@ -552,7 +552,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         sharedSteps.setProgressResponseElements(progressResponseElements);
 
         System.out.println("ELEMENTI NEL WEBHOOK: "+progressResponseElements.toString());
-        if(deepCount >= 200){
+        if(deepCount >= 250){
             throw new IllegalStateException("LOP: PROGRESS-ELEMENTS: "+progressResponseElements
                     +" WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" IUN: "+sharedSteps.getSentNotification().getIun()+" DEEP: "+deepCount);
         }
@@ -582,7 +582,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 Thread.sleep(500);
                 return searchInWebhook(timeLineOrStatus,lastProgress.getEventId(),(deepCount+1));
             }catch (IllegalStateException illegalStateException){
-                if(deepCount == 199 || deepCount == 198 || deepCount == 197){
+                if(deepCount == 249 || deepCount == 248 || deepCount == 247){
                     throw new IllegalStateException((illegalStateException.getMessage()+("LOP: PROGRESS-ELEMENTS: "+progressResponseElements
                             +" WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" IUN: "+sharedSteps.getSentNotification().getIun()+" DEEP: "+deepCount)));
                 }else{

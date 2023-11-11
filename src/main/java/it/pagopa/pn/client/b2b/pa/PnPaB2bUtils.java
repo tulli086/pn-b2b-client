@@ -477,7 +477,7 @@ public class PnPaB2bUtils {
     }
 
     public FullSentNotificationV21 waitForRequestAcceptationShort( NewNotificationResponse response) {
-        return waitForRequestAcceptation(response,16,9000);
+        return waitForRequestAcceptation(response,230,5000);
     }
 
 
