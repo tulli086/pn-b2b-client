@@ -269,7 +269,12 @@ public class RicezioneNotificheWebDelegheSteps {
             }
         }
         if (mandateDto != null) {
-            webMandateClient.rejectMandate(mandateDto.getMandateId());
+            try{
+                webMandateClient.rejectMandate(mandateDto.getMandateId());
+            }catch(Exception exp){
+                System.out.println("REJECT FALLITA");
+            }
+
         }
     }
 
