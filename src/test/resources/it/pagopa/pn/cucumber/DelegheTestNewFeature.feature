@@ -12,7 +12,7 @@ Feature: deleghe test new feature
     When la notifica viene inviata tramite api b2b dal "Comune_Son" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere correttamente letta da "Mario Gherkin" con delega
 
-  @deleghe1 @AOO_UO
+  @deleghe1 @AOO_UO @patch
   Scenario: [WEB-PF-MANDATE_18] Invio notifica digitale altro destinatario e recupero AAR e Attestazione Opponibile positivo
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
     And "Mario Gherkin" viene delegato da "Mario Cucumber" per comune "Comune_Root"
@@ -48,7 +48,7 @@ Feature: deleghe test new feature
     When la notifica viene inviata tramite api b2b dal "Comune_Root" e si attende che lo stato diventi ACCEPTED
     And l'allegato "F24" può essere correttamente recuperato da "Mario Gherkin" con delega
 
-  @deleghe1 @AOO_UO
+  @deleghe1 @AOO_UO @patch
   Scenario: [WEB-PF-MANDATE_20] Invio notifica da parte di ente padre e lettura da delegato
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
     And "Mario Gherkin" viene delegato da "Mario Cucumber" per comune "Comune_Root"
@@ -65,7 +65,7 @@ Feature: deleghe test new feature
     Given "Mario Gherkin" viene delegato da "Mario Cucumber" per comune "Comune_Son"
     Then l'operazione ha generato un errore con status code "422"
 
-  @Annullamento @deleghe1
+  @Annullamento @deleghe1 @patch
   Scenario:  [B2B-PF-ANNULLAMENTO_26] PA mittente: annullamento notifica in cui è presente un delegato e verifica dell’annullamento sia da parte del destinatario che del delegato
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
     And "Mario Gherkin" viene delegato da "Mario Cucumber"
@@ -79,7 +79,7 @@ Feature: deleghe test new feature
     Then la notifica può essere correttamente recuperata da "Mario Cucumber"
     And la notifica può essere correttamente letta da "Mario Gherkin" con delega
 
-  @Annullamento @deleghe1
+  @Annullamento @deleghe1 @patch
   Scenario:  [B2B-PF-ANNULLAMENTO_27] PA mittente: annullamento notifica in cui è presente un delegato e verifica dell’annullamento sia da parte del destinatario che del delegato
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
     And "Mario Gherkin" viene delegato da "Mario Cucumber"
@@ -109,7 +109,7 @@ Feature: deleghe test new feature
     When vengono letti gli eventi fino allo stato della notifica "CANCELLED"
     Then il documento notificato non può essere correttamente recuperato da "Mario Gherkin" con delega restituendo un errore "404"
 
-  @Annullamento @deleghe1
+  @Annullamento @deleghe1 @patch
   Scenario: [B2B-PA-ANNULLAMENTO_33] Invio notifica digitale mono destinatario e recupero allegato pagopa_scenario negativo
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
     And "Mario Gherkin" viene delegato da "Mario Cucumber"
@@ -125,7 +125,7 @@ Feature: deleghe test new feature
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
     Then il documento notificato non può essere correttamente recuperato da "Mario Gherkin" con delega restituendo un errore "404"
 
-  @deleghe2 @AOO_UO
+  @deleghe2 @AOO_UO @patch
   Scenario: [WEB-PG-MANDATE_19] Invio notifica digitale altro destinatario e recupero_scenario positivo da parte di ente radice
     Given "CucumberSpa" rifiuta se presente la delega ricevuta "GherkinSrl"
     And "CucumberSpa" viene delegato da "GherkinSrl" per comune "Comune_Root"
@@ -152,7 +152,7 @@ Feature: deleghe test new feature
     When la notifica viene inviata tramite api b2b dal "Comune_Son" e si attende che lo stato diventi ACCEPTED
     And l'allegato "PAGOPA" può essere correttamente recuperato da "CucumberSpa" con delega
 
-  @deleghe2 @AOO_UO
+  @deleghe2 @AOO_UO @patch
   Scenario: [WEB-PG-MANDATE_21] Invio notifica digitale altro destinatario e recupero AAR e Attestazione Opponibile positivo da parte di ente radice
     Given "CucumberSpa" rifiuta se presente la delega ricevuta "GherkinSrl"
     And "CucumberSpa" viene delegato da "GherkinSrl" per comune "Comune_Root"
