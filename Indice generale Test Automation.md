@@ -1251,127 +1251,6 @@
 
 </details>
 
-### Annullamento Notifiche B2b Deleghe
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PF-ANNULLAMENTO_26] PA mittente: annullamento notifica in cui è presente un delegato e verifica dell’annullamento sia da parte del destinatario che del delegato
-</summary>
-
-**Descrizione**
-
-1. Mario Gherkin  rifiuta se presente la delega ricevuta Mario Cucumber
-2. Mario Gherkin viene delegato da Mario Cucumber
-3. Mario Gherkin accetta la delega Mario Cucumber
-4. Viene creata una nuova notifica con destinatario Mario Cucumber
-5. la notifica viene inviata tramite api b2b dal `Comune_1` e si aspetta che lo stato passi in `ACCEPTED` e successivamente annullata
-6. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
-7. la notifica può essere correttamente recuperata da `Mario Cucumber`
-8. la notifica può essere correttamente letta da `Mario Gherkin` con delega
-
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/annullamentoNotifica/AnnullamentoNotificheB2bDeleghe.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PF-ANNULLAMENTO_26_1] PA mittente: annullamento notifica in cui è presente un delegato e verifica dell’annullamento sia da parte del destinatario che del delegato
-</summary>
-
-**Descrizione**
-
-1. Mario Gherkin  rifiuta se presente la delega ricevuta Mario Cucumber
-2. Mario Gherkin viene delegato da Mario Cucumber
-3. Mario Gherkin accetta la delega Mario Cucumber
-4. Viene creata una nuova notifica con destinatario Mario Cucumber
-5. la notifica viene inviata tramite api b2b dal `Comune_1` e si aspetta che lo stato passi in `ACCEPTED` e successivamente annullata
-6. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
-7. vengono letti gli eventi fino allo stato della notifica `CANCELLED`
-8. la notifica può essere correttamente recuperata da `Mario Cucumber`
-9. la notifica può essere correttamente letta da `Mario Gherkin` con delega
-
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/annullamentoNotifica/AnnullamentoNotificheB2bDeleghe.feature)
-
-</details>
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PF-ANNULLAMENTO_26_2] PA mittente: annullamento notifica in cui è presente un delegato e verifica dell’annullamento sia da parte del destinatario che del delegato
-</summary>
-
-**Descrizione**
-
-1. Mario Gherkin  rifiuta se presente la delega ricevuta Mario Cucumber
-2. Mario Gherkin viene delegato da Mario Cucumber
-3. Mario Gherkin accetta la delega Mario Cucumber
-4. Viene creata una nuova notifica con destinatario Mario Cucumber
-5. la notifica viene inviata tramite api b2b dal `Comune_1` e si aspetta che lo stato passi in `ACCEPTED` e successivamente annullata
-6. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
-7. la notifica può essere correttamente recuperata da `Mario Cucumber`
-8. la notifica può essere correttamente letta da `Mario Gherkin` con delega
-
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/annullamentoNotifica/AnnullamentoNotificheB2bDeleghe.feature)
-
-</details>
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PF-ANNULLAMENTO_26_3] PA mittente: annullamento notifica in cui è presente un delegato e verifica dell’annullamento sia da parte del destinatario che del delegato
-</summary>
-
-**Descrizione**
-
-1. Mario Gherkin  rifiuta se presente la delega ricevuta Mario Cucumber
-2. Mario Gherkin viene delegato da Mario Cucumber
-3. Mario Gherkin accetta la delega Mario Cucumber
-4. Viene creata una nuova notifica con destinatario Mario Cucumber
-5. la notifica viene inviata tramite api b2b dal `Comune_1` e si aspetta che lo stato passi in `ACCEPTED` e successivamente annullata
-6. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
-7. vengono letti gli eventi fino allo stato della notifica `CANCELLED`
-8. la notifica può essere correttamente recuperata da `Mario Cucumber`
-9. la notifica può essere correttamente letta da `Mario Gherkin` con delega
-
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/annullamentoNotifica/AnnullamentoNotificheB2bDeleghe.feature)
-
-</details>
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-ANNULLAMENTO_32] Invio notifica digitale mono destinatario e recupero documento notificato_scenario negativo
-</summary>
-
-**Descrizione**
-
-1. Mario Gherkin  rifiuta se presente la delega ricevuta Mario Cucumber
-2. Mario Gherkin viene delegato da Mario Cucumber
-3. Mario Gherkin accetta la delega Mario Cucumber
-4. Viene creata una nuova notifica con destinatario Mario Cucumber
-5. la notifica viene inviata tramite api b2b dal `Comune_1` e si aspetta che lo stato passi in `ACCEPTED` e successivamente annullata
-6. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
-7. vengono letti gli eventi fino allo stato della notifica `CANCELLED`
-8. il documento notificato non può essere correttamente recuperato da `Mario Gherkin` con delega restituendo un errore `404`
-
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/annullamentoNotifica/AnnullamentoNotificheB2bDeleghe.feature)
-
-</details>
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-ANNULLAMENTO_33] Invio notifica digitale mono destinatario e recupero allegato pagopa_scenario negativo
-</summary>
-
-**Descrizione**
-
-1. Mario Gherkin  rifiuta se presente la delega ricevuta Mario Cucumber
-2. Mario Gherkin viene delegato da Mario Cucumber
-3. Mario Gherkin accetta la delega Mario Cucumber
-4. Viene creata una nuova notifica con destinatario Mario Cucumber
-5. la notifica viene inviata tramite api b2b dal `Comune_1` e si aspetta che lo stato passi in `ACCEPTED` e successivamente annullata
-6. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
-7. il documento notificato non può essere correttamente recuperato da `Mario Gherkin` con delega restituendo un errore `404`
-
-
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/annullamentoNotifica/AnnullamentoNotificheB2bDeleghe.feature)
-
-</details>
-
-
 ### Annullamento Notifiche B2b PG
 
 
@@ -5678,6 +5557,90 @@
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/visualizzazioneNotifica/deleghe/pg/RicezioneNotifichePGWebDeleghe.feature)
 
 </details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PG-MANDATE_14] Invio notifica digitale con delega senza gruppo e assegnazione di un gruppo alla delega da parte del PG amministratore  positivo PN-5962</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` viene delegato da `GherkinSrl`
+2. `CucumberSpa` accetta la delega `GherkinSrl`
+3. Viene generata una nuova notifica con destinatario `GherkinSrl`
+4. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi `ACCEPTED`
+5. come amministratore `GherkinSrl` associa alla delega il primo gruppo disponibile attivo per il delegato `CucumberSpa`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/visualizzazioneNotifica/deleghe/pg/RicezioneNotifichePGWebDeleghe.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PF-PG-MANDATE_15] Invio notifica digitale con delega ad un PG amministratore e recupero della stessa positivo</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` viene delegato da `Mario Cucumber`
+2. `CucumberSpa` accetta la delega `Mario Cucumber`
+3. Viene generata una nuova notifica con destinatario `Mario Cucumber`
+4. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi `ACCEPTED`
+5. la notifica può essere correttamente letta da `CucumberSpa` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/visualizzazioneNotifica/deleghe/pg/RicezioneNotifichePGWebDeleghe.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PF-PG-MANDATE_16] Invio notifica digitale con delega senza gruppo e assegnazione di un gruppo alla delega da parte del PG amministratore e recupero della stessa positivo</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` viene delegato da `Mario Cucumber`
+2. `CucumberSpa` accetta la delega `Mario Cucumber`
+3. Viene generata una nuova notifica con destinatario `Mario Cucumber`
+4. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi `ACCEPTED`
+5. la notifica può essere correttamente letta da `CucumberSpa` con delega
+6. come amministratore `Mario Cucumber` associa alla delega il primo gruppo disponibile attivo per il delegato `CucumberSpa`
+7. la notifica può essere correttamente letta da `CucumberSpa` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/visualizzazioneNotifica/deleghe/pg/RicezioneNotifichePGWebDeleghe.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PF-PG-MANDATE_17] Invio notifica digitale con delega senza gruppo ad un PG amministratore e altro destinatario e recupero_scenario positivo</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` viene delegato da `Mario Cucumber`
+2. `CucumberSpa` accetta la delega `Mario Cucumber`
+3. Viene generata una nuova notifica con destinatari `Mario Cucumber` e `CucumberSpa`
+4. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi `ACCEPTED`
+5. la notifica può essere correttamente letta da `Mario Cucumber`
+6. la notifica può essere correttamente letta da `CucumberSpa` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/visualizzazioneNotifica/deleghe/pg/RicezioneNotifichePGWebDeleghe.feature)
+
+</details>
+
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PF-PG-MANDATE_18] Invio notifica digitale con delega senza gruppo ad un PG amministratore e altro destinatario e assegnazione di un gruppo con recupero_scenario positivo</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` viene delegato da `Mario Cucumber`
+2. `CucumberSpa` accetta la delega `Mario Cucumber`
+3. Viene generata una nuova notifica con destinatari `Mario Cucumber` e `CucumberSpa`
+4. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
+5. la notifica può essere correttamente letta da `Mario Cucumber`
+6. la notifica può essere correttamente letta da `CucumberSpa` con delega
+6. come amministratore `Mario Cucumber` associa alla delega il primo gruppo disponibile attivo per il delegato `CucumberSpa`
+7. la notifica può essere correttamente letta da `CucumberSpa` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/visualizzazioneNotifica/deleghe/pg/RicezioneNotifichePGWebDeleghe.feature)
+
+</details>
+
+
 
 
 #### Persona fisica e giuridica
