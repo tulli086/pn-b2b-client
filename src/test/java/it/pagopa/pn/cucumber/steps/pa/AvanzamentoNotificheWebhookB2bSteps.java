@@ -672,6 +672,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     public void cleanC3() {
         setPaWebhook("Comune_Multi");
         cleanWebhook();
+        SharedSteps.lastEventID = 0;
     }
 
     private void cleanWebhook(){
@@ -724,7 +725,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         Assertions.assertNotNull(progressResponseElements);
         boolean counterIncrement = true ;
         int lastEventID = SharedSteps.lastEventID;
-        System.out.println("ELEMENTI NEL WEBHOOK LAST EVENT ID1: "+lastEventID);
+        //logger.info("ELEMENTI NEL WEBHOOK LAST EVENT ID1: "+lastEventID);
         for(ProgressResponseElement elem: progressResponseElements){
             if (lastEventID==0){
                 lastEventID = Integer.parseInt(elem.getEventId());
@@ -744,7 +745,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
 
         SharedSteps.lastEventID=lastEventID;
-        System.out.println("ELEMENTI NEL WEBHOOK LAST EVENT ID2: "+lastEventID);
+        //logger.info("ELEMENTI NEL WEBHOOK LAST EVENT ID2: "+lastEventID);
     }
 }
 
