@@ -737,7 +737,12 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 lastEventID = Integer.parseInt(elem.getEventId());
             }
         }//for
-        Assertions.assertTrue(counterIncrement);
+        try{
+            Assertions.assertTrue(counterIncrement);
+        }catch (AssertionFailedError assertionFailedError){
+            throw new AssertionFailedError(assertionFailedError.getMessage()+" PROGRESS-ELEMENT: \n"+progressResponseElements);
+        }
+
         SharedSteps.lastEventID=lastEventID;
         System.out.println("ELEMENTI NEL WEBHOOK LAST EVENT ID2: "+lastEventID);
     }

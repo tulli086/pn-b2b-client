@@ -1450,13 +1450,11 @@ public class SharedSteps {
 
     public void selectUser(String recipient) {
         switch (recipient.trim().toLowerCase()){
-            case "mario cucumber":
-            case "ettore fieramosca":
+            case "mario cucumber", "ettore fieramosca":
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
                 break;
-            case "mario gherkin":
-            case "cristoforo colombo":
+            case "mario gherkin", "cristoforo colombo":
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 break;
