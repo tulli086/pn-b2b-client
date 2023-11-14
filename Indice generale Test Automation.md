@@ -7,18 +7,19 @@
    2. [Download](#download)
    3. [Validation](#validation)
 3. [Service_Desk](#service-desk)
-4. [Visualizzazione notifica](#visualizzazione-notifica)
+4. [Versioning API](#versioning)
+5. [Visualizzazione notifica](#visualizzazione-notifica)
    1. [Deleghe](#deleghe)
    2. [Destinatario persona fisica](#destinatario-persona-fisica)
-5. [Workflow notifica](#workflow-notifica)
+6. [Workflow notifica](#workflow-notifica)
    1. [B2B](#b2b)
    2. [Download](#notifica)
    3. [Webhook](#webhook)
-6. [Allegati](#allegati)
-7. [Api Key Manager](#api-key-manager)
-8. [Downtime logs](#downtime-logs)
-9. [User Attributes](#user-attributes)
-10. [Test di integrazione della pubblica amministrazione](#test-di-integrazione-della-pubblica-amministrazione)
+7. [Allegati](#allegati)
+8. [Api Key Manager](#api-key-manager)
+9. [Downtime logs](#downtime-logs)
+10. [User Attributes](#user-attributes)
+11. [Test di integrazione della pubblica amministrazione](#test-di-integrazione-della-pubblica-amministrazione)
 
 ## Annullamento_Notifica
 
@@ -2014,18 +2015,7 @@
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/invioNotifica/invio/pf/InvioNotificheB2bPF2.feature)
 
 </details>
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-SEND_39] Invio notifica  mono destinatario con allegato Max Num Allegati scenario negativo</summary>
 
-**Descrizione**
-
-1. Viene creata una nuova notifica con destinatario `Mario Cucumber`
-2. la notifica viene inviata tramite api b2b over 15 preload allegato dal `Comune_Multi` e si attende che lo stato diventi REFUSED
-3. si verifica che la notifica non viene accettata causa `INVALID_PARAMETER_MAX_ATTACHMENT`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/invioNotifica/invio/pf/InvioNotificheB2bPF2.feature)
-
-</details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
   <summary>[B2B-PA-SEND_40] Invio notifica digitale mono destinatario con noticeCode ripetuto prima notifica rifiutata</summary>
 
@@ -2042,6 +2032,36 @@
 
 </details>
 
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_41] Invio notifica digitale_scenario da PA figlio e non riesce a recuperare la notifica PA padre</summary>
+
+**Descrizione**
+
+1. Viene creata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_Son` e si attende che lo stato diventi ACCEPTED
+3. si tenta il recupero dal sistema tramite codice IUN dalla PA `Comune_Root`
+4. l'operazione ha generato un errore con status code `404`
+
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/invioNotifica/invio/pf/InvioNotificheB2bPF2.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_42] Invio notifica digitale_scenario da PA padre e non riesce a recuperare la notifica  PA figlio</summary>
+
+**Descrizione**
+
+1. Viene creata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_Root` e si attende che lo stato diventi ACCEPTED
+3. si tenta il recupero dal sistema tramite codice IUN dalla PA `Comune_Son`
+4. l'operazione ha generato un errore con status code `404`
+
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/invioNotifica/invio/pf/InvioNotificheB2bPF2.feature)
+
+</details>
 
 ##### Invio notifiche b2b con altre PA, multi-destinatario e senza pagamento
 
@@ -2135,11 +2155,10 @@
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-MULTI-PA-SEND_7] Invio notifica multi destinatario destinatario duplicato_scenario negativo</summary>
+  <summary>[B2B-MULTI-PA-SEND_8] Invio notifica multidestinatario max recipient_scenario negativo</summary>
 
 **Descrizione**
 
-:warning: _Ignored_
 
 1. Viene creata una nuova notifica multi destinatario con 15 destinatari
 2. Viene inviata dal `Comune_Multi`
@@ -4539,6 +4558,8 @@
 
 **Descrizione**
 
+:warning: _Ignored_
+
 1. viene comunicato il nuovo indirizzo
 2. viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con CF `TMTSFS80A01H703K`
 3. viene invocato il servizio CREATE_OPERATION
@@ -4554,6 +4575,31 @@
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/ApiServiceDesk.feature)
 
 </details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[API-SERVICE_SEARCH_18_1] Invocazione del servizio CREATE_OPERATION con indirizzo errato</summary>
+
+**Descrizione**
+
+1. viene comunicato il nuovo indirizzo
+2. viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con CF `TMTSFS80A01H703K`
+3. viene invocato il servizio CREATE_OPERATION
+4. la risposta del servizio CREATE_OPERATION risponde con esito positivo
+5. viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO
+6. viene invocato il servizio UPLOAD VIDEO
+7. la risposta del servizio UPLOAD VIDEO risponde con esito positivo
+8. il video viene caricato su SafeStorage
+9. viene creata una nuova richiesta per invocare il servizio SEARCH per il CF `TMTSFS80A01H703K`
+10. viene invocato il servizio SEARCH con delay
+11. Il servizio SEARCH risponde con esito positivo e lo stato della consegna è `KO`
+12. viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il `TMTSFS80A01H703K`
+13. viene invocato il servizio UNREACHABLE
+14. la risposta del servizio UNREACHABLE è `1`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/ApiServiceDesk.feature)
+
+</details>
+
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
   <summary>[API-SERVICE_DESK_CREATE_OPERATION_19] Invocazione del servizio CREATE_OPERATION con ticket id vuoto</summary>
 
@@ -4879,7 +4925,7 @@
 8. il video viene caricato su SafeStorage
 9. viene creata una nuova richiesta per invocare il servizio SEARCH per il `TMTMRC66A01H703L`
 10. viene invocato il servizio SEARCH con delay
-11. Il servizio SEARCH risponde con esito positivo per lo `QAQN-LJXG-YTNA-202309-Q-1` e lo stato della consegna è `OK`
+11. Il servizio SEARCH risponde con esito positivo e lo stato della consegna è `OK`
 12. viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con `TMTRCC80A01A509O`
 13. viene invocato il servizio CREATE_OPERATION
 14. la risposta del servizio CREATE_OPERATION risponde con esito positivo
@@ -4889,16 +4935,18 @@
 18. il video viene caricato su SafeStorage
 19. viene creata una nuova richiesta per invocare il servizio SEARCH per il `TMTRCC80A01A509O`
 20. viene invocato il servizio SEARCH con delay
-21. Il servizio SEARCH risponde con esito positivo per lo `QAQN-LJXG-YTNA-202309-Q-1` e lo stato della consegna è `OK`
+21. Il servizio SEARCH risponde con esito positivo e lo stato della consegna è `OK`
 
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/ApiServiceDesk.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[API-SERVICE_SEARCH_42] Inserimento di una nuova richista di reinvio pratiche con stato operation id in CREATED</summary>
+  <summary>[API-SERVICE_SEARCH_42_1] Inserimento di una nuova richista di reinvio pratiche con stato operation id in CREATED</summary>
 
 **Descrizione**
+
+:warning: _Ignored_
 
 1. viene comunicato il nuovo indirizzo
 2. viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con `FRMTTR76M06B715E`
@@ -4914,6 +4962,30 @@
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/ApiServiceDesk.feature)
 
 </details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[API-SERVICE_SEARCH_42] Inserimento di una nuova richista di reinvio pratiche con stato operation id in CREATED</summary>
+
+**Descrizione**
+
+1. viene comunicato il nuovo indirizzo
+2. viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con `FRMTTR76M06B715E`
+3. viene invocato il servizio CREATE_OPERATION
+4. la risposta del servizio CREATE_OPERATION risponde con esito positivo
+5. viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO
+6. viene invocato il servizio UPLOAD VIDEO
+7. la risposta del servizio UPLOAD VIDEO risponde con esito positivo
+8. viene creata una nuova richiesta per invocare il servizio SEARCH per il `FRMTTR76M06B715E`
+9. viene invocato il servizio SEARCH
+10. Il servizio SEARCH risponde con esito positivo e lo stato della consegna è `CREATING`
+11. viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il `FRMTTR76M06B715E`
+12. viene invocato il servizio UNREACHABLE
+13. la risposta del servizio UNREACHABLE è `1`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/ApiServiceDesk.feature)
+
+</details>
+
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
   <summary>[API-SERVICE_SEARCH_43] Inserimento di una nuova richista di reinvio pratiche con stato operation id in CREATED</summary>
 
@@ -5005,6 +5077,8 @@
 
 **Descrizione**
 
+:warning: _Ignored_
+
 1. viene comunicato il nuovo indirizzo
 2. viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con `TMTVCN80A01H501P`
 3. viene invocato il servizio CREATE_OPERATION
@@ -5031,6 +5105,42 @@
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/ApiServiceDesk.feature)
 
 </details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E_50_1] CF per il quale una consegna per irreperibilità totale è andata  KO e si reinserisce nuova richiesta</summary>
+
+**Descrizione**
+
+1. viene comunicato il nuovo indirizzo
+2. viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con `TMTVCN80A01H501P`
+3. viene invocato il servizio CREATE_OPERATION
+4. la risposta del servizio CREATE_OPERATION risponde con esito positivo
+5. viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO
+6. viene invocato il servizio UPLOAD VIDEO
+7. la risposta del servizio UPLOAD VIDEO risponde con esito positivo
+8. il video viene caricato su SafeStorage
+9. viene creata una nuova richiesta per invocare il servizio SEARCH per il `TMTVCN80A01H501P`
+10. viene invocato il servizio SEARCH
+11. Il servizio SEARCH risponde con esito positivo e lo stato della consegna è `KO`
+12. viene comunicato il nuovo indirizzo
+13. viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con `TMTVCN80A01H501P`
+14. viene invocato il servizio CREATE_OPERATION
+15. la risposta del servizio CREATE_OPERATION risponde con esito positivo
+16. viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO
+17. viene invocato il servizio UPLOAD VIDEO
+18. la risposta del servizio UPLOAD VIDEO risponde con esito positivo
+19. il video viene caricato su SafeStorage
+20. viene creata una nuova richiesta per invocare il servizio SEARCH per il `TMTVCN80A01H501P`
+21. viene invocato il servizio SEARCH con delay
+22. Il servizio SEARCH risponde con esito positivo e lo stato della consegna è `OK`
+23. viene creata una nuova richiesta per invocare il servizio UNREACHABLE per il `TMTVCN80A01H501P`
+24. viene invocato il servizio UNREACHABLE
+25. la risposta del servizio UNREACHABLE è `0`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/ApiServiceDesk.feature)
+
+</details>
+
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
   <summary>[API-SERVICE_PREUPLOAD_VIDEO_51] Inserimento di una nuova richista di reinvio pratiche con stato caricamento video su SafeStorage e verifica retention
 </summary>
@@ -5089,7 +5199,7 @@
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary></summary>
+  <summary>[API-AUTH_56] Connessione al client con api key errata</summary>
 
 **Descrizione**
 
@@ -5110,6 +5220,352 @@
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/ApiServiceDesk.feature)
 
 </details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[API-SLIPT_SPEDIZIONE_57] Creazione spedizione multipla per numero pagine allegati superiore al limite consentito per singola spedizione</summary>
+
+**Descrizione**
+
+1. viene comunicato il nuovo indirizzo
+2. viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con `FRMTTR76M06B715E`
+3. viene invocato il servizio CREATE_OPERATION
+4. la risposta del servizio CREATE_OPERATION risponde con esito positivo
+5. viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO
+6. viene invocato il servizio UPLOAD VIDEO
+7. la risposta del servizio UPLOAD VIDEO risponde con esito positivo
+8. il video viene caricato su SafeStorage
+9. viene creata una nuova richiesta per invocare il servizio SEARCH per il `FRMTTR76M06B715E`
+10. viene invocato il servizio SEARCH con delay
+11. il servizio SEARCH risponde con esito positivo con spedizione multipla e lo stato della consegna è `OK`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/ApiServiceDesk.feature)
+
+</details>
+
+## Versioning
+
+### verifica compatibilità tra v1.1 a v2.1
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_8] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW da V1 in ambiente con versione superiore</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Gherkin` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_2` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `ANALOG_SUCCESS_WORKFLOW` con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_12] Invio e visualizzazione notifica e verifica amount e effectiveDate da V1 in ambiente con versione superiore</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `LVLDAA85T50G702B` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. l'avviso pagopa viene pagato correttamente dall'utente `0` con versione API V1
+4. si attende il corretto pagamento della notifica con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_10] Invio notifica digitale mono destinatario V1.1 con annullamento V2.1 e recupero tramite codice IUN V1.1 (p.fisica)_scenario positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. la notifica può essere annullata dal sistema tramite codice IUN
+4. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
+5. vengono letti gli eventi fino allo stato della notifica `CANCELLED`
+6. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_9] Invio notifica ed attesa elemento di timeline DIGITAL_SUCCESS_WORKFLOW_scenario da V1 in ambiente con versione superiore</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `DIGITAL_SUCCESS_WORKFLOW` con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_10](da aggiornare id) Invio notifica V1.1 ed attesa elemento di timeline DIGITAL_SUCCESS_WORKFLOW_scenario V2.1 positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `DIGITAL_SUCCESS_WORKFLOW`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_13] Invio e visualizzazione notifica e verifica amount e effectiveDate da  V1.1 a V2.1</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `LVLDAA85T50G702B` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. l'avviso pagopa viene pagato correttamente dall'utente `0`
+4. si attende il corretto pagamento della notifica
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_1] Invio notifica digitale mono destinatario e mono pagamento V2.1 e recupero tramite codice IUN V1.1 (p.fisica)_scenario positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. si verifica la corretta acquisizione della notifica
+4. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_3] Invio notifica digitale mono destinatario e mono pagamento V1.1 e recupero tramite codice IUN V2.1 (p.fisica)_scenario positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. si verifica la corretta acquisizione della notifica con versione API V1
+4. la notifica può essere correttamente recuperata dal sistema tramite codice IUN
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_4] Invio notifica digitale mono destinatario e mono pagamento V2.1 Ccon annullamento e recupero tramite codice IUN V1.1 (p.fisica)_scenario positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED e successivamente annullata
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `DIGITAL_SUCCESS_WORKFLOW`
+4. vengono letti gli eventi fino allo stato della notifica `CANCELLED`
+5. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_4_1] Invio notifica digitale mono destinatario e mono pagamento V2.1 con annullamento e recupero tramite codice IUN V1.1 (p.fisica)_scenario positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED e successivamente annullata
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
+4. vengono letti gli eventi fino allo stato della notifica `CANCELLED`
+5. vengono letti gli eventi e verificho che l'utente `0` non abbia associato un evento `NOTIFICATION_CANCELLATION_REQUEST` con versione API V1
+6. vengono letti gli eventi fino allo stato della notifica `CANCELLED` con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_5] Invio notifica digitale mono destinatario e mono pagamento V1.1 e recupero visualizzazione notifica e verifica amount e effectiveDate V2.1</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. si verifica la corretta acquisizione della notifica con versione API V1
+4. `Mario Cucumber` legge la notifica ricevuta
+5. vengono verificati costo = `100` e data di perfezionamento della notifica
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_6] Invio notifica digitale mono destinatario e mono pagamento con payment senza PagopaForm_scenario V2.1 e recupero con V1.1 positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. si verifica la corretta acquisizione della notifica
+4. si tenta il recupero dal sistema tramite codice IUN con versione API V1
+5. l'operazione ha generato un errore con status code `400`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_7] Invio notifica digitale V2.1 ed attesa stato ACCEPTED_scenario V1.1 positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Gherkin`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. vengono letti gli eventi fino allo stato della notifica `ACCEPTED` con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_19] Invio notifica digitale mono destinatario e mono pagamento con PagopaForm_scenario V2.1 e recupero con V1.1 positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. si verifica la corretta acquisizione della notifica
+4. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_11] Invio e visualizzazione notifica e verifica amount e effectiveDate da  V1.1 a V2.1</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Gherkin` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. vengono verificati costo = `100` e data di perfezionamento della notifica con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_14] Invio e visualizzazione notifica e verifica amount e effectiveDate da  V2.1 a V1.1</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED 
+3. l'avviso pagopa viene pagato correttamente dall'utente `0` con versione API V1
+4. si attende il corretto pagamento della notifica V1 con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1_1ToV2_1.feature)
+
+</details>
+
+
+### verifica compatibilità tra v1 a v2
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_15] Invio notifica V2 ed attesa elemento di timeline DIGITAL_SUCCESS_WORKFLOW_scenario V2 positivo</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber` con versione API V2
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED  con versione API V2
+3. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V20
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1ToV2.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_17] Invio notifica V2 ed attesa elemento di timeline DIGITAL_SUCCESS_WORKFLOW_scenario V1.1 positivo</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber` con versione API V2
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED  con versione API V2
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `DIGITAL_SUCCESS_WORKFLOW` con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1ToV2.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_18] Invio notifica digitale mono destinatario V2 e recupero tramite codice IUN V1 (p.fisica)_scenario positivo</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber` con versione API V2
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED  con versione API V2
+3. si verifica la corretta acquisizione della notifica con versione API V2
+4. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V1ToV2.feature)
+
+</details>
+
+### verifica compatibilità tra v2 a v2.1
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_16] Invio notifica V2.1 ed attesa elemento di timeline DIGITAL_SUCCESS_WORKFLOW_scenario V2 positivo</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `DIGITAL_SUCCESS_WORKFLOW` con versione API V2
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V2toV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_2] Invio notifica digitale mono destinatario e mono pagamento V2.1 e recupero tramite codice IUN V2.0 (p.fisica)_scenario positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. si verifica la corretta acquisizione della notifica
+4. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V20
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V2toV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_19](aggiorare id duplicato) Invio notifica digitale mono destinatario e mono pagamento con PagopaForm_scenario V2.1 e recupero con V1.1 positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. si verifica la corretta acquisizione della notifica
+4. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V20
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/serviceDesk/V2toV2_1.feature)
+
+</details>
+
 
 ## Visualizzazione notifica
 
@@ -6428,6 +6884,538 @@
 ### B2B
 
 #### Persona fisica
+
+##### Avanzamento notifiche b2b asincrona con controllo costi su GPD per persona fisica
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_1_PF] Notifica mono PF-Caso creazione Notifica di tipo non ASYNC, validazione non prevista</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica sincrona con destinatario `Mario Gherkin`
+2. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi `ACCEPTED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_2_PF] Notifica mono PF-Senza verifica amount GPD per notifica ASYNC e campo feePolicy a FLAT_RATE</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_3_PF] Notifica mono PF-Rifiuto in caso di notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi non abilitati alla modalità asincrona</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `REFUSED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_4_PF] Notifica mono PF-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Mario Gherkin`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. l'avviso pagopa viene pagato correttamente
+9. vengono letti gli eventi fino all'elemento di timeline della notifica `PAYMENT` e successivamente annullata
+10. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED`
+11. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+12. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+13. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `REFUSED`
+14. viene cancellata la posizione debitoria di `Mario Gherkin`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_5_PF] Notifica mono PF-Senza verifica amount GPD per notifica ASYNC e campo paFee non popolato - Refused</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `REFUSED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_6_PF] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “REQUEST_REFUSED“</summary>
+
+**Descrizione**
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+5. lettura amount posizione debitoria di `Mario Gherkin`
+6. viene effettuato il controllo del amount di GPD = `100`
+7. viene cancellata la posizione debitoria di `Mario Gherkin`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_7_PF] Notifica mono PF-Aggiornamento costi KO per posizione debitoria non presente</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `REFUSED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_8_PF] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Mario Gherkin`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
+9. la notifica può essere annullata dal sistema tramite codice IUN
+10. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED`
+11. lettura amount posizione debitoria di `Mario Gherkin`
+12. viene effettuato il controllo del amount di GPD = `100`
+13. viene cancellata la posizione debitoria di `Mario Gherkin`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_9_PF] Notifica mono PF Multipagamento-Verifica amount GPD notifica async dopo pagamento di un solo pagamento poi annullata la notifica il secondo pagamento amount non azzerrato</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene creata una nuova richiesta per istanziare 2 nuove posizioni debitorie per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `1`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. l'avviso pagopa `0` viene pagato correttamente dall'utente `0`
+6. viene cancellata la posizione debitoria del pagamento `0`
+7. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_DIGITAL_DOMICILE` e successivamente annullata
+8. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED`
+9. lettura amount posizione debitoria per pagamento `1`
+10. viene effettuato il controllo del amount di GPD = `100`
+11. viene cancellata la posizione debitoria del pagamento `1`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_10_PF] Notifica mono PF Multipagamento-Verifica amount GPD notifica async dopo pagamento tutti i pagamenti poi annullata la notifica il secondo pagamento amount non azzerrato</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene creata una nuova richiesta per istanziare 2 nuove posizioni debitorie per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `1`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. l'avviso pagopa `0` viene pagato correttamente dall'utente `0`
+6. viene cancellata la posizione debitoria del pagamento `0`
+7. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_DIGITAL_DOMICILE` e successivamente annullata
+10. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED`
+11. viene cancellata la posizione debitoria del pagamento `0`
+12. viene effettuato il controllo del amount di GPD = `100`
+13. lettura amount posizione debitoria per pagamento `1`
+14. viene effettuato il controllo del amount di GPD = `100`
+15. vengono cancellate le posizioni debitorie
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_11_PF] Notifica mono PF-Verifica amount GPD per notifica ASYNC per Multipagamento</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona multipagamento con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Mario Gherkin`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
+9. lettura amount posizione debitoria di `Mario Gherkin`
+10. viene effettuato il controllo del cambiamento del amount nella timeline `SEND_SIMPLE_REGISTERED_LETTER` del pagamento `0`
+11. viene cancellata la posizione debitoria del pagamento `0`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_12_PF] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato “VALIDATION“</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED per controllo GPD
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Mario Gherkin`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. viene cancellata la posizione debitoria di `Mario Gherkin`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_13_PF] Notifica mono PF-Verifica amount GPD per notifica ASYNC fino a "SEND_ANALOG_DOMICILE" al primo tentativo</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED per controllo GPD
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Mario Gherkin`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_ANALOG_DOMICILE` al tentativo `ATTEMPT_0`
+9. lettura amount posizione debitoria di `Mario Gherkin`
+10. viene effettuato il controllo del cambiamento del amount nella timeline `SEND_ANALOG_DOMICILE` utente `0` al tentativo `0`
+11. viene cancellata la posizione debitoria di `Mario Gherkin`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_14_PF] Notifica mono PF-Verifica amount GPD per notifica ASYNC fino a "SEND_ANALOG_DOMICILE" al secondo tentativo</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED per controllo GPD
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Mario Gherkin`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_ANALOG_DOMICILE` al tentativo `ATTEMPT_0`
+9. lettura amount posizione debitoria di `Mario Gherkin`
+10. viene effettuato il controllo del cambiamento del amount nella timeline `SEND_ANALOG_DOMICILE` utente `0` al tentativo `0`
+11. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_ANALOG_DOMICILE` al tentativo `ATTEMPT_1`
+12. lettura amount posizione debitoria di `Mario Gherkin`
+13. viene effettuato il controllo del cambiamento del amount nella timeline`SEND_ANALOG_DOMICILE` utente `0` al tentativo `1`
+14. viene cancellata la posizione debitoria di `Mario Gherkin`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_15_PF] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato "SEND_SIMPLE_REGISTERED_LETTER"</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0` del pagamento `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Mario Gherkin`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
+9. lettura amount posizione debitoria di `Mario Gherkin`
+10. viene effettuato il controllo del cambiamento del amount nella timeline `SEND_SIMPLE_REGISTERED_LETTER` del utente `0`
+11. viene cancellata la posizione debitoria di `Mario Gherkin`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_16_PF] Notifica mono PF-Verifica amount GPD per notifica ASYNC in stato "VALIDATION" --> “SEND_SIMPLE_REGISTERED_LETTER“</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Mario Gherkin`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
+9. lettura amount posizione debitoria di `Mario Gherkin`
+10. viene effettuato il controllo del cambiamento del amount nella timeline `SEND_SIMPLE_REGISTERED_LETTER` del utente `0`
+11. viene cancellata la posizione debitoria di `Mario Gherkin`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_17_PF] Notifica mono PF-Verifica amount GPD per notifica ASYNC cancellazione posizione debitoria dopo validazione della notifica</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Mario Gherkin`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. viene cancellata la posizione debitoria di `Mario Gherkin`
+9. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_18_PF] Notifica mono PF-Verifica scarto notifica se applyCostFlag a false</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare 2 nuove posizioni debitorie per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+5. vengono cancellate le posizioni debitorie
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_1_VERSIONAMENTO] Creazione notifica ASYNC con V1 - Errore</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED con versione API V1
+5. si verifica lo scarto dell' acquisizione della notifica con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_2_VERSIONAMENTO] Creazione notifica ASYNC con V2.1 e recupero tramite codice IUN V1 (p.fisica)_scenario negativo</summary>
+
+**Descrizione**
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. si verifica la corretta acquisizione della notifica
+6. la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V1 generando un errore
+7. l'operazione ha prodotto un errore con status code `404`
+8. vengono cancellate le posizioni debitorie
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_3_VERSIONAMENTO] Creazione notifica ASYNC con V2.1 e recupero tramite codice IUN V2.0 (p.fisica)_scenario negativo</summary>
+
+**Descrizione**
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. si verifica la corretta acquisizione della notifica
+6. la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V2 generando un errore
+7. l'operazione ha prodotto un errore con status code `404`
+8. vengono cancellate le posizioni debitorie
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_1_MULTI] Notifica multi PF/PG-Rifiuto di notifiche con modalità asincrona di integrazione al cui interno risultano avvisi non abilitati alla modalità asincrona</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica asincrona con destinatario `Mario Gherkin`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_2_MULTI] Notifica multi PF/PG-Verifica amount GPD in fase "REQUEST_REFUSED" costo aggiornato a 0</summary>
+
+**Descrizione**
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Gherkin Analogic` con Piva `05722930657`
+3. viene generata una nuova notifica asincrona con destinatari `Mario Gherkin`e `Gherkin Analogic`
+4. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione `0` del pagamento `0`
+5. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione `1` del pagamento `0`
+6. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+7. lettura amount posizione debitoria di `Mario Gherkin`
+8. viene effettuato il controllo del amount di GPD = `100`
+9. lettura amount posizione debitoria di `Gherkin Analogic`
+10. viene effettuato il controllo del amount di GPD = `100`
+11. viene cancellata la posizione debitoria di `Mario Gherkin`
+12. viene cancellata la posizione debitoria di `Gherkin Analogic`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_3_MULTI] Notifica multi PF/PG-Verifica amount GPD per notifica ASYNC in stato "NOTIFICATION_CANCELLED"</summary>
+
+**Descrizione**
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Gherkin Analogic` con Piva `05722930657`
+3. viene generata una nuova notifica asincrona con destinatari `Mario Gherkin`e `Gherkin Analogic`
+4. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione debitoria `0` del pagamento `0`
+5. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione debitoria `1` del pagamento `0`
+6. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED e successivamente annullata
+7. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED`
+8. lettura amount posizione debitoria di `Mario Gherkin`
+9. viene effettuato il controllo del amount di GPD = `100`
+10. lettura amount posizione debitoria di `Gherkin Analogic`
+11. viene effettuato il controllo del amount di GPD = `100`
+12. vengono cancellate le posizioni debitorie
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_4_MULTI] Notifica multi PF/PG-Verifica amount GPD per notifica ASYNC per Multipagamento</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene creata una nuova richiesta per istanziare 2 nuove posizioni debitorie per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene creata una nuova richiesta per istanziare 2 nuove posizioni debitorie per l'ente creditore `77777777777` e amount `100` per `Gherkin Analogic` con Piva `05722930657`
+3. viene generata una nuova notifica asincrona con destinatari `Mario Gherkin`e `Gherkin Analogic`
+4. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione debitoria `0` del pagamento `0`
+5. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione debitoria `1` del pagamento `1`
+6. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione debitoria `2` del pagamento `0`
+7. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione debitoria `3` del pagamento `1`
+8. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED per controllo GPD
+9. viene aggiunto il costo della notifica totale
+10. l'avviso pagopa `0` viene pagato correttamente dall'utente `0`
+11. la notifica può essere annullata dal sistema tramite codice IUN
+12. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED`
+13. lettura amount posizione debitoria per pagamento `0`
+14. viene effettuato il controllo del amount di GPD con amount notifica del pagamento `0`
+15. lettura amount posizione debitoria per pagamento `1`
+16. viene effettuato il controllo del amount di GPD = `100`
+17. lettura amount posizione debitoria per pagamento `2`
+18. viene effettuato il controllo del amount di GPD = `100`
+19. lettura amount posizione debitoria per pagamento `3`
+20. viene effettuato il controllo del amount di GPD = `100`
+21. vengono cancellate le posizioni debitorie
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_5_MULTI] Notifica multi PF/PG-Verifica amount GPD per notifica ASYNC in stato "SEND_SIMPLE_REGISTERED_LETTER"</summary>
+
+**Descrizione**
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Gherkin Analogic` con Piva `05722930657`
+3. viene generata una nuova notifica asincrona con destinatari `Mario Gherkin`e `Gherkin Analogic`
+4. al destinatario viene associato lo iuv creato mediante partita debitoria per `Mario Gherkin` alla posizione debitoria `0` del pagamento `0`
+5. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione debitoria `1` del pagamento `0`
+6. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED per controllo GPD
+7. viene aggiunto il costo della notifica totale
+8. lettura amount posizione debitoria di `Mario Gherkin`
+9. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+10. lettura amount posizione debitoria di `Gherkin Analogic`
+11. viene effettuato il controllo dell'aggiornamento del costo totale del utente `1`
+12. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER` per l'utente `0`
+13. lettura amount posizione debitoria di `Mario Gherkin`
+14. viene effettuato il controllo del cambiamento del amount nella timeline `SEND_SIMPLE_REGISTERED_LETTER` per l'utente `0` al tentativo `0`
+15. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER` per l'utente `1` 
+16. lettura amount posizione debitoria di `Gherkin Analogic`
+17. viene effettuato il controllo del cambiamento del amount nella timeline `SEND_SIMPLE_REGISTERED_LETTER` per l'utente `1` al tentativo `1`
+18. vengono cancellate le posizioni debitorie
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_6_MULTI] Notifica mono PF/PG-Verifica scarto notifica se applyCostFlag a false</summary>
+
+**Descrizione**
+
+
+1. viene creata una nuova richiesta per istanziare 2 nuove posizioni debitorie per l'ente creditore `77777777777` e amount `100` per `Mario Gherkin` con CF `CLMCST42R12D969Z`
+2. viene creata una nuova richiesta per istanziare 2 nuove posizioni debitorie per l'ente creditore `77777777777` e amount `100` per `Gherkin Analogic` con Piva `05722930657`
+3. viene generata una nuova notifica asincrona con destinatari `Mario Gherkin`e `Gherkin Analogic`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+5. vengono cancellate le posizioni debitorie
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
+
+</details>
 
 ##### Avanzamento notifiche b2b persona fisica
 
@@ -8797,6 +9785,115 @@ Dati destinatario
 
 
 #### Persona giuridica
+
+##### Avanzamento notifiche b2b asincrona con controllo costi su GPD per persona giuridica
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_1_PG] Notifica mono PG-Caso creazione Notifica di tipo non ASYNC, validazione non prevista</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica sincrona con destinatario `Cucumber Society`
+2. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi `ACCEPTED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pg/AvanzamentoNotificheAsyncB2bPG.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_2_PG] Notifica mono PG-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Gherkin Analogic` con Piva `00749900049`
+2. viene generata una nuova notifica asincrona con destinatario `Gherkin Analogic`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Gherkin Analogic`
+7. viene effettuato il controllo dell'aggiornamento del costo totale del utente `0`
+8. l'avviso pagopa viene pagato correttamente
+9. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_DIGITAL_DOMICILE` e successivamente annullata
+10. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED`
+11. viene generata una nuova notifica sincrona con destinatario `Gherkin Analogic`
+12. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione `0`
+13. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+14. viene cancellata la posizione debitoria di `Gherkin Analogic`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pg/AvanzamentoNotificheAsyncB2bPG.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_3_PG] Notifica mono PG-Verifica amount GPD per notifica ASYNC in stato “NOTIFICATION_CANCELLED“</summary>
+
+**Descrizione**
+
+1. viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore `77777777777` e amount `100` per `Gherkin Analogic` con Piva `00749900049`
+2. viene generata una nuova notifica asincrona con destinatario `Gherkin Analogic`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED e successivamente annullata
+5. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED`
+6. lettura amount posizione debitoria di `Gherkin Analogic`
+7. viene effettuato il controllo del amount di GPD = `100`
+8. viene cancellata la posizione debitoria di `Gherkin Analogic`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pg/AvanzamentoNotificheAsyncB2bPG.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_4_PG] Notifica mono PG Multipagamento-Verifica amount GPD notifica async dopo pagamento tutti i pagamenti poi annullata la notifica il secondo pagamento amount non azzerrato</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene creata una nuova richiesta per istanziare due nuove posizioni debitorie per l'ente creditore `77777777777` e amount `100` per `Gherkin Analogic` con Piva `00749900049`
+2. viene generata una nuova notifica asincrona multipagamento con destinatario `Gherkin Analogic`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione `0`
+4. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione `1`
+5. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+6. viene aggiunto il costo della notifica totale
+7. l'avviso pagopa `0` viene pagato correttamente dall'utente `0`
+8. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_DIGITAL_DOMICILE` e successivamente annullata
+9. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED`
+10. lettura amount posizione debitoria per pagamento `0`
+11. viene effettuato il controllo del amount di GPD = `100`
+12. 10. lettura amount posizione debitoria per pagamento `1`
+13. viene effettuato il controllo del amount di GPD con amount notifica del utente `1`
+14. vengono cancellate le posizioni debitorie
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pg/AvanzamentoNotificheAsyncB2bPG.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ASYNC_5_PG] Notifica mono PG-Verifica amount GPD per notifica ASYNC fino a "SEND_ANALOG_DOMICILE" al secondo tentativo</summary>
+
+**Descrizione**
+
+1. viene creata una nuova richiesta per istanziare due nuove posizioni debitorie per l'ente creditore `77777777777` e amount `100` per `Gherkin Analogic` con Piva `00749900049`
+2. viene generata una nuova notifica asincrona con destinatario `Gherkin Analogic`
+3. al destinatario viene associato lo iuv creato mediante partita debitoria per `Gherkin Analogic` alla posizione `0`
+4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED per controllo GPD
+5. viene aggiunto il costo della notifica totale
+6. lettura amount posizione debitoria di `Gherkin Analogic`
+7. l'avviso pagopa `0` viene pagato correttamente dall'utente `0`
+8. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_ANALOG_DOMICILE` al tentativo `0`
+9. lettura amount posizione debitoria di `Gherkin Analogic`
+10. viene effettuato il controllo del cambiamento del amount nella timeline `SEND_ANALOG_DOMICILE` del utente `0` al tentativo `0`
+11. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_ANALOG_DOMICILE` al tentativo `1`
+12. lettura amount posizione debitoria di "Gherkin Analogic"
+13. viene effettuato il controllo del cambiamento del amount nella timeline `SEND_ANALOG_DOMICILE` del utente `0` al tentativo `1`
+14. vengono cancellate la posizione debitoria di "Gherkin Analogic"
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pg/AvanzamentoNotificheAsyncB2bPG.feature)
+
+</details>
+
 
 ##### Avanzamento b2b persona giuridica
 
