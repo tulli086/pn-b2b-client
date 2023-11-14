@@ -3750,7 +3750,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_inps_flat     | NULL |
       | payment_f24standard_local_flat    | NULL |
       | payment_f24standard_region_flat   | NULL |
-      | payment_f24standard_treasury_flat | SI |
+      | payment_f24standard_treasury_flat | SI   |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
       | title_payment | F24_STANDARD_TREASURY_LVLDAA85T50G702B |
