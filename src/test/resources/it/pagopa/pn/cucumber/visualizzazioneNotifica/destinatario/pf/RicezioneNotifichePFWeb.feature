@@ -1,6 +1,6 @@
 Feature: Ricezione notifiche api web con invio tramite api B2B
 
-  @SmokeTest @testLite
+  @SmokeTest @letturaDestinatario
   Scenario: [WEB-PF-RECIPIENT_1] Invio notifica digitale mono destinatario e recupero tramite codice IUN API WEB_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -9,7 +9,7 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere correttamente recuperata da "Mario Gherkin"
 
-  @SmokeTest @testLite
+  @SmokeTest @letturaDestinatario
   Scenario: [WEB-PF-RECIPIENT_2] Invio notifica digitale mono destinatario e recupero documento notificato_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -18,7 +18,7 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then il documento notificato può essere correttamente recuperato da "Mario Gherkin"
 
-  @SmokeTest @testLite
+  @SmokeTest @letturaDestinatario
   Scenario: [WEB-PF-RECIPIENT_3] Invio notifica digitale mono destinatario e recupero allegato pagopa_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -149,7 +149,7 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
       | startDate | 01/01/2022 |
       | subjectRegExp | cucumber |
 
-  @SmokeTest @testLite
+  @SmokeTest @letturaDestinatario
   Scenario: [WEB-PF-RECIPIENT_14] Invio notifica digitale mono destinatario e recupero tramite ricerca API WEB_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
