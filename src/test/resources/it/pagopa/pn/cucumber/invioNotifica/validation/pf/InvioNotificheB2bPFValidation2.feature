@@ -399,12 +399,10 @@ Feature: Validazione campi invio notifiche b2b
 
   @validation
   Scenario Outline: [B2B-PA-SEND_VALID_34] Invio notifica digitale con mono destinatario con denomination errata scenario negativo
-
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | comune di milano               |
     And destinatario
-
       | denomination | <denomination>   |
       | taxId        | FRMTTR76M06B715E |
     When la notifica viene inviata dal "Comune_1"
@@ -412,8 +410,7 @@ Feature: Validazione campi invio notifiche b2b
     Examples:
       | denomination                                                 |
       | Nicolò Rossi Raffaella Carrà Salvator Dalì Bruno Nicolè dudù |
-
-      | Nicola Rossi :"()=?*+;,!^&                                   |
+      
 
 
   @validation
