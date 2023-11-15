@@ -1,6 +1,6 @@
 Feature: recupero notifiche tramite api AppIO b2b
 
-  @SmokeTest @testLite  @appIo
+  @SmokeTest @letturaDestinatario  @appIo
   Scenario: [B2B-PA-APP-IO_1] Invio notifica con api b2b e recupero tramite AppIO
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -9,7 +9,7 @@ Feature: recupero notifiche tramite api AppIO b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere recuperata tramite AppIO
 
-  @SmokeTest @testLite  @appIo
+  @SmokeTest @letturaDestinatario  @appIo
   Scenario: [B2B-PA-APP-IO_2] Invio notifica con api b2b paProtocolNumber e idemPotenceToken e recupero tramite AppIO
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -22,7 +22,7 @@ Feature: recupero notifiche tramite api AppIO b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then la notifica può essere recuperata tramite AppIO
 
-  @SmokeTest @testLite  @appIo
+  @SmokeTest @letturaDestinatario  @appIo
   Scenario: [B2B-PA-APP-IO_3] Invio notifica con api b2b uguale creditorTaxId e diverso codice avviso recupero tramite AppIO
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
