@@ -202,8 +202,6 @@ Feature: avanzamento b2b notifica multi destinatario analogico
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW" per l'utente 0
 
 
-
-
   @irreperibile_7623_Test @irreperibile_7623_Uat @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_10] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D00 non trovato - caso Multi
     Given viene generata una nuova notifica
