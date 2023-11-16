@@ -173,17 +173,36 @@ public class SharedSteps {
     private List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.ProgressResponseElement> progressResponseElements = null;
     public static Integer lastEventID = 0;
 
-    private String gherkinSpaTaxID = "12666810299";
+    //Vita Nova sas 12666810299
+    @Value("${pn.bearer-token.pg1.taxID}")
+    private String gherkinSpaTaxID;
+
+    //LucioAnneoSeneca 20517490320
+    @Value("${pn.bearer-token.pg2.taxID}")
+    private String cucumberSrlTaxID;
+
+    //private String gherkinSpaTaxID = "12666810299";
     //  private String cucumberSrlTaxID = "SCTPTR04A01C352E";
 
-    private String cucumberSrlTaxID = "20517490320";
+    //private String cucumberSrlTaxID = "20517490320";
 
-    private String cucumberSocietyTaxID = "20517490320" ;// "DNNGRL83A01C352D";
+    @Value("${pn.bearer-token.pg2.taxID}")
+    private String cucumberSocietyTaxID;
+   // private String cucumberSocietyTaxID = "20517490320" ;// "DNNGRL83A01C352D";
+
     private String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
     // private String gherkinSrltaxId = "CCRMCT06A03A433H";
-    private String gherkinAnalogicTaxID = "05722930657";
-    private String gherkinSrltaxId = "12666810299";
-    private String cucumberSpataxId = "20517490320"; //
+
+    @Value("${pn.bearer-token.pg3.taxID}")
+    private String gherkinAnalogicTaxID;
+    //private String gherkinAnalogicTaxID = "05722930657";
+
+    @Value("${pn.bearer-token.pg1.taxID}")
+    private String gherkinSrltaxId;
+   // private String gherkinSrltaxId = "12666810299";
+    @Value("${pn.bearer-token.pg2.taxID}")
+    private String cucumberSpataxId;
+    //private String cucumberSpataxId = "20517490320"; //
 
     @Value("${pn.interop.base-url}")
     private String interopBaseUrl;
