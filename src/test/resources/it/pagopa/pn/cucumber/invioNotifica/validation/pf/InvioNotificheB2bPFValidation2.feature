@@ -91,7 +91,7 @@ Feature: Validazione campi invio notifiche b2b
       | via dà via è via ì via ò                     |
       | via dell'adige via sull’adige via sull`adige |
 
-
+  @validation
   Scenario Outline: [B2B-PA-SEND_VALID_11] invio notifiche digitali mono destinatario con parametri tax_id errati_scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -108,7 +108,7 @@ Feature: Validazione campi invio notifiche b2b
       | FRMTTRZ6M06B715E  |
       | FRMTTR76M0YB715E  |
       | FRMTTR76M06B7W5E  |
-      | 20517490320       |
+      | 20517460320       |
       #1) 10 numeri (min 11)
       #2) 17 numeri (max 16)
       #3) CF non valido (lettera finale mancante)
