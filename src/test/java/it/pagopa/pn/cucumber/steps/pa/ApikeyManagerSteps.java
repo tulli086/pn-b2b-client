@@ -1,5 +1,6 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -11,7 +12,9 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.m
 import it.pagopa.pn.cucumber.utils.GroupPosition;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.List;
@@ -29,6 +32,13 @@ public class ApikeyManagerSteps {
     private String firstGroupUsed;
     private String responseNewApiKeyTaxId;
 
+    //TODO: trovare punto migliore
+    @Value("${pn.interop.enable}")
+    private boolean isInteropEnabled;
+
+    @Value("${spring.profiles.active}")
+    private String env;
+
     @Autowired
     public ApikeyManagerSteps(IPnApiKeyManagerClient apiKeyManagerClient, SharedSteps sharedSteps,PnApiKeyManagerExternalClientImpl apiKeyManagerClientImpl) {
         this.sharedSteps = sharedSteps;
@@ -41,6 +51,26 @@ public class ApikeyManagerSteps {
         Assertions.assertDoesNotThrow(() ->
                 apiKeys = this.apiKeyManagerClient.getApiKeys(null, null, null, true));
     }
+
+    //TODO: Centralizzare
+    @Before("@precondition")
+    public void setup(){
+        Assumptions.assumeTrue(preconditionForTest());
+    }
+
+    //TODO: Centralizzare
+    private boolean preconditionForTest(){
+        System.out.println("ENV: "+env+" isInteropEnabled: "+isInteropEnabled);
+       switch (env){
+           case "test":
+               return !isInteropEnabled;
+           case "uat":
+               return isInteropEnabled;
+           default:
+               return false;
+       }
+    }
+
 
     @Then("la lettura è avvenuta correttamente")
     public void laLetturaÈAvvenutaCorrettamente() {

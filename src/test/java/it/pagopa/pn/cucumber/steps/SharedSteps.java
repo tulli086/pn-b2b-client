@@ -152,6 +152,11 @@ public class SharedSteps {
     @Value("${pn.configuration.scheduling.days.failure.digital.refinement:6m}")
     private String schedulingDaysFailureDigitalRefinementString;
 
+    @Value("${pn.configuration.scheduling.delta.millis.pagopa:100}")
+    private String schedulingDelta;
+
+    private String schedulingDeltaDefault="500";
+
     private final Integer workFlowWaitDefault = 31000;
     private final Integer waitDefault = 10000;
 
@@ -1870,12 +1875,19 @@ public class SharedSteps {
     }
 
     public String getSchedulingDaysFailureDigitalRefinementString() {
-        if (schedulingDaysFailureDigitalRefinementString == null) return schedulingDaysFailureDigitalRefinementDefaultString;
+        if (schedulingDaysFailureDigitalRefinementString == null){
+            return schedulingDaysFailureDigitalRefinementDefaultString;
+        }
         return schedulingDaysFailureDigitalRefinementString;
     }
     public String getSchedulingDaysSuccessDigitalRefinementString() {
         if (schedulingDaysSuccessDigitalRefinementString == null) return schedulingDaysSuccessDigitalRefinementDefaultString;
         return schedulingDaysSuccessDigitalRefinementString;
+    }
+
+    public String getSchedulingDelta() {
+        if (schedulingDelta == null) return schedulingDeltaDefault;
+        return schedulingDelta;
     }
 
     public void addIuvGPD(String iuvGPD) {
