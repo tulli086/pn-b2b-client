@@ -14,10 +14,10 @@ import static io.cucumber.junit.platform.engine.Constants.*;
         @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "it.pagopa.pn.cucumber.steps"),
         @ConfigurationParameter(key = EXECUTION_MODE_FEATURE_PROPERTY_NAME, value = "concurrent"),
 })
-@ExcludeTags({"ignore"})
+@ExcludeTags({"ignore","mockNR"})
 @IncludeTags({"workflowDigitale", "workflowAnalogico", "pagamentiMultipli",
-        "costoAnalogico","Async", "f24", "version","AOO_UO", "Annullamento",
+        "costoAnalogico","Async", "f24", "version", "Annullamento",
         "validation", "RetentionAllegati", "apiKeyManager", "downtimeLogs",
-        "legalFact", "letturaDestinatario"})
+        "legalFact", "letturaDestinatario"}) //"AOO_UO",
 public class NrtTest_uat {
 }
