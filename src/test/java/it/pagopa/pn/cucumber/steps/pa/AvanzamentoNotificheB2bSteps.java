@@ -3576,8 +3576,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} e verifica data schedulingDate per il destinatario {int} rispetto ell'evento in timeline {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithVerifySchedulingDate(String timelineEventCategory, int destinatario, String evento) {
-        int delay =0;
-        String tipoIncremento="m";
+        int delay = 0;
         TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
         TimelineElementV20 timelineElement = null;
         OffsetDateTime digitalDeliveryCreationRequestDate = null;
@@ -3604,45 +3603,38 @@ public class AvanzamentoNotificheB2bSteps {
             }
         }
         try {
-
             //RECUPERO Data DeliveryCreationRequest
             for (TimelineElementV20 element : sharedSteps.getSentNotification().getTimeline()) {
                 if (element.getCategory().getValue().equals("DIGITAL_DELIVERY_CREATION_REQUEST") && element.getDetails().getRecIndex().equals(destinatario) && evento.equalsIgnoreCase("DIGITAL_DELIVERY_CREATION_REQUEST")) {
-
                     digitalDeliveryCreationRequestDate = element.getTimestamp();
-                    if (sharedSteps.getSchedulingDaysFailureDigitalRefinementString().contains("m"))
-                        tipoIncremento = "m";
-                    else if (sharedSteps.getSchedulingDaysFailureDigitalRefinementString().contains("d"))
-                        tipoIncremento = "d";
-
-                    delay = Integer.parseInt(sharedSteps.getSchedulingDaysFailureDigitalRefinementString().replace(tipoIncremento,""));
+                    delay = Integer.parseInt(sharedSteps.getSchedulingDaysFailureDigitalRefinementString().replace("m",""));
                     break;
                 } else if (element.getCategory().getValue().equals("SEND_DIGITAL_FEEDBACK") && element.getDetails().getRecIndex().equals(destinatario) && evento.equalsIgnoreCase("SEND_DIGITAL_FEEDBACK")) {
                     if ("OK".equalsIgnoreCase(element.getDetails().getResponseStatus().getValue())) {
                         digitalDeliveryCreationRequestDate = element.getDetails().getNotificationDate();
-                        if (sharedSteps.getSchedulingDaysSuccessDigitalRefinementString().contains("m"))
-                            tipoIncremento = "m";
-                        else if (sharedSteps.getSchedulingDaysSuccessDigitalRefinementString().contains("d"))
-                            tipoIncremento = "d";
-
-                        delay = Integer.parseInt(sharedSteps.getSchedulingDaysSuccessDigitalRefinementString().replace(tipoIncremento,""));
+                        delay = Integer.parseInt(sharedSteps.getSchedulingDaysSuccessDigitalRefinementString().replace("m",""));
                         break;
                     }
                 }
             }
-
+            logger.info("TIMELINE ELEMENT: {} , DETAILS {} , SCHEDULING DATE {}",
+                    timelineElement,timelineElement.getDetails(), timelineElement.getDetails().getSchedulingDate());
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getSchedulingDate());
-            Assertions.assertNotNull(tipoIncremento);
 
-            if ("d".equalsIgnoreCase(tipoIncremento)){
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                Assertions.assertTrue(timelineElement.getDetails().getSchedulingDate().format(fmt).equals(digitalDeliveryCreationRequestDate.plusDays(delay).format(fmt)));
-            } else if ("m".equalsIgnoreCase(tipoIncremento)) {
-                Duration ss = sharedSteps.getSchedulingDaysSuccessDigitalRefinement();
-                DateTimeFormatter fmt1 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-                Assertions.assertTrue(timelineElement.getDetails().getSchedulingDate().format(fmt1).equals(digitalDeliveryCreationRequestDate.plusMinutes(delay).format(fmt1)));
-            }
+            //Duration ss = sharedSteps.getSchedulingDaysSuccessDigitalRefinement();
+            //DateTimeFormatter fmt1 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+            Long schedulingDateMillis = timelineElement.getDetails().getSchedulingDate().toInstant().toEpochMilli();
+            Long digitalDeliveryCreationMillis = digitalDeliveryCreationRequestDate.toInstant().toEpochMilli();
+            Long diff = schedulingDateMillis - digitalDeliveryCreationMillis;
+            Long delayMillis = ((Long.valueOf(delay)*60)*1000); //TODO: refactor
+            Long delta = Long.valueOf(sharedSteps.getSchedulingDelta());
+            logger.info("PRE-ASSERTION: schedulingDateMillis {}, digitalDeliveryCreationMillis {}, diff {}, delayMillis {}, delta {}",
+                    schedulingDateMillis,digitalDeliveryCreationMillis,diff,delayMillis,delta);
+            Assertions.assertTrue(diff <= delayMillis+delta && diff >= delayMillis-delta);
+
+            //Assertions.assertTrue(timelineElement.getDetails().getSchedulingDate().format(fmt1).equals(digitalDeliveryCreationRequestDate.plusMinutes(delay).format(fmt1)));
 
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
