@@ -15,12 +15,15 @@
    1. [B2B](#b2b)
    2. [Download](#Download)
    3. [E2E](#E2E)
-   4.[Webhook](#webhook)
-7. [Allegati](#allegati)
-8. [Api Key Manager](#api-key-manager)
-9. [Downtime logs](#downtime-logs)
-10. [User Attributes](#user-attributes)
-11. [Test di integrazione della pubblica amministrazione](#test-di-integrazione-della-pubblica-amministrazione)
+   4. [Webhook](#webhook)
+7. [Address Validation](#Address Validation)
+8. [Allegati](#allegati)
+9. [Api Key Manager](#api-key-manager)
+10. [Audit-Log OpenSeach](#Audit Log OpenSearch)
+11. [Deleghe](#Deleghe new feature)
+12. [Downtime logs](#downtime-logs)
+13. [User Attributes](#user-attributes)
+14. [Test di integrazione della pubblica amministrazione](#test-di-integrazione-della-pubblica-amministrazione)
 
 ## annullamento-notifica
 
@@ -524,9 +527,9 @@
 1. Viene creata una nuova notifica con destinatario Mario Cucumber
 2. Viene inviata tramite api b2b dal `Comune_1` e si aspetta che lo stato passi in `ACCEPTED`
 3. vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION" e successivamente annullata
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
-4. il documento notificato non può essere correttamente recuperato da "`Mario Cucumber`"
-5. il download ha prodotto un errore con status code "`404`"
+4. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
+5. il documento notificato non può essere correttamente recuperato da "`Mario Cucumber`"
+6. il download ha prodotto un errore con status code "`404`"
 
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/annullamentoNotifica/AnnullamentoNotificheB2b.feature)
@@ -18355,6 +18358,502 @@ Dati Destinatario
 
 </details>
 
+#### Notifica pagata
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-WF-INHIBITION-PAID-3] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.Viene effettuato il pagamento subito dopo la generazione dell'evento di timeline SCHEDULE_REFINEMENT. Il pagamento non deve generare un evento di timeline REFINEMENT.</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `SCHEDULE_REFINEMENT` esista
+4. l'avviso pagopa viene pagato correttamente
+5. si attende il corretto pagamento della notifica
+6. viene schedulato il perfezionamento per decorrenza termini per il caso `DIGITAL_SUCCESS_WORKFLOW`
+7. si attende che sia presente il perfezionamento per decorrenza termini
+8. viene verificato che l'elemento di timeline `REFINEMENT` non esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationPaid.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-WF-INHIBITION-PAID-4] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica. Viene effettuato il pagamento subito dopo la generazione dell'evento di timeline DIGITAL_FAILURE_WORKFLOW. Il pagamento non deve generare un evento di timeline PREPARE_SIMPLE_REGISTERED_LETTER e SEND_SIMPLE_REGISTERED_LETTER.</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `DIGITAL_FAILURE_WORKFLOW` esista
+4. l'avviso pagopa viene pagato correttamente
+5. si attende il corretto pagamento della notifica
+6. viene verificato che l'elemento di timeline `PREPARE_SIMPLE_REGISTERED_LETTER` non esista
+7. viene verificato che l'elemento di timeline `SEND_SIMPLE_REGISTERED_LETTER` non esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationPaid.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-WF-INHIBITION-PAID-5] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica. Viene effettuato il pagamento subito dopo che la notifica è stata accettata. Il pagamento non deve generare un evento di timeline SEND_ANALOG_DOMICILE.</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. l'avviso pagopa viene pagato correttamente
+4. si attende il corretto pagamento della notifica
+5. viene verificato che l'elemento di timeline `SEND_ANALOG_DOMICILE` non esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationPaid.feature)
+
+</details>
+
+#### Validazione notifica e2e
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION_VALIDATION_ATTACHMENT_1] validazione fallita allegati notifica - file non caricato su SafeStorage</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+3. si verifica che la notifica non viene accettata causa `ALLEGATO`
+4. viene verificato che l'elemento di timeline `REQUEST_REFUSED` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationValidation.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION_VALIDATION_ATTACHMENT_2] validazione fallita allegati notifica - Sha256 differenti</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+3. si verifica che la notifica non viene accettata causa `SHA_256`
+4. viene verificato che l'elemento di timeline `REQUEST_REFUSED` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationValidation.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION_VALIDATION_ATTACHMENT_3] validazione fallita allegati notifica - estensione errata</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+3. si verifica che la notifica non viene accettata causa `EXTENSION`
+4. viene verificato che l'elemento di timeline `REQUEST_REFUSED` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationValidation.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION_VALIDATION_ATTACHMENT_4] validazione fallita allegati notifica - file non caricato su SafeStorage</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+3. si verifica che la notifica non viene accettata causa `ALLEGATO`
+4. viene verificato che l'elemento di timeline `REQUEST_REFUSED` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationValidation.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION_VALIDATION_TAXID] Invio notifica mono destinatario con taxId non valido scenario negativo</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `LNALNI80A01H501T`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+3. si verifica che la notifica non viene accettata causa `TAX_ID`
+4. viene verificato che l'elemento di timeline `REQUEST_REFUSED` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationValidation.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION_VALIDATION_PHYSICAL_ADDRESS] Invio notifica mono destinatario con indirizzo fisico non valido scenario negativo</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi REFUSED
+3. si verifica che la notifica non viene accettata causa `ADDRESS`
+4. viene verificato che l'elemento di timeline `REQUEST_REFUSED` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationValidation.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION_VALIDATION_ASINC_OK] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED e controllo che sia presente nel campo legalFactsIds l'atto opponibile a terzi con category SENDER_ACK positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `REQUEST_ACCEPTED` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationValidation.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION_VALIDATION_AAR_GENERATION] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION sia presente il campo generatedAarUrl valorizzato positivo</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `AAR_GENERATION` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationValidation.feature)
+
+</details>
+
+#### Notifica visualizzata
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION-VIEWED-1] Visualizzazione da parte del destinatario della notifica</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Ettore Fieramosca`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `REQUEST_ACCEPTED` esista
+4. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `REQUEST_ACCEPTED`
+5. la notifica può essere correttamente recuperata da `Mario Cucumber`
+6. viene verificato che l'elemento di timeline `NOTIFICATION_VIEWED` esista
+7. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `NOTIFICATION_VIEWED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION-VIEWED-2] Visualizzazione da parte del delegato della notifica</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. `Mario Gherkin` rifiuta se presente la delega ricevuta `Mario Cucumber`
+2. `Mario Gherkin` viene delegato da `Mario Cucumber`
+3. `Mario Gherkin` accetta la delega `Mario Cucumber`
+4. viene generata una nuova notifica con destinatario `Ettore Fieramosca`
+5. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+6. viene verificato che l'elemento di timeline `REQUEST_ACCEPTED` esista
+7. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `REQUEST_ACCEPTED`
+8. la notifica può essere correttamente recuperata da `Mario Gherkin` con delega
+9. viene verificato che l'elemento di timeline `NOTIFICATION_VIEWED` esista
+10. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `NOTIFICATION_VIEWED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION-VIEWED-4] A valle della visualizzazione della notifica non deve essere generato un nuovo elemento di timeline NOTIFICATION VIEWED</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Ettore Fieramosca`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `REQUEST_ACCEPTED` esista
+4. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `REQUEST_ACCEPTED`
+5. la notifica può essere correttamente recuperata da `Mario Cucumber`
+6. verifico che l'atto opponibile a terzi di `NOTIFICATION_VIEWED` sia lo stesso
+7. viene verificato che il numero di elementi di timeline `NOTIFICATION_VIEWED` della notifica sia di `1`
+8. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `NOTIFICATION_VIEWED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-NOTIFICATION-VIEWED-5] A valle della visualizzazione della notifica, il destinatario non deve essere nella tabella pn-paper-notification-failed</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Leonardo da Vinci`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `COMPLETELY_UNREACHABLE` esista
+4. viene verificato che il destinatario `DSRDNI00A01A225I` di tipo `PF` sia nella tabella pn-paper-notification-failed
+5. la notifica può essere correttamente recuperata da `Dino Sauro`
+6. viene verificato che l'elemento di timeline `NOTIFICATION_VIEWED` esista
+7. viene verificato che il destinatario `DSRDNI00A01A225I` di tipo `PF` non sia nella tabella pn-paper-notification-failed
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-WF-INHIBITION-2] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `SEND_DIGITAL_FEEDBACK` esista
+4. la notifica può essere correttamente recuperata da `Cristoforo Colombo`
+5. viene verificato che l'elemento di timeline `NOTIFICATION_VIEWED` esista
+6. viene verificato che il numero di elementi di timeline `SCHEDULE_REFINEMENT` della notifica sia di `0`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-WF-INHIBITION-3] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica. La notifica viene letta subito dopo la generazione dell'evento di timeline SCHEDULE_REFINEMENT. Questa lettura non deve generare un evento di timeline REFINEMENT.</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `SCHEDULE_REFINEMENT` esista
+5. la notifica può essere correttamente recuperata da `Cristoforo Colombo`
+6. viene schedulato il perfezionamento per decorrenza termini per il caso `DIGITAL_SUCCESS_WORKFLOW`
+7. si attende che sia presente il perfezionamento per decorrenza termini
+8. viene verificato che l'elemento di timeline `REFINEMENT` non esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-WF-INHIBITION-4] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica. La notifica viene letta subito dopo la generazione dell'evento di timeline DIGITAL_FAILURE_WORKFLOW. Questa lettura non deve generare un evento di timeline PREPARE_SIMPLE_REGISTERED_LETTER e SEND_SIMPLE_REGISTERED_LETTER.</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `DIGITAL_FAILURE_WORKFLOW` esista
+4. la notifica può essere correttamente recuperata da `Cristoforo Colombo`
+5. viene verificato che l'elemento di timeline `PREPARE_SIMPLE_REGISTERED_LETTER` non esista
+6. viene verificato che l'elemento di timeline `SEND_SIMPLE_REGISTERED_LETTER` non esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-WF-INHIBITION-5] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica.</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Ettore Fieramosca`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `DIGITAL_FAILURE_WORKFLOW` esista
+4. la notifica può essere correttamente recuperata da `Ettore Fieramosca`
+5. viene verificato che l'elemento di timeline `SEND_ANALOG_DOMICILE` non esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-WF-INHIBITION-6] Casistica in cui la visualizzazione di una notifica inibisce parte del workflow di notifica. La notifica viene letta subito dopo la generazione dell'evento di timeline ANALOG_FAILURE_WORKFLOW. Questa lettura non deve generare un evento di timeline REFINEMENT.</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Leonardo da Vinci`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `SCHEDULE_REFINEMENT` esista
+4. viene verificato che l'elemento di timeline `ANALOG_FAILURE_WORKFLOW` esista
+5. la notifica può essere correttamente recuperata da `Leonardo da Vinci`
+6. viene schedulato il perfezionamento per decorrenza termini per il caso `ANALOG_FAILURE_WORKFLOW`
+7. si attende che sia presente il perfezionamento per decorrenza termini
+8. viene verificato che l'elemento di timeline `REFINEMENT` non esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-WF-INHIBITION-7] Invio notifica con percorso analogico. Notifica visualizzata tra un tentativo e l'altro</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `SEND_DIGITAL_FEEDBACK` esista
+4. la notifica può essere correttamente recuperata da `Cristoforo Colombo`
+5. viene verificato che l'elemento di timeline `SEND_ANALOG_FEEDBACK` esista
+6. viene verificato che il numero di elementi di timeline `SEND_ANALOG_DOMICILE` della notifica sia di `1`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/NotificationViewed.feature)
+
+</details>
+
+#### Invio messaggi cortesia E2E
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-SEND_COURTESY_MESSAGE_1] invio messaggio di cortesia - invio per email</summary>
+
+**Descrizione**
+
+1. si predispone addressbook per l'utente `Galileo Galilei`
+2. viene inserito un recapito legale `example@pecSuccess.it`
+3. viene generata una nuova notifica con destinatario `Galileo Galilei`
+4. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+5. si verifica la corretta acquisizione della notifica
+6. viene verificato che l'elemento di timeline `SEND_COURTESY_MESSAGE` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/SendCourtesyMessage.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-SEND_COURTESY_MESSAGE_2] invio messaggio di cortesia - invio per SMS</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario `Louis Armstrong`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. si verifica la corretta acquisizione della notifica
+4. viene verificato che l'elemento di timeline `SEND_COURTESY_MESSAGE` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/SendCourtesyMessage.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-SEND_COURTESY_MESSAGE_3] invio messaggio di cortesia - invio per AppIO</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Cristoforo Colombo`
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
+3. si verifica la corretta acquisizione della notifica
+4. viene verificato che l'elemento di timeline `SEND_COURTESY_MESSAGE` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/SendCourtesyMessage.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-SEND-COURTESY-MESSAGE-4] Invio notifica mono destinatario con messaggio di cortesia non configurato</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Dino Sauro`
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene verificato che l'elemento di timeline `SEND_COURTESY_MESSAGE` non esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/SendCourtesyMessage.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-SEND_COURTESY_MESSAGE_5_PG] invio messaggio di cortesia - invio notifica per email per ente padre per PG</summary>
+
+**Descrizione**
+
+1. si predispone addressbook per l'utente `Lucio Anneo Seneca`
+2. viene inserito un recapito legale `example@pecSuccess.it`
+3. viene inserita l'email di cortesia `provaemail@test.it` per il comune `default`
+4. viene inserita l'email di cortesia `provaemail@test.it` per il comune `Comune_Root`
+5. viene generata una nuova notifica con destinatario `Lucio Anneo Seneca`
+6. la notifica viene inviata tramite api b2b dal `Comune_Root` e si attende che lo stato diventi ACCEPTED
+7. si verifica la corretta acquisizione della notifica
+8. viene verificato che l'elemento di timeline `SEND_COURTESY_MESSAGE` esista
+9. viene eliminata l'email di cortesia per il comune `default`
+10. viene eliminata l'email di cortesia per il comune `Comune_Root`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/SendCourtesyMessage.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-SEND_COURTESY_MESSAGE_5] invio messaggio di cortesia - invio notifica per email per ente padre</summary>
+
+**Descrizione**
+
+1. si predispone addressbook per l'utente `Galileo Galilei`
+2. viene inserito un recapito legale `example@pecSuccess.it`
+3. viene inserita l'email di cortesia `provaemail@test.it` per il comune `Comune_Root`
+4. viene generata una nuova notifica con destinatario `Galileo Galilei`
+5. la notifica viene inviata tramite api b2b dal `Comune_Root` e si attende che lo stato diventi ACCEPTED
+6. si verifica la corretta acquisizione della notifica
+7. viene verificato che l'elemento di timeline `SEND_COURTESY_MESSAGE` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/SendCourtesyMessage.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-SEND_COURTESY_MESSAGE_6_PG] invio messaggio di cortesia - invio notifica per email per ente figlio per PG</summary>
+
+**Descrizione**
+
+1. si predispone addressbook per l'utente `Lucio Anneo Seneca`
+2. viene inserito un recapito legale `example@pecSuccess.it`
+3. viene inserita l'email di cortesia `provaemail@test.it` per il comune `default`
+4. viene inserita l'email di cortesia `provaemail@test.it` per il comune `Comune_Root`
+5. viene generata una nuova notifica con destinatario `Lucio Anneo Seneca`
+6. la notifica viene inviata tramite api b2b dal `Comune_Son` e si attende che lo stato diventi ACCEPTED
+7. si verifica la corretta acquisizione della notifica
+8. viene verificato che l'elemento di timeline `SEND_COURTESY_MESSAGE` esista
+9. viene eliminata l'email di cortesia per il comune `default`
+10. viene eliminata l'email di cortesia per il comune `Comune_Root`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/SendCourtesyMessage.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[E2E-SEND_COURTESY_MESSAGE_6] invio messaggio di cortesia - invio notifica per email per ente figlio</summary>
+
+**Descrizione**
+
+1. si predispone addressbook per l'utente `Galileo Galilei`
+2. viene inserito un recapito legale `example@pecSuccess.it`
+3. viene inserita l'email di cortesia `provaemail@test.it` per il comune `Comune_Root`
+4. viene generata una nuova notifica con destinatario `Galileo Galilei`
+5. la notifica viene inviata tramite api b2b dal `Comune_Son` e si attende che lo stato diventi ACCEPTED
+6. si verifica la corretta acquisizione della notifica
+7. viene verificato che l'elemento di timeline `SEND_COURTESY_MESSAGE` esista
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/e2e/SendCourtesyMessage.feature)
+
+</details>
 
 ### Webhook
 
@@ -18675,6 +19174,22 @@ Dati Destinatario
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/webhook/pf/AvanzamentoNotificheWebhookB2bPF.feature)
 
+</details>
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-STREAM_TIMELINE_24_7878] Invio notifiche digitali e controllo che vengano letti 50 eventi nel webhook</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica con destinatario `Mario Gherkin`
+2. Si predispone `1` nuovo stream denominato `stream-test` con eventType `TIMELINE`
+3. Si crea il nuovo stream per il `Comune_1`
+4. La notifica viene inviata tramite api b2b senza preload allegato dal `Comune_1` e si attende che lo stato diventi `ACCEPTED`
+5. Viene generata una nuova notifica con destinatario `Mario Cucumber`
+6. La notifica viene inviata tramite api b2b senza preload allegato dal `Comune_1` e si attende che lo stato diventi `ACCEPTED`
+7. vengono letti gli eventi fino all'elemento di timeline della notifica `DIGITAL_FAILURE_WORKFLOW`
+8. vengono letti gli eventi dello stream che contenga `50` eventi
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/webhook/pf/AvanzamentoNotificheWebhookB2bPF.feature)
 </details>
 
 ##### Avanzamento notifiche webhook b2b multi
@@ -19038,6 +19553,34 @@ Dati Destinatario
 
 </details>
 
+## Address Validation
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_ADDRESS_VALIDATION] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo</summary>
+
+**Descrizione**
+
+      | denomination 				| <denomination> |
+      |    taxId     				| CLMCST42R12D969Z |
+      | physicalAddress_address 		| <address> |
+      | at 					| <at> |
+      | physicalAddress_addressDetails 		| <addressDetails> |
+      | physicalAddress_zip 			| <zip> |
+      | physicalAddress_municipality 		| <municipality> |
+      | physicalAddress_municipalityDetails 	| <municipalityDetails> |
+      | physicalAddress_province 		| <province> |
+      | physicalAddress_State 			| <foreignState> |
+
+1. Viene generata una nuova notifica con destinatario `CLMCST42R12D969Z`
+2. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi `<notificationValidationStatus>`
+3. Si verifica che la notifica non viene accettata causa `ALLEGATO`
+4. Then vengono letti gli eventi dello stream del `Comune_2` con la verifica di Allegato non trovato
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/AddressValidation.feature)
+
+</details>
+
+
 ## Allegati
 
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19048,7 +19591,7 @@ Dati Destinatario
 1. viene effettuato il pre-caricamento di un documento
 2. viene effettuato un controllo sulla durata della retention di `ATTO OPPONIBILE` precaricato
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19059,7 +19602,7 @@ Dati Destinatario
 1. viene effettuato il pre-caricamento di un documento
 2. viene effettuato un controllo sulla durata della retention di `PAGOPA` precaricato
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19072,7 +19615,7 @@ Dati Destinatario
 3. si verifica la corretta acquisizione della notifica
 4. viene effettuato un controllo sulla durata della retention di `ATTO OPPONIBILE`
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19085,7 +19628,7 @@ Dati Destinatario
 3. si verifica la corretta acquisizione della notifica
 4. viene effettuato un controllo sulla durata della retention di `PAGOPA`
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19098,7 +19641,7 @@ Dati Destinatario
 3. Si verifica la corretta acquisizione della notifica
 4. Viene effettuato un controllo sulla durata della retention di `ATTO OPPONIBILE`
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19111,7 +19654,7 @@ Dati Destinatario
 3. Si verifica la corretta acquisizione della notifica
 4. Viene effettuato un controllo sulla durata della retention di `PAGOPA`
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19124,7 +19667,7 @@ Dati Destinatario
 3. Si verifica la corretta acquisizione della notifica
 4. Viene effettuato un controllo sulla durata della retention di `ATTO OPPONIBILE`
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19137,9 +19680,62 @@ Dati Destinatario
 3. Si verifica la corretta acquisizione della notifica
 4. Viene effettuato un controllo sulla durata della retention di `PAGOPA`
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
 
 </details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_PN8120_1] Analizzando una notifica digitale perfezionata, verificare che la retention degli allegati non venga modificata anche post visualizzazione</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `REFINEMENT`
+4. viene verificato che l'elemento di timeline `REFINEMENT` esista
+5. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `REFINEMENT`
+6. la notifica può essere correttamente recuperata da `Mario Cucumber`
+7. viene verificato che l'elemento di timeline `NOTIFICATION_VIEWED` esista
+8. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `NOTIFICATION_VIEWED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_PN8120_2] Analizzando una notifica analogica perfezionata, verificare che la retention degli allegati non venga modificata anche post visualizzazione</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `REFINEMENT`
+4. viene verificato che l'elemento di timeline `REFINEMENT` esista
+5. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `REFINEMENT`
+6. la notifica può essere correttamente recuperata da `Mario Cucumber`
+7. viene verificato che l'elemento di timeline `NOTIFICATION_VIEWED` esista
+8. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `NOTIFICATION_VIEWED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/Allegati.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B_PN8120_3] Visualizzazione da parte del destinatario della notifica non perfezionata e verifica che la retenion dell'allegato non cambi</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica con destinatario `Mario Cucumber`
+2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+3. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `REQUEST_ACCEPTED`
+4. la notifica può essere correttamente recuperata da `Mario Cucumber`
+5. viene verificato che l'elemento di timeline `NOTIFICATION_VIEWED` esista
+6. viene effettuato un controllo sulla durata della retention di `ATTACHMENTS` per l'elemento di timeline `NOTIFICATION_VIEWED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
+
+</details>
+
 
 ## Api Key Manager
 
@@ -19151,7 +19747,7 @@ Dati Destinatario
 1. vengono lette le apiKey esistenti
 2. la lettura è avvenuta correttamente
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19167,7 +19763,7 @@ Dati Destinatario
 6. vengono lette le apiKey esistenti
 7. l'apiKey non è più presente
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19183,7 +19779,7 @@ Dati Destinatario
 6. viene modificato lo stato dell'apiKey in `BLOCK`
 7. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19199,7 +19795,7 @@ Dati Destinatario
 6. si verifica lo stato dell'apikey `BLOCKED`
 7. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19214,7 +19810,7 @@ Dati Destinatario
 5. viene modificato lo stato dell'apiKey in `BLOCK`
 6. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19231,7 +19827,7 @@ Dati Destinatario
 7. viene modificato lo stato dell'apiKey in `BLOCK`
 8. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19252,7 +19848,7 @@ Dati Destinatario
 11. viene modificato lo stato dell'apiKey in `BLOCK`
 12. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19272,7 +19868,7 @@ Dati Destinatario
 10. viene modificato lo stato dell'apiKey in `BLOCK`
 11. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19291,7 +19887,7 @@ Dati Destinatario
 9. l'invio della notifica ha sollevato un errore di autenticazione `403`
 10. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19307,7 +19903,7 @@ Dati Destinatario
 6. vengono lette le apiKey esistenti
 7. l'apiKey non è più presente
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19325,7 +19921,7 @@ Dati Destinatario
 8. viene modificato lo stato dell'apiKey in `BLOCK`
 9. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19344,7 +19940,7 @@ Dati Destinatario
 9. viene modificato lo stato dell'apiKey in `BLOCK`
 10. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19362,7 +19958,7 @@ Dati Destinatario
 8. viene modificato lo stato dell'apiKey in `BLOCK`
 9. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19381,7 +19977,7 @@ Dati Destinatario
 9. viene modificato lo stato dell'apiKey in `BLOCK`
 10. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19400,7 +19996,7 @@ Dati Destinatario
 9. viene modificato lo stato dell'apiKey in `BLOCK`
 10. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19424,7 +20020,7 @@ Dati Destinatario
 14. viene modificato lo stato dell'apiKey in `BLOCK`
 15. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19449,7 +20045,7 @@ Dati Destinatario
 15. viene modificato lo stato dell'apiKey in `BLOCK`
 16. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19472,7 +20068,7 @@ Dati Destinatario
 13. viene modificato lo stato dell'apiKey in `BLOCK`
 14. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19496,7 +20092,7 @@ Dati Destinatario
 14. viene modificato lo stato dell'apiKey in `BLOCK`
 15. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19520,7 +20116,7 @@ Dati Destinatario
 14. viene modificato lo stato dell'apiKey in `BLOCK`
 15. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19528,10 +20124,12 @@ Dati Destinatario
 
 **Descrizione**
 
+:warning: _Ignored_
+
 1. Viene generata una nuova apiKey con il gruppo `AAAAAAAAAA`
 2. l'operazione ha sollevato un errore con status code `400`
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19549,7 +20147,7 @@ Dati Destinatario
 8. viene modificato lo stato dell'apiKey in `BLOCK`
 9. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19568,7 +20166,7 @@ Dati Destinatario
 9. viene modificato lo stato dell'apiKey in `BLOCK`
 10. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
 
 </details>
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -19592,7 +20190,332 @@ Dati Destinatario
 14. viene modificato lo stato dell'apiKey in `BLOCK`
 15. l'apiKey viene cancellata
 
-[Feature link](src/test/resources/it/pagopa/pn/cucumber)
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[API-KEY_25] generazione senza gruppo e mancata presenza nel ente padre</summary>
+
+**Descrizione**
+
+1. Viene creata una nuova apiKey per il comune `Comune_Root` senza gruppo
+2. viene impostata l'apikey appena generata
+3. Si cambia al comune `Comune_Son`
+4. vengono lette le apiKey esistenti
+5. l'apiKey non è più presente
+6. Si cambia al comune `Comune_Root`
+7. viene modificato lo stato dell'apiKey in `BLOCK`
+8. l'apiKey viene cancellata
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[API-KEY_26] generazione senza gruppo e mancata presenza nel ente figlio</summary>
+
+**Descrizione**
+
+1. Viene creata una nuova apiKey per il comune `Comune_Son` senza gruppo
+2. viene impostata l'apikey appena generata
+3. Si cambia al comune `Comune_Root`
+4. vengono lette le apiKey esistenti
+5. l'apiKey non è più presente
+6. Si cambia al comune `Comune_Son`
+7. viene modificato lo stato dell'apiKey in `BLOCK`
+8. l'apiKey viene cancellata
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/ApikeyManager.feature)
+
+</details>
+
+## Audit Log OpenSearch
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[AUDIT_OPEN_SEARCH_1] verifica solo presenza audit log 10y</summary>
+
+**Descrizione**
+
+1. viene verificato che esiste un audit log `<audit-log>` in `10y`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/auditLogOpenSearch.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[AUDIT_OPEN_SEARCH_2] verifica presenza nel giusto indice e data di scrittura audit log 10y</summary>
+
+**Descrizione**
+
+1. viene verificato che esiste un audit log `<audit-log>` in `10y` non più vecchio di 10` giorni
+2. viene verificato che non esiste un audit log `<audit-log>` in `5y`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/auditLogOpenSearch.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[AUDIT_OPEN_SEARCH_3] verifica solo presenza audit log 5y</summary>
+
+**Descrizione**
+
+1. viene verificato che esiste un audit log `<audit-log>` in `5y`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/auditLogOpenSearch.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[AUDIT_OPEN_SEARCH_4] verifica presenza nel giusto indice e data di scrittura audit log 5y</summary>
+
+**Descrizione**
+
+1. viene verificato che esiste un audit log `<audit-log>` in `5y` non più vecchio di 10` giorni
+2. viene verificato che non esiste un audit log `<audit-log>` in `10y`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/auditLogOpenSearch.feature)
+
+</details>
+
+## Deleghe new feature
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PF-ANNULLAMENTO_26] PA mittente: annullamento notifica in cui è presente un delegato e verifica dell’annullamento sia da parte del destinatario che del delegato</summary>
+
+**Descrizione**
+
+1. `Mario Gherkin` rifiuta se presente la delega ricevuta `Mario Cucumber`
+2. `Mario Gherkin` viene delegato da `Mario Cucumber`
+3. `Mario Gherkin` accetta la delega `Mario Cucumber`
+4. Viene generata nuova notifica con destinatario `Mario Cucumber`
+5. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED e successivamente annullata
+6. Vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
+7. la notifica può essere correttamente recuperata da `Mario Cucumber`
+8. la notifica può essere correttamente letta da `Mario Gherkin` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PF-ANNULLAMENTO_27] PA mittente: annullamento notifica in cui è presente un delegato e verifica dell’annullamento sia da parte del destinatario che del delegato</summary>
+
+**Descrizione**
+
+1. `Mario Gherkin` rifiuta se presente la delega ricevuta `Mario Cucumber`
+2. `Mario Gherkin` viene delegato da `Mario Cucumber`
+3. `Mario Gherkin` accetta la delega `Mario Cucumber`
+4. Viene generata nuova notifica con destinatario `Mario Cucumber`
+5. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED e successivamente annullata
+6. Vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
+7. vengono letti gli eventi fino allo stato della notifica `CANCELLED`
+8. la notifica può essere correttamente recuperata da `Mario Cucumber`
+9. la notifica può essere correttamente letta da `Mario Gherkin` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-ANNULLAMENTO_32] Invio notifica digitale mono destinatario e recupero documento notificato_scenario negativo</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. `Mario Gherkin` rifiuta se presente la delega ricevuta `Mario Cucumber`
+2. `Mario Gherkin` viene delegato da `Mario Cucumber`
+3. `Mario Gherkin` accetta la delega `Mario Cucumber`
+4. Viene generata nuova notifica con destinatario `Mario Cucumber`
+5. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED e successivamente annullata
+6. Vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
+7. vengono letti gli eventi fino allo stato della notifica `CANCELLED`
+8. la notifica può essere correttamente letta da `Mario Gherkin` con delega restituendo un errore `404`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PF-MANDATE_17] Invio notifica digitale altro destinatario e recupero_scenario positivo</summary>
+
+**Descrizione**
+
+1. `Mario Gherkin` rifiuta se presente la delega ricevuta `Mario Cucumber`
+2. `Mario Gherkin` viene delegato da `Mario Cucumber` per comune `Comune_Root`
+3. `Mario Gherkin` accetta la delega `Mario Cucumber`
+4. Viene generata nuova notifica con destinatario `Mario Cucumber`
+5. La notifica viene inviata tramite api b2b dal `Comune_Son` e si attende che lo stato diventi ACCEPTED
+6. la notifica può essere correttamente letta da `Mario Gherkin` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PF-MANDATE_18] Invio notifica digitale altro destinatario e recupero AAR e Attestazione Opponibile positivo</summary>
+
+**Descrizione**
+
+1. `Mario Gherkin` rifiuta se presente la delega ricevuta `Mario Cucumber`
+2. `Mario Gherkin` viene delegato da `Mario Cucumber` per comune `Comune_Root`
+3. `Mario Gherkin` accetta la delega `Mario Cucumber`
+4. Viene generata nuova notifica con destinatario `Mario Cucumber`
+5. La notifica viene inviata tramite api b2b dal `Comune_Root` e si attende che lo stato diventi ACCEPTED
+6. la notifica può essere correttamente letta da `Mario Gherkin` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PF-MANDATE_20] Invio notifica da parte di ente padre e lettura da delegato</summary>
+
+**Descrizione**
+
+1. `Mario Gherkin` rifiuta se presente la delega ricevuta `Mario Cucumber`
+2. `Mario Gherkin` viene delegato da `Mario Cucumber` per comune `Comune_Root`
+3. `Mario Gherkin` accetta la delega `Mario Cucumber`
+4. Viene generata nuova notifica con destinatario `Mario Cucumber`
+5. La notifica viene inviata tramite api b2b dal `Comune_Root` e si attende che lo stato diventi ACCEPTED
+6. la notifica può essere correttamente letta da `Mario Gherkin` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PF-MANDATE_21] Invio notifica digitale altro destinatario e recupero_scenario positivo</summary>
+
+**Descrizione**
+
+1. `Mario Gherkin` rifiuta se presente la delega ricevuta `Mario Cucumber`
+2. `Mario Gherkin` viene delegato da `Mario Cucumber` per comune `Comune_Son`
+3. l'operazione ha generato un errore con status code `422`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-ANNULLAMENTO_33] Invio notifica digitale mono destinatario e recupero allegato pagopa_scenario negativo</summary>
+
+**Descrizione**
+
+1. `Mario Gherkin` rifiuta se presente la delega ricevuta `Mario Cucumber`
+2. `Mario Gherkin` viene delegato da `Mario Cucumber`
+3. `Mario Gherkin` accetta la delega `Mario Cucumber`
+4. Viene generata nuova notifica con destinatario `Mario Cucumber`
+5. La notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED e successivamente annullata
+6. Vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
+7. la notifica può essere correttamente letta da `Mario Gherkin` con delega restituendo un errore `404`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PG-MANDATE_19] Invio notifica digitale altro destinatario e recupero_scenario positivo da parte di ente radice</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` rifiuta se presente la delega ricevuta `GherkinSrl`
+2. `CucumberSpa` viene delegato da `GherkinSrl` per comune `Comune_Root`
+3. `CucumberSpa` accetta la delega `GherkinSrl`
+4. Viene generata nuova notifica con destinatario `GherkinSrl`
+5. La notifica viene inviata tramite api b2b dal `Comune_Root` e si attende che lo stato diventi ACCEPTED
+6. la notifica può essere correttamente letta da `CucumberSpa` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PG-MANDATE_20] Invio notifica digitale altro destinatario e recupero AAR e Attestazione Opponibile positivo da parte di ente radice</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` rifiuta se presente la delega ricevuta `GherkinSrl`
+2. `CucumberSpa` viene delegato da `GherkinSrl` per comune `Comune_Root`
+3. `CucumberSpa` accetta la delega `GherkinSrl`
+4. Viene generata nuova notifica con destinatario `GherkinSrl`
+5. La notifica viene inviata tramite api b2b dal `Comune_Son` e si attende che lo stato diventi ACCEPTED
+6. l'allegato `PAGOPA` può essere correttamente recuperato da`CucumberSpa` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PG-MANDATE_21] Invio notifica digitale altro destinatario e recupero AAR e Attestazione Opponibile positivo da parte di ente radice</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` rifiuta se presente la delega ricevuta `GherkinSrl`
+2. `CucumberSpa` viene delegato da `GherkinSrl` per comune `Comune_Root`
+3. `CucumberSpa` accetta la delega `GherkinSrl`
+4. Viene generata nuova notifica con destinatario `GherkinSrl`
+5. La notifica viene inviata tramite api b2b dal `Comune_Son` e si attende che lo stato diventi ACCEPTED
+6. l'allegato `F24` può essere correttamente recuperato da`CucumberSpa` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[WEB-PG-MANDATE_22] Invio notifica digitale altro destinatario per ente figlio e fallimento invio</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` rifiuta se presente la delega ricevuta `GherkinSrl`
+2. `CucumberSpa` viene delegato da `GherkinSrl`
+3. `CucumberSpa` accetta la delega `GherkinSrl`
+4. Viene generata nuova notifica con destinatario `GherkinSrl`
+5. La notifica viene inviata tramite api b2b dal `Comune_Son` e si attende che lo stato diventi ACCEPTED
+6. la notifica può essere correttamente letta da`CucumberSpa` con delega
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-PAY_MULTI_PG_69] Notifica con delega e presenza contemporanea di avviso pagoPA e F24: Delegante e Delegato scaricano correttamenta l'avviso pagoPA e F24</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` rifiuta se presente la delega ricevuta `GherkinSrl`
+2. `CucumberSpa` viene delegato da `GherkinSrl` per comune `Comune_Root`
+3. `CucumberSpa` accetta la delega `GherkinSrl`
+4. Viene generata nuova notifica con destinatario `GherkinSrl`
+5. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+6. l'allegato `PAGOPA` può essere correttamente recuperato da `CucumberSpa` con delega
+7. `GherkinSrl` tenta il recupero dell'allegato `PAGOPA`
+8. il download non ha prodotto errori
+9. l'allegato `F24` può essere correttamente recuperato da `CucumberSpa` con delega
+10. `GherkinSrl` tenta il recupero dell'allegato `F24`
+11. la notifica può essere correttamente letta da `CucumberSpa` con delega
+12. il download non ha prodotto errori
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-PAY_MULTI_PG_70] Notifica con delega e presenza contemporanea di avviso pagoPA e F24: Delegante e Delegato scaricano correttamenta l'avviso pagoPA</summary>
+
+**Descrizione**
+
+1. `CucumberSpa` rifiuta se presente la delega ricevuta `GherkinSrl`
+2. `CucumberSpa` viene delegato da `GherkinSrl` per comune `Comune_Root`
+3. `CucumberSpa` accetta la delega `GherkinSrl`
+4. Viene generata nuova notifica con destinatario `GherkinSrl`
+5. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
+6. l'allegato `PAGOPA` può essere correttamente recuperato da `CucumberSpa` con delega
+7. `GherkinSrl` tenta il recupero dell'allegato `PAGOPA`
+8. il download non ha prodotto errori
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/DelegheTestNewFeature.feature)
 
 </details>
 
@@ -19756,6 +20679,85 @@ Dati Destinatario
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/UserAttributes.feature)
 
 </details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[USER-ATTR_10] inserimento email di cortesia per ente figlio</summary>
+
+**Descrizione**
+
+1. Si predispone addressbook per l'utente `Mario Cucumber`
+2. viene richiesto l'inserimento del email di cortesia `provaemail@test.it` per il comune `Comune_Son`
+3. L'inserimento ha prodotto un errore con status code `400`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/UserAttributes.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[USER-ATTR_10_PG] inserimento email di cortesia a PG ente figlio</summary>
+
+**Descrizione**
+
+1. Si predispone addressbook per l'utente `Lucio Anneo Seneca`
+2. viene richiesto l'inserimento del email di cortesia `provaemail@test.it` per il comune `Comune_Son`
+3. L'inserimento ha prodotto un errore con status code `400`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/UserAttributes.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[USER-ATTR_11] inserimento numero di telefono ente figlio</summary>
+
+**Descrizione**
+
+1. Si predispone addressbook per l'utente `Mario Cucumber`
+2. viene richiesto l'inserimento del email di cortesia `provaemail@test.it` per il comune `Comune_Son`
+3. L'inserimento ha prodotto un errore con status code `400`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/UserAttributes.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[USER-ATTR_11_PG] inserimento numero di telefono a PG per ente figlio- fallimento</summary>
+
+**Descrizione**
+
+1. Si predispone addressbook per l'utente `Lucio Anneo Seneca`
+2. viene richiesto l'inserimento del email di cortesia `provaemail@test.it` per il comune `Comune_Son`
+3. L'inserimento ha prodotto un errore con status code `400`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/UserAttributes.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[USER-ATTR_12] inserimento recapito legale per ente figlio- fallimento</summary>
+
+**Descrizione**
+
+1. Si predispone addressbook per l'utente `Mario Cucumber`
+2. viene richiesto l'inserimento del email di cortesia `provaemail@test.it` per il comune `Comune_Son`
+3. L'inserimento ha prodotto un errore con status code `400`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/UserAttributes.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[USER-ATTR_12_PG] inserimento recapito legale a PG per ente figlio- fallimento</summary>
+
+**Descrizione**
+
+1. Si predispone addressbook per l'utente `Lucio Anneo Seneca`
+2. viene richiesto l'inserimento del email di cortesia `provaemail@test.it` per il comune `Comune_Son`
+3. L'inserimento ha prodotto un errore con status code `400`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/UserAttributes.feature)
+
+</details>
+
 
 ## Test di integrazione della pubblica amministrazione
 
