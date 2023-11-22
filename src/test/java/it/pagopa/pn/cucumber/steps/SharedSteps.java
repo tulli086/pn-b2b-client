@@ -93,7 +93,7 @@ public class SharedSteps {
 
     private String errorCode = null;
 
-    private static final Integer WAITING_GPD = 3000;
+    private static final Integer WAITING_GPD = 2000;
 
 
 
@@ -151,6 +151,11 @@ public class SharedSteps {
 
     @Value("${pn.configuration.scheduling.days.failure.digital.refinement:6m}")
     private String schedulingDaysFailureDigitalRefinementString;
+
+    @Value("${pn.configuration.scheduling.delta.millis.pagopa:100}")
+    private String schedulingDelta;
+
+    private String schedulingDeltaDefault="500";
 
     private final Integer workFlowWaitDefault = 31000;
     private final Integer waitDefault = 10000;
@@ -805,6 +810,13 @@ public class SharedSteps {
         sendNotificationAndCancel();
     }
 
+    @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED e successivamente annullata V2")
+    public void laNotificaVieneInviataOkAndCancelledV2(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromPropertiesV2();
+        sendNotificationAndCancelV2();
+    }
+
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataRefused(String paType) {
         selectPA(paType);
@@ -845,6 +857,13 @@ public class SharedSteps {
         selectPA(paType);
         setSenderTaxIdFromProperties();
         sendNotificationRefusedOverSizeAllegato();
+    }
+
+    @When("la notifica viene inviata tramite api b2b con preload allegato da 25 pagine dal {string} e si attende che lo stato diventi ACCEPTED")
+    public void laNotificaVieneInviataPreloadAllegato50Pagine(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationSize50Allegato();
     }
 
     @When("la notifica viene inviata tramite api b2b injection preload allegato dal {string} e si attende che lo stato diventi REFUSED")
@@ -1036,8 +1055,23 @@ public class SharedSteps {
         });
     }
 
+    private void sendNotificationAndCancelV2() {
+        sendNotificationV2();
+
+        Assertions.assertDoesNotThrow(() -> {
+            RequestStatus resp =  Assertions.assertDoesNotThrow(() ->
+                    b2bClient.notificationCancellation(notificationResponseCompleteV2.getIun()));
+
+            Assertions.assertNotNull(resp);
+            Assertions.assertNotNull(resp.getDetails());
+            Assertions.assertTrue(resp.getDetails().size()>0);
+            Assertions.assertTrue("NOTIFICATION_CANCELLATION_ACCEPTED".equalsIgnoreCase(resp.getDetails().get(0).getCode()));
+
+        });
+    }
+
     private void sendNotificationGPD() {
-        sendNotification(WAITING_GPD);
+        sendNotificationRapid(WAITING_GPD);
     }
 
 
@@ -1165,6 +1199,37 @@ public class SharedSteps {
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(errorCode);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+    private void sendNotificationSize50Allegato()  {
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                notificationCreationDate = OffsetDateTime.now();
+                newNotificationResponse = b2bUtils.uploadNotification50size(notificationRequest);
+
+                try {
+                    Thread.sleep(getWorkFlowWait());
+                } catch (InterruptedException e) {
+                    logger.error("Thread.sleep error retry");
+                    throw new RuntimeException(e);
+                }
+
+                notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
+            });
+
+            try {
+                Thread.sleep(getWorkFlowWait());
+            } catch (InterruptedException e) {
+                logger.error("Thread.sleep error retry");
+                throw new RuntimeException(e);
+            }
+            Assertions.assertNotNull(notificationResponseComplete);
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1413,12 +1478,12 @@ public class SharedSteps {
         this.notificationResponseComplete = notificationResponseComplete;
     }
 
-    public void setSentNotificationV1(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification notificationResponseComplete) {
-        this.notificationResponseCompleteV1 = notificationResponseComplete;
+    public void setSentNotificationV1(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification notificationResponseCompleteV1) {
+        this.notificationResponseCompleteV1 = notificationResponseCompleteV1;
     }
 
-    public void setSentNotificationV2(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20 notificationResponseComplete) {
-        this.notificationResponseCompleteV2 = notificationResponseComplete;
+    public void setSentNotificationV2(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20 notificationResponseCompleteV2) {
+        this.notificationResponseCompleteV2 = notificationResponseCompleteV2;
     }
 
     public void selectPA(String apiKey) {
@@ -1832,12 +1897,19 @@ public class SharedSteps {
     }
 
     public String getSchedulingDaysFailureDigitalRefinementString() {
-        if (schedulingDaysFailureDigitalRefinementString == null) return schedulingDaysFailureDigitalRefinementDefaultString;
+        if (schedulingDaysFailureDigitalRefinementString == null){
+            return schedulingDaysFailureDigitalRefinementDefaultString;
+        }
         return schedulingDaysFailureDigitalRefinementString;
     }
     public String getSchedulingDaysSuccessDigitalRefinementString() {
         if (schedulingDaysSuccessDigitalRefinementString == null) return schedulingDaysSuccessDigitalRefinementDefaultString;
         return schedulingDaysSuccessDigitalRefinementString;
+    }
+
+    public String getSchedulingDelta() {
+        if (schedulingDelta == null) return schedulingDeltaDefault;
+        return schedulingDelta;
     }
 
     public void addIuvGPD(String iuvGPD) {

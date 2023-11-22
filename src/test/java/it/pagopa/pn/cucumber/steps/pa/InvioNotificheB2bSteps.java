@@ -80,7 +80,7 @@ public class InvioNotificheB2bSteps {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final Integer NUM_CHECK_PAYMENT_INFO = 15;
+    private static final Integer NUM_CHECK_PAYMENT_INFO = 32;
     private static final Integer WAITING_PAYMENT_INFO = 1000;
     @Autowired
     public InvioNotificheB2bSteps(PnExternalServiceClientImpl safeStorageClient, SharedSteps sharedSteps) {
@@ -412,6 +412,24 @@ public class InvioNotificheB2bSteps {
     public void retrievalAttemptedIUN(String IUN) {
         try {
             b2bUtils.getNotificationByIun(IUN);
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
+        }
+    }
+
+    @When("si tenta il recupero della notifica dal sistema tramite codice IUN {string} con la V1")
+    public void retrievalAttemptedIUNConV1(String IUN) {
+        try {
+            b2bUtils.getNotificationByIunV1(IUN);
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
+        }
+    }
+
+    @When("si tenta il recupero della notifica dal sistema tramite codice IUN {string} con la V2")
+    public void retrievalAttemptedIUNConV2(String IUN) {
+        try {
+            b2bUtils.getNotificationByIunV2(IUN);
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
@@ -1231,6 +1249,100 @@ public class InvioNotificheB2bSteps {
 
             String message = assertionFailedError.getMessage() +
                     "{Informazioni sullo stato del Pagamento: " + (paymentInfoResponse == null ? "NULL" : paymentInfoResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
+    @Then("verifica stato pagamento di una notifica con status {string}")
+    public void verificaStatoPagamentoNotifica(String status) {
+
+        List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoRequest>();
+
+        PaymentInfoRequest paymentInfoRequest = new PaymentInfoRequest()
+                .creditorTaxId(sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments().get(0).getPagoPa().getCreditorTaxId())
+                .noticeCode(sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode());
+
+        paymentInfoRequestList.add(paymentInfoRequest);
+
+        logger.info("Messaggio json da allegare: " + paymentInfoRequest);
+
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                paymentInfoResponse=pnPaymentInfoClient.getPaymentInfoV21(paymentInfoRequestList);
+
+            });
+            Assertions.assertNotNull(paymentInfoResponse);
+            logger.info("Informazioni sullo stato del Pagamento: " + paymentInfoResponse.toString());
+           Assertions.assertTrue(status.equalsIgnoreCase(paymentInfoResponse.get(0).getStatus().getValue()));
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{Informazioni sullo stato del Pagamento: " + (paymentInfoResponse == null ? "NULL" : paymentInfoResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+
+
+    @And("l'avviso pagopa viene pagato correttamente su checkout con errore {string}")
+    public void laNotificaVienePagatasuCheckoutError(String codiceErrore) {
+
+        PaymentRequest paymentRequest= new PaymentRequest();
+        PaymentNotice paymentNotice= new PaymentNotice();
+        paymentNotice.noticeNumber( sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode());
+        paymentNotice.fiscalCode(sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments().get(0).getPagoPa().getCreditorTaxId());
+        paymentNotice.companyName("Test Automation");
+        paymentNotice.amount(100);
+        paymentNotice.description("Test Automation Desk");
+        paymentRequest.paymentNotice(paymentNotice);
+        paymentRequest.returnUrl("https://api.uat.platform.pagopa.it");
+
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                paymentResponse=pnPaymentInfoClient.checkoutCart(paymentRequest);
+
+            });
+            Assertions.assertNotNull(paymentResponse);
+            logger.info("Risposta recupero posizione debitoria: " + paymentResponse.toString());
+            Assertions.assertTrue(codiceErrore.equalsIgnoreCase(paymentResponse.getCheckoutUrl()));
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+    }
+
+
+    @And("l'avviso pagopa viene pagato correttamente su checkout creditorTaxID {string} noticeCode {string} con errore {string}")
+    public void laNotificaVienePagatasuCheckoutError(String creditorTaxID , String noticeCode,String codiceErrore) {
+
+        PaymentRequest paymentRequest= new PaymentRequest();
+        PaymentNotice paymentNotice= new PaymentNotice();
+        paymentNotice.noticeNumber( noticeCode);
+        paymentNotice.fiscalCode(creditorTaxID);
+        paymentNotice.companyName("Test Automation");
+        paymentNotice.amount(100);
+        paymentNotice.description("Test Automation Desk");
+        paymentRequest.paymentNotice(paymentNotice);
+        paymentRequest.returnUrl("https://api.uat.platform.pagopa.it");
+
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                paymentResponse=pnPaymentInfoClient.checkoutCart(paymentRequest);
+            });
+            Assertions.assertNotNull(paymentResponse);
+            logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
+            Assertions.assertTrue(codiceErrore.equalsIgnoreCase(paymentInfoResponse.get(0).getErrorCode()));
+
+        } catch (AssertionFailedError assertionFailedError) {
+
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
 
         }

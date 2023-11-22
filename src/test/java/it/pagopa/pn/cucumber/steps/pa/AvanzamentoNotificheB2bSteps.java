@@ -536,11 +536,6 @@ public class AvanzamentoNotificheB2bSteps {
             case "PREPARE_ANALOG_DOMICILE":
                 timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.PREPARE_ANALOG_DOMICILE, 4, waiting * 5);
                 break;
-                /**
-            case "PREPARE_ANALOG_DOMICILE_FAILURE":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory,20, sharedSteps.getWorkFlowWait());
-                break;
-                 **/
             case "COMPLETELY_UNREACHABLE":
                 timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.COMPLETELY_UNREACHABLE, 10, sharedSteps.getWorkFlowWait());
                 break;
@@ -565,19 +560,29 @@ public class AvanzamentoNotificheB2bSteps {
             case "DIGITAL_DELIVERY_CREATION_REQUEST":
                 timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.DIGITAL_DELIVERY_CREATION_REQUEST, 5, waiting * 3);
                 break;
-                /**
-            case "NOTIFICATION_CANCELLATION_REQUEST":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.NOTIFICATION_CANCELLATION_REQUEST, 2, waiting);
-                break;
-            case "NOTIFICATION_CANCELLED":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.NOTIFICATION_CANCELLED, 5, waiting * 3);
-                break;
-                 **/
             default:
                 throw new IllegalArgumentException();
         }
         return timelineElementWait;
     }
+
+
+    private TimelineElementWait getTimelineElementCategoryV2(String timelineEventCategory) {
+        Integer waiting = sharedSteps.getWorkFlowWait();
+        TimelineElementWait timelineElementWait;
+        switch (timelineEventCategory) {
+            case "DIGITAL_SUCCESS_WORKFLOW":
+                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementCategoryV20.DIGITAL_SUCCESS_WORKFLOW, 3, waiting * 3);
+                break;
+            case "NOTIFICATION_CANCELLED":
+                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementCategoryV20.NOTIFICATION_CANCELLED, 5, waiting * 3);
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        return timelineElementWait;
+    }
+
 
 
     private void checkTimelineElementEquality(String timelineEventCategory, TimelineElementV20 elementFromNotification, DataTest dataFromTest) {
@@ -837,7 +842,7 @@ public class AvanzamentoNotificheB2bSteps {
     public void readingEventUpToTheTimelineElementOfNotificationForCategory(TimelineElementWait timelineElementWait) {
 
         TimelineElementV20 timelineElement = null;
-
+        String iun = null;
         for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
             try {
                 Thread.sleep(timelineElementWait.getWaiting());
@@ -846,23 +851,21 @@ public class AvanzamentoNotificheB2bSteps {
             }
 
             if (sharedSteps.getSentNotification()!= null) {
-                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+                iun = sharedSteps.getSentNotification().getIun();
 
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-                timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-                if (timelineElement != null) {
-                    break;
-                }
             } else if (sharedSteps.getSentNotificationV1()!= null) {
-                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotificationV1().getIun()));
+                iun = sharedSteps.getSentNotificationV1().getIun();
 
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+            } else if (sharedSteps.getSentNotificationV2()!= null) {
+                iun = sharedSteps.getSentNotificationV2().getIun();
+            }
 
-                timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-                if (timelineElement != null) {
-                    break;
-                }
+            sharedSteps.setSentNotification(b2bClient.getSentNotification(iun));
+            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+
+            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+            if (timelineElement != null) {
+                break;
             }
         }
         try {
@@ -879,7 +882,7 @@ public class AvanzamentoNotificheB2bSteps {
         TimelineElementWait timelineElementWait = getTimelineElementCategoryV1(timelineEventCategory);
 
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement = null;
-
+        String iun = null;
         for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
             try {
                 Thread.sleep(timelineElementWait.getWaiting());
@@ -888,23 +891,21 @@ public class AvanzamentoNotificheB2bSteps {
             }
 
             if (sharedSteps.getSentNotification()!= null) {
-                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+                iun = sharedSteps.getSentNotification().getIun();
 
-                logger.info("NOTIFICATION_TIMELINE : " + sharedSteps.getSentNotification().getTimeline());
-
-                timelineElement = sharedSteps.getSentNotificationV1().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-                if (timelineElement != null) {
-                    break;
-                }
             } else if (sharedSteps.getSentNotificationV1()!= null) {
-                sharedSteps.setSentNotificationV1(b2bClient.getSentNotificationV1(sharedSteps.getSentNotificationV1().getIun()));
+                iun = sharedSteps.getSentNotificationV1().getIun();
 
-                logger.info("NOTIFICATION_TIMELINE V1 : " + sharedSteps.getSentNotificationV1().getTimeline());
+            } else if (sharedSteps.getSentNotificationV2()!= null) {
+                iun = sharedSteps.getSentNotificationV2().getIun();
+            }
 
-                timelineElement = sharedSteps.getSentNotificationV1().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategoryV1())).findAny().orElse(null);
-                if (timelineElement != null) {
-                    break;
-                }
+            sharedSteps.setSentNotificationV1(b2bClient.getSentNotificationV1(iun));
+            logger.info("NOTIFICATION_TIMELINE V1 : " + sharedSteps.getSentNotificationV1().getTimeline());
+
+            timelineElement = sharedSteps.getSentNotificationV1().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategoryV1())).findAny().orElse(null);
+            if (timelineElement != null) {
+                break;
             }
         }
         try {
@@ -916,10 +917,10 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} V2")
     public void readingEventUpToTheTimelineElementOfNotificationV2(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+        TimelineElementWait timelineElementWait = getTimelineElementCategoryV2(timelineEventCategory);
 
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementV20 timelineElement = null;
-
+        String iun = null;
         for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
             try {
                 Thread.sleep(timelineElementWait.getWaiting());
@@ -927,20 +928,57 @@ public class AvanzamentoNotificheB2bSteps {
                 throw new RuntimeException(exc);
             }
 
-            if (sharedSteps.getSentNotificationV1()!= null) {
-                sharedSteps.setSentNotificationV2(b2bClient.getSentNotificationV2(sharedSteps.getSentNotificationV1().getIun()));
+            if (sharedSteps.getSentNotification()!= null) {
+                iun = sharedSteps.getSentNotification().getIun();
 
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+            } else if (sharedSteps.getSentNotificationV1()!= null) {
+                iun = sharedSteps.getSentNotificationV1().getIun();
 
-                timelineElement = sharedSteps.getSentNotificationV2().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategoryV1())).findAny().orElse(null);
-                if (timelineElement != null) {
-                    break;
-                }
+            } else if (sharedSteps.getSentNotificationV2()!= null) {
+                iun = sharedSteps.getSentNotificationV2().getIun();
+            }
+
+            sharedSteps.setSentNotificationV2(b2bClient.getSentNotificationV2(iun));
+            logger.info("NOTIFICATION_TIMELINE V2: " + sharedSteps.getSentNotificationV2().getTimeline());
+
+            timelineElement = sharedSteps.getSentNotificationV2().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategoryV2())).findAny().orElse(null);
+
+            if (timelineElement != null) {
+                break;
             }
 
         }
         try {
             Assertions.assertNotNull(timelineElement);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
+    @Then("vengono letti gli eventi della timeline e si controlla che l'evento di timeline {string} non esista con la V1")
+    public void readingEventsOfTimelineElementOfNotificationV1(String timelineEventCategory) {
+
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement = null;
+        String iun = null;
+
+
+        if (sharedSteps.getSentNotification()!= null) {
+            iun = sharedSteps.getSentNotification().getIun();
+
+        } else if (sharedSteps.getSentNotificationV1()!= null) {
+            iun = sharedSteps.getSentNotificationV1().getIun();
+
+        } else if (sharedSteps.getSentNotificationV2()!= null) {
+        iun = sharedSteps.getSentNotificationV2().getIun();
+    }
+
+        sharedSteps.setSentNotificationV1(b2bClient.getSentNotificationV1(iun));
+        logger.info("NOTIFICATION_TIMELINE V1 : " + sharedSteps.getSentNotificationV1().getTimeline());
+
+        timelineElement = sharedSteps.getSentNotificationV1().getTimeline().stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).findAny().orElse(null);
+
+        try {
+            Assertions.assertNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -1537,9 +1575,9 @@ public class AvanzamentoNotificheB2bSteps {
             } catch (AssertionFailedError assertionFailedError) {
                 sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
             }
-        }else {
+        }else if(sharedSteps.getSentNotificationV2()!= null) {
             it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement = null;
-            sharedSteps.setSentNotificationV1(b2bClient.getSentNotificationV1(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotificationV1(b2bClient.getSentNotificationV1(sharedSteps.getSentNotificationV2().getIun()));
             for (it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement element : sharedSteps.getSentNotificationV1().getTimeline()) {
 
                 if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(destinatario)) {
@@ -1552,6 +1590,22 @@ public class AvanzamentoNotificheB2bSteps {
             } catch (AssertionFailedError assertionFailedError) {
                 sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
             }
+
+        }else{
+                it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement = null;
+                sharedSteps.setSentNotificationV1(b2bClient.getSentNotificationV1(sharedSteps.getSentNotification().getIun()));
+                for (it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement element : sharedSteps.getSentNotificationV1().getTimeline()) {
+
+                    if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(destinatario)) {
+                        timelineElement = element;
+                    }
+                }
+
+                try {
+                    Assertions.assertNull(timelineElement);
+                } catch (AssertionFailedError assertionFailedError) {
+                    sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+                }
         }
 
 
@@ -1752,8 +1806,8 @@ public class AvanzamentoNotificheB2bSteps {
             }
             if (appIO) {
 
-               // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
-                      //  sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
+                // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
+                //  sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
 
             }
             if (webRecipient) {
@@ -1840,7 +1894,7 @@ public class AvanzamentoNotificheB2bSteps {
                         sharedSteps.deepCopy(categorySearch,
                                 it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactCategory.class),
                         finalKeySearch);
-               // System.out.println("NOME FILE PEC RECIPIENT DEST"+legalFactDownloadMetadataResponse.getFilename());
+                // System.out.println("NOME FILE PEC RECIPIENT DEST"+legalFactDownloadMetadataResponse.getFilename());
                 Assertions.assertNotNull(legalFactDownloadMetadataResponse);
                 Assertions.assertNotNull(legalFactDownloadMetadataResponse.getFilename());
                 Assertions.assertTrue(legalFactDownloadMetadataResponse.getFilename().contains(".eml"));
@@ -1928,7 +1982,7 @@ public class AvanzamentoNotificheB2bSteps {
             }
             if (appIO) {
 
-               // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
+                // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
                 //        sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
             }
             if (webRecipient) {
@@ -2040,23 +2094,23 @@ public class AvanzamentoNotificheB2bSteps {
         if(sharedSteps.getSentNotification()!=null) {
             List<NotificationPaymentItem> listNotificationPaymentItem = sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments();
 
-        if (listNotificationPaymentItem != null){
-            for (NotificationPaymentItem notificationPaymentItem: listNotificationPaymentItem) {
-                NotificationPriceResponse notificationPrice = this.b2bClient.getNotificationPrice(notificationPaymentItem.getPagoPa().getCreditorTaxId(), notificationPaymentItem.getPagoPa().getNoticeCode());
-                try {
-                    Assertions.assertEquals(notificationPrice.getIun(), sharedSteps.getSentNotification().getIun());
-                    if (price != null) {
-                        logger.info("Costo notifica: {} destinatario: {}", notificationPrice.getAmount(), destinatario);
-                        Assertions.assertEquals(notificationPrice.getAmount(), Integer.parseInt(price));
+            if (listNotificationPaymentItem != null){
+                for (NotificationPaymentItem notificationPaymentItem: listNotificationPaymentItem) {
+                    NotificationPriceResponse notificationPrice = this.b2bClient.getNotificationPrice(notificationPaymentItem.getPagoPa().getCreditorTaxId(), notificationPaymentItem.getPagoPa().getNoticeCode());
+                    try {
+                        Assertions.assertEquals(notificationPrice.getIun(), sharedSteps.getSentNotification().getIun());
+                        if (price != null) {
+                            logger.info("Costo notifica: {} destinatario: {}", notificationPrice.getAmount(), destinatario);
+                            Assertions.assertEquals(notificationPrice.getAmount(), Integer.parseInt(price));
+                        }
+                        if (date != null) {
+                            Assertions.assertNotNull(notificationPrice.getRefinementDate());
+                        }
+                    } catch (AssertionFailedError assertionFailedError) {
+                        sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
                     }
-                    if (date != null) {
-                        Assertions.assertNotNull(notificationPrice.getRefinementDate());
-                    }
-                } catch (AssertionFailedError assertionFailedError) {
-                    sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
                 }
             }
-        }
         }else if(sharedSteps.getSentNotificationV1()!=null) {
             priceVerificationV1(price,date,destinatario);
         }
@@ -2093,7 +2147,7 @@ public class AvanzamentoNotificheB2bSteps {
     private void priceVerificationProcessCost(String price, String date, Integer destinatario) {
         NotificationProcessCostResponse notificationProcessCost = null;
         if (sharedSteps.getSentNotification().getNotificationFeePolicy().equals(NotificationFeePolicy.DELIVERY_MODE)) {
-             notificationProcessCost = this.b2bClient.getNotificationProcessCost(sharedSteps.getSentNotification().getIun(), destinatario, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy.DELIVERY_MODE, sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(0).getF24().getApplyCost(), sharedSteps.getSentNotification().getPaFee());
+            notificationProcessCost = this.b2bClient.getNotificationProcessCost(sharedSteps.getSentNotification().getIun(), destinatario, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy.DELIVERY_MODE, sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(0).getF24().getApplyCost(), sharedSteps.getSentNotification().getPaFee());
         }else {
             notificationProcessCost = this.b2bClient.getNotificationProcessCost(sharedSteps.getSentNotification().getIun(), destinatario, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy.FLAT_RATE, sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(0).getF24().getApplyCost(), sharedSteps.getSentNotification().getPaFee());
         }
@@ -3567,8 +3621,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} e verifica data schedulingDate per il destinatario {int} rispetto ell'evento in timeline {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithVerifySchedulingDate(String timelineEventCategory, int destinatario, String evento) {
-        int delay =0;
-        String tipoIncremento="m";
+        int delay = 0;
         TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
         TimelineElementV20 timelineElement = null;
         OffsetDateTime digitalDeliveryCreationRequestDate = null;
@@ -3595,45 +3648,38 @@ public class AvanzamentoNotificheB2bSteps {
             }
         }
         try {
-
             //RECUPERO Data DeliveryCreationRequest
             for (TimelineElementV20 element : sharedSteps.getSentNotification().getTimeline()) {
                 if (element.getCategory().getValue().equals("DIGITAL_DELIVERY_CREATION_REQUEST") && element.getDetails().getRecIndex().equals(destinatario) && evento.equalsIgnoreCase("DIGITAL_DELIVERY_CREATION_REQUEST")) {
-
                     digitalDeliveryCreationRequestDate = element.getTimestamp();
-                    if (sharedSteps.getSchedulingDaysFailureDigitalRefinementString().contains("m"))
-                        tipoIncremento = "m";
-                    else if (sharedSteps.getSchedulingDaysFailureDigitalRefinementString().contains("d"))
-                        tipoIncremento = "d";
-
-                    delay = Integer.parseInt(sharedSteps.getSchedulingDaysFailureDigitalRefinementString().replace(tipoIncremento,""));
+                    delay = Integer.parseInt(sharedSteps.getSchedulingDaysFailureDigitalRefinementString().replace("m",""));
                     break;
                 } else if (element.getCategory().getValue().equals("SEND_DIGITAL_FEEDBACK") && element.getDetails().getRecIndex().equals(destinatario) && evento.equalsIgnoreCase("SEND_DIGITAL_FEEDBACK")) {
                     if ("OK".equalsIgnoreCase(element.getDetails().getResponseStatus().getValue())) {
                         digitalDeliveryCreationRequestDate = element.getDetails().getNotificationDate();
-                        if (sharedSteps.getSchedulingDaysSuccessDigitalRefinementString().contains("m"))
-                            tipoIncremento = "m";
-                        else if (sharedSteps.getSchedulingDaysSuccessDigitalRefinementString().contains("d"))
-                            tipoIncremento = "d";
-
-                        delay = Integer.parseInt(sharedSteps.getSchedulingDaysSuccessDigitalRefinementString().replace(tipoIncremento,""));
+                        delay = Integer.parseInt(sharedSteps.getSchedulingDaysSuccessDigitalRefinementString().replace("m",""));
                         break;
                     }
                 }
             }
-
+            logger.info("TIMELINE ELEMENT: {} , DETAILS {} , SCHEDULING DATE {}",
+                    timelineElement,timelineElement.getDetails(), timelineElement.getDetails().getSchedulingDate());
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getSchedulingDate());
-            Assertions.assertNotNull(tipoIncremento);
 
-            if ("d".equalsIgnoreCase(tipoIncremento)){
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                Assertions.assertTrue(timelineElement.getDetails().getSchedulingDate().format(fmt).equals(digitalDeliveryCreationRequestDate.plusDays(delay).format(fmt)));
-            } else if ("m".equalsIgnoreCase(tipoIncremento)) {
-                Duration ss = sharedSteps.getSchedulingDaysSuccessDigitalRefinement();
-                DateTimeFormatter fmt1 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-                Assertions.assertTrue(timelineElement.getDetails().getSchedulingDate().format(fmt1).equals(digitalDeliveryCreationRequestDate.plusMinutes(delay).format(fmt1)));
-            }
+            //Duration ss = sharedSteps.getSchedulingDaysSuccessDigitalRefinement();
+            //DateTimeFormatter fmt1 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+            Long schedulingDateMillis = timelineElement.getDetails().getSchedulingDate().toInstant().toEpochMilli();
+            Long digitalDeliveryCreationMillis = digitalDeliveryCreationRequestDate.toInstant().toEpochMilli();
+            Long diff = schedulingDateMillis - digitalDeliveryCreationMillis;
+            Long delayMillis = ((Long.valueOf(delay)*60)*1000); //TODO: refactor
+            Long delta = Long.valueOf(sharedSteps.getSchedulingDelta());
+            logger.info("PRE-ASSERTION: schedulingDateMillis {}, digitalDeliveryCreationMillis {}, diff {}, delayMillis {}, delta {}",
+                    schedulingDateMillis,digitalDeliveryCreationMillis,diff,delayMillis,delta);
+            Assertions.assertTrue(diff <= delayMillis+delta && diff >= delayMillis-delta);
+
+            //Assertions.assertTrue(timelineElement.getDetails().getSchedulingDate().format(fmt1).equals(digitalDeliveryCreationRequestDate.plusMinutes(delay).format(fmt1)));
 
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
