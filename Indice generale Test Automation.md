@@ -7263,7 +7263,7 @@
 4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
 5. si verifica la corretta acquisizione della notifica
 6. la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V1 generando un errore
-7. l'operazione ha prodotto un errore con status code `404`
+7. l'operazione ha prodotto un errore con status code `400`
 8. vengono cancellate le posizioni debitorie
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
@@ -7281,7 +7281,7 @@
 4. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED
 5. si verifica la corretta acquisizione della notifica
 6. la notifica non può essere recuperata dal sistema tramite codice IUN con OpenApi V2 generando un errore
-7. l'operazione ha prodotto un errore con status code `404`
+7. l'operazione ha prodotto un errore con status code `400`
 8. vengono cancellate le posizioni debitorie
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheAsyncB2bPF.feature)
@@ -9014,6 +9014,7 @@
 2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
 3. vengono letti gli eventi fino all'elemento di timeline della notifica `REQUEST_ACCEPTED`
 4. il documento di pagamento `PAGOPA` può essere recuperata tramite AppIO da `Mario Cucumber`
+5. il download non ha prodotto errori
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
 
@@ -9028,6 +9029,7 @@
 2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
 3. vengono letti gli eventi fino all'elemento di timeline della notifica `REQUEST_ACCEPTED`
 4. il documento di pagamento `F24` può essere recuperata tramite AppIO da `Mario Cucumber`
+5. il download non ha prodotto errori
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
 
@@ -9150,33 +9152,7 @@
 </details>
 
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-PAY_MULTI_80_4] PA - Invio RS DELIVERY_MODE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica  inclusi modalità DELIVERY_MODE (scenario positivo)</summary>
-
-**Descrizione**
-
-1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
-2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
   <summary>[B2B-PA-PAY_MULTI_80_1_1] PA - Invio RS DELIVERY_MODE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica  inclusi modalità DELIVERY_MODE (scenario positivo)</summary>
-
-**Descrizione**
-
-1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
-2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-PAY_MULTI_80_1_1_1] PA - Invio RS DELIVERY_MODE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica  inclusi modalità DELIVERY_MODE (scenario positivo)</summary>
 
 **Descrizione**
 
@@ -9202,46 +9178,7 @@
 </details>
 
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-PAY_MULTI_80_2_1] PA - Invio RS DELIVERY_MODE con Costi inclusi - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica  inclusi modalità DELIVERY_MODE (scenario positivo)</summary>
-
-**Descrizione**
-
-1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
-2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
   <summary>[B2B-PA-PAY_MULTI_80_3] PA - Invio RS FLAT_RATE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità FLAT_RATE (scenario positivo)</summary>
-
-**Descrizione**
-
-1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
-2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-PAY_MULTI_80_3_1] PA - Invio RS FLAT_RATE - inserimento notifica  mono destinatario con un solo avviso pagoPA e costi di notifica non inclusi modalità FLAT_RATE (scenario positivo)</summary>
-
-**Descrizione**
-
-1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
-2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-PAY_MULTI_81] PA - Invio RS DELIVERY_MODE - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica  inclusi</summary>
 
 **Descrizione**
 
@@ -9280,33 +9217,7 @@
 </details>
 
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-PAY_MULTI_81_1_2] PA - Invio RS DELIVERY_MODE Costi inclusi - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica  inclusi più paFee</summary>
-
-**Descrizione**
-
-1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
-2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
   <summary>[B2B-PA-PAY_MULTI_81_1_1] PA - Invio RS DELIVERY_MODE Costi inclusi - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica  inclusi</summary>
-
-**Descrizione**
-
-1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
-2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-PAY_MULTI_81_1_1_1] PA - Invio RS DELIVERY_MODE Costi inclusi - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica  inclusi</summary>
 
 **Descrizione**
 
@@ -9332,33 +9243,7 @@
 </details>
 
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-PAY_MULTI_81_2_1] PA - Invio RS FLAT_RATE - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica non inclusi</summary>
-
-**Descrizione**
-
-1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
-2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
   <summary>[B2B-PA-PAY_MULTI_81_3] PA - Invio RS FLAT_RATE - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica  inclusi più paFee</summary>
-
-**Descrizione**
-
-1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
-2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
-3. vengono letti gli eventi fino all'elemento di timeline della notifica `SEND_SIMPLE_REGISTERED_LETTER`
-
-[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
-
-</details>
-
-<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
-  <summary>[B2B-PA-PAY_MULTI_81_3_1] PA - Invio RS FLAT_RATE - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica  inclusi più paFee</summary>
 
 **Descrizione**
 
@@ -10036,6 +9921,19 @@
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
 
 </details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-PAY_MULTI_100_7] PA - inserimento notifica mono destinatario con un solo F24 TREASURY_AE FLAT_RATE  e controllo coerenza dei dati del modello F24 Agenzia delle Entrate (Costi di notifica non inclusi e credit e debit valorizzati sullo stesso record - scenario negativo).</summary>
+
+**Descrizione**
+
+1. Viene generata una nuova notifica con destinatario `LVLDAA85T50G702B`
+2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `REFUSED`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pf/AvanzamentoNotificheB2bPFMultiPagamento.feature)
+
+</details>
+
 
 
 ##### Avanzamento notifiche b2b persona fisica pagamento
@@ -13218,10 +13116,10 @@ Dati destinatario
 
 :warning: _Ignored_
 
-1. Viene generata una nuova notifica con destinatario `Cucumber srl`
+1. Viene generata una nuova notifica con destinatario `CucumberSpa`
 2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
 3. vengono letti gli eventi fino all'elemento di timeline della notifica `REQUEST_ACCEPTED`
-4. l'allegato `F24` può essere correttamente recuperato da `Cucumber srl`
+4. l'allegato `F24` può essere correttamente recuperato da `CucumberSpa`
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pg/AvanzamentoNotificheB2bPGPagamento.feature)
 
@@ -13233,10 +13131,11 @@ Dati destinatario
 **Descrizione**
 
 
-1. Viene generata una nuova notifica con destinatario `Cucumber srl`
+1. Viene generata una nuova notifica con destinatario `CucumberSpa`
 2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
 3. vengono letti gli eventi fino all'elemento di timeline della notifica `REQUEST_ACCEPTED`
-4. il documento di pagamento `PAGOPA` può essere recuperata tramite AppIO da `Mario Cucumber`
+4. il documento di pagamento `PAGOPA` può essere recuperata tramite AppIO da `CucumberSpa`
+5. il download non ha prodotto errori
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pg/AvanzamentoNotificheB2bPGPagamento.feature)
 
@@ -13248,10 +13147,11 @@ Dati destinatario
 **Descrizione**
 
 
-1. Viene generata una nuova notifica con destinatario `Cucumber srl`
+1. Viene generata una nuova notifica con destinatario `CucumberSpa`
 2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
 3. vengono letti gli eventi fino all'elemento di timeline della notifica `REQUEST_ACCEPTED`
-4. il documento di pagamento `F24` può essere recuperata tramite AppIO da `Mario Cucumber`
+4. il documento di pagamento `F24` può essere recuperata tramite AppIO da `CucumberSpa`
+5. il download non ha prodotto errori
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pg/AvanzamentoNotificheB2bPGPagamento.feature)
 
@@ -13262,11 +13162,11 @@ Dati destinatario
 
 **Descrizione**
 
-1. Viene generata una nuova notifica con destinatario `Cucumber srl`
+1. Viene generata una nuova notifica con destinatario `CucumberSpa`
 2. La notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi `ACCEPTED`
 3. la notifica può essere annullata dal sistema tramite codice IUN dal comune `Comune_Multi`
 4. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLATION_REQUEST`
-5. `Mario Cucumber` tenta il recupero dell'allegato `PAGOPA`
+5. `CucumberSpa` tenta il recupero dell'allegato `PAGOPA`
 6. il download ha prodotto un errore con status code `404`
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/pg/AvanzamentoNotificheB2bPGPagamento.feature)
