@@ -35,6 +35,7 @@
         <open.api.version.mandate>${open.api.version}</open.api.version.mandate>
         <open.api.version.apikey.manager>${open.api.version}</open.api.version.apikey.manager>
         <open.api.version.downtime.logs>${open.api.version}</open.api.version.downtime.logs>
+        <open.api.version.radd>v2.1.13</open.api.version.radd>
     </properties>
 
     <dependencies>
@@ -182,6 +183,35 @@
                 <version>5.4.0</version>
                 <executions>
                     <execution>
+                        <id>generate-internal-client-radd</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-radd-fsu/develop/docs/openapi/pn-radd-fsu-v1.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <apiPackage>it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.api</apiPackage>
+                                <modelPackage>it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model</modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <useAbstractionForFiles>true</useAbstractionForFiles>
+                                <useBeanValidation>false</useBeanValidation>
+                                <additionalModelTypeAnnotations>
+                                    @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                            <apiPackage>it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.api</apiPackage>
+                            <modelPackage>it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model</modelPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>generate-internal-client-b2b-pa</id>
                         <goals>
                             <goal>generate</goal>
@@ -210,9 +240,6 @@
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model</modelPackage>
                         </configuration>
                     </execution>
-
-
-
                     <execution>
                         <id>generate-internal-client-b2b-pa_v1</id>
                         <goals>
