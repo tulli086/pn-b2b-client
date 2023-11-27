@@ -9,9 +9,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | DELIVERY_MODE       |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -28,9 +26,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -46,13 +42,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -67,13 +61,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | SI |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -100,9 +92,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy             | FLAT_RATE      |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
@@ -118,9 +108,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy             | FLAT_RATE      |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
@@ -137,9 +125,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy             | DELIVERY_MODE      |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
@@ -157,13 +143,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -176,13 +160,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -197,9 +179,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -215,9 +195,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -233,9 +211,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -251,13 +227,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | SI |
       | apply_cost_f24 | SI |
       | payment_multy_number | 2 |
@@ -273,9 +247,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -295,13 +267,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 2 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -314,13 +284,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 2 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -335,9 +303,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -354,9 +320,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -372,9 +336,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -392,13 +354,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -411,13 +371,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -430,13 +388,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -453,9 +409,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -480,9 +434,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -509,13 +461,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     And destinatario
@@ -524,7 +474,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -538,13 +488,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     And destinatario
@@ -553,7 +501,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -567,13 +515,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     And destinatario
@@ -596,9 +542,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -627,13 +571,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     And destinatario
@@ -658,13 +600,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo            |
       | feePolicy          | DELIVERY_MODE               |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -679,13 +619,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo            |
       | feePolicy          | DELIVERY_MODE               |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -713,9 +651,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo            |
       | feePolicy          | DELIVERY_MODE               |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm  | SI   |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL   |
@@ -741,9 +677,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -772,12 +706,10 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     And destinatario
@@ -809,9 +741,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NO |
@@ -831,9 +761,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NO |
@@ -850,9 +778,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NO |
@@ -873,13 +799,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
@@ -896,13 +820,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -961,9 +883,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -990,9 +910,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1019,13 +937,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | SI |
       | apply_cost_f24 | SI |
       | payment_multy_number | 2 |
@@ -1054,9 +970,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1087,9 +1001,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_pagoPaForm_1 | SI |
       | payment_f24flatRate | NULL |
@@ -1117,13 +1029,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | apply_cost_pagopa | SI |
       | payment_multy_number | 1 |
@@ -1152,9 +1062,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1173,9 +1081,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1193,13 +1099,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1215,13 +1119,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1237,13 +1139,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
@@ -1261,9 +1161,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1292,9 +1190,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1323,13 +1219,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     And destinatario
@@ -1353,13 +1247,11 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     And destinatario
@@ -1383,9 +1275,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1427,9 +1317,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1446,9 +1334,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1475,9 +1361,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1503,9 +1387,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1531,9 +1413,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1572,9 +1452,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
@@ -1606,9 +1484,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -1754,9 +1630,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI |
       | payment_f24flatRate | NULL |
       | payment_f24standard | NULL |
@@ -2104,9 +1978,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | DELIVERY_MODE       |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | SI |
@@ -2126,9 +1998,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | DELIVERY_MODE       |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok-Retry_RS |
       | payment_pagoPaForm | SI |
@@ -2148,9 +2018,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | DELIVERY_MODE       |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | SI |
@@ -2171,9 +2039,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | FLAT_RATE       |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | SI |
@@ -2194,15 +2060,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2218,15 +2082,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2241,15 +2103,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@ok-Retry_RS |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2264,15 +2124,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via Roma |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_FLAT_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
@@ -2287,18 +2145,16 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
-      | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via Roma |
-      | payment_pagoPaForm | NULL |
-      | payment_f24flatRate | SI |
-      | payment_f24standard | NULL |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
-      | apply_cost_pagopa | NO |
-      | apply_cost_f24 | NO |
-      | payment_multy_number | 1 |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test@fail.it              |
+      | physicalAddress_address | Via Roma                  |
+      | payment_pagoPaForm      | NULL                      |
+      | payment_f24flatRate     | SI                        |
+      | payment_f24standard     | NULL                      |
+      | title_payment           | F24_FLAT_CLMCST42R12D969Z |
+      | apply_cost_pagopa       | NO                        |
+      | apply_cost_f24          | NO                        |
+      | payment_multy_number    | 1                         |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
 
@@ -2311,17 +2167,15 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | DELIVERY_MODE       |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via@ok_AR |
-      | payment_pagoPaForm | SI |
-      | payment_f24flatRate | NULL |
-      | payment_f24standard | NULL |
-      | apply_cost_pagopa | SI |
-      | apply_cost_f24 | NO |
-      | payment_multy_number | 1 |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile         | NULL               |
+      | physicalAddress_address | Via@ok_AR          |
+      | payment_pagoPaForm      | SI                 |
+      | payment_f24flatRate     | NULL               |
+      | payment_f24standard     | NULL               |
+      | apply_cost_pagopa       | SI                 |
+      | apply_cost_f24          | NO                 |
+      | payment_multy_number    | 1                  |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
@@ -2332,9 +2186,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | DELIVERY_MODE       |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_AR |
       | payment_pagoPaForm | SI |
@@ -2353,9 +2205,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | FLAT_RATE       |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_AR |
       | payment_pagoPaForm | SI |
@@ -2374,18 +2224,16 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via@ok_AR |
-      | payment_pagoPaForm | NULL |
-      | payment_f24flatRate | NULL |
-      | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
-      | apply_cost_pagopa | NO |
-      | apply_cost_f24 | SI |
-      | payment_multy_number | 1 |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile         | NULL                          |
+      | physicalAddress_address | Via@ok_AR                     |
+      | payment_pagoPaForm      | NULL                          |
+      | payment_f24flatRate     | NULL                          |
+      | payment_f24standard     | SI                            |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z |
+      | apply_cost_pagopa       | NO                            |
+      | apply_cost_f24          | SI                            |
+      | payment_multy_number    | 1                             |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
@@ -2396,15 +2244,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_AR |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2419,15 +2265,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_AR |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_FLAT_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
@@ -2441,15 +2285,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_AR |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_FLAT_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
@@ -2464,9 +2306,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | DELIVERY_MODE       |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
       | payment_pagoPaForm | SI |
@@ -2485,9 +2325,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | DELIVERY_MODE       |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
       | payment_pagoPaForm | SI |
@@ -2506,9 +2344,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy          | FLAT_RATE       |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
       | payment_pagoPaForm | SI |
@@ -2527,15 +2363,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2549,15 +2383,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2572,15 +2404,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_FLAT_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
@@ -2594,15 +2424,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_FLAT_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
@@ -2618,9 +2446,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | physicalCommunication | AR_REGISTERED_LETTER |
       | feePolicy | FLAT_RATE |
       | paFee | 100 |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | via@FAIL-Irreperibile_AR |
       | payment_pagoPaForm | NULL |
@@ -2642,9 +2468,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | physicalCommunication | AR_REGISTERED_LETTER |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | via@FAIL-Irreperibile_AR |
       | payment_pagoPaForm | NULL |
@@ -2667,9 +2491,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | physicalCommunication | AR_REGISTERED_LETTER |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | via@FAIL-Irreperibile_AR |
       | payment_pagoPaForm | NULL |
@@ -2691,9 +2513,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | physicalCommunication | AR_REGISTERED_LETTER |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | via@FAIL-Irreperibile_AR |
       | payment_pagoPaForm | NULL |
@@ -2716,9 +2536,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | physicalCommunication | AR_REGISTERED_LETTER |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination | Cristoforo Colombo |
-      | taxId | CLMCST42R12D969Z |
+    And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
       | physicalAddress_address | via@FAIL-Irreperibile_AR |
       | payment_pagoPaForm | NULL |
@@ -2741,14 +2559,12 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | physicalCommunication | AR_REGISTERED_LETTER |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address |   test@pecOk.it  |
       |payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2763,14 +2579,12 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | physicalCommunication | AR_REGISTERED_LETTER |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address |   pectest@pec.pagopa.it  |
       |payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2785,14 +2599,12 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | physicalCommunication | AR_REGISTERED_LETTER |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address |   test@pecOk.it  |
       |payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2807,14 +2619,12 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | physicalCommunication | AR_REGISTERED_LETTER |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address |   pectest@pec.pagopa.it  |
       |payment_pagoPaForm | NULL |
       | payment_f24flatRate | NULL |
       | payment_f24standard | SI |
-      | title_payment | F24_STANDARD_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa | NO |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
@@ -2828,10 +2638,8 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
+      | title_payment | F24_FLAT_CLMCST42R12D969Z |
       | digitalDomicile_address |   test@pecOk.it  |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
@@ -2849,10 +2657,8 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
+      | title_payment | F24_FLAT_CLMCST42R12D969Z |
       | digitalDomicile_address |   pectest@pec.pagopa.it  |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
@@ -2870,11 +2676,9 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address |   test@pecOk.it  |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_FLAT_CLMCST42R12D969Z |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
@@ -2891,11 +2695,9 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       | digitalDomicile_address |   pectest@pec.pagopa.it  |
-      | title_payment | F24_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_FLAT_CLMCST42R12D969Z |
       | payment_pagoPaForm | NULL |
       | payment_f24flatRate | SI |
       | payment_f24standard | NULL |
@@ -2915,9 +2717,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -2939,7 +2739,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_SEMPLIFICATO_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_SEMPLIFICATO_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -2952,9 +2752,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -2976,7 +2774,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_SEMPLIFICATO_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_SEMPLIFICATO_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -2989,9 +2787,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3013,7 +2809,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_SEMPLIFICATO_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_SEMPLIFICATO_FLAT_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3026,9 +2822,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3050,7 +2844,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_INPS_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_INPS_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3063,9 +2857,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3087,7 +2879,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_INPS_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_INPS_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3100,9 +2892,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3124,7 +2914,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_INPS_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_INPS_FLAT_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3137,9 +2927,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3162,7 +2950,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_INPS_ERR_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_INPS_ERR_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
@@ -3174,9 +2962,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3200,7 +2986,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_INPS_ERR1_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_INPS_ERR1_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
@@ -3213,9 +2999,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3237,7 +3021,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_LOCAL_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_LOCAL_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3250,9 +3034,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3274,7 +3056,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_LOCAL_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_LOCAL_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3287,9 +3069,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3311,7 +3091,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_LOCAL_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_LOCAL_FLAT_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3324,9 +3104,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3348,7 +3126,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_REGION_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_REGION_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3361,9 +3139,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3385,7 +3161,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_REGION_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_REGION_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3398,9 +3174,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3422,7 +3196,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_REGION_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_REGION_FLAT_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3435,9 +3209,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3459,7 +3231,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_TREASURY_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_TREASURY_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3472,9 +3244,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3496,7 +3266,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_TREASURY_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_TREASURY_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3509,9 +3279,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3533,7 +3301,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | SI   |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_TREASURY_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_TREASURY_FLAT_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3546,9 +3314,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3570,7 +3336,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_SOCIAL_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_SOCIAL_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3583,9 +3349,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3607,7 +3371,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_SOCIAL_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_SOCIAL_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3620,9 +3384,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3644,7 +3406,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | SI |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_SOCIAL_FLAT_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_SOCIAL_FLAT_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3657,9 +3419,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3683,7 +3443,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_INPS_DC_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_INPS_DC_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3696,9 +3456,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 100 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3722,7 +3480,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_f24standard_treasury_flat | NULL |
       | payment_f24standard_social_flat   | NULL |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_INPS_DC1_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_INPS_DC1_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3735,9 +3493,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | DELIVERY_MODE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3747,7 +3503,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       #F24 completo a sezioni modalità Delivery - costi inclusi--
       | f24_delivery_standard_treasury_ae            | SI |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_TREASURY_AE_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_TREASURY_AE_CLMCST42R12D969Z |
       | apply_cost_f24 | SI |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3760,9 +3516,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3772,7 +3526,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       #F24 completo a sezioni modalità Delivery - costi non inclusi--
       | f24_delivery_standard_treasury_ae_flat            | SI |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_TREASURY_AE_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_TREASURY_AE_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -3785,9 +3539,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | senderDenomination | Comune di Palermo |
       | feePolicy | FLAT_RATE |
       | paFee | 0 |
-    And destinatario
-      | denomination     | Ada Lovelace  |
-      | taxId | LVLDAA85T50G702B |
+    And destinatario Mario Gherkin e:
       #Sezione PagoPA-----------------------------
       | payment_pagoPaForm | NULL |
       | apply_cost_pagopa | NULL |
@@ -3797,7 +3549,7 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       #F24 completo a sezioni modalità Delivery - costi non inclusi--
       | f24_delivery_standard_treasury_ae_err_flat            | SI |
       #-------------------------------------------
-      | title_payment | F24_STANDARD_TREASURY_AE_LVLDAA85T50G702B |
+      | title_payment | F24_STANDARD_TREASURY_AE_CLMCST42R12D969Z |
       | apply_cost_f24 | NO |
       | payment_multy_number | 1 |
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
