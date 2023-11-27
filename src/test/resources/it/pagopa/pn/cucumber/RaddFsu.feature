@@ -65,7 +65,7 @@ Feature: Radd fsu
     And vengono caricati i documento di identità del cittadino
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR
     And l'operazione di download degli atti si conclude correttamente
-    #And viene conclusa la visualizzati di atti ed attestazioni della notifica
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -93,7 +93,7 @@ Feature: Radd fsu
     And vengono caricati i documento di identità del cittadino
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR
     And l'operazione di download degli atti si conclude correttamente
-    #And viene conclusa la visualizzati di atti ed attestazioni della notifica
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica
     And viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |

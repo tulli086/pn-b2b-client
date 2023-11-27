@@ -13,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
@@ -44,6 +46,7 @@ public class RaddFsuSteps {
     private AORInquiryResponse aorInquiryResponse;
     private PnPaB2bUtils.Pair<String,String> documentUploadResponse;
 
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
 
     @Autowired
@@ -252,7 +255,7 @@ public class RaddFsuSteps {
         CompleteTransactionRequest completeTransactionRequest =
                 new CompleteTransactionRequest()
                         .operationId(this.operationid)
-                        .operationDate(OffsetDateTime.now());
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()));
         CompleteTransactionResponse completeTransactionResponse = raddFsuClient.completeActTransaction(this.uid, completeTransactionRequest);
         System.out.println(completeTransactionResponse);
         Assertions.assertNotNull(completeTransactionResponse);
@@ -277,6 +280,11 @@ public class RaddFsuSteps {
 
     @Then("Vengono recuperati gli atti delle notifiche in stato irreperibile")
     public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile() {
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         this.operationid = generateRandomNumber();
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
@@ -285,7 +293,8 @@ public class RaddFsuSteps {
                         .operationId(this.operationid)
                         .recipientTaxId(this.currentUserCf)
                         .recipientType(AorStartTransactionRequest.RecipientTypeEnum.PF)
-                        //.operationDate(OffsetDateTime.now()) TODO: controllare
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                        //.delegateTaxId("")
                         .checksum(this.documentUploadResponse.getValue2());
         this.aorStartTransactionResponse = raddFsuClient.startAorTransaction(this.uid, aorStartTransactionRequest);
     }

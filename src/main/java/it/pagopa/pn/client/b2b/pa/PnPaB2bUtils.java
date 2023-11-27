@@ -922,7 +922,8 @@ public class PnPaB2bUtils {
     private DocumentUploadResponse getPreLoadRaddResponse(String sha256) {
         String id = sha256 + System.nanoTime();
         DocumentUploadRequest documentUploadRequest = new DocumentUploadRequest()
-                .bundleId("PN_RADD_FSU_ATTACHMENT-"+id+".pdf")
+                //.bundleId("PN_RADD_FSU_ATTACHMENT-"+id+".pdf")
+                .bundleId("TEST")
                 .checksum(sha256)
                 .contentType("application/pdf");
 
@@ -1145,10 +1146,11 @@ public class PnPaB2bUtils {
             headers.add("Content-type", resourceType);
             headers.add("x-amz-checksum-sha256", sha256);
             headers.add("x-amz-meta-secret", secret);
-
+            log.info("headers: {}",headers);
             HttpEntity<Resource> req = new HttpEntity<>( ctx.getResource( resource), headers);
             restTemplate.exchange( URI.create(url), HttpMethod.PUT, req, Object.class);
         }catch (Exception e){
+            log.info("Upload in catch, retry");
             loadToPresigned(url,secret,sha256,resource,resourceType,depth+1);
         }
     }

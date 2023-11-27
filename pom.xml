@@ -195,6 +195,9 @@
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
+                            <typeMappings>
+                                <typeMapping>OffsetDateTime=java.lang.String</typeMapping>
+                            </typeMappings>
                             <inputSpec>https://raw.githubusercontent.com/pagopa/pn-radd-fsu/${open.api.version.radd}/docs/openapi/pn-radd-fsu-v1.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
