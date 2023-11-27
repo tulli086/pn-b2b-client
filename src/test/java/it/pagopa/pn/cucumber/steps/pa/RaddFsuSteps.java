@@ -156,6 +156,13 @@ public class RaddFsuSteps {
                 Assertions.assertNotNull( actInquiryResponse.getStatus());
                 Assertions.assertEquals(error, actInquiryResponse.getStatus().getCode());
             }
+            case "stampa già eseguita" ->{
+                Assertions.assertEquals(false, actInquiryResponse.getResult());
+                Assertions.assertNotNull( actInquiryResponse.getStatus());
+                Assertions.assertNotNull(actInquiryResponse.getStatus().getMessage());
+                Assertions.assertEquals(errorType.toLowerCase(), actInquiryResponse.getStatus().getMessage().toLowerCase());
+                Assertions.assertEquals(error, actInquiryResponse.getStatus().getCode());
+            }
             default -> throw new IllegalArgumentException();
         }
     }
@@ -265,8 +272,7 @@ public class RaddFsuSteps {
     @Given("Il cittadino {string} chiede di verificare la presenza di notifiche")
     public void ilCittadinoChiedeDiVerificareLaPresenzaDiNotifiche(String cf) {
         selectUser(cf);
-        AORInquiryResponse aorInquiryResponse = raddFsuClient.aorInquiry(uid, cf, "PF");
-        this.aorInquiryResponse = aorInquiryResponse;
+        this.aorInquiryResponse = raddFsuClient.aorInquiry(uid, cf, "PF");
     }
 
     @When("La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente")
@@ -280,11 +286,6 @@ public class RaddFsuSteps {
 
     @Then("Vengono recuperati gli atti delle notifiche in stato irreperibile")
     public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile() {
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         this.operationid = generateRandomNumber();
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
@@ -303,4 +304,11 @@ public class RaddFsuSteps {
     public void ilRecuperoDegliAttiInStatoIrreperibileSiConcludeCorrettamente() {
         log.info("aorStartTransactionResponse: {}",this.aorStartTransactionResponse);
     }
+
+    @When("La verifica della presenza di notifiche in stato irreperibi genera un errore {string} con codice {int}")
+    public void laVerificaDellaPresenzaDiNotificheInStatoIrreperibiGeneraUnErroreConCodice(String errorDescription, int errorCode) {
+        log.info("aorInquiryResponse: {}",this.aorInquiryResponse);
+    }
+
+
 }
