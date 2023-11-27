@@ -43,6 +43,7 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -599,6 +600,29 @@ public class SharedSteps {
          */
     }
 
+    @And("destinatario Signor casuale e:")
+    public void destinatarioSignorCasualeMap(Map<String, String> data) {
+        NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
+        addRecipientToNotification(this.notificationRequest,
+                (notificationRecipientV21
+                        .denomination("signor RaddCasuale")
+                        .taxId(generateCF(System.currentTimeMillis()))
+                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PF)),
+                data);
+    }
+
+    @And("destinatario Signor casuale")
+    public void destinatarioSignorCasuale() {
+        addRecipientToNotification(this.notificationRequest,
+                (dataTableTypeUtil.convertNotificationRecipient(new HashMap<>())
+                        .denomination("signor RaddCasuale")
+                        .taxId(generateCF(System.currentTimeMillis()))
+                        .recipientType(NotificationRecipientV21.RecipientTypeEnum.PF)
+                        .digitalDomicile(new NotificationDigitalAddress()
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValue()))), new HashMap<>());
+    }
+
     @And("destinatario Gherkin Analogic e:")
     public void destinatarioGherkinAnalogicParam(Map<String, String> data) {//@Transpose NotificationRecipientV21 recipient
         NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(data);
@@ -644,6 +668,8 @@ public class SharedSteps {
 
  */
     }
+
+
 
     @And("viene generata una nuova notifica con uguale codice fiscale del creditore e diverso codice avviso")
     public void vienePredispostaEInviataUnaNuovaNotificaConUgualeCodiceFiscaleDelCreditoreEDiversoCodiceAvviso() {
@@ -1942,5 +1968,7 @@ public class SharedSteps {
             }
         }
     }
+
+
 
 }

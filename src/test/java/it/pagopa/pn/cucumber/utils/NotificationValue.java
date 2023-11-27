@@ -146,7 +146,7 @@ public enum NotificationValue {
          */
     }
 
-    private static String  generateRandomNumber(){
+    public static String  generateRandomNumber(){
         String threadNumber = (Thread.currentThread().getId()+"");
         String numberOfThread = threadNumber.length() < 2 ? "0"+threadNumber: threadNumber.substring(0, 2);
         String timeNano = System.nanoTime()+"";
