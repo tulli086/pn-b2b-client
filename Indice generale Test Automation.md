@@ -5476,6 +5476,51 @@
 
 </details>
 
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_12] Invio e visualizzazione notifica e verifica amount e effectiveDate da  V1.1 a V2.1 senza pagoPaIntMode PN-8843</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Gherkin` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. vengono verificati costo = `100` e data di perfezionamento della notifica V1 con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_13] Invio e visualizzazione notifica e verifica amount e effectiveDate da  V1.1 a V2.1 e recupero con V1.1 senza payment_pagoPaForm PN-8842</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Gherkin` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V1_1ToV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_14] Invio e visualizzazione notifica e verifica amount e effectiveDate da  V1.1 a V2.1 e recupero con V2.1 senza payment_pagoPaForm PN-8842</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Gherkin` con versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. la notifica può essere correttamente recuperata dal sistema tramite codice IUN
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V1_1ToV2_1.feature)
+
+</details>
+
 
 ### verifica compatibilità tra v1 a v2
 
@@ -5525,6 +5570,48 @@
 
 </details>
 
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_19] Recupero notifica V1 non esistente su Send V2.0</summary>
+
+**Descrizione**
+
+1. si tenta il recupero della notifica dal sistema tramite codice IUN `UGYD-XHEZ-KLRM-202208-X-0` con versione API V2
+2. l'operazione ha prodotto un errore con status code `404`
+3. si tenta il recupero della notifica dal sistema tramite codice IUN `UGYD-XHEZ-KLRM-202208-X-0` con versione API V1
+4. l'operazione ha prodotto un errore con status code `404`
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V1ToV2.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_20] Invio notifica digitale mono destinatario V2 e controllo che V1 non abbia l'evento "NOTIFICATION_CANCELLED"</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario Mario Cucumber e versione API V2
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED e successivamente annullata con versione API V2
+3. vengono letti gli eventi fino all'elemento di timeline della notifica `NOTIFICATION_CANCELLED` con versione API V2
+4. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con versione API V1
+5. vengono letti gli eventi della timeline e si controlla che l'evento di timeline `NOTIFICATION_CANCELLED` non esista con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V1ToV2.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_21] Controlle se presente lo stato ACCEPTED nella versione V1</summary>
+
+**Descrizione**
+
+1. viene generata una nuova notifica con destinatario Mario Cucumber e versione API V1
+2. la notifica viene inviata tramite api b2b dal `Comune_Multi` e si attende che lo stato diventi ACCEPTED con versione API V1
+3. vengono letti gli eventi fino allo stato della notifica `ACCEPTED` con versione API V1
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V1ToV2.feature)
+
+</details>
+
 ### verifica compatibilità tra v2 a v2.1
 
 <details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
@@ -5565,6 +5652,51 @@
 2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED
 3. si verifica la corretta acquisizione della notifica
 4. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V20
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V2toV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_20] Invio e visualizzazione notifica e verifica amount e effectiveDate da  V2 a V2.1 senza pagoPaIntMode PN-8843</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Gherkin` con versione Api V2
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione Api V2
+3. si verifica la corretta acquisizione della notifica con versione Api V2
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V2toV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_21] Invio e visualizzazione notifica e verifica amount e effectiveDate da  V2.0 a V2.1 e recupero con V2.0 senza payment_pagoPaForm PN-8842</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Gherkin` con versione Api V2
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione Api V2
+3. la notifica può essere correttamente recuperata dal sistema tramite codice IUN con versione OpenApi V20
+
+[Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V2toV2_1.feature)
+
+</details>
+
+<details style="border:1px solid; border-radius: 5px; padding: 10px; margin-bottom: 20px">
+  <summary>[B2B-PA-SEND_VERSION_22] Invio e visualizzazione notifica e verifica amount e effectiveDate da  V2.0 a V2.1 e recupero con V2.1 senza payment_pagoPaForm PN-8842</summary>
+
+**Descrizione**
+
+:warning: _Ignored_
+
+1. viene generata una nuova notifica con destinatario `Mario Gherkin` con versione Api V2
+2. la notifica viene inviata tramite api b2b dal `Comune_1` e si attende che lo stato diventi ACCEPTED con versione Api V2
+3. la notifica può essere correttamente recuperata dal sistema tramite codice IUN
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/versioning/V2toV2_1.feature)
 
@@ -14731,7 +14863,6 @@ Dati destinatario
 7. Vengono letti gli eventi fino all'elemento di timeline della notifica `SCHEDULE_REFINEMENT`e verifica data schedulingDate per il destinatario `1` rispetto ell'evento in timeline `SEND_DIGITAL_FEEDBACK`
 8. Vengono letti gli eventi fino all'elemento di timeline della notifica `DIGITAL_SUCCESS_WORKFLOW` per l'utente `0`
 9. Vengono letti gli eventi fino all'elemento di timeline della notifica `DIGITAL_SUCCESS_WORKFLOW` per l'utente `1`
-10. Vengono letti gli eventi fino allo stato della notifica `DELIVERED`
 
 [Feature link](src/test/resources/it/pagopa/pn/cucumber/workflowNotifica/b2b/AvanzamentoNotificheB2bPFPGDigitaleAnalogico.feature)
 
