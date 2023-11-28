@@ -183,6 +183,32 @@ public class PnExternalServiceClientImpl {
     }
 
 
+    public HashMap<String, String> getQuickAccessLink(String iun) {
+        return getQuickAccessLinkWithHttpInfo(iun).getBody();
+    }
+
+    private ResponseEntity<HashMap<String, String>> getQuickAccessLinkWithHttpInfo(String iun) {
+        Object postBody = null;
+
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        uriVariables.put("iun", iun);
+
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        queryParams.add("metadataOnly", "true");
+
+        final HttpHeaders headerParams = new HttpHeaders();
+
+        final String[] localVarAccepts = {
+                "application/json", "application/problem+json"
+        };
+        final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
+        final MediaType localVarContentType = MediaType.APPLICATION_JSON;
+
+        ParameterizedTypeReference<HashMap<String, String>> returnType = new ParameterizedTypeReference<>() {
+        };
+        return invokeAPI(extChannelsBasePath, "/delivery-private/notifications/{iun}/quick-access-link-tokens", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
+    }
+
     public List<HashMap<String, String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType) throws RestClientException {
         switch (apiKeyType) {
             case MVP_1:

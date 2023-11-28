@@ -2,8 +2,14 @@ package it.pagopa.pn.client.b2b.pa;
 
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
+import it.pagopa.pn.client.b2b.pa.testclient.IPnRaddFsuClientImpl;
 import it.pagopa.pn.client.b2b.pa.testclient.IPnWebPaClient;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadRequest;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadResponse;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +58,14 @@ public class PnPaB2bUtils {
 
     private IPnPaB2bClient client;
 
+    private final IPnRaddFsuClientImpl raddFsuClient;
+
     @Autowired
-    public PnPaB2bUtils(ApplicationContext ctx, IPnPaB2bClient client,RestTemplate restTemplate) {
+    public PnPaB2bUtils(ApplicationContext ctx, IPnPaB2bClient client,RestTemplate restTemplate, IPnRaddFsuClientImpl raddFsuClient) {
         this.restTemplate = restTemplate;
         this.ctx = ctx;
         this.client = client;
+        this.raddFsuClient = raddFsuClient;
     }
 
     public void setClient(IPnPaB2bClient client) {
@@ -880,6 +889,48 @@ public class PnPaB2bUtils {
     }
 
 
+    @AllArgsConstructor
+    @Data
+    @ToString
+    public static class Pair<K,E>{
+        K value1;
+        E value2;
+    }
+
+    public Pair<String,String> preloadRadFsuDocument( String resourcePath, boolean usePresignedUrl) throws IOException {
+
+        String sha256 = computeSha256( resourcePath );
+        DocumentUploadResponse documentUploadResponse = getPreLoadRaddResponse(sha256);
+
+        String key = documentUploadResponse.getFileKey();
+        String secret = documentUploadResponse.getSecret();
+        String url = documentUploadResponse.getUrl();
+
+        log.info(String.format("Attachment resourceKey=%s sha256=%s secret=%s presignedUrl=%s\n",
+                resourcePath, sha256, secret, url));
+
+        if(usePresignedUrl){
+            loadToPresigned( url, secret, sha256, resourcePath );
+            log.info("UPLOAD RADD COMPLETE");
+        }else{
+            log.info("UPLOAD RADD COMPLETE WITHOUT UPLOAD");
+        }
+
+        return new Pair<>(key, sha256);
+    }
+
+    private DocumentUploadResponse getPreLoadRaddResponse(String sha256) {
+        String id = sha256 + System.nanoTime();
+        DocumentUploadRequest documentUploadRequest = new DocumentUploadRequest()
+                //.bundleId("PN_RADD_FSU_ATTACHMENT-"+id+".pdf")
+                .bundleId("TEST")
+                .checksum(sha256)
+                .contentType("application/pdf");
+
+        DocumentUploadResponse documentUploadResponse = raddFsuClient.documentUpload("1234556", documentUploadRequest);
+        return documentUploadResponse;
+    }
+
     public NotificationDocument preloadDocument( NotificationDocument document) throws IOException {
 
         String resourceName = document.getRef().getKey();
@@ -1095,13 +1146,15 @@ public class PnPaB2bUtils {
             headers.add("Content-type", resourceType);
             headers.add("x-amz-checksum-sha256", sha256);
             headers.add("x-amz-meta-secret", secret);
-
+            log.info("headers: {}",headers);
             HttpEntity<Resource> req = new HttpEntity<>( ctx.getResource( resource), headers);
             restTemplate.exchange( URI.create(url), HttpMethod.PUT, req, Object.class);
         }catch (Exception e){
+            log.info("Upload in catch, retry");
             loadToPresigned(url,secret,sha256,resource,resourceType,depth+1);
         }
     }
+
 
 
 
