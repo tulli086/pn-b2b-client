@@ -190,7 +190,7 @@ Feature: Radd fsu
     When La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente
 
   @radd
-  Scenario: [B2B_RADD_AOR-2] inquiry per cittadino con notifiche in stato irreperibile
+  Scenario: [B2B_RADD_AOR-3] inquiry per cittadino con notifiche in stato irreperibile
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -204,7 +204,7 @@ Feature: Radd fsu
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente
 
   @radd
-  Scenario: [B2B_RADD_AOR-3] recupero atti per cittadino con notifiche in stato irreperibile
+  Scenario: [B2B_RADD_AOR-4] recupero atti per cittadino con notifiche in stato irreperibile
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -221,7 +221,7 @@ Feature: Radd fsu
     And il recupero degli aar in stato irreperibile si conclude correttamente
 
   @radd
-  Scenario: [B2B_RADD_AOR-4] start transaction aor senza effettuare upload documenti
+  Scenario: [B2B_RADD_AOR-5] start transaction aor senza effettuare upload documenti
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
