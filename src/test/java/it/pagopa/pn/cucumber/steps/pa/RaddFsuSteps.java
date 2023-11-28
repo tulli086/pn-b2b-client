@@ -27,11 +27,6 @@ public class RaddFsuSteps {
     private final PnExternalServiceClientImpl externalServiceClient;
     private final SharedSteps sharedSteps;
     private final PnPaB2bUtils pnPaB2bUtils;
-
-    private final String defaultQrCodeCf = "MNDLCU98T68C933T";
-    private final String qrCodeMNDLCU98T68C933T = "R0pHTi1aUk1KLU5EVkEtMjAyMzA2LVUtMV9QRi00ZGJkZTM0MC0wMWQ5LTRlYTEtOWNhZC05NDM1ZGEwYjY2OGNfNzk4ZDhlMzktYmMxMC00MmUzLWJhNjktMjRhY2MxNDE3MmVl";
-    private final String malformedQrCode;
-    private final String nonExistentQrCode;
     private ActInquiryResponse actInquiryResponse;
     private String qrCode;
     private String currentUserCf;
@@ -42,6 +37,7 @@ public class RaddFsuSteps {
     private String uid = "1234556";
 
     private AORInquiryResponse aorInquiryResponse;
+    private CompleteTransactionResponse completeTransactionResponse;
     private PnPaB2bUtils.Pair<String,String> documentUploadResponse;
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -55,8 +51,6 @@ public class RaddFsuSteps {
         this.sharedSteps = sharedSteps;
         this.pnPaB2bUtils = pnPaB2bUtils;
 
-        this.malformedQrCode = qrCodeMNDLCU98T68C933T + "MALF";
-        this.nonExistentQrCode = qrCodeMNDLCU98T68C933T.replace('L','C');
     }
 
 
@@ -75,11 +69,6 @@ public class RaddFsuSteps {
         log.debug("qrCode: {}",qrCode);
     }
 
-
-    @Given("Il cittadino mostra il QRCode malformato presente sull{string}operatore")
-    public void ilCittadinoMostraIlQRCodeMalformatoPresenteSullAARAllOperatore() {
-        this.qrCode = this.malformedQrCode;
-    }
 
     @When("L'operatore scansione il qrCode per recuperare gli atti")
     public void lOperatoreScansioneIlQrCodePerRecuperariGliAtti() {
@@ -364,5 +353,20 @@ public class RaddFsuSteps {
     }
 
 
+    @And("viene chiusa la transazione per il recupero degli aar")
+    public void vieneDichiarataCompletataLaTransazionePerIlRecuperoDegliAar() {
+        CompleteTransactionRequest completeTransactionRequest =
+                new CompleteTransactionRequest()
+                        .operationId(this.operationid)
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()));
+        this.completeTransactionResponse = raddFsuClient.completeAorTransaction(this.uid, completeTransactionRequest);
+        log.info("completeTransactionResponse: {}",completeTransactionResponse);
+    }
 
+    @And("la chiusura delle transazione per il recupero degli aar non genera errori")
+    public void laChiusuraDelleTransazionePerIlRecuperoDegliAarNonGeneraErrori() {
+        Assertions.assertNotNull(this.completeTransactionResponse);
+        Assertions.assertNotNull(this.completeTransactionResponse.getStatus());
+        Assertions.assertEquals(TransactionResponseStatus.CodeEnum.NUMBER_0,this.completeTransactionResponse.getStatus().getCode());
+    }
 }

@@ -160,7 +160,7 @@ Feature: Radd fsu
     When Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR utilizzando il precedente operationId
     Then l'operazione di download degli atti genera un errore "transazione già esistente o con stato completed o aborted" con codice 99
 
-  @radd #Dovrebbe andare in errore
+  @radd
   Scenario: [B2B_RADD_ACT-11] start transaction utilizzando il qr code di una transazione precedente con lo stesso IUN
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -177,7 +177,7 @@ Feature: Radd fsu
     And viene conclusa la visualizzati di atti ed attestazioni della notifica
     And vengono caricati i documento di identità del cittadino
     When Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR
-    Then l'operazione di download degli atti genera un errore "transazione già esistente o con stato completed o aborted" con codice 99
+    Then l'operazione di download degli atti genera un errore "Stampa già eseguita" con codice 99
 
   @radd @bugNoto
   Scenario: [B2B_RADD_AOR-1] inquiry per cittadino con molte notifiche in stato irreperibile
@@ -203,6 +203,7 @@ Feature: Radd fsu
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente
 
+
   @radd
   Scenario: [B2B_RADD_AOR-4] recupero atti per cittadino con notifiche in stato irreperibile
     Given viene generata una nuova notifica
@@ -219,6 +220,8 @@ Feature: Radd fsu
     And vengono caricati i documento di identità del cittadino
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile
     And il recupero degli aar in stato irreperibile si conclude correttamente
+    And viene chiusa la transazione per il recupero degli aar
+    And la chiusura delle transazione per il recupero degli aar non genera errori
 
   @radd
   Scenario: [B2B_RADD_AOR-5] start transaction aor senza effettuare upload documenti
