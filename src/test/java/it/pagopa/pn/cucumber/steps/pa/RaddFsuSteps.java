@@ -13,11 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-
 import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.generateRandomNumber;
 
@@ -101,22 +99,28 @@ public class RaddFsuSteps {
         }
     }
 
-    @When("Il cittadino Signor casuale chiede di verificare la presenza di notifiche")
-    public void ilCittadinoSignorCasualeChiedeDiVerificareLaPresenzaDiNotifiche() {
-        selectUser("Signor casuale");
-        this.aorInquiryResponse = raddFsuClient.aorInquiry(uid, this.currentUserCf, "PF");
-    }
+
 
     @Given("Il cittadino {string} mostra il QRCode {string}")
     public void ilCittadinoMostraIlQRCode(String cf, String qrCodeType) {
         selectUser(cf);
         qrCodeType = qrCodeType.toLowerCase();
         switch (qrCodeType) {
-            case "malformato" -> this.qrCode = malformedQrCode;
-            case "inesistente" -> this.qrCode = nonExistentQrCode;
+            case "malformato" -> {
+                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
+                this.qrCode = this.qrCode+"MALF";
+            }
+            case "inesistente" -> {
+                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
+                char toReplace = this.qrCode.charAt(0);
+                char replace = toReplace == 'B' ? 'C' : 'B';
+                this.qrCode = this.qrCode.replace(toReplace,replace);
+            }
             case "appartenente a terzo" -> {
-                if(defaultQrCodeCf.equalsIgnoreCase(cf))throw new IllegalArgumentException();
-                this.qrCode = qrCodeMNDLCU98T68C933T;
+                if(this.currentUserCf.equalsIgnoreCase(sharedSteps.getSentNotification().getRecipients().get(0).getTaxId())){
+                    throw new IllegalArgumentException();
+                }
+                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
             }
             case "corretto" -> {
                 vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
@@ -243,6 +247,7 @@ public class RaddFsuSteps {
     }
 
     private StartTransactionResponseStatus.CodeEnum getErrorCodeStartTransaction(int errorCode){
+        //return StartTransactionResponseStatus.CodeEnum.valueOf("NUMBER_"+errorCode);
         switch (errorCode){
             case 0 -> {
                 return StartTransactionResponseStatus.CodeEnum.NUMBER_0;
@@ -275,6 +280,12 @@ public class RaddFsuSteps {
         this.aorInquiryResponse = raddFsuClient.aorInquiry(uid, cf, "PF");
     }
 
+    @When("Il cittadino Signor casuale chiede di verificare la presenza di notifiche")
+    public void ilCittadinoSignorCasualeChiedeDiVerificareLaPresenzaDiNotifiche() {
+        selectUser("Signor casuale");
+        this.aorInquiryResponse = raddFsuClient.aorInquiry(uid, this.currentUserCf, "PF");
+    }
+
     @When("La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente")
     public void laVerificaAorMostraCorrettamenteLeNotificheInStatoIrreperibile() {
         Assertions.assertNotNull(this.aorInquiryResponse);
@@ -284,7 +295,7 @@ public class RaddFsuSteps {
         log.info("aorInquiryResponse: {}",this.aorInquiryResponse);
     }
 
-    @Then("Vengono recuperati gli atti delle notifiche in stato irreperibile")
+    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile")
     public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile() {
         this.operationid = generateRandomNumber();
         AorStartTransactionRequest aorStartTransactionRequest =
@@ -300,15 +311,58 @@ public class RaddFsuSteps {
         this.aorStartTransactionResponse = raddFsuClient.startAorTransaction(this.uid, aorStartTransactionRequest);
     }
 
-    @And("il recupero degli atti in stato irreperibile si conclude correttamente")
+    @And("il recupero degli aar in stato irreperibile si conclude correttamente")
     public void ilRecuperoDegliAttiInStatoIrreperibileSiConcludeCorrettamente() {
         log.info("aorStartTransactionResponse: {}",this.aorStartTransactionResponse);
+
+        Assertions.assertNotNull(this.aorStartTransactionResponse.getUrlList());
+        Assertions.assertFalse(this.aorStartTransactionResponse.getUrlList().isEmpty());
+        Assertions.assertNotNull(this.aorStartTransactionResponse.getStatus());
+        Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0,this.aorStartTransactionResponse.getStatus().getCode());
     }
 
-    @When("La verifica della presenza di notifiche in stato irreperibi genera un errore {string} con codice {int}")
-    public void laVerificaDellaPresenzaDiNotificheInStatoIrreperibiGeneraUnErroreConCodice(String errorDescription, int errorCode) {
+    @And("il recupero degli aar genera un errore {string} con codice {int}")
+    public void ilRecuperoDegliAarGeneraUnErroreConCodice(String errorType, int errorCode) {
+        log.info("aorStartTransactionResponse: {}",this.aorStartTransactionResponse);
+
+        errorType = errorType.toLowerCase();
+        StartTransactionResponseStatus.CodeEnum error = getErrorCodeStartTransaction(errorCode);
+
+        Assertions.assertNull(this.aorStartTransactionResponse.getUrlList());
+        Assertions.assertNotNull( this.aorStartTransactionResponse.getStatus());
+        Assertions.assertEquals(error,this.aorStartTransactionResponse.getStatus().getCode());
+        Assertions.assertNotNull(this.aorStartTransactionResponse.getStatus().getMessage());
+        Assertions.assertEquals(errorType,this.aorStartTransactionResponse.getStatus().getMessage().toLowerCase());
+    }
+
+    @When("La verifica della presenza di notifiche in stato irreperibile genera un errore {string} con codice {int}")
+    public void laVerificaDellaPresenzaDiNotificheInStatoIrreperibiGeneraUnErroreConCodice(String errorType, int errorCode) {
+        errorType = errorType.toLowerCase();
+        ResponseStatus.CodeEnum error = getAorErrorCode(errorCode);
+        switch (errorType) {
+            case "non ci sono notifiche non consegnate per questo codice fiscale" -> {
+                Assertions.assertEquals(false, this.aorInquiryResponse.getResult());
+                Assertions.assertNotNull( this.aorInquiryResponse.getStatus());
+                Assertions.assertEquals(error, this.aorInquiryResponse.getStatus().getCode());
+            }
+            default -> throw new IllegalArgumentException();
+        }
+
         log.info("aorInquiryResponse: {}",this.aorInquiryResponse);
     }
+
+    private ResponseStatus.CodeEnum getAorErrorCode(int errorCode){
+        switch (errorCode){
+            case 0 -> {
+                return ResponseStatus.CodeEnum.NUMBER_0;
+            }
+            case 99 -> {
+                return ResponseStatus.CodeEnum.NUMBER_99;
+            }
+            default -> throw new IllegalArgumentException();
+        }
+    }
+
 
 
 }
