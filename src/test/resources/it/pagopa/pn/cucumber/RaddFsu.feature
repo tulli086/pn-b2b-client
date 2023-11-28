@@ -203,7 +203,6 @@ Feature: Radd fsu
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente
 
-
   @radd
   Scenario: [B2B_RADD_AOR-4] recupero atti per cittadino con notifiche in stato irreperibile
     Given viene generata una nuova notifica
