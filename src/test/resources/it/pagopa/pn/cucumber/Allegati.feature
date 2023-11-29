@@ -165,6 +165,6 @@ Feature: Allegati notifica
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | legalFactsIds | [{"category": "RECIPIENT_ACCESS"}] |
-    And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
+    Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
       | details | NOT_NULL |
       | details_recIndex | 0 |
