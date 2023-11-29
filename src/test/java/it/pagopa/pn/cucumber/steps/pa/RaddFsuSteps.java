@@ -12,6 +12,9 @@ import it.pagopa.pn.cucumber.steps.SharedSteps;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpStatusCodeException;
+
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +42,9 @@ public class RaddFsuSteps {
     private AORInquiryResponse aorInquiryResponse;
     private CompleteTransactionResponse completeTransactionResponse;
     private PnPaB2bUtils.Pair<String,String> documentUploadResponse;
+
+    private HttpStatusCodeException documentUploadError;
+
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
@@ -310,6 +316,17 @@ public class RaddFsuSteps {
         Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0,this.aorStartTransactionResponse.getStatus().getCode());
     }
 
+    @And("il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti {int} aar")
+    public void ilRecuperoDegliAarInStatoIrreperibileSiConcludeCorrettamenteEVengonoRestituitiTuttiEGliAar(int aarNumber) {
+        log.info("aorStartTransactionResponse: {}",this.aorStartTransactionResponse);
+
+        Assertions.assertNotNull(this.aorStartTransactionResponse.getUrlList());
+        Assertions.assertEquals(this.aorStartTransactionResponse.getUrlList().size(),aarNumber);
+        Assertions.assertFalse(this.aorStartTransactionResponse.getUrlList().isEmpty());
+        Assertions.assertNotNull(this.aorStartTransactionResponse.getStatus());
+        Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0,this.aorStartTransactionResponse.getStatus().getCode());
+    }
+
     @And("il recupero degli aar genera un errore {string} con codice {int}")
     public void ilRecuperoDegliAarGeneraUnErroreConCodice(String errorType, int errorCode) {
         log.info("aorStartTransactionResponse: {}",this.aorStartTransactionResponse);
@@ -368,5 +385,35 @@ public class RaddFsuSteps {
         Assertions.assertNotNull(this.completeTransactionResponse);
         Assertions.assertNotNull(this.completeTransactionResponse.getStatus());
         Assertions.assertEquals(TransactionResponseStatus.CodeEnum.NUMBER_0,this.completeTransactionResponse.getStatus().getCode());
+    }
+
+
+    @Given("vengono caricati i documento di identità del cittadino senza {string}")
+    public void vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSenza(String without) {
+        String sha256;
+        try {
+            sha256 = pnPaB2bUtils.computeSha256( "classpath:/sample.pdf" );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        DocumentUploadRequest documentUploadRequest = new DocumentUploadRequest();
+        documentUploadRequest = without.equalsIgnoreCase("bundleId") ? documentUploadRequest : documentUploadRequest.bundleId("TEST");
+        documentUploadRequest = without.equalsIgnoreCase("contentType") ? documentUploadRequest : documentUploadRequest.checksum(sha256);
+        documentUploadRequest = without.equalsIgnoreCase("checksum") ? documentUploadRequest : documentUploadRequest.contentType("application/pdf");
+
+        try{
+            DocumentUploadResponse documentUploadResponse = raddFsuClient.documentUpload("1234556", documentUploadRequest);
+            log.debug("DocumentUploadResponse: {}",documentUploadResponse);
+        }catch(HttpStatusCodeException httpStatusCodeException){
+            log.debug("HttpStatusCodeException {}",httpStatusCodeException);
+            this.documentUploadError = httpStatusCodeException;
+        }
+    }
+
+    @Then("il caricamente ha prodotto une errore http {int}")
+    public void ilCaricamenteHaProdottoUneErroreHttp(int httpError) {
+        Assertions.assertNotNull(this.documentUploadError);
+        Assertions.assertEquals(this.documentUploadError.getStatusCode().value(),httpError);
     }
 }
