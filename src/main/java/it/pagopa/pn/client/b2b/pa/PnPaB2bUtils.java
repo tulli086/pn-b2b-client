@@ -1180,7 +1180,7 @@ public class PnPaB2bUtils {
         ).get(0);
     }
 
-    private String computeSha256( String resName ) throws IOException {
+    public String computeSha256( String resName ) throws IOException {
         Resource res = ctx.getResource( resName );
         return computeSha256( res );
     }
