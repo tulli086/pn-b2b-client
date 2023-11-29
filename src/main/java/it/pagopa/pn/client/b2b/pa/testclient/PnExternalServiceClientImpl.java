@@ -51,6 +51,8 @@ public class PnExternalServiceClientImpl {
     private final String safeStorageBasePath;
     private final String gruopInfoBasePath;
     private final String extChannelsBasePath;
+
+    private final String deliveryBasePath;
     private final String dataVaultBasePath;
 
 
@@ -82,6 +84,7 @@ public class PnExternalServiceClientImpl {
             @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
             @Value("${pn.webapi.external.base-url}") String basePathWebApi,
             @Value("${pn.externalChannels.base-url}") String extChannelsBasePath,
+            @Value("${pn.delivery.base-url}") String deliveryBasePath,
             @Value("${pn.dataVault.base-url}") String dataVaultBasePath,
             @Value("${pn.OpenSearch.base-url}") String openSearchBaseUrl,
             @Value("${pn.OpenSearch.username}") String openSearchUsername,
@@ -91,6 +94,7 @@ public class PnExternalServiceClientImpl {
         this.restTemplate = restTemplate;
         this.safeStorageBasePath = safeStorageBasePath;
         this.extChannelsBasePath = extChannelsBasePath;
+        this.deliveryBasePath = deliveryBasePath;
         this.dataVaultBasePath = dataVaultBasePath;
         this.gruopInfoBasePath = gruopInfoBasePath;
         this.basePathWebApi = basePathWebApi;
@@ -206,7 +210,7 @@ public class PnExternalServiceClientImpl {
 
         ParameterizedTypeReference<HashMap<String, String>> returnType = new ParameterizedTypeReference<>() {
         };
-        return invokeAPI(extChannelsBasePath, "/delivery-private/notifications/{iun}/quick-access-link-tokens", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
+        return invokeAPI(deliveryBasePath, "/delivery-private/notifications/{iun}/quick-access-link-tokens", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
     }
 
     public List<HashMap<String, String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType) throws RestClientException {
