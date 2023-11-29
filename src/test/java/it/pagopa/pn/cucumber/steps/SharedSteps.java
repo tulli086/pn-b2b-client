@@ -375,6 +375,7 @@ public class SharedSteps {
         }
 
         Assertions.assertTrue(completed);
+        Assertions.assertEquals(sentNotifications.size(),numberOfNotification);
         logger.debug("NOTIFICATION LIST: {}",sentNotifications);
         logger.debug("IUN: ");
         for(FullSentNotificationV21 notificationV21: sentNotifications){

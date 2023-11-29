@@ -310,6 +310,17 @@ public class RaddFsuSteps {
         Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0,this.aorStartTransactionResponse.getStatus().getCode());
     }
 
+    @And("il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti {int} aar")
+    public void ilRecuperoDegliAarInStatoIrreperibileSiConcludeCorrettamenteEVengonoRestituitiTuttiEGliAar(int aarNumber) {
+        log.info("aorStartTransactionResponse: {}",this.aorStartTransactionResponse);
+
+        Assertions.assertNotNull(this.aorStartTransactionResponse.getUrlList());
+        Assertions.assertEquals(this.aorStartTransactionResponse.getUrlList().size(),aarNumber);
+        Assertions.assertFalse(this.aorStartTransactionResponse.getUrlList().isEmpty());
+        Assertions.assertNotNull(this.aorStartTransactionResponse.getStatus());
+        Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0,this.aorStartTransactionResponse.getStatus().getCode());
+    }
+
     @And("il recupero degli aar genera un errore {string} con codice {int}")
     public void ilRecuperoDegliAarGeneraUnErroreConCodice(String errorType, int errorCode) {
         log.info("aorStartTransactionResponse: {}",this.aorStartTransactionResponse);
@@ -369,6 +380,7 @@ public class RaddFsuSteps {
         Assertions.assertNotNull(this.completeTransactionResponse.getStatus());
         Assertions.assertEquals(TransactionResponseStatus.CodeEnum.NUMBER_0,this.completeTransactionResponse.getStatus().getCode());
     }
+
 
 
 }
