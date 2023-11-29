@@ -158,7 +158,7 @@ Feature: Radd fsu
     And viene conclusa la visualizzati di atti ed attestazioni della notifica
     And vengono caricati i documento di identità del cittadino
     When Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR utilizzando il precedente operationId
-    Then l'operazione di download degli atti genera un errore "transazione già esistente o con stato completed o aborted" con codice 99
+    Then l'operazione di download degli atti genera un errore "stampa già eseguita" con codice 99
 
   @radd
   Scenario: [B2B_RADD_ACT-11] start transaction utilizzando il qr code di una transazione precedente con lo stesso IUN
@@ -179,15 +179,16 @@ Feature: Radd fsu
     When Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR
     Then l'operazione di download degli atti genera un errore "Stampa già eseguita" con codice 99
 
-  @radd @bugNoto
+  @radd
   Scenario: [B2B_RADD_AOR-1] inquiry per cittadino con molte notifiche in stato irreperibile
     Given Il cittadino "signor generato" chiede di verificare la presenza di notifiche
-    When La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99
+    Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99
 
   @radd @bugNoto
   Scenario: [B2B_RADD_AOR-2] inquiry per cittadino con molte notifiche in stato irreperibile
     Given Il cittadino "DVNLRD52D15M059P" chiede di verificare la presenza di notifiche
-    When La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente
+
 
   @radd
   Scenario: [B2B_RADD_AOR-3] inquiry per cittadino con notifiche in stato irreperibile
@@ -238,3 +239,10 @@ Feature: Radd fsu
     And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile
     And il recupero degli aar genera un errore "Documenti non disponibili" con codice 99
+
+
+  @radd
+  Scenario: [B2B_RADD_AOR-6] inquiry per cittadino con 10 notifiche in stato irreperibile
+    Given vengono inviate 11 notifiche per l'utente Signor casuale con il "Comune_Multi" e si aspetta fino allo stato COMPLETELY_UNREACHABLE
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente

@@ -369,4 +369,6 @@ public class RaddFsuSteps {
         Assertions.assertNotNull(this.completeTransactionResponse.getStatus());
         Assertions.assertEquals(TransactionResponseStatus.CodeEnum.NUMBER_0,this.completeTransactionResponse.getStatus().getCode());
     }
+
+
 }

@@ -23,6 +23,7 @@ import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.model.N
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.cucumber.utils.*;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
@@ -42,7 +43,9 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.COMPLETELY_UNREACHABLE;
 import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
@@ -280,6 +283,108 @@ public class SharedSteps {
         this.notificationRequestV2.addRecipientsItem(recipient);
     }
 
+    /*
+    Invio massivo di notifiche irreperibili utili per i test radd
+    TODO: migliorare e rendere di utilità generale
+     */
+    @Given("vengono inviate {int} notifiche per l'utente Signor casuale con il {string} e si aspetta fino allo stato COMPLETELY_UNREACHABLE")
+    public void vengonoInviateNotifichePerLUtenteSignorCasualeConIlESiAspettaFinoAlloStatoCOMPLETELY_UNREACHABLE(int numberOfNotification, String pa) {
+        List<NewNotificationRequestV21> notificationRequests = new LinkedList<>();
+        String generatedFiscalCode = generateCF(System.currentTimeMillis());
+        for(int i = 0; i < numberOfNotification; i++){
+            NewNotificationRequestV21 newNotificationRequestV21 = dataTableTypeUtil.convertNotificationRequest(new HashMap<>())
+                    .subject("notifica analogica con cucumber")
+                    .senderDenomination("Comune di palermo")
+                    .physicalCommunicationType(NewNotificationRequestV21.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
+
+            HashMap<String, String> notificationRecipientMap = new HashMap<>();
+            notificationRecipientMap.put("digitalDomicile","NULL");
+            notificationRecipientMap.put("physicalAddress_address","Via NationalRegistries @fail-Irreperibile_AR");
+            NotificationRecipientV21 notificationRecipientV21 = dataTableTypeUtil.convertNotificationRecipient(notificationRecipientMap);
+            addRecipientToNotification(newNotificationRequestV21,
+                    (notificationRecipientV21
+                            .denomination("signor RaddCasuale")
+                            .taxId(generatedFiscalCode)
+                            .recipientType(NotificationRecipientV21.RecipientTypeEnum.PF)),
+                    notificationRecipientMap);
+
+
+            this.notificationRequest = newNotificationRequestV21;
+            selectPA(pa);
+            setSenderTaxIdFromProperties();
+
+            notificationRequests.add(newNotificationRequestV21);
+        }//for
+
+        List<Thread> threadList = new LinkedList<>();
+        ConcurrentLinkedQueue<FullSentNotificationV21> sentNotifications = new ConcurrentLinkedQueue<>();
+
+        for(NewNotificationRequestV21 notification: notificationRequests){
+
+            Thread t = new Thread(() -> {
+                //INVIO NOTIFICA ED ATTESA ACCEPTED
+                NewNotificationResponse internalNotificationResponse = Assertions.assertDoesNotThrow(()->b2bUtils.uploadNotification(notification));
+                try {
+                    Thread.sleep(getWait());
+                } catch (InterruptedException e) {
+                    logger.error("Thread.sleep error retry");
+                    throw new RuntimeException(e);
+                }
+                FullSentNotificationV21 fullSentNotificationV21 = b2bUtils.waitForRequestAcceptation(internalNotificationResponse);
+                Assertions.assertNotNull(fullSentNotificationV21);
+
+                //ATTESA ELEMENTO DI TIMELINE
+                TimelineElementV20 timelineElementV20 = null;
+                for (int i = 0; i < 33; i++) {
+                    try {
+                        Thread.sleep(getWorkFlowWait());
+                    } catch (InterruptedException exc) {
+                        throw new RuntimeException(exc);
+                    }
+                    fullSentNotificationV21 = b2bClient.getSentNotification(fullSentNotificationV21.getIun());
+                    logger.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV21.getTimeline());
+                    timelineElementV20 = fullSentNotificationV21.getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.COMPLETELY_UNREACHABLE)).findAny().orElse(null);
+                    if (timelineElementV20 != null) {
+                        break;
+                    }
+                }
+                Assertions.assertNotNull(timelineElementV20);
+                sentNotifications.add(fullSentNotificationV21);
+            });
+
+            threadList.add(t);
+            t.start();
+        }
+        int attempts = 0;
+        boolean completed = false;
+
+        while(attempts < 50){
+            try {
+                Thread.sleep(getWorkFlowWait());
+            } catch (InterruptedException e) { throw new RuntimeException(e); }
+            int counter = 0;
+            for(Thread thread: threadList){
+                if(!thread.isAlive())counter++;
+            }
+            if(counter == threadList.size()){
+                completed = true;
+                break;
+            }else{
+                attempts++;
+            }
+        }
+
+        Assertions.assertTrue(completed);
+        logger.debug("NOTIFICATION LIST: {}",sentNotifications);
+        logger.debug("IUN: ");
+        for(FullSentNotificationV21 notificationV21: sentNotifications){
+            logger.info(notificationV21.getIun());
+        }
+        logger.debug("End IUN list");
+        //la prima notifica viene inserita
+        this.notificationResponseComplete = sentNotifications.poll();
+        logger.debug("notificationResponseComplete: {}",this.notificationResponseComplete);
+    }
 
     @And("destinatario Mario Cucumber")
     public void destinatarioMarioCucumber() {
@@ -1986,5 +2091,6 @@ public class SharedSteps {
             return null;
         }
     }
+
 
 }
