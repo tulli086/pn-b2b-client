@@ -12,6 +12,7 @@ import it.pagopa.pn.cucumber.steps.SharedSteps;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -49,6 +50,8 @@ public class RaddFsuSteps {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
 
+    private final String oldNotificationCLMCST42R12D969Z;
+
     @Autowired
     public RaddFsuSteps(IPnRaddFsuClientImpl raddFsuClient,PnExternalServiceClientImpl externalServiceClient,
                         PnPaB2bUtils pnPaB2bUtils, SharedSteps sharedSteps) {
@@ -56,7 +59,7 @@ public class RaddFsuSteps {
         this.externalServiceClient = externalServiceClient;
         this.sharedSteps = sharedSteps;
         this.pnPaB2bUtils = pnPaB2bUtils;
-
+        this.oldNotificationCLMCST42R12D969Z = "DTGT-LTQP-PXHP-202307-Y-1";
     }
 
 
@@ -95,6 +98,12 @@ public class RaddFsuSteps {
     }
 
 
+    @Given("Il cittadino Mario Cucumber mostra il QRCode relativo alla vecchia notifica")
+    public void ilCittadinoMarioCucumberMostraIlQRCodeRelativoAllaNotificaPiùVecchiaDiGiorni() {
+        selectUser("MARIO CUCUMBER");
+        System.out.println("NOTIFICATION: "+oldNotificationCLMCST42R12D969Z);
+        vieneRichiestoIlCodiceQRPerLoIUN(oldNotificationCLMCST42R12D969Z);
+    }
 
     @Given("Il cittadino {string} mostra il QRCode {string}")
     public void ilCittadinoMostraIlQRCode(String cf, String qrCodeType) {
@@ -416,4 +425,6 @@ public class RaddFsuSteps {
         Assertions.assertNotNull(this.documentUploadError);
         Assertions.assertEquals(this.documentUploadError.getStatusCode().value(),httpError);
     }
+
+
 }

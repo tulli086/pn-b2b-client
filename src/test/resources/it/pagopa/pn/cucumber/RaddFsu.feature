@@ -194,6 +194,12 @@ Feature: Radd fsu
     When Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR
     Then l'operazione di download degli atti genera un errore "Stampa già eseguita" con codice 99
 
+  @radd #TODO: il messaggio di errore dovrebbe essere diverso 2 -> Documenti non più disponibili
+  Scenario: [B2B_RADD_ACT-12] inquiry act con notifica più vecchia di 120 giorni
+    Given Il cittadino Mario Cucumber mostra il QRCode relativo alla vecchia notifica
+    When L'operatore scansione il qrCode per recuperare gli atti
+    Then Viene restituito un messaggio di errore "QrCode non valido" con codice di errore 1
+
   @radd
   Scenario: [B2B_RADD_AOR-1] inquiry per cittadino con molte notifiche in stato irreperibile
     Given Il cittadino "signor generato" chiede di verificare la presenza di notifiche
@@ -203,7 +209,6 @@ Feature: Radd fsu
   Scenario: [B2B_RADD_AOR-2] inquiry per cittadino con molte notifiche in stato irreperibile
     Given Il cittadino "DVNLRD52D15M059P" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente
-
 
   @radd
   Scenario: [B2B_RADD_AOR-3] inquiry per cittadino con notifiche in stato irreperibile
