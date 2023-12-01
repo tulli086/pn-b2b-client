@@ -195,7 +195,7 @@ Feature: Radd fsu
     Then l'operazione di download degli atti genera un errore "Stampa già eseguita" con codice 99
 
   @radd
-  Scenario: [B2B_RADD_AOR-1] inquiry per cittadino con molte notifiche in stato irreperibile
+  Scenario: [B2B_RADD_AOR-1] inquiry per cittadino con nessuna notifica in stato irreperibile
     Given Il cittadino "signor generato" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99
 
@@ -265,3 +265,14 @@ Feature: Radd fsu
     And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 49 aar
     And viene chiusa la transazione per il recupero degli aar
     And la chiusura delle transazione per il recupero degli aar non genera errori
+
+  @radd
+  Scenario: [B2B_RADD_AOR-7] inquiry per cittadino con nessuna notifica in stato irreperibile e notifica consegnata
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Signor casuale
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99
