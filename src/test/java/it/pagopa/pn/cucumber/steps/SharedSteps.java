@@ -970,6 +970,18 @@ public class SharedSteps {
         sendNotificationRefused();
     }
 
+    /*
+    TODO: per test normalizzatore
+     */
+    @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi HTTP_ERROR")
+    public void laNotificaVieneInviataHttpError(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationWithError();
+        Assertions.assertNotNull(this.notificationError);
+        Assertions.assertEquals(this.notificationError.getStatusCode().value(),400);
+    }
+
     @When("la notifica viene inviata tramite api b2b senza preload allegato dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataSenzaPreloadAllegato(String paType) {
         selectPA(paType);

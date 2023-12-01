@@ -1241,6 +1241,7 @@ public class InvioNotificheB2bSteps {
             });
             Assertions.assertNotNull(paymentResponse);
 
+            System.out.println(paymentResponse);
         } catch (AssertionFailedError assertionFailedError) {
 
             String message = assertionFailedError.getMessage() +
@@ -1418,4 +1419,43 @@ public class InvioNotificheB2bSteps {
         }
     }
 
+    @And("Si effettua la chiamata su external-reg per ricevere l'url di checkout con noticeCode {string} e creditorTaxId {string}")
+    public void siEffettuaLaChiamataSuExternalRegPerRicevereLUrlDiCheckoutConNoticeCodeECreditorTaxId(String noticeCode, String creditorTaxId) {
+
+        PaymentInfoRequest paymentInfoRequest = new PaymentInfoRequest()
+                .creditorTaxId(creditorTaxId)
+                .noticeCode(noticeCode);
+
+        List<PaymentInfoV21> getPaymentInfoV21 = Assertions.assertDoesNotThrow(() -> pnPaymentInfoClient.getPaymentInfoV21(Collections.singletonList(paymentInfoRequest)));
+
+        PaymentRequest paymentRequest= new PaymentRequest();
+        PaymentNotice paymentNotice= new PaymentNotice();
+
+        paymentNotice.noticeNumber( noticeCode);
+        paymentNotice.fiscalCode(creditorTaxId);
+        paymentNotice.companyName("Test Automation");
+
+        System.out.println("COSTO NOTIFICA: "+getPaymentInfoV21.get(0).getAmount());
+
+        paymentNotice.amount(getPaymentInfoV21.get(0).getAmount());
+        paymentNotice.description("Test Automation Desk");
+        paymentRequest.paymentNotice(paymentNotice);
+        paymentRequest.returnUrl("https://api.uat.platform.pagopa.it");
+
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                paymentResponse = pnPaymentInfoClient.checkoutCart(paymentRequest);
+                logger.info("Risposta recupero posizione debitoria: " + paymentResponse.toString());
+            });
+            Assertions.assertNotNull(paymentResponse);
+
+            System.out.println(paymentResponse);
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
+        }
+
+    }
 }

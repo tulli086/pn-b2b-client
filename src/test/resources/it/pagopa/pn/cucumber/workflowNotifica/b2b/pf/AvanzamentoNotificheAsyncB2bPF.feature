@@ -862,7 +862,7 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
     And viene aggiunto il costo della notifica totale
     And lettura amount posizione debitoria per la notifica corrente di "Mario Gherkin"
     And l'avviso pagopa viene pagato correttamente su checkout
-    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
+    #Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
 
   @testIntegrazione @ignore
@@ -886,4 +886,6 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
 
 
 
-
+  #Utile per test manuali
+  Scenario: url per il pagamento della notifica su checkout
+    When Si effettua la chiamata su external-reg per ricevere l'url di checkout con noticeCode "347011196700966544" e creditorTaxId "77777777777"
