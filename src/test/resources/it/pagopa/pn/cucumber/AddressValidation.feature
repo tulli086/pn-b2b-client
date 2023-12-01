@@ -21,7 +21,7 @@ Feature: address validation feature
     Examples:
       | denomination           | at           | address                                             | addressDetails  | zip     | municipality                  | municipalityDetails | province  | foreignState  | notificationValidationStatus  |
       | TEST_NORMALIZZATORE_01 | NULL         | Via Rodolfo de Novà 1                               | NULL            | 00173   | roma                          | NULL                | RM        | italia        | ACCEPTED                      |
-      | TEST_NORMALIZZATORE_02 | NULL         | VIA FIUME N° 16/A                                   | NULL            | 97013   | COMISO                        | NULL                | NULL      | NULL          | HTTP_ERROR                    |
+      | TEST_NORMALIZZATORE_02 | NULL         | VIA FIUME N° 16/A                                   | NULL            | 97013   | COMISO                        | NULL                | RG        | NULL          | ACCEPTED                      |
       | TEST_NORMALIZZATORE_03 | NULL         | EPASA-ITAC                                          | NULL            | NULL    | marotta@cert.epasa-itaco      | NULL                | it        | NULL          | REFUSED                       |
       | TEST_NORMALIZZATORE_04 | NULL         | VIA DON DINO BIANCARDI,60                           | NULL            | 46030   | SUSTINENTE                    | NULL                | NULL      | NULL          | HTTP_ERROR                    |
       | TEST_NORMALIZZATORE_05 | NULL         | VIA REPUBBLICA,57                                   | NULL            | 20843   | VERANO B                      | NULL                | ZA        | NULL          | ACCEPTED                      |
@@ -69,4 +69,4 @@ Feature: address validation feature
       | TEST_NORMALIZZATORE_47 | NULL         | VIA MOLINI 2                                        | NULL            | 37069   | VILLAFRANCA                   | NULL                | NULL      | NULL          | HTTP_ERROR                    |
       | TEST_NORMALIZZATORE_48 | NULL         | VIA MOLINI 2                                        | NULL            | 37062   | VILLAFRANCA                   | NULL                | NULL      | NULL          | HTTP_ERROR                    |
       | TEST_NORMALIZZATORE_49 | NULL         | VIA MOLINI 2                                        | NULL            | 37062   | DOSSOBUONO                    | NULL                | NULL      | NULL          | HTTP_ERROR                    |
-      
+      | TEST_NORMALIZZATORE_50 | NULL         | VIA EURIALO N^47 IN.6                               | NULL            | 00100   | ROMA                          | NULL                | RM        | italia        | ACCEPTED                      |
