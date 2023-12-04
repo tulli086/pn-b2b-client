@@ -4,14 +4,20 @@ package it.pagopa.pn.client.b2b.pa.impl;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.ApiClient;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api.*;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.testclient.InteropTokenRefresh;
 import it.pagopa.pn.client.b2b.pa.testclient.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.api.NotificationProcessCostApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationProcessCostResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -22,7 +28,10 @@ import static it.pagopa.pn.client.b2b.pa.testclient.InteropTokenSingleton.ENEBLE
 @Component()
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ConditionalOnProperty( name = IPnPaB2bClient.IMPLEMENTATION_TYPE_PROPERTY, havingValue = "external", matchIfMissing = true)
-public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
+@Slf4j
+@EnableScheduling
+@EnableAsync
+public class PnPaB2bExternalClientImpl implements IPnPaB2bClient, InteropTokenRefresh {
 
 
     private final ApplicationContext ctx;
@@ -81,8 +90,6 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
             this.bearerTokenInterop = interopTokenSingleton.getTokenInterop();
         }
-
-
         this.newNotificationApi = new NewNotificationApi( newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop) );
         this.newNotificationApiV1 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v1.NewNotificationApi( newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop) );
         this.newNotificationApiV2 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v2.NewNotificationApi( newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop) );
@@ -98,10 +105,12 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
         this.notificationCancellationApi = new NotificationCancellationApi(newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop));
 
         this.interopTokenSingleton = interopTokenSingleton;
-
     }
 
-    private void refreshTokenInteropClient(){
+    @Async
+    @Scheduled(cron = "0 0/01 * * * ?")
+    public void refreshTokenInteropClient(){
+        log.debug("Attempt refresh");
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
             this.bearerTokenInterop = interopTokenSingleton.getTokenInterop();
 
@@ -205,168 +214,126 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
     }
 
     public NotificationAttachmentDownloadMetadataResponse getSentNotificationDocument(String iun, Integer docidx) {
-        refreshTokenInteropClient();
         return senderReadB2BApi.retrieveSentNotificationDocument(iun, docidx);
     }
 
-
     public  it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationAttachmentDownloadMetadataResponse getSentNotificationDocumentV1(String iun, Integer docidx) {
-        refreshTokenInteropClient();
         return senderReadB2BApiV1.retrieveSentNotificationDocument(iun, docidx);
     }
 
     public  it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationAttachmentDownloadMetadataResponse getSentNotificationDocumentV2(String iun, Integer docidx) {
-        refreshTokenInteropClient();
         return senderReadB2BApiV2.retrieveSentNotificationDocument(iun, docidx);
     }
 
     public NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachment(String iun, Integer recipientIdx, String attachname, Integer attachmentIdx) {
-        refreshTokenInteropClient();
         return senderReadB2BApi.retrieveSentNotificationAttachment(iun, recipientIdx, attachname,attachmentIdx);
     }
 
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachmentV1(String iun, Integer recipientIdx, String attachmentName) {
-        refreshTokenInteropClient();
         return senderReadB2BApiV1.retrieveSentNotificationAttachment(iun, recipientIdx, attachmentName);
     }
 
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachmentV2(String iun, Integer recipientIdx, String attachmentName) {
-        refreshTokenInteropClient();
         return senderReadB2BApiV2.retrieveSentNotificationAttachment(iun, recipientIdx, attachmentName);
     }
 
     public LegalFactDownloadMetadataResponse getLegalFact(String iun, LegalFactCategory legalFactType, String legalFactId) {
-        refreshTokenInteropClient();
         return legalFactsApi.retrieveLegalFact(iun, legalFactType, legalFactId);
     }
 
     public LegalFactDownloadMetadataResponse getDownloadLegalFact(String iun,  String legalFactId) {
-        refreshTokenInteropClient();
         return legalFactsApi.downloadLegalFactById(iun,  legalFactId);
     }
 
     public LegalFactDownloadMetadataResponse getDownloadLegalFact(String iun, LegalFactCategory legalFactType, String legalFactId) {
-        refreshTokenInteropClient();
         return legalFactsApi.downloadLegalFactById(iun, legalFactId);
     }
 
     @Override
     public NotificationPriceResponse getNotificationPrice(String paTaxId, String noticeCode) throws RestClientException {
-        refreshTokenInteropClient();
         return this.notificationPriceApi.retrieveNotificationPrice(paTaxId,noticeCode);
     }
 
     public NotificationProcessCostResponse getNotificationProcessCost(String iun, Integer recipientIndex, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy notificationFeePolicy, Boolean applyCost, Integer paFee) throws RestClientException {
-        refreshTokenInteropClient();
         return this.notificationProcessCostApi.notificationProcessCost(iun, recipientIndex, notificationFeePolicy, applyCost, paFee);
     }
 
-
-
     public List<PreLoadResponse> presignedUploadRequest(List<PreLoadRequest> preLoadRequest) {
-        refreshTokenInteropClient();
         return newNotificationApi.presignedUploadRequest( preLoadRequest );
     }
 
     public NewNotificationResponse sendNewNotification(NewNotificationRequestV21 newNotificationRequest) {
-        refreshTokenInteropClient();
         return newNotificationApi.sendNewNotificationV21( newNotificationRequest );
     }
 
-
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse sendNewNotificationV1(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequest newNotificationRequest) {
-        refreshTokenInteropClient();
         return newNotificationApiV1.sendNewNotification( newNotificationRequest );
     }
 
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationResponse sendNewNotificationV2(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequest newNotificationRequest) {
-        refreshTokenInteropClient();
         return newNotificationApiV2.sendNewNotification( newNotificationRequest );
     }
 
-
-
-
-
     @Override
     public FullSentNotificationV21 getSentNotification(String iun) {
-
-        refreshTokenInteropClient();
         return senderReadB2BApi.retrieveSentNotificationV21( iun );
     }
 
-
-
     @Override
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20 getSentNotificationV2(String iun) {
-        refreshTokenInteropClient();
         return senderReadB2BApiV2.retrieveSentNotificationV20( iun );
     }
 
     @Override
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification getSentNotificationV1(String iun) {
-        refreshTokenInteropClient();
         return senderReadB2BApiV1.retrieveSentNotification( iun );
     }
 
-
     @Override
     public NewNotificationRequestStatusResponseV21 getNotificationRequestStatus(String notificationRequestId) {
-        refreshTokenInteropClient();
         return senderReadB2BApi.retrieveNotificationRequestStatusV21( notificationRequestId, null, null );
     }
 
     @Override
     public  it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequestStatusResponse getNotificationRequestStatusV1(String notificationRequestId) {
-        refreshTokenInteropClient();
         return senderReadB2BApiV1.retrieveNotificationRequestStatus( notificationRequestId, null, null );
     }
 
     @Override
     public  it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequestStatusResponse getNotificationRequestStatusV2(String notificationRequestId) {
-        refreshTokenInteropClient();
         return senderReadB2BApiV2.retrieveNotificationRequestStatus( notificationRequestId, null, null );
     }
 
-
-
     @Override
     public NewNotificationRequestStatusResponseV21 getNotificationRequestStatusAllParam(String notificationRequestId, String paProtocolNumber, String idempotenceToken) {
-        refreshTokenInteropClient();
         return senderReadB2BApi.retrieveNotificationRequestStatusV21(notificationRequestId,paProtocolNumber,idempotenceToken);
     }
 
     @Override
     public void paymentEventsRequestPagoPa(PaymentEventsRequestPagoPa paymentEventsRequestPagoPa) throws RestClientException {
-        refreshTokenInteropClient();
         this.paymentEventsApi.paymentEventsRequestPagoPaWithHttpInfo(paymentEventsRequestPagoPa);
     }
 
     @Override
     public void paymentEventsRequestPagoPaV1(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.PaymentEventsRequestPagoPa paymentEventsRequestPagoPa) throws RestClientException {
-        refreshTokenInteropClient();
         this.paymentEventsApiV1.paymentEventsRequestPagoPaWithHttpInfo(paymentEventsRequestPagoPa);
     }
 
     @Override
     public void paymentEventsRequestPagoPaV2(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.PaymentEventsRequestPagoPa paymentEventsRequestPagoPa) throws RestClientException {
-        refreshTokenInteropClient();
         this.paymentEventsApiV2.paymentEventsRequestPagoPaWithHttpInfo(paymentEventsRequestPagoPa);
     }
 
     @Override
     public void paymentEventsRequestF24(PaymentEventsRequestF24 paymentEventsRequestF24) throws RestClientException {
-        refreshTokenInteropClient();
         this.paymentEventsApi.paymentEventsRequestF24WithHttpInfo(paymentEventsRequestF24);
     }
 
     @Override
     public RequestStatus notificationCancellation(String iun) throws RestClientException {
-        refreshTokenInteropClient();
         RequestStatus status = this.notificationCancellationApi.notificationCancellation(iun);
         return status;
     }
-
 
 
 }

@@ -291,13 +291,11 @@ public class PnExternalServiceClientImpl {
             headerParams.add("Authorization","Bearer "+ interopTokenSingleton.getTokenInterop());
         }
 
-
         final String[] localVarAccepts = {
                 "application/json", "application/problem+json"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
-
 
         ParameterizedTypeReference<List<HashMap<String, String>>> returnType = new ParameterizedTypeReference<>() {
         };

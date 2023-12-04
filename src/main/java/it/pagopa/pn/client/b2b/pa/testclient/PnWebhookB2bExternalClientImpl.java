@@ -5,6 +5,7 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.api.EventsApi;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.api.StreamsApi;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +14,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,7 +30,10 @@ import static it.pagopa.pn.client.b2b.pa.testclient.InteropTokenSingleton.ENEBLE
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
+@Slf4j
+@EnableScheduling
+@EnableAsync
+public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient, InteropTokenRefresh {
 
     private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
@@ -74,7 +82,10 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
     }
 
 
-    private void refreshTokenInteropClient(){
+    @Async
+    @Scheduled(cron = "0 0/01 * * * ?")
+    public void refreshTokenInteropClient(){
+        log.debug("Attempt refresh");
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
             this.bearerTokenInterop = interopTokenSingleton.getTokenInterop();
 
@@ -95,38 +106,31 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
 
 
     public StreamMetadataResponse createEventStream(StreamCreationRequest streamCreationRequest){
-        refreshTokenInteropClient();
         return this.streamsApi.createEventStream(streamCreationRequest);
     }
 
     public void deleteEventStream(UUID streamId){
-        refreshTokenInteropClient();
         this.streamsApi.removeEventStream(streamId);
     }
 
     public StreamMetadataResponse getEventStream(UUID streamId){
-        refreshTokenInteropClient();
         return this.streamsApi.retrieveEventStream(streamId);
     }
 
     public List<StreamListElement> listEventStreams(){
-        refreshTokenInteropClient();
         return this.streamsApi.listEventStreams();
     }
 
     public StreamMetadataResponse updateEventStream(UUID streamId, StreamCreationRequest streamCreationRequest){
-        refreshTokenInteropClient();
         return this.streamsApi.updateEventStream(streamId,streamCreationRequest);
     }
 
     public List<ProgressResponseElement> consumeEventStream(UUID streamId, String lastEventId){
-        refreshTokenInteropClient();
         return this.eventsApi.consumeEventStream(streamId,lastEventId);
     }
 
     @Override
     public ResponseEntity<List<ProgressResponseElement>> consumeEventStreamHttp(UUID streamId, String lastEventId) {
-        refreshTokenInteropClient();
         return this.eventsApi.consumeEventStreamWithHttpInfo(streamId,lastEventId);
     }
 
