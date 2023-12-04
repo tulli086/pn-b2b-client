@@ -14,8 +14,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -31,7 +29,6 @@ import static it.pagopa.pn.client.b2b.pa.testclient.InteropTokenSingleton.ENEBLE
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-@EnableAsync
 public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient, InteropTokenRefresh {
 
     private final ApplicationContext ctx;
@@ -81,7 +78,6 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient, Inte
     }
 
 
-    @Async
     @Scheduled(cron = "* * * * * ?")
     public void refreshTokenInteropClient(){
         //log.info("Attempt refresh interop token");

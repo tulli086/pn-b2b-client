@@ -14,8 +14,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,7 +27,6 @@ import static it.pagopa.pn.client.b2b.pa.testclient.InteropTokenSingleton.ENEBLE
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ConditionalOnProperty( name = IPnPaB2bClient.IMPLEMENTATION_TYPE_PROPERTY, havingValue = "external", matchIfMissing = true)
 @Slf4j
-@EnableAsync
 public class PnPaB2bExternalClientImpl implements IPnPaB2bClient, InteropTokenRefresh {
 
 
@@ -106,7 +103,7 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient, InteropTokenRe
         this.interopTokenSingleton = interopTokenSingleton;
     }
 
-    @Async
+
     @Scheduled(cron = "* * * * * ?")
     public void refreshTokenInteropClient(){
         //log.info("Attempt refresh interop token");
