@@ -29,7 +29,7 @@ import static it.pagopa.pn.client.b2b.pa.testclient.InteropTokenSingleton.ENEBLE
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient, InteropTokenRefresh {
+public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
 
     private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
@@ -78,13 +78,12 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient, Inte
     }
 
 
-    @Scheduled(cron = "* * * * * ?")
-    public void refreshTokenInteropClient(){
-        //log.info("Attempt refresh interop token");
+    //@Scheduled(cron = "* * * * * ?")
+    public void refreshAndSetTokenInteropClient(){
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
             String tokenInterop = interopTokenSingleton.getTokenInterop();
             if(!tokenInterop.equals(this.bearerTokenInterop)){
-                log.info("refresh interop token");
+                log.info("webhookClient call interopTokenSingleton");
                 this.bearerTokenInterop = tokenInterop;
                 this.eventsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
                 this.streamsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
@@ -104,31 +103,38 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient, Inte
 
 
     public StreamMetadataResponse createEventStream(StreamCreationRequest streamCreationRequest){
+        refreshAndSetTokenInteropClient();
         return this.streamsApi.createEventStream(streamCreationRequest);
     }
 
     public void deleteEventStream(UUID streamId){
+        refreshAndSetTokenInteropClient();
         this.streamsApi.removeEventStream(streamId);
     }
 
     public StreamMetadataResponse getEventStream(UUID streamId){
+        refreshAndSetTokenInteropClient();
         return this.streamsApi.retrieveEventStream(streamId);
     }
 
     public List<StreamListElement> listEventStreams(){
+        refreshAndSetTokenInteropClient();
         return this.streamsApi.listEventStreams();
     }
 
     public StreamMetadataResponse updateEventStream(UUID streamId, StreamCreationRequest streamCreationRequest){
+        refreshAndSetTokenInteropClient();
         return this.streamsApi.updateEventStream(streamId,streamCreationRequest);
     }
 
     public List<ProgressResponseElement> consumeEventStream(UUID streamId, String lastEventId){
+        refreshAndSetTokenInteropClient();
         return this.eventsApi.consumeEventStream(streamId,lastEventId);
     }
 
     @Override
     public ResponseEntity<List<ProgressResponseElement>> consumeEventStreamHttp(UUID streamId, String lastEventId) {
+        refreshAndSetTokenInteropClient();
         return this.eventsApi.consumeEventStreamWithHttpInfo(streamId,lastEventId);
     }
 
