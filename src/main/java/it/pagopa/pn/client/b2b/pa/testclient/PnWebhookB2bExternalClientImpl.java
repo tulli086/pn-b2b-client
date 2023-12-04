@@ -87,10 +87,13 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient, Inte
     public void refreshTokenInteropClient(){
         log.debug("Attempt refresh");
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
-            this.bearerTokenInterop = interopTokenSingleton.getTokenInterop();
+            String tokenInterop = interopTokenSingleton.getTokenInterop();
+            if(!tokenInterop.equals(this.bearerTokenInterop)){
+                this.bearerTokenInterop = tokenInterop;
+                this.eventsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.streamsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+            }
 
-            this.eventsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.streamsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
         }
     }
 

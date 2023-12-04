@@ -112,21 +112,24 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient, InteropTokenRe
     public void refreshTokenInteropClient(){
         log.debug("Attempt refresh");
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
-            this.bearerTokenInterop = interopTokenSingleton.getTokenInterop();
+            String tokenInterop = interopTokenSingleton.getTokenInterop();
+            if(!tokenInterop.equals(this.bearerTokenInterop)){
+                this.bearerTokenInterop = tokenInterop;
+                this.newNotificationApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.newNotificationApiV1.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.newNotificationApiV2.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.senderReadB2BApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.senderReadB2BApiV1.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.senderReadB2BApiV2.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.legalFactsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.notificationPriceApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.notificationProcessCostApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.paymentEventsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.paymentEventsApiV1.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.paymentEventsApiV2.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.notificationCancellationApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+            }
 
-            this.newNotificationApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.newNotificationApiV1.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.newNotificationApiV2.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.senderReadB2BApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.senderReadB2BApiV1.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.senderReadB2BApiV2.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.legalFactsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.notificationPriceApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.notificationProcessCostApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.paymentEventsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.paymentEventsApiV1.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.paymentEventsApiV2.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-            this.notificationCancellationApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
         }
     }
 
