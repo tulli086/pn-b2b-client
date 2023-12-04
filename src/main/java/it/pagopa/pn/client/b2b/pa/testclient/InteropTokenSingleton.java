@@ -1,6 +1,7 @@
 package it.pagopa.pn.client.b2b.pa.testclient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
@@ -21,7 +22,7 @@ public class InteropTokenSingleton {
 
     public final static String ENEBLED_INTEROP = "true";
     private static String tokenInterop;
-    private OffsetDateTime tokenCreationDate;
+    private static OffsetDateTime tokenCreationDate;
     private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
     private final String clientAssertion;
@@ -45,12 +46,13 @@ public class InteropTokenSingleton {
         this.interopClientId = interopClientId;
     }
 
+    @Synchronized
     public String getTokenInterop(){
-        if(tokenInterop != null && (Duration.between(tokenCreationDate, OffsetDateTime.now()).getSeconds() < (60*5)) ){
+        if(tokenInterop != null && (Duration.between(tokenCreationDate, OffsetDateTime.now()).getSeconds() <= (60*7)) ){
             return tokenInterop;
         }else{
-            this.tokenInterop = getBearerToken();
-            this.tokenCreationDate = OffsetDateTime.now();
+            tokenInterop = getBearerToken();
+            tokenCreationDate = OffsetDateTime.now();
             return tokenInterop;
         }
     }

@@ -29,7 +29,6 @@ import static it.pagopa.pn.client.b2b.pa.testclient.InteropTokenSingleton.ENEBLE
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ConditionalOnProperty( name = IPnPaB2bClient.IMPLEMENTATION_TYPE_PROPERTY, havingValue = "external", matchIfMissing = true)
 @Slf4j
-@EnableScheduling
 @EnableAsync
 public class PnPaB2bExternalClientImpl implements IPnPaB2bClient, InteropTokenRefresh {
 
@@ -108,12 +107,13 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient, InteropTokenRe
     }
 
     @Async
-    @Scheduled(cron = "0 0/01 * * * ?")
+    @Scheduled(cron = "* * * * * ?")
     public void refreshTokenInteropClient(){
-        log.debug("Attempt refresh");
+        log.info("Attempt refresh interop token");
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
             String tokenInterop = interopTokenSingleton.getTokenInterop();
             if(!tokenInterop.equals(this.bearerTokenInterop)){
+                log.info("refresh interop token");
                 this.bearerTokenInterop = tokenInterop;
                 this.newNotificationApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
                 this.newNotificationApiV1.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);

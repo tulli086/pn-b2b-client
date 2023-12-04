@@ -31,7 +31,6 @@ import static it.pagopa.pn.client.b2b.pa.testclient.InteropTokenSingleton.ENEBLE
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-@EnableScheduling
 @EnableAsync
 public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient, InteropTokenRefresh {
 
@@ -83,17 +82,17 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient, Inte
 
 
     @Async
-    @Scheduled(cron = "0 0/01 * * * ?")
+    @Scheduled(cron = "* * * * * ?")
     public void refreshTokenInteropClient(){
-        log.debug("Attempt refresh");
+        log.info("Attempt refresh interop token");
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
             String tokenInterop = interopTokenSingleton.getTokenInterop();
             if(!tokenInterop.equals(this.bearerTokenInterop)){
+                log.info("refresh interop token");
                 this.bearerTokenInterop = tokenInterop;
                 this.eventsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
                 this.streamsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
             }
-
         }
     }
 
