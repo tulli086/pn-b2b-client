@@ -109,7 +109,7 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient, InteropTokenRe
     @Async
     @Scheduled(cron = "* * * * * ?")
     public void refreshTokenInteropClient(){
-        log.info("Attempt refresh interop token");
+        //log.info("Attempt refresh interop token");
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
             String tokenInterop = interopTokenSingleton.getTokenInterop();
             if(!tokenInterop.equals(this.bearerTokenInterop)){
