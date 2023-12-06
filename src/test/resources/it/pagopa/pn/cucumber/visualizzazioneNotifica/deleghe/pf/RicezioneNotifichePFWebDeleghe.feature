@@ -188,3 +188,4 @@ Feature: Ricezione notifiche destinate al delegante
     And download attestazione opponibile AAR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And la PA richiede il download dell'attestazione opponibile "SENDER_ACK"
+

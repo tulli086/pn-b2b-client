@@ -9,7 +9,8 @@ import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
 import it.pagopa.pn.client.b2b.pa.springconfig.TimingConfiguration;
 import it.pagopa.pn.client.b2b.pa.testclient.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 
 @CucumberContextConfiguration
 @SpringBootTest(classes = {
@@ -33,8 +34,11 @@ import org.springframework.test.context.TestPropertySource;
         InteropTokenSingleton.class,
         PnServiceDeskClientImpl.class,
         PnServiceDeskClientImplNoApiKey.class,
-        PnServiceDeskClientImplWrongApiKey.class})
-@TestPropertySource(properties = {"spring.profiles.active=hotfix"})
+        PnServiceDeskClientImplWrongApiKey.class,
+        PnGPDClientImpl.class,
+        PnPaymentInfoClientImpl.class,
+        PnRaddFsuClientImpl.class
+})
+@EnableScheduling
 public class CucumberSpringIntegration {
-
 }

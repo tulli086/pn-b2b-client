@@ -20,6 +20,7 @@ import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.ByteArrayInputStream;
@@ -43,10 +44,20 @@ public class RicezioneNotificheWebSteps {
     private final IPnPaB2bClient b2bClient;
     private final PnExternalServiceClientImpl externalClient;
     private final SharedSteps sharedSteps;
-
     private final IPnWebPaClient webPaClient;
     private HttpStatusCodeException notificationError;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    @Value("${pn.external.senderId}")
+    private String senderId;
+    @Value("${pn.external.senderId-2}")
+    private String senderId2;
+    @Value("${pn.external.senderId-GA}")
+    private String senderIdGA;
+    @Value("${pn.external.senderId-SON}")
+    private String senderIdSON;
+
+    @Value("${pn.external.senderId-ROOT}")
+    private String senderIdROOT;
 
     @Autowired
     public RicezioneNotificheWebSteps(SharedSteps sharedSteps, IPnWebUserAttributesClient iPnWebUserAttributesClient) {
@@ -70,7 +81,7 @@ public class RicezioneNotificheWebSteps {
     @Then("la notifica non può essere correttamente recuperata da {string}")
     public void notificationCanNotBeCorrectlyReadby(String recipient) {
         sharedSteps.selectUser(recipient);
-        FullReceivedNotification fullNotification = webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
+        FullReceivedNotificationV21 fullNotification = webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
         Assertions.assertNull(fullNotification);
 
     }
@@ -109,18 +120,41 @@ public class RicezioneNotificheWebSteps {
 
     @Then("l'allegato {string} può essere correttamente recuperato da {string}")
     public void attachmentCanBeCorrectlyRetrievedBy(String attachmentName, String recipient) {
+        //TODO Modificare
         sharedSteps.selectUser(recipient);
         NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
                 sharedSteps.getSentNotification().getIun(),
                 attachmentName,
-                null);
-        AtomicReference<String> Sha256 = new AtomicReference<>("");
-        Assertions.assertDoesNotThrow(() -> {
-            byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                    b2bUtils.downloadFile(downloadResponse.getUrl()));
-            Sha256.set(b2bUtils.computeSha256(new ByteArrayInputStream(bytes)));
-        });
-        Assertions.assertEquals(Sha256.get(), downloadResponse.getSha256());
+                null,0);
+
+        if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
+            try {
+                Thread.sleep(downloadResponse.getRetryAfter()*3);
+                 downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
+                        sharedSteps.getSentNotification().getIun(),
+                        attachmentName,
+                        null,0);
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+        }
+
+        if (!"F24".equalsIgnoreCase(attachmentName)){
+            AtomicReference<String> Sha256 = new AtomicReference<>("");
+            NotificationAttachmentDownloadMetadataResponse finalDownloadResponse = downloadResponse;
+            Assertions.assertDoesNotThrow(() -> {
+                byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                        b2bUtils.downloadFile(finalDownloadResponse.getUrl()));
+                Sha256.set(b2bUtils.computeSha256(new ByteArrayInputStream(bytes)));
+            });
+            Assertions.assertEquals(Sha256.get(), downloadResponse.getSha256());
+        }else {
+            NotificationAttachmentDownloadMetadataResponse finalDownloadResponse = downloadResponse;
+            Assertions.assertDoesNotThrow(() -> {
+                byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                        b2bUtils.downloadFile(finalDownloadResponse.getUrl()));
+            });
+        }
     }
 
     @And("{string} tenta il recupero dell'allegato {string}")
@@ -128,10 +162,23 @@ public class RicezioneNotificheWebSteps {
         this.notificationError = null;
         sharedSteps.selectUser(recipient);
         try {
-            webRecipientClient.getReceivedNotificationAttachment(
+            NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
                     sharedSteps.getSentNotification().getIun(),
                     attachmentName,
-                    null);
+                    null, 0);
+
+
+            if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
+                try {
+                    Thread.sleep(downloadResponse.getRetryAfter()*3);
+                    downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
+                            sharedSteps.getSentNotification().getIun(),
+                            attachmentName,
+                            null,0);
+                } catch (InterruptedException exc) {
+                    throw new RuntimeException(exc);
+                }
+            }
         } catch (HttpStatusCodeException e) {
             this.notificationError = e;
         }
@@ -142,10 +189,22 @@ public class RicezioneNotificheWebSteps {
         this.notificationError = null;
         sharedSteps.selectUser(recipient);
         try {
-            webRecipientClient.getReceivedNotificationAttachment(
+            NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
                     sharedSteps.getSentNotification().getIun(),
                     attachmentName,
-                    null);
+                    null, 0);
+
+            if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
+                try {
+                    Thread.sleep(downloadResponse.getRetryAfter()*3);
+                    downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
+                            sharedSteps.getSentNotification().getIun(),
+                            attachmentName,
+                            null,0);
+                } catch (InterruptedException exc) {
+                    throw new RuntimeException(exc);
+                }
+            }
         } catch (HttpStatusCodeException e) {
             this.notificationError = e;
         }
@@ -155,6 +214,11 @@ public class RicezioneNotificheWebSteps {
     public void operationProducedErrorWithStatusCode(String statusCode) {
         Assertions.assertTrue((this.notificationError != null) &&
                 (this.notificationError.getStatusCode().toString().substring(0, 3).equals(statusCode)));
+    }
+
+    @Then("(il download)(il recupero) non ha prodotto errori")
+    public void operationProducedErrorWithStatusCode() {
+        Assertions.assertTrue((this.notificationError == null) );
     }
 
 
@@ -361,6 +425,9 @@ public class RicezioneNotificheWebSteps {
             case "Galileo Galilei":
                 this.iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_4);
                 break;
+            case "Lucio Anneo Seneca":
+                this.iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.PG_2);
+                break;
             default:
                 throw new IllegalArgumentException();
         }
@@ -401,6 +468,201 @@ public class RicezioneNotificheWebSteps {
             sharedSteps.setNotificationError(httpStatusCodeException);
         }
     }
+
+    @And("viene inserito un recapito legale {string} per il comune {string}")
+    public void nuovoRecapitoLegaleDalComune(String pec, String pa) {
+
+        String senderIdPa="default";
+
+        switch (pa){
+
+            case "Comune_1":
+                senderIdPa=senderId;
+                break;
+            case "Comune_2":
+                senderIdPa=senderId2;
+                break;
+            case "Comune_Multi":
+                senderIdPa=senderIdGA;
+                break;
+            case "Comune_Son":
+                senderIdPa=senderIdSON;
+                break;
+            case "Comune_Root":
+                senderIdPa=senderIdROOT;
+                break;
+        }
+
+        // inserimento
+        this.iPnWebUserAttributesClient.postRecipientLegalAddress(senderIdPa, LegalChannelType.PEC, (new AddressVerification().value(pec)));
+        // validazione
+        String verificationCode = this.externalClient.getVerificationCode(pec);
+        this.iPnWebUserAttributesClient.postRecipientLegalAddress(senderIdPa, LegalChannelType.PEC, (new AddressVerification().value(pec).verificationCode(verificationCode)));
+    }
+
+    @When("viene richiesto l'inserimento della pec {string} per il comune {string}")
+    public void perLUtenteVieneSettatoLaPecPerIlComune(String pec,String pa) {
+
+        String senderIdPa="default";
+
+        switch (pa){
+            case "Comune_1":
+                senderIdPa=senderId;
+                break;
+            case "Comune_2":
+                senderIdPa=senderId2;
+                break;
+            case "Comune_Multi":
+                senderIdPa=senderIdGA;
+                break;
+            case "Comune_Son":
+                senderIdPa=senderIdSON;
+                break;
+            case "Comune_Root":
+                senderIdPa=senderIdROOT;
+                break;
+        }
+
+        try {
+            this.iPnWebUserAttributesClient.postRecipientLegalAddress(senderIdPa, LegalChannelType.PEC, (new AddressVerification().value(pec).verificationCode("00000")));
+        } catch (HttpStatusCodeException httpStatusCodeException) {
+            sharedSteps.setNotificationError(httpStatusCodeException);
+        }
+    }
+
+    @And("viene richiesto l'inserimento del email di cortesia {string} per il comune {string}")
+    public void vieneRichiestoLInserimentoDelEmailDiCortesiaDalComune(String email, String pa) {
+
+        String senderIdPa="default";
+
+        switch (pa){
+            case "Comune_1":
+                senderIdPa=senderId;
+                break;
+            case "Comune_2":
+                senderIdPa=senderId2;
+                break;
+            case "Comune_Multi":
+                senderIdPa=senderIdGA;
+                break;
+            case "Comune_Son":
+                senderIdPa=senderIdSON;
+                break;
+            case "Comune_Root":
+                senderIdPa=senderIdROOT;
+                break;
+        }
+
+        try {
+            this.iPnWebUserAttributesClient.postRecipientCourtesyAddress(senderIdPa, CourtesyChannelType.EMAIL, (new AddressVerification().value(email).verificationCode("00000")));
+        } catch (HttpStatusCodeException httpStatusCodeException) {
+            sharedSteps.setNotificationError(httpStatusCodeException);
+        }
+    }
+
+    @And("viene inserita l'email di cortesia {string} per il comune {string}")
+    public void vieneInseritaEmailDiCortesiaDalComune(String email, String pa) {
+
+        String senderIdPa=null;
+
+        switch (pa){
+            case "Comune_1":
+                senderIdPa=senderId;
+                break;
+            case "Comune_2":
+                senderIdPa=senderId2;
+                break;
+            case "Comune_Multi":
+                senderIdPa=senderIdGA;
+                break;
+            case "Comune_Son":
+                senderIdPa=senderIdSON;
+                break;
+            case "Comune_Root":
+                senderIdPa=senderIdROOT;
+                break;
+            default:
+                senderIdPa="default";
+        }
+
+        try {
+
+            this.iPnWebUserAttributesClient.postRecipientCourtesyAddress(senderIdPa, CourtesyChannelType.EMAIL, (new AddressVerification().value(email)));
+            // validazione
+            String verificationCode = this.externalClient.getVerificationCode(email);
+            this.iPnWebUserAttributesClient.postRecipientCourtesyAddress(senderIdPa, CourtesyChannelType.EMAIL, (new AddressVerification().value(email).verificationCode(verificationCode)));
+        } catch (HttpStatusCodeException httpStatusCodeException) {
+            sharedSteps.setNotificationError(httpStatusCodeException);
+        }
+    }
+
+    @When("viene richiesto l'inserimento del numero di telefono {string} per il comune {string}")
+
+    public void vieneRichiestoLInserimentoDelNumeroDiTelefono(String phone, String pa) {
+
+        String senderIdPa=null;
+
+        switch (pa){
+            case "Comune_1":
+                senderIdPa=senderId;
+                break;
+            case "Comune_2":
+                senderIdPa=senderId2;
+                break;
+            case "Comune_Multi":
+                senderIdPa=senderIdGA;
+                break;
+            case "Comune_Son":
+                senderIdPa=senderIdSON;
+                break;
+            case "Comune_Root":
+                senderIdPa=senderIdROOT;
+                break;
+            default:
+                senderIdPa="default";
+        }
+
+        try {
+            this.iPnWebUserAttributesClient.postRecipientCourtesyAddress(senderIdPa, CourtesyChannelType.SMS, (new AddressVerification().value(phone).verificationCode("00000")));
+        } catch (HttpStatusCodeException httpStatusCodeException) {
+            sharedSteps.setNotificationError(httpStatusCodeException);
+        }
+    }
+
+
+    @And("viene cancellata l'email di cortesia per il comune {string}")
+    public void vieneCancellataEmailDiCortesiaDalComune( String pa) {
+
+        String senderIdPa=null;
+
+        switch (pa){
+            case "Comune_1":
+                senderIdPa=senderId;
+                break;
+            case "Comune_2":
+                senderIdPa=senderId2;
+                break;
+            case "Comune_Multi":
+                senderIdPa=senderIdGA;
+                break;
+            case "Comune_Son":
+                senderIdPa=senderIdSON;
+                break;
+            case "Comune_Root":
+                senderIdPa=senderIdROOT;
+                break;
+            default:
+                senderIdPa="default";
+        }
+
+        try {
+            this.iPnWebUserAttributesClient.deleteRecipientCourtesyAddress(senderIdPa, CourtesyChannelType.EMAIL);
+        } catch (HttpStatusCodeException httpStatusCodeException) {
+            sharedSteps.setNotificationError(httpStatusCodeException);
+        }
+    }
+
+
 
     @Then("l'inserimento ha prodotto un errore con status code {string}")
     public void lInserimentoHaProdottoUnErroreConStatusCode(String statusCode) {

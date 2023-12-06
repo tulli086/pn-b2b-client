@@ -10,7 +10,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario
-      | denomination | OK-Giacenza-gt10-890 |
+      | denomination | OK-Giacenza-gt10_890 |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile | NULL |
       | physicalAddress_address | via@OK-Giacenza-gt10_890 |
@@ -25,7 +25,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario
-      | denomination | Signor giacenza |
+      | denomination | OK-GiacenzaDelegato-gt10_890 |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile | NULL |
       | physicalAddress_address | via@OK-GiacenzaDelegato-gt10_890 |
@@ -40,7 +40,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario
-      | denomination | FAIL-Giacenza-gt10-890 |
+      | denomination | FAIL-Giacenza-gt10_890 |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile | NULL |
       | physicalAddress_address | via@FAIL-Giacenza-gt10_890 |
@@ -55,7 +55,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario
-      | denomination | OK-CompiutaGiacenza-890 |
+      | denomination | OK-CompiutaGiacenza_890 |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile | NULL |
       | physicalAddress_address | via@OK-CompiutaGiacenza_890 |
@@ -81,7 +81,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
   Scenario: [B2B_TIMELINE_ANALOG_45] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECRN015 AR momentaneamente non rendicontabile positivo PN-6079
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo    |
+      | senderDenomination | Comune di palermo |
     And destinatario
       | denomination | OK-CausaForzaMaggiore_AR |
       | taxId | LVLDAA85T50G702B |
@@ -100,7 +100,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario
-      | denomination            | signor nonRendicontabile    |
+      | denomination            | via@OK-NonRendicontabile_AR |
       | taxId                   | DVNLRD52D15M059P            |
       | digitalDomicile         | NULL                        |
       | physicalAddress_address | via@OK-NonRendicontabile_AR |
@@ -222,7 +222,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario
-      | denomination            | FAIL-Giacenza-lte10-890     |
+      | denomination            | FAIL-Giacenza-lte10_890     |
       | taxId                   | DVNLRD52D15M059P            |
       | digitalDomicile         | NULL                        |
       | physicalAddress_address | Via@FAIL-Giacenza-lte10_890 |
@@ -236,7 +236,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
   #Da verificare--------------
 
 
-  @dev @workflowAnalogico
+  @dev @workflowAnalogico @bugSecondoTentativo_PN-8719
   Scenario: [B2B_TIMELINE_ANALOG_53] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-DiscoveryIrreperibile_AR_scenario positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -335,7 +335,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     #"@sequence.MANCANTE
 
 
-  @dev @workflowAnalogico
+  @dev @workflowAnalogico @bugSecondoTentativo_PN-8719
   Scenario: [B2B_TIMELINE_ANALOG_58] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-DiscoveryIrreperibile_890_scenario positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -398,8 +398,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRI002"
 
 
-
-  @irreperibile_7623_Test @irreperibile_7623_Uat @workflowAnalogico
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_ANALOG_62] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D00 non trovato
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -413,7 +412,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE_FAILURE" con failureCause "D00"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"
 
-  @irreperibile_7623_Test  @workflowAnalogico
+  @mockNR  @workflowAnalogico
   Scenario: [B2B_TIMELINE_ANALOG_63] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D01 non valido
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -423,18 +422,13 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | taxId | NNVFNC80A01H501G |
       | digitalDomicile | NULL |
       | physicalAddress_address | via @FAIL-Irreperibile_AR 16 |
-      | physicalAddress_zip                 | 40121                        |
-      | physicalAddress_municipality        | BOLOGNA                      |
-      | physicalAddress_province            | BO                           |
-      | physicalAddress_addressDetails      | NULL                         |
-      | physicalAddress_municipalityDetails | NULL                         |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE"
-    #And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE_FAILURE" con failureCause "D01"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"
 
 
 
-  @irreperibile_7623_Test  @workflowAnalogico
+  @mockNR  @workflowAnalogico @bugD02
   Scenario: [B2B_TIMELINE_ANALOG_64] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D02 coincidente
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -447,8 +441,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | physicalAddress_zip                 | 40121                        |
       | physicalAddress_municipality        | BOLOGNA                      |
       | physicalAddress_province            | BO                           |
-      | physicalAddress_addressDetails      | NULL                         |
-      | physicalAddress_municipalityDetails | NULL                         |
+      | physicalAddress_addressDetails      | 0_CHAR                         |
+      | physicalAddress_municipalityDetails | 0_CHAR                         |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE_FAILURE" con failureCause "D02"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"

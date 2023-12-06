@@ -1,4 +1,5 @@
 Feature: Download da persona giuridica
+
   @testLite
   Scenario: [B2B-DOWN-PG_1] download documento notificato_scenario positivo
     Given viene generata una nuova notifica

@@ -8,8 +8,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.ApiClient;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api.*;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.CxTypeAuthFleet;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.api.LegalFactsApi;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.api.NotificationCancellationApi;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationProcessCostResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -28,6 +27,7 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
     private final NotificationPriceApi notificationPriceApi;
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v1.SenderReadB2BApi senderReadB2BApiV1;
 
+    private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v2.SenderReadB2BApi senderReadB2BApiV2;
 
     private final String paId;
     private final String operatorId;
@@ -50,6 +50,7 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
         this.newNotificationApi = new NewNotificationApi( newApiClient( restTemplate, deliveryBasePath) );
         this.senderReadB2BApi = new SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
         this.senderReadB2BApiV1 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v1.SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
+        this.senderReadB2BApiV2 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v2.SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
         this.notificationPriceApi = new NotificationPriceApi(newApiClient(restTemplate, deliveryPushBasePath));
     }
 
@@ -70,22 +71,27 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
     public NotificationAttachmentDownloadMetadataResponse getSentNotificationDocument(String iun, Integer docidx) {
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NotificationAttachmentDownloadMetadataResponse response =
                 senderReadB2BApi.getSentNotificationDocument(
-                    operatorId
-                    , CxTypeAuthFleet.PA
-                    , paId
-                    , iun
-                    , docidx
-                    , groups);
+                        operatorId
+                        , CxTypeAuthFleet.PA
+                        , paId
+                        , iun
+                        , docidx
+                        , groups);
 
         return deepCopy( response, NotificationAttachmentDownloadMetadataResponse.class );
     }
+
 
     @Override
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationAttachmentDownloadMetadataResponse getSentNotificationDocumentV1(String iun, Integer docidx) {
         return null;
     }
 
-    public NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachment(String iun, Integer recipientIdx, String attachname) {
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationAttachmentDownloadMetadataResponse getSentNotificationDocumentV2(String iun, Integer docidx) {
+        return null;
+    }
+
+    public NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachment(String iun, Integer recipientIdx, String attachname,  Integer attachmentIdx) {
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NotificationAttachmentDownloadMetadataResponse response =
                 senderReadB2BApi.getSentNotificationAttachment(
                     operatorId
@@ -94,7 +100,8 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
                     , iun
                     , recipientIdx
                     , attachname
-                    , groups);
+                    , groups,
+                        attachmentIdx);
 
         return deepCopy( response, NotificationAttachmentDownloadMetadataResponse.class );
     }
@@ -125,7 +132,12 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
     @Override
     public void paymentEventsRequestPagoPaV1(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.PaymentEventsRequestPagoPa paymentEventsRequestPagoPa) throws RestClientException {
+        throw new UnsupportedOperationException();
+    }
 
+    @Override
+    public void paymentEventsRequestPagoPaV2(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.PaymentEventsRequestPagoPa paymentEventsRequestPagoPa) throws RestClientException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -140,6 +152,9 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
     @Override
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachmentV1(String iun, Integer recipientIdx, String attachmentName) {
+        return null;
+    }
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachmentV2(String iun, Integer recipientIdx, String attachmentName) {
         return null;
     }
 
@@ -165,22 +180,22 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
         List<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.PreLoadResponse> responses;
         responses =newNotificationApi.presignedUploadRequest(
-                 operatorId,
-                 CxTypeAuthFleet.PA,
-                 paId,
-                 Arrays.asList( requests ));
+                operatorId,
+                CxTypeAuthFleet.PA,
+                paId,
+                Arrays.asList( requests ));
 
         PreLoadResponse[] result = deepCopy( responses, PreLoadResponse[].class );
         return Arrays.asList( result );
     }
 
-    public NewNotificationResponse sendNewNotification(NewNotificationRequest newNotificationRequest) {
-        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NewNotificationRequest request;
-        request = deepCopy( newNotificationRequest, it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NewNotificationRequest.class );
+    public NewNotificationResponse sendNewNotification(NewNotificationRequestV21 newNotificationRequest) {
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NewNotificationRequestV21 request;
+        request = deepCopy( newNotificationRequest, it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NewNotificationRequestV21.class );
 
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NewNotificationResponse response;
 
-        response = newNotificationApi.sendNewNotification(operatorId, CxTypeAuthFleet.PA, paId, "B2B", request, groups,null);
+        response = newNotificationApi.sendNewNotificationV21(operatorId, CxTypeAuthFleet.PA, paId, "B2B", request, groups,null,null);
 
         return deepCopy( response, NewNotificationResponse.class );
     }
@@ -190,12 +205,21 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public FullSentNotificationV20 getSentNotification(String iun) {
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationResponse sendNewNotificationV2(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequest newNotificationRequest) {
+        throw new UnsupportedOperationException();
+    }
 
-        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.FullSentNotificationV20 resp;
-        resp = senderReadB2BApi.getSentNotificationV20( operatorId, CxTypeAuthFleet.PA, paId, iun, groups );
-        return deepCopy( resp, FullSentNotificationV20.class );
+    @Override
+    public FullSentNotificationV21 getSentNotification(String iun) {
+
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.FullSentNotificationV21 resp;
+        resp = senderReadB2BApi.getSentNotificationV21( operatorId, CxTypeAuthFleet.PA, paId, iun, groups );
+        return deepCopy( resp, FullSentNotificationV21.class );
+    }
+
+    @Override
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20 getSentNotificationV2(String iun) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -203,11 +227,12 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public NewNotificationRequestStatusResponse getNotificationRequestStatus(String notificationRequestId) {
 
-        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NewNotificationRequestStatusResponse resp;
-        resp = senderReadB2BApi.getNotificationRequestStatus(
+    @Override
+    public NewNotificationRequestStatusResponseV21 getNotificationRequestStatus(String notificationRequestId) {
+
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NewNotificationRequestStatusResponseV21 resp;
+        resp = senderReadB2BApi.getNotificationRequestStatusV21(
                 operatorId,
                 CxTypeAuthFleet.PA,
                 paId,
@@ -216,7 +241,7 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
                 null,
                 null
             );
-        return deepCopy( resp, NewNotificationRequestStatusResponse.class );
+        return deepCopy( resp, NewNotificationRequestStatusResponseV21.class );
     }
 
     @Override
@@ -224,10 +249,14 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
         throw new UnsupportedOperationException();
     }
 
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequestStatusResponse getNotificationRequestStatusV2(String notificationRequestId) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override
-    public NewNotificationRequestStatusResponse getNotificationRequestStatusAllParam(String notificationRequestId, String paProtocolNumber, String idempotenceToken) {
-        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NewNotificationRequestStatusResponse resp;
-        resp = senderReadB2BApi.getNotificationRequestStatus(
+    public NewNotificationRequestStatusResponseV21 getNotificationRequestStatusAllParam(String notificationRequestId, String paProtocolNumber, String idempotenceToken) {
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NewNotificationRequestStatusResponseV21 resp;
+        resp = senderReadB2BApi.getNotificationRequestStatusV21(
                 operatorId,
                 CxTypeAuthFleet.PA,
                 paId,
@@ -236,7 +265,11 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
                 paProtocolNumber,
                 idempotenceToken
         );
-        return deepCopy( resp, NewNotificationRequestStatusResponse.class );
+        return deepCopy( resp, NewNotificationRequestStatusResponseV21.class );
+    }
+
+    public NotificationProcessCostResponse getNotificationProcessCost(String iun, Integer recipientIndex, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy notificationFeePolicy, Boolean applyCost, Integer paFee) throws RestClientException {
+        throw new UnsupportedOperationException();
     }
 
     private <T> T deepCopy( Object obj, Class<T> toClass) {

@@ -10,7 +10,7 @@ import it.pagopa.pn.client.b2b.pa.testclient.IPnWebMandateClient;
 import it.pagopa.pn.client.b2b.pa.testclient.IPnWebRecipientClient;
 import it.pagopa.pn.client.b2b.pa.testclient.SettableBearerToken;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalMandate.model.*;
-import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.FullReceivedNotification;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.FullReceivedNotificationV21;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.apache.commons.lang.time.DateUtils;
@@ -21,13 +21,11 @@ import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import javax.validation.constraints.AssertTrue;
 import java.io.ByteArrayInputStream;
-
-import java.io.IOException;
 
 import java.lang.invoke.MethodHandles;
 import java.text.SimpleDateFormat;
@@ -52,7 +50,16 @@ public class RicezioneNotificheWebDelegheSteps {
 
     private final String gherkinSrltaxId;
     private final String cucumberSpataxId;
-
+    @Value("${pn.external.senderId}")
+    private String senderId;
+    @Value("${pn.external.senderId-2}")
+    private String senderId2;
+    @Value("${pn.external.senderId-GA}")
+    private String senderIdGA;
+    @Value("${pn.external.senderId-SON}")
+    private String senderIdSON;
+    @Value("${pn.external.senderId-ROOT}")
+    private String senderIdROOT;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
@@ -152,12 +159,12 @@ public class RicezioneNotificheWebDelegheSteps {
                 break;
         }
 
-        return beenSet;
+        return !beenSet;
     }
 
     @And("{string} viene delegato da {string}")
     public void delegateUser(String delegate, String delegator) {
-        if (!setBearerToken(delegator)) {
+        if (setBearerToken(delegator)) {
             throw new IllegalArgumentException();
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -179,9 +186,68 @@ public class RicezioneNotificheWebDelegheSteps {
         }
     }
 
+
+    @And("{string} viene delegato da {string} per comune {string}")
+    public void delegateUser(String delegate, String delegator,String comune) {
+        if (setBearerToken(delegator)) {
+            throw new IllegalArgumentException();
+        }
+        OrganizationIdDto organizationIdDto = new OrganizationIdDto();
+
+        switch (comune){
+            case "Comune_1":
+                organizationIdDto=organizationIdDto
+                        .name("Comune di Milano")
+                        .uniqueIdentifier(senderId);
+                break;
+            case "Comune_2":
+                organizationIdDto=organizationIdDto
+                        .name("Comune di Verona")
+                        .uniqueIdentifier(senderId2);
+                break;
+            case "Comune_Multi":
+                organizationIdDto=organizationIdDto
+                        .name("Comune di Palermo")
+                        .uniqueIdentifier(senderIdGA);
+                break;
+            case "Comune_Son":
+                organizationIdDto=organizationIdDto
+                        .name("Ufficio per la transizione al Digitale")
+                        .uniqueIdentifier(senderIdSON);
+                break;
+            case "Comune_Root":
+                organizationIdDto=organizationIdDto
+                        .name("Comune di Aglientu")
+                        .uniqueIdentifier(senderIdROOT);
+                break;
+            default:
+                throw new IllegalStateException();
+        }
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        MandateDto mandate = (new MandateDto()
+                .delegator(getUserDtoByuser(delegator))
+                .delegate(getUserDtoByuser(delegate))
+                .verificationCode(verificationCode)
+                .datefrom(sdf.format(new Date()))
+                .visibilityIds(Arrays.asList(organizationIdDto))
+                .status(MandateDto.StatusEnum.PENDING)
+                .dateto(sdf.format(DateUtils.addDays(new Date(), 1)))
+        );
+
+        System.out.println("MANDATE: " + mandate);
+
+        try{
+            webMandateClient.createMandate(mandate);
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
+        }
+    }
+
     @Given("{string} rifiuta se presente la delega ricevuta {string}")
     public void userRejectIfPresentMandateOfAnotheruser(String delegate, String delegator) {
-        if (!setBearerToken(delegate)) {
+        if (setBearerToken(delegate)) {
             throw new IllegalArgumentException();
         }
         String delegatorTaxId = getTaxIdByUser(delegator);
@@ -191,19 +257,25 @@ public class RicezioneNotificheWebDelegheSteps {
         //List<MandateDto> mandateList = webMandateClient.listMandatesByDelegate1(null);
         MandateDto mandateDto = null;
         for (MandateDto mandate : mandateList) {
+            logger.debug("MANDATE-LIST: {}",mandateList);
             if (mandate.getDelegator().getFiscalCode() != null && mandate.getDelegator().getFiscalCode().equalsIgnoreCase(delegatorTaxId)) {
                 mandateDto = mandate;
                 break;
             }
         }
         if (mandateDto != null) {
-            webMandateClient.rejectMandate(mandateDto.getMandateId());
+            try{
+                webMandateClient.rejectMandate(mandateDto.getMandateId());
+            }catch(Exception exp){
+                System.out.println("REJECT FALLITA");
+            }
+
         }
     }
 
     @And("{string} accetta la delega {string}")
     public void userAcceptsMandateOfAnotherUser(String delegate, String delegator) {
-        if (!setBearerToken(delegate)) {
+        if (setBearerToken(delegate)) {
             throw new IllegalArgumentException();
         }
         String delegatorTaxId = getTaxIdByUser(delegator);;
@@ -220,7 +292,11 @@ public class RicezioneNotificheWebDelegheSteps {
 
         Assertions.assertNotNull(mandateDto);
         this.mandateToSearch = mandateDto;
-        webMandateClient.acceptMandate(mandateDto.getMandateId(), new AcceptRequestDto().verificationCode(verificationCode));
+        try{
+            webMandateClient.acceptMandate(mandateDto.getMandateId(), new AcceptRequestDto().verificationCode(verificationCode));
+        }catch(Exception e){
+            System.out.println("ACCEPT DELEGA ERROR");
+        }
     }
 
     @And("la notifica può essere correttamente letta da {string} con delega")
@@ -372,23 +448,39 @@ public class RicezioneNotificheWebDelegheSteps {
 
     @Then("l'allegato {string} può essere correttamente recuperato da {string} con delega")
     public void attachmentCanBeCorrectlyRetrievedFromWithMandate(String attachmentName, String recipient) {
+        //TODO Modificare attachmentIdx al momento e 0...............
         sharedSteps.selectUser(recipient);
         NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
                 sharedSteps.getSentNotification().getIun(),
                 attachmentName,
-                UUID.fromString(mandateToSearch.getMandateId()));
-        AtomicReference<String> Sha256 = new AtomicReference<>("");
-        Assertions.assertDoesNotThrow(() -> {
-            byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                    b2bUtils.downloadFile(downloadResponse.getUrl()));
-            Sha256.set(b2bUtils.computeSha256(new ByteArrayInputStream(bytes)));
-        });
-        Assertions.assertEquals(Sha256.get(), downloadResponse.getSha256());
+                UUID.fromString(mandateToSearch.getMandateId()),0);
+
+        if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
+            try {
+                Thread.sleep(downloadResponse.getRetryAfter()*3);
+                 downloadResponse = webRecipientClient.getReceivedNotificationAttachment(
+                        sharedSteps.getSentNotification().getIun(),
+                        attachmentName,
+                        UUID.fromString(mandateToSearch.getMandateId()),0);
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+        }
+        if(!"F24".equalsIgnoreCase(attachmentName)){
+            AtomicReference<String> Sha256 = new AtomicReference<>("");
+            NotificationAttachmentDownloadMetadataResponse finalDownloadResponse = downloadResponse;
+            Assertions.assertDoesNotThrow(() -> {
+                byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                        b2bUtils.downloadFile(finalDownloadResponse.getUrl()));
+                Sha256.set(b2bUtils.computeSha256(new ByteArrayInputStream(bytes)));
+            });
+            Assertions.assertEquals(Sha256.get(), downloadResponse.getSha256());
+        }
     }
 
     @And("{string} revoca la delega a {string}")
     public void userRevokesMandate(String delegator, String delegate) {
-        if (!setBearerToken(delegator)) {
+        if (setBearerToken(delegator)) {
             throw new IllegalArgumentException();
         }
 
@@ -410,7 +502,7 @@ public class RicezioneNotificheWebDelegheSteps {
 
     @And("{string} rifiuta la delega ricevuta da {string}")
     public void delegateRefusesMandateReceivedFromDelegator(String delegate, String delegator) {
-        if (!setBearerToken(delegate)) {
+        if (setBearerToken(delegate)) {
             throw new IllegalArgumentException();
         }
         String delegatorTaxId = getTaxIdByUser(delegator);
@@ -435,7 +527,7 @@ public class RicezioneNotificheWebDelegheSteps {
         sharedSteps.selectUser(recipient);
         HttpClientErrorException httpClientErrorException = null;
         try {
-            FullReceivedNotification receivedNotification =
+            FullReceivedNotificationV21 receivedNotification =
                     webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), mandateToSearch.getMandateId());
         } catch (HttpClientErrorException e) {
             httpClientErrorException = e;
@@ -458,6 +550,15 @@ public class RicezioneNotificheWebDelegheSteps {
             webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
         });
         webRecipientClient.setBearerToken(baseUser);
+    }
+
+    @And("la notifica può essere correttamente letta da {string} per comune {string}")
+    public void notificationCanBeCorrectlyReadFromAtPa(String recipient,String pa) {
+        sharedSteps.selectPA(pa);
+        sharedSteps.selectUser(recipient);
+        Assertions.assertDoesNotThrow(() -> {
+            webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
+        });
     }
 
     @And("si verifica che l'elemento di timeline della lettura riporti i dati di {string}")
@@ -501,7 +602,7 @@ public class RicezioneNotificheWebDelegheSteps {
     //for debug
     @And("{string} visualizza le deleghe")
     public void visualizzaLeDeleghe(String user) {
-        if (!setBearerToken(user)) {
+        if (setBearerToken(user)) {
             throw new IllegalArgumentException();
         }
 

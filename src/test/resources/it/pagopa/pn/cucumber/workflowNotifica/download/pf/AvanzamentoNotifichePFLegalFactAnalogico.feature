@@ -1,6 +1,6 @@
 Feature: Download legalFact analogico
 
-  @dev
+  @dev @legalFact
   Scenario: [B2B_PA_ANALOGICO_LEGALFACT_1] Invio notifica con @fail_RS e download atto opponibile collegato a DIGITAL_FAILURE_WORKFLOW positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -24,7 +24,7 @@ Feature: Download legalFact analogico
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_FAILURE_WORKFLOW"
     Then la PA richiede il download dell'attestazione opponibile "DIGITAL_DELIVERY_FAILURE"
 
-  @dev
+  @dev @legalFact
   Scenario: [B2B_PA_ANALOGICO_LEGALFACT_3] Invio notifica con @fail_AR e download atto opponibile collegato a SEND_ANALOG_PROGRESS positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -37,7 +37,7 @@ Feature: Download legalFact analogico
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRN002B"
     Then la PA richiede il download dell'attestazione opponibile "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRN002B"
 
-  @dev
+  @dev @legalFact
   Scenario: [B2B_PA_ANALOGICO_LEGALFACT_4] Invio notifica con @ok_890 e download atto opponibile collegato a SEND_ANALOG_PROGRESS positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |

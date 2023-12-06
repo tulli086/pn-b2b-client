@@ -45,10 +45,14 @@ public class PnExternalServiceClientImpl {
     private final String apiKeyMvp1;
     private final String apiKeyMvp2;
     private final String apiKeyGa;
+    private final String apiKeySON;
+    private final String apiKeyROOT;
 
     private final String safeStorageBasePath;
     private final String gruopInfoBasePath;
     private final String extChannelsBasePath;
+
+    private final String deliveryBasePath;
     private final String dataVaultBasePath;
 
 
@@ -73,11 +77,14 @@ public class PnExternalServiceClientImpl {
             @Value("${pn.external.api-key}") String apiKeyMvp1,
             @Value("${pn.external.api-key-2}") String apiKeyMvp2,
             @Value("${pn.external.api-key-GA}") String apiKeyGa,
+            @Value("${pn.external.api-key-SON}") String apiKeySON,
+            @Value("${pn.external.api-key-ROOT}") String apiKeyROOT,
             @Value("${pn.interop.enable}") String enableInterop,
             @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
             @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
             @Value("${pn.webapi.external.base-url}") String basePathWebApi,
             @Value("${pn.externalChannels.base-url}") String extChannelsBasePath,
+            @Value("${pn.delivery.base-url}") String deliveryBasePath,
             @Value("${pn.dataVault.base-url}") String dataVaultBasePath,
             @Value("${pn.OpenSearch.base-url}") String openSearchBaseUrl,
             @Value("${pn.OpenSearch.username}") String openSearchUsername,
@@ -87,12 +94,15 @@ public class PnExternalServiceClientImpl {
         this.restTemplate = restTemplate;
         this.safeStorageBasePath = safeStorageBasePath;
         this.extChannelsBasePath = extChannelsBasePath;
+        this.deliveryBasePath = deliveryBasePath;
         this.dataVaultBasePath = dataVaultBasePath;
         this.gruopInfoBasePath = gruopInfoBasePath;
         this.basePathWebApi = basePathWebApi;
         this.apiKeyMvp1 = apiKeyMvp1;
         this.apiKeyMvp2 = apiKeyMvp2;
         this.apiKeyGa = apiKeyGa;
+        this.apiKeySON = apiKeySON;
+        this.apiKeyROOT = apiKeyROOT;
 
         this.enableInterop = enableInterop;
 
@@ -177,6 +187,32 @@ public class PnExternalServiceClientImpl {
     }
 
 
+    public HashMap<String, String> getQuickAccessLink(String iun) {
+        return getQuickAccessLinkWithHttpInfo(iun).getBody();
+    }
+
+    private ResponseEntity<HashMap<String, String>> getQuickAccessLinkWithHttpInfo(String iun) {
+        Object postBody = null;
+
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        uriVariables.put("iun", iun);
+
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        queryParams.add("metadataOnly", "true");
+
+        final HttpHeaders headerParams = new HttpHeaders();
+
+        final String[] localVarAccepts = {
+                "application/json", "application/problem+json"
+        };
+        final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
+        final MediaType localVarContentType = MediaType.APPLICATION_JSON;
+
+        ParameterizedTypeReference<HashMap<String, String>> returnType = new ParameterizedTypeReference<>() {
+        };
+        return invokeAPI(deliveryBasePath, "/delivery-private/notifications/{iun}/quick-access-link-tokens", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
+    }
+
     public List<HashMap<String, String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType) throws RestClientException {
         switch (apiKeyType) {
             case MVP_1:
@@ -185,6 +221,10 @@ public class PnExternalServiceClientImpl {
                 return paGroupInfoWithHttpInfo(apiKeyMvp2).getBody();
             case GA:
                 return paGroupInfoWithHttpInfo(apiKeyGa).getBody();
+            case SON:
+                return paGroupInfoWithHttpInfo(apiKeySON).getBody();
+            case ROOT:
+                return paGroupInfoWithHttpInfo(apiKeyROOT).getBody();
             default:
                 throw new IllegalArgumentException();
         }
@@ -251,13 +291,11 @@ public class PnExternalServiceClientImpl {
             headerParams.add("Authorization","Bearer "+ interopTokenSingleton.getTokenInterop());
         }
 
-
         final String[] localVarAccepts = {
                 "application/json", "application/problem+json"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
-
 
         ParameterizedTypeReference<List<HashMap<String, String>>> returnType = new ParameterizedTypeReference<>() {
         };
