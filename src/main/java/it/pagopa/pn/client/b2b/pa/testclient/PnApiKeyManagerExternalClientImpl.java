@@ -92,6 +92,7 @@ public class PnApiKeyManagerExternalClientImpl implements IPnApiKeyManagerClient
     }
 
 
+    //TODO: indagare l'utilizzo di questo metodo
     @Override
     public boolean setApiKeys(ApiKeyType apiKey) {
         boolean beenSet = false;

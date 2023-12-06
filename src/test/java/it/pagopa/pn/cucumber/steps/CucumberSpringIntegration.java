@@ -9,7 +9,8 @@ import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
 import it.pagopa.pn.client.b2b.pa.springconfig.TimingConfiguration;
 import it.pagopa.pn.client.b2b.pa.testclient.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 
 @CucumberContextConfiguration
 @SpringBootTest(classes = {
@@ -38,6 +39,6 @@ import org.springframework.test.context.TestPropertySource;
         PnPaymentInfoClientImpl.class,
         PnRaddFsuClientImpl.class
 })
+@EnableScheduling
 public class CucumberSpringIntegration {
-
 }
