@@ -105,3 +105,25 @@ Feature: verifica compatibilità tra v2 a v2.1
     Then si verifica la corretta acquisizione della notifica V2
     And "Mario Cucumber" legge la notifica ricevuta
     Then vengono verificati costo = "100" e data di perfezionamento della notifica
+
+
+  @version
+  Scenario: [B2B-PA-SEND_VERSION_V2_V21_9] Invio notifica V2.0 con taxId errato PN-8913
+    Given viene generata una nuova notifica V2
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario V2
+      | taxID | LNALNI80A01H501X |
+    When la notifica viene inviata dal "Comune_1" V2
+    Then l'operazione ha prodotto un errore con status code "400"
+
+  @version
+  Scenario: [B2B-PA-SEND_VERSION_V1_V21_21]  Invio notifica V2.0 con noticeCode esistente PN-8913
+    Given viene generata una nuova notifica V2
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+    And destinatario Mario Gherkin V2 e:
+      | payment_noticeCode | 355312817721270543 |
+    When la notifica viene inviata dal "Comune_1" V2
+    Then l'operazione ha prodotto un errore con status code "409"

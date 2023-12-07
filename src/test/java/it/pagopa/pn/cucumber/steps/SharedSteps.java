@@ -1065,6 +1065,20 @@ public class SharedSteps {
         sendNotificationWithError();
     }
 
+    @When("la notifica viene inviata dal {string} V1")
+    public void laNotificaVieneInviataDallaPAV1(String pa) {
+        selectPA(pa);
+        setSenderTaxIdFromPropertiesV1();
+        sendNotificationWithErrorV1();
+    }
+
+    @When("la notifica viene inviata dal {string} V2")
+    public void laNotificaVieneInviataDallaPAV2(String pa) {
+        selectPA(pa);
+        setSenderTaxIdFromPropertiesV2();
+        sendNotificationWithErrorV2();
+    }
+
     @When("la notifica viene inviata tramite api b2b")
     public void laNotificaVieneInviatatramiteApiB2b() {
         sendNotificationWithError();
@@ -1257,6 +1271,29 @@ public class SharedSteps {
             }
         }
     }
+
+    private void sendNotificationWithErrorV1() {
+        try {
+            notificationCreationDate = OffsetDateTime.now();
+            this.newNotificationResponseV1 = b2bUtils.uploadNotificationV1(notificationRequestV1);
+        } catch (HttpStatusCodeException | IOException e) {
+            if (e instanceof HttpStatusCodeException) {
+                this.notificationError = (HttpStatusCodeException) e;
+            }
+        }
+    }
+
+    private void sendNotificationWithErrorV2() {
+        try {
+            notificationCreationDate = OffsetDateTime.now();
+            this.newNotificationResponseV2 = b2bUtils.uploadNotificationV2(notificationRequestV2);
+        } catch (HttpStatusCodeException | IOException e) {
+            if (e instanceof HttpStatusCodeException) {
+                this.notificationError = (HttpStatusCodeException) e;
+            }
+        }
+    }
+
 
     private void sendNotificationWithErrorNotFindAllegato(boolean noUpload) {
 
