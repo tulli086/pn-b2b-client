@@ -135,7 +135,7 @@ Feature: avanzamento notifiche analogico persona giuridica
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con responseStatus "OK"
 
-  @dev @workflowAnalogico
+  @dev @workflowAnalogico @bugSecondoTentativo_PN-8719
   Scenario: [B2B_TIMELINE_PG_ANALOG_7] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_AR_scenario positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -146,7 +146,7 @@ Feature: avanzamento notifiche analogico persona giuridica
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
-  @dev @workflowAnalogico
+  @dev @workflowAnalogico @bugSecondoTentativo_PN-8719
   Scenario: [B2B_TIMELINE_PG_ANALOG_8] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_890_scenario positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -271,20 +271,20 @@ Feature: avanzamento notifiche analogico persona giuridica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
 
-  @dev @workflowAnalogico @mockPec
+  @dev @workflowAnalogico
   Scenario: [B2B_TIMELINE_PG_ANALOG_18] Invio notifica ed attesa sospensione invio cartaceo per avvenuto pagamento positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Cucumber Analogic e:
       | digitalDomicile | NULL |
-      | physicalAddress_address | Via@OK_890_SLOW |
+      | physicalAddress_address | Via@ok_890_SLOW |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And l'avviso pagopa viene pagato correttamente
     Then si attende la corretta sospensione dell'invio cartaceo
 
 
-  @irreperibile_7623_Test  @workflowAnalogico
+  @mockNR  @workflowAnalogico
   Scenario: [B2B_TIMELINE_PG_ANALOG_19] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D00 non trovato - PG
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -300,7 +300,7 @@ Feature: avanzamento notifiche analogico persona giuridica
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"
 
 
-  @irreperibile_7623_Test @ignore @workflowAnalogico
+  @ignore @workflowAnalogico
   Scenario: [B2B_TIMELINE_PG_ANALOG_20] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D01 non valido - PG
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -317,9 +317,7 @@ Feature: avanzamento notifiche analogico persona giuridica
 
 
 
-
-
-  @irreperibile_7623_Test @ignore @workflowAnalogico
+  @ignore @workflowAnalogico
   Scenario: [B2B_TIMELINE_PG_ANALOG_21] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D02 coincidente - PG
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |

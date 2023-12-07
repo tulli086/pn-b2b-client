@@ -7,8 +7,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.cucumber.utils.DataTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
@@ -19,8 +18,8 @@ public class DataTableTypeUtil {
     private PnPaB2bUtils utils;
 
     @DataTableType
-    public synchronized NewNotificationRequest convertNotificationRequest(Map<String, String> data){
-        NewNotificationRequest notificationRequest = (new NewNotificationRequest()
+    public synchronized NewNotificationRequestV21 convertNotificationRequest(Map<String, String> data){
+        NewNotificationRequestV21 notificationRequest = (new NewNotificationRequestV21()
                 .subject(getValue(data,SUBJECT.key))
                 .cancelledIun(getValue(data,CANCELLED_IUN.key))
                 .group(getValue(data,GROUP.key))
@@ -40,9 +39,20 @@ public class DataTableTypeUtil {
                 .physicalCommunicationType(
                         (getValue(data,PHYSICAL_COMMUNICATION_TYPE.key) == null? null :
                                 (getValue(data,PHYSICAL_COMMUNICATION_TYPE.key).equalsIgnoreCase("REGISTERED_LETTER_890")?
-                                        NewNotificationRequest.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 :
-                                        NewNotificationRequest.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER)))
+                                        NewNotificationRequestV21.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 :
+                                        NewNotificationRequestV21.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER)))
                 .addDocumentsItem( getValue(data,DOCUMENT.key) == null ? null : utils.newDocument(getDefaultValue(DOCUMENT.key)))
+
+                .paFee(getValue(data, PA_FEE.key) == null ?  null : Integer.parseInt(getValue(data, PA_FEE.key)))
+                .pagoPaIntMode(
+                        (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("SYNC")?
+                                NewNotificationRequestV21.PagoPaIntModeEnum.SYNC :
+                                (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("ASYNC")?
+                                        NewNotificationRequestV21.PagoPaIntModeEnum.ASYNC:null
+        )))
+
+
+
         );
         try {
             Thread.sleep(2);
@@ -80,8 +90,8 @@ public class DataTableTypeUtil {
                 .pagoPaIntMode(
                         (getValue(data,PAGOPAINTMODE.key) == null ? null :
                                 (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("SYNC")?
-                                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequest.PagoPaIntModeEnum.SYNC :
-                                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequest.PagoPaIntModeEnum.NONE )))
+                                it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequest.PagoPaIntModeEnum.SYNC :
+                                it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequest.PagoPaIntModeEnum.NONE )))
         );
         try {
             Thread.sleep(2);
@@ -92,15 +102,58 @@ public class DataTableTypeUtil {
     }
 
     @DataTableType
-    public synchronized NotificationRecipient convertNotificationRecipient(Map<String, String> data){
-        NotificationRecipient notificationRecipient =  (new NotificationRecipient()
+    public synchronized it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequest convertNotificationRequestV2(Map<String, String> data){
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequest notificationRequestV2 = (new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequest()
+                .subject(getValue(data,SUBJECT.key))
+                .cancelledIun(getValue(data,CANCELLED_IUN.key))
+                .group(getValue(data,GROUP.key))
+                .idempotenceToken(getValue(data,IDEMPOTENCE_TOKEN.key))
+                ._abstract(getValue(data,ABSTRACT.key))
+                .senderDenomination(getValue(data,SENDER_DENOMINATION.key))
+                .senderTaxId(getValue(data,SENDER_TAX_ID.key))
+                .paProtocolNumber(getValue(data,PA_PROTOCOL_NUMBER.key))
+                .taxonomyCode(getValue(data,TAXONOMY_CODE.key))
+                .amount(getValue(data, AMOUNT.key) == null ?  null : Integer.parseInt(getValue(data, AMOUNT.key)))
+                .paymentExpirationDate(getValue(data, PAYMENT_EXPIRATION_DATE.key) == null ? null : getValue(data, PAYMENT_EXPIRATION_DATE.key))
+                .notificationFeePolicy(
+                        (getValue(data,NOTIFICATION_FEE_POLICY.key) == null? null :
+                                (getValue(data,NOTIFICATION_FEE_POLICY.key).equalsIgnoreCase("FLAT_RATE")?
+                                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationFeePolicy.FLAT_RATE :
+                                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationFeePolicy.DELIVERY_MODE)))
+                .physicalCommunicationType(
+                        (getValue(data,PHYSICAL_COMMUNICATION_TYPE.key) == null? null :
+                                (getValue(data,PHYSICAL_COMMUNICATION_TYPE.key).equalsIgnoreCase("REGISTERED_LETTER_890")?
+                                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequest.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 :
+                                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequest.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER)))
+                .addDocumentsItem( getValue(data,DOCUMENT.key) == null ? null : utils.newDocumentV2(getDefaultValue(DOCUMENT.key)))
+                .pagoPaIntMode(
+                        (getValue(data,PAGOPAINTMODE.key) == null ? null :
+                                (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("SYNC")?
+                                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequest.PagoPaIntModeEnum.SYNC :
+                                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequest.PagoPaIntModeEnum.NONE )))
+        );
+        try {
+            Thread.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return notificationRequestV2;
+    }
+
+
+    @DataTableType
+    public synchronized NotificationRecipientV21 convertNotificationRecipient(Map<String, String> data) {
+
+        List<NotificationPaymentItem> listPayment = new ArrayList<NotificationPaymentItem>();;
+
+        NotificationRecipientV21 notificationRecipient =  (new NotificationRecipientV21()
                 .denomination(getValue(data,DENOMINATION.key))
                 .taxId(getValue(data,TAX_ID.key))
                 //.internalId(getValue(data,INTERNAL_ID.key))
                 .digitalDomicile(getValue(data,DIGITAL_DOMICILE.key) == null? null : (new NotificationDigitalAddress()
-                .type((getValue(data,DIGITAL_DOMICILE_TYPE.key) == null?
-                        null : NotificationDigitalAddress.TypeEnum.PEC ))
-                .address( getValue(data,DIGITAL_DOMICILE_ADDRESS.key)))
+                        .type((getValue(data,DIGITAL_DOMICILE_TYPE.key) == null?
+                                null : NotificationDigitalAddress.TypeEnum.PEC ))
+                        .address( getValue(data,DIGITAL_DOMICILE_ADDRESS.key)))
                 )
                 .physicalAddress(getValue(data,PHYSICAL_ADDRES.key) == null? null: new NotificationPhysicalAddress()
                         .address(getValue(data,PHYSICAL_ADDRESS_ADDRESS.key))
@@ -114,24 +167,262 @@ public class DataTableTypeUtil {
                 )
                 .recipientType((getValue(data,RECIPIENT_TYPE.key) == null? null :
                         (getValue(data,RECIPIENT_TYPE.key).equalsIgnoreCase("PF")?
-                                NotificationRecipient.RecipientTypeEnum.PF :
-                                NotificationRecipient.RecipientTypeEnum.PG)))
-                .payment(getValue(data,PAYMENT.key)== null? null : new NotificationPaymentInfo()
-                        .creditorTaxId(getValue(data, PAYMENT_CREDITOR_TAX_ID.key))
-                        .noticeCode(getValue(data, PAYMENT_NOTICE_CODE.key))
-                        //.noticeCodeAlternative(getValue(data, PAYMENT_NOTICE_CODE_OPTIONAL.key))
+                                NotificationRecipientV21.RecipientTypeEnum.PF :
+                                NotificationRecipientV21.RecipientTypeEnum.PG)))
 
-                        .pagoPaForm(getValue(data, PAYMENT_PAGOPA_FORM.key) == null ?
-                                null : utils.newAttachment(getDefaultValue(PAYMENT_PAGOPA_FORM.key)))
-      //                  .f24flatRate(getValue(data, PAYMENT_F24_FLAT.key) == null ? null :
-      //                  (getValue(data, PAYMENT_F24_FLAT.key).equalsIgnoreCase("SI")?
-      //                                  utils.newAttachment(getDefaultValue(PAYMENT_F24_FLAT.key)):null))
-      //
-      //                    .f24standard(getValue(data, PAYMENT_F24_STANDARD.key) == null ? null :
-      //                           (getValue(data, PAYMENT_F24_STANDARD.key).equalsIgnoreCase("SI")?
-      //                                  utils.newAttachment(getDefaultValue(PAYMENT_F24_STANDARD.key)):null))
-                )
+                //GESTIONE ISTANZE DI PAGAMENTI
+
         );
+
+        //N PAGAMENTI
+        if (getValue(data,PAYMENT.key)!= null && getValue(data,PAYMENT_MULTY_NUMBER.key)!= null && !getValue(data,PAYMENT_MULTY_NUMBER.key).isEmpty()){
+                listPayment = new ArrayList<NotificationPaymentItem>();
+                for (int i = 0; i < Integer.parseInt(getValue(data, PAYMENT_MULTY_NUMBER.key)); i++) {
+                    try {
+                        Thread.sleep(1000);
+                    }
+                    catch (InterruptedException exc) {
+                        throw new RuntimeException(exc);
+                    }
+                    NotificationPaymentItem addPaymentsItem = new NotificationPaymentItem();
+                    addPaymentsItem.pagoPa(getValue(data, PAYMENT_PAGOPA_FORM.key) == null ? null :
+                            (getValue(data, PAYMENT_PAGOPA_FORM.key).equalsIgnoreCase("NO") ?
+                                    null :
+                                    new PagoPaPayment()
+                                            .creditorTaxId(getValue(data, PAYMENT_CREDITOR_TAX_ID.key))
+                                            .noticeCode(getValue(data, PAYMENT_NOTICE_CODE.key))
+                                            .applyCost(getValue(data, PAYMENT_APPLY_COST_PAGOPA.key).equalsIgnoreCase("SI") ? true : false)
+                                            .attachment(getValue(data, PAYMENT_PAGOPA_FORM.key).equalsIgnoreCase("NOALLEGATO") ? null : utils.newAttachment(getDefaultValue(PAYMENT_PAGOPA_FORM.key)))));
+                                            //.attachment(utils.newAttachment(getDefaultValue(PAYMENT_PAGOPA_FORM.key)))));
+
+                    if(Objects.equals(getValue(data, PAYMENT_F24_STANDARD_NO_VALID_FORMAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key) + "_" + i)
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_NO_VALID_FORMAT.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_NO_VALID_LENGH.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key) + "_" + i)
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_NO_VALID_LENGH.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_VALID_ANAG.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key) + "_" + i)
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_VALID_ANAG.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_NO_VALID_ANAG.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key) + "_" + i)
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_NO_VALID_ANAG.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_NO_VALID_ANAG_1.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key) + "_" + i)
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_NO_VALID_ANAG_1.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_NO_VALID_ANAG_2.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key) + "_" + i)
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_NO_VALID_ANAG_2.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_NO_VALID_ANAG_3.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key) + "_" + i)
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_NO_VALID_ANAG_3.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_NO_VALID_ANAG_4.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key) + "_" + i)
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_NO_VALID_ANAG_4.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key) + "_" + i)
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_FLAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_FLAT.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_SIMPLIFIED.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_SIMPLIFIED.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_SIMPLIFIED_1.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key))
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_SIMPLIFIED_1.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_SIMPLIFIED_ERR1.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key))
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_SIMPLIFIED_ERR1.key))));
+                    } else if (Objects.equals(getValue(data, PAYMENT_F24_SIMPLIFIED_ERR2.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key))
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_SIMPLIFIED_ERR2.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_SIMPLIFIED_ERR3.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key))
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_SIMPLIFIED_ERR3.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_INPS.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_INPS.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_INPS_DEBIT_CREDIT.key), "SI")) {
+                        addPaymentsItem.f24(new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_INPS_DEBIT_CREDIT.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_INPS_DEBIT_CREDIT_1.key), "SI")) {
+                        addPaymentsItem.f24(new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_INPS_DEBIT_CREDIT_1.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_REGION.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_REGION.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_LOCAL.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_LOCAL.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_TREASURY.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_TREASURY.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_TREASURY_AE.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key))
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_TREASURY_AE.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_SOCIAL.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_SOCIAL.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_SIMPLIFIED_FLAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_SIMPLIFIED_FLAT.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_INPS_FLAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_INPS_FLAT.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_REGION_FLAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_REGION_FLAT.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_LOCAL_FLAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_LOCAL_FLAT.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_TREASURY_FLAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_TREASURY_FLAT.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_TREASURY_AE_FLAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key))
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_TREASURY_AE_FLAT.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_TREASURY_AE_ERR_FLAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                new F24Payment()
+                                        .title(getValue(data, TITLE_PAYMENT.key))
+                                        .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                        .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_TREASURY_AE_ERR_FLAT.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_SOCIAL_FLAT.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_SOCIAL_FLAT.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_INPS_ERR.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_INPS_ERR.key))));
+                    }else if (Objects.equals(getValue(data, PAYMENT_F24_STANDARD_INPS_ERR1.key), "SI")) {
+                        addPaymentsItem.f24(
+                                        new F24Payment()
+                                                .title(getValue(data, TITLE_PAYMENT.key))
+                                                .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                                .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD_INPS_ERR1.key))));
+                    }
+
+                    listPayment.add(addPaymentsItem);
+                }
+            notificationRecipient.setPayments(listPayment);
+        }
+        /*
+            if (getValue(data,PAYMENT.key)!= null && (listPayment==null || (listPayment!= null && listPayment.isEmpty()))){
+                listPayment = new ArrayList<NotificationPaymentItem>();
+                NotificationPaymentItem addPaymentsItem = new NotificationPaymentItem();
+                addPaymentsItem.pagoPa(
+                        new PagoPaPayment()
+                                .creditorTaxId(getValue(data, PAYMENT_CREDITOR_TAX_ID.key))
+                                .noticeCode(getValue(data, PAYMENT_NOTICE_CODE.key))
+                                .applyCost(getValue(data, PAYMENT_APPLY_COST_PAGOPA.key).equalsIgnoreCase("SI") ? true : false)
+                                .attachment(utils.newAttachment(getDefaultValue(PAYMENT_PAGOPA_FORM.key))));
+
+                                 addPaymentsItem.f24(getValue(data, PAYMENT_F24_STANDARD.key) == null ? null :
+                                 (getValue(data, PAYMENT_F24_STANDARD.key).equalsIgnoreCase("SI") ?
+                                 new F24Payment()
+                                 .title(getValue(data, TITLE_PAYMENT.key))
+                                 .applyCost(getValue(data, PAYMENT_APPLY_COST_F24.key).equalsIgnoreCase("SI") ? true : false)
+                                 .metadataAttachment(utils.newMetadataAttachment(getDefaultValue(PAYMENT_F24_STANDARD.key))) : null));
+
+
+
+                listPayment.add(addPaymentsItem);
+            }
+
+         */
+
+
         /* TEST
         if(getValue(data,DIGITAL_DOMICILE.key) != null && !getValue(data,DIGITAL_DOMICILE.key).equalsIgnoreCase(EXCLUDE_VALUE)){
             notificationRecipient = notificationRecipient.digitalDomicile(getValue(data,DIGITAL_DOMICILE.key) == null? null : (new NotificationDigitalAddress()
@@ -149,6 +440,7 @@ public class DataTableTypeUtil {
         }
         return notificationRecipient;
     }
+
 
     @DataTableType
     public synchronized it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationRecipient convertNotificationRecipientV1(Map<String, String> data){
@@ -178,13 +470,29 @@ public class DataTableTypeUtil {
                 .payment(getValue(data,PAYMENT.key)== null? null : new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationPaymentInfo()
                                 .creditorTaxId(getValue(data, PAYMENT_CREDITOR_TAX_ID.key))
                                 .noticeCode(getValue(data, PAYMENT_NOTICE_CODE.key))
-                                //.noticeCodeAlternative(getValue(data, PAYMENT_NOTICE_CODE_OPTIONAL.key))
+                                .noticeCodeAlternative(getValue(data, PAYMENT_NOTICE_CODE_OPTIONAL.key).equalsIgnoreCase("SI")? getDefaultValue(PAYMENT_NOTICE_CODE_OPTIONAL.key) : null)
 
                                 .pagoPaForm(getValue(data, PAYMENT_PAGOPA_FORM.key) == null ?
                                         null : utils.newAttachmentV1(getDefaultValue(PAYMENT_PAGOPA_FORM.key)))
+                        //                  .f24flatRate(getValue(data, PAYMENT_F24_FLAT.key) == null ? null :
+                        //                  (getValue(data, PAYMENT_F24_FLAT.key).equalsIgnoreCase("SI")?
+                        //                                  utils.newAttachment(getDefaultValue(PAYMENT_F24_FLAT.key)):null))
+                        //
+                        //                    .f24standard(getValue(data, PAYMENT_F24_STANDARD.key) == null ? null :
+                        //                           (getValue(data, PAYMENT_F24_STANDARD.key).equalsIgnoreCase("SI")?
+                        //                                  utils.newAttachment(getDefaultValue(PAYMENT_F24_STANDARD.key)):null))
                 )
         );
+        /* TEST
+        if(getValue(data,DIGITAL_DOMICILE.key) != null && !getValue(data,DIGITAL_DOMICILE.key).equalsIgnoreCase(EXCLUDE_VALUE)){
+            notificationRecipient = notificationRecipient.digitalDomicile(getValue(data,DIGITAL_DOMICILE.key) == null? null : (new NotificationDigitalAddress()
+                    .type((getValue(data,DIGITAL_DOMICILE_TYPE.key) == null?
+                            null : NotificationDigitalAddress.TypeEnum.PEC ))
+                    .address( getValue(data,DIGITAL_DOMICILE_ADDRESS.key)))
+            );
+        }
 
+         */
         try {
             Thread.sleep(2);
         } catch (InterruptedException e) {
@@ -193,7 +501,64 @@ public class DataTableTypeUtil {
         return notificationRecipient;
     }
 
+    @DataTableType
+    public synchronized it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient convertNotificationRecipientV2(Map<String, String> data){
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient notificationRecipientV2 =  (new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient()
+                .denomination(getValue(data,DENOMINATION.key))
+                .taxId(getValue(data,TAX_ID.key))
+                //.internalId(getValue(data,INTERNAL_ID.key))
+                .digitalDomicile(getValue(data,DIGITAL_DOMICILE.key) == null? null : (new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationDigitalAddress()
+                        .type((getValue(data,DIGITAL_DOMICILE_TYPE.key) == null?
+                                null : it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationDigitalAddress.TypeEnum.PEC ))
+                        .address( getValue(data,DIGITAL_DOMICILE_ADDRESS.key)))
+                )
+                .physicalAddress(getValue(data,PHYSICAL_ADDRES.key) == null? null: new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationPhysicalAddress()
+                        .address(getValue(data,PHYSICAL_ADDRESS_ADDRESS.key))
+                        .addressDetails(getValue(data,PHYSICAL_ADDRESS_DETAILS.key))
+                        .municipality(getValue(data,PHYSICAL_ADDRESS_MUNICIPALITY.key))
+                        .at(getValue(data,PHYSICAL_ADDRESS_AT.key))
+                        .municipalityDetails(getValue(data, PHYSICAL_ADDRESS_MUNICIPALITYDETAILS.key))
+                        .province(getValue(data,PHYSICAL_ADDRESS_PROVINCE.key))
+                        .foreignState(getValue(data,PHYSICAL_ADDRESS_STATE.key))
+                        .zip(getValue(data,PHYSICAL_ADDRESS_ZIP.key))
+                )
+                .recipientType((getValue(data,RECIPIENT_TYPE.key) == null? null :
+                        (getValue(data,RECIPIENT_TYPE.key).equalsIgnoreCase("PF")?
+                                it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient.RecipientTypeEnum.PF :
+                                it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient.RecipientTypeEnum.PG)))
+                .payment(getValue(data,PAYMENT.key)== null? null : new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationPaymentInfo()
+                                .creditorTaxId(getValue(data, PAYMENT_CREDITOR_TAX_ID.key))
+                                .noticeCode(getValue(data, PAYMENT_NOTICE_CODE.key))
+                                .noticeCodeAlternative(getValue(data, PAYMENT_NOTICE_CODE_OPTIONAL.key).equalsIgnoreCase("SI")? getDefaultValue(PAYMENT_NOTICE_CODE_OPTIONAL.key) : null)
 
+                                .pagoPaForm(getValue(data, PAYMENT_PAGOPA_FORM.key) == null ?
+                                        null : utils.newAttachmentV2(getDefaultValue(PAYMENT_PAGOPA_FORM.key)))
+                        //                  .f24flatRate(getValue(data, PAYMENT_F24_FLAT.key) == null ? null :
+                        //                  (getValue(data, PAYMENT_F24_FLAT.key).equalsIgnoreCase("SI")?
+                        //                                  utils.newAttachment(getDefaultValue(PAYMENT_F24_FLAT.key)):null))
+                        //
+                        //                    .f24standard(getValue(data, PAYMENT_F24_STANDARD.key) == null ? null :
+                        //                           (getValue(data, PAYMENT_F24_STANDARD.key).equalsIgnoreCase("SI")?
+                        //                                  utils.newAttachment(getDefaultValue(PAYMENT_F24_STANDARD.key)):null))
+                )
+        );
+        /* TEST
+        if(getValue(data,DIGITAL_DOMICILE.key) != null && !getValue(data,DIGITAL_DOMICILE.key).equalsIgnoreCase(EXCLUDE_VALUE)){
+            notificationRecipient = notificationRecipient.digitalDomicile(getValue(data,DIGITAL_DOMICILE.key) == null? null : (new NotificationDigitalAddress()
+                    .type((getValue(data,DIGITAL_DOMICILE_TYPE.key) == null?
+                            null : NotificationDigitalAddress.TypeEnum.PEC ))
+                    .address( getValue(data,DIGITAL_DOMICILE_ADDRESS.key)))
+            );
+        }
+
+         */
+        try {
+            Thread.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return notificationRecipientV2;
+    }
 
     @DataTableType
     public synchronized DataTest convertTimelineElement(Map<String, String> data) throws JsonProcessingException {
@@ -220,7 +585,7 @@ public class DataTableTypeUtil {
                 .details(getValue(data, DETAILS.key) == null ? null : new TimelineElementDetailsV20()
                         .recIndex(recIndex != null ? Integer.parseInt(recIndex) : null)
                         .digitalAddress(getObjValue(DigitalAddress.class, data, DETAILS_DIGITAL_ADDRESS.key))
-                        .refusalReasons(getListValue(NotificationRefusedError.class, data, DETAILS_REFUSAL_REASONS.key))
+                        .refusalReasons(getListValue(NotificationRefusedErrorV20.class, data, DETAILS_REFUSAL_REASONS.key))
                         .generatedAarUrl(getValue(data, DETAILS_GENERATED_AAR_URL.key))
                         .responseStatus(responseStatus != null ? ResponseStatus.valueOf(responseStatus) : null)
                         .digitalAddressSource(digitalAddressSource != null ? DigitalAddressSource.valueOf(digitalAddressSource) : null)

@@ -1,12 +1,15 @@
 package it.pagopa.pn.client.b2b.pa.testclient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -17,11 +20,12 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Component
-public class InteropTokenSingleton {
+@Slf4j
+public class InteropTokenSingleton implements InteropTokenRefresh{
 
-    public final static String ENEBLED_INTEROP = "true";
+    public static final String ENEBLED_INTEROP = "true";
     private static String tokenInterop;
-    private OffsetDateTime tokenCreationDate;
+    private static OffsetDateTime tokenCreationDate;
     private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
     private final String clientAssertion;
@@ -29,13 +33,17 @@ public class InteropTokenSingleton {
     private final String tokenOauth2Path;
     private final String interopBaseUrl;
 
+    private final String enableInterop;
+
     public InteropTokenSingleton(
             RestTemplate restTemplate,
             ApplicationContext ctx,
             @Value("${pn.interop.base-url}") String interopBaseUrl,
             @Value("${pn.interop.token-oauth2.path}") String tokenOauth2Path,
             @Value("${pn.interop.token-oauth2.client-assertion}") String clientAssertion,
-            @Value("${interop.clientId}") String interopClientId){
+            @Value("${pn.interop.clientId}") String interopClientId,
+            @Value("${pn.interop.enable}") String enableInterop){
+
 
         this.ctx = ctx;
         this.restTemplate = restTemplate;
@@ -43,15 +51,34 @@ public class InteropTokenSingleton {
         this.tokenOauth2Path = tokenOauth2Path;
         this.clientAssertion = clientAssertion;
         this.interopClientId = interopClientId;
+        this.enableInterop = enableInterop;
     }
 
+    @Synchronized
     public String getTokenInterop(){
-        if(tokenInterop != null && (Duration.between(tokenCreationDate, OffsetDateTime.now()).getSeconds() < (60*9)) ){
+        if(tokenInterop == null){
+            tokenInterop = getBearerToken();
+            tokenCreationDate = OffsetDateTime.now();
+        }
+        return tokenInterop;
+        /*
+        if(tokenInterop != null && (Duration.between(tokenCreationDate, OffsetDateTime.now()).getSeconds() <= (60*8)) ){
             return tokenInterop;
         }else{
-            this.tokenInterop = getBearerToken();
-            this.tokenCreationDate = OffsetDateTime.now();
+            log.info("refresh interop token");
+            tokenInterop = getBearerToken();
+            tokenCreationDate = OffsetDateTime.now();
             return tokenInterop;
+        }
+         */
+    }
+
+    @Scheduled(cron = "0 0/01 * * * ?")
+    public void refreshTokenInteropClient() {
+        if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
+            log.info("refresh interop token");
+            tokenInterop = getBearerToken();
+            tokenCreationDate = OffsetDateTime.now();
         }
     }
 
@@ -72,6 +99,7 @@ public class InteropTokenSingleton {
         return (response.getStatusCode().is2xxSuccessful() ? response.getBody().getAccessToken() : null);
 
     }
+
 
     private static class InteropResponse {
         private String correlationId;

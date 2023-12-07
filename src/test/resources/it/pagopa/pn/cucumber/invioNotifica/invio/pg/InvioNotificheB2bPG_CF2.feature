@@ -16,7 +16,7 @@ Feature: invio notifiche b2b per la persona giuridica con codice fiscale (societ
       | senderDenomination | Comune di milano |
     And destinatario Cucumber Society e:
       | payment_creditorTaxId | 77777777777 |
-      | payment_pagoPaForm | NULL |
+      | payment_pagoPaForm | SI |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then si verifica la corretta acquisizione della notifica
     And la notifica può essere correttamente recuperata dal sistema tramite codice IUN

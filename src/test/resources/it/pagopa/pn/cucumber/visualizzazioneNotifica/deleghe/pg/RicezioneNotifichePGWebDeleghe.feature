@@ -228,3 +228,6 @@ Feature: Ricezione notifiche destinate al delegante
     And la notifica può essere correttamente letta da "CucumberSpa" con delega
     And come amministratore "Mario Cucumber" associa alla delega il primo gruppo disponibile attivo per il delegato "CucumberSpa"
     And la notifica può essere correttamente letta da "CucumberSpa" con delega
+
+
+

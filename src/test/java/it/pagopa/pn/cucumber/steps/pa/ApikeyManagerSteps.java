@@ -1,15 +1,20 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.testclient.IPnApiKeyManagerClient;
+import it.pagopa.pn.client.b2b.pa.testclient.PnApiKeyManagerExternalClientImpl;
+import it.pagopa.pn.client.b2b.pa.testclient.SettableApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.*;
 import it.pagopa.pn.cucumber.utils.GroupPosition;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.List;
@@ -18,7 +23,7 @@ public class ApikeyManagerSteps {
 
     private final IPnApiKeyManagerClient apiKeyManagerClient;
     private final SharedSteps sharedSteps;
-
+    private final PnApiKeyManagerExternalClientImpl apiKeyManagerClientImpl;
     private ApiKeysResponse apiKeys;
     private RequestNewApiKey requestNewApiKey;
     private ResponseNewApiKey responseNewApiKey;
@@ -27,10 +32,18 @@ public class ApikeyManagerSteps {
     private String firstGroupUsed;
     private String responseNewApiKeyTaxId;
 
+    //TODO: trovare punto migliore
+    @Value("${pn.interop.enable}")
+    private boolean isInteropEnabled;
+
+    @Value("${spring.profiles.active}")
+    private String env;
+
     @Autowired
-    public ApikeyManagerSteps(IPnApiKeyManagerClient apiKeyManagerClient, SharedSteps sharedSteps) {
+    public ApikeyManagerSteps(IPnApiKeyManagerClient apiKeyManagerClient, SharedSteps sharedSteps,PnApiKeyManagerExternalClientImpl apiKeyManagerClientImpl) {
         this.sharedSteps = sharedSteps;
         this.apiKeyManagerClient = apiKeyManagerClient;
+        this.apiKeyManagerClientImpl=apiKeyManagerClientImpl;
     }
 
     @Given("vengono lette le apiKey esistenti")
@@ -38,6 +51,26 @@ public class ApikeyManagerSteps {
         Assertions.assertDoesNotThrow(() ->
                 apiKeys = this.apiKeyManagerClient.getApiKeys(null, null, null, true));
     }
+
+    //TODO: Centralizzare
+    @Before("@precondition")
+    public void setup(){
+        Assumptions.assumeTrue(preconditionForTest());
+    }
+
+    //TODO: Centralizzare
+    private boolean preconditionForTest(){
+        System.out.println("ENV: "+env+" isInteropEnabled: "+isInteropEnabled);
+       switch (env){
+           case "test":
+               return !isInteropEnabled;
+           case "uat":
+               return isInteropEnabled;
+           default:
+               return false;
+       }
+    }
+
 
     @Then("la lettura è avvenuta correttamente")
     public void laLetturaÈAvvenutaCorrettamente() {
@@ -203,9 +236,21 @@ public class ApikeyManagerSteps {
 
     @Given("Viene creata una nuova apiKey per il comune {string} senza gruppo")
     public void viene_creata_una_nuova_api_key_per_il_comune_senza_gruppo(String settedPa) {
+        switch (settedPa) {
+            case "Comune_1":
+                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
+                break;
+            case "Comune_Son":
+                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.SON);
+                break;
+            case "Comune_Root":
+                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.ROOT);
+                break;
+        }
+
         requestNewApiKey = new RequestNewApiKey().name("CUCUMBER GROUP TEST");
         responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
-        Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
+        Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClientImpl.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
     }
@@ -272,4 +317,31 @@ public class ApikeyManagerSteps {
             this.sharedSteps.setNotificationError(e);
         }
     }
+
+    @Then("si tenta il recupero dal sistema tramite codice IUN con api v1")
+    public void siTentaIlRecuperoDalSistemaTramiteCodiceIUNV1() {
+        try {
+            sharedSteps.getB2bUtils().getNotificationByIunV1(sharedSteps.getSentNotification().getIun());
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
+        }
+    }
+
+    @And("Si cambia al comune {string}")
+    public void lApiKeyNonÈPresenteDalComune(String settedPa) {
+        sharedSteps.selectPA(settedPa);
+        switch (settedPa){
+            case "Comune_1":
+                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
+                break;
+            case "Comune_Son":
+                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.SON);
+                break;
+            case "Comune_Root":
+                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.ROOT);
+                break;
+        }
+
+        }
+
 }
