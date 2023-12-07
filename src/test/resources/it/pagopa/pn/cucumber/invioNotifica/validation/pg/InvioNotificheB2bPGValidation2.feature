@@ -279,7 +279,7 @@ Feature: Validazione campi invio notifiche b2b persona giuridica
       | Milano           | 20121    | MI       |
       | VILLAPIANA LIDO  | 87076    | CS       |
 
-  @validation
+  @validation @realNormalizzatore
   Scenario Outline: [B2B-PA-SEND_VALID_PF_PG_17] invio notifiche digitali multi destinatario con  con physicalAddress_zip, physicalAddress_municipality e physicalAddress_province errati scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |

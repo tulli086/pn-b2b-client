@@ -15,8 +15,7 @@ import static io.cucumber.junit.platform.engine.Constants.*;
         @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "it.pagopa.pn.cucumber.steps"),
         @ConfigurationParameter(key = EXECUTION_MODE_FEATURE_PROPERTY_NAME, value = "concurrent"),
 })
-@ExcludeTags({"ignore"})
-@IncludeTags({"AOO_UO"})
-public class AooUoTest {
-
+@ExcludeTags({"ignore","realNR"})
+@IncludeTags({"workflowAnalogico","workflowDigitale","costoAnalogico","validation","version"})
+public class NrtTest {
 }

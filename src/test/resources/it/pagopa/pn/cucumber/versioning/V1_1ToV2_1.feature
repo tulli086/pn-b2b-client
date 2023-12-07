@@ -251,3 +251,26 @@ Feature: verifica compatibilità tra v1.1 a v2.1
       | payment_f24standard | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED V1
     Then la notifica può essere correttamente recuperata dal sistema tramite codice IUN
+
+
+
+  @version
+  Scenario: [B2B-PA-SEND_VERSION_V1_V21_20]  Invio notifica V1.1 con taxId errato PN-8913
+    Given viene generata una nuova notifica V1
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario V1
+      | taxID | LNALNI80A01H501X |
+    When la notifica viene inviata dal "Comune_1" dalla "V1"
+    Then l'operazione ha prodotto un errore con status code "400"
+
+  @version
+  Scenario: [B2B-PA-SEND_VERSION_V1_V21_21]  Invio notifica V1.1 con noticeCode esistente PN-8913
+    Given viene generata una nuova notifica V1
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
+    And destinatario Mario Gherkin V1 e:
+      | payment_noticeCode | 355312817721270543 |
+    When la notifica viene inviata dal "Comune_1" dalla "V1"
+    Then l'operazione ha prodotto un errore con status code "409"
