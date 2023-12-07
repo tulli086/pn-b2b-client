@@ -1065,18 +1065,15 @@ public class SharedSteps {
         sendNotificationWithError();
     }
 
-    @When("la notifica viene inviata dal {string} V1")
-    public void laNotificaVieneInviataDallaPAV1(String pa) {
+    @When("la notifica viene inviata dal {string} dalla {string}")
+    public void laNotificaVieneInviataDallaPAV1(String pa,String versione) {
         selectPA(pa);
-        setSenderTaxIdFromPropertiesV1();
-        sendNotificationWithErrorV1();
-    }
-
-    @When("la notifica viene inviata dal {string} V2")
-    public void laNotificaVieneInviataDallaPAV2(String pa) {
-        selectPA(pa);
-        setSenderTaxIdFromPropertiesV2();
-        sendNotificationWithErrorV2();
+        if(versione.equalsIgnoreCase("V1")){
+            setSenderTaxIdFromPropertiesV1();
+        }else if(versione.equalsIgnoreCase("V2")){
+            setSenderTaxIdFromPropertiesV2();
+        }
+        sendNotificationWithError();
     }
 
     @When("la notifica viene inviata tramite api b2b")
@@ -1264,29 +1261,13 @@ public class SharedSteps {
     private void sendNotificationWithError() {
         try {
             notificationCreationDate = OffsetDateTime.now();
-            this.newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
-        } catch (HttpStatusCodeException | IOException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
+            if(notificationRequest!= null) {
+                this.newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
+            } else if(notificationRequestV1!= null){
+                this.newNotificationResponseV1 = b2bUtils.uploadNotificationV1(notificationRequestV1);
+            }else if(notificationRequestV2!= null){
+                this.newNotificationResponseV2 = b2bUtils.uploadNotificationV2(notificationRequestV2);
             }
-        }
-    }
-
-    private void sendNotificationWithErrorV1() {
-        try {
-            notificationCreationDate = OffsetDateTime.now();
-            this.newNotificationResponseV1 = b2bUtils.uploadNotificationV1(notificationRequestV1);
-        } catch (HttpStatusCodeException | IOException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
-        }
-    }
-
-    private void sendNotificationWithErrorV2() {
-        try {
-            notificationCreationDate = OffsetDateTime.now();
-            this.newNotificationResponseV2 = b2bUtils.uploadNotificationV2(notificationRequestV2);
         } catch (HttpStatusCodeException | IOException e) {
             if (e instanceof HttpStatusCodeException) {
                 this.notificationError = (HttpStatusCodeException) e;

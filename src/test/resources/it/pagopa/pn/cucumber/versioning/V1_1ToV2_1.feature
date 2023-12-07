@@ -261,7 +261,7 @@ Feature: verifica compatibilità tra v1.1 a v2.1
       | senderDenomination | Comune di milano            |
     And destinatario V1
       | taxID | LNALNI80A01H501X |
-    When la notifica viene inviata dal "Comune_1" V1
+    When la notifica viene inviata dal "Comune_1" dalla "V1"
     Then l'operazione ha prodotto un errore con status code "400"
 
   @version
@@ -272,5 +272,5 @@ Feature: verifica compatibilità tra v1.1 a v2.1
       | feePolicy          | DELIVERY_MODE               |
     And destinatario Mario Gherkin V1 e:
       | payment_noticeCode | 355312817721270543 |
-    When la notifica viene inviata dal "Comune_1" V1
+    When la notifica viene inviata dal "Comune_1" dalla "V1"
     Then l'operazione ha prodotto un errore con status code "409"
