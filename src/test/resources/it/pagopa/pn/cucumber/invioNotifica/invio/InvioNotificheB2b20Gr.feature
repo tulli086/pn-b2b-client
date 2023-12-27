@@ -19,7 +19,7 @@ Feature: invio notifiche b2b con analisi documenti allegati
       | document           | DOC_2_PG;DOC_2_PG;DOC_2_PG  |
     And destinatario Mario Cucumber e:
       | payment | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then si verifica la corretta acquisizione della notifica
     And la notifica può essere correttamente recuperata dal sistema tramite codice IUN
 
@@ -32,7 +32,7 @@ Feature: invio notifiche b2b con analisi documenti allegati
       | document           | DOC_6_PG                    |
     And destinatario Mario Cucumber e:
       | payment | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then si verifica la corretta acquisizione della notifica
     And la notifica può essere correttamente recuperata dal sistema tramite codice IUN
 
