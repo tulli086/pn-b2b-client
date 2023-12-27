@@ -87,6 +87,7 @@ public class DataTableTypeUtil {
             case "DOC_3_PG" -> document = "classpath:/sample_3pg.pdf";
             case "DOC_4_PG" -> document = "classpath:/sample_4pg.pdf";
             case "DOC_5_PG" -> document = "classpath:/sample_5pg.pdf";
+            case "DOC_6_PG" -> document = "classpath:/sample_6pg.pdf";
             case "DOC_7_PG" -> document = "classpath:/sample_7pg.pdf";
             case "DOC_8_PG" -> document = "classpath:/sample_8pg.pdf";
             default ->  document = getDefaultValue(DOCUMENT.key);
