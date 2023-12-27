@@ -770,8 +770,7 @@ public class PnPaB2bUtils {
 
         int i = 0;
         for (NotificationRecipientV21 recipient : fsn.getRecipients()) {
-
-            if(fsn.getRecipients().get(i).getPayments() != null &&
+            if(fsn.getRecipients().get(i).getPayments() != null && fsn.getRecipients().get(i).getPayments().size()>0 &&
                     fsn.getRecipients().get(i).getPayments().get(0).getPagoPa() != null){
                 NotificationAttachmentDownloadMetadataResponse resp;
 
@@ -779,7 +778,7 @@ public class PnPaB2bUtils {
 
                 checkAttachment( resp );
             }
-            if(fsn.getRecipients().get(i).getPayments() != null &&
+            if(fsn.getRecipients().get(i).getPayments() != null && fsn.getRecipients().get(i).getPayments().size()>0 &&
                     fsn.getRecipients().get(i).getPayments().get(0).getF24() != null){
                 NotificationAttachmentDownloadMetadataResponse resp;
 
