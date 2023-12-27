@@ -16,9 +16,7 @@ Feature: invio notifiche b2b
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
-      | document           | DOC_2_PG                    |
-      | document_1         | DOC_2_PG                    |
-      | document_2         | DOC_2_PG                    |
+      | document           | DOC_2_PG;DOC_2_PG;DOC_2_PG  |
     And destinatario Mario Cucumber e:
       | payment_pagoPaForm | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
