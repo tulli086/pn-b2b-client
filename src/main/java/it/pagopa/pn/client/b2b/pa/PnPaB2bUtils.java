@@ -68,6 +68,7 @@ public class PnPaB2bUtils {
         this.raddFsuClient = raddFsuClient;
     }
 
+
     public void setClient(IPnPaB2bClient client) {
         this.client = client;
     }
@@ -82,7 +83,10 @@ public class PnPaB2bUtils {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            newdocs.add(this.preloadDocument(doc));
+
+            if (doc!= null) {
+                newdocs.add(this.preloadDocument(doc));
+            }
         }
         request.setDocuments(newdocs);
 
@@ -102,7 +106,6 @@ public class PnPaB2bUtils {
                     if (paymentInfo.getF24()!= null) {
                         paymentInfo.getF24().setMetadataAttachment(preloadMetadataAttachment(paymentInfo.getF24().getMetadataAttachment()));
                     }
-
                 }
 
                // paymentInfo.setPagoPaForm(preloadAttachment(paymentInfo.getPagoPaForm()));
