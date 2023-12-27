@@ -41,7 +41,56 @@ public class DataTableTypeUtil {
                                 (getValue(data,PHYSICAL_COMMUNICATION_TYPE.key).equalsIgnoreCase("REGISTERED_LETTER_890")?
                                         NewNotificationRequestV21.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 :
                                         NewNotificationRequestV21.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER)))
-                .addDocumentsItem( getValue(data,DOCUMENT.key) == null ? null : utils.newDocument(getDefaultValue(DOCUMENT.key)))
+
+                .addDocumentsItem( getValue(data,DOCUMENT.key) == null ? null :
+                        (getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_1_PG")?
+                                utils.newDocument("classpath:/sample_1pg.pdf"):
+                        (getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_2_PG")?
+                                utils.newDocument("classpath:/sample_2pg.pdf"):
+                        (getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_3_PG")?
+                                utils.newDocument("classpath:/sample_3pg.pdf"):
+                                getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_4_PG")?
+                                        utils.newDocument("classpath:/sample_4pg.pdf"):
+                                      getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_5_PG")?
+                                                utils.newDocument("classpath:/sample_5pg.pdf"):
+                                        getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_7_PG")?
+                                                utils.newDocument("classpath:/sample_7pg.pdf"):
+                                                getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_8_PG")?
+                                                        utils.newDocument("classpath:/sample_8pg.pdf"):
+                                                utils.newDocument(getDefaultValue(DOCUMENT.key))))))
+
+                .addDocumentsItem( getValue(data,DOCUMENT_1.key) == null ? null :
+                        (getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_1_PG")?
+                                utils.newDocument("classpath:/sample_1pg.pdf"):
+                                (getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_2_PG")?
+                                        utils.newDocument("classpath:/sample_2pg.pdf"):
+                                        (getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_3_PG")?
+                                                utils.newDocument("classpath:/sample_3pg.pdf"):
+                                                getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_4_PG")?
+                                                        utils.newDocument("classpath:/sample_4pg.pdf"):
+                                                        getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_5_PG")?
+                                                                utils.newDocument("classpath:/sample_5pg.pdf"):
+                                                                getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_7_PG")?
+                                                                        utils.newDocument("classpath:/sample_7pg.pdf"):
+                                                                        getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_8_PG")?
+                                                                                utils.newDocument("classpath:/sample_8pg.pdf"):
+                                                                                utils.newDocument(getDefaultValue(DOCUMENT_1.key))))))
+                .addDocumentsItem( getValue(data,DOCUMENT_2.key) == null ? null :
+                        (getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_1_PG")?
+                                utils.newDocument("classpath:/sample_1pg.pdf"):
+                                (getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_2_PG")?
+                                        utils.newDocument("classpath:/sample_2pg.pdf"):
+                                        (getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_3_PG")?
+                                                utils.newDocument("classpath:/sample_3pg.pdf"):
+                                                getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_4_PG")?
+                                                        utils.newDocument("classpath:/sample_4pg.pdf"):
+                                                        getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_5_PG")?
+                                                                utils.newDocument("classpath:/sample_5pg.pdf"):
+                                                                getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_7_PG")?
+                                                                        utils.newDocument("classpath:/sample_7pg.pdf"):
+                                                                        getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_8_PG")?
+                                                                                utils.newDocument("classpath:/sample_8pg.pdf"):
+                                                                                utils.newDocument(getDefaultValue(DOCUMENT_2.key))))))
 
                 .paFee(getValue(data, PA_FEE.key) == null ?  null : Integer.parseInt(getValue(data, PA_FEE.key)))
                 .pagoPaIntMode(
