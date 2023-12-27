@@ -42,73 +42,57 @@ public class DataTableTypeUtil {
                                         NewNotificationRequestV21.PhysicalCommunicationTypeEnum.REGISTERED_LETTER_890 :
                                         NewNotificationRequestV21.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER)))
 
-                .addDocumentsItem( getValue(data,DOCUMENT.key) == null ? null :
-                        (getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_1_PG")?
-                                utils.newDocument("classpath:/sample_1pg.pdf"):
-                        (getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_2_PG")?
-                                utils.newDocument("classpath:/sample_2pg.pdf"):
-                        (getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_3_PG")?
-                                utils.newDocument("classpath:/sample_3pg.pdf"):
-                                getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_4_PG")?
-                                        utils.newDocument("classpath:/sample_4pg.pdf"):
-                                      getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_5_PG")?
-                                                utils.newDocument("classpath:/sample_5pg.pdf"):
-                                        getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_7_PG")?
-                                                utils.newDocument("classpath:/sample_7pg.pdf"):
-                                                getValue(data,DOCUMENT.key) .equalsIgnoreCase("DOC_8_PG")?
-                                                        utils.newDocument("classpath:/sample_8pg.pdf"):
-                                                utils.newDocument(getDefaultValue(DOCUMENT.key))))))
-
-                .addDocumentsItem( getValue(data,DOCUMENT_1.key) == null ? null :
-                        (getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_1_PG")?
-                                utils.newDocument("classpath:/sample_1pg.pdf"):
-                                (getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_2_PG")?
-                                        utils.newDocument("classpath:/sample_2pg.pdf"):
-                                        (getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_3_PG")?
-                                                utils.newDocument("classpath:/sample_3pg.pdf"):
-                                                getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_4_PG")?
-                                                        utils.newDocument("classpath:/sample_4pg.pdf"):
-                                                        getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_5_PG")?
-                                                                utils.newDocument("classpath:/sample_5pg.pdf"):
-                                                                getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_7_PG")?
-                                                                        utils.newDocument("classpath:/sample_7pg.pdf"):
-                                                                        getValue(data,DOCUMENT_1.key) .equalsIgnoreCase("DOC_8_PG")?
-                                                                                utils.newDocument("classpath:/sample_8pg.pdf"):
-                                                                                utils.newDocument(getDefaultValue(DOCUMENT_1.key))))))
-                .addDocumentsItem( getValue(data,DOCUMENT_2.key) == null ? null :
-                        (getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_1_PG")?
-                                utils.newDocument("classpath:/sample_1pg.pdf"):
-                                (getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_2_PG")?
-                                        utils.newDocument("classpath:/sample_2pg.pdf"):
-                                        (getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_3_PG")?
-                                                utils.newDocument("classpath:/sample_3pg.pdf"):
-                                                getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_4_PG")?
-                                                        utils.newDocument("classpath:/sample_4pg.pdf"):
-                                                        getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_5_PG")?
-                                                                utils.newDocument("classpath:/sample_5pg.pdf"):
-                                                                getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_7_PG")?
-                                                                        utils.newDocument("classpath:/sample_7pg.pdf"):
-                                                                        getValue(data,DOCUMENT_2.key) .equalsIgnoreCase("DOC_8_PG")?
-                                                                                utils.newDocument("classpath:/sample_8pg.pdf"):
-                                                                                utils.newDocument(getDefaultValue(DOCUMENT_2.key))))))
-
                 .paFee(getValue(data, PA_FEE.key) == null ?  null : Integer.parseInt(getValue(data, PA_FEE.key)))
                 .pagoPaIntMode(
                         (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("SYNC")?
                                 NewNotificationRequestV21.PagoPaIntModeEnum.SYNC :
                                 (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("ASYNC")?
                                         NewNotificationRequestV21.PagoPaIntModeEnum.ASYNC:null
-        )))
+        ))));
 
+        notificationRequest = addDocument(notificationRequest,data);
 
-
-        );
         try {
             Thread.sleep(2);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return notificationRequest;
+    }
+
+    private NewNotificationRequestV21 addDocument(NewNotificationRequestV21 notificationRequest, Map<String, String> data) {
+        String documentsToAdd = getValue(data,DOCUMENT.key);
+        if( documentsToAdd == null){
+            return notificationRequest.addDocumentsItem(null);
+        }
+
+        if(documentsToAdd.contains(";")){
+            for(String documentElem : documentsToAdd.split(";")){
+                notificationRequest = notificationRequest.addDocumentsItem(getNotificationDocument(documentElem));
+            }
+        }else{
+            notificationRequest = notificationRequest.addDocumentsItem(getNotificationDocument(documentsToAdd));
+        }
+        return notificationRequest;
+
+
+    }
+
+    private NotificationDocument getNotificationDocument(String documentElem) {
+        String document = null;
+
+        switch (documentElem.toUpperCase().trim()) {
+            case "DOC_1_PG" -> document = "classpath:/sample_1pg.pdf";
+            case "DOC_2_PG" -> document = "classpath:/sample_2pg.pdf";
+            case "DOC_3_PG" -> document = "classpath:/sample_3pg.pdf";
+            case "DOC_4_PG" -> document = "classpath:/sample_4pg.pdf";
+            case "DOC_5_PG" -> document = "classpath:/sample_5pg.pdf";
+            case "DOC_7_PG" -> document = "classpath:/sample_7pg.pdf";
+            case "DOC_8_PG" -> document = "classpath:/sample_8pg.pdf";
+            default ->  document = getDefaultValue(DOCUMENT.key);
+        }
+
+       return utils.newDocument(document);
     }
 
     @DataTableType
