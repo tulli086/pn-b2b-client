@@ -16,7 +16,9 @@ Feature: invio notifiche b2b
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
-      | document           | DOC_3_PG                    |
+      | document           | DOC_2_PG                    |
+      | document_1         | DOC_2_PG                    |
+      | document_2         | DOC_2_PG                    |
     And destinatario Mario Cucumber e:
       | payment_pagoPaForm | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
@@ -84,7 +86,6 @@ Feature: invio notifiche b2b
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi REFUSED
 
 
-
   @20Grammi
   Scenario: [B2B-PA-SEND_PRELOAD_4_E] da PA non elencata in abilitazione -  nessuno allegato di pagamento e tre documenti di 2 pagine ognuno (Esito: refused)
     Given viene generata una nuova notifica
@@ -119,8 +120,3 @@ Feature: invio notifiche b2b
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then si verifica la corretta acquisizione della notifica
     And la notifica può essere correttamente recuperata dal sistema tramite codice IUN
-
-
-
-
-    
