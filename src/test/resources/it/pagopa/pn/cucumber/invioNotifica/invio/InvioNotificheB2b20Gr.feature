@@ -1,4 +1,4 @@
-Feature: invio notifiche b2b
+Feature: invio notifiche b2b con analisi documenti allegati
 
   @20Grammi
   Scenario: [B2B-PA-SEND_PRELOAD_1] notifica con un allegato di pagamento inviata da PA “abilitata” (Esito: refined)
