@@ -92,19 +92,18 @@ Feature: invio notifiche b2b con analisi documenti allegati
       | document           | DOC_2_PG;DOC_2_PG;DOC_2_PG  |
     And destinatario Mario Cucumber e:
       | payment | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi REFUSED
+    Then la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi REFUSED
 
   @20Grammi
   Scenario: [B2B-PA-SEND_PRELOAD_9] da PA non elencata in abilitazione -  nessun allegato di pagamento e due documenti: uno da 3 pagine e uno da 1 pagina inviata da PA “disabilitata” (Esito: refused)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
-      | document           | DOC_3_PG;DOC_2_PG           |
+      | document           | DOC_3_PG;DOC_1_PG           |
     And destinatario Mario Cucumber e:
       | payment | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
-    Then si verifica la corretta acquisizione della notifica
-    And la notifica può essere correttamente recuperata dal sistema tramite codice IUN
+    Then la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi REFUSED
+
 
   @20Grammi
   Scenario: [B2B-PA-SEND_PRELOAD_10] da PA non elencata in abilitazione -  nessuno allegato di pagamento e 2 documenti di 2 pagine ognuno (Esito: refined)
