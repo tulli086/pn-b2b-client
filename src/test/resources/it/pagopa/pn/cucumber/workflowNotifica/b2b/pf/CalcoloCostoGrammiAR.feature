@@ -40,7 +40,7 @@ Feature: calcolo costo notifica in base hai grammi
       | payment_pagoPaForm           | NOALLEGATO           |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo = "4700" della notifica
+    And viene verificato il costo = "8700" della notifica
 
 
   @CostoCartaceoComplete
@@ -243,7 +243,7 @@ Feature: calcolo costo notifica in base hai grammi
       | senderDenomination    | Comune di palermo                                                                                |
       | physicalCommunication | AR_REGISTERED_LETTER                                                                             |
       | feePolicy             | DELIVERY_MODE                                                                                    |
-      | document              | DOC_300_PG;DOC_300_PG;DOC_100_PG;DOC_50_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_7_PG |
+      | document              | DOC_300_PG;DOC_300_PG;DOC_100_PG;DOC_50_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_6_PG |
     And destinatario Mario Gherkin e:
       | digitalDomicile              | NULL         |
       | physicalAddress_address      | Via@ok_AR    |
@@ -262,7 +262,7 @@ Feature: calcolo costo notifica in base hai grammi
       | senderDenomination    | Comune di palermo               |
       | physicalCommunication | AR_REGISTERED_LETTER            |
       | feePolicy             | DELIVERY_MODE                   |
-      | document              | DOC_2_PG;                       |
+      | document              | DOC_4_PG;                       |
     And destinatario Mario Gherkin e:
       | digitalDomicile         | NULL       |
       | physicalAddress_State   | ALBANIA    |
@@ -289,7 +289,7 @@ Feature: calcolo costo notifica in base hai grammi
       | payment_pagoPaForm      | NOALLEGATO |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo = "4700" della notifica
+    And viene verificato il costo = "8700" della notifica
 
   @CostoCartaceoComplete
   Scenario: [CALCOLO-COSTO_AR-50GR_16] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 50gr
@@ -352,7 +352,7 @@ Feature: calcolo costo notifica in base hai grammi
       | senderDenomination    | Comune di palermo                            |
       | physicalCommunication | AR_REGISTERED_LETTER                         |
       | feePolicy             | DELIVERY_MODE                                |
-      | document              | DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_7_PG |
+      | document              | DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_5_PG |
     And destinatario Mario Gherkin e:
       | digitalDomicile         | NULL       |
       | physicalAddress_State   | ALBANIA    |
@@ -478,7 +478,7 @@ Feature: calcolo costo notifica in base hai grammi
       | senderDenomination    | Comune di palermo                                                                                |
       | physicalCommunication | AR_REGISTERED_LETTER                                                                             |
       | feePolicy             | DELIVERY_MODE                                                                                    |
-      | document              | DOC_300_PG;DOC_300_PG;DOC_100_PG;DOC_50_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_7_PG |
+      | document              | DOC_300_PG;DOC_300_PG;DOC_100_PG;DOC_50_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_8_PG;DOC_6_PG |
     And destinatario Mario Gherkin e:
       | digitalDomicile         | NULL       |
       | physicalAddress_State   | ALBANIA    |
