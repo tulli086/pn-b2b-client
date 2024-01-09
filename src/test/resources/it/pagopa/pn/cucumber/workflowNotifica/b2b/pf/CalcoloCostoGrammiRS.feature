@@ -301,11 +301,11 @@ Feature: calcolo costo notifica in base hai grammi
       | feePolicy          | DELIVERY_MODE                   |
       | document           | DOC_5_PG;                       |
     And destinatario Mario Gherkin e:
-      | digitalDomicile_address | test@fail.it            |              |
-      | physicalAddress_State   | ALBANIA                 |              |
-      | physicalAddress_zip     | ZONE_1                  |              |
-      | physicalAddress_address | digitalDomicile_address | test@fail.it |
-      | payment_pagoPaForm      | NOALLEGATO              |              |
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_State   | ALBANIA      |
+      | physicalAddress_zip     | ZONE_1       |
+      | physicalAddress_address | Via@ok_RIS   |
+      | payment_pagoPaForm      | NOALLEGATO   |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And viene verificato il costo = "964" della notifica
