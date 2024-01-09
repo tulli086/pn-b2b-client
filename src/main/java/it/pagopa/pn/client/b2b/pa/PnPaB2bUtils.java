@@ -1275,7 +1275,7 @@ public class PnPaB2bUtils {
 
 
     private void loadToPresigned( String url, String secret, String sha256, String resource,String resourceType, int depth ) {
-        if(depth >= 5){
+        if(depth >= 8){
             throw new ResourceAccessException("max depth, PUT not working");
         }
         try{
