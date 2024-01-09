@@ -24,12 +24,12 @@ Feature: calcolo costo notifica in base hai grammi
     Examples:
       | CAP   | COSTO | MUNICIPALITY   | PROVINCE | SUBJECT                        |
       | 05010 | 1111  | COLLELUNGO     | TR       | notifica analogica FSU         |
-      | 06031 | 981   | CANTALUPO      | PG       | notifica analogica RECAPITISTA |
+      | 06031 | 963   | CANTALUPO      | PG       | notifica analogica RECAPITISTA |
       | 64011 | 960   | ALBA ADRIATICA | TE       | notifica analogica RECAPITISTA |
       | 00010 | 912   | CASAPE         | RM       | notifica analogica RECAPITISTA |
-      | 70010 | 867  | ADELFIA        | BA       | notifica analogica RECAPITISTA |
-      | 10010 | 931  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
-      | 60012 | 985  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
+      | 70010 | 867   | ADELFIA        | BA       | notifica analogica RECAPITISTA |
+      | 10010 | 931   | ANDRATE        | TO       | notifica analogica RECAPITISTA |
+      | 60012 | 985   | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
   @CostoCartaceoComplete
@@ -229,7 +229,7 @@ Feature: calcolo costo notifica in base hai grammi
       | 05010 | 1436  | COLLELUNGO     | TR       | notifica analogica FSU         |
       | 06031 | 1265  | CANTALUPO      | PG       | notifica analogica RECAPITISTA |
       | 64011 | 1328  | ALBA ADRIATICA | TE       | notifica analogica RECAPITISTA |
-      | 00010 | 1288   | CASAPE         | RM       | notifica analogica RECAPITISTA |
+      | 00010 | 1288  | CASAPE         | RM       | notifica analogica RECAPITISTA |
       | 70010 | 1228  | ADELFIA        | BA       | notifica analogica RECAPITISTA |
       | 10010 | 1312  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1383  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
@@ -258,7 +258,7 @@ Feature: calcolo costo notifica in base hai grammi
       | 05010 | 1493  | COLLELUNGO     | TR       | notifica analogica FSU         |
       | 06031 | 1322  | CANTALUPO      | PG       | notifica analogica RECAPITISTA |
       | 64011 | 1385  | ALBA ADRIATICA | TE       | notifica analogica RECAPITISTA |
-      | 00010 | 1833   | CASAPE         | RM       | notifica analogica RECAPITISTA |
+      | 00010 | 1345   | CASAPE         | RM       | notifica analogica RECAPITISTA |
       | 70010 | 1285  | ADELFIA        | BA       | notifica analogica RECAPITISTA |
       | 10010 | 1369  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1440  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
@@ -287,7 +287,7 @@ Feature: calcolo costo notifica in base hai grammi
       | 05010 | 1613  | COLLELUNGO     | TR       | notifica analogica FSU         |
       | 06031 | 1423  | CANTALUPO      | PG       | notifica analogica RECAPITISTA |
       | 64011 | 1492  | ALBA ADRIATICA | TE       | notifica analogica RECAPITISTA |
-      | 00010 | 1492   | CASAPE         | RM       | notifica analogica RECAPITISTA |
+      | 00010 | 1446   | CASAPE         | RM       | notifica analogica RECAPITISTA |
       | 70010 | 1381  | ADELFIA        | BA       | notifica analogica RECAPITISTA |
       | 10010 | 1473  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1551  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
