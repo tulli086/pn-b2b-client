@@ -22,18 +22,24 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                |
-      | 80060 | 550   | Vico Equense | NA       | notifica analogica FSU |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 550   | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 454   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 411   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 378   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 470   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 399   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 420   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-21GR_2] Invio notifica e verifica calcolo del costo su raccomandata con peso = 21gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber |
-      | senderDenomination    | Comune di palermo               |
-      | physicalCommunication | AR_REGISTERED_LETTER            |
-      | feePolicy             | DELIVERY_MODE                   |
-      | document              | DOC_5_PG;                       |
+      | subject               | <SUBJECT>            |
+      | senderDenomination    | Comune di palermo    |
+      | physicalCommunication | AR_REGISTERED_LETTER |
+      | feePolicy             | DELIVERY_MODE        |
+      | document              | DOC_5_PG;            |
     And destinatario Mario Gherkin e:
       | digitalDomicile              | NULL           |
       | physicalAddress_address      | Via@ok_AR      |
@@ -45,18 +51,24 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 623   | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 623   | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 457   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 397   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 362   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 478   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 389   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 410   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-50GR_3] Invio notifica e verifica calcolo del costo su raccomandata con peso = 50gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber |
-      | senderDenomination    | Comune di palermo               |
-      | physicalCommunication | AR_REGISTERED_LETTER            |
-      | feePolicy             | DELIVERY_MODE                   |
-      | document              | DOC_8_PG;DOC_8_PG;              |
+      | subject               | <SUBJECT>            |
+      | senderDenomination    | Comune di palermo    |
+      | physicalCommunication | AR_REGISTERED_LETTER |
+      | feePolicy             | DELIVERY_MODE        |
+      | document              | DOC_8_PG;DOC_8_PG;   |
     And destinatario Mario Gherkin e:
       | digitalDomicile              | NULL           |
       | physicalAddress_address      | Via@ok_AR      |
@@ -68,18 +80,24 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 638   | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 638   | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 472   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 412   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 377   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 493   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 404   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 425   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-51GR_4] Invio notifica e verifica calcolo del costo su raccomandata con peso = 51gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber |
-      | senderDenomination    | Comune di palermo               |
-      | physicalCommunication | AR_REGISTERED_LETTER            |
-      | feePolicy             | DELIVERY_MODE                   |
-      | document              | DOC_8_PG;DOC_8_PG;DOC_1_PG;     |
+      | subject               | <SUBJECT>                   |
+      | senderDenomination    | Comune di palermo           |
+      | physicalCommunication | AR_REGISTERED_LETTER        |
+      | feePolicy             | DELIVERY_MODE               |
+      | document              | DOC_8_PG;DOC_8_PG;DOC_1_PG; |
     And destinatario Mario Gherkin e:
       | digitalDomicile              | NULL           |
       | physicalAddress_address      | Via@ok_AR      |
@@ -91,14 +109,20 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 679   | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 679   | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 503   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 444   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 406   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 526   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 437   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 458   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-100GR_5] Invio notifica e verifica calcolo del costo su raccomandata con peso = 100gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber               |
+      | subject               | <SUBJECT>                                     |
       | senderDenomination    | Comune di palermo                             |
       | physicalCommunication | AR_REGISTERED_LETTER                          |
       | feePolicy             | DELIVERY_MODE                                 |
@@ -114,14 +138,20 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 706   | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 706   | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 530   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 471   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 433   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 553   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 464   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 485   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-101GR_6] Invio notifica e verifica calcolo del costo su raccomandata con peso = 101gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber              |
+      | subject               | <SUBJECT>                                    |
       | senderDenomination    | Comune di palermo                            |
       | physicalCommunication | AR_REGISTERED_LETTER                         |
       | feePolicy             | DELIVERY_MODE                                |
@@ -137,13 +167,19 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 750   | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 750   | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 564   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 506   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 466   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 589   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 500   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 521   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-250GR_7] Invio notifica e verifica calcolo del costo su raccomandata con peso = 250gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber                                 |
+      | subject               | <SUBJECT>                                                       |
       | senderDenomination    | Comune di palermo                                               |
       | physicalCommunication | AR_REGISTERED_LETTER                                            |
       | feePolicy             | DELIVERY_MODE                                                   |
@@ -159,13 +195,19 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 837   | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 837   | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 651   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 593   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 553   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 676   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 587   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 608   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-251GR_8] Invio notifica e verifica calcolo del costo su raccomandata con peso = 251gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber                                 |
+      | subject               | <SUBJECT>                                                       |
       | senderDenomination    | Comune di palermo                                               |
       | physicalCommunication | AR_REGISTERED_LETTER                                            |
       | feePolicy             | DELIVERY_MODE                                                   |
@@ -181,13 +223,19 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 874   | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 874   | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 679   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 624   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 580   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 705   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 617   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 641   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-350GR_9] Invio notifica e verifica calcolo del costo su raccomandata con peso = 350gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber                                  |
+      | subject               | <SUBJECT>                                                        |
       | senderDenomination    | Comune di palermo                                                |
       | physicalCommunication | AR_REGISTERED_LETTER                                             |
       | feePolicy             | DELIVERY_MODE                                                    |
@@ -203,13 +251,19 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 931   | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 931   | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 736   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 681   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 637   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 762   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 674   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 698   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-351GR_10] Invio notifica e verifica calcolo del costo su raccomandata con peso = 351gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber                                  |
+      | subject               | <SUBJECT>                                                        |
       | senderDenomination    | Comune di palermo                                                |
       | physicalCommunication | AR_REGISTERED_LETTER                                             |
       | feePolicy             | DELIVERY_MODE                                                    |
@@ -225,13 +279,19 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 1008  | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 1008  | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 795   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 737   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 693   | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 825   | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 737   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 757   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-1000GR_11] Invio notifica e verifica calcolo del costo su raccomandata con peso = 1000gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber                                                                  |
+      | subject               | <SUBJECT>                                                                                        |
       | senderDenomination    | Comune di palermo                                                                                |
       | physicalCommunication | AR_REGISTERED_LETTER                                                                             |
       | feePolicy             | DELIVERY_MODE                                                                                    |
@@ -247,13 +307,19 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 1395  | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 1395  | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 1182  | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 1124  | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 1080  | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 1212  | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 1124  | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 1144  | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-1001GR_12] Invio notifica e verifica calcolo del costo su raccomandata con peso = 1001gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber                                                                  |
+      | subject               | <SUBJECT>                                                                                        |
       | senderDenomination    | Comune di palermo                                                                                |
       | physicalCommunication | AR_REGISTERED_LETTER                                                                             |
       | feePolicy             | DELIVERY_MODE                                                                                    |
@@ -269,13 +335,19 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 1486  | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 1486  | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 1251  | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 1195  | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 1146  | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 1286  | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 1197  | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 1218  | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
   @CostoCartaceoComplete
   Scenario Outline: [CALCOLO-COSTO_AR-2000GR_13] Invio notifica e verifica calcolo del costo su raccomandata con peso = 2000gr
     Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber                                                                  |
+      | subject               | <SUBJECT>                                                                                        |
       | senderDenomination    | Comune di palermo                                                                                |
       | physicalCommunication | AR_REGISTERED_LETTER                                                                             |
       | feePolicy             | DELIVERY_MODE                                                                                    |
@@ -291,8 +363,14 @@ Feature: calcolo costo notifica in base hai grammi
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "<COSTO>" della notifica
     Examples:
-      | CAP   | COSTO | MUNICIPALITY | PROVINCE |
-      | 80060 | 2083  | Vico Equense | NA       |
+      | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
+      | 80060 | 2083  | Vico Equense | NA       | notifica analogica FSU         |
+      | 60012 | 1848  | MONTERADO    | AN       | notifica analogica RECAPITISTA |
+      | 60123 | 1792  | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 70123 | 1743  | BARI         | BA       | notifica analogica RECAPITISTA |
+      | 80013 | 1883  | CASAREA      | NA       | notifica analogica RECAPITISTA |
+      | 80123 | 1794  | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 83100 | 1815  | AVELLINO     | AV       | notifica analogica RECAPITISTA |
 
   @CostoCartaceoComplete
   Scenario: [CALCOLO-COSTO_AR-20GR_14] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso <= 20gr
