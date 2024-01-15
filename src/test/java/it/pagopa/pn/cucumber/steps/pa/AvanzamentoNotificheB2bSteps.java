@@ -63,12 +63,6 @@ public class AvanzamentoNotificheB2bSteps {
     }
 
 
-    @Then("vengono letti gli eventi fino allo stato della notifica {string} dalla PA {string}")
-    public void readingEventsNotificationPA(String status, String pa) {
-        sharedSteps.selectPA(pa);
-        readingEventUpToTheStatusOfNotification(status);
-        sharedSteps.selectPA(SharedSteps.DEFAULT_PA);
-    }
 
     @Then("vengono letti gli eventi fino allo stato della notifica {string}")
     public void readingEventUpToTheStatusOfNotification(String status) {
