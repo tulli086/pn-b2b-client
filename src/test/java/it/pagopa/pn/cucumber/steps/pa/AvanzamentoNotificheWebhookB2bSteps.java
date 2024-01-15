@@ -446,6 +446,18 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_DIGITAL_FEEDBACK;
                 break;
+            case "SEND_ANALOG_PROGRESS":
+                numCheck = 8;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_ANALOG_PROGRESS;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_ANALOG_PROGRESS;
+                break;
+            case "SEND_ANALOG_FEEDBACK":
+                numCheck = 10;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK;
+                break;
             case "SEND_ANALOG_DOMICILE":
                 numCheck = 9;
                 timelineElementCategory = TimelineElementCategoryV20.SEND_ANALOG_DOMICILE;
@@ -458,6 +470,12 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 timelineElementCategory = TimelineElementCategoryV20.SEND_DIGITAL_PROGRESS;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_DIGITAL_PROGRESS;
+                break;
+            case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS":
+                numCheck = 15;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS;
                 break;
             case "PUBLIC_REGISTRY_CALL":
                 numCheck = 2;
@@ -472,6 +490,12 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 timelineElementCategory = TimelineElementCategoryV20.PUBLIC_REGISTRY_RESPONSE;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.PUBLIC_REGISTRY_RESPONSE;
+                break;
+            case "PAYMENT":
+                numCheck = 9;
+                timelineElementCategory = TimelineElementCategoryV20.PAYMENT;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.PAYMENT;
                 break;
             case "NOTIFICATION_CANCELLATION_REQUEST":
                 numCheck = 9;
@@ -530,6 +554,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         try{
             Assertions.assertNotNull(progressResponseElement);
+            Assertions.assertNotSame(progressResponseElement.getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
             logger.info("EventProgress: " + progressResponseElement);
 
         }catch(AssertionFailedError assertionFailedError){
@@ -552,6 +577,94 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             logger.info("notification timestamp : {}",NotificationTimestamp);
 
             Assertions.assertNotSame(EventTimestamp,NotificationTimestamp);
+
+        }catch(AssertionFailedError assertionFailedError){
+            String message = assertionFailedError.getMessage()+
+                    "{IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" }";
+            throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
+        }
+    }
+
+
+    @Then("Si verifica che l'elemento di timeline {string} dello stream di {string} non abbia il timestamp uguale a quella della notifica")
+    public void readStreamTimelineElementAndVerify(String timelineEventCategory,String pa) {
+        setPaWebhook(pa);
+        TimelineElementCategoryV20 timelineElementCategory;
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20 timelineElementInternalCategory;
+
+        Integer numCheck = 10;
+        Integer waiting = sharedSteps.getWorkFlowWait();
+
+        switch (timelineEventCategory) {
+            case "NOTIFICATION_VIEWED":
+                timelineElementCategory = TimelineElementCategoryV20.NOTIFICATION_VIEWED;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.NOTIFICATION_VIEWED;
+                break;
+            case "SEND_DIGITAL_PROGRESS":
+                timelineElementCategory = TimelineElementCategoryV20.SEND_DIGITAL_PROGRESS;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_DIGITAL_PROGRESS;
+                break;
+            case "SEND_DIGITAL_FEEDBACK":
+                timelineElementCategory = TimelineElementCategoryV20.SEND_DIGITAL_FEEDBACK;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_DIGITAL_FEEDBACK;
+                break;
+            case "SEND_ANALOG_PROGRESS":
+                timelineElementCategory = TimelineElementCategoryV20.SEND_ANALOG_PROGRESS;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_ANALOG_PROGRESS;
+                break;
+            case "SEND_ANALOG_FEEDBACK":
+                timelineElementCategory = TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK;
+                break;
+            case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS":
+                timelineElementCategory = TimelineElementCategoryV20.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS;
+                break;
+            case "PAYMENT":
+                timelineElementCategory = TimelineElementCategoryV20.PAYMENT;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.PAYMENT;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+
+        boolean finish = false;
+        for (int i = 0; i < numCheck; i++) {
+
+            try {
+                Thread.sleep(waiting);
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+
+            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            TimelineElementV20 timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().orElse(null);
+            if (timelineElement != null) {
+                finish = true;
+                break;
+            }
+        }
+
+        Assertions.assertTrue(finish);
+        OffsetDateTime EventTimestamp=null;
+        OffsetDateTime NotificationTimestamp=null;
+        try{
+            Assertions.assertNotNull(progressResponseElementList);
+
+            EventTimestamp = progressResponseElementList.stream().filter(elem -> elem.getTimelineEventCategory().equals(timelineElementCategory)).findAny().get().getTimestamp();
+            NotificationTimestamp =sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp();
+
+            logger.info("event timestamp : {}",EventTimestamp);
+            logger.info("notification timestamp : {}",NotificationTimestamp);
+
+            Assertions.assertTrue(EventTimestamp!=NotificationTimestamp);
 
         }catch(AssertionFailedError assertionFailedError){
             String message = assertionFailedError.getMessage()+
