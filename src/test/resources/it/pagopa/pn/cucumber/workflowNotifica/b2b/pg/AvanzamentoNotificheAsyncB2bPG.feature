@@ -10,11 +10,11 @@ Feature: avanzamento notifiche asincrone b2b PG - controllo costi
       | paFee              | NULL                        |
     And destinatario Cucumber Society e:
       | payment_creditorTaxId | 77777777777 |
-      | payment_pagoPaForm    | SI                 |
-      | payment_f24flatRate   | NULL               |
-      | payment_f24standard   | NULL               |
-      | apply_cost_pagopa     | SI                 |
-      | payment_multy_number  | 1                  |
+      | payment_pagoPaForm    | SI          |
+      | payment_f24flatRate   | NULL        |
+      | payment_f24standard   | NULL        |
+      | apply_cost_pagopa     | SI          |
+      | payment_multy_number  | 1           |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
 
@@ -26,14 +26,14 @@ Feature: avanzamento notifiche asincrone b2b PG - controllo costi
       | senderDenomination | Comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
       | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 10                         |
+      | paFee              | 10                          |
     And destinatario Gherkin Analogic e:
-      | payment_creditorTaxId | 77777777777      |
-      | payment_pagoPaForm    | SI                 |
-      | payment_f24flatRate   | NULL               |
-      | payment_f24standard   | NULL               |
-      | apply_cost_pagopa     | SI                 |
-      | payment_multy_number  | 1                  |
+      | payment_creditorTaxId | 77777777777 |
+      | payment_pagoPaForm    | SI          |
+      | payment_f24flatRate   | NULL        |
+      | payment_f24standard   | NULL        |
+      | apply_cost_pagopa     | SI          |
+      | payment_multy_number  | 1           |
     And al destinatario viene associato lo iuv creato mediante partita debitoria per "Gherkin Analogic" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And viene aggiunto il costo della notifica totale
@@ -47,14 +47,14 @@ Feature: avanzamento notifiche asincrone b2b PG - controllo costi
       | senderDenomination | Comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
       | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 10                         |
+      | paFee              | 10                          |
     And destinatario Gherkin Analogic e:
-      | payment_creditorTaxId | 77777777777      |
-      | payment_pagoPaForm    | SI                 |
-      | payment_f24flatRate   | NULL               |
-      | payment_f24standard   | NULL               |
-      | apply_cost_pagopa     | SI                 |
-      | payment_multy_number  | 1                  |
+      | payment_creditorTaxId | 77777777777 |
+      | payment_pagoPaForm    | SI          |
+      | payment_f24flatRate   | NULL        |
+      | payment_f24standard   | NULL        |
+      | apply_cost_pagopa     | SI          |
+      | payment_multy_number  | 1           |
     And al destinatario viene associato lo iuv creato mediante partita debitoria per "Gherkin Analogic" alla posizione 0
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
     Then viene cancellata la posizione debitoria di "Gherkin Analogic"
@@ -68,16 +68,16 @@ Feature: avanzamento notifiche asincrone b2b PG - controllo costi
       | senderDenomination | Comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
       | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 10                         |
+      | paFee              | 10                          |
     And destinatario Gherkin Analogic e:
-      | payment_creditorTaxId   | 77777777777           |
-      | digitalDomicile         | NULL                  |
-      | physicalAddress_address | Via@FAIL-Discovery_AR |
-      | payment_pagoPaForm      | SI                    |
-      | payment_f24flatRate     | NULL                  |
-      | payment_f24standard     | NULL                  |
-      | apply_cost_pagopa       | SI                    |
-      | payment_multy_number    | 1                     |
+      | payment_creditorTaxId   | 77777777777                 |
+      | digitalDomicile         | NULL                        |
+      | physicalAddress_address | Via@FAIL-Discovery_890_SLOW |
+      | payment_pagoPaForm      | SI                          |
+      | payment_f24flatRate     | NULL                        |
+      | payment_f24standard     | NULL                        |
+      | apply_cost_pagopa       | SI                          |
+      | payment_multy_number    | 1                           |
     And al destinatario viene associato lo iuv creato mediante partita debitoria per "Gherkin Analogicc" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
@@ -94,7 +94,7 @@ Feature: avanzamento notifiche asincrone b2b PG - controllo costi
       | senderDenomination | Comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
       | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 10                         |
+      | paFee              | 10                          |
     And destinatario Gherkin Analogic e:
       | payment_creditorTaxId   | 77777777777  |
       | digitalDomicile_address | test@fail.it |
@@ -126,14 +126,14 @@ Feature: avanzamento notifiche asincrone b2b PG - controllo costi
       | pagoPaIntMode | ASYNC                       |
       | paFee         | 10                          |
     And destinatario Gherkin Analogic e:
-      | digitalDomicile         | NULL                     |
-      | physicalAddress_address | via@FAIL-Irreperibile_AR_SLOW |
-      | payment_creditorTaxId   | 77777777777              |
-      | payment_pagoPaForm      | SI                       |
-      | payment_f24flatRate     | NULL                     |
-      | payment_f24standard     | NULL                     |
-      | apply_cost_pagopa       | SI                       |
-      | payment_multy_number    | 1                        |
+      | digitalDomicile         | NULL                        |
+      | physicalAddress_address | via@FAIL-Discovery_890_SLOW |
+      | payment_creditorTaxId   | 77777777777                 |
+      | payment_pagoPaForm      | SI                          |
+      | payment_f24flatRate     | NULL                        |
+      | payment_f24standard     | NULL                        |
+      | apply_cost_pagopa       | SI                          |
+      | payment_multy_number    | 1                           |
     And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Analogic" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED per controllo GPD
     And viene aggiunto il costo della notifica totale
