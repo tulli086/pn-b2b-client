@@ -19,11 +19,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <java.version>17</java.version>
-        <spring.boot-version>2.5.2</spring.boot-version>
-        <cucumber.version>7.8.1</cucumber.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <java.version>21</java.version>
+        <spring.boot-version>3.2.1</spring.boot-version>
+        <cucumber.version>7.15.0</cucumber.version>
         <open.api.version>develop</open.api.version>
         <open.api.version.delivery>${open.api.version}</open.api.version.delivery>
         <open.api.version.delivery.push>${open.api.version}</open.api.version.delivery.push>
@@ -99,12 +99,13 @@
         <dependency>
             <groupId>net.masterthought</groupId>
             <artifactId>cucumber-reporting</artifactId>
-            <version>5.7.2</version>
+            <version>5.7.8</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -140,7 +141,7 @@
             <dependency>
                 <groupId>io.cucumber</groupId>
                 <artifactId>cucumber-bom</artifactId>
-                <version>7.8.1</version>
+                <version>7.15.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -186,7 +187,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.4.0</version>
+                <version>7.2.0</version>
                 <executions>
                     <execution>
                         <id>generate-internal-client-radd</id>
@@ -215,6 +216,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model</modelPackage>
@@ -244,6 +246,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model</modelPackage>
@@ -273,12 +276,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v1</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model_v1</modelPackage>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>generate-internal-client-b2b-pa_v2</id>
                         <goals>
@@ -303,13 +306,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v2</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model_v2</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-internal-delivery-push-client-b2b-pa</id>
                         <goals>
@@ -334,13 +336,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.model</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-internal-delivery-push-client-b2b-pa_v1</id>
                         <goals>
@@ -365,12 +366,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.api_v1</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.model_v1</modelPackage>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>generate-internal-delivery-push-client-b2b-pa_v2</id>
                         <goals>
@@ -395,13 +396,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.api_v1</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.model_v1</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-external-client-b2b-pa</id>
                         <goals>
@@ -426,14 +426,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model</modelPackage>
                         </configuration>
                     </execution>
-
-
-
                     <execution>
                         <id>generate-external-client-b2b-pa_v1</id>
                         <goals>
@@ -458,12 +456,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v1</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1</modelPackage>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>generate-external-client-b2b-pa_v2</id>
                         <goals>
@@ -488,13 +486,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v2</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-external-web-recipient</id>
                         <goals>
@@ -519,13 +516,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-external-web-recipient_v1</id>
                         <goals>
@@ -550,12 +546,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.api_v1</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model_v1</modelPackage>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>generate-external-web-recipient_v2</id>
                         <goals>
@@ -580,13 +576,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.api_v2</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model_v2</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-external-client-b2b-webhook</id>
                         <goals>
@@ -611,14 +606,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model</modelPackage>
                         </configuration>
                     </execution>
-
-
-
                     <execution>
                         <id>generate-external-client-b2b-webhook_v1</id>
                         <goals>
@@ -643,12 +636,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.api_v1</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v1</modelPackage>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>generate-external-client-b2b-webhook_v2</id>
                         <goals>
@@ -673,14 +666,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.api_v2</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2</modelPackage>
                         </configuration>
                     </execution>
-
-
-
                     <execution>
                         <id>generate-external-web-mandate</id>
                         <goals>
@@ -705,6 +696,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalMandate.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalMandate.model</modelPackage>
@@ -734,13 +726,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-external-api-appIO_v1</id>
                         <goals>
@@ -765,12 +756,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.api_v1</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model_v1</modelPackage>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>generate-external-api-appIO_v2</id>
                         <goals>
@@ -795,12 +786,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.api_v2</apiPackage>
                             <modelPackage>it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model_v2</modelPackage>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>generate-external-web-userAttributes-consents</id>
                         <goals>
@@ -825,6 +816,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.consents.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.consents.model</modelPackage>
@@ -854,13 +846,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.webPa.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.webPa.model</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-external-web-PA_v1</id>
                         <goals>
@@ -885,12 +876,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.webPa.api_v1</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.webPa.model_v1</modelPackage>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>generate-external-web-PA_v2</id>
                         <goals>
@@ -915,13 +906,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.webPa.api_v2</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.webPa.model_v2</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-external-web-userAttributes-address-book</id>
                         <goals>
@@ -946,6 +936,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model</modelPackage>
@@ -975,6 +966,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.io.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.io.model</modelPackage>
@@ -1004,6 +996,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model</modelPackage>
@@ -1033,6 +1026,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model</modelPackage>
@@ -1065,13 +1059,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.privateDeliveryPush.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.privateDeliveryPush.model</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-private-delivery-push_v1</id>
                         <goals>
@@ -1099,6 +1092,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.privateDeliveryPush.api_v1</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.privateDeliveryPush.model_v1</modelPackage>
@@ -1131,13 +1125,12 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.privateDeliveryPush.api_v2</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.privateDeliveryPush.model_v2</modelPackage>
                         </configuration>
                     </execution>
-
-
                     <execution>
                         <id>generate-external-servicedesk</id>
                         <goals>
@@ -1162,6 +1155,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.serviceDesk.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.serviceDesk.model</modelPackage>
@@ -1191,6 +1185,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <typeMappings>
                                 <typeMapping>OffsetDateTime=java.lang.StringBuilder</typeMapping>
@@ -1223,6 +1218,7 @@
                             <additionalModelTypeAnnotations>
                                 @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                             </additionalModelTypeAnnotations>
+                            <useJakartaEe>true</useJakartaEe>
                         </configOptions>
                         <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.payment-info.api</apiPackage>
                         <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.payment-info.model</modelPackage>
@@ -1252,6 +1248,7 @@
                                 <additionalModelTypeAnnotations>
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <apiPackage>it.pagopa.pn.client.web.generated.openapi.clients.serviceDeskIntegration.api</apiPackage>
                             <modelPackage>it.pagopa.pn.client.web.generated.openapi.clients.serviceDeskIntegration.model</modelPackage>

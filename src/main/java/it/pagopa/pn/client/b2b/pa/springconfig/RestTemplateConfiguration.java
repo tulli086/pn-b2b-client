@@ -29,9 +29,9 @@ public class RestTemplateConfiguration {
         RestTemplate restTemplate = new RestTemplate();
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setConnectTimeout(990_000);
-        requestFactory.setReadTimeout(990_000);
+        //requestFactory.setReadTimeout(990_000);
         requestFactory.setConnectionRequestTimeout(990_000);
-        requestFactory.setBufferRequestBody(false);
+        //requestFactory.setBufferRequestBody(false);
         restTemplate.setRequestFactory(requestFactory);
 
         List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
@@ -62,7 +62,7 @@ public class RestTemplateConfiguration {
         }
 
         private void doLog(HttpRequest request, ClientHttpResponse response) {
-            String httpMethod = request.getMethodValue();
+            String httpMethod = request.getMethod().name();
             String requestUrl = request.getURI().toString();
             String traceId = getTraceIdFromHttpResponse( response );
 
