@@ -1,7 +1,9 @@
 package it.pagopa.pn.cucumber.utils;
 
+import jakarta.validation.constraints.NotNull;
+
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.NotNull;
 
 /**
  * Classe builder che permette di costruire un timelineEventId
