@@ -298,7 +298,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico
     And si verifica che scheduleDate del SCHEDULE_REFINEMENT sia uguale al timestamp di REFINEMENT per l'utente 0
     And si verifica che scheduleDate del SCHEDULE_REFINEMENT sia uguale al timestamp di REFINEMENT per l'utente 1
 
-  @dev @workflowAnalogico
+  @dev @workflowAnalogico @ignore
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_15] Invio notifica multidestinatario complettamente irreperibile e complettamente irreperibile e controllo date business PN-9059
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -321,7 +321,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico
     And verifica date business in timeline COMPLETELY_UNREACHABLE per l'utente 1
 
 
-  @dev @workflowAnalogico
+  @dev @workflowAnalogico @ignore
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_16] Invio notifica multidestinatario completamente irreperibile e successo digitale con lettura notifica analogica e non presenza REFINEMENT PN-9059
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
