@@ -160,7 +160,7 @@ Feature: avanzamento notifiche webhook b2b
     When si creano i nuovi stream per il "Comune_1"
     Then l'ultima creazione ha prodotto un errore con status code "409"
 
-  @clean @dev @webhook1
+  @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_16] Invio notifica digitale ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -172,7 +172,7 @@ Feature: avanzamento notifiche webhook b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "DIGITAL_FAILURE_WORKFLOW"
 
-  @clean @dev @ignore @webhook1
+  @clean @ignore @webhook1
   Scenario: [B2B-STREAM_TIMELINE_17] Invio notifica digitale ed attesa elemento di timeline NOT_HANDLED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -184,7 +184,7 @@ Feature: avanzamento notifiche webhook b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "NOT_HANDLED"
 
-  @clean @dev @webhook1
+  @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_19] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -195,7 +195,7 @@ Feature: avanzamento notifiche webhook b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK"
 
-  @clean @dev @webhook1
+  @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_20] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -206,7 +206,7 @@ Feature: avanzamento notifiche webhook b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_PROGRESS"
 
-  @clean @dev @webhook1
+  @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_21] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -218,7 +218,7 @@ Feature: avanzamento notifiche webhook b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "PUBLIC_REGISTRY_CALL"
 
-  @clean @dev @webhook1
+  @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_22] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -230,7 +230,7 @@ Feature: avanzamento notifiche webhook b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "PUBLIC_REGISTRY_RESPONSE"
 
-  @clean @dev @webhook1
+  @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_23] Invio notifica  mono destinatario con documenti pre-caricati non trovati su safestorage scenario negativo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -262,7 +262,7 @@ Feature: avanzamento notifiche webhook b2b
     And vengono letti gli eventi dello stream che contenga 50 eventi
 
 
-  @clean @dev @webhook1
+  @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_25] Invio notifica digitale ed attesa elemento di timeline PAYMENT
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |

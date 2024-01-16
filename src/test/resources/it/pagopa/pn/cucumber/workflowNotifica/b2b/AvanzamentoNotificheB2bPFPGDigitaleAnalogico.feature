@@ -32,7 +32,7 @@ Feature: avanzamento b2b notifica analogico difgitale
  # 2	monodestinatario PG -> insuccesso e verifica nuovo WF  (con controllo date perfezionamento per decorrenza termini)
   #TODO Repererire una PG per cui fallisce l'invio digitale
 
-  @dev @ignore
+  @ignore
   Scenario: [B2B_TIMELINE_FIX_7179_2] Notifica mono destinatario con workflow digitale fallito - Destinatario PG
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -88,7 +88,7 @@ Feature: avanzamento b2b notifica analogico difgitale
     #And vengono letti gli eventi e verificho che l'utente 0 non abbia associato un evento "SEND_SIMPLE_REGISTERED_LETTER"
 
  # 5 monodestinatario PF -> insuccesso e verifica nuovo WF (con controllo date perfezionamento per decorrenza termini) --> caso unreachable
-  @dev
+
   Scenario: [B2B_TIMELINE_FIX_7179_5] Notifica analogica mono destinatario con destinatario irreperibile - Destinatario PF
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -149,7 +149,7 @@ Feature: avanzamento b2b notifica analogico difgitale
     And vengono letti gli eventi fino allo stato della notifica "EFFECTIVE_DATE"
 
  # 8	multidestinatario -> insuccesso e verifica nuovo WF (con controllo date perfezionamento per decorrenza termini) --> caso completely unreachable
-  @dev
+
   Scenario: [B2B_TIMELINE_FIX_7179_8] Notifica multi destinatario con workflow analogico con destinatari irreperibili
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |

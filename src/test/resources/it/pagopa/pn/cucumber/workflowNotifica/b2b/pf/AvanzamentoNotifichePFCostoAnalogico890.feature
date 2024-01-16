@@ -3,7 +3,7 @@ Feature: costo notifica con workflow analogico per persona fisica 890
   Background:
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
 
-  @dev @costoAnalogico @costoCartAAR
+  @costoAnalogico @costoCartAAR
   Scenario Outline: [B2B_COSTO_ANALOG_PF_890_1] Invio notifica verifica costo con FSU + @OK_890 + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -23,7 +23,7 @@ Feature: costo notifica con workflow analogico per persona fisica 890
       | CAP   | COSTO | MUNICIPALITY | PROVINCE |
       | 05010 | 1105  | COLLELUNGO   | TR       |
 
-  @dev @costoAnalogico @costoCartAAR
+  @costoAnalogico @costoCartAAR
   Scenario Outline: [B2B_COSTO_ANALOG_PF_890_2] Invio notifica verifica costo con FSU + @OK_890 + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -44,7 +44,7 @@ Feature: costo notifica con workflow analogico per persona fisica 890
       | CAP   | COSTO | MUNICIPALITY | PROVINCE |
       | 05010 | 0     | COLLELUNGO   | TR        |
 
-  @dev @costoAnalogico @costoCartAAR
+  @costoAnalogico @costoCartAAR
   Scenario Outline: [B2B_COSTO_ANALOG_PF_890_3] Invio notifica e verifica costo con RECAPITISTA + @OK_890 + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -70,7 +70,7 @@ Feature: costo notifica con workflow analogico per persona fisica 890
       | 10012 | 925   | BOLLENGO     | TO       |
 
 
-  @dev @costoAnalogico @costoCartAAR
+  @costoAnalogico @costoCartAAR
   Scenario Outline: [B2B_COSTO_ANALOG_PF_890_4] Invio notifica e verifica costo con RECAPITISTA + @OK_890 + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |

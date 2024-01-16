@@ -111,7 +111,7 @@ Feature: avanzamento notifiche b2b persona fisica
     And "Mario Gherkin" legge la notifica ricevuta
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
 
-  @dev @ignore
+  @ignore
   Scenario: [B2B_TIMELINE_12] Invio notifica digitale ed attesa elemento di timeline PREPARE_SIMPLE_REGISTERED_LETTER_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -121,7 +121,7 @@ Feature: avanzamento notifiche b2b persona fisica
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_SIMPLE_REGISTERED_LETTER"
 
-  @dev @ignore
+  @ignore
   Scenario: [B2B_TIMELINE_13] Invio notifica digitale ed attesa elemento di timeline SEND_SIMPLE_REGISTERED_LETTER positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -204,7 +204,7 @@ Feature: avanzamento notifiche b2b persona fisica
     And viene verificato che nell'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE" e' presente il campo Digital Address di piattaforma
     #Serve un CF con indirizzo digitale in piattaforma
   
-  @dev @ignore
+  @ignore
   Scenario: [B2B_TIMELINE_21] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo il campo Digital Address positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -216,7 +216,7 @@ Feature: avanzamento notifiche b2b persona fisica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_DIGITAL_DOMICILE"
     And viene verificato che nell'elemento di timeline della notifica "PREPARE_DIGITAL_DOMICILE" sia presente il campo Digital Address
     #Il campo è stato messo come facoltativo, dato che non sempre è presente. Da capire assieme se ci sono casi in cui dovrebbe esserci ma non compare.
-  @dev @ignore
+  @ignore
   Scenario: [B2B_TIMELINE_22] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo il campo Digital Address positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -229,7 +229,7 @@ Feature: avanzamento notifiche b2b persona fisica
     And viene verificato che nell'elemento di timeline della notifica "SCHEDULE_DIGITAL_WORKFLOW" sia presente il campo Digital Address
     #Il campo è stato messo come facoltativo, dato che non sempre è presente. Da capire assieme se ci sono casi in cui dovrebbe esserci ma non compare.
 
-  @dev @ignore
+  @ignore
   Scenario: [B2B_TIMELINE_23] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE sia presente il campo Digital Address scenario positivo PN-5992
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -239,7 +239,7 @@ Feature: avanzamento notifiche b2b persona fisica
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che nell'elemento di timeline della notifica "PUBLIC_REGISTRY_RESPONSE" sia presente il campo Digital Address da National Registry
 
-    @dev @ignore
+    @ignore
     Scenario: [B2B_TIMELINE_24] Invio notifica digitale ed attesa elemento di timeline DELIVERED-NOTIFICATION_VIEWED_scenario positivo
       Given viene generata una nuova notifica
         | subject | invio notifica con cucumber |

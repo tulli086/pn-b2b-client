@@ -1,6 +1,6 @@
 Feature: costo notifica con workflow analogico per persona giuridica
 
-  @dev @costoAnalogico @costoCartAAR
+  @costoAnalogico @costoCartAAR
   Scenario Outline: [B2B_COSTO_ANALOG_PG_1] Invio notifica e verifica costo con FSU + @OK_AR + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -21,7 +21,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
       | CAP   | COSTO | MUNICIPALITY | PROVINCE |
       | 80060 | 544   | MASSAQUANO   | NA       |
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_2] Invio notifica e verifica costo con FSU + @OK_AR + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -43,7 +43,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
       | CAP   | COSTO | MUNICIPALITY | PROVINCE |
       | 80060 | 0     | MASSAQUANO   | NA       |
 
-  @dev @costoAnalogico @costoCartAAR
+  @costoAnalogico @costoCartAAR
   Scenario: [B2B_COSTO_ANALOG_PG_3] Invio notifica e verifica costo con ZONA_2 + @OK_RIR + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -62,7 +62,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1037" della notifica
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_4] Invio notifica e verifica costo con ZONA_2 + @OK_RIR + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -83,7 +83,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
 
 
 
-  @dev @costoAnalogico @costoCartAAR
+  @costoAnalogico @costoCartAAR
   Scenario Outline: [B2B_COSTO_ANALOG_PG_5] Invio notifica e verifica costo con RECAPITISTA + @OK_AR + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -113,7 +113,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
       | 04100 | 481   | FOGLIANO     | LT       |
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_6] Invio notifica e verifica costo con RECAPITISTA + @OK_AR + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -143,7 +143,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
       | 04100 | 0     | FOGLIANO     | LT       |
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_7] Invio notifica e verifica costo con ZONE_1 + @OK_RIR + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -163,7 +163,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
     And viene verificato il costo = "921" della notifica
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_8] Invio notifica e verifica costo con ZONE_1 + @OK_RIR + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -183,7 +183,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
     And viene verificato il costo = "0" della notifica
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_9] Invio notifica e verifica costo con ZONE_3 + @OK_RIR + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -201,7 +201,7 @@ Feature: costo notifica con workflow analogico per persona giuridica
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1095" della notifica
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_10] Invio notifica e verifica costo con ZONE_3 + @OK_RIR + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |

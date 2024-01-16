@@ -161,7 +161,7 @@ Feature: Ricezione notifiche destinate al delegante
     Then la notifica può essere correttamente letta da "GherkinSrl"
     And la notifica può essere correttamente letta da "CucumberSpa" con delega
 
-  @dev @deleghe2
+  @deleghe2
   Scenario: [WEB-PG-MANDATE_14] Invio notifica digitale con delega senza gruppo e assegnazione di un gruppo alla delega da parte del PG amministratore  positivo PN-5962
     Given "CucumberSpa" viene delegato da "GherkinSrl"
     And "CucumberSpa" accetta la delega "GherkinSrl"

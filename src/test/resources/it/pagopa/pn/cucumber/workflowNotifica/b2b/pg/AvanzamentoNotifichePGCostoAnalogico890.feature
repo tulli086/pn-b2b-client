@@ -1,6 +1,6 @@
 Feature: costo notifica con workflow analogico per persona giuridica 890
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_890_1] Invio notifica e verifica costo con FSU + @OK_890 + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -21,7 +21,7 @@ Feature: costo notifica con workflow analogico per persona giuridica 890
       | 05010 | 1105  | COLLELUNGO   | TR       |
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_890_2] Invio notifica e verifica costo con FSU + @OK_890 + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -43,7 +43,7 @@ Feature: costo notifica con workflow analogico per persona giuridica 890
       | 05010 | 0     | COLLELUNGO   | TR       |
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_890_3] Invio notifica e verifica costo con RECAPITISTA + @OK_890 + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -68,7 +68,7 @@ Feature: costo notifica con workflow analogico per persona giuridica 890
       | 06031 | 957   | BEVAGNA      | PG       |
       | 10012 | 925   | BOLLENGO     | TO       |
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_890_4] Invio notifica e verifica costo con RECAPITISTA + @OK_890 + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |

@@ -196,7 +196,7 @@ Feature: Validazione campi invio notifiche b2b
     Then si verifica la corretta acquisizione della notifica
     And la notifica può essere correttamente recuperata dal sistema tramite codice IUN
 
-  @dev
+
   Scenario Outline: [B2B-PA-SEND_VALID_19] invio notifiche digitali mono destinatario con physicalAddress_zip corretti scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -216,7 +216,7 @@ Feature: Validazione campi invio notifiche b2b
       | 750077750077 |
       | 750077750077998 |
 
-  @dev
+
   Scenario Outline: [B2B-PA-SEND_VALID_20] invio notifiche digitali mono destinatario con physicalAddress_zip non corretti scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -234,7 +234,7 @@ Feature: Validazione campi invio notifiche b2b
       | 7500777500779987 |
     #1) 15 max Length
 
-  @dev
+
   Scenario Outline: [B2B-PA-SEND_VALID_21] invio notifiche digitali mono destinatario con physicalAddress_zip corretti scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -249,7 +249,7 @@ Feature: Validazione campi invio notifiche b2b
       | 87041 |
       | 87100 |
 
-  @dev
+
   Scenario Outline: [B2B-PA-SEND_VALID_22] invio notifiche digitali mono destinatario con physicalAddress_zip non corretti scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |

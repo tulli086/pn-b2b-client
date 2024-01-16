@@ -1,6 +1,6 @@
 Feature: costo notifica con workflow analogico per persona giuridica RS
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_RS_1] Invio notifica verifica costo con FSU + @OK_RS + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -21,7 +21,7 @@ Feature: costo notifica con workflow analogico per persona giuridica RS
       | 60040 | 404   | COLLEPONI    | AN       |
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_RS_2] Invio notifica verifica costo con FSU + @OK_RS + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -42,7 +42,7 @@ Feature: costo notifica con workflow analogico per persona giuridica RS
       | CAP   | COSTO | MUNICIPALITY | PROVINCE |
       | 60040 | 0     | COLLEPONI    | AN       |
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_RIS_3] Invio notifica verifica costo con ZONE_1 + @OK_RIS + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -61,7 +61,7 @@ Feature: costo notifica con workflow analogico per persona giuridica RS
     And viene verificato il costo = "742" della notifica
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_RIS_4] Invio notifica e verifica costo con ZONE_1 + @OK_RIS + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -81,7 +81,7 @@ Feature: costo notifica con workflow analogico per persona giuridica RS
     And viene verificato il costo = "0" della notifica
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_RS_5] Invio notifica e verifica costo con RECAPITISTA + @OK_RS + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -107,7 +107,7 @@ Feature: costo notifica con workflow analogico per persona giuridica RS
       | 00013 | 404   | CASTELCHIODATO | RM       |
 
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario Outline: [B2B_COSTO_ANALOG_PG_RS_6] Invio notifica e verifica costo con RECAPITISTA + @OK_RS + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -132,7 +132,7 @@ Feature: costo notifica con workflow analogico per persona giuridica RS
       | 03100 | 0     | FROSINONE      | FR       |
       | 00013 | 0     | CASTELCHIODATO | RM       |
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_RIS_7] Invio notifica e verifica costo con ZONA_2 + @OK_RIS + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -150,7 +150,7 @@ Feature: costo notifica con workflow analogico per persona giuridica RS
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And viene verificato il costo = "858" della notifica
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_RIS_8] Invio notifica e verifica costo con ZONA_2 + @OK_RIS + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -168,7 +168,7 @@ Feature: costo notifica con workflow analogico per persona giuridica RS
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And viene verificato il costo = "0" della notifica
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_RIS_9] Invio notifica e verifica costo con ZONA_3 + @OK_RIS + DELIVERY_MODE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -186,7 +186,7 @@ Feature: costo notifica con workflow analogico per persona giuridica RS
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And viene verificato il costo = "915" della notifica
 
-  @dev @costoAnalogico
+  @costoAnalogico
   Scenario: [B2B_COSTO_ANALOG_PG_RIS_10] Invio notifica e verifica costo con ZONA_3 + @OK_RIS + FLAT_RATE positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
