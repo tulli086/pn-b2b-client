@@ -6,9 +6,12 @@ Feature: avanzamento notifiche b2b
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario Mario Gherkin
-    And destinatario Mario Cucumber
+    And destinatario Mario Cucumber e:
+      | digitalDomicile         | NULL                      |
+      | physicalAddress_address | Via@FAIL-Irreperibile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
+    And vengono letti gli eventi fino allo stato della notifica "EFFECTIVE_DATE" per il destinatario 1 e presente l'evento "SEND_ANALOG_FEEDBACK"
+
 
   @workflowDigitale
   Scenario: [B2B-TIMELINE_MULTI_2] Invio notifica multi destinatario_scenario positivo
