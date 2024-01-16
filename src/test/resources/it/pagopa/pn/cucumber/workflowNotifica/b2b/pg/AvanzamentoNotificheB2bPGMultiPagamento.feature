@@ -1926,7 +1926,7 @@ Feature: avanzamento notifiche b2b persona giuridica multi pagamento
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
 
 
-  @pagamentiMultipli @f24 @dev @ignore
+  @pagamentiMultipli @f24 @dev
   Scenario: [B2B-PA-PAY_MULTI_PG_95] PA - inserimento notifica mono destinatario con un solo avviso F24 e costi di notifica  inclusi e  Visualizzazione anagrafica completa F24 con intestazione a persone giuridiche. - PN-9070
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1946,7 +1946,7 @@ Feature: avanzamento notifiche b2b persona giuridica multi pagamento
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
 
-  @pagamentiMultipli @f24 @dev @ignore
+  @pagamentiMultipli @f24 @dev
   Scenario: [B2B-PA-PAY_MULTI_PG_96] PA - inserimento notifica mono destinatario con un solo avviso F24 semplificato e costi di notifica  inclusi e  che contenga nelle informazioni del contribuente l'oggetto "company" valorizzato.. - PN-9070
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1966,7 +1966,7 @@ Feature: avanzamento notifiche b2b persona giuridica multi pagamento
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
 
-  @pagamentiMultipli @f24 @dev @ignore
+  @pagamentiMultipli @f24 @dev
   Scenario: [B2B-PA-PAY_MULTI_PG_97] PA - inserimento notifica mono destinatario con un solo avviso F24 semplificato e costi di notifica  inclusi e  he contenga nelle informazioni del contribuente l'oggetto "company" e "company.taxAddress" valorizzato. - PN-9070
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
