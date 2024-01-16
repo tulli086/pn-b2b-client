@@ -176,7 +176,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 0
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
-  @workflowAnalogico @bugSecondoTentativo_PN-8719
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_8] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_AR_scenario positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -189,7 +189,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 1
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW" per l'utente 0
 
-  @workflowAnalogico @bugSecondoTentativo_PN-8719
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_9] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_890_scenario  positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
