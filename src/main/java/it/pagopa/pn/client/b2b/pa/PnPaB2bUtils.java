@@ -691,7 +691,7 @@ public class PnPaB2bUtils {
         log.info("Request status for " + response.getNotificationRequestId() );
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequestStatusResponse status = null;
         long startTime = System.currentTimeMillis();
-        for( int i = 0; i < 10; i++ ) {
+        for( int i = 0; i < 16; i++ ) {
 
             try {
                 Thread.sleep( getAcceptedWait());
@@ -719,7 +719,7 @@ public class PnPaB2bUtils {
         log.info("Request status for " + response.getNotificationRequestId() );
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequestStatusResponse status = null;
         long startTime = System.currentTimeMillis();
-        for( int i = 0; i < 10; i++ ) {
+        for( int i = 0; i < 16; i++ ) {
 
             try {
                 Thread.sleep( getAcceptedWait());
