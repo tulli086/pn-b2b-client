@@ -98,7 +98,7 @@ public class SharedSteps {
 
     private String errorCode = null;
 
-    private static final Integer WAITING_GPD = 2000;
+    private static final Integer WAITING_GPD = 100;
 
 
 
@@ -1291,7 +1291,7 @@ public class SharedSteps {
 
 
     private void sendNotificationAndCancel() {
-        sendNotificationRapid(1000);
+        sendNotificationRapid(100);
 
         Assertions.assertDoesNotThrow(() -> {
             RequestStatus resp =  Assertions.assertDoesNotThrow(() ->
