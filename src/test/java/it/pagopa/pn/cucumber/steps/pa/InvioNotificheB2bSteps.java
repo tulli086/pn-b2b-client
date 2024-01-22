@@ -1,8 +1,6 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -10,11 +8,11 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
-import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
-import it.pagopa.pn.client.b2b.pa.testclient.IPnWebPaClient;
-import it.pagopa.pn.client.b2b.pa.testclient.PnExternalServiceClientImpl;
-import it.pagopa.pn.client.b2b.pa.testclient.PnGPDClientImpl;
-import it.pagopa.pn.client.b2b.pa.testclient.PnPaymentInfoClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
+import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnGPDClient;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnPaymentInfoClient;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.*;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.*;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
@@ -27,14 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -60,9 +55,9 @@ public class InvioNotificheB2bSteps {
     private final IPnPaB2bClient b2bClient;
     private final PnExternalServiceClientImpl safeStorageClient;
     private final SharedSteps sharedSteps;
-    private final PnGPDClientImpl pnGPDClientImpl;
+    private final PnGPDClient pnGPDClientImpl;
 
-    private final PnPaymentInfoClientImpl pnPaymentInfoClient;
+    private final PnPaymentInfoClient pnPaymentInfoClient;
     private List<PaymentPositionModel> paymentPositionModel;
 
     private PaymentResponse paymentResponse;
