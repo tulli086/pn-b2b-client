@@ -1,8 +1,6 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -10,14 +8,15 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
-import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
-import it.pagopa.pn.client.b2b.pa.testclient.IPnWebPaClient;
-import it.pagopa.pn.client.b2b.pa.testclient.PnExternalServiceClientImpl;
-import it.pagopa.pn.client.b2b.pa.testclient.PnGPDClientImpl;
-import it.pagopa.pn.client.b2b.pa.testclient.PnPaymentInfoClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
+import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnGPDClient;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnPaymentInfoClient;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.*;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.*;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchRow;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.DataTest;
 import org.junit.jupiter.api.Assertions;
@@ -26,14 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -59,9 +55,9 @@ public class InvioNotificheB2bSteps {
     private final IPnPaB2bClient b2bClient;
     private final PnExternalServiceClientImpl safeStorageClient;
     private final SharedSteps sharedSteps;
-    private final PnGPDClientImpl pnGPDClientImpl;
+    private final PnGPDClient pnGPDClientImpl;
 
-    private final PnPaymentInfoClientImpl pnPaymentInfoClient;
+    private final PnPaymentInfoClient pnPaymentInfoClient;
     private List<PaymentPositionModel> paymentPositionModel;
 
     private PaymentResponse paymentResponse;
@@ -213,6 +209,54 @@ public class InvioNotificheB2bSteps {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
+
+    @And("recupera notifica vecchia di 120 giorni da lato web PA e verifica presenza pagamento")
+    public void notification120ggCanBeRetrievedWithIUNWebPA() {
+        AtomicReference<NotificationSearchResponse> notificationByIun = new AtomicReference<>();
+        try {
+            Assertions.assertDoesNotThrow(() ->
+                    notificationByIun.set(webPaClient.searchSentNotification(OffsetDateTime.now().minusDays(140), OffsetDateTime.now().minusDays(130),null,null,null,null,20,null))
+            );
+
+            Assertions.assertNotNull(notificationByIun.get());
+            Assertions.assertNotNull(notificationByIun.get().getResultsPage());
+            Assertions.assertTrue(notificationByIun.get().getResultsPage().size()>0);
+
+            List<NotificationSearchRow> ricercaNotifiche= notificationByIun.get().getResultsPage();
+
+            FullSentNotificationV21 notifica120 = null;
+
+            for(NotificationSearchRow notifiche :ricercaNotifiche){
+
+                notifica120 = b2bClient.getSentNotification(notifiche.getIun());
+
+                if(notifica120.getRecipients().get(0).getPayments() != null && notifica120.getRecipients().get(0).getPayments().get(0).getPagoPa() != null && notifica120.getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode() != null){
+                    break;
+                }else{
+                    notifica120=null;
+                }
+
+
+                try {
+                    Thread.sleep(sharedSteps.getWorkFlowWait());
+                } catch (InterruptedException exc) {
+                    throw new RuntimeException(exc);
+                }
+            }
+
+            Assertions.assertNotNull(notifica120);
+
+            logger.info("notifica dopo 120gg: {}", notifica120);
+
+            Assertions.assertNull(notifica120.getRecipients().get(0).getPayments().get(0).getPagoPa().getAttachment());
+
+            sharedSteps.setSentNotification(notifica120);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
 
     @Then("la notifica può essere correttamente recuperata dal sistema tramite Stato {string} dalla web PA {string}")
     public void notificationCanBeRetrievedWithStatusByWebPA(String status, String paType) {

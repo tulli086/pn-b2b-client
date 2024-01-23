@@ -2,14 +2,11 @@ package it.pagopa.pn;
 
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
-import it.pagopa.pn.client.b2b.pa.impl.PnPaB2bExternalClientImpl;
-import it.pagopa.pn.client.b2b.pa.impl.PnPaB2bInternalClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnPaB2bExternalClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnPaB2bInternalClientImpl;
 import it.pagopa.pn.client.b2b.pa.springconfig.ApiKeysConfiguration;
-import it.pagopa.pn.client.b2b.pa.springconfig.BearerTokenConfiguration;
 import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
-import it.pagopa.pn.client.b2b.pa.springconfig.TimingConfiguration;
-import it.pagopa.pn.client.b2b.pa.testclient.*;
-import it.pagopa.pn.cucumber.steps.SharedSteps;
+import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -18,42 +15,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-@SpringBootTest(classes = {
+@SpringBootTest( classes = {
+        PnPaB2bExternalClientImpl.class,
+        PnPaB2bInternalClientImpl.class,
         ApiKeysConfiguration.class,
-        BearerTokenConfiguration.class,
-        TimingConfiguration.class,
         RestTemplateConfiguration.class,
         PnPaB2bUtils.class,
-        PnPaB2bExternalClientImpl.class,
-        PnWebRecipientExternalClientImpl.class,
-        PnWebhookB2bExternalClientImpl.class,
-        PnWebMandateExternalClientImpl.class,
-        PnExternalServiceClientImpl.class,
-        PnWebUserAttributesExternalClientImpl.class,
-        PnAppIOB2bExternalClientImpl.class,
-        PnApiKeyManagerExternalClientImpl.class,
-        PnDowntimeLogsExternalClientImpl.class,
-        PnIoUserAttributerExternaClientImpl.class,
-        PnWebPaClientImpl.class,
-        PnPrivateDeliveryPushExternalClientImpl.class,
-        InteropTokenSingleton.class,
-        PnServiceDeskClientImpl.class,
-        PnServiceDeskClientImplNoApiKey.class,
-        PnServiceDeskClientImplWrongApiKey.class,
-        PnGPDClientImpl.class,
-        PnPaymentInfoClientImpl.class,
-        PnRaddFsuClientImpl.class
+        InteropTokenSingleton.class
 })
-@TestPropertySource(properties = {"spring.profiles.active=dev2"})
+@TestPropertySource(properties = {"spring.profiles.active=dev"})
 public class NewNotificationTest {
 
     @Autowired
     private PnPaB2bUtils utils;
-
 
     @Test
     public void insertNewNotification() {
@@ -87,9 +64,7 @@ public class NewNotificationTest {
                 //        RECIPIENT_TYPE_DIGITAL.NO_DIGITAL, RECIPIENT_TYPE_ANALOG.ANALOG_OK))
                 ;
 
-
         Assertions.assertDoesNotThrow(() -> {
-
             NewNotificationResponse newNotificationRequest = utils.uploadNotification( request );
             FullSentNotificationV21 newNotification = utils.waitForRequestAcceptation( newNotificationRequest );
             Thread.sleep( 10 * 1000);

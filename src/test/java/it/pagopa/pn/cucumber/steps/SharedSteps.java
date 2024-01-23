@@ -12,18 +12,19 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.NotificationPaymentInfo;
-import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.NotificationRecipient;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
-import it.pagopa.pn.client.b2b.pa.impl.IPnPaB2bClient;
+import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
+import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
+import it.pagopa.pn.client.b2b.pa.service.IPnWebRecipientClient;
+import it.pagopa.pn.client.b2b.pa.service.IPnWebUserAttributesClient;
+import it.pagopa.pn.client.b2b.pa.service.impl.*;
+import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
+import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
-import it.pagopa.pn.client.b2b.pa.testclient.*;
-import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.model.NotificationRequest;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.cucumber.utils.*;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
@@ -34,9 +35,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.convert.DurationStyle;
 import org.springframework.context.annotation.Scope;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
@@ -45,7 +46,6 @@ import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.COMPLETELY_UNREACHABLE;
 import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
@@ -56,8 +56,8 @@ public class SharedSteps {
     private final DataTableTypeUtil dataTableTypeUtil;
     private final IPnPaB2bClient b2bClient;
     private final IPnWebPaClient webClient;
-    private final PnGPDClientImpl pnGPDClientImpl;
-    private final PnPaymentInfoClientImpl pnPaymentInfoClient;
+    private final PnGPDClient pnGPDClientImpl;
+    private final PnPaymentInfoClient pnPaymentInfoClient;
 
     //private  String iuvGPD;
 
@@ -219,7 +219,7 @@ public class SharedSteps {
                        PnExternalServiceClientImpl pnExternalServiceClient,
                        IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient,
                        PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey,
-                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey,PnGPDClientImpl pnGPDClientImpl, PnPaymentInfoClientImpl pnPaymentInfoClient) {
+                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey, PnGPDClient pnGPDClientImpl, PnPaymentInfoClient pnPaymentInfoClient) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.webClient = webClient;
@@ -884,6 +884,13 @@ public class SharedSteps {
         sendNotification();
     }
 
+    @When("verifica che la notifica inviata tramite api b2b dal {string} non diventi ACCEPTED")
+    public void laNotificaVieneInviataNoAccept(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationNoAccept();
+    }
+
     @When("la notifica viene inviata tramite api b2b dal {string} e si controlla con check rapidi che lo stato diventi ACCEPTED")
     public void laNotificaVieneInviataOkRapidCheck(String paType) {
         selectPA(paType);
@@ -896,6 +903,14 @@ public class SharedSteps {
         selectPA(paType);
         setSenderTaxIdFromPropertiesV1();
         sendNotificationV1();
+    }
+
+    @And("viene effettuato recupero stato della notifica con la V1 dal comune {string}")
+    public void retriveStateNotification(String paType) {
+        selectPA(paType);
+        this.notificationRequestV1= new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequest();
+        setSenderTaxIdFromPropertiesV1();
+        searchNotificationV1(Base64Utils.encodeToString(getSentNotification().getIun().getBytes()));
     }
 
 
@@ -1092,6 +1107,10 @@ public class SharedSteps {
         sendNotification(getWorkFlowWait());
     }
 
+    private void sendNotificationNoAccept() {
+        sendNotificationNoAccept(getWorkFlowWait());
+    }
+
     private void sendNotificationRapidCheck() {
         sendNotificationRapid(100);
     }
@@ -1120,6 +1139,37 @@ public class SharedSteps {
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseComplete);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+
+    private void sendNotificationNoAccept(int wait){
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                notificationCreationDate = OffsetDateTime.now();
+
+                try {
+                    Thread.sleep(wait);
+                } catch (InterruptedException e) {
+                    logger.error("Thread.sleep error retry");
+                    throw new RuntimeException(e);
+                }
+
+                notificationResponseComplete = b2bUtils.waitForRequestNoAcceptation(newNotificationResponse);
+            });
+
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {
+                logger.error("Thread.sleep error retry");
+                throw new RuntimeException(e);
+            }
+            Assertions.assertNull(notificationResponseComplete);
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1158,6 +1208,22 @@ public class SharedSteps {
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }
+
+
+    private void searchNotificationV1(String requestId) {
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequestStatusResponse notificationV1 = b2bClient.getNotificationRequestStatusV1(requestId);
+            });
+
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponseV1 == null ? "NULL" : newNotificationResponseV1.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
 
     private void sendNotificationV1() {
         try {
@@ -1791,11 +1857,11 @@ public class SharedSteps {
     public IPnWebPaClient getWebPaClient() {
         return webClient;
     }
-    public PnGPDClientImpl getPnGPDClientImpl() {
+    public PnGPDClient getPnGPDClientImpl() {
         return pnGPDClientImpl;
     }
 
-    public PnPaymentInfoClientImpl getPnPaymentInfoClientImpl() {
+    public PnPaymentInfoClient getPnPaymentInfoClientImpl() {
         return pnPaymentInfoClient;
     }
 
