@@ -116,8 +116,7 @@ Feature: avanzamento b2b notifica analogico difgitale
     And destinatario Cucumber Analogic e:
       | digitalDomicile_address | test@fail.it |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And esiste l'elemento di timeline della notifica "PREPARE_DIGITAL_DOMICILE" per l'utente 0
-    And esiste l'elemento di timeline della notifica "PREPARE_DIGITAL_DOMICILE" per l'utente 1
+    And vengono letti gli eventi fino allo stato della notifica "EFFECTIVE_DATE"
     And esiste l'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER" per l'utente 0
     And esiste l'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER" per l'utente 1
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT" e verifica data schedulingDate per il destinatario 0 rispetto ell'evento in timeline "DIGITAL_DELIVERY_CREATION_REQUEST"
