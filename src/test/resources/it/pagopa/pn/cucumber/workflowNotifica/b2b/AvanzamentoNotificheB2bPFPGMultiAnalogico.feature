@@ -236,8 +236,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW" per l'utente 0
 
 
-    #collegato al bug 8771
-  @mockNR @workflowAnalogico @bugNoto
+  @mockNR @workflowAnalogico @bugD02
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_12] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D02 coincidente - caso Multi
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
