@@ -6,9 +6,11 @@ Feature: avanzamento notifiche b2b
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario Mario Gherkin e:
-      | digitalDomicile_address | test@OK-pecSuccess.it |
+      | digitalDomicile         | NULL        |
+      | physicalAddress_address | Test@ok_890 |
     And destinatario Mario Cucumber e:
-      | digitalDomicile_address | via@OK-pecSuccess.it |
+      | digitalDomicile         | NULL       |
+      | physicalAddress_address | Via@ok_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
