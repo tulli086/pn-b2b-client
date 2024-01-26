@@ -510,6 +510,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
 
+  #{"sequenceName":"OK-MISSING-ARCAD-1","sequence":"@sequence.5s-CON080.5s-RECAG012.5s-RECAG011B[DOC:23L]"  },
+  #{"sequenceName":"OK-MISSING-ARCAD-2","sequence":"@sequence.5s-CON080.5s-RECAG011B[DOC:23L].5s-RECAG012"  }
   @workflowAnalogico
   Scenario: [B2B_TIMELINE_ANALOG_70] PA - invio notifica 890 mono destinatario con sequence @OK-MISSING-ARCAD-1 -PN-9653
     Given viene generata una nuova notifica
