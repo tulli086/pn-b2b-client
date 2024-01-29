@@ -42,6 +42,8 @@ public interface IPnWebhookB2bClient extends SettableApiKey {
 
     StreamMetadataResponseV22 updateEventStreamV22(UUID streamId, StreamRequestV22 streamRequest);
 
+    StreamMetadataResponseV22 disableEventStreamV22(UUID streamId);
+
     List<ProgressResponseElementV22> consumeEventStreamV22(UUID streamId, String lastEventId);
 
     ResponseEntity<List<ProgressResponseElementV22>> consumeEventStreamHttpV22(UUID streamId, String lastEventId);

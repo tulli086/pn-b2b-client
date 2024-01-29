@@ -182,6 +182,11 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
         return this.streamsApiV22.updateEventStream( operatorId, it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.CxTypeAuthFleet.PA,paId,streamId,streamRequest,groups,"2_2");
     }
 
+    public StreamMetadataResponseV22 disableEventStreamV22(UUID streamId){
+        refreshAndSetTokenInteropClient();
+        return this.streamsApiV22.disableEventStream( operatorId, it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.CxTypeAuthFleet.PA,paId,streamId,groups,"2_2");
+    }
+
     public List<ProgressResponseElementV22> consumeEventStreamV22(UUID streamId, String lastEventId){
         refreshAndSetTokenInteropClient();
         return this.eventsApiV22.consumeEventStream(operatorId, it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.CxTypeAuthFleet.PA,paId,streamId,groups,"2_2",lastEventId);
