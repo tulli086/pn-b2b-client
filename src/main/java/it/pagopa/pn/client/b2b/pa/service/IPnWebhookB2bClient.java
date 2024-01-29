@@ -38,7 +38,7 @@ public interface IPnWebhookB2bClient extends SettableApiKey {
 
     StreamMetadataResponseV22 getEventStreamV22(UUID streamId);
 
-    List<StreamListElement> listEventStreamsV22();
+    List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement> listEventStreamsV22();
 
     StreamMetadataResponseV22 updateEventStreamV22(UUID streamId, StreamRequestV22 streamRequest);
 
