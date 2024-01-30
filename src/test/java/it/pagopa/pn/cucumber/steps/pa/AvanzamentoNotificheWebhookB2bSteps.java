@@ -113,7 +113,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         this.requestNumber = number;
         for(int i = 0; i<number; i++){
             StreamCreationRequestV22 streamRequest = new StreamCreationRequestV22();
-            streamRequest.setTitle(title);
+            streamRequest.setTitle(title+"_"+i);
             //STATUS, TIMELINE
 
             if(eventType.equalsIgnoreCase("STATUS")){
