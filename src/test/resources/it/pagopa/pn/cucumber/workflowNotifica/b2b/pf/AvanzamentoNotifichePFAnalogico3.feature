@@ -512,7 +512,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
 
   #{"sequenceName":"OK-MISSING-ARCAD-1","sequence":"@sequence.5s-CON080.5s-RECAG012.5s-RECAG011B[DOC:23L]"  },
   #{"sequenceName":"OK-MISSING-ARCAD-2","sequence":"@sequence.5s-CON080.5s-RECAG011B[DOC:23L].5s-RECAG012"  }
-  @workflowAnalogico
+  @workflowAnalogico @ARCAD
   Scenario: [B2B_TIMELINE_ANALOG_70] PA - invio notifica 890 mono destinatario con sequence @OK-MISSING-ARCAD-1 -PN-9653
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -527,7 +527,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
 
-  @workflowAnalogico
+  @workflowAnalogico @ARCAD
   Scenario: [B2B_TIMELINE_ANALOG_71] PA - Invio notifica 890 multi destinatario (1 dest. con flusso digitale e 1 dest. con sequence @OK-MISSING-ARCAD-1) -PN-9653
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -545,7 +545,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT" per l'utente 0
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT" per l'utente 1
 
-  @workflowAnalogico
+  @workflowAnalogico @ARCAD
   Scenario: [B2B_TIMELINE_ANALOG_72] PA - Invio notifica mono destinatario con sequence @OK-MISSING-ARCAD-2 -PN-9653
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -559,7 +559,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "PNAG012"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
-  @workflowAnalogico
+  @workflowAnalogico @ARCAD
   Scenario: [B2B_TIMELINE_ANALOG_73] PA - Invio notifica 890 multi destinatario (1 dest. con flusso digitale e 1 dest. con sequence @OK-MISSING-ARCAD-2) -PN-9653
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
