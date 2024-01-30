@@ -1,7 +1,7 @@
 Feature: avanzamento notifiche webhook b2b per persona giuridica
 
   Background:
-    Given vengono cancellati tutti gli stream presenti del "Comune_2"
+    Given vengono cancellati tutti gli stream presenti del "Comune_2" con versione "V10"
 
   @cleanC2 @webhook3
   Scenario: [B2B-STREAM_TIMELINE_PG_1] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
@@ -10,7 +10,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino allo stato "ACCEPTED"
 
@@ -21,7 +21,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "REQUEST_ACCEPTED"
 
@@ -32,7 +32,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "AAR_GENERATION"
 
@@ -43,7 +43,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "GET_ADDRESS"
 
@@ -54,7 +54,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino allo stato "DELIVERING"
 
@@ -65,7 +65,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE"
 
@@ -76,7 +76,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino allo stato "DELIVERED"
 
@@ -88,7 +88,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
     And destinatario Gherkin spa e:
       | digitalDomicile_address | test@fail.it |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER"
 
@@ -99,7 +99,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK"
 
@@ -110,7 +110,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_PROGRESS"
 
@@ -122,7 +122,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
     And destinatario Gherkin spa e:
       | digitalDomicile_address | test@fail.it |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "PUBLIC_REGISTRY_CALL"
 
@@ -134,7 +134,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
     And destinatario Gherkin spa e:
       | digitalDomicile_address | test@fail.it |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "PUBLIC_REGISTRY_RESPONSE"
 
@@ -145,7 +145,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2"
+    And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b senza preload allegato dal "Comune_2" e si attende che lo stato diventi REFUSED
     And si verifica che la notifica non viene accettata causa "ALLEGATO"
     Then vengono letti gli eventi dello stream del "Comune_2" con la verifica di Allegato non trovato

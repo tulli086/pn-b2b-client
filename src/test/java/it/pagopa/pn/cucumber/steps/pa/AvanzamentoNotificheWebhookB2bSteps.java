@@ -16,6 +16,9 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamListElement;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV20;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.ProgressResponseElementV22;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamCreationRequestV22;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV22;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
@@ -41,6 +44,12 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
     private List<StreamCreationRequest> streamCreationRequestList;
     private List<StreamMetadataResponse> eventStreamList;
+
+    private LinkedList<ProgressResponseElementV22> progressResponseElementListV22 = new LinkedList<>();
+    private List<StreamCreationRequestV22> streamCreationRequestListV22;
+    private List<StreamMetadataResponseV22> eventStreamListV22;
+
+
     private Integer requestNumber;
     private HttpStatusCodeException notificationError;
     private static final Logger logger = LoggerFactory.getLogger(AvanzamentoNotificheWebhookB2bSteps.class);
@@ -97,6 +106,36 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+
+    @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream V22 denominat(i)(o) {string} con eventType {string}")
+    public void setUpStreamsWithEventTypeV22(int number, String title, String eventType) {
+        this.streamCreationRequestListV22 = new LinkedList<>();
+        this.requestNumber = number;
+        for(int i = 0; i<number; i++){
+            StreamCreationRequestV22 streamRequest = new StreamCreationRequestV22();
+            streamRequest.setTitle(title);
+            //STATUS, TIMELINE
+
+            if(eventType.equalsIgnoreCase("STATUS")){
+                streamRequest.setEventType(StreamCreationRequestV22.EventTypeEnum.STATUS);
+
+                List<String> filteredValues = Arrays.stream(NotificationStatus.values())
+                        .map(Enum::toString)
+                        .collect(Collectors.toList());
+                streamRequest.setFilterValues(filteredValues);
+            }else{
+                streamRequest.setEventType(StreamCreationRequestV22.EventTypeEnum.TIMELINE);
+
+                List<String> filteredValues = Arrays.stream(TimelineElementCategoryV20.values())
+                        .map(Enum::toString)
+                        .collect(Collectors.toList());
+                streamRequest.setFilterValues(filteredValues);
+            }
+
+            streamCreationRequestListV22.add(streamRequest);
+        }
+    }
+
     private void setPaWebhook(String pa){
         switch (pa){
             case "Comune_1":
@@ -116,43 +155,99 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
-    @When("si crea(no) i(l) nuov(o)(i) stream per il {string}")
-    public void createdStream(String pa) {
-        this.eventStreamList = new LinkedList<>();
+    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string}")
+    public void createdStream(String pa, String versione) {
         setPaWebhook(pa);
-        for(StreamCreationRequest request: streamCreationRequestList){
-            try{
-            StreamMetadataResponse eventStream = webhookB2bClient.createEventStream(request);
-            this.eventStreamList.add(eventStream);
-            }catch (HttpStatusCodeException e) {
-                this.notificationError = e;
-            }
+        switch (versione) {
+            case "V10":
+                this.eventStreamList = new LinkedList<>();
+                for(StreamCreationRequest request: streamCreationRequestList){
+                    try{
+                        StreamMetadataResponse eventStream = webhookB2bClient.createEventStream(request);
+                        this.eventStreamList.add(eventStream);
+                    }catch (HttpStatusCodeException e) {
+                        this.notificationError = e;
+                    }
+                }
+                break;
+            case "V22":
+                this.eventStreamListV22 = new LinkedList<>();
+                for(StreamCreationRequestV22 request: streamCreationRequestListV22){
+                    try{
+                        StreamMetadataResponseV22 eventStream = webhookB2bClient.createEventStreamV22(request);
+                        this.eventStreamListV22.add(eventStream);
+                    }catch (HttpStatusCodeException e) {
+                        this.notificationError = e;
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
     }
 
-    @And("si cancella(no) (lo)(gli) stream creat(o)(i)")
-    public void deleteStream() {
-        for(StreamMetadataResponse eventStream: eventStreamList){
-            webhookB2bClient.deleteEventStream(eventStream.getStreamId());
+    @And("si cancella(no) (lo)(gli) stream creat(o)(i) con versione {string}")
+    public void deleteStream(String versione) {
+        switch (versione) {
+            case "V10":
+                for(StreamMetadataResponse eventStream: eventStreamList){
+                    webhookB2bClient.deleteEventStream(eventStream.getStreamId());
+                }
+                break;
+            case "V22":
+                for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
+                    webhookB2bClient.deleteEventStreamV22(eventStream.getStreamId());
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
+
+
+
 
     }
 
-    @And("viene verificata la corretta cancellazione")
-    public void verifiedTheCorrectDeletion() {
-        List<StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
-        for(StreamMetadataResponse eventStream: eventStreamList){
-            StreamListElement streamListElement = streamListElements.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
-            Assertions.assertNull(streamListElement);
+    @And("viene verificata la corretta cancellazione con versione {string}")
+    public void verifiedTheCorrectDeletion(String versione) {
+        switch (versione) {
+            case "V10":
+                List<StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
+                for(StreamMetadataResponse eventStream: eventStreamList){
+                    StreamListElement streamListElement = streamListElements.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
+                    Assertions.assertNull(streamListElement);
+                }
+                break;
+            case "V22":
+                List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement> streamListElementsV22 = webhookB2bClient.listEventStreamsV22();
+                for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
+                    it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement streamListElement = streamListElementsV22.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
+                    Assertions.assertNull(streamListElement);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
     }
 
 
-    @Then("lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id")
-    public void streamBeenCreatedAndCorrectlyRetrievedByStreamId() {
-        Assertions.assertDoesNotThrow(() -> {
-            StreamMetadataResponse eventStream = webhookB2bClient.getEventStream(this.eventStreamList.get(0).getStreamId());
-        });
+    @Then("lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione {string}")
+    public void streamBeenCreatedAndCorrectlyRetrievedByStreamId(String versione) {
+
+        switch (versione) {
+            case "V10":
+                Assertions.assertDoesNotThrow(() -> {
+                    StreamMetadataResponse eventStream = webhookB2bClient.getEventStream(this.eventStreamList.get(0).getStreamId());
+                });
+                break;
+            case "V22":
+                Assertions.assertDoesNotThrow(() -> {
+                    StreamMetadataResponseV22 eventStream = webhookB2bClient.getEventStreamV22(this.eventStreamList.get(0).getStreamId());
+                });
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
 
@@ -857,12 +952,24 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
 
-    @Given("vengono cancellati tutti gli stream presenti del {string}")
-    public void deleteAll(String pa) {
+    @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string}")
+    public void deleteAll(String pa,String versione) {
         setPaWebhook(pa);
-        List<StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
-        for(StreamListElement elem: streamListElements){
-            webhookB2bClient.deleteEventStream(elem.getStreamId());
+        switch (versione) {
+            case "V10":
+                List<StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
+                for(StreamListElement elem: streamListElements){
+                    webhookB2bClient.deleteEventStream(elem.getStreamId());
+                }
+                break;
+            case "V22":
+                List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement> streamListElementsV22 = webhookB2bClient.listEventStreamsV22();
+                for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement elem: streamListElementsV22){
+                    webhookB2bClient.deleteEventStreamV22(elem.getStreamId());
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
     }
 
