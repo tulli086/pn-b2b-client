@@ -198,10 +198,19 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             default:
                 throw new IllegalArgumentException();
         }
+    }
 
-
-
-
+    @And("si disabilita(no) (lo)(gli) stream creat(o)(i) con versione {string}")
+    public void disableStream(String versione) {
+        switch (versione) {
+            case "V22":
+                for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
+                    webhookB2bClient.disableEventStreamV22(eventStream.getStreamId());
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     @And("viene verificata la corretta cancellazione con versione {string}")
