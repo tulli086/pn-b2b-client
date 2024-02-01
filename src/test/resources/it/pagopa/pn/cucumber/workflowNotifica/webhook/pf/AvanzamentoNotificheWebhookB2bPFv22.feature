@@ -53,9 +53,6 @@ Feature: avanzamento notifiche webhook b2b V22
     And l'apiKey viene cancellata
 
 
-
-
-
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_STATUS_ES1.1_4] Creazione stream notifica V22 con gruppo
     Given si predispone 1 nuovo stream V22 denominato "stream-test" con eventType "STATUS"
@@ -105,12 +102,24 @@ Feature: avanzamento notifiche webhook b2b V22
     And l'apiKey viene cancellata
 
 
+  @testLite @webhook1
+  Scenario Outline: [B2B-STREAM_V22_STATUS_ES2.1 Impostare nuova tipologia di Audit Log
+    Then viene verificato che esiste un audit log "<audit-log>" in "10y"
+    Examples:
+      | audit-log      |
+      | AUD_WH_CREATE  |
+      | AUD_WH_READ    |
+      | AUD_WH_UPDATE  |
+      | AUD_WH_DELETE  |
+      | AUD_WH_DISABLE |
+      | AUD_WH_CONSUME |
 
-
-
-
-
-
+ # AUD_WH_CREATE(PnAuditLogMarker.AUDIT10Y),
+ # AUD_WH_READ(PnAuditLogMarker.AUDIT10Y),
+ # AUD_WH_UPDATE(PnAuditLogMarker.AUDIT10Y),
+ # AUD_WH_DELETE(PnAuditLogMarker.AUDIT10Y),
+ # AUD_WH_DISABLE(PnAuditLogMarker.AUDIT10Y),
+ # AUD_WH_CONSUME(PnAuditLogMarker.AUDIT10Y),
 
 
   @testLite @webhook1
@@ -124,8 +133,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_2] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -135,8 +144,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_3] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -146,8 +155,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_4] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -157,8 +166,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_6] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -168,8 +177,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @testLite @webhook1
   Scenario: [B2B-STREAM_TIMELINE_7] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -179,8 +188,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_8] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -190,8 +199,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @testLite @webhook1
   Scenario: [B2B-STREAM_TIMELINE_9] Invio notifica digitale ed attesa stato DELIVERING-VIEWED_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -203,8 +212,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @testLite @webhook1
   Scenario: [B2B-STREAM_TIMELINE_10] Invio notifica digitale ed attesa elemento di timeline DELIVERING-NOTIFICATION_VIEWED_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -216,8 +225,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_11] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -227,8 +236,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_12] Invio notifica digitale ed attesa stato DELIVERED-VIEWED_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -240,8 +249,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_13] Invio notifica digitale ed attesa elemento di timeline DELIVERED-NOTIFICATION_VIEWED_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -265,8 +274,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @dev @webhook1
   Scenario: [B2B-STREAM_TIMELINE_16] Invio notifica digitale ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Cucumber Analogic e:
       | digitalDomicile_address | test@fail.it |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
@@ -277,8 +286,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @dev @ignore @webhook1
   Scenario: [B2B-STREAM_TIMELINE_17] Invio notifica digitale ed attesa elemento di timeline NOT_HANDLED_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
@@ -289,8 +298,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @dev @webhook1
   Scenario: [B2B-STREAM_TIMELINE_19] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -300,8 +309,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @dev @webhook1
   Scenario: [B2B-STREAM_TIMELINE_20] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -311,8 +320,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @dev @webhook1
   Scenario: [B2B-STREAM_TIMELINE_21] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
@@ -323,8 +332,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @dev @webhook1
   Scenario: [B2B-STREAM_TIMELINE_22] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
@@ -335,8 +344,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @dev @webhook1
   Scenario: [B2B-STREAM_TIMELINE_23] Invio notifica  mono destinatario con documenti pre-caricati non trovati su safestorage scenario negativo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
@@ -347,8 +356,8 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_24_7878] Invio notifiche digitali e controllo che vengano letti 50 eventi nel webhook
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
@@ -356,7 +365,7 @@ Feature: avanzamento notifiche webhook b2b V22
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     When viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano                 |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
@@ -367,11 +376,11 @@ Feature: avanzamento notifiche webhook b2b V22
   @clean @dev @webhook1
   Scenario: [B2B-STREAM_TIMELINE_25] Invio notifica digitale ed attesa elemento di timeline PAYMENT
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
-      | feePolicy | DELIVERY_MODE |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
     And destinatario Mario Gherkin e:
-      | payment_pagoPaForm | SI |
+      | payment_pagoPaForm | SI   |
       | payment_f24        | NULL |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"

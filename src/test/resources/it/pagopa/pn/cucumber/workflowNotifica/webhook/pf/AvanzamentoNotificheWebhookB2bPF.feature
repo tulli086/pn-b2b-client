@@ -8,7 +8,7 @@ Feature: avanzamento notifiche webhook b2b
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS"
     When si crea il nuovo stream per il "Comune_1" con versione "V10"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V10"
-    And si cancella lo stream creato "V10"
+    And si cancella lo stream creato con versione "V10"
     And viene verificata la corretta cancellazione con versione "V10"
 
   @testLite @webhook1
@@ -16,7 +16,7 @@ Feature: avanzamento notifiche webhook b2b
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
     When si crea il nuovo stream per il "Comune_1" con versione "V10"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V10"
-    And si cancella lo stream creato "V10"
+    And si cancella lo stream creato con versione "V10"
     And viene verificata la corretta cancellazione con versione "V10"
 
   @clean @webhook1
