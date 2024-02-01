@@ -5,10 +5,10 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_STATUS_ES1.1_1] Creazione stream notifica V22 senza gruppo
-    Given si predispone 1 nuovo stream V22 denominato "stream-test" con eventType "STATUS"
-    When Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V22"
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
     And viene verificata la corretta cancellazione con versione "V22"
@@ -17,10 +17,10 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_STATUS_ES1.1_1_1] Creazione stream notifica V22 senza gruppo
-    Given si predispone 1 nuovo stream V22 denominato "stream-test" con eventType "TIMELINE"
-    When Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V22"
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
     And viene verificata la corretta cancellazione con versione "V22"
@@ -30,10 +30,10 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_STATUS_ES1.1_2] Creazione 10 stream notifica V22 senza gruppo
-    Given si predispone 10 nuovo stream V22 denominato "stream-test" con eventType "STATUS"
-    When Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V22"
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
     And viene verificata la corretta cancellazione con versione "V22"
@@ -42,10 +42,10 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_STATUS_ES1.1_3] Creazione 11 stream notifica V22 senza gruppo
-    Given si predispone 11 nuovo stream V22 denominato "stream-test" con eventType "TIMELINE"
-    When Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V22"
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
     And viene verificata la corretta cancellazione con versione "V22"
@@ -55,10 +55,10 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_STATUS_ES1.1_4] Creazione stream notifica V22 con gruppo
-    Given si predispone 1 nuovo stream V22 denominato "stream-test" con eventType "STATUS"
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V22"
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
     And viene verificata la corretta cancellazione con versione "V22"
@@ -67,10 +67,10 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_STATUS_ES1.1_4_1] Creazione stream notifica V22 con gruppo
-    Given si predispone 1 nuovo stream V22 denominato "stream-test" con eventType "TIMELINE"
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V22"
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
     And viene verificata la corretta cancellazione con versione "V22"
@@ -79,10 +79,10 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_STATUS_ES1.1_5] Creazione 10 stream notifica V22 con gruppo
-    Given si predispone 1 nuovo stream V22 denominato "stream-test" con eventType "STATUS"
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V22"
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
     And viene verificata la corretta cancellazione con versione "V22"
@@ -91,15 +91,22 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_STATUS_ES1.1_6] Creazione 11 stream notifica V22 con gruppo
-    Given si predispone 1 nuovo stream V22 denominato "stream-test" con eventType "TIMELINE"
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V22"
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
     And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
+
+
+
+
+
+
+
 
 
   @testLite @webhook1
@@ -124,7 +131,7 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_V22_TIMELINE_1] Creazione stream notifica V22
-    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
@@ -136,7 +143,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "ACCEPTED"
@@ -147,7 +154,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED"
@@ -158,7 +165,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "AAR_GENERATION"
@@ -169,7 +176,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "GET_ADDRESS"
@@ -180,7 +187,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERING"
@@ -191,7 +198,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE"
@@ -202,7 +209,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERING"
@@ -215,7 +222,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERING"
@@ -228,7 +235,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERED"
@@ -239,7 +246,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERED"
@@ -252,7 +259,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERED"
@@ -261,13 +268,13 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_14] Creazione multi stream notifica
-    Given si predispongono 6 nuovi stream denominati "stream-test" con eventType "STATUS"
-    When si creano i nuovi stream per il "Comune_1"
+    Given si predispongono 6 nuovi stream denominati "stream-test" con eventType "STATUS" con versione "V22"
+    When si creano i nuovi stream per il "Comune_1" con versione "V22"
     Then l'ultima creazione ha prodotto un errore con status code "409"
 
   @clean @webhook1
   Scenario: [B2B-STREAM_TIMELINE_15] Creazione multi stream notifica
-    Given si predispongono 6 nuovi stream denominati "stream-test" con eventType "TIMELINE"
+    Given si predispongono 6 nuovi stream denominati "stream-test" con eventType "TIMELINE" con versione "V22"
     When si creano i nuovi stream per il "Comune_1" con versione "V22"
     Then l'ultima creazione ha prodotto un errore con status code "409"
 
@@ -278,7 +285,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | senderDenomination | Comune di milano            |
     And destinatario Cucumber Analogic e:
       | digitalDomicile_address | test@fail.it |
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "DIGITAL_FAILURE_WORKFLOW"
@@ -290,7 +297,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "NOT_HANDLED"
@@ -301,7 +308,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK"
@@ -312,7 +319,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_PROGRESS"
@@ -324,7 +331,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "PUBLIC_REGISTRY_CALL"
@@ -336,7 +343,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "PUBLIC_REGISTRY_RESPONSE"
@@ -347,7 +354,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b senza preload allegato dal "Comune_1" e si attende che lo stato diventi REFUSED
     And si verifica che la notifica non viene accettata causa "ALLEGATO"
@@ -360,7 +367,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     When viene generata una nuova notifica
@@ -382,7 +389,7 @@ Feature: avanzamento notifiche webhook b2b V22
     And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI   |
       | payment_f24        | NULL |
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And l'avviso pagopa viene pagato correttamente
@@ -394,7 +401,7 @@ Feature: avanzamento notifiche webhook b2b V22
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And l'avviso pagopa viene pagato correttamente

@@ -62,19 +62,43 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         this.b2bClient = sharedSteps.getB2bClient();
     }
 
-    @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream denominat(i)(o) {string} con eventType {string}")
-    public void setUpStreamsWithEventType(int number, String title, String eventType) {
-        this.streamCreationRequestList = new LinkedList<>();
+    @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream denominat(i)(o) {string} con eventType {string} con versione {string}")
+    public void setUpStreamsWithEventType(int number, String title, String eventType, String versione) {
+
         this.requestNumber = number;
-        for(int i = 0; i<number; i++){
-            StreamCreationRequest streamRequest = new StreamCreationRequest();
-            streamRequest.setTitle(title);
-            //STATUS, TIMELINE
-            streamRequest.setEventType(eventType.equalsIgnoreCase("STATUS") ?
-                    StreamCreationRequest.EventTypeEnum.STATUS : StreamCreationRequest.EventTypeEnum.TIMELINE);
-            streamCreationRequestList.add(streamRequest);
-            streamRequest.setFilterValues(new LinkedList<>());
+        switch (versione) {
+            case "V10":
+                this.streamCreationRequestList = new LinkedList<>();
+                for(int i = 0; i<number; i++){
+                    StreamCreationRequest streamRequest = new StreamCreationRequest();
+                    streamRequest.setTitle(title+"_"+i);
+                    //STATUS, TIMELINE
+                    streamRequest.setEventType(eventType.equalsIgnoreCase("STATUS") ?
+                            StreamCreationRequest.EventTypeEnum.STATUS : StreamCreationRequest.EventTypeEnum.TIMELINE);
+                    streamCreationRequestList.add(streamRequest);
+                    streamRequest.setFilterValues(new LinkedList<>());
+                }
+                break;
+            case "V22":
+                this.streamCreationRequestListV22 = new LinkedList<>();
+                for(int i = 0; i<number; i++){
+                    StreamCreationRequestV22 streamRequest = new StreamCreationRequestV22();
+                    streamRequest.setTitle(title+"_"+i);
+                    //STATUS, TIMELINE
+                    streamRequest.setEventType(eventType.equalsIgnoreCase("STATUS") ?
+                            StreamCreationRequestV22.EventTypeEnum.STATUS : StreamCreationRequestV22.EventTypeEnum.TIMELINE);
+                    streamCreationRequestListV22.add(streamRequest);
+                    streamRequest.setFilterValues(new LinkedList<>());
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
+
+
+
+
+
     }
 
     @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream V2 denominat(i)(o) {string} con eventType {string}")
@@ -83,7 +107,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         this.requestNumber = number;
         for(int i = 0; i<number; i++){
             StreamCreationRequest streamRequest = new StreamCreationRequest();
-            streamRequest.setTitle(title);
+            streamRequest.setTitle(title+"_"+i);
             //STATUS, TIMELINE
 
             if(eventType.equalsIgnoreCase("STATUS")){
@@ -107,34 +131,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
 
-    @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream V22 denominat(i)(o) {string} con eventType {string}")
-    public void setUpStreamsWithEventTypeV22(int number, String title, String eventType) {
-        this.streamCreationRequestListV22 = new LinkedList<>();
-        this.requestNumber = number;
-        for(int i = 0; i<number; i++){
-            StreamCreationRequestV22 streamRequest = new StreamCreationRequestV22();
-            streamRequest.setTitle(title+"_"+i);
-            //STATUS, TIMELINE
-
-            if(eventType.equalsIgnoreCase("STATUS")){
-                streamRequest.setEventType(StreamCreationRequestV22.EventTypeEnum.STATUS);
-
-                List<String> filteredValues = Arrays.stream(NotificationStatus.values())
-                        .map(Enum::toString)
-                        .collect(Collectors.toList());
-                streamRequest.setFilterValues(filteredValues);
-            }else{
-                streamRequest.setEventType(StreamCreationRequestV22.EventTypeEnum.TIMELINE);
-
-                List<String> filteredValues = Arrays.stream(TimelineElementCategoryV20.values())
-                        .map(Enum::toString)
-                        .collect(Collectors.toList());
-                streamRequest.setFilterValues(filteredValues);
-            }
-
-            streamCreationRequestListV22.add(streamRequest);
-        }
-    }
 
     private void setPaWebhook(String pa){
         switch (pa){
@@ -221,8 +217,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             case "V22":
                 List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement> streamListElementsV22 = webhookB2bClient.listEventStreamsV22();
                 for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
-                    it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement streamListElement = streamListElementsV22.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
-                    Assertions.assertNull(streamListElement);
+                    it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement streamListElementV22 = streamListElementsV22.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
+                    Assertions.assertNull(streamListElementV22);
                 }
                 break;
             default:
@@ -242,7 +238,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 break;
             case "V22":
                 Assertions.assertDoesNotThrow(() -> {
-                    StreamMetadataResponseV22 eventStream = webhookB2bClient.getEventStreamV22(this.eventStreamList.get(0).getStreamId());
+                    StreamMetadataResponseV22 eventStream = webhookB2bClient.getEventStreamV22(this.eventStreamListV22.get(0).getStreamId());
                 });
                 break;
             default:

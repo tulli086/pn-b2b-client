@@ -74,19 +74,19 @@ Feature: test di integrazione della pubblica amministrazione
     ###TC-INVIO-02
   @integrationTest @TC-INVIO-02
   Scenario: [TC-STREAM_TIMELINE_0.1] Creazione stream notifica
-    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS"
-    When si crea il nuovo stream per il "Comune_1"
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V10"
+    When si crea il nuovo stream per il "Comune_1" con versione "V10"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V10"
-    And si cancella lo stream creato "V10"
+    And si cancella lo stream creato "V10" con versione "V10"
     And viene verificata la corretta cancellazione con versione "V10"
 
 
   @integrationTest @TC-INVIO-02
   Scenario: [TC-STREAM_TIMELINE_0.2] Creazione stream notifica
-    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
-    When si crea il nuovo stream per il "Comune_1"
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
+    When si crea il nuovo stream per il "Comune_1" con versione "V10"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V10"
-    And si cancella lo stream creato "V10"
+    And si cancella lo stream creato "V10" con versione "V10"
     And viene verificata la corretta cancellazione con versione "V10"
 
   @clean @integrationTest @TC-INVIO-02
@@ -95,7 +95,7 @@ Feature: test di integrazione della pubblica amministrazione
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_1" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" del validatore fino allo stato "ACCEPTED"
@@ -106,7 +106,7 @@ Feature: test di integrazione della pubblica amministrazione
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_1" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED"
@@ -117,7 +117,7 @@ Feature: test di integrazione della pubblica amministrazione
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_1" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "AAR_GENERATION"
@@ -128,7 +128,7 @@ Feature: test di integrazione della pubblica amministrazione
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_1" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "GET_ADDRESS"
@@ -139,7 +139,7 @@ Feature: test di integrazione della pubblica amministrazione
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_1" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERING"
@@ -150,7 +150,7 @@ Feature: test di integrazione della pubblica amministrazione
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_1" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE"
@@ -161,7 +161,7 @@ Feature: test di integrazione della pubblica amministrazione
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_1" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" del validatore fino allo stato "DELIVERED"
