@@ -163,6 +163,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                         this.eventStreamList.add(eventStream);
                     }catch (HttpStatusCodeException e) {
                         this.notificationError = e;
+                        if (e instanceof HttpStatusCodeException) {
+                            sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                        }
                     }
                 }
                 break;
@@ -174,6 +177,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                         this.eventStreamListV22.add(eventStream);
                     }catch (HttpStatusCodeException e) {
                         this.notificationError = e;
+                        if (e instanceof HttpStatusCodeException) {
+                            sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                        }
                     }
                 }
                 break;
@@ -204,8 +210,15 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     public void disableStream(String versione) {
         switch (versione) {
             case "V22":
-                for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
-                    webhookB2bClient.disableEventStreamV22(eventStream.getStreamId());
+                try{
+                    for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
+                        webhookB2bClient.disableEventStreamV22(eventStream.getStreamId());
+                    }
+                }catch (HttpStatusCodeException e) {
+                    this.notificationError = e;
+                    if (e instanceof HttpStatusCodeException) {
+                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                    }
                 }
                 break;
             default:
