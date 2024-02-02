@@ -103,7 +103,7 @@ Feature: avanzamento notifiche webhook b2b V22
 
 
   @testLite @webhook1
-  Scenario: [B2B-STREAM_V22_STATUS_ES1.1_9] Disabilitazione per una PA di uno stream notifica senza gruppo con eventType "TIMELINE".
+  Scenario: [B2B-STREAM_V22_STATUS_ES1.1_9] Disabilitazione per una PA di uno stream notifica senza gruppo con eventType "TIMELINE"  utilizzando un apikey senza gruppo.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
@@ -116,7 +116,24 @@ Feature: avanzamento notifiche webhook b2b V22
     And l'apiKey viene cancellata
 
   @testLite @webhook1
-  Scenario: [B2B-STREAM_V22_STATUS_ES1.1_10] Disabilitazione per una PA di uno stream notifica con gruppo con eventType "STATUS".
+  Scenario: [B2B-STREAM_V22_STATUS_ES1.9_1] Disabilitazione per una PA di uno stream notifica senza  con eventType "STATUS" utilizzando un apikey con gruppo
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+    And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
+    And viene impostata l'apikey appena generata
+    Then si disabilita lo stream creato con versione "V22"
+    And si cancella lo stream creato con versione "V22"
+    And viene verificata la corretta cancellazione con versione "V22"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+  @testLite @webhook1
+  Scenario: [B2B-STREAM_V22_STATUS_ES1.1_10] Disabilitazione per una PA di uno stream notifica con gruppo con eventType "STATUS"  utilizzando un apikey appartentente allo stesso gruppo.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -128,9 +145,26 @@ Feature: avanzamento notifiche webhook b2b V22
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
+  @testLite @webhook1
+  Scenario: [B2B-STREAM_V22_STATUS_ES1.10_1]Disabilitazione per una PA di uno stream notifica con gruppo con eventType "STATUS" utilizzando un apikey senza gruppo
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
+    And viene impostata l'apikey appena generata
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    Then si disabilita lo stream creato con versione "V22"
+    And si cancella lo stream creato con versione "V22"
+    And viene verificata la corretta cancellazione con versione "V22"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
 
   @testLite @webhook1
-  Scenario: [B2B-STREAM_V22_STATUS_ES1.12] Cancellazione stream notifica V22 con gruppo con eventType "STATUS"
+  Scenario: [B2B-STREAM_V22_STATUS_ES1.12] Cancellazione stream notifica V22 con gruppo con eventType "STATUS" utilizzando un apikey appartentente allo stesso gruppo
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -142,13 +176,45 @@ Feature: avanzamento notifiche webhook b2b V22
     And l'apiKey viene cancellata
 
   @testLite @webhook1
-  Scenario: [B2B-STREAM_V22_STATUS_ES1.13] Cancellazione stream notifica V22 senza gruppo con eventType "STATUS"
+  Scenario: [B2B-STREAM_V22_STATUS_ES1.12_1] Cancellazione stream notifica V22 con gruppo con eventType "STATUS" utilizzando un apikey senza gruppo
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
+    And viene impostata l'apikey appena generata
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    Then si cancella lo stream creato con versione "V22"
+    And viene verificata la corretta cancellazione con versione "V22"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+  @testLite @webhook1
+  Scenario: [B2B-STREAM_V22_STATUS_ES1.13] Cancellazione stream notifica V22 senza gruppo con eventType "STATUS" utilizzando un apikey senza gruppo
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
     When si crea il nuovo stream per il "Comune_1" con versione "V22"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And si cancella lo stream creato con versione "V22"
+    And viene verificata la corretta cancellazione con versione "V22"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+  @testLite @webhook1
+  Scenario: [B2B-STREAM_V22_STATUS_ES1.13_1] Cancellazione stream notifica V22 senza gruppo con eventType "STATUS" utilizzando un apikey con gruppo
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    When si crea il nuovo stream per il "Comune_1" con versione "V22"
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+    And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
+    And viene impostata l'apikey appena generata
+    Then si cancella lo stream creato con versione "V22"
     And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
