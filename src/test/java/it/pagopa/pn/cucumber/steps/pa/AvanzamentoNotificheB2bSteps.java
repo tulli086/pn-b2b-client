@@ -438,7 +438,7 @@ public class AvanzamentoNotificheB2bSteps {
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.REQUEST_REFUSED, 2, waiting);
                 break;
             case "DIGITAL_DELIVERY_CREATION_REQUEST":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.DIGITAL_DELIVERY_CREATION_REQUEST, 12, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.DIGITAL_DELIVERY_CREATION_REQUEST, 5, waiting * 3);
                 break;
             case "NOTIFICATION_CANCELLATION_REQUEST":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.NOTIFICATION_CANCELLATION_REQUEST, 2, waiting);
