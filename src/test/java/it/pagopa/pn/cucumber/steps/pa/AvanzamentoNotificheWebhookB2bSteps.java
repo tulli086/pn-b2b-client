@@ -44,6 +44,12 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
     private List<StreamCreationRequest> streamCreationRequestList;
     private List<StreamMetadataResponse> eventStreamList;
+
+    private LinkedList<ProgressResponseElementV22> progressResponseElementListV22 = new LinkedList<>();
+    private List<StreamCreationRequestV22> streamCreationRequestListV22;
+    private List<StreamMetadataResponseV22> eventStreamListV22;
+
+
     private Integer requestNumber;
     private HttpStatusCodeException notificationError;
     private static final Logger logger = LoggerFactory.getLogger(AvanzamentoNotificheWebhookB2bSteps.class);
