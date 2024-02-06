@@ -316,6 +316,35 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+    @Then("lo stream viene correttamente recuperato dal sistema tramite stream id con versione {string}")
+    public void streamBeenCorrectlyRetrievedByStreamId(String versione) {
+
+        switch (versione) {
+            case "V10":
+                try{
+                    StreamMetadataResponse eventStream = webhookB2bClient.getEventStream(this.eventStreamList.get(0).getStreamId());
+                }catch (HttpStatusCodeException e) {
+                    this.notificationError = e;
+                    if (e instanceof HttpStatusCodeException) {
+                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                    }
+                }
+                break;
+            case "V22":
+                try{
+                    StreamMetadataResponseV22 eventStream = webhookB2bClient.getEventStreamV22(this.eventStreamListV22.get(0).getStreamId());
+                }catch (HttpStatusCodeException e) {
+                    this.notificationError = e;
+                    if (e instanceof HttpStatusCodeException) {
+                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
 
     @And("vengono letti gli eventi dello stream")
     public void readStreamEvents() {

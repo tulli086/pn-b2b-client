@@ -288,7 +288,7 @@ public class ApikeyManagerSteps {
         this.sharedSteps.getNotificationRequest().setGroup(group);
     }
 
-    @Given("Viene creata una nuova apiKey per il comune {string} con gruppo differente del invio notifica")
+    @Given("Viene creata una nuova apiKey per il comune {string} con gruppo differente (del invio notifica)(dallo stream)")
     public void viene_creata_una_nuova_api_key_per_il_comune_con_gruppo_differente_del_invio_notifica(String settedPa) {
         String group = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.LAST);
         Assertions.assertNotNull(firstGroupUsed);
@@ -300,8 +300,11 @@ public class ApikeyManagerSteps {
         requestNewApiKey.setGroups(List.of(group));
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
+        sharedSteps.setRequestNewApiKey(requestNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
     }
+
+
 
     @Given("Viene creata una nuova apiKey per il comune {string} con gruppo uguale del invio notifica")
     public void viene_creata_una_nuova_api_key_per_il_comune_con_gruppo_uguale_del_invio_notifica(String settedPa) {
