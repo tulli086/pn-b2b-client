@@ -213,6 +213,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
                 }
                 break;
+            case "NO_GROUPS":
+                listGroups = null;
+                break;
+
             default:
                 throw new IllegalArgumentException();
         }
