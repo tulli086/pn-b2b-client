@@ -316,8 +316,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
-    @Then("lo stream viene correttamente recuperato dal sistema tramite stream id con versione {string}")
-    public void streamBeenCorrectlyRetrievedByStreamId(String versione) {
+    @Then("lo stream viene recuperato dal sistema tramite stream id con versione {string}")
+    public void streamBeenRetrievedByStreamId(String versione) {
 
         switch (versione) {
             case "V10":
