@@ -25,7 +25,7 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
     private final NewNotificationApi newNotificationApi;
     private final SenderReadB2BApi senderReadB2BApi;
-    private final NotificationPriceApi notificationPriceApi;
+    private final NotificationPriceV23Api notificationPriceApi;
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v1.SenderReadB2BApi senderReadB2BApiV1;
 
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v2.SenderReadB2BApi senderReadB2BApiV2;
@@ -52,7 +52,7 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
         this.senderReadB2BApi = new SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
         this.senderReadB2BApiV1 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v1.SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
         this.senderReadB2BApiV2 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v2.SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
-        this.notificationPriceApi = new NotificationPriceApi(newApiClient(restTemplate, deliveryPushBasePath));
+        this.notificationPriceApi = new NotificationPriceV23Api(newApiClient(restTemplate, deliveryPushBasePath));
     }
 
     private static it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.ApiClient
@@ -120,8 +120,8 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
     @Override
     public NotificationPriceResponse getNotificationPrice(String paTaxId, String noticeCode) throws RestClientException {
-        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NotificationPriceResponse
-                notificationPrice = this.notificationPriceApi.getNotificationPrice(paTaxId,noticeCode);
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NotificationPriceResponseV23
+                notificationPrice = this.notificationPriceApi.getNotificationPriceV23(paTaxId,noticeCode);
 
         return deepCopy( notificationPrice, NotificationPriceResponse.class );
     }
@@ -269,7 +269,7 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
         return deepCopy( resp, NewNotificationRequestStatusResponseV23.class );
     }
 
-    public NotificationProcessCostResponse getNotificationProcessCost(String iun, Integer recipientIndex, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy notificationFeePolicy, Boolean applyCost, Integer paFee) throws RestClientException {
+    public NotificationProcessCostResponse getNotificationProcessCost(String iun, Integer recipientIndex, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy notificationFeePolicy, Boolean applyCost, Integer paFee,Integer vat) throws RestClientException {
         throw new UnsupportedOperationException();
     }
 
