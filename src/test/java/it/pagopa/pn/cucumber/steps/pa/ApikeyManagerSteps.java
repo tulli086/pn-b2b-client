@@ -215,11 +215,7 @@ public class ApikeyManagerSteps {
 
         responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
         firstGroupUsed = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.FIRST);
-
-        String firstGroupUsedOther = this.sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.FIRST);
-
-        //requestNewApiKey.setGroups(List.of(firstGroupUsed));
-        requestNewApiKey.setGroups(List.of(firstGroupUsedOther));
+        requestNewApiKey.setGroups(List.of(firstGroupUsed));
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
         sharedSteps.setRequestNewApiKey(requestNewApiKey);
