@@ -22,6 +22,7 @@ import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.cucumber.utils.*;
@@ -99,7 +100,7 @@ public class SharedSteps {
 
     private static final Integer WAITING_GPD = 2000;
 
-
+    private RequestNewApiKey requestNewApiKey;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -1114,6 +1115,9 @@ public class SharedSteps {
         try {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
+                //TODO Eliminare
+                notificationRequest.setPaFee(0);
+                notificationRequest.setVat(22);
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
 
                 try {
@@ -2224,4 +2228,11 @@ public class SharedSteps {
     }
 
 
+    public RequestNewApiKey getRequestNewApiKey() {
+        return requestNewApiKey;
+    }
+
+    public void setRequestNewApiKey(RequestNewApiKey requestNewApiKey) {
+        this.requestNewApiKey = requestNewApiKey;
+    }
 }

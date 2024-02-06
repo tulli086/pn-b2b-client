@@ -174,6 +174,7 @@ public class ApikeyManagerSteps {
     public void vieneImpostataLApikeyAppenaGenerataPerIl() {
         sharedSteps.getB2bClient().setApiKey(responseNewApiKey.getApiKey());
         sharedSteps.getB2bUtils().setClient(sharedSteps.getB2bClient());
+        sharedSteps.setRequestNewApiKey(requestNewApiKey);
     }
 
     @Then("l'invio della notifica non ha prodotto errori")
@@ -202,6 +203,7 @@ public class ApikeyManagerSteps {
         requestNewApiKey.setGroups(List.of(group));
         try {
             this.apiKeyManagerClient.newApiKey(requestNewApiKey);
+            sharedSteps.setRequestNewApiKey(requestNewApiKey);
         } catch (HttpStatusCodeException httpStatusCodeException) {
             this.httpStatusCodeException = httpStatusCodeException;
         }
@@ -214,11 +216,16 @@ public class ApikeyManagerSteps {
         responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
         firstGroupUsed = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.FIRST);
 
-        requestNewApiKey.setGroups(List.of(firstGroupUsed));
+        String firstGroupUsedOther = this.sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.FIRST);
+
+        //requestNewApiKey.setGroups(List.of(firstGroupUsed));
+        requestNewApiKey.setGroups(List.of(firstGroupUsedOther));
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
+        sharedSteps.setRequestNewApiKey(requestNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
     }
+
 
     @Given("Viene creata una nuova apiKey per il comune {string} con due gruppi")
     public void viene_creata_una_nuova_api_key_per_il_comune_con_due_gruppi(String settedPa) {
@@ -231,6 +238,7 @@ public class ApikeyManagerSteps {
         requestNewApiKey.setGroups(List.of(firstGroupUsed,lastGroupUsed));
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
+        sharedSteps.setRequestNewApiKey(requestNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
     }
 
@@ -252,6 +260,7 @@ public class ApikeyManagerSteps {
         responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClientImpl.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
+        sharedSteps.setRequestNewApiKey(requestNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
     }
 

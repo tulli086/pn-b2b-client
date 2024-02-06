@@ -20,6 +20,7 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamCreationRequestV22;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV22;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
+import it.pagopa.pn.cucumber.utils.GroupPosition;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
@@ -173,6 +174,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 this.eventStreamListV22 = new LinkedList<>();
                 for(StreamCreationRequestV22 request: streamCreationRequestListV22){
                     try{
+                        request.setGroups(sharedSteps.getRequestNewApiKey().getGroups());
                         StreamMetadataResponseV22 eventStream = webhookB2bClient.createEventStreamV22(request);
                         this.eventStreamListV22.add(eventStream);
                     }catch (HttpStatusCodeException e) {
@@ -185,6 +187,48 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 break;
             default:
                 throw new IllegalArgumentException();
+        }
+    }
+
+    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} con un gruppo disponibile {string}")
+    public void createdStreamByGroups(String pa, String versione, String position) {
+        setPaWebhook(pa);
+        List<String> listGroups = new ArrayList<>();
+        switch (position) {
+            case "FIRST":
+                Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.FIRST));
+                listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.FIRST));
+                break;
+            case "LAST":
+                Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
+                listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
+                break;
+            case "ALTRA_PA":
+                if ("Comune_1".equalsIgnoreCase(pa)){
+                    pa = "Comune_Multi";
+                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
+                    listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
+                }else {
+                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
+                    listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+
+        this.eventStreamListV22 = new LinkedList<>();
+        for(StreamCreationRequestV22 request: streamCreationRequestListV22){
+            try{
+                request.setGroups(listGroups);
+                StreamMetadataResponseV22 eventStream = webhookB2bClient.createEventStreamV22(request);
+                this.eventStreamListV22.add(eventStream);
+            }catch (HttpStatusCodeException e) {
+                this.notificationError = e;
+                if (e instanceof HttpStatusCodeException) {
+                    sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                }
+            }
         }
     }
 
@@ -369,7 +413,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             logger.info("EventProgress: " + progressResponseElement);
         }catch(AssertionFailedError assertionFailedError){
             String message = assertionFailedError.getMessage()+
-                   " {IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" }";
+                    " {IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" }";
             throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
         }
 
@@ -874,9 +918,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         ProgressResponseElement lastProgress = null;
         for(ProgressResponseElement elem: progressResponseElements){
             if("REFUSED".equalsIgnoreCase(elem.getNewStatus().getValue()) && elem.getValidationErrors() != null && elem.getValidationErrors().size()>0){
-               if (elem.getValidationErrors().get(0).getErrorCode()!= null && "FILE_NOTFOUND".equalsIgnoreCase(elem.getValidationErrors().get(0).getErrorCode()) )
-                   progressResponseElement = elem;
-               break;
+                if (elem.getValidationErrors().get(0).getErrorCode()!= null && "FILE_NOTFOUND".equalsIgnoreCase(elem.getValidationErrors().get(0).getErrorCode()) )
+                    progressResponseElement = elem;
+                break;
             }
         }//for
         return progressResponseElement;
