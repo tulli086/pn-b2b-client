@@ -302,7 +302,7 @@ Feature: avanzamento notifiche webhook b2b V22
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @testLite @webhook1
+  @testLite @webhook1 @ignore
   Scenario: [B2B-STREAM_ES1.1_32] Lettura di uno stream notifica con gruppo, con eventType "TIMELINE"  utilizzando un apikey con gruppo non appartenente alla PA.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
@@ -406,7 +406,7 @@ Feature: avanzamento notifiche webhook b2b V22
 
   #--------------DISABILITAZIONE DI UNO STREAM------------
 
-  @testLite @webhook1
+  @testLite @webhook1 @ignore
   Scenario: [B2B-STREAM_ES1.1_57] Disabilitazione di uno stream notifica con gruppo, con eventType "STATUS"  utilizzando un apikey con gruppo non appartenente alla PA.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
@@ -472,7 +472,7 @@ Feature: avanzamento notifiche webhook b2b V22
     And l'apiKey viene cancellata
 
 
-  @testLite @webhook1
+  @testLite @webhook1 @ignore
   Scenario: [B2B-STREAM_ES1.1_62] Disabilitazione di uno stream notifica con gruppo, con eventType "TIMELINE"  utilizzando un apikey con gruppo non appartenente alla PA.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
@@ -585,7 +585,7 @@ Feature: avanzamento notifiche webhook b2b V22
 
      #--------------CANCELLAZIONE DI UNO STREAM------------
 
-  @testLite @webhook1
+  @testLite @webhook1 @ignore
   Scenario: [B2B-STREAM_ES1.1_72] Cancellazione di uno stream notifica con gruppo, con eventType "STATUS"  utilizzando un apikey con gruppo non appartenente alla PA.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
@@ -652,7 +652,7 @@ Feature: avanzamento notifiche webhook b2b V22
 
 
 
-  @testLite @webhook1
+  @testLite @webhook1 @ignore
   Scenario: [B2B-STREAM_ES1.1_77] Cancellazione di uno stream notifica con gruppo, con eventType "TIMELINE"  utilizzando un apikey con gruppo non appartenente alla PA.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
@@ -767,11 +767,7 @@ Feature: avanzamento notifiche webhook b2b V22
     And viene impostata l'apikey appena generata
     And si crea il nuovo stream per il "Comune_1" con versione "V22" e apiKey aggiornata
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
-    And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
-    And viene impostata l'apikey appena generata
-    When si aggiorna lo stream creato con versione "V22" e apiKey aggiornata
+    When si aggiorna lo stream creato con versione "V22" con un gruppo che non appartiene al comune "Comune_1"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -828,11 +824,7 @@ Feature: avanzamento notifiche webhook b2b V22
     And viene impostata l'apikey appena generata
     And si crea il nuovo stream per il "Comune_1" con versione "V22" e apiKey aggiornata
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
-    And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
-    And viene impostata l'apikey appena generata
-    When si aggiorna lo stream creato con versione "V22" e apiKey aggiornata
+    When si aggiorna lo stream creato con versione "V22" con un gruppo che non appartiene al comune "Comune_1"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata

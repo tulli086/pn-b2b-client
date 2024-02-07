@@ -54,6 +54,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private Integer requestNumber;
     private HttpStatusCodeException notificationError;
+    private StreamRequestV22 streamRequest;
     private static final Logger logger = LoggerFactory.getLogger(AvanzamentoNotificheWebhookB2bSteps.class);
 
     @Autowired
@@ -286,16 +287,30 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
-    @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
-    public void updateStreamUpadateApiKey(String versione) {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+
+    @And("si (aggiorna(no)) (lo)(gli) stream creat(o)(i) con versione {string} con un gruppo che non appartiene al comune {string}")
+    public void updateStreamByGroupsNoPA(String versione,String pa) {
+
+            try {
+                streamRequest = new StreamRequestV22();
+                if ("Comune_1".equalsIgnoreCase(pa)) {
+                    streamRequest.setGroups(List.of(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.FIRST)));
+                }else {
+                    streamRequest.setGroups(List.of(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.FIRST)));
+                }
+
+            } catch (HttpStatusCodeException e) {
+                this.notificationError = e;
+                if (e instanceof HttpStatusCodeException) {
+                    sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                }
+            }
         updateStream(versione);
     }
 
     @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string}")
-    public void updateStream(String versione) {
+    public void updateStream (String versione) {
+
         switch (versione) {
             case "V10":
                 //TODO da verificare..
@@ -305,9 +320,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 break;
             case "V22":
                 try{
-                    //TODO da verificare..
-                    StreamRequestV22 streamRequest = new StreamRequestV22();
-                    streamRequest.setGroups(sharedSteps.getRequestNewApiKey().getGroups());
+
                     for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
                         webhookB2bClient.updateEventStreamV22(eventStream.getStreamId(),null);
                     }
@@ -394,6 +407,14 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    @And("lo stream viene recuperato dal sistema tramite stream id con versione {string} e apiKey aggiornata")
+    public void streamBeenRetrievedByStreamIdUpdateApiKey(String versione) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        streamBeenRetrievedByStreamId(versione);
     }
 
     @Then("lo stream viene recuperato dal sistema tramite stream id con versione {string}")
