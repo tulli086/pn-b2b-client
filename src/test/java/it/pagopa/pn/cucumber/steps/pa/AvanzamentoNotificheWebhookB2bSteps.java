@@ -19,6 +19,7 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.ProgressResponseElementV22;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamCreationRequestV22;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV22;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamRequestV22;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.GroupPosition;
 import org.junit.jupiter.api.Assertions;
@@ -152,6 +153,14 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} e apiKey aggiornata")
+    public void createdStreamNewApiKey(String pa, String versione) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        createdStream(pa, versione);
+    }
+
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string}")
     public void createdStream(String pa, String versione) {
         setPaWebhook(pa);
@@ -188,6 +197,14 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} con un gruppo disponibile {string} e apiKey aggiornata")
+    public void createdStreamByGroupsUpdateApiKey(String pa, String versione, String position) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        createdStreamByGroups( pa, versione,  position);
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} con un gruppo disponibile {string}")
@@ -236,6 +253,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+    @And("si cancella(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
+    public void deleteStreamUpadateApiKey(String versione) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        deleteStream(versione);
+    }
     @And("si cancella(no) (lo)(gli) stream creat(o)(i) con versione {string}")
     public void deleteStream(String versione) {
         switch (versione) {
@@ -245,13 +269,69 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 }
                 break;
             case "V22":
-                for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
-                    webhookB2bClient.deleteEventStreamV22(eventStream.getStreamId());
+                try{
+                    for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
+                        webhookB2bClient.deleteEventStreamV22(eventStream.getStreamId());
+                    }
+                }catch (HttpStatusCodeException e) {
+                    this.notificationError = e;
+                    if (e instanceof HttpStatusCodeException) {
+                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                    }
                 }
+
                 break;
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
+    public void updateStreamUpadateApiKey(String versione) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        updateStream(versione);
+    }
+
+    @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string}")
+    public void updateStream(String versione) {
+        switch (versione) {
+            case "V10":
+                //TODO da verificare..
+                for(StreamMetadataResponse eventStream: eventStreamList){
+                    webhookB2bClient.updateEventStream(eventStream.getStreamId(),null);
+                }
+                break;
+            case "V22":
+                try{
+                    //TODO da verificare..
+                    StreamRequestV22 streamRequest = new StreamRequestV22();
+                    streamRequest.setGroups(sharedSteps.getRequestNewApiKey().getGroups());
+                    for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
+                        webhookB2bClient.updateEventStreamV22(eventStream.getStreamId(),null);
+                    }
+                }catch (HttpStatusCodeException e) {
+                    this.notificationError = e;
+                    if (e instanceof HttpStatusCodeException) {
+                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                    }
+                }
+
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+
+
+    @And("si disabilita(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
+    public void disableStreamUpdateApiKey(String versione) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        disableStream(versione);
     }
 
     @And("si disabilita(no) (lo)(gli) stream creat(o)(i) con versione {string}")

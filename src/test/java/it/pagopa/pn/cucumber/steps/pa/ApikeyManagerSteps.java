@@ -175,6 +175,7 @@ public class ApikeyManagerSteps {
         sharedSteps.getB2bClient().setApiKey(responseNewApiKey.getApiKey());
         sharedSteps.getB2bUtils().setClient(sharedSteps.getB2bClient());
         sharedSteps.setRequestNewApiKey(requestNewApiKey);
+        sharedSteps.setResponseNewApiKey(responseNewApiKey);
     }
 
     @Then("l'invio della notifica non ha prodotto errori")
@@ -219,6 +220,7 @@ public class ApikeyManagerSteps {
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
         sharedSteps.setRequestNewApiKey(requestNewApiKey);
+        sharedSteps.setResponseNewApiKey(responseNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
     }
 

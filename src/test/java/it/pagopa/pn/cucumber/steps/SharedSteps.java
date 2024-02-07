@@ -23,6 +23,7 @@ import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.cucumber.utils.*;
@@ -101,6 +102,10 @@ public class SharedSteps {
     private static final Integer WAITING_GPD = 2000;
 
     private RequestNewApiKey requestNewApiKey;
+
+
+
+    private ResponseNewApiKey responseNewApiKey;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -2234,5 +2239,13 @@ public class SharedSteps {
 
     public void setRequestNewApiKey(RequestNewApiKey requestNewApiKey) {
         this.requestNewApiKey = requestNewApiKey;
+    }
+
+    public ResponseNewApiKey getResponseNewApiKey() {
+        return responseNewApiKey;
+    }
+
+    public void setResponseNewApiKey(ResponseNewApiKey responseNewApiKey) {
+        this.responseNewApiKey = responseNewApiKey;
     }
 }

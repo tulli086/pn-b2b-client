@@ -708,6 +708,13 @@ public class InvioNotificheB2bSteps {
                 (httpStatusCodeException.getStatusCode().toString().substring(0, 3).equals(statusCode)));
     }
 
+    @Then("l'operazione non ha prodotto errori")
+    public void operationProducedNotAnError(String statusCode) {
+        HttpStatusCodeException httpStatusCodeException = this.sharedSteps.consumeNotificationError();
+        Assertions.assertFalse((httpStatusCodeException != null) &&
+                (httpStatusCodeException.getStatusCode().toString().substring(0, 3).equals(statusCode)));
+    }
+
 
     @Then("si verifica la corretta acquisizione della notifica")
     public void correctAcquisitionNotification() {
