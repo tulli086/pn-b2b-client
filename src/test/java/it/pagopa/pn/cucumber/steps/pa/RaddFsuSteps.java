@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -41,6 +42,8 @@ public class RaddFsuSteps {
     private AORInquiryResponse aorInquiryResponse;
     private CompleteTransactionResponse completeTransactionResponse;
     private PnPaB2bUtils.Pair<String,String> documentUploadResponse;
+
+    private AbortTransactionResponse abortActTransaction;
 
     private HttpStatusCodeException documentUploadError;
 
@@ -262,7 +265,7 @@ public class RaddFsuSteps {
                 new CompleteTransactionRequest()
                         .operationId(this.operationid)
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()));
-        CompleteTransactionResponse completeTransactionResponse = raddFsuClient.completeActTransaction(this.uid, completeTransactionRequest);
+        this.completeTransactionResponse = raddFsuClient.completeActTransaction(this.uid, completeTransactionRequest);
         System.out.println(completeTransactionResponse);
         Assertions.assertNotNull(completeTransactionResponse);
     }
@@ -386,6 +389,15 @@ public class RaddFsuSteps {
         Assertions.assertEquals(TransactionResponseStatus.CodeEnum.NUMBER_0,this.completeTransactionResponse.getStatus().getCode());
     }
 
+    @And("la chiusura delle transazione per il recupero degli aar ha generato l'errore {string} con statusCode {int}")
+    public void laChiusuraDelleTransazionePerIlRecuperoDegliAarNonGeneraErrori(String error, int statusCode) {
+        Assertions.assertNotNull(this.completeTransactionResponse);
+        Assertions.assertNotNull(this.completeTransactionResponse.getStatus());
+        Assertions.assertNotNull(this.completeTransactionResponse.getStatus().getCode());
+        Assertions.assertEquals(new BigDecimal(statusCode),this.completeTransactionResponse.getStatus().getCode().getValue());
+        Assertions.assertEquals(error,this.completeTransactionResponse.getStatus().getMessage());
+    }
+
 
     @Given("vengono caricati i documento di identità del cittadino senza {string}")
     public void vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSenza(String without) {
@@ -414,5 +426,23 @@ public class RaddFsuSteps {
     public void ilCaricamenteHaProdottoUneErroreHttp(int httpError) {
         Assertions.assertNotNull(this.documentUploadError);
         Assertions.assertEquals(this.documentUploadError.getStatusCode().value(),httpError);
+    }
+
+    @Then("la transazione viene abortita")
+    public void laTransazioneVieneAbortita() {
+        this.abortActTransaction = this.raddFsuClient.abortActTransaction(this.uid,
+                new AbortTransactionRequest()
+                        .operationId(this.operationid)
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                        .reason("TEST"));
+    }
+
+    @And("l'operazione di abort genera un errore {string} con codice {int}")
+    public void lOperazioneDiAbortGeneraUnErroreConCodice(String error, int statusCode) {
+        Assertions.assertNotNull(this.abortActTransaction);
+        Assertions.assertNotNull(this.abortActTransaction.getStatus());
+        Assertions.assertNotNull(this.abortActTransaction.getStatus().getCode());
+        Assertions.assertEquals(new BigDecimal(statusCode),this.abortActTransaction.getStatus().getCode().getValue());
+        Assertions.assertEquals(error,this.abortActTransaction.getStatus().getMessage());
     }
 }
