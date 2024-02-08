@@ -453,6 +453,10 @@ public class AvanzamentoNotificheB2bSteps {
             case "NOTIFICATION_CANCELLED":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLED, 5, waiting * 3);
                 break;
+            case "NOTIFICATION_RADD_RETRIEVED":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_RADD_RETRIEVED, 5, waiting * 3);
+                break;
+
             default:
                 throw new IllegalArgumentException();
         }
