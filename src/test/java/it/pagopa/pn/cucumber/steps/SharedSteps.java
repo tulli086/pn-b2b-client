@@ -2004,6 +2004,25 @@ public class SharedSteps {
         return id;
     }
 
+    public List<String> getGroupAllActiveByPa(String settedPa) {
+        List<HashMap<String, String>> hashMapsList = getGroupsByPa(settedPa);
+        List<String> groups = new ArrayList<>();
+        String id = null;
+        Integer count = 0;
+
+        for (HashMap<String, String> elem : hashMapsList) {
+            if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
+                id = elem.get("id");
+                count++;
+                groups.add(id);
+            }
+        }
+
+        Assertions.assertTrue(count >= 2);
+
+        return groups;
+    }
+
     @And("viene rimossa se presente la pec di piattaforma di {string}")
     public void vieneRimossaSePresenteLaPecDiPiattaformaDi(String user) {
         selectUser(user);

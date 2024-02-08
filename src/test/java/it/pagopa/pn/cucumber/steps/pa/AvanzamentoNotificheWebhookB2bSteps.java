@@ -221,6 +221,14 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
                 listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
                 break;
+            case "ALL":
+                Assertions.assertNotNull(sharedSteps.getGroupAllActiveByPa(pa));
+                listGroups = sharedSteps.getGroupAllActiveByPa(pa);
+                break;
+            case "UGUALI":
+                Assertions.assertNotNull(sharedSteps.getRequestNewApiKey());
+                listGroups = sharedSteps.getRequestNewApiKey().getGroups();
+                break;
             case "ALTRA_PA":
                 if ("Comune_1".equalsIgnoreCase(pa)){
                     pa = "Comune_Multi";
@@ -288,6 +296,14 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
 
+    @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
+    public void updateStreamUpadateApiKey(String versione) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        deleteStream(versione);
+    }
+
     @And("si (aggiorna(no)) (lo)(gli) stream creat(o)(i) con versione {string} con un gruppo che non appartiene al comune {string}")
     public void updateStreamByGroupsNoPA(String versione,String pa) {
 
@@ -347,6 +363,51 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         disableStream(versione);
     }
 
+    @And("si disabilita(no) (lo)(gli) stream che non esiste e apiKey aggiornata")
+    public void disableStreamNotexist() {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        try{
+                webhookB2bClient.disableEventStreamV22(UUID.randomUUID());
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            if (e instanceof HttpStatusCodeException) {
+                sharedSteps.setNotificationError((HttpStatusCodeException) e);
+            }
+        }
+    }
+
+    @And("si cancella(no) (lo)(gli) stream che non esiste e apiKey aggiornata")
+    public void deleteStreamNotexist() {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        try{
+            webhookB2bClient.deleteEventStreamV22(UUID.randomUUID());
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            if (e instanceof HttpStatusCodeException) {
+                sharedSteps.setNotificationError((HttpStatusCodeException) e);
+            }
+        }
+    }
+
+    @And("si legge(no) (lo)(gli) stream che non esiste e apiKey aggiornata")
+    public void readStreamNotexist() {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        try{
+            webhookB2bClient.getEventStream(UUID.randomUUID());
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            if (e instanceof HttpStatusCodeException) {
+                sharedSteps.setNotificationError((HttpStatusCodeException) e);
+            }
+        }
+    }
+
     @And("si disabilita(no) (lo)(gli) stream creat(o)(i) con versione {string}")
     public void disableStream(String versione) {
         switch (versione) {
@@ -389,6 +450,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+    @Then("lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione {string} e apiKey aggiornata")
+    public void streamBeenCreatedAndCorrectlyRetrievedByStreamIdUpdateApiKey(String versione) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        streamBeenCreatedAndCorrectlyRetrievedByStreamId(versione);
+    }
 
     @Then("lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione {string}")
     public void streamBeenCreatedAndCorrectlyRetrievedByStreamId(String versione) {
