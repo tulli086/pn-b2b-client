@@ -22,6 +22,7 @@ import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.ProgressResponseElementV22;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV22;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
@@ -189,6 +190,10 @@ public class SharedSteps {
 
 
     private List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.ProgressResponseElement> progressResponseElements = null;
+
+
+
+    private List<ProgressResponseElementV22> progressResponseElementsV22 = null;
     public static Integer lastEventID = 0;
 
     private String gherkinSpaTaxID = "12666810299";
@@ -2285,5 +2290,13 @@ public class SharedSteps {
 
     public void setEventStream(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse eventStream) {
         this.eventStream = eventStream;
+    }
+
+    public List<ProgressResponseElementV22> getProgressResponseElementsV22() {
+        return progressResponseElementsV22;
+    }
+
+    public void setProgressResponseElementsV22(List<ProgressResponseElementV22> progressResponseElementsV22) {
+        this.progressResponseElementsV22 = progressResponseElementsV22;
     }
 }

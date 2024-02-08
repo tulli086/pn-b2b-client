@@ -15,7 +15,6 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamCreationRequest;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamListElement;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.ProgressResponseElementV22;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamCreationRequestV22;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV22;
@@ -307,7 +306,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         updateStream(versione);
     }
 
-    @And("si (aggiorna(no)) (lo)(gli) stream creat(o)(i) con versione {string} con un gruppo che non appartiene al comune {string}")
+    @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} con un gruppo che non appartiene al comune {string}")
     public void updateStreamByGroupsNoPA(String versione,String pa) {
 
             try {
@@ -642,6 +641,68 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
 
+
+    @And("vengono letti gli eventi dello stream del {string} fino allo stato {string} con versione V22 e apiKey aggiornata")
+    public void readStreamEventsStateV22(String pa,String status) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        setPaWebhook(pa);
+        NotificationStatus notificationStatus;
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatus notificationInternalStatus;
+        switch (status) {
+            case "ACCEPTED":
+                notificationStatus = NotificationStatus.ACCEPTED;
+                break;
+            case "DELIVERING":
+                notificationStatus = NotificationStatus.DELIVERING;
+                break;
+            case "DELIVERED":
+                notificationStatus = NotificationStatus.DELIVERED;
+                break;
+            case "CANCELLED":
+                notificationStatus = NotificationStatus.CANCELLED;
+                break;
+            case "EFFECTIVE_DATE":
+                notificationStatus = NotificationStatus.EFFECTIVE_DATE;
+                 break;
+
+            case "REFUSED":
+                notificationStatus = NotificationStatus.REFUSED;
+               break;
+
+            default:
+                throw new IllegalArgumentException();
+        }
+        ProgressResponseElementV22 progressResponseElement = null;
+
+        for (int i = 0; i < 4; i++) {
+            progressResponseElement = searchInWebhookV22(notificationStatus,null,0);
+            logger.debug("PROGRESS-ELEMENT: "+progressResponseElement);
+
+            if (progressResponseElement != null) {
+                break;
+            }
+
+            try {
+                Thread.sleep(sharedSteps.getWait());
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+        }
+
+        try{
+            Assertions.assertNotNull(progressResponseElement);
+            logger.info("EventProgress: " + progressResponseElement);
+        }catch(AssertionFailedError assertionFailedError){
+            String message = assertionFailedError.getMessage()+
+                    " {IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" }";
+            throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
+        }
+
+    }
+
+
     @And("vengono letti gli eventi dello stream del {string} del validatore fino allo stato {string}")
     public void readStreamEventsStateValidatore(String pa,String status) {
         setPaWebhook(pa);
@@ -943,6 +1004,194 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+
+    @Then("vengono letti gli eventi dello stream del {string} fino all'elemento di timeline {string} con versione V22 e apiKey aggiornata")
+    public void readStreamTimelineElementV22(String pa,String timelineEventCategory) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        setPaWebhook(pa);
+        TimelineElementCategoryV20 timelineElementCategory;
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20 timelineElementInternalCategory;
+
+        Integer numCheck = 10;
+        Integer waiting = sharedSteps.getWorkFlowWait();
+
+        switch (timelineEventCategory) {
+            case "REQUEST_ACCEPTED":
+                numCheck = 2;
+                timelineElementCategory = TimelineElementCategoryV20.REQUEST_ACCEPTED;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.REQUEST_ACCEPTED;
+                break;
+            case "AAR_GENERATION":
+                numCheck = 2;
+                waiting = waiting * 2;
+                timelineElementCategory = TimelineElementCategoryV20.AAR_GENERATION;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.AAR_GENERATION;
+                break;
+            case "GET_ADDRESS":
+                numCheck = 2;
+                waiting = waiting * 2;
+                timelineElementCategory = TimelineElementCategoryV20.GET_ADDRESS;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.GET_ADDRESS;
+                break;
+            case "SEND_DIGITAL_DOMICILE":
+                numCheck = 2;
+                waiting = waiting * 2;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_DIGITAL_DOMICILE;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_DIGITAL_DOMICILE;
+                break;
+            case "NOTIFICATION_VIEWED":
+                numCheck = 2;
+                waiting = waiting * 2;
+                timelineElementCategory = TimelineElementCategoryV20.NOTIFICATION_VIEWED;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.NOTIFICATION_VIEWED;
+                break;
+            case "SEND_COURTESY_MESSAGE":
+                numCheck = 10;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_COURTESY_MESSAGE;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_COURTESY_MESSAGE;
+                break;
+            case "DIGITAL_FAILURE_WORKFLOW":
+                numCheck = 9;
+                timelineElementCategory = TimelineElementCategoryV20.DIGITAL_FAILURE_WORKFLOW;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.DIGITAL_FAILURE_WORKFLOW;
+                break;
+            case "DIGITAL_SUCCESS_WORKFLOW":
+                numCheck = 2;
+                waiting = waiting * 3;
+                timelineElementCategory = TimelineElementCategoryV20.DIGITAL_SUCCESS_WORKFLOW;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.DIGITAL_SUCCESS_WORKFLOW;
+                break;
+            case "SCHEDULE_ANALOG_WORKFLOW":
+                numCheck = 2;
+                waiting = waiting * 3;
+                timelineElementCategory = TimelineElementCategoryV20.SCHEDULE_ANALOG_WORKFLOW;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SCHEDULE_ANALOG_WORKFLOW;
+                break;
+            case "NOT_HANDLED":
+                numCheck = 9;
+                timelineElementCategory = TimelineElementCategoryV20.NOT_HANDLED;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.NOT_HANDLED;
+                break;
+            case "SEND_DIGITAL_FEEDBACK":
+                numCheck = 2;
+                waiting = waiting * 3;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_DIGITAL_FEEDBACK;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_DIGITAL_FEEDBACK;
+                break;
+            case "SEND_ANALOG_PROGRESS":
+                numCheck = 8;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_ANALOG_PROGRESS;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_ANALOG_PROGRESS;
+                break;
+            case "SEND_ANALOG_FEEDBACK":
+                numCheck = 10;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK;
+                break;
+            case "SEND_ANALOG_DOMICILE":
+                numCheck = 9;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_ANALOG_DOMICILE;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_ANALOG_DOMICILE;
+                break;
+            case "SEND_DIGITAL_PROGRESS":
+                numCheck = 2;
+                waiting = waiting * 3;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_DIGITAL_PROGRESS;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_DIGITAL_PROGRESS;
+                break;
+            case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS":
+                numCheck = 15;
+                timelineElementCategory = TimelineElementCategoryV20.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS;
+                break;
+            case "PUBLIC_REGISTRY_CALL":
+                numCheck = 2;
+                waiting = waiting * 4;
+                timelineElementCategory = TimelineElementCategoryV20.PUBLIC_REGISTRY_CALL;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.PUBLIC_REGISTRY_CALL;
+                break;
+            case "PUBLIC_REGISTRY_RESPONSE":
+                numCheck = 2;
+                waiting = waiting * 4;
+                timelineElementCategory = TimelineElementCategoryV20.PUBLIC_REGISTRY_RESPONSE;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.PUBLIC_REGISTRY_RESPONSE;
+                break;
+            case "PAYMENT":
+                numCheck = 9;
+                timelineElementCategory = TimelineElementCategoryV20.PAYMENT;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.PAYMENT;
+                break;
+            case "NOTIFICATION_CANCELLATION_REQUEST":
+                numCheck = 9;
+                timelineElementCategory = TimelineElementCategoryV20.NOTIFICATION_CANCELLATION_REQUEST;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.NOTIFICATION_CANCELLATION_REQUEST;
+                break;
+            case "NOTIFICATION_CANCELLED":
+                numCheck = 10;
+                timelineElementCategory = TimelineElementCategoryV20.NOTIFICATION_CANCELLED;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.NOTIFICATION_CANCELLED;
+                break;
+            case "REFINEMENT":
+                numCheck = 15;
+                timelineElementCategory = TimelineElementCategoryV20.REFINEMENT;
+                timelineElementInternalCategory =
+                        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20.REFINEMENT;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        ProgressResponseElementV22 progressResponseElement = null;
+
+
+        for (int i = 0; i < 4; i++) {
+            progressResponseElement = searchInWebhookV22(timelineElementCategory,null,0);
+            logger.debug("PROGRESS-ELEMENT: "+progressResponseElement);
+
+            if (progressResponseElement != null) {
+                break;
+            }
+
+            try {
+                Thread.sleep(sharedSteps.getWait());
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+        }
+        try{
+            Assertions.assertNotNull(progressResponseElement);
+            Assertions.assertNotSame(progressResponseElement.getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
+            logger.info("EventProgress: " + progressResponseElement);
+
+        }catch(AssertionFailedError assertionFailedError){
+            String message = assertionFailedError.getMessage()+
+                    "{IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" }";
+            throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
+        }
+    }
+
     @Then("Si verifica che l'elemento di timeline REFINEMENT abbia il timestamp uguale a quella presente nel webhook")
     public void readStreamTimelineElementAndVerifyDate() {
         OffsetDateTime EventTimestamp=null;
@@ -1101,6 +1350,70 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             try{
                 Thread.sleep(500);
                 return searchInWebhook(timeLineOrStatus,lastProgress.getEventId(),(deepCount+1));
+            }catch (IllegalStateException illegalStateException){
+                if(deepCount == 249 || deepCount == 248 || deepCount == 247){
+                    throw new IllegalStateException((illegalStateException.getMessage()+("LOP: PROGRESS-ELEMENTS: "+progressResponseElements
+                            +" WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" IUN: "+sharedSteps.getSentNotification().getIun()+" DEEP: "+deepCount)));
+                }else{
+                    throw illegalStateException;
+                }
+            }catch (InterruptedException interruptedException){
+                logger.error("Thread.sleep error retry");
+                throw new RuntimeException(interruptedException);
+            }
+        }else{
+            return null;
+        }
+    }//searchInWebhookTimelineElement
+
+    private <T> ProgressResponseElementV22 searchInWebhookV22(T timeLineOrStatus,String lastEventId, int deepCount){
+
+        TimelineElementCategoryV23 timelineElementCategory = null;
+        NotificationStatus notificationStatus = null;
+        if(timeLineOrStatus instanceof TimelineElementCategoryV23){
+            timelineElementCategory = (TimelineElementCategoryV23)timeLineOrStatus;
+        }else if(timeLineOrStatus instanceof NotificationStatus){
+            notificationStatus = (NotificationStatus)timeLineOrStatus;
+        }else{
+            throw new IllegalArgumentException();
+        }
+        ProgressResponseElementV22 progressResponseElement = null;
+        ResponseEntity<List<ProgressResponseElementV22>> listResponseEntity = webhookB2bClient.consumeEventStreamHttpV22(this.eventStreamList.get(0).getStreamId(), lastEventId);
+        int retryAfter = Integer.parseInt(listResponseEntity.getHeaders().get("retry-after").get(0));
+        List<ProgressResponseElementV22> progressResponseElements = listResponseEntity.getBody();
+
+        sharedSteps.setProgressResponseElementsV22(progressResponseElements);
+
+        System.out.println("ELEMENTI NEL WEBHOOK: "+progressResponseElements.toString());
+        if(deepCount >= 250){
+            throw new IllegalStateException("LOP: PROGRESS-ELEMENTS: "+progressResponseElements
+                    +" WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" IUN: "+sharedSteps.getSentNotification().getIun()+" DEEP: "+deepCount);
+        }
+        ProgressResponseElementV22 lastProgress = null;
+        for(ProgressResponseElementV22 elem: progressResponseElements){
+            if(lastProgress == null){
+                lastProgress = elem;
+            }else if (lastProgress.getEventId().compareTo(elem.getEventId()) < 0){
+                lastProgress = elem;
+            }
+            if(elem.getIun() != null && elem.getIun().equals(sharedSteps.getSentNotification().getIun())){
+                if(!progressResponseElementListV22.contains(elem)){
+                    progressResponseElementListV22.addLast(elem);
+                }
+                if(((elem.getTimelineEventCategory() != null && (elem.getTimelineEventCategory().equals(timelineElementCategory)))
+                        || (elem.getNewStatus() != null && (elem.getNewStatus().equals(notificationStatus))))){
+                    progressResponseElement = elem;
+                    break;
+                }
+            }
+        }//for
+
+        if(progressResponseElement != null){
+            return progressResponseElement;
+        }else if(retryAfter == 0){
+            try{
+                Thread.sleep(500);
+                return searchInWebhookV22(timeLineOrStatus,lastProgress.getEventId(),(deepCount+1));
             }catch (IllegalStateException illegalStateException){
                 if(deepCount == 249 || deepCount == 248 || deepCount == 247){
                     throw new IllegalStateException((illegalStateException.getMessage()+("LOP: PROGRESS-ELEMENTS: "+progressResponseElements
