@@ -200,16 +200,16 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
-    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} con un gruppo disponibile {string} e apiKey aggiornata")
-    public void createdStreamByGroupsUpdateApiKey(String pa, String versione, String position) {
+    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con replaceId {string} con un gruppo disponibile {string} e apiKey aggiornata")
+    public void createdStreamByGroupsUpdateApiKey(String pa, String replaceId, String position) {
         if(sharedSteps.getResponseNewApiKey()!= null){
             webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
         }
-        createdStreamByGroups( pa, versione,  position);
+        createdStreamByGroups( pa, replaceId,  position);
     }
 
-    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} con un gruppo disponibile {string}")
-    public void createdStreamByGroups(String pa, String versione, String position) {
+    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con replaceId {string} con un gruppo disponibile {string}")
+    public void createdStreamByGroups(String pa, String replaceId, String position) {
         setPaWebhook(pa);
         List<String> listGroups = new ArrayList<>();
         switch (position) {
@@ -251,6 +251,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         for(StreamCreationRequestV22 request: streamCreationRequestListV22){
             try{
                 request.setGroups(listGroups);
+                if ("SET".equalsIgnoreCase(replaceId)){
+                    request.setReplacedStreamId(sharedSteps.getEventStreamV22().getStreamId());
+                }
                 StreamMetadataResponseV22 eventStream = webhookB2bClient.createEventStreamV22(request);
                 this.eventStreamListV22.add(eventStream);
             }catch (HttpStatusCodeException e) {
@@ -301,7 +304,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         if(sharedSteps.getResponseNewApiKey()!= null){
             webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
         }
-        deleteStream(versione);
+        updateStream(versione);
     }
 
     @And("si (aggiorna(no)) (lo)(gli) stream creat(o)(i) con versione {string} con un gruppo che non appartiene al comune {string}")
@@ -408,6 +411,21 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+    @And("si aggiorna(no) (lo)(gli) stream che non esiste e apiKey aggiornata")
+    public void updateStreamNotexist() {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        try{
+            webhookB2bClient.updateEventStreamV22(UUID.randomUUID(),new StreamRequestV22());
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            if (e instanceof HttpStatusCodeException) {
+                sharedSteps.setNotificationError((HttpStatusCodeException) e);
+            }
+        }
+    }
+
     @And("si disabilita(no) (lo)(gli) stream creat(o)(i) con versione {string}")
     public void disableStream(String versione) {
         switch (versione) {
@@ -466,11 +484,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 Assertions.assertDoesNotThrow(() -> {
                     StreamMetadataResponse eventStream = webhookB2bClient.getEventStream(this.eventStreamList.get(0).getStreamId());
                 });
+                sharedSteps.setEventStream(webhookB2bClient.getEventStream(this.eventStreamListV22.get(0).getStreamId()));
                 break;
             case "V22":
                 Assertions.assertDoesNotThrow(() -> {
                     StreamMetadataResponseV22 eventStream = webhookB2bClient.getEventStreamV22(this.eventStreamListV22.get(0).getStreamId());
                 });
+                sharedSteps.setEventStream(webhookB2bClient.getEventStreamV22(this.eventStreamListV22.get(0).getStreamId()));
                 break;
             default:
                 throw new IllegalArgumentException();

@@ -225,6 +225,7 @@ public class ApikeyManagerSteps {
     }
 
 
+
     @Given("Viene creata una nuova apiKey per il comune {string} con due gruppi")
     public void viene_creata_una_nuova_api_key_per_il_comune_con_due_gruppi(String settedPa) {
         requestNewApiKey = new RequestNewApiKey().name("CUCUMBER GROUP TEST");
@@ -237,6 +238,7 @@ public class ApikeyManagerSteps {
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
         sharedSteps.setRequestNewApiKey(requestNewApiKey);
+        sharedSteps.setResponseNewApiKey(responseNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
     }
 

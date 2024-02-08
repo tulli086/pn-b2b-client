@@ -22,6 +22,7 @@ import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV22;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
@@ -102,10 +103,12 @@ public class SharedSteps {
     private static final Integer WAITING_GPD = 2000;
 
     private RequestNewApiKey requestNewApiKey;
-
-
-
     private ResponseNewApiKey responseNewApiKey;
+
+
+
+    private it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse eventStream;
+    private StreamMetadataResponseV22 eventStreamV22;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -2266,5 +2269,21 @@ public class SharedSteps {
 
     public void setResponseNewApiKey(ResponseNewApiKey responseNewApiKey) {
         this.responseNewApiKey = responseNewApiKey;
+    }
+
+    public StreamMetadataResponseV22 getEventStreamV22() {
+        return eventStreamV22;
+    }
+
+    public void setEventStream(StreamMetadataResponseV22 eventStreamV22) {
+        this.eventStreamV22 = eventStreamV22;
+    }
+
+    public it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse getEventStream() {
+        return eventStream;
+    }
+
+    public void setEventStream(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse eventStream) {
+        this.eventStream = eventStream;
     }
 }
