@@ -49,7 +49,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private LinkedList<ProgressResponseElementV22> progressResponseElementListV22 = new LinkedList<>();
     private List<StreamCreationRequestV22> streamCreationRequestListV22;
     private List<StreamMetadataResponseV22> eventStreamListV22;
-
+    private StreamRequestV22 streamRequestV22;
 
     private Integer requestNumber;
     private HttpStatusCodeException notificationError;
@@ -306,6 +306,24 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         updateStream(versione);
     }
 
+    @And("si {string} un gruppo allo stream creat(o)(i) con versione {string} per il comune {string} e apiKey aggiornata")
+    public void updateGroupsStreamUpadateApiKey(String action, String versione, String pa) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        if(sharedSteps.getRequestNewApiKey()!= null){
+            streamRequestV22 = new StreamRequestV22();
+            if ("rimuove".equalsIgnoreCase(action) && sharedSteps.getRequestNewApiKey()!= null && sharedSteps.getRequestNewApiKey().getGroups().size()>=2) {
+                streamRequestV22.setGroups(sharedSteps.getRequestNewApiKey().getGroups().subList(0, 0));
+            } else if ("aggiunge".equalsIgnoreCase(action)) {
+                streamRequestV22.setGroups(sharedSteps.getGroupAllActiveByPa(pa));
+            }
+        }
+
+
+        updateStream(versione);
+    }
+
     @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} con un gruppo che non appartiene al comune {string}")
     public void updateStreamByGroupsNoPA(String versione,String pa) {
 
@@ -340,7 +358,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 try{
 
                     for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
-                        webhookB2bClient.updateEventStreamV22(eventStream.getStreamId(),null);
+                        webhookB2bClient.updateEventStreamV22(eventStream.getStreamId(),streamRequestV22);
                     }
                 }catch (HttpStatusCodeException e) {
                     this.notificationError = e;
@@ -657,8 +675,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
 
 
-    @And("vengono letti gli eventi dello stream del {string} fino allo stato {string} con versione V22 e apiKey aggiornata")
-    public void readStreamEventsStateV22(String pa,String status) {
+    @And("vengono letti gli eventi dello stream del {string} fino allo stato {string} con versione V22 e apiKey aggiornata con position {int}")
+    public void readStreamEventsStateV22(String pa,String status, Integer position) {
         if(sharedSteps.getResponseNewApiKey()!= null){
             webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
         }
@@ -692,7 +710,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         ProgressResponseElementV22 progressResponseElement = null;
 
         for (int i = 0; i < 4; i++) {
-            progressResponseElement = searchInWebhookV22(notificationStatus,null,0);
+            progressResponseElement = searchInWebhookV22(notificationStatus,null,0,position);
             logger.debug("PROGRESS-ELEMENT: "+progressResponseElement);
 
             if (progressResponseElement != null) {
@@ -1020,8 +1038,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
 
-    @Then("vengono letti gli eventi dello stream del {string} fino all'elemento di timeline {string} con versione V22 e apiKey aggiornata")
-    public void readStreamTimelineElementV22(String pa,String timelineEventCategory) {
+    @Then("vengono letti gli eventi dello stream del {string} fino all'elemento di timeline {string} con versione V22 e apiKey aggiornata con position {int}")
+    public void readStreamTimelineElementV22(String pa,String timelineEventCategory,Integer position) {
         if(sharedSteps.getResponseNewApiKey()!= null){
             webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
         }
@@ -1190,7 +1208,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
 
         for (int i = 0; i < 4; i++) {
-            progressResponseElement = searchInWebhookV22(timelineElementCategory,null,0);
+            progressResponseElement = searchInWebhookV22(timelineElementCategory,null,0, position);
             logger.debug("PROGRESS-ELEMENT: "+progressResponseElement);
 
             if (progressResponseElement != null) {
@@ -1389,7 +1407,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }//searchInWebhookTimelineElement
 
-    private <T> ProgressResponseElementV22 searchInWebhookV22(T timeLineOrStatus,String lastEventId, int deepCount){
+    private <T> ProgressResponseElementV22 searchInWebhookV22(T timeLineOrStatus,String lastEventId, int deepCount, int position){
 
         TimelineElementCategoryV23 timelineElementCategory = null;
         NotificationStatus notificationStatus = null;
@@ -1401,7 +1419,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             throw new IllegalArgumentException();
         }
         ProgressResponseElementV22 progressResponseElement = null;
-        ResponseEntity<List<ProgressResponseElementV22>> listResponseEntity = webhookB2bClient.consumeEventStreamHttpV22(this.eventStreamList.get(0).getStreamId(), lastEventId);
+        ResponseEntity<List<ProgressResponseElementV22>> listResponseEntity = webhookB2bClient.consumeEventStreamHttpV22(this.eventStreamList.get(position).getStreamId(), lastEventId);
         int retryAfter = Integer.parseInt(listResponseEntity.getHeaders().get("retry-after").get(0));
         List<ProgressResponseElementV22> progressResponseElements = listResponseEntity.getBody();
 
@@ -1436,7 +1454,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }else if(retryAfter == 0){
             try{
                 Thread.sleep(500);
-                return searchInWebhookV22(timeLineOrStatus,lastProgress.getEventId(),(deepCount+1));
+                return searchInWebhookV22(timeLineOrStatus,lastProgress.getEventId(),(deepCount+1),position);
             }catch (IllegalStateException illegalStateException){
                 if(deepCount == 249 || deepCount == 248 || deepCount == 247){
                     throw new IllegalStateException((illegalStateException.getMessage()+("LOP: PROGRESS-ELEMENTS: "+progressResponseElements
