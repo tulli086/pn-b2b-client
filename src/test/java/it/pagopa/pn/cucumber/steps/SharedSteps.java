@@ -2285,7 +2285,7 @@ public class SharedSteps {
         return eventStreamV22;
     }
 
-    public void setEventStream(StreamMetadataResponseV22 eventStreamV22) {
+    public void setEventStreamV22(StreamMetadataResponseV22 eventStreamV22) {
         this.eventStreamV22 = eventStreamV22;
     }
 

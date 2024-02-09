@@ -546,13 +546,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 Assertions.assertDoesNotThrow(() -> {
                     StreamMetadataResponse eventStream = webhookB2bClient.getEventStream(this.eventStreamList.get(0).getStreamId());
                 });
-                sharedSteps.setEventStream(webhookB2bClient.getEventStream(this.eventStreamListV22.get(0).getStreamId()));
+                sharedSteps.setEventStream(webhookB2bClient.getEventStream(this.eventStreamList.get(0).getStreamId()));
                 break;
             case "V22":
                 Assertions.assertDoesNotThrow(() -> {
                     StreamMetadataResponseV22 eventStream = webhookB2bClient.getEventStreamV22(this.eventStreamListV22.get(0).getStreamId());
                 });
-                sharedSteps.setEventStream(webhookB2bClient.getEventStreamV22(this.eventStreamListV22.get(0).getStreamId()));
+                sharedSteps.setEventStreamV22(webhookB2bClient.getEventStreamV22(this.eventStreamListV22.get(0).getStreamId()));
                 break;
             default:
                 throw new IllegalArgumentException();

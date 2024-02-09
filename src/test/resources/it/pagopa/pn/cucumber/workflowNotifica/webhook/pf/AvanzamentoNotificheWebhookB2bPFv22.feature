@@ -78,7 +78,7 @@ Feature: avanzamento notifiche webhook b2b V22
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_ES1.1_7] Creazione per una PA di 10 nuovi stream notifica con eventType TIMELINE con gruppo.
-    Given si predispone 10 nuovo stream denominato "stream-test" con eventType "STATUSSTATUS" con versione "V22"
+    Given si predispone 10 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
     When si creano i nuovi stream per il "Comune_1" con versione "V22" e apiKey aggiornata
@@ -1672,7 +1672,7 @@ Feature: avanzamento notifiche webhook b2b V22
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-    
+
   @testLite @webhook1
   Scenario: [B2B-STREAM_ES1.5_142] Creazione di uno stream notifica senza gruppo, con eventType "TIMELINE" utilizzando un apikey con gruppo con la versione V23.(replacedStreamId di uno stream creato con la versione V10 settato).
     Given viene generata una nuova notifica
