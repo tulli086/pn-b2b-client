@@ -1613,6 +1613,87 @@ Feature: avanzamento notifiche webhook b2b V22
 
 
   @testLite @webhook1
+  Scenario: [B2B-STREAM_ES1.5_139] Creazione di uno stream senza gruppo con la V23 e lettura Eventi di timeline o di cambio di stato con la versione V10  utilzzando un apikey abilitata
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Mario Gherkin
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    And si crea il nuovo stream per il "Comune_1" con versione "V22" e apiKey aggiornata
+    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    When vengono letti gli eventi di timeline dello stream con versione "V10" -Cross Versioning
+    Then l'operazione ha prodotto un errore con status code "403"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+  @testLite @webhook1
+  Scenario: [B2B-STREAM_ES1.5_141] Creazione di uno stream senza gruppo con la V10 e  lettura Eventi di timeline o di cambio di stato con la versione V23 utilzzando un apikey abilitata.
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Mario Gherkin
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
+    And si crea il nuovo stream per il "Comune_1" con versione "V10"
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    When vengono letti gli eventi di timeline dello stream con versione "V22" -Cross Versioning
+    Then l'operazione ha prodotto un errore con status code "403"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+
+
+  @testLite @webhook1
+  Scenario: [B2B-STREAM_ES1.5.138] Aggiornamento di uno stream notifica V23 senza gruppo, con  la versione V10.
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    And si crea il nuovo stream per il "Comune_1" con versione "V22" e apiKey aggiornata
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
+    When si aggiorna lo stream creato con versione "V10" -Cross Versioning
+    Then l'operazione ha prodotto un errore con status code "403"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+  @testLite @webhook1
+  Scenario: [B2B-STREAM_ES1.5.140] Aggiornamento di uno stream notifica V10 senza gruppo, con  la versione V23.
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
+    And si crea il nuovo stream per il "Comune_1" con versione "V10"
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V10"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    When si aggiorna lo stream creato con versione "V22" -Cross Versioning
+    Then l'operazione ha prodotto un errore con status code "403"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+    
+  @testLite @webhook1
+  Scenario: [B2B-STREAM_ES1.5_142] Creazione di uno stream notifica senza gruppo, con eventType "TIMELINE" utilizzando un apikey con gruppo con la versione V23.(replacedStreamId di uno stream creato con la versione V10 settato).
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Mario Gherkin
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
+    And si crea il nuovo stream per il "Comune_1" con versione "V10"
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V10"
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    When si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "FIRST" e apiKey aggiornata
+    Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+
+
+  @testLite @webhook1
   Scenario: [B2B-STREAM_ES1.3_134] Consumo di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey senza gruppo.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1629,7 +1710,7 @@ Feature: avanzamento notifiche webhook b2b V22
     And l'apiKey viene cancellata
 
 
-  @testLite @webhook1
+  @testLite @webhook1 @deleghe1
   Scenario: [B2B-STREAM_ES3.1_144] Lettura e verifica de-anonimizzazione con un apiKey senza gruppo degli eventi di timeline di una notifica inviata con un apikey senza gruppo e salvati in uno stream dell'ente senza gruppo
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
     And "Mario Gherkin" viene delegato da "Mario Cucumber"
@@ -1650,7 +1731,7 @@ Feature: avanzamento notifiche webhook b2b V22
     And l'apiKey viene cancellata
 
 
-  @testLite @webhook1
+  @testLite @webhook1 @deleghe1
   Scenario: [B2B-STREAM_ES3.1_146] Lettura e verifica de-anonimizzazione con un apiKey con gruppo degli eventi di timeline di una notifica inviata con un apikey con gruppo e salvati in uno stream dell'ente con gruppo (Stesso gruppo)
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
     And "Mario Gherkin" viene delegato da "Mario Cucumber"

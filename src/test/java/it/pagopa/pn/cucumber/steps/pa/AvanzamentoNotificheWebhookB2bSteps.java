@@ -345,19 +345,48 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         updateStream(versione);
     }
 
+    @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} -Cross Versioning")
+    public void updateStreamVersioning (String versione) {
+
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        UUID idStream = null;
+        if (eventStreamList!= null && !eventStreamList.isEmpty()){
+            idStream = eventStreamList.get(0).getStreamId();
+        } else if (eventStreamListV22 != null && !eventStreamListV22.isEmpty()) {
+            idStream = eventStreamListV22.get(0).getStreamId();
+        }
+        switch (versione) {
+            case "V10":
+                    webhookB2bClient.updateEventStream(idStream,null);
+                break;
+            case "V22":
+                try{
+                        webhookB2bClient.updateEventStreamV22(idStream,streamRequestV22);
+                }catch (HttpStatusCodeException e) {
+                    this.notificationError = e;
+                    if (e instanceof HttpStatusCodeException) {
+                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
     @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string}")
     public void updateStream (String versione) {
 
         switch (versione) {
             case "V10":
-                //TODO da verificare..
                 for(StreamMetadataResponse eventStream: eventStreamList){
                     webhookB2bClient.updateEventStream(eventStream.getStreamId(),null);
                 }
                 break;
             case "V22":
                 try{
-
                     for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
                         webhookB2bClient.updateEventStreamV22(eventStream.getStreamId(),streamRequestV22);
                     }
@@ -1761,6 +1790,40 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         Assertions.assertNotNull(timelineElementWebhookDetails.getDigitalAddress().getAddress());
         Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getTaxId());
         Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getDenomination());
+    }
+
+    @When("vengono letti gli eventi di timeline dello stream con versione {string} -Cross Versioning")
+    public void vengonoLettiGliEventiDiTimelineDelloStreamDel(String versione) {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        switch (versione) {
+            case "V10":
+                try{
+                    ResponseEntity<List<ProgressResponseElement>> listResponseEntity = webhookB2bClient.consumeEventStreamHttp(this.eventStreamListV22.get(0).getStreamId(), null);
+
+                }catch (HttpStatusCodeException e) {
+                    this.notificationError = e;
+                    if (e instanceof HttpStatusCodeException) {
+                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                    }
+                }
+                break;
+            case "V22":
+                try{
+                    ResponseEntity<List<ProgressResponseElementV22>> listResponseEntity = webhookB2bClient.consumeEventStreamHttpV22(this.eventStreamList.get(0).getStreamId(), null);
+
+                }catch (HttpStatusCodeException e) {
+                    this.notificationError = e;
+                    if (e instanceof HttpStatusCodeException) {
+                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+
     }
 }
 
