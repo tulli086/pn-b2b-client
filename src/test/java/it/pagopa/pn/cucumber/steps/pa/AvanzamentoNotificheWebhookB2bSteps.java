@@ -1,5 +1,6 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
+import com.google.common.collect.ComparisonChain;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -1225,7 +1226,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             Assertions.assertNotNull(progressResponseElement);
             Assertions.assertNotSame(progressResponseElement.getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
             logger.info("EventProgress: " + progressResponseElement);
-
+            sharedSteps.setProgressResponseElementV22(progressResponseElement);
         }catch(AssertionFailedError assertionFailedError){
             String message = assertionFailedError.getMessage()+
                     "{IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" }";
@@ -1663,6 +1664,56 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             Assertions.assertEquals(progressResponseElements.size() , numEventi);
             System.out.println("ELEMENTI NEL WEBHOOK: "+progressResponseElements.size());
         });
+
+    }
+
+    @And("verifica corrispondenza tra i detail del webhook e quelli della timeline")
+    public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() {
+
+        if (sharedSteps.getTimelineElementV23().getDetails().getLegalFactId().compareTo(sharedSteps.getProgressResponseElementV22().getElement().getDetails().getLegalFactId()) == 0) {
+
+        }
+        TimelineElementDetailsV23 timelineElementDetails = sharedSteps.getTimelineElementV23().getDetails();
+        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV20 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV22().getElement().getDetails();
+
+        int comparisonResult = ComparisonChain.start()
+                .compare(timelineElementDetails.getLegalFactId(), timelineElementWebhookDetails.getLegalFactId())
+                .compare(timelineElementDetails.getRecIndex(), timelineElementWebhookDetails.getRecIndex())
+                .compare(timelineElementDetails.getOldAddress().getAddress(), timelineElementWebhookDetails.getOldAddress().getAddress())
+                .compare(timelineElementDetails.getGeneratedAarUrl(), timelineElementWebhookDetails.getGeneratedAarUrl())
+                .compare(timelineElementDetails.getPhysicalAddress().getAddress(), timelineElementWebhookDetails.getPhysicalAddress().getAddress())
+                .compare(timelineElementDetails.getLegalfactId(), timelineElementWebhookDetails.getLegalfactId())
+                .compare(timelineElementDetails.getEndWorkflowStatus(), timelineElementWebhookDetails.getEndWorkflowStatus())
+                .compare(timelineElementDetails.getCompletionWorkflowDate(), timelineElementWebhookDetails.getCompletionWorkflowDate())
+                .compare(timelineElementDetails.getLegalFactGenerationDate(), timelineElementWebhookDetails.getLegalFactGenerationDate())
+                .compare(timelineElementDetails.getDigitalAddress().getAddress(), timelineElementWebhookDetails.getDigitalAddress().getAddress())
+                .compare(timelineElementDetails.getAttemptDate(), timelineElementWebhookDetails.getAttemptDate())
+                .compare(timelineElementDetails.getIsAvailable(), timelineElementWebhookDetails.getIsAvailable())
+                .compare(timelineElementDetails.getEventTimestamp(), timelineElementWebhookDetails.getEventTimestamp())
+                .compare(timelineElementDetails.getRaddType(), timelineElementWebhookDetails.getRaddType())
+                .compare(timelineElementDetails.getRaddTransactionId(), timelineElementWebhookDetails.getRaddTransactionId())
+                .compare(timelineElementDetails.getDelegateInfo().getTaxId(), timelineElementWebhookDetails.getDelegateInfo().getTaxId())
+                .compare(timelineElementDetails.getNotificationCost(), timelineElementWebhookDetails.getNotificationCost())
+                .compare(timelineElementDetails.getNotificationDate(), timelineElementWebhookDetails.getNotificationDate())
+                .compare(timelineElementDetails.getSendDate(), timelineElementWebhookDetails.getSendDate())
+                .compare(timelineElementDetails.getSchedulingDate(), timelineElementWebhookDetails.getSchedulingDate())
+                .compare(timelineElementDetails.getLastAttemptDate(), timelineElementWebhookDetails.getLastAttemptDate())
+                .compare(timelineElementDetails.getAnalogCost(), timelineElementWebhookDetails.getAnalogCost())
+                .compare(timelineElementDetails.getAttemptDate(), timelineElementWebhookDetails.getAttemptDate())
+                .compare(timelineElementDetails.getNumberOfPages(), timelineElementWebhookDetails.getNumberOfPages())
+                .compare(timelineElementDetails.getEnvelopeWeight(), timelineElementWebhookDetails.getEnvelopeWeight())
+                .compare(timelineElementDetails.getProductType(), timelineElementWebhookDetails.getProductType())
+                .compare(timelineElementDetails.getAmount(), timelineElementWebhookDetails.getAmount())
+                .compare(timelineElementDetails.getCreditorTaxId(), timelineElementWebhookDetails.getCreditorTaxId())
+                .compare(timelineElementDetails.getDeliveryDetailCode(), timelineElementWebhookDetails.getDeliveryDetailCode())
+                .compare(timelineElementDetails.getNoticeCode(), timelineElementWebhookDetails.getNoticeCode())
+                .compare(timelineElementDetails.getSchedulingAnalogDate(), timelineElementWebhookDetails.getSchedulingAnalogDate())
+
+                .result();
+
+        Assertions.assertTrue(comparisonResult>0);
+
+
 
     }
 }

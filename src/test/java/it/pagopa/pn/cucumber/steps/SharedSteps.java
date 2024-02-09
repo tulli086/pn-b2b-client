@@ -108,6 +108,11 @@ public class SharedSteps {
 
 
 
+
+    private TimelineElementV23 timelineElementV23;
+    private ProgressResponseElementV22 progressResponseElementV22;
+
+
     private it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse eventStream;
     private StreamMetadataResponseV22 eventStreamV22;
 
@@ -2298,5 +2303,21 @@ public class SharedSteps {
 
     public void setProgressResponseElementsV22(List<ProgressResponseElementV22> progressResponseElementsV22) {
         this.progressResponseElementsV22 = progressResponseElementsV22;
+    }
+
+    public TimelineElementV23 getTimelineElementV23() {
+        return timelineElementV23;
+    }
+
+    public void setTimelineElementV23(TimelineElementV23 timelineElement) {
+        this.timelineElementV23 = timelineElementV23;
+    }
+
+    public ProgressResponseElementV22 getProgressResponseElementV22() {
+        return progressResponseElementV22;
+    }
+
+    public void setProgressResponseElementV22(ProgressResponseElementV22 progressResponseElement) {
+        this.progressResponseElementV22 = progressResponseElementV22;
     }
 }
