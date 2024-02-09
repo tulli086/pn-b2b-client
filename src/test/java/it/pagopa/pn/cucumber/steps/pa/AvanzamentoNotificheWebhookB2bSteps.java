@@ -596,6 +596,22 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+    @And("vengono letti gli eventi dello stream versione V22")
+    public void readStreamEventsV22() {
+        if(sharedSteps.getResponseNewApiKey()!= null){
+            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
+        }
+        try{
+            List<ProgressResponseElement> progressResponseElements = webhookB2bClient.consumeEventStream(this.eventStreamList.get(0).getStreamId(), null);
+            logger.info("EventProgress: " + progressResponseElements);
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            if (e instanceof HttpStatusCodeException) {
+                sharedSteps.setNotificationError((HttpStatusCodeException) e);
+            }
+        }
+    }
+
 
     @And("vengono letti gli eventi dello stream")
     public void readStreamEvents() {
