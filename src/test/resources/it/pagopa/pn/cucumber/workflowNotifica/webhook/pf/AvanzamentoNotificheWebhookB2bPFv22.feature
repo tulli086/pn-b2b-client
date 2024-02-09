@@ -276,8 +276,6 @@ Feature: avanzamento notifiche webhook b2b V22
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     When si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "FIRST" e apiKey aggiornata
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And si cancella lo stream creato con versione "V22"
-    And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -317,8 +315,6 @@ Feature: avanzamento notifiche webhook b2b V22
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     When si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "FIRST" e apiKey aggiornata
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And si cancella lo stream creato con versione "V22"
-    And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -331,8 +327,6 @@ Feature: avanzamento notifiche webhook b2b V22
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     When si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "FIRST" e apiKey aggiornata
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And si cancella lo stream creato con versione "V22"
-    And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -357,8 +351,6 @@ Feature: avanzamento notifiche webhook b2b V22
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     When si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "LAST" e apiKey aggiornata
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And si cancella lo stream creato con versione "V22"
-    And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -371,8 +363,6 @@ Feature: avanzamento notifiche webhook b2b V22
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     When si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "FIRST" e apiKey aggiornata
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And si cancella lo stream creato con versione "V22"
-    And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -385,8 +375,6 @@ Feature: avanzamento notifiche webhook b2b V22
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     When si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "NO_GROUPS" e apiKey aggiornata
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And si cancella lo stream creato con versione "V22"
-    And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -446,14 +434,8 @@ Feature: avanzamento notifiche webhook b2b V22
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     When si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "NO_GROUPS" e apiKey aggiornata
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And si cancella lo stream creato con versione "V22"
-    And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
-
-
-
-
 
 
   @testLite @webhook1
@@ -501,8 +483,6 @@ Feature: avanzamento notifiche webhook b2b V22
     And si predispone 10 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     When si creano i nuovi stream per il "Comune_1" con versione "V22" e apiKey aggiornata
     And l'operazione non ha prodotto errori
-    And si cancella lo stream creato con versione "V22"
-    And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -546,9 +526,8 @@ Feature: avanzamento notifiche webhook b2b V22
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
-    And Viene creata una nuova apiKey per il comune "Comune_1" con gruppo differente dallo stream
+    When Viene creata una nuova apiKey per il comune "Comune_1" con gruppo differente dallo stream
     And viene impostata l'apikey appena generata
-    When viene impostata l'apikey appena generata
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22" e apiKey aggiornata
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -561,8 +540,6 @@ Feature: avanzamento notifiche webhook b2b V22
     And viene impostata l'apikey appena generata
     And si crea il nuovo stream per il "Comune_1" con versione "V22" e apiKey aggiornata
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    And si cancella lo stream creato con versione "V22"
-    And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
