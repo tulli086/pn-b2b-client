@@ -387,6 +387,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 break;
             case "V22":
                 try{
+                    streamRequest = new StreamRequestV22();
+                    streamRequest.setGroups(sharedSteps.getRequestNewApiKey().getGroups());
                     for(StreamMetadataResponseV22 eventStream: eventStreamListV22){
                         webhookB2bClient.updateEventStreamV22(eventStream.getStreamId(),streamRequestV22);
                     }
