@@ -391,6 +391,36 @@ Feature: avanzamento notifiche webhook b2b V22
     And l'apiKey viene cancellata
 
   @testLite @webhook1
+  Scenario: [B2B-STREAM_ES1.1_112] Creazione con replaceID di uno stream notifica senza gruppo uguale al precedente stream con eventType "TIMELINE" utilizzando un apikey master. (replacedStreamId settato) con controllo EventId incrementale e senza duplicati.
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Mario Gherkin
+
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    And si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "NO_GROUPS" e apiKey aggiornata
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
+    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE"
+    And viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati V22
+    And si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "NO_GROUPS" e apiKey aggiornata
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
+
+    When viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di palermo                 |
+    And destinatario Cucumber Analogic e:
+      | digitalDomicile_address | test@fail.it |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "DIGITAL_FAILURE_WORKFLOW"
+    Then viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati V22
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+
+  @testLite @webhook1
   Scenario: [B2B-STREAM_ES1.1_113]  Creazione con replaceID di uno stream notifica senza gruppo uguale al precedente stream con eventType "STATUS" utilizzando un apikey con gruppo. (replacedStreamId settato).
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
@@ -420,6 +450,11 @@ Feature: avanzamento notifiche webhook b2b V22
     And viene verificata la corretta cancellazione con versione "V22"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
+
+
+
+
+
 
   @testLite @webhook1
   Scenario: [B2B-STREAM_ES1.1_115]  Creazione con replaceID di uno stream notifica con gruppo diverso al precedente stream con eventType "STATUS" utilizzando un apikey senza gruppo. (replacedStreamId settato).
@@ -1595,6 +1630,48 @@ Feature: avanzamento notifiche webhook b2b V22
 
 
   @testLite @webhook1
+  Scenario: [B2B-STREAM_ES3.1_144] Lettura e verifica de-anonimizzazione con un apiKey senza gruppo degli eventi di timeline di una notifica inviata con un apikey senza gruppo e salvati in uno stream dell'ente senza gruppo
+    Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
+    And "Mario Gherkin" viene delegato da "Mario Cucumber"
+    And "Mario Gherkin" accetta la delega "Mario Cucumber"
+    And viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Mario Cucumber
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    And si crea il nuovo stream per il "Comune_1" con versione "V22" e apiKey aggiornata
+    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    When vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V22 e apiKey aggiornata con position 0
+    Then verifica deanonimizzazione degli eventi di timeline
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+
+  @testLite @webhook1
+  Scenario: [B2B-STREAM_ES3.1_146] Lettura e verifica de-anonimizzazione con un apiKey con gruppo degli eventi di timeline di una notifica inviata con un apikey con gruppo e salvati in uno stream dell'ente con gruppo (Stesso gruppo)
+    Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
+    And "Mario Gherkin" viene delegato da "Mario Cucumber"
+    And "Mario Gherkin" accetta la delega "Mario Cucumber"
+    And viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Mario Cucumber
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
+    And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
+    And viene impostata l'apikey appena generata
+    And si crea il nuovo stream per il "Comune_1" con versione "V22" e apiKey aggiornata
+    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    When vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V22 e apiKey aggiornata con position 0
+    Then verifica deanonimizzazione degli eventi di timeline
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+
+  @testLite @webhook1
   Scenario: [B2B-STREAM_ES1.3_135] Consumo di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey con gruppo.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1665,6 +1742,9 @@ Feature: avanzamento notifiche webhook b2b V22
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
+
+
+
 
 
  #--------------LETTURA NUOVO EVENTO DI TIMELINE DI UNO STREAM------------

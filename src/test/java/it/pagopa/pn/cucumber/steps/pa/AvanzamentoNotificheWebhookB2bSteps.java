@@ -1624,6 +1624,37 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     }
 
+    @Then("viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati V22")
+    public void vieneVerificatoCheIlProgressResponseElementIdDelWebhookSiaIncrementaleESenzaDuplicatiV22() {
+
+        List<ProgressResponseElementV22> progressResponseElements = sharedSteps.getProgressResponseElementsV22();
+        Assertions.assertNotNull(progressResponseElements);
+        boolean counterIncrement = true ;
+        int lastEventID = SharedSteps.lastEventID;
+        //logger.info("ELEMENTI NEL WEBHOOK LAST EVENT ID1: "+lastEventID);
+        for(ProgressResponseElementV22 elem: progressResponseElements){
+            if (lastEventID==0){
+                lastEventID = Integer.parseInt(elem.getEventId());
+                continue;
+            }
+            if (Integer.parseInt(elem.getEventId())<=lastEventID){
+                counterIncrement = false;
+                break;
+            }else {
+                lastEventID = Integer.parseInt(elem.getEventId());
+            }
+        }//for
+        try{
+            Assertions.assertTrue(counterIncrement);
+        }catch (AssertionFailedError assertionFailedError){
+            throw new AssertionFailedError(assertionFailedError.getMessage()+" PROGRESS-ELEMENT: \n"+progressResponseElements);
+        }
+
+        SharedSteps.lastEventID=lastEventID;
+        //logger.info("ELEMENTI NEL WEBHOOK LAST EVENT ID2: "+lastEventID);
+    }
+
+
     @Then("viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati")
     public void vieneVerificatoCheIlProgressResponseElementIdDelWebhookSiaIncrementaleESenzaDuplicati() {
 
@@ -1670,9 +1701,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @And("verifica corrispondenza tra i detail del webhook e quelli della timeline")
     public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() {
 
-        if (sharedSteps.getTimelineElementV23().getDetails().getLegalFactId().compareTo(sharedSteps.getProgressResponseElementV22().getElement().getDetails().getLegalFactId()) == 0) {
-
-        }
         TimelineElementDetailsV23 timelineElementDetails = sharedSteps.getTimelineElementV23().getDetails();
         it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV20 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV22().getElement().getDetails();
 
@@ -1680,6 +1708,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 .compare(timelineElementDetails.getLegalFactId(), timelineElementWebhookDetails.getLegalFactId())
                 .compare(timelineElementDetails.getRecIndex(), timelineElementWebhookDetails.getRecIndex())
                 .compare(timelineElementDetails.getOldAddress().getAddress(), timelineElementWebhookDetails.getOldAddress().getAddress())
+                .compare(timelineElementDetails.getOldAddress().getMunicipality(), timelineElementWebhookDetails.getOldAddress().getMunicipality())
+                .compare(timelineElementDetails.getOldAddress().getProvince(), timelineElementWebhookDetails.getOldAddress().getProvince())
+                .compare(timelineElementDetails.getOldAddress().getZip(), timelineElementWebhookDetails.getOldAddress().getZip())
+
                 .compare(timelineElementDetails.getGeneratedAarUrl(), timelineElementWebhookDetails.getGeneratedAarUrl())
                 .compare(timelineElementDetails.getPhysicalAddress().getAddress(), timelineElementWebhookDetails.getPhysicalAddress().getAddress())
                 .compare(timelineElementDetails.getLegalfactId(), timelineElementWebhookDetails.getLegalfactId())
@@ -1687,6 +1719,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 .compare(timelineElementDetails.getCompletionWorkflowDate(), timelineElementWebhookDetails.getCompletionWorkflowDate())
                 .compare(timelineElementDetails.getLegalFactGenerationDate(), timelineElementWebhookDetails.getLegalFactGenerationDate())
                 .compare(timelineElementDetails.getDigitalAddress().getAddress(), timelineElementWebhookDetails.getDigitalAddress().getAddress())
+                .compare(timelineElementDetails.getDigitalAddress().getType(), timelineElementWebhookDetails.getDigitalAddress().getType())
                 .compare(timelineElementDetails.getAttemptDate(), timelineElementWebhookDetails.getAttemptDate())
                 .compare(timelineElementDetails.getIsAvailable(), timelineElementWebhookDetails.getIsAvailable())
                 .compare(timelineElementDetails.getEventTimestamp(), timelineElementWebhookDetails.getEventTimestamp())
@@ -1715,6 +1748,19 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
 
 
+    }
+
+    @Then("verifica deanonimizzazione degli eventi di timeline")
+    public void verificaDeanonimizzazioneDegliEventiDiTimeline() {
+        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV20 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV22().getElement().getDetails();
+
+        Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getAddress());
+        Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getMunicipality());
+        Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getProvince());
+        Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getZip());
+        Assertions.assertNotNull(timelineElementWebhookDetails.getDigitalAddress().getAddress());
+        Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getTaxId());
+        Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getDenomination());
     }
 }
 

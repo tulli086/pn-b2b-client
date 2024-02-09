@@ -899,6 +899,7 @@ Feature: annullamento notifiche b2b
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "DIGITAL_FAILURE_WORKFLOW"
     Then viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati
+
   @Annullamento @webhook3 @ignore
   Scenario: [B2B-STREAM_TIMELINE_24_3] Invio notifica digitale ed attesa di un eventi di Timeline stream v2  con controllo EventId incrementale e senza duplicati scenario positivo
     Given vengono cancellati tutti gli stream presenti del "Comune_2" con versione "V10"
