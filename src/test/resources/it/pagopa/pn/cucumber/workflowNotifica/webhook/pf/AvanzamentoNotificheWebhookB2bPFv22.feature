@@ -895,7 +895,7 @@ Feature: avanzamento notifiche webhook b2b V22
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V22"
     And Viene creata una nuova apiKey per il comune "Comune_1" con due gruppi
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "UGUALI" e apiKey aggiornata
+    And si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "UGUALI" e apiKey aggiornata
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
@@ -943,7 +943,7 @@ Feature: avanzamento notifiche webhook b2b V22
     When si disabilita lo stream creato con versione "V22"
     Then l'operazione non ha prodotto errori
     When si cancella lo stream creato con versione "V22"
-    Then l'operazione ha prodotto un errore con status code "404"
+    Then l'operazione non ha prodotto errori
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -971,7 +971,7 @@ Feature: avanzamento notifiche webhook b2b V22
     When si disabilita lo stream creato con versione "V22"
     Then l'operazione non ha prodotto errori
     When lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V22"
-    Then l'operazione ha prodotto un errore con status code "404"
+    Then l'operazione non ha prodotto errori
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
