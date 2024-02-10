@@ -1,5 +1,9 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ComparisonChain;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
@@ -64,6 +68,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         this.webRecipientClient = sharedSteps.getWebRecipientClient();
         this.b2bClient = sharedSteps.getB2bClient();
     }
+
+
 
     @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream denominat(i)(o) {string} con eventType {string} con versione {string}")
     public void setUpStreamsWithEventType(int number, String title, String eventType, String versione) {
@@ -1745,11 +1751,54 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     }
 
+    public static void main(String[]args){
+        AvanzamentoNotificheWebhookB2bSteps avanz = new AvanzamentoNotificheWebhookB2bSteps(null,null);
+        avanz.test();
+    }
+
+    private final ObjectMapper objMapper = JsonMapper.builder()
+            .addModule(new JavaTimeModule())
+            .build();
+
+    public void test(){
+        TimelineElementDetailsV23 timelineElementDetails = new TimelineElementDetailsV23();
+        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV20 timelineElementWebhookDetails = new it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV20();
+
+        timelineElementDetails.setAmount(12);
+
+        timelineElementWebhookDetails.setAmount(12);
+
+        TimelineElementDetailsV23 timelineElementDetailsV23 = new TimelineElementDetailsV23();
+        timelineElementDetailsV23 = deepCopy( timelineElementWebhookDetails, TimelineElementDetailsV23.class );
+        if (timelineElementDetails.equals(timelineElementDetailsV23)){
+            System.out.println(timelineElementDetailsV23.getAmount());
+        }
+    }
+
+    private <T> T deepCopy( Object obj, Class<T> toClass) {
+        try {
+            String json = objMapper.writeValueAsString( obj );
+            return objMapper.readValue( json, toClass );
+        } catch (JsonProcessingException exc ) {
+            throw new RuntimeException( exc );
+        }
+    }
+
     @And("verifica corrispondenza tra i detail del webhook e quelli della timeline")
     public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() {
 
         TimelineElementDetailsV23 timelineElementDetails = sharedSteps.getTimelineElementV23().getDetails();
         it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV20 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV22().getElement().getDetails();
+
+        TimelineElementDetailsV23 timelineElementDetailsV23 = new TimelineElementDetailsV23();
+        timelineElementDetailsV23 = sharedSteps.deepCopy( timelineElementWebhookDetails, TimelineElementDetailsV23.class );
+        Assertions.assertTrue(timelineElementDetails.equals(timelineElementDetailsV23));
+
+        timelineElementDetailsV23 = sharedSteps.deepCopy( timelineElementWebhookDetails, TimelineElementDetailsV23.class );
+
+        Assertions.assertTrue(timelineElementDetails.equals(timelineElementDetailsV23));
+
+//TODO Verificare il corretto funziionamento...
 
         int comparisonResult = ComparisonChain.start()
                 .compare(timelineElementDetails.getLegalFactId(), timelineElementWebhookDetails.getLegalFactId())
