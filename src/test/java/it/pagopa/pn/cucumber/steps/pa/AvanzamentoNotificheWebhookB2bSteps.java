@@ -1751,39 +1751,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     }
 
-    public static void main(String[]args){
-        AvanzamentoNotificheWebhookB2bSteps avanz = new AvanzamentoNotificheWebhookB2bSteps(null,null);
-        avanz.test();
-    }
-
-    private final ObjectMapper objMapper = JsonMapper.builder()
-            .addModule(new JavaTimeModule())
-            .build();
-
-    public void test(){
-        TimelineElementDetailsV23 timelineElementDetails = new TimelineElementDetailsV23();
-        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV20 timelineElementWebhookDetails = new it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV20();
-
-        timelineElementDetails.setAmount(12);
-
-        timelineElementWebhookDetails.setAmount(12);
-
-        TimelineElementDetailsV23 timelineElementDetailsV23 = new TimelineElementDetailsV23();
-        timelineElementDetailsV23 = deepCopy( timelineElementWebhookDetails, TimelineElementDetailsV23.class );
-        if (timelineElementDetails.equals(timelineElementDetailsV23)){
-            System.out.println(timelineElementDetailsV23.getAmount());
-        }
-    }
-
-    private <T> T deepCopy( Object obj, Class<T> toClass) {
-        try {
-            String json = objMapper.writeValueAsString( obj );
-            return objMapper.readValue( json, toClass );
-        } catch (JsonProcessingException exc ) {
-            throw new RuntimeException( exc );
-        }
-    }
-
+   
     @And("verifica corrispondenza tra i detail del webhook e quelli della timeline")
     public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() {
 
