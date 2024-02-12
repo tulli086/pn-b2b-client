@@ -1749,7 +1749,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
     @Then("Si verifica che l'elemento di timeline {string} dello stream di {string} non abbia il timestamp uguale a quella della notifica con la versione V22")
-    public void readStreamTimelineElementAndVerify(String timelineEventCategory,String pa) {
+    public void readStreamTimelineElementAndVerifyV22(String timelineEventCategory,String pa) {
         setPaWebhook(pa);
         TimelineElementCategoryV23 timelineElementCategory;
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23 timelineElementInternalCategory;
@@ -2017,10 +2017,23 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         ProgressResponseElementV22 lastProgress = null;
         for(ProgressResponseElementV22 elem: progressResponseElements){
             if("REFUSED".equalsIgnoreCase(elem.getNewStatus().getValue()) ){
-
+                    //TODO Verificare se Corretto
                 break;
             }
         }//for
+
+          //TODO Verificare il corretto comportamento...
+
+/**          ProgressResponseElementV22 lastProgress = null;
+          for(ProgressResponseElementV22 elem: progressResponseElements){
+              if("REFUSED".equalsIgnoreCase(elem.getNewStatus().getValue()) && elem.getValidationErrors() != null && elem.getValidationErrors().size()>0){
+                  if (elem.getValidationErrors().get(0).getErrorCode()!= null && "FILE_NOTFOUND".equalsIgnoreCase(elem.getValidationErrors().get(0).getErrorCode()) )
+                      progressResponseElement = elem;
+                  break;
+              }
+          }//for
+   **/
+
         return progressResponseElement;
     }//searchInWebhookTimelineElement
 

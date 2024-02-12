@@ -152,7 +152,7 @@ Feature: avanzamento notifiche webhook b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERED" con la versione V22
     And "Mario Gherkin" legge la notifica
-    Then si verifica nello stream del "Comune_1" che la notifica abbia lo stato VIEWED con versione "V22" con la versione V22
+    Then si verifica nello stream del "Comune_1" che la notifica abbia lo stato VIEWED con versione "V22"
 
   @webhookV22 @clean @webhook1
   Scenario: [B2B-STREAM_V22_TIMELINE_13] Invio notifica digitale ed attesa elemento di timeline DELIVERED-NOTIFICATION_VIEWED_scenario positivo
@@ -163,7 +163,7 @@ Feature: avanzamento notifiche webhook b2b
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V22"
     And si crea il nuovo stream per il "Comune_1" con versione "V22"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERED" con versione V22 con la versione V22
+    Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "DELIVERED" con la versione V22
     And "Mario Gherkin" legge la notifica
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "NOTIFICATION_VIEWED" con la versione V22
 
