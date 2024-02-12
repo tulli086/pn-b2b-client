@@ -1714,7 +1714,9 @@ Feature: avanzamento notifiche webhook b2b V22
 
 
  #--------------LETTURA NUOVO EVENTO DI TIMELINE DI UNO STREAM------------
-  @webhookV22 @clean @webhook1
+
+  #SERVE INTEGRAZIONE CON RADD
+  @webhookV22 @clean @webhook1 @ignore
   Scenario: [B2B-STREAM_ES1.4_136] Lettura degli eventi di timeline  dello stream senza gruppo con visualizzazione del nuovo evento di timeline utilzzando un apikey abilitata.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1730,8 +1732,8 @@ Feature: avanzamento notifiche webhook b2b V22
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-
-  @webhookV22 @clean @webhook1
+ #SERVE INTEGRAZIONE CON RADD
+  @webhookV22 @clean @webhook1 @ignore
   Scenario: [B2B-STREAM_ES1.4_137] Lettura degli eventi di timeline  dello stream con gruppo con visualizzazione  del nuovo evento di timeline utilzzando un apikey abilitata.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
