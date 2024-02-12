@@ -5,10 +5,10 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamCreationRequest;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamListElement;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.ProgressResponseElementV22;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamCreationRequestV22;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV22;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamRequestV22;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.ProgressResponseElementV23;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamCreationRequestV23;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV23;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamRequestV23;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -32,19 +32,19 @@ public interface IPnWebhookB2bClient extends SettableApiKey {
 
     //Versione 2_2
 
-    StreamMetadataResponseV22 createEventStreamV22(StreamCreationRequestV22 streamCreationRequest);
+    StreamMetadataResponseV23 createEventStreamV22(StreamCreationRequestV23 streamCreationRequest);
 
     void deleteEventStreamV22(UUID streamId);
 
-    StreamMetadataResponseV22 getEventStreamV22(UUID streamId);
+    StreamMetadataResponseV23 getEventStreamV22(UUID streamId);
 
     List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement> listEventStreamsV22();
 
-    StreamMetadataResponseV22 updateEventStreamV22(UUID streamId, StreamRequestV22 streamRequest);
+    StreamMetadataResponseV23 updateEventStreamV22(UUID streamId, StreamRequestV23 streamRequest);
 
-    StreamMetadataResponseV22 disableEventStreamV22(UUID streamId);
+    StreamMetadataResponseV23 disableEventStreamV22(UUID streamId);
 
-    List<ProgressResponseElementV22> consumeEventStreamV22(UUID streamId, String lastEventId);
+    List<ProgressResponseElementV23> consumeEventStreamV22(UUID streamId, String lastEventId);
 
-    ResponseEntity<List<ProgressResponseElementV22>> consumeEventStreamHttpV22(UUID streamId, String lastEventId);
+    ResponseEntity<List<ProgressResponseElementV23>> consumeEventStreamHttpV22(UUID streamId, String lastEventId);
 }

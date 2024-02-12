@@ -687,7 +687,7 @@
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-delivery-push/ba616dac6c64bc9d2309c8d8d6bffd71e0c1b87b/docs/openapi/api-internal-b2b-webhook.yaml</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-delivery-push/c5b117410e40dae5a12ad5878312684b9e400e1d/docs/openapi/api-external-b2b-webhook-bundle.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
                             <generateApiTests>false</generateApiTests>

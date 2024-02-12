@@ -22,8 +22,8 @@ import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.ProgressResponseElementV22;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV22;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.ProgressResponseElementV23;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV23;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
@@ -110,11 +110,11 @@ public class SharedSteps {
 
 
     private TimelineElementV23 timelineElementV23;
-    private ProgressResponseElementV22 progressResponseElementV22;
+    private ProgressResponseElementV23 progressResponseElementV22;
 
 
     private it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse eventStream;
-    private StreamMetadataResponseV22 eventStreamV22;
+    private StreamMetadataResponseV23 eventStreamV22;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -198,7 +198,7 @@ public class SharedSteps {
 
 
 
-    private List<ProgressResponseElementV22> progressResponseElementsV22 = null;
+    private List<ProgressResponseElementV23> progressResponseElementsV22 = null;
     public static Integer lastEventID = 0;
 
     private String gherkinSpaTaxID = "12666810299";
@@ -2281,11 +2281,11 @@ public class SharedSteps {
         this.responseNewApiKey = responseNewApiKey;
     }
 
-    public StreamMetadataResponseV22 getEventStreamV22() {
+    public StreamMetadataResponseV23 getEventStreamV22() {
         return eventStreamV22;
     }
 
-    public void setEventStreamV22(StreamMetadataResponseV22 eventStreamV22) {
+    public void setEventStreamV22(StreamMetadataResponseV23 eventStreamV22) {
         this.eventStreamV22 = eventStreamV22;
     }
 
@@ -2297,11 +2297,11 @@ public class SharedSteps {
         this.eventStream = eventStream;
     }
 
-    public List<ProgressResponseElementV22> getProgressResponseElementsV22() {
+    public List<ProgressResponseElementV23> getProgressResponseElementsV22() {
         return progressResponseElementsV22;
     }
 
-    public void setProgressResponseElementsV22(List<ProgressResponseElementV22> progressResponseElementsV22) {
+    public void setProgressResponseElementsV22(List<ProgressResponseElementV23> progressResponseElementsV22) {
         this.progressResponseElementsV22 = progressResponseElementsV22;
     }
 
@@ -2313,11 +2313,11 @@ public class SharedSteps {
         this.timelineElementV23 = timelineElementV23;
     }
 
-    public ProgressResponseElementV22 getProgressResponseElementV22() {
+    public ProgressResponseElementV23 getProgressResponseElementV22() {
         return progressResponseElementV22;
     }
 
-    public void setProgressResponseElementV22(ProgressResponseElementV22 progressResponseElement) {
+    public void setProgressResponseElementV22(ProgressResponseElementV23 progressResponseElement) {
         this.progressResponseElementV22 = progressResponseElementV22;
     }
 }
