@@ -1003,6 +1003,29 @@ public class PnPaB2bUtils {
         return new Pair<>(key, sha256);
     }
 
+    public Pair<String,String> preloadRaddAlternativeDocument( String resourcePath, boolean usePresignedUrl) throws IOException {
+
+        String sha256 = computeSha256( resourcePath );
+        DocumentUploadResponse documentUploadResponse = getPreLoadRaddResponse(sha256);
+
+        String key = documentUploadResponse.getFileKey();
+        String secret = documentUploadResponse.getSecret();
+        String url = documentUploadResponse.getUrl();
+
+        log.info(String.format("Attachment resourceKey=%s sha256=%s secret=%s presignedUrl=%s\n",
+                resourcePath, sha256, secret, url));
+
+        if(usePresignedUrl){
+            loadToPresigned( url, secret, sha256, resourcePath );
+            log.info("UPLOAD RADD COMPLETE");
+        }else{
+            log.info("UPLOAD RADD COMPLETE WITHOUT UPLOAD");
+        }
+
+        return new Pair<>(key, sha256);
+    }
+
+
     private DocumentUploadResponse getPreLoadRaddResponse(String sha256) {
         String id = sha256 + System.nanoTime();
         DocumentUploadRequest documentUploadRequest = new DocumentUploadRequest()
