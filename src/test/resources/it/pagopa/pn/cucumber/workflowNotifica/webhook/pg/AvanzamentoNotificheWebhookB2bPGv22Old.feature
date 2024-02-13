@@ -1,4 +1,4 @@
-Feature: avanzamento notifiche webhook b2b per persona giuridica
+Feature: avanzamento notifiche webhook b2b per persona giuridica V23
 
   Background:
     Given vengono cancellati tutti gli stream presenti del "Comune_2" con versione "V23"

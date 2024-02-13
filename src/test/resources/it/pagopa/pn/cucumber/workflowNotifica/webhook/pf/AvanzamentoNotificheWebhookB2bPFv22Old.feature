@@ -1,4 +1,4 @@
-Feature: avanzamento notifiche webhook b2b
+Feature: avanzamento notifiche webhook b2b V23
 
   Background:
     Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V23"

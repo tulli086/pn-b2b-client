@@ -1,4 +1,4 @@
-Feature: avanzamento notifiche webhook b2b multi
+Feature: avanzamento notifiche webhook b2b multi V23
 
   Background:
     Given vengono cancellati tutti gli stream presenti del "Comune_Multi" con versione "V23"
