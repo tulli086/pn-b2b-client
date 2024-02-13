@@ -13,6 +13,7 @@ import it.pagopa.pn.cucumber.steps.SharedSteps;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -36,10 +37,13 @@ public class RaddAltSteps {
     private final IPnRaddAlternativeClient raddAltClient;
     private final PnExternalServiceClientImpl externalServiceClient;
     private final SharedSteps sharedSteps;
+    private final RaddFsuSteps raddFsuSteps;
     private final PnPaB2bUtils pnPaB2bUtils;
     private ActInquiryResponse actInquiryResponse;
     private String qrCode;
-    private String currentUserCf;
+
+    @Value("${pn.external.bearer-token-pg1.id}")
+    private String idOrganizationGherkinSrl;
 
     private String operationid;
     private StartTransactionResponse startTransactionResponse;
@@ -60,11 +64,12 @@ public class RaddAltSteps {
 
     @Autowired
     public RaddAltSteps(IPnRaddAlternativeClient raddAltClient, PnExternalServiceClientImpl externalServiceClient,
-                        PnPaB2bUtils pnPaB2bUtils, SharedSteps sharedSteps) {
+                        PnPaB2bUtils pnPaB2bUtils, SharedSteps sharedSteps,RaddFsuSteps raddFsuSteps) {
         this.raddAltClient = raddAltClient;
         this.externalServiceClient = externalServiceClient;
         this.sharedSteps = sharedSteps;
         this.pnPaB2bUtils = pnPaB2bUtils;
+        this.raddFsuSteps=raddFsuSteps;
 
     }
 
@@ -76,24 +81,13 @@ public class RaddAltSteps {
     }
 
 
-    @Given("viene richiesto il codice QR per lo IUN {string}")
-    public void vieneRichiestoIlCodiceQRPerLoIUN(String iun) {
-        HashMap<String, String> quickAccessLink = externalServiceClient.getQuickAccessLink(iun);
-        log.debug("quickAccessLink: {}",quickAccessLink.toString());
-        this.qrCode = quickAccessLink.get(quickAccessLink.keySet().toArray()[0]);
-        log.debug("qrCode: {}",qrCode);
-    }
-
-
     @When("L'operatore scansione il qrCode per recuperare gli atti della {string}")
     public void lOperatoreScansioneIlQrCodePerRecuperariGliAtti(String recipientType) {
 
-            ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(
-                    recipientType.equalsIgnoreCase("PF")? CxTypeAuthFleet.PF:
-                            recipientType.equalsIgnoreCase("PG")? CxTypeAuthFleet.PG : null,
-                    null,
+            ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
+                    idOrganizationGherkinSrl,
                     uid,
-                    this.currentUserCf,
+                    raddFsuSteps,
                     recipientType,
                     qrCode,
                     sharedSteps.getIunVersionamento());
@@ -102,46 +96,27 @@ public class RaddAltSteps {
         this.actInquiryResponse = actInquiryResponse;
     }
 
+    @When("L'operatore usa lo IUN per recuperare gli atti della {string}")
+    public void lOperatoreUsoIUNPerRecuperariGliAtti(String recipientType) {
 
-    private void selectUser(String cf){
-        switch (cf.toUpperCase()){
-            case "MARIO CUCUMBER" -> this.currentUserCf = sharedSteps.getMarioCucumberTaxID();
-            case "MARIO GHERKIN" -> this.currentUserCf = sharedSteps.getMarioGherkinTaxID();
-            case "SIGNOR CASUALE" -> this.currentUserCf = sharedSteps.getSentNotification().getRecipients().get(0).getTaxId();
-            case "SIGNOR GENERATO" -> this.currentUserCf = generateCF(System.nanoTime());
-            default ->  this.currentUserCf = cf;
-        }
+        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
+                idOrganizationGherkinSrl,
+                uid,
+                this.currentUserCf,
+                recipientType,
+                null,
+                sharedSteps.getIunVersionamento());
+
+        log.info("actInquiryResponse: {}",actInquiryResponse);
+        this.actInquiryResponse = actInquiryResponse;
     }
 
 
 
-    @Given("Il cittadino {string} mostra il QRCode {string}")
-    public void ilCittadinoMostraIlQRCode(String cf, String qrCodeType) {
-        selectUser(cf);
-        qrCodeType = qrCodeType.toLowerCase();
-        switch (qrCodeType) {
-            case "malformato" -> {
-                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
-                this.qrCode = this.qrCode+"MALF";
-            }
-            case "inesistente" -> {
-                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
-                char toReplace = this.qrCode.charAt(0);
-                char replace = toReplace == 'B' ? 'C' : 'B';
-                this.qrCode = this.qrCode.replace(toReplace,replace);
-            }
-            case "appartenente a terzo" -> {
-                if(this.currentUserCf.equalsIgnoreCase(sharedSteps.getSentNotification().getRecipients().get(0).getTaxId())){
-                    throw new IllegalArgumentException();
-                }
-                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
-            }
-            case "corretto" -> {
-                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
-            }
-            default -> throw new IllegalArgumentException();
-        }
-    }
+
+
+
+
 
     private ActInquiryResponseStatus.CodeEnum getErrorCode(int errorCode){
         switch (errorCode){
@@ -297,15 +272,16 @@ public class RaddAltSteps {
     }
 
 
-    @Given("Il cittadino {string} persona {string} chiede di verificare la presenza di notifiche")
-    public void ilCittadinoChiedeDiVerificareLaPresenzaDiNotifiche(String cf,String typeAuthFleet) {
+    @Given("la {string} {string} chiede di verificare la presenza di notifiche")
+    public void ilCittadinoChiedeDiVerificareLaPresenzaDiNotifiche(String typeAuthFleet, String cf) {
         selectUser(cf);
         this.aorInquiryResponse = raddAltClient.aorInquiry(
-                typeAuthFleet.equalsIgnoreCase("fisica")? CxTypeAuthFleet.PF:
-                typeAuthFleet.equalsIgnoreCase("giuridica")? CxTypeAuthFleet.PG : null,
+                typeAuthFleet.equalsIgnoreCase("PF")? CxTypeAuthFleet.PF:
+                typeAuthFleet.equalsIgnoreCase("PG")? CxTypeAuthFleet.PG : null,
                 null,
                 uid,
-                cf, "PF");
+                cf,
+                typeAuthFleet);
     }
 
     @When("Il cittadino Signor casuale chiede di verificare la presenza di notifiche")
@@ -501,40 +477,5 @@ public class RaddAltSteps {
         Assertions.assertEquals(new BigDecimal(statusCode),this.abortActTransaction.getStatus().getCode().getValue());
         Assertions.assertEquals(error,this.abortActTransaction.getStatus().getMessage());
     }
-
-
-
-
-
-
-
-
-    public InputStream creazioneJSON(){
-        Map<String, String> jsonMap = new HashMap<>();
-        jsonMap.put("operationId", "");
-        jsonMap.put("docType", "");
-        jsonMap.put("docNumber", "");
-        jsonMap.put("docIssuer", "");
-        jsonMap.put("issueDate", "");
-        jsonMap.put("expireDate", "");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-
-        try {
-            String jsonString = objectMapper.writeValueAsString(jsonMap);
-            System.out.println(jsonString);
-
-            byte[] jsonBytes = jsonString.getBytes();
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(jsonBytes);
-
-            InputStreamSource inputStreamSource = new InputStreamResource(inputStream);
-
-            return inputStreamSource.getInputStream();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
+    
 }
