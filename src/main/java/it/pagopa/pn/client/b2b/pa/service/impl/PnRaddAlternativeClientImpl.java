@@ -27,18 +27,21 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final AorTransactionManagementApi aorTransactionManagementApi;
     private final DocumentUploadApi documentUploadApi;
     private final NotificationInquiryApi notificationInquiryApi;
+    private final DocumentDownloadApi documentDownloadApi;
 
 
-    public PnRaddAlternativeClientImpl(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.base-url}") String basePath) {
+    public PnRaddAlternativeClientImpl(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.base-url}") String basePath,
+     @Value("${pn.external.api-key}") String apiKeyMvp1) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.basePath = basePath;
 
-        this.actDocumentInquiryApi = new ActDocumentInquiryApi(newApiClientExternal(restTemplate,basePath));
-        this.actTransactionManagementApi = new ActTransactionManagementApi(newApiClientExternal(restTemplate,basePath));
-        this.aorDocumentInquiryApi = new AorDocumentInquiryApi(newApiClientExternal(restTemplate,basePath));
-        this.aorTransactionManagementApi = new AorTransactionManagementApi(newApiClientExternal(restTemplate,basePath));
-        this.documentUploadApi = new DocumentUploadApi(newApiClientExternal(restTemplate,basePath));
+        this.actDocumentInquiryApi = new ActDocumentInquiryApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
+        this.actTransactionManagementApi = new ActTransactionManagementApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
+        this.aorDocumentInquiryApi = new AorDocumentInquiryApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
+        this.aorTransactionManagementApi = new AorTransactionManagementApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
+        this.documentUploadApi = new DocumentUploadApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
+        this.documentDownloadApi = new DocumentDownloadApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
         this.notificationInquiryApi = new NotificationInquiryApi(newApiClient(restTemplate,basePath));
 
     }
@@ -49,9 +52,10 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         return newApiClient;
     }
 
-    private static it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClientExternal(RestTemplate restTemplate, String basePath ) {
+    private static it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClientExternal(RestTemplate restTemplate,String apikey, String basePath ) {
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClient = new it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
+        newApiClient.addDefaultHeader("x-api-key", apikey );
         return newApiClient;
     }
 
@@ -120,6 +124,11 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
 
     public OperationAorResponse getAorTransactionByOperationId(String transactionId) throws RestClientException {
         return this.notificationInquiryApi.getAorTransactionByTransactionIdWithHttpInfo(transactionId).getBody();
+    }
+
+    @Override
+    public byte[] documentDownload(String operationType, String operationId, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId) throws RestClientException {
+        return this.documentDownloadApi.documentDownload(operationType,operationId,xPagopaPnCxType,xPagopaPnCxId);
     }
 
 }
