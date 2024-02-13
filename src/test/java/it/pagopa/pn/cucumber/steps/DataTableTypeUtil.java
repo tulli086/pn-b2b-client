@@ -43,6 +43,7 @@ public class DataTableTypeUtil {
                                         NewNotificationRequestV23.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER)))
 
                 .paFee(getValue(data, PA_FEE.key) == null ?  null : Integer.parseInt(getValue(data, PA_FEE.key)))
+                .vat(0)
                 .pagoPaIntMode(
                         (getValue(data,PAGOPAINTMODE.key).equalsIgnoreCase("SYNC")?
                                 NewNotificationRequestV23.PagoPaIntModeEnum.SYNC :

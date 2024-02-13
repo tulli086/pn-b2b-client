@@ -328,13 +328,13 @@ public class AvanzamentoNotificheB2bSteps {
         TimelineElementWait timelineElementWait;
         switch (timelineEventCategory) {
             case "REQUEST_ACCEPTED":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.REQUEST_ACCEPTED, 2, waiting);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.REQUEST_ACCEPTED, 2, waiting);
                 break;
             case "NOTIFICATION_CANCELLATION_REQUEST":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.NOTIFICATION_CANCELLATION_REQUEST, 2, 11000);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLATION_REQUEST, 2, 11000);
                 break;
             case "NOTIFICATION_CANCELLED":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.NOTIFICATION_CANCELLED, 5, 11000 * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLED, 5, 11000 * 3);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -349,109 +349,112 @@ public class AvanzamentoNotificheB2bSteps {
         switch (timelineEventCategory) {
             case "REQUEST_ACCEPTED":
 
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.REQUEST_ACCEPTED, 2, waiting);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.REQUEST_ACCEPTED, 2, waiting);
                 break;
             case "AAR_GENERATION":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.AAR_GENERATION, 2, waiting * 2);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.AAR_GENERATION, 2, waiting * 2);
                 break;
             case "GET_ADDRESS":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.GET_ADDRESS, 2, waiting * 2);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.GET_ADDRESS, 2, waiting * 2);
                 break;
             case "SEND_DIGITAL_DOMICILE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_DIGITAL_DOMICILE, 2, waiting * 2);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_DIGITAL_DOMICILE, 2, waiting * 2);
                 break;
             case "NOTIFICATION_VIEWED":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.NOTIFICATION_VIEWED, 2, waiting * 2);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_VIEWED, 2, waiting * 2);
                 break;
             case "SEND_COURTESY_MESSAGE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_COURTESY_MESSAGE, 10, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_COURTESY_MESSAGE, 10, sharedSteps.getWorkFlowWait());
                 break;
             case "DIGITAL_SUCCESS_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.DIGITAL_SUCCESS_WORKFLOW, 3, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.DIGITAL_SUCCESS_WORKFLOW, 3, waiting * 3);
                 break;
             case "DIGITAL_FAILURE_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.DIGITAL_FAILURE_WORKFLOW, 8, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.DIGITAL_FAILURE_WORKFLOW, 8, waiting * 3);
                 break;
             case "NOT_HANDLED":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.NOT_HANDLED, 8, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOT_HANDLED, 8, sharedSteps.getWorkFlowWait());
                 break;
             case "SEND_DIGITAL_FEEDBACK":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_DIGITAL_FEEDBACK, 4, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_DIGITAL_FEEDBACK, 4, waiting * 3);
                 break;
             case "SEND_DIGITAL_PROGRESS":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_DIGITAL_PROGRESS, 5, waiting * 4);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_DIGITAL_PROGRESS, 5, waiting * 4);
                 break;
             case "PUBLIC_REGISTRY_CALL":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.PUBLIC_REGISTRY_CALL, 2, waiting * 4);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.PUBLIC_REGISTRY_CALL, 2, waiting * 4);
                 break;
             case "PUBLIC_REGISTRY_RESPONSE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.PUBLIC_REGISTRY_RESPONSE, 4, waiting * 4);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.PUBLIC_REGISTRY_RESPONSE, 4, waiting * 4);
                 break;
             case "SCHEDULE_ANALOG_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SCHEDULE_ANALOG_WORKFLOW, 2, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SCHEDULE_ANALOG_WORKFLOW, 2, waiting * 3);
                 break;
             case "ANALOG_SUCCESS_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.ANALOG_SUCCESS_WORKFLOW, 8, waiting * 4);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.ANALOG_SUCCESS_WORKFLOW, 8, waiting * 4);
                 break;
             case "ANALOG_FAILURE_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.ANALOG_FAILURE_WORKFLOW, 8, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.ANALOG_FAILURE_WORKFLOW, 8, sharedSteps.getWorkFlowWait());
                 break;
             case "SEND_ANALOG_DOMICILE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_ANALOG_DOMICILE, 4, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_ANALOG_DOMICILE, 4, waiting * 3);
                 break;
             case "SEND_ANALOG_PROGRESS":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_ANALOG_PROGRESS, 6, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_ANALOG_PROGRESS, 6, waiting * 3);
                 break;
             case "SEND_ANALOG_FEEDBACK":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK, 6, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK, 6, waiting * 3);
                 break;
             case "PREPARE_SIMPLE_REGISTERED_LETTER":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.PREPARE_SIMPLE_REGISTERED_LETTER, 9, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.PREPARE_SIMPLE_REGISTERED_LETTER, 9, waiting * 3);
                 break;
             case "SEND_SIMPLE_REGISTERED_LETTER":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_SIMPLE_REGISTERED_LETTER, 9, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_SIMPLE_REGISTERED_LETTER, 9, waiting * 3);
                 break;
             case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS, 10, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS, 10, waiting * 3);
                 break;
             case "PAYMENT":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.PAYMENT, 8, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.PAYMENT, 8, sharedSteps.getWorkFlowWait());
                 break;
             case "PREPARE_ANALOG_DOMICILE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.PREPARE_ANALOG_DOMICILE, 4, waiting * 5);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.PREPARE_ANALOG_DOMICILE, 4, waiting * 5);
                 break;
             case "PREPARE_ANALOG_DOMICILE_FAILURE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.PREPARE_ANALOG_DOMICILE_FAILURE,10, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.PREPARE_ANALOG_DOMICILE_FAILURE,10, sharedSteps.getWorkFlowWait());
                 break;
             case "COMPLETELY_UNREACHABLE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.COMPLETELY_UNREACHABLE, 10, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE, 10, sharedSteps.getWorkFlowWait());
                 break;
             case "COMPLETELY_UNREACHABLE_CREATION_REQUEST":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.COMPLETELY_UNREACHABLE_CREATION_REQUEST, 10, sharedSteps.getWorkFlowWait());
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE_CREATION_REQUEST, 10, sharedSteps.getWorkFlowWait());
                 break;
             case "PREPARE_DIGITAL_DOMICILE":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.PREPARE_DIGITAL_DOMICILE, 2, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.PREPARE_DIGITAL_DOMICILE, 2, waiting * 3);
                 break;
             case "SCHEDULE_DIGITAL_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SCHEDULE_DIGITAL_WORKFLOW, 2,waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SCHEDULE_DIGITAL_WORKFLOW, 2,waiting * 3);
                 break;
             case "SCHEDULE_REFINEMENT":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.SCHEDULE_REFINEMENT, 8, waiting);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SCHEDULE_REFINEMENT, 8, waiting);
                 break;
             case "REFINEMENT":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.REFINEMENT, 15, waiting);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.REFINEMENT, 15, waiting);
                 break;
             case "REQUEST_REFUSED":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.REQUEST_REFUSED, 2, waiting);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.REQUEST_REFUSED, 2, waiting);
                 break;
             case "DIGITAL_DELIVERY_CREATION_REQUEST":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.DIGITAL_DELIVERY_CREATION_REQUEST, 5, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.DIGITAL_DELIVERY_CREATION_REQUEST, 5, waiting * 3);
                 break;
             case "NOTIFICATION_CANCELLATION_REQUEST":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.NOTIFICATION_CANCELLATION_REQUEST, 2, waiting);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLATION_REQUEST, 2, waiting);
                 break;
             case "NOTIFICATION_CANCELLED":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV20.NOTIFICATION_CANCELLED, 5, waiting * 3);
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLED, 5, waiting * 3);
+                break;
+            case "NOTIFICATION_RADD_RETRIEVED":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_RADD_RETRIEVED, 5, waiting * 3);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -744,7 +747,7 @@ public class AvanzamentoNotificheB2bSteps {
         String iun;
         TimelineElementV23 timelineElement;
 
-        if (timelineEventCategory.equals(TimelineElementCategoryV20.REQUEST_REFUSED.getValue())) {
+        if (timelineEventCategory.equals(TimelineElementCategoryV23.REQUEST_REFUSED.getValue())) {
 
             String requestId = sharedSteps.getNewNotificationResponse().getNotificationRequestId();
             byte[] decodedBytes = Base64.getDecoder().decode(requestId);
@@ -809,7 +812,7 @@ public class AvanzamentoNotificheB2bSteps {
     public void getTimelineElementListSize(String timelineEventCategory, Long size, @Transpose DataTest dataFromTest) {
         List<TimelineElementV23> timelineElementList = sharedSteps.getSentNotification().getTimeline();
         String iun;
-        if (timelineEventCategory.equals(TimelineElementCategoryV20.REQUEST_REFUSED.getValue())) {
+        if (timelineEventCategory.equals(TimelineElementCategoryV23.REQUEST_REFUSED.getValue())) {
 
             String requestId = sharedSteps.getNewNotificationResponse().getNotificationRequestId();
             byte[] decodedBytes = Base64.getDecoder().decode(requestId);
@@ -820,7 +823,7 @@ public class AvanzamentoNotificheB2bSteps {
         }
         // get timeline event id
         String timelineEventId = sharedSteps.getTimelineEventId(timelineEventCategory, iun, dataFromTest);
-        if (timelineEventCategory.equals(TimelineElementCategoryV20.SEND_ANALOG_PROGRESS.getValue())) {
+        if (timelineEventCategory.equals(TimelineElementCategoryV23.SEND_ANALOG_PROGRESS.getValue())) {
             TimelineElementV23 timelineElementFromTest = dataFromTest.getTimelineElement();
             TimelineElementDetailsV23 timelineElementDetails = timelineElementFromTest.getDetails();
 
@@ -863,8 +866,8 @@ public class AvanzamentoNotificheB2bSteps {
     public void verificationDateScheduleRefinementWithRefinement(Integer destinatario) {
 
     try {
-        OffsetDateTime ricezioneRaccomandata = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SCHEDULE_REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getDetails().getSchedulingDate();
-        OffsetDateTime refinementDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+        OffsetDateTime ricezioneRaccomandata = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SCHEDULE_REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getDetails().getSchedulingDate();
+        OffsetDateTime refinementDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
 
         logger.info("DESTINATARIO : {}", destinatario);
         logger.info("ricezioneRaccomandata : {}", ricezioneRaccomandata);
@@ -881,15 +884,15 @@ public class AvanzamentoNotificheB2bSteps {
     public void verificationDateComplettelyUnreachableWithRefinement(Integer destinatario) {
 
         try {
-            OffsetDateTime shedulingDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SCHEDULE_REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
-            OffsetDateTime complettelyUnreachableDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.COMPLETELY_UNREACHABLE) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
-            OffsetDateTime complettelyUnreachableRequestDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.COMPLETELY_UNREACHABLE_CREATION_REQUEST) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
-            OffsetDateTime analogFailureDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.ANALOG_FAILURE_WORKFLOW) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
-            OffsetDateTime sendAnalogProgressTimestampDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SEND_ANALOG_PROGRESS) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
-            OffsetDateTime sendAnalogProgressNotificationDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SEND_ANALOG_PROGRESS) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getDetails().getNotificationDate();
-            OffsetDateTime sendFeedbackTimestampDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
-            OffsetDateTime sendFeedbackNotificationDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getDetails().getNotificationDate();
-            OffsetDateTime prepareAnalogDomicileFailureTimestamp = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.PREPARE_ANALOG_DOMICILE_FAILURE) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime shedulingDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SCHEDULE_REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime complettelyUnreachableDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime complettelyUnreachableRequestDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE_CREATION_REQUEST) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime analogFailureDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.ANALOG_FAILURE_WORKFLOW) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime sendAnalogProgressTimestampDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_PROGRESS) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime sendAnalogProgressNotificationDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_PROGRESS) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getDetails().getNotificationDate();
+            OffsetDateTime sendFeedbackTimestampDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime sendFeedbackNotificationDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getDetails().getNotificationDate();
+            OffsetDateTime prepareAnalogDomicileFailureTimestamp = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.PREPARE_ANALOG_DOMICILE_FAILURE) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
 
             logger.info("DESTINATARIO : {}", destinatario);
             logger.info("sendAnalogProgressTimestampDate : {}", sendAnalogProgressTimestampDate);
@@ -926,12 +929,12 @@ public class AvanzamentoNotificheB2bSteps {
     public void verificationDateScheduleRefinementWithSendAnalogFeedback(Integer destinatario,Integer tentativo) {
 
         try {
-            OffsetDateTime shedulingDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SCHEDULE_REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
-            OffsetDateTime sendAnalogProgressNotificationDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SEND_ANALOG_PROGRESS) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getDetails().getNotificationDate();
-            OffsetDateTime sendAnalogProgressTimestampDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SEND_ANALOG_PROGRESS) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
-            OffsetDateTime sendFeedbackTimestampDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK) && elem.getDetails().getRecIndex().equals(destinatario) && elem.getDetails().getSentAttemptMade().equals(tentativo)).findAny().get().getTimestamp();
-            OffsetDateTime sendFeedbackNotificationDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK) && elem.getDetails().getRecIndex().equals(destinatario) && elem.getDetails().getSentAttemptMade().equals(tentativo)).findAny().get().getDetails().getNotificationDate();
-            OffsetDateTime analogSuccessDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.ANALOG_SUCCESS_WORKFLOW) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime shedulingDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SCHEDULE_REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime sendAnalogProgressNotificationDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_PROGRESS) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getDetails().getNotificationDate();
+            OffsetDateTime sendAnalogProgressTimestampDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_PROGRESS) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime sendFeedbackTimestampDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK) && elem.getDetails().getRecIndex().equals(destinatario) && elem.getDetails().getSentAttemptMade().equals(tentativo)).findAny().get().getTimestamp();
+            OffsetDateTime sendFeedbackNotificationDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK) && elem.getDetails().getRecIndex().equals(destinatario) && elem.getDetails().getSentAttemptMade().equals(tentativo)).findAny().get().getDetails().getNotificationDate();
+            OffsetDateTime analogSuccessDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.ANALOG_SUCCESS_WORKFLOW) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
 
             logger.info("DESTINATARIO : {}", destinatario);
             logger.info("sendAnalogProgressTimestampDate: {}", sendAnalogProgressTimestampDate);
@@ -1759,10 +1762,10 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("verifica generazione Atto opponibile senza la messa a disposizione in {string}")
     public void paVerifyGenerazioneLegalFact(String legalFactCategory){
-        TimelineElementCategoryV20 timelineElementInternalCategory =  null;
+        TimelineElementCategoryV23 timelineElementInternalCategory =  null;
 
         if (legalFactCategory.equalsIgnoreCase("DIGITAL_DELIVERY_CREATION_REQUEST"))
-            timelineElementInternalCategory = TimelineElementCategoryV20.DIGITAL_DELIVERY_CREATION_REQUEST;
+            timelineElementInternalCategory = TimelineElementCategoryV23.DIGITAL_DELIVERY_CREATION_REQUEST;
 
         TimelineElementV23 timelineElement = null;
         Assertions.assertNotNull(timelineElementInternalCategory);
@@ -1956,7 +1959,7 @@ public class AvanzamentoNotificheB2bSteps {
 
         TimelineElementV23 timelineElement = null;
 
-        TimelineElementCategoryV20 timelineElementInternalCategory = TimelineElementCategoryV20.SEND_DIGITAL_PROGRESS;
+        TimelineElementCategoryV23 timelineElementInternalCategory = TimelineElementCategoryV23.SEND_DIGITAL_PROGRESS;
         LegalFactCategory category = LegalFactCategory.PEC_RECEIPT;
 
         for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
@@ -2714,7 +2717,7 @@ public class AvanzamentoNotificheB2bSteps {
     @Then("sono presenti {int} attestazioni opponibili RECIPIENT_ACCESS")
     public void sonoPresentiAttestazioniOpponibili(int number) {
 
-        TimelineElementCategoryV20 timelineElementInternalCategory = TimelineElementCategoryV20.NOTIFICATION_VIEWED;
+        TimelineElementCategoryV23 timelineElementInternalCategory = TimelineElementCategoryV23.NOTIFICATION_VIEWED;
         boolean findElement = false;
         for (int i = 0; i < 16; i++) {
             sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
@@ -3280,8 +3283,8 @@ public class AvanzamentoNotificheB2bSteps {
     public void verificationDateScheduleRefinementWithRefinementPlus10Days() {
 
         try {
-            OffsetDateTime scheduleDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.SEND_ANALOG_FEEDBACK)).findAny().get().getTimestamp().plus(sharedSteps.getSchedulingDaysSuccessAnalogRefinement());
-            OffsetDateTime refinementDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV20.REFINEMENT)).findAny().get().getTimestamp();
+            OffsetDateTime scheduleDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK)).findAny().get().getTimestamp().plus(sharedSteps.getSchedulingDaysSuccessAnalogRefinement());
+            OffsetDateTime refinementDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.REFINEMENT)).findAny().get().getTimestamp();
             logger.info("scheduleDate : {}", scheduleDate);
             logger.info("refinementDate : {}", refinementDate);
 
@@ -3314,11 +3317,11 @@ public class AvanzamentoNotificheB2bSteps {
         TimelineElementV23 timelineElementForDateCalculation = null;
         if (timelineCategory.equals(TimelineElementCategoryV23.DIGITAL_SUCCESS_WORKFLOW.getValue())) {
             timelineElementForDateCalculation = sharedSteps.getTimelineElementByEventId(TimelineElementCategoryV23.SEND_DIGITAL_FEEDBACK.getValue(), dataFromTest);
-        } else if (timelineCategory.equals(TimelineElementCategoryV20.DIGITAL_FAILURE_WORKFLOW.getValue())) {
+        } else if (timelineCategory.equals(TimelineElementCategoryV23.DIGITAL_FAILURE_WORKFLOW.getValue())) {
             timelineElementForDateCalculation = sharedSteps.getTimelineElementByEventId(TimelineElementCategoryV23.DIGITAL_DELIVERY_CREATION_REQUEST.getValue(), dataFromTest);
-        }  else if (timelineCategory.equals(TimelineElementCategoryV20.ANALOG_SUCCESS_WORKFLOW.getValue())) {
+        }  else if (timelineCategory.equals(TimelineElementCategoryV23.ANALOG_SUCCESS_WORKFLOW.getValue())) {
             timelineElementForDateCalculation = sharedSteps.getTimelineElementByEventId(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK.getValue(), dataFromTest);
-        } else if (timelineCategory.equals(TimelineElementCategoryV20.ANALOG_FAILURE_WORKFLOW.getValue())) {
+        } else if (timelineCategory.equals(TimelineElementCategoryV23.ANALOG_FAILURE_WORKFLOW.getValue())) {
             timelineElementForDateCalculation = sharedSteps.getTimelineElementByEventId(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK.getValue(), dataFromTest);
 
         }
@@ -3578,7 +3581,7 @@ public class AvanzamentoNotificheB2bSteps {
             throw new RuntimeException(exc);
         }
 
-        TimelineElementCategoryV20 timelineElementInternalCategory= TimelineElementCategoryV20.AAR_GENERATION;
+        TimelineElementCategoryV23 timelineElementInternalCategory= TimelineElementCategoryV23.AAR_GENERATION;
         TimelineElementV23 timelineElement = null;
 
         for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
