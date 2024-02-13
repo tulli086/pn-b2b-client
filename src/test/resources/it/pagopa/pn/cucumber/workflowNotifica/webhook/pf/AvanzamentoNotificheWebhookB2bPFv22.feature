@@ -1753,6 +1753,24 @@ Feature: avanzamento notifiche webhook b2b V22
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
+ #SERVE INTEGRAZIONE CON RADD
+  @webhookV22 @clean @webhook1 @ignore
+  Scenario: [B2B-STREAM_ES3.1_145] Creazione di uno stream senza gruppo con la V10 e  lettura di nuovi eventi di timeline con un apikey abilitata.
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Mario Gherkin
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
+    And si crea il nuovo stream per il "Comune_1" con versione "V10" e filtro di timeline "NOTIFICATION_RADD_RETRIEVED"
+    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V10"
+    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
+    Then verifica non presenza di eventi nello stream del "Comune_1"
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+
+
   @webhookV22 @clean @webhook1
   Scenario: [B2B-STREAM_ES1.2_123] Creazione di stream con apiKey con gruppi differenti e verifica corretta scrittura degli eventi di notifiche create con le stesse apiKey.
     Given viene generata una nuova notifica
