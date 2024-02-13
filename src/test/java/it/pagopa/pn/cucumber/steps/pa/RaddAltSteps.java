@@ -175,8 +175,7 @@ public class RaddAltSteps {
 
     private void uploadDocumentRaddAlternative(boolean usePresignedUrl) {
         try {
-            //TODO preload dei documenti
-            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRadFsuDocument("classpath:/sample.zip", usePresignedUrl);
+            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddAlternativeDocument("classpath:/sample.zip", usePresignedUrl,this.operationid);
             Assertions.assertNotNull(uploadResponse);
             this.documentUploadResponse = uploadResponse;
             log.info("documentUploadResponse: {}", documentUploadResponse);
