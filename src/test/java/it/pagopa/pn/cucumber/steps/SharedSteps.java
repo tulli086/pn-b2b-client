@@ -110,11 +110,11 @@ public class SharedSteps {
 
 
     private TimelineElementV23 timelineElementV23;
-    private ProgressResponseElementV23 progressResponseElementV22;
+    private ProgressResponseElementV23 progressResponseElementV23;
 
 
     private it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse eventStream;
-    private StreamMetadataResponseV23 eventStreamV22;
+    private StreamMetadataResponseV23 eventStreamV23;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -198,7 +198,7 @@ public class SharedSteps {
 
 
 
-    private List<ProgressResponseElementV23> progressResponseElementsV22 = null;
+    private List<ProgressResponseElementV23> progressResponseElementsV23 = null;
     public static Integer lastEventID = 0;
 
     private String gherkinSpaTaxID = "12666810299";
@@ -413,8 +413,8 @@ public class SharedSteps {
                         .denomination("Mario Cucumber")
                         .taxId(marioCucumberTaxID)
                         .digitalDomicile(new NotificationDigitalAddress()
-                                        .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                        .address(getDigitalAddressValue()))
+                                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                .address(getDigitalAddressValue()))
                 ,new HashMap<>());
         /*
         this.notificationRequest.addRecipientsItem(
@@ -456,8 +456,8 @@ public class SharedSteps {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
                 (notificationRecipientV23
-                .denomination("Mario Cucumber")
-                .taxId(marioCucumberTaxID))
+                        .denomination("Mario Cucumber")
+                        .taxId(marioCucumberTaxID))
                 ,data);
         /*
         this.notificationRequest.addRecipientsItem(
@@ -516,7 +516,7 @@ public class SharedSteps {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
                 (notificationRecipientV23.denomination("Mario Gherkin")
-                .taxId(marioGherkinTaxID)),
+                        .taxId(marioGherkinTaxID)),
                 data);
     }
 
@@ -2281,12 +2281,12 @@ public class SharedSteps {
         this.responseNewApiKey = responseNewApiKey;
     }
 
-    public StreamMetadataResponseV23 getEventStreamV22() {
-        return eventStreamV22;
+    public StreamMetadataResponseV23 getEventStreamV23() {
+        return eventStreamV23;
     }
 
-    public void setEventStreamV22(StreamMetadataResponseV23 eventStreamV22) {
-        this.eventStreamV22 = eventStreamV22;
+    public void setEventStreamV23(StreamMetadataResponseV23 eventStreamV23) {
+        this.eventStreamV23 = eventStreamV23;
     }
 
     public it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse getEventStream() {
@@ -2297,12 +2297,12 @@ public class SharedSteps {
         this.eventStream = eventStream;
     }
 
-    public List<ProgressResponseElementV23> getProgressResponseElementsV22() {
-        return progressResponseElementsV22;
+    public List<ProgressResponseElementV23> getProgressResponseElementsV23() {
+        return progressResponseElementsV23;
     }
 
-    public void setProgressResponseElementsV22(List<ProgressResponseElementV23> progressResponseElementsV22) {
-        this.progressResponseElementsV22 = progressResponseElementsV22;
+    public void setProgressResponseElementsV23(List<ProgressResponseElementV23> progressResponseElementsV23) {
+        this.progressResponseElementsV23 = progressResponseElementsV23;
     }
 
     public TimelineElementV23 getTimelineElementV23() {
@@ -2313,11 +2313,11 @@ public class SharedSteps {
         this.timelineElementV23 = timelineElementV23;
     }
 
-    public ProgressResponseElementV23 getProgressResponseElementV22() {
-        return progressResponseElementV22;
+    public ProgressResponseElementV23 getProgressResponseElementV23() {
+        return progressResponseElementV23;
     }
 
-    public void setProgressResponseElementV22(ProgressResponseElementV23 progressResponseElement) {
-        this.progressResponseElementV22 = progressResponseElementV22;
+    public void setProgressResponseElementV23(ProgressResponseElementV23 progressResponseElement) {
+        this.progressResponseElementV23 = progressResponseElementV23;
     }
 }
