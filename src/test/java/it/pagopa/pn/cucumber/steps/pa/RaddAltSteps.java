@@ -83,7 +83,7 @@ public class RaddAltSteps {
 
 
     @When("L'operatore scansione il qrCode per recuperare gli atti della {string}")
-    public void lOperatoreScansioneIlQrCodePerRecuperariGliAtti(String recipientType) {
+    public void lOperatoreScansioneIlQrCodePerRecuperariGliAttiAlternative(String recipientType) {
 
         ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
                 idOrganization,
@@ -156,7 +156,7 @@ public class RaddAltSteps {
     }
 
     @And("la scansione si conclude correttamente su radd alternative")
-    public void laScansioneSiConcludeCorrettamente() {
+    public void laScansioneSiConcludeCorrettamenteAlternative() {
         log.debug("actInquiryResponse {}", actInquiryResponse.toString());
         Assertions.assertEquals(true, actInquiryResponse.getResult());
         Assertions.assertNotNull(actInquiryResponse.getStatus());
@@ -457,7 +457,7 @@ public class RaddAltSteps {
     }
 
     @Given("Il cittadino {string} mostra il QRCode {string} su radd alternative")
-    public void ilCittadinoMostraIlQRCode(String cf, String qrCodeType) {
+    public void ilCittadinoMostraIlQRCodeAlternative(String cf, String qrCodeType) {
         selectUserRaddAlternative(cf);
         qrCodeType = qrCodeType.toLowerCase();
         switch (qrCodeType) {
