@@ -20,10 +20,10 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamCreationRequest;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamListElement;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.ProgressResponseElementV23;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamCreationRequestV23;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamMetadataResponseV23;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamRequestV23;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.ProgressResponseElementV23;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamCreationRequestV23;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamMetadataResponseV23;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamRequestV23;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.GroupPosition;
 import org.junit.jupiter.api.Assertions;
@@ -573,9 +573,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 }
                 break;
             case "V23":
-                List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement> streamListElementsV23 = webhookB2bClient.listEventStreamsV23();
+                List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement> streamListElementsV23 = webhookB2bClient.listEventStreamsV23();
                 for(StreamMetadataResponseV23 eventStream: eventStreamListV23){
-                    it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement streamListElementV23 = streamListElementsV23.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
+                    it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement streamListElementV23 = streamListElementsV23.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
                     Assertions.assertNull(streamListElementV23);
                 }
                 break;
@@ -2225,8 +2225,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 }
                 break;
             case "V23":
-                List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement> streamListElementsV23 = webhookB2bClient.listEventStreamsV23();
-                for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.StreamListElement elem: streamListElementsV23){
+                List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement> streamListElementsV23 = webhookB2bClient.listEventStreamsV23();
+                for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement elem: streamListElementsV23){
                     webhookB2bClient.deleteEventStreamV23(elem.getStreamId());
                 }
                 break;
@@ -2352,7 +2352,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() {
 
         TimelineElementDetailsV23 timelineElementDetails = sharedSteps.getTimelineElementV23().getDetails();
-        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
+        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
 
         TimelineElementDetailsV23 timelineElementDetailsV23 = new TimelineElementDetailsV23();
         timelineElementDetailsV23 = sharedSteps.deepCopy( timelineElementWebhookDetails, TimelineElementDetailsV23.class );
@@ -2412,7 +2412,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Then("verifica deanonimizzazione degli eventi di timeline")
     public void verificaDeanonimizzazioneDegliEventiDiTimeline() {
-        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_2.TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
+        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
 
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getAddress());
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getMunicipality());
