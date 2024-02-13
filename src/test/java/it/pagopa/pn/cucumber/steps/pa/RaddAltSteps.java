@@ -150,6 +150,15 @@ public class RaddAltSteps {
                 Assertions.assertNotNull(actInquiryResponse.getStatus().getMessage());
                 Assertions.assertEquals(errorType.toLowerCase(), actInquiryResponse.getStatus().getMessage().toLowerCase());
                 Assertions.assertEquals(error, actInquiryResponse.getStatus().getCode());
+
+            }
+            case "notifica annullata" -> {
+                Assertions.assertEquals(false, actInquiryResponse.getResult());
+                Assertions.assertNotNull(actInquiryResponse.getStatus());
+                Assertions.assertNotNull(actInquiryResponse.getStatus().getMessage());
+                Assertions.assertEquals(errorType.toLowerCase(), actInquiryResponse.getStatus().getMessage().toLowerCase());
+                Assertions.assertEquals(error, actInquiryResponse.getStatus().getCode());
+
             }
             default -> throw new IllegalArgumentException();
         }
