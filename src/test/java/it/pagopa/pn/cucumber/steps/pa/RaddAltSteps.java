@@ -448,6 +448,7 @@ public class RaddAltSteps {
         switch (cf.toUpperCase()) {
             case "MARIO CUCUMBER" -> this.currentUserCf = sharedSteps.getMarioCucumberTaxID();
             case "MARIO GHERKIN" -> this.currentUserCf = sharedSteps.getMarioGherkinTaxID();
+            case "CucumberSpa" -> this.currentUserCf = sharedSteps.getCucumberSpataxId();
             case "SIGNOR CASUALE" ->
                     this.currentUserCf = sharedSteps.getSentNotification().getRecipients().get(0).getTaxId();
             case "SIGNOR GENERATO" -> this.currentUserCf = generateCF(System.nanoTime());
@@ -504,9 +505,9 @@ public class RaddAltSteps {
         this.qrCode = quickAccessLink.get(quickAccessLink.keySet().toArray()[0]);
         log.debug("qrCode: {}",qrCode);
     }
-    @When("L'operatore scansione il qrCode per recuperare gli atti su radd alternative")
-    public void lOperatoreScansioneIlQrCodePerRecuperariGliAtti() {
-        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG, idOrganization, uid, this.currentUserCf, "PF", qrCode, null);
+    @When("L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType {string}")
+    public void lOperatoreScansioneIlQrCodePerRecuperariGliAtti(String recipientType) {
+        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG, idOrganization, uid, this.currentUserCf, recipientType, qrCode, null);
         log.info("actInquiryResponse: {}",actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
     }
