@@ -431,15 +431,6 @@ public class RaddAltSteps {
         Assertions.assertEquals(this.documentUploadError.getStatusCode().value(), httpError);
     }
 
-    @Then("la transazione viene abortita dalla {string} su radd alternative")
-    public void laTransazioneVieneAbortita(String typeAuthFleet) {
-
-        this.abortActTransaction = this.raddAltClient.abortActTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization,
-                new AbortTransactionRequest()
-                        .operationId(this.operationid)
-                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
-                        .reason("TEST"));
-    }
 
     @Then("la transazione viene abortita per gli {string}")
     public void laTransazioneVieneAbortitaAor(String tipologia) {

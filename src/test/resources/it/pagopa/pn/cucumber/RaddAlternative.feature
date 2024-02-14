@@ -133,7 +133,18 @@ Feature: Radd Alternative
 
 
   Scenario: [RADD-ALT_ACT-11] PF - Restituzione errore - Documento non stampabile tra quelli disponibili nella lista dei documenti associati a QR code esistente con CF corretto
-
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And Il cittadino "Mario Cucumber" mostra il QRCode "corretto"
+    When L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 99
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-12] PG - Scansione QR code esistente associato al CF corretto
@@ -267,7 +278,18 @@ Feature: Radd Alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-22] PG - Restituzione errore - Documento non stampabile tra quelli disponibili nella lista dei documenti associati a QR code esistente con CF corretto
-
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And Il cittadino "CucumberSpa" mostra il QRCode "corretto"
+    When L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 99
 
   @raddAlt
   Scenario: [RADD-ALT_AOR-23] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale)
@@ -367,6 +389,8 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     And la transazione viene abortita per gli "aor"
     And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2
 
@@ -467,6 +491,8 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     And la transazione viene abortita per gli "aor"
     And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2
 
