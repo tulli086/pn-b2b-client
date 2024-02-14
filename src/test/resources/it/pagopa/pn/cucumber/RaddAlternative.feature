@@ -371,27 +371,104 @@ Feature: Radd Alternative
     And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2
 
 
-
-  Scenario: [RADD-ALT_ACT-30] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale)
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-30] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-31] PG - Visualizzazione link AAR disponibili associati a notifica esistente in stato irreperibile con CF corretto
+  Scenario: [RADD-ALT_AOR-31] PG - Visualizzazione link AAR disponibili associati a notifica esistente in stato irreperibile con CF corretto
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-32] PG - Stampa documenti disponibili associati a notifica esistente con CF corretto, mai visualizzata
+  Scenario: [RADD-ALT_AOR-32] PG - Stampa documenti disponibili associati a notifica esistente con CF corretto, mai visualizzata
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-33] PG - Consegna documenti al cittadino successivi alla stampa
+  Scenario: [RADD-ALT_AOR-33] PG - Consegna documenti al cittadino successivi alla stampa
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
+
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-34] PG - Restituzione errore - nessuna Notifica disponibile associata al CF corretto
+  Scenario: [RADD-ALT_AOR-34] PG - Restituzione errore - nessuna Notifica disponibile associata al CF corretto
+    Given la "PG" "Signor Generato SRL" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99
+
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-35] PG - Restituzione errore - nessuna Notifica disponibile in stato Irreperibile associata al CF corretto
+  Scenario: [RADD-ALT_AOR-35] PG - Restituzione errore - nessuna Notifica disponibile in stato Irreperibile associata al CF corretto
+    Given la "PG" "Signor Generato SRL" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-36] PG - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, ma inibizione stampa documenti associati alla notifica
-
+  Scenario: [RADD-ALT_AOR-36] PG - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, ma inibizione stampa documenti associati alla notifica
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And la transazione viene abortita per gli aor
+    And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-37] PA - Visualizzazione in timeline nuovo evento di avvenuta consegna documenti tramite RADD (NOTIFICATION_RADD_RETRIEVED)
