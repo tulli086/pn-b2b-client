@@ -526,8 +526,8 @@ Feature: Radd Alternative
     And lato desinatario "CucumberSpa" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
 
-  @raddAlt
-  Scenario: [RADD-ALT_ACT-41] PF/PG - Check conformità AAR
+ # @raddAlt @ignore MANUALE
+ # Scenario: [RADD-ALT_ACT-41] PF/PG - Check conformità AAR
 
 
 
@@ -550,7 +550,14 @@ Feature: Radd Alternative
       | AUD_RADD_ACTINQUIRY |
 
   @raddAlt
-  Scenario Outline: [RADD-ALT_ACT-43] Ricerca Notifiche collegate al CF fornito dal cittadino e verifica auditlog AUD_RADD_AORINQUIRY
+  Scenario Outline: [RADD-ALT_AOR-43] Ricerca Notifiche collegate al CF fornito dal cittadino e verifica auditlog AUD_RADD_AORINQUIRY
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When la "PF" "Mario Cucumber" chiede di verificare la presenza di notifiche
     Then viene verificato che esiste un audit log "<audit-log>" in "10y"
     Examples:
       | audit-log           |
@@ -576,7 +583,7 @@ Feature: Radd Alternative
       | AUD_RADD_ACTTRAN |
 
   @raddAlt
-  Scenario Outline: [RADD-ALT_ACT-45] Disponibilità degli AAR collegati al CF fornito e verifica auditlog AUD_RADD_AORTRAN
+  Scenario Outline: [RADD-ALT_AOR-45] Disponibilità degli AAR collegati al CF fornito e verifica auditlog AUD_RADD_AORTRAN
     Then viene verificato che esiste un audit log "<audit-log>" in "10y"
     Examples:
       | audit-log        |
