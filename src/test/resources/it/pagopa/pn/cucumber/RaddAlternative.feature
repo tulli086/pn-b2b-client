@@ -463,7 +463,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
-    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
@@ -478,23 +478,53 @@ Feature: Radd Alternative
     And destinatario Mario Gherkin
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
-    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
-    When viene chiusa la transazione per il recupero degli aar su radd alternative
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
-    And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
-    Then lato destinatario la notifica può essere correttamente recuperata da "Mario Gherkin" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
-    And lato desinatario "Mario Gherkin" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
-
+    And Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-38] PA - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Gherkin
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
+    And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-39] PF - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Gherkin
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    Then lato destinatario la notifica può essere correttamente recuperata da "Mario Gherkin" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
+    And lato desinatario "Mario Gherkin" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-40] PG - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
+    When And
+    Then lato destinatario la notifica può essere correttamente recuperata da "Mario Gherkin" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
+    And lato desinatario "CucumberSpa" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
+
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-41] PF/PG - Check conformità AAR
