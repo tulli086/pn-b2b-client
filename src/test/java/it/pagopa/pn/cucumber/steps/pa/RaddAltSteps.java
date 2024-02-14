@@ -441,13 +441,26 @@ public class RaddAltSteps {
                         .reason("TEST"));
     }
 
-    @Then("la transazione viene abortita per gli aor")
-    public void laTransazioneVieneAbortitaAor() {
-        this.abortActTransaction = this.raddAltClient.abortAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization,
-                new AbortTransactionRequest()
-                        .operationId(this.operationid)
-                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
-                        .reason("TEST"));
+    @Then("la transazione viene abortita per gli {string}")
+    public void laTransazioneVieneAbortitaAor(String tipologia) {
+        switch (tipologia.toLowerCase()) {
+            case "aor":
+                this.abortActTransaction = this.raddAltClient.abortAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization,
+                        new AbortTransactionRequest()
+                                .operationId(this.operationid)
+                                .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                                .reason("TEST"));
+                break;
+            case "act":
+                this.abortActTransaction = this.raddAltClient.abortActTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization,
+                        new AbortTransactionRequest()
+                                .operationId(this.operationid)
+                                .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                                .reason("TEST"));
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
 

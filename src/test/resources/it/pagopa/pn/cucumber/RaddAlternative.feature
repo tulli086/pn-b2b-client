@@ -97,7 +97,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
     And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
-    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la scansione si conclude correttamente su radd alternative
     When lato destinatario la notifica può essere correttamente recuperata da "Mario Cucumber" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     Then lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
@@ -226,7 +226,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
     And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
-    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la scansione si conclude correttamente su radd alternative
     When lato destinatario la notifica può essere correttamente recuperata da "CucumberSpa" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     Then lato desinatario "CucumberSpa" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
@@ -367,7 +367,7 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
-    And la transazione viene abortita per gli aor
+    And la transazione viene abortita per gli "aor"
     And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2
 
 
@@ -467,7 +467,7 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
-    And la transazione viene abortita per gli aor
+    And la transazione viene abortita per gli "aor"
     And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2
 
   @raddAlt
