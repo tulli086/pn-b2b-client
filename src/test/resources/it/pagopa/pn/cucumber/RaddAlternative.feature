@@ -262,7 +262,6 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
     And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
     When L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
-    #TODO Verificare l'errore restitutito
     Then Viene restituito un messaggio di errore "notifica annullata" con codice di errore 80 su radd alternative
 
 
