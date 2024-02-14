@@ -191,6 +191,7 @@ public class SharedSteps {
     private String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
     // private String gherkinSrltaxId = "CCRMCT06A03A433H";
     private String gherkinAnalogicTaxID = "05722930657";
+    private String gherkinIrreperibileTaxID = "00749900049";
     private String gherkinSrltaxId = "12666810299";
     private String cucumberSpataxId = "20517490320"; //
 
@@ -736,12 +737,24 @@ public class SharedSteps {
     }
 
     @And("destinatario Gherkin Analogic e:")
-    public void destinatarioGherkinAnalogicParam(Map<String, String> data) {//@Transpose NotificationRecipientV21 recipient
+    public void destinatarioGherkinAnalogicParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
                 (notificationRecipientV23
                         .denomination("Gherkin Analogic")
                         .taxId(gherkinAnalogicTaxID)
+                        .recipientType(NotificationRecipientV23.RecipientTypeEnum.PG)),
+                data);
+
+    }
+
+    @And("destinatario Gherkin Irreperibile e:")
+    public void destinatarioGherkinIrreperibileParam(Map<String, String> data) {
+        NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
+        addRecipientToNotification(this.notificationRequest,
+                (notificationRecipientV23
+                        .denomination("Gherkin Irreperibile")
+                        .taxId(gherkinIrreperibileTaxID)
                         .recipientType(NotificationRecipientV23.RecipientTypeEnum.PG)),
                 data);
 
@@ -1868,6 +1881,10 @@ public class SharedSteps {
 
     public String getCucumberSpataxId() {
         return cucumberSpataxId;
+    }
+
+    public String getGherkinIrreperibileTaxId() {
+        return gherkinIrreperibileTaxID;
     }
 
     public PnExternalServiceClientImpl getPnExternalServiceClient() {
