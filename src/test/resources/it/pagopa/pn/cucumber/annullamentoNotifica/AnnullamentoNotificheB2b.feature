@@ -1074,7 +1074,7 @@ Feature: annullamento notifiche b2b
 
 
   @Annullamento
-  Scenario: [B2B-PA-ANNULLAMENTO_41] PA mittente: Annullamento notifica in stato “REFUSED” - PN-9065
+  Scenario: [B2B-PA-ANNULLAMENTO_41] PA mittente: Annullamento notifica prima di essere rifiutata - PN-9065
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
