@@ -269,9 +269,106 @@ Feature: Radd Alternative
   Scenario: [RADD-ALT_ACT-22] PG - Restituzione errore - Documento non stampabile tra quelli disponibili nella lista dei documenti associati a QR code esistente con CF corretto
 
 
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-23] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario Signor casuale e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-24] PF - Visualizzazione link AAR disponibili associati a notifica esistente in stato irreperibile con CF corretto
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario Signor casuale e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
 
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-25] PF - Stampa documenti disponibili associati a notifica esistente con CF corretto, mai visualizzata
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario Signor casuale e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-26] PF - Consegna documenti al cittadino successivi alla stampa
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario Signor casuale e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
+
+
+  #Da capire se fattibile siccome l'aor restituisce solo notifiche irreperibili e act li serve perforza un QRcode
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-27] PF - Restituzione errore - nessuna Notifica disponibile associata al CF
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-28] PF - Restituzione errore - nessuna Notifica disponibile in stato Irreperibile associata al CF corretto
+    When la "PF" "Signor Generato" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99 su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-29] PF - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, ma inibizione stampa documenti associati alla notifica
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Signor casuale e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And la transazione viene abortita per gli aor
+    And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2
 
 
    #Bozza...

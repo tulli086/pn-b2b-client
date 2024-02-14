@@ -275,13 +275,13 @@ public class RaddAltSteps {
     }
 
     @When("Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative")
-    public void ilCittadinoSignorCasualeChiedeDiVerificareLaPresenzaDiNotifiche(String typeAuthFleet) {
+    public void ilCittadinoSignorCasualeChiedeDiVerificareLaPresenzaDiNotifiche() {
         selectUserRaddAlternative("Signor casuale");
         this.aorInquiryResponse = raddAltClient.aorInquiry(CxTypeAuthFleet.PG,
                 idOrganization,
                 uid,
                 this.currentUserCf,
-                typeAuthFleet);
+                "PF");
     }
 
     @When("La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative")
@@ -294,7 +294,7 @@ public class RaddAltSteps {
     }
 
     @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della {string} su radd alternative")
-    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile(String typeAuthFleet) {
+    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile(String recipientType) {
         this.operationid = generateRandomNumber();
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
@@ -302,7 +302,8 @@ public class RaddAltSteps {
                         .fileKey(this.documentUploadResponse.getValue1())
                         .operationId(this.operationid)
                         .recipientTaxId(this.currentUserCf)
-                        .recipientType(AorStartTransactionRequest.RecipientTypeEnum.PF)
+                        .recipientType(recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
+                                AorStartTransactionRequest.RecipientTypeEnum.PG)
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                         //.delegateTaxId("")
                         .checksum(this.documentUploadResponse.getValue2());
@@ -440,6 +441,16 @@ public class RaddAltSteps {
                         .reason("TEST"));
     }
 
+    @Then("la transazione viene abortita per gli aor")
+    public void laTransazioneVieneAbortitaAor() {
+        this.abortActTransaction = this.raddAltClient.abortAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization,
+                new AbortTransactionRequest()
+                        .operationId(this.operationid)
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                        .reason("TEST"));
+    }
+
+
     @And("l'operazione di abort genera un errore {string} con codice {int} su radd alternative")
     public void lOperazioneDiAbortGeneraUnErroreConCodice(String error, int statusCode) {
         Assertions.assertNotNull(this.abortActTransaction);
@@ -520,12 +531,13 @@ public class RaddAltSteps {
 
     @Given("L'operatore esegue il download del frontespizio del operazione {string}")
     public void lOperatoreEsegueDownloadFrontespizio(String operationType) {
-        raddAltClient.documentDownload(operationType.equalsIgnoreCase("aor")?"aor":
+        byte[] download = raddAltClient.documentDownload(operationType.equalsIgnoreCase("aor")?"aor":
                         operationType.equalsIgnoreCase("act")?"act": null,
                 this.operationid,
                 CxTypeAuthFleet.PG,
                 idOrganization);
 
+    Assertions.assertNotNull(download);
     }
 
 
