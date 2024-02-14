@@ -117,8 +117,23 @@ Feature: Radd Alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And Il cittadino "Mario Cucumber" mostra il QRCode "corretto"
-    And L'operatore scansione il qrCode per recuperare gli atti
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
     And Viene restituito un messaggio di errore "Stampa già eseguita" con codice di errore 3
+
+  Scenario: [RADD-ALT_ACT-10] PF - Notifica annullata - Restituzione errore al tentativo di recupero documenti di notifica
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION" e successivamente annullata
+    When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And Viene restituito un messaggio di errore "notifica annullata" con codice di errore 80 su radd alternative
+
+
+  Scenario: [RADD-ALT_ACT-11] PF - Restituzione errore - Documento non stampabile tra quelli disponibili nella lista dei documenti associati a QR code esistente con CF corretto
+
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-12] PG - Scansione QR code esistente associato al CF corretto
@@ -248,7 +263,7 @@ Feature: Radd Alternative
     And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
     When L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
     #TODO Verificare l'errore restitutito
-    Then Viene restituito un messaggio di errore "notifica annullata" con codice di errore 3 su radd alternative
+    Then Viene restituito un messaggio di errore "notifica annullata" con codice di errore 80 su radd alternative
 
 
   @raddAlt
