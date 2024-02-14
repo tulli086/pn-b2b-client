@@ -453,7 +453,7 @@ public class RaddAltSteps {
         switch (cf.toUpperCase()) {
             case "MARIO CUCUMBER" -> this.currentUserCf = sharedSteps.getMarioCucumberTaxID();
             case "MARIO GHERKIN" -> this.currentUserCf = sharedSteps.getMarioGherkinTaxID();
-            case "CucumberSpa" -> this.currentUserCf = sharedSteps.getCucumberSpataxId();
+            case "CUCUMBERSPA" -> this.currentUserCf = sharedSteps.getCucumberSpataxId();
             case "SIGNOR CASUALE" ->
                     this.currentUserCf = sharedSteps.getSentNotification().getRecipients().get(0).getTaxId();
             case "SIGNOR GENERATO" -> this.currentUserCf = generateCF(System.nanoTime());
