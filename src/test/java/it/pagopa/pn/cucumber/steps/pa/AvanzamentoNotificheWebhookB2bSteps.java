@@ -676,10 +676,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private <T> ProgressResponseElement searchInWebhook(T timeLineOrStatus,String lastEventId, int deepCount){
 
-        TimelineElementCategoryV20 timelineElementCategory = null;
+        TimelineElementCategoryV23 timelineElementCategory = null;
         NotificationStatus notificationStatus = null;
-        if(timeLineOrStatus instanceof TimelineElementCategoryV20){
-            timelineElementCategory = (TimelineElementCategoryV20)timeLineOrStatus;
+        if(timeLineOrStatus instanceof TimelineElementCategoryV23){
+            timelineElementCategory = (TimelineElementCategoryV23)timeLineOrStatus;
         }else if(timeLineOrStatus instanceof NotificationStatus){
             notificationStatus = (NotificationStatus)timeLineOrStatus;
         }else{
@@ -741,10 +741,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private <T> ProgressResponseElement searchInWebhookFileNotFound(T timeLineOrStatus,String lastEventId, int deepCount){
 
-        TimelineElementCategoryV20 timelineElementCategory = null;
+        TimelineElementCategoryV23 timelineElementCategory = null;
         NotificationStatus notificationStatus = null;
-        if(timeLineOrStatus instanceof TimelineElementCategoryV20){
-            timelineElementCategory = (TimelineElementCategoryV20)timeLineOrStatus;
+        if(timeLineOrStatus instanceof TimelineElementCategoryV23){
+            timelineElementCategory = (TimelineElementCategoryV23)timeLineOrStatus;
         }else if(timeLineOrStatus instanceof NotificationStatus){
             notificationStatus = (NotificationStatus)timeLineOrStatus;
         }else{
