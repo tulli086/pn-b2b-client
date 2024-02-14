@@ -95,11 +95,11 @@ Feature: Radd Alternative
     And destinatario Mario Cucumber
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
-    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
-    When viene chiusa la transazione per il recupero degli aar su radd alternative
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
-    And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
+    And Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    When lato destinatario la notifica può essere correttamente recuperata da "Mario Cucumber" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
+    Then lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-9] PF - Restituzione errore - Documenti già stampati
@@ -122,8 +122,8 @@ Feature: Radd Alternative
 
   Scenario: [RADD-ALT_ACT-10] PF - Notifica annullata - Restituzione errore al tentativo di recupero documenti di notifica
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION" e successivamente annullata
@@ -224,18 +224,18 @@ Feature: Radd Alternative
     And destinatario CucumberSpa
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
-    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
-    When viene chiusa la transazione per il recupero degli aar su radd alternative
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
-    And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
+    And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    When lato destinatario la notifica può essere correttamente recuperata da "CucumberSpa" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
+    Then lato desinatario "CucumberSpa" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-20] PG - Restituzione errore - Documenti già stampati
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
     And destinatario CucumberSpa
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
@@ -253,8 +253,8 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_ACT-21] PG - Notifica annullata - Restituzione errore al tentativo di recupero documenti di notifica
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
     And destinatario CucumberSpa
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
@@ -299,6 +299,57 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+
+  Scenario: [RADD-ALT_ACT-30] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale)
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-31] PG - Visualizzazione link AAR disponibili associati a notifica esistente in stato irreperibile con CF corretto
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-32] PG - Stampa documenti disponibili associati a notifica esistente con CF corretto, mai visualizzata
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-33] PG - Consegna documenti al cittadino successivi alla stampa
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-34] PG - Restituzione errore - nessuna Notifica disponibile associata al CF corretto
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-35] PG - Restituzione errore - nessuna Notifica disponibile in stato Irreperibile associata al CF corretto
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-36] PG - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, ma inibizione stampa documenti associati alla notifica
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-37] PA - Visualizzazione in timeline nuovo evento di avvenuta consegna documenti tramite RADD (NOTIFICATION_RADD_RETRIEVED)
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Gherkin
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
+    When viene chiusa la transazione per il recupero degli aar su radd alternative
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
+    And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
+    Then lato destinatario la notifica può essere correttamente recuperata da "Mario Gherkin" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
+    And lato desinatario "Mario Gherkin" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-38] PA - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-39] PF - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-40] PG - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-41] PF/PG - Check conformità AAR
+
 
 
   @raddAlt
