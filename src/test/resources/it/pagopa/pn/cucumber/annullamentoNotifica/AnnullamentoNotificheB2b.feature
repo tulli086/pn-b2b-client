@@ -2,56 +2,6 @@ Feature: annullamento notifiche b2b
 
 
   #ANNULLAMENTO LATO PA----------------------------------->>
-
-  @Annullamento
-  Scenario: [B2B-PA-ANNULLAMENTO_1_1] PA mittente: Annullamento notifica in stato “REFUSED” - PN-9065
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                           |
-    And destinatario Mario Gherkin e:
-      #Sezione PagoPA-----------------------------
-      | payment_pagoPaForm   | NULL                        |
-      | apply_cost_pagopa    | NULL                        |
-      #F24 completo a sezioni modalità Delivery - costi inclusi--
-      | payment_f24          | PAYMENT_F24_SIMPLIFIED_ERR1 |
-      #-------------------------------------------
-      | title_payment        | F24_STANDARD_SEMPLIFICATO   |
-      | apply_cost_f24       | SI                          |
-      | payment_multy_number | 1                           |
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-    When la notifica non può essere annullata dal sistema tramite codice IUN
-    And si tenta il recupero della notifica dal sistema
-    Then l'operazione ha prodotto un errore con status code "404"
-
-
-
-
-  @Annullamento
-  Scenario: [B2B-PA-ANNULLAMENTO_1_1] PA mittente: Annullamento notifica in stato “REFUSED” - PN-9065
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                           |
-    And destinatario Mario Gherkin e:
-      #Sezione PagoPA-----------------------------
-      | payment_pagoPaForm   | NULL                        |
-      | apply_cost_pagopa    | NULL                        |
-      #F24 completo a sezioni modalità Delivery - costi inclusi--
-      | payment_f24          | PAYMENT_F24_SIMPLIFIED_ERR1 |
-      #-------------------------------------------
-      | title_payment        | F24_STANDARD_SEMPLIFICATO   |
-      | apply_cost_f24       | SI                          |
-      | payment_multy_number | 1                           |
-    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-    When la notifica non può essere annullata dal sistema tramite codice IUN
-    Then l'operazione di annullamento ha prodotto un errore con status code "404"
-
-
-
-
   @Annullamento
   Scenario: [B2B-PA-ANNULLAMENTO_1] PA mittente: Annullamento notifica in stato “depositata”
     Given viene generata una nuova notifica
@@ -1121,4 +1071,50 @@ Feature: annullamento notifiche b2b
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     And il documento notificato può essere recuperata tramite AppIO da "Mario Gherkin"
     Then il tentativo di recupero con appIO ha prodotto un errore con status code "404"
+
+
+  @Annullamento
+  Scenario: [B2B-PA-ANNULLAMENTO_41] PA mittente: Annullamento notifica in stato “REFUSED” - PN-9065
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Mario Gherkin e:
+      #Sezione PagoPA-----------------------------
+      | payment_pagoPaForm   | NULL                        |
+      | apply_cost_pagopa    | NULL                        |
+      #F24 completo a sezioni modalità Delivery - costi inclusi--
+      | payment_f24          | PAYMENT_F24_SIMPLIFIED_ERR1 |
+      #-------------------------------------------
+      | title_payment        | F24_STANDARD_SEMPLIFICATO   |
+      | apply_cost_f24       | SI                          |
+      | payment_multy_number | 1                           |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" si annulla prima che lo stato diventi REFUSED
+    And si tenta il recupero della notifica dal sistema
+    Then l'operazione ha prodotto un errore con status code "404"
+
+
+
+
+  @Annullamento
+  Scenario: [B2B-PA-ANNULLAMENTO_42] PA mittente: Annullamento notifica in stato “REFUSED” - PN-9065
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Mario Gherkin e:
+      #Sezione PagoPA-----------------------------
+      | payment_pagoPaForm   | NULL                        |
+      | apply_cost_pagopa    | NULL                        |
+      #F24 completo a sezioni modalità Delivery - costi inclusi--
+      | payment_f24          | PAYMENT_F24_SIMPLIFIED_ERR1 |
+      #-------------------------------------------
+      | title_payment        | F24_STANDARD_SEMPLIFICATO   |
+      | apply_cost_f24       | SI                          |
+      | payment_multy_number | 1                           |
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
+    When la notifica non può essere annullata dal sistema tramite codice IUN
+    Then l'operazione di annullamento ha prodotto un errore con status code "404"
 

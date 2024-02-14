@@ -964,6 +964,13 @@ public class SharedSteps {
                 (this.notificationError.getStatusCode().toString().substring(0, 3).equals(statusCode)));
     }
 
+    @When("la notifica viene inviata tramite api b2b dal {string} si annulla prima che lo stato diventi REFUSED")
+    public void laNotificaVieneInviataRefusedAndCancelled(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationAndCancelPreRefused();
+    }
+
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED e successivamente annullata")
     public void laNotificaVieneInviataOkAndCancelled(String paType) {
         selectPA(paType);
@@ -1172,11 +1179,54 @@ public class SharedSteps {
         }
     }
 
+
     private void sendNotificationRapid(int wait){
         try {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
+
+                try {
+                    Thread.sleep(wait);
+                } catch (InterruptedException e) {
+                    logger.error("Thread.sleep error retry");
+                    throw new RuntimeException(e);
+                }
+
+                notificationResponseComplete = b2bUtils.waitForRequestAcceptationShort(newNotificationResponse);
+            });
+
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {
+                logger.error("Thread.sleep error retry");
+                throw new RuntimeException(e);
+            }
+            Assertions.assertNotNull(notificationResponseComplete);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+    private void sendNotificationRapidCancellPreRefused(int wait){
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                notificationCreationDate = OffsetDateTime.now();
+                newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
+
+                Assertions.assertDoesNotThrow(() -> {
+                    RequestStatus resp =  Assertions.assertDoesNotThrow(() ->
+                            b2bClient.notificationCancellation(new String(Base64Utils.decodeFromString(newNotificationResponse.getNotificationRequestId()))));
+
+                    Assertions.assertNotNull(resp);
+                    Assertions.assertNotNull(resp.getDetails());
+                    Assertions.assertTrue(resp.getDetails().size()>0);
+                    Assertions.assertTrue("NOTIFICATION_CANCELLATION_ACCEPTED".equalsIgnoreCase(resp.getDetails().get(0).getCode()));
+
+                });
 
                 try {
                     Thread.sleep(wait);
@@ -1282,6 +1332,11 @@ public class SharedSteps {
         }
     }
 
+
+    private void sendNotificationAndCancelPreRefused() {
+        sendNotificationRapidCancellPreRefused(1000);
+
+    }
 
     private void sendNotificationAndCancel() {
         sendNotificationRapid(1000);
