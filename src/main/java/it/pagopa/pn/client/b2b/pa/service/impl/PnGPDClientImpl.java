@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 
 @Component
-public class PnGPDClient implements IPnGPDClient {
+public class PnGPDClientImpl implements IPnGPDClient {
 
     private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
@@ -44,7 +44,7 @@ public class PnGPDClient implements IPnGPDClient {
    // private final String paId;
     private final String operatorId;
 
-    public PnGPDClient(
+    public PnGPDClientImpl(
             ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.internal.gpd-base-url}") String deliveryBasePath ,

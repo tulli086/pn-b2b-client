@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Component
-public class PnPaymentInfoClient implements IPnPaymentInfoClient {
+public class PnPaymentInfoClientImpl implements IPnPaymentInfoClient {
 
     private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
@@ -31,7 +31,7 @@ public class PnPaymentInfoClient implements IPnPaymentInfoClient {
    // private final String paId;
     private final String operatorId;
 
-    public PnPaymentInfoClient(
+    public PnPaymentInfoClientImpl(
             ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.webapi.external.base-url}") String deliveryBasePath ,

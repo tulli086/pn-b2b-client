@@ -16,8 +16,8 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 })
 @ExcludeTags({"ignore","mockNR"})
 @IncludeTags({"workflowDigitale", "workflowAnalogico", "pagamentiMultipli",
-        "costoAnalogico","Async", "f24", "version","AOO_UO", "Annullamento",
+        "Async", "f24", "version","AOO_UO", "Annullamento",
         "validation", "RetentionAllegati", "apiKeyManager", "downtimeLogs",
-        "legalFact", "letturaDestinatario","radd"})
+        "legalFact", "letturaDestinatario","radd","20Grammi"})
 public class NrtTest_uat {
 }
