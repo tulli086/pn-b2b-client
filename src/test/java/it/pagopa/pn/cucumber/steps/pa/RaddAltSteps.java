@@ -161,7 +161,7 @@ public class RaddAltSteps {
         }
     }
 
-    @And("la scansione si conclude correttamente su radd alternative")
+    @And("la (scansione)(lettura) si conclude correttamente su radd alternative")
     public void laScansioneSiConcludeCorrettamenteAlternative() {
         log.debug("actInquiryResponse {}", actInquiryResponse.toString());
         Assertions.assertEquals(true, actInquiryResponse.getResult());

@@ -595,7 +595,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "inesistente" per recuperare gli atti della "PF" "Mario Cucumber"
-    And la scansione si conclude correttamente su radd alternative
+    Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
 
 
   @raddAlt
@@ -607,6 +607,8 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Cucumber"
+    Then la lettura si conclude correttamente su radd alternative
+
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-49] PF - Recupero notifica con codice IUN errato associato a CF corretto
@@ -617,6 +619,8 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "erratto" per recuperare gli atti della "PF" "Mario Cucumber"
+    Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
+
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-50] PF -  Recupero notifica con codice IUN esistente associato a CF sbagliato
@@ -627,6 +631,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Gherkin"
+    Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 1 su radd alternative
 
 
   @raddAlt
@@ -638,7 +643,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "inesistente" per recuperare gli atti della "PG" "CucumberSpa"
-    And la scansione si conclude correttamente su radd alternative
+    Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
 
 
   @raddAlt
@@ -650,6 +655,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PG" "CucumberSpa"
+    Then la lettura si conclude correttamente su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-53] PG - Recupero notifica con codice IUN errato associato a CF corretto
@@ -660,6 +666,8 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "erratto" per recuperare gli atti della "PG" "CucumberSpa"
+    Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
+
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-54] PG -  Recupero notifica con codice IUN esistente associato a CF sbagliato
@@ -670,6 +678,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PG" "Gherkin Irreperibile"
+    Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 1 su radd alternative
 
 
   @raddAlt
@@ -751,3 +760,174 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Gherkin"
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-64] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | payment_pagoPaForm      | SI                                           |
+      | payment_f24             | PAYMENT_F24_STANDARD                         |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
+      | apply_cost_pagopa       | SI                                           |
+      | apply_cost_f24          | SI                                           |
+      | payment_multy_number    | 1                                            |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-65] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato F24
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | payment_pagoPaForm      | NULL                                         |
+      | payment_f24             | PAYMENT_F24_STANDARD                         |
+      | title_payment           | F24_STANDARD_FRMTTR76M06B715E                |
+      | apply_cost_pagopa       | NO                                           |
+      | apply_cost_f24          | SI                                           |
+      | payment_multy_number    | 1                                            |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-66] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato un Avviso PagoPA
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | payment_pagoPaForm      | SI                                           |
+      | payment_f24             | NULL                                         |
+      | apply_cost_pagopa       | SI                                           |
+      | apply_cost_f24          | NO                                           |
+      | payment_multy_number    | 1                                            |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-67] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegati due o più Avvisi PagoPA e due o più F24
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | payment_pagoPaForm      | SI                                           |
+      | payment_f24             | PAYMENT_F24_STANDARD                         |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
+      | apply_cost_pagopa       | SI                                           |
+      | apply_cost_f24          | SI                                           |
+      | payment_multy_number    | 2                                            |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-68] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | payment_pagoPaForm      | SI                                           |
+      | payment_f24             | PAYMENT_F24_STANDARD                         |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
+      | apply_cost_pagopa       | SI                                           |
+      | apply_cost_f24          | SI                                           |
+      | payment_multy_number    | 1                                            |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-69] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato F24
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | payment_pagoPaForm      | NULL                                         |
+      | payment_f24             | PAYMENT_F24_STANDARD                         |
+      | title_payment           | F24_STANDARD_FRMTTR76M06B715E                |
+      | apply_cost_pagopa       | NO                                           |
+      | apply_cost_f24          | SI                                           |
+      | payment_multy_number    | 1                                            |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-70] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato un Avviso PagoPA
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | payment_pagoPaForm      | SI                                           |
+      | payment_f24             | NULL                                         |
+      | apply_cost_pagopa       | SI                                           |
+      | apply_cost_f24          | NO                                           |
+      | payment_multy_number    | 1                                            |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-71] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegati due o più Avvisi PagoPA e due o più F24
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | payment_pagoPaForm      | SI                                           |
+      | payment_f24             | PAYMENT_F24_STANDARD                         |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
+      | apply_cost_pagopa       | SI                                           |
+      | apply_cost_f24          | SI                                           |
+      | payment_multy_number    | 2                                            |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
