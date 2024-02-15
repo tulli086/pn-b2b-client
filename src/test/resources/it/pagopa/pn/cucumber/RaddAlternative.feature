@@ -294,12 +294,12 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-23] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale)
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Signor casuale e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
@@ -308,12 +308,12 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-24] PF - Visualizzazione link AAR disponibili associati a notifica esistente in stato irreperibile con CF corretto
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Signor casuale e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
@@ -326,12 +326,12 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-25] PF - Stampa documenti disponibili associati a notifica esistente con CF corretto, mai visualizzata
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Signor casuale e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
@@ -344,12 +344,12 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-26] PF - Consegna documenti al cittadino successivi alla stampa
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Signor casuale e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
@@ -377,11 +377,11 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-29] PF - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, ma inibizione stampa documenti associati alla notifica
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Signor casuale e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
@@ -398,12 +398,12 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-30] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale)
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Gherkin Irreperibile e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
@@ -412,12 +412,12 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-31] PG - Visualizzazione link AAR disponibili associati a notifica esistente in stato irreperibile con CF corretto
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Gherkin Irreperibile e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
@@ -430,12 +430,12 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-32] PG - Stampa documenti disponibili associati a notifica esistente con CF corretto, mai visualizzata
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Gherkin Irreperibile e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
@@ -448,12 +448,12 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-33] PG - Consegna documenti al cittadino successivi alla stampa
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Gherkin Irreperibile e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
@@ -479,11 +479,11 @@ Feature: Radd Alternative
   @raddAlt
   Scenario: [RADD-ALT_AOR-36] PG - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, ma inibizione stampa documenti associati alla notifica
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Gherkin Irreperibile e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR|
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
@@ -557,67 +557,15 @@ Feature: Radd Alternative
 
 
 
-
-   #Bozza...
+#Copre scenari tutti i scenari di test 43-44-45-46
   @raddAlt
-  Scenario Outline: [RADD-ALT_ACT-42] Scansione QR code o IUN e verifica auditlog AUD_RADD_ACTINQUIRY
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    And Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
-    And L'operatore scansione il qrCode per recuperare gli atti della "PF"
-    When la scansione si conclude correttamente su radd alternative
+  Scenario Outline: [RADD-ALT_AUDIT_LOG-42] Scansione QR code o IUN e verifica auditlog AUD_RADD_ACTINQUIRY
     Then viene verificato che esiste un audit log "<audit-log>" in "10y"
     Examples:
       | audit-log           |
       | AUD_RADD_ACTINQUIRY |
-
-  @raddAlt
-  Scenario Outline: [RADD-ALT_AOR-43] Ricerca Notifiche collegate al CF fornito dal cittadino e verifica auditlog AUD_RADD_AORINQUIRY
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When la "PF" "Mario Cucumber" chiede di verificare la presenza di notifiche
-    Then viene verificato che esiste un audit log "<audit-log>" in "10y"
-    Examples:
-      | audit-log           |
       | AUD_RADD_AORINQUIRY |
+      | AUD_RADD_ACTTRAN    |
+      | AUD_RADD_AORTRAN    |
+      | AUD_NT_RADD_OPEN    |
 
-  @raddAlt
-  Scenario Outline: [RADD-ALT_ACT-44] Disponibilità dei documenti (Allegati Notifica, Allegati di pagamento, AOT) collegati alla notifica ricercata e verifica auditlog AUD_RADD_ACTTRAN
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
-    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
-    And la scansione si conclude correttamente su radd alternative
-    And vengono caricati i documento di identità del cittadino su radd alternative
-    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
-    And l'operazione di download degli atti si conclude correttamente su radd alternative
-    Then viene verificato che esiste un audit log "<audit-log>" in "10y"
-    Examples:
-      | audit-log        |
-      | AUD_RADD_ACTTRAN |
-
-  @raddAlt
-  Scenario Outline: [RADD-ALT_AOR-45] Disponibilità degli AAR collegati al CF fornito e verifica auditlog AUD_RADD_AORTRAN
-    Then viene verificato che esiste un audit log "<audit-log>" in "10y"
-    Examples:
-      | audit-log        |
-      | AUD_RADD_AORTRAN |
-
-  @raddAlt
-  Scenario Outline: [RADD-ALT_ACT-46] Esecuzione operazione di conferma del completamento di recupero degli atti e verifica auditlog AUD_NT_RADD_OPEN
-    Then viene verificato che esiste un audit log "<audit-log>" in "10y"
-    Examples:
-      | audit-log        |
-      | AUD_NT_RADD_OPEN |
