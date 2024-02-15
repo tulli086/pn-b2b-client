@@ -3,9 +3,9 @@ package it.pagopa.pn.client.b2b.pa.service.impl;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.api.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2braddalt.ApiClient;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2braddalt.api.*;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2braddalt.model.*;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.ApiClient;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.api.*;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -36,12 +36,12 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         this.restTemplate = restTemplate;
         this.basePath = basePath;
 
-        this.actDocumentInquiryApi = new ActDocumentInquiryApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
-        this.actTransactionManagementApi = new ActTransactionManagementApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
-        this.aorDocumentInquiryApi = new AorDocumentInquiryApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
-        this.aorTransactionManagementApi = new AorTransactionManagementApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
-        this.documentUploadApi = new DocumentUploadApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
-        this.documentDownloadApi = new DocumentDownloadApi(newApiClientExternal(restTemplate,apiKeyMvp1,basePath));
+        this.actDocumentInquiryApi = new ActDocumentInquiryApi(newApiClientExternal(restTemplate,basePath));
+        this.actTransactionManagementApi = new ActTransactionManagementApi(newApiClientExternal(restTemplate,basePath));
+        this.aorDocumentInquiryApi = new AorDocumentInquiryApi(newApiClientExternal(restTemplate,basePath));
+        this.aorTransactionManagementApi = new AorTransactionManagementApi(newApiClientExternal(restTemplate,basePath));
+        this.documentUploadApi = new DocumentUploadApi(newApiClientExternal(restTemplate,basePath));
+        this.documentDownloadApi = new DocumentDownloadApi(newApiClientExternal(restTemplate,basePath));
         this.notificationInquiryApi = new NotificationInquiryApi(newApiClient(restTemplate,basePath));
 
     }
@@ -52,10 +52,9 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         return newApiClient;
     }
 
-    private static it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClientExternal(RestTemplate restTemplate,String apikey, String basePath ) {
+    private static it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClientExternal(RestTemplate restTemplate, String basePath ) {
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClient = new it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
-        newApiClient.addDefaultHeader("x-api-key", apikey );
         return newApiClient;
     }
 

@@ -1,6 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.service;
 
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2braddalt.model.*;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.model.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
 import org.springframework.web.client.RestClientException;
 
