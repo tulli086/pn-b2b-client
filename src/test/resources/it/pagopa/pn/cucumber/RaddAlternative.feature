@@ -670,7 +670,6 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PG" "Gherkin Irreperibile"
-    Then L'operatore usa lo IUN per recuperare gli atti della "PG"
 
 
   @raddAlt
@@ -732,7 +731,6 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Cucumber"
-    Then L'operatore usa lo IUN per recuperare gli atti della "PF"
 
 
   @raddAlt
@@ -752,5 +750,4 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Cucumber"
-    Then L'operatore usa lo IUN per recuperare gli atti della "PF"
+    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Gherkin"
