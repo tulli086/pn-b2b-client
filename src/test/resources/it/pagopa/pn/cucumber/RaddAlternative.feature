@@ -1063,3 +1063,74 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-72] PF/PG - Notifica multi destinatario disponibile associata al CF corretto fornito dal destinatario (irreperibile totale) con allegati Avvisi PagoPA e F24
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                          |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | payment_pagoPaForm      | SI                                            |
+      | payment_f24             | PAYMENT_F24_STANDARD                          |
+      | title_payment           | F24_STANDARD_CASUALE                          |
+      | apply_cost_pagopa       | SI                                            |
+      | apply_cost_f24          | SI                                            |
+      | payment_multy_number    | 1                                             |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile         | NULL                                          |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | payment_pagoPaForm      | SI                                            |
+      | payment_f24             | PAYMENT_F24_STANDARD                          |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
+      | apply_cost_pagopa       | SI                                            |
+      | apply_cost_f24          | SI                                            |
+      | payment_multy_number    | 1                                             |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE" per l'utente 0
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE" per l'utente 1
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    When la "PF" "Signor Casuale" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-73] PF -  Start di una ACT transaction con stesso operationId - ricezione Errore
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR utilizzando il precedente operationId su radd alternative
+    Then l'operazione di download degli atti genera un errore "transazione già esistente o con stato completed o aborted" con codice 99
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-74] PF -  Start di una AOR transaction con stesso operationId - ricezione Errore
+    Given viene generata una nuova notifica
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" con lo stesso operationId su radd alternative
+    Then il recupero degli aar genera un errore "transazione già esistente o con stato completed o aborted" con codice 99 su radd alternative

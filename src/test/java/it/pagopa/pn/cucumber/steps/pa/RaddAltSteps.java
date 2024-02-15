@@ -311,6 +311,26 @@ public class RaddAltSteps {
         this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization, aorStartTransactionRequest);
     }
 
+
+
+    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della {string} con lo stesso operationId su radd alternative")
+    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileStessoOperationId(String recipientType) {
+        this.operationid = generateRandomNumber();
+        AorStartTransactionRequest aorStartTransactionRequest =
+                new AorStartTransactionRequest()
+                        .versionToken("string")
+                        .fileKey(this.documentUploadResponse.getValue1())
+                        .operationId(this.operationid)
+                        .recipientTaxId(this.currentUserCf)
+                        .recipientType(recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
+                                AorStartTransactionRequest.RecipientTypeEnum.PG)
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                        //.delegateTaxId("")
+                        .checksum(this.documentUploadResponse.getValue2());
+        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization, aorStartTransactionRequest);
+    }
+
+
     @And("il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative")
     public void ilRecuperoDegliAttiInStatoIrreperibileSiConcludeCorrettamente() {
         log.info("aorStartTransactionResponse: {}", this.aorStartTransactionResponse);
