@@ -894,7 +894,7 @@ Feature: Radd Alternative
     And la lettura si conclude correttamente su radd alternative
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-64] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
+  Scenario: [RADD-ALT_AOR-64] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -902,7 +902,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
       | payment_pagoPaForm      | SI                                           |
       | payment_f24             | PAYMENT_F24_STANDARD                         |
       | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
@@ -916,7 +916,7 @@ Feature: Radd Alternative
 
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-65] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato F24
+  Scenario: [RADD-ALT_AOR-65] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -924,7 +924,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
       | payment_pagoPaForm      | NULL                                         |
       | payment_f24             | PAYMENT_F24_STANDARD                         |
       | title_payment           | F24_STANDARD_FRMTTR76M06B715E                |
@@ -937,7 +937,7 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-66] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato un Avviso PagoPA
+  Scenario: [RADD-ALT_AOR-66] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato un Avviso PagoPA
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -945,7 +945,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
       | payment_pagoPaForm      | SI                                           |
       | payment_f24             | NULL                                         |
       | apply_cost_pagopa       | SI                                           |
@@ -958,7 +958,7 @@ Feature: Radd Alternative
 
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-67] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegati due o più Avvisi PagoPA e due o più F24
+  Scenario: [RADD-ALT_AOR-67] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegati due o più Avvisi PagoPA e due o più F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -966,7 +966,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
       | payment_pagoPaForm      | SI                                           |
       | payment_f24             | PAYMENT_F24_STANDARD                         |
       | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
@@ -980,7 +980,7 @@ Feature: Radd Alternative
 
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-68] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
+  Scenario: [RADD-ALT_AOR-68] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -988,7 +988,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
       | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
       | payment_pagoPaForm      | SI                                           |
       | payment_f24             | PAYMENT_F24_STANDARD                         |
       | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
@@ -1002,7 +1002,7 @@ Feature: Radd Alternative
 
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-69] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato F24
+  Scenario: [RADD-ALT_AOR-69] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -1010,7 +1010,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
       | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
       | payment_pagoPaForm      | NULL                                         |
       | payment_f24             | PAYMENT_F24_STANDARD                         |
       | title_payment           | F24_STANDARD_FRMTTR76M06B715E                |
@@ -1023,7 +1023,7 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-70] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato un Avviso PagoPA
+  Scenario: [RADD-ALT_AOR-70] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato un Avviso PagoPA
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -1031,7 +1031,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
       | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
       | payment_pagoPaForm      | SI                                           |
       | payment_f24             | NULL                                         |
       | apply_cost_pagopa       | SI                                           |
@@ -1044,21 +1044,21 @@ Feature: Radd Alternative
 
 
   @raddAlt
-  Scenario: [RADD-ALT_ACT-71] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegati due o più Avvisi PagoPA e due o più F24
+  Scenario: [RADD-ALT_AOR-71] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegati due o più Avvisi PagoPA e due o più F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
-      | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
-      | payment_pagoPaForm      | SI                                           |
-      | payment_f24             | PAYMENT_F24_STANDARD                         |
-      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
-      | apply_cost_pagopa       | SI                                           |
-      | apply_cost_f24          | SI                                           |
-      | payment_multy_number    | 2                                            |
+      | digitalDomicile         | NULL                                          |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | payment_pagoPaForm      | SI                                            |
+      | payment_f24             | PAYMENT_F24_STANDARD                          |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
+      | apply_cost_pagopa       | SI                                            |
+      | apply_cost_f24          | SI                                            |
+      | payment_multy_number    | 2                                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
