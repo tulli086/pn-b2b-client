@@ -82,9 +82,9 @@ public class RaddAltSteps {
     }
 
 
-    @When("L'operatore scansione il qrCode per recuperare gli atti della {string}")
-    public void lOperatoreScansioneIlQrCodePerRecuperariGliAttiAlternative(String recipientType) {
-
+    @When("L'operatore scansione il qrCode per recuperare gli atti della {string} {string}")
+    public void lOperatoreScansioneIlQrCodePerRecuperariGliAttiAlternative(String recipientType,String cf) {
+        selectUserRaddAlternative(cf);
         ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
                 idOrganization,
                 uid,
@@ -471,7 +471,9 @@ public class RaddAltSteps {
             case "CUCUMBERSPA" -> this.currentUserCf = sharedSteps.getCucumberSpataxId();
             case "SIGNOR CASUALE" ->
                     this.currentUserCf = sharedSteps.getSentNotification().getRecipients().get(0).getTaxId();
-            case "GHERKIN IRREPERIBILE" -> this.currentUserCf = sharedSteps.getCucumberSpataxId();
+            case "SIGNOR GENERATO" -> this.currentUserCf = generateCF(System.nanoTime());
+            case "GHERKIN IRREPERIBILE" -> this.currentUserCf = sharedSteps.getGherkinIrreperibileTaxId();
+            case "DINO" -> this.currentUserCf = "DSRDNI00A01A225I";
             default -> this.currentUserCf = cf;
         }
     }

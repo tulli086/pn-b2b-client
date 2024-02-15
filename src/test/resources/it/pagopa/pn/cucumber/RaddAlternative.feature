@@ -10,7 +10,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
-    When L'operatore scansione il qrCode per recuperare gli atti della "PF"
+    When L'operatore scansione il qrCode per recuperare gli atti della "PF" "Mario Cucumber"
     And la scansione si conclude correttamente su radd alternative
 
 
@@ -155,7 +155,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
-    When L'operatore scansione il qrCode per recuperare gli atti della "PG"
+    When L'operatore scansione il qrCode per recuperare gli atti della "PG" "CucumberSpa"
     And la scansione si conclude correttamente su radd alternative
 
   @raddAlt
@@ -364,13 +364,22 @@ Feature: Radd Alternative
   #Da capire se fattibile siccome l'aor restituisce solo notifiche irreperibili e act li serve perforza un QRcode
   @raddAlt
   Scenario: [RADD-ALT_AOR-27] PF - Restituzione errore - nessuna Notifica disponibile associata al CF
-    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
-    Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99
+    When la "PF" "Signor Generato" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99 su radd alternative
 
 
   @raddAlt
   Scenario: [RADD-ALT_AOR-28] PF - Restituzione errore - nessuna Notifica disponibile in stato Irreperibile associata al CF corretto
-    When la "PF" "Signor Generato" chiede di verificare la presenza di notifiche
+    Given viene generata una nuova notifica
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
+    And destinatario
+      | denomination    | Dino Sauro       |
+      | taxId           | DSRDNI00A01A225I |
+      | digitalDomicile | NULL             |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    When la "PF" "DINO" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99 su radd alternative
 
 
@@ -473,7 +482,13 @@ Feature: Radd Alternative
 
   @raddAlt
   Scenario: [RADD-ALT_AOR-35] PG - Restituzione errore - nessuna Notifica disponibile in stato Irreperibile associata al CF corretto
-    Given la "PG" "Signor Generato SRL" chiede di verificare la presenza di notifiche
+    Given viene generata una nuova notifica
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
+    And destinatario CucumberSpa
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Given la "PG" "cucumberspa" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99
 
   @raddAlt
@@ -569,3 +584,28 @@ Feature: Radd Alternative
       | AUD_RADD_AORTRAN    |
       | AUD_NT_RADD_OPEN    |
 
+
+
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-47] PF - Restituzione errore - Recupero notifica solo con CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore scansione il qrCode per recuperare gli atti della "PF" "Mario Cucumber"
+    And la scansione si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-48] PF - Recupero notifica con codice IUN esistente associato al CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore usa lo IUN per recuperare gli atti della "PF"
