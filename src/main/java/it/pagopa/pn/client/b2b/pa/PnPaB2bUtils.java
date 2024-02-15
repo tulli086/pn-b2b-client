@@ -702,10 +702,10 @@ public class PnPaB2bUtils {
         NewNotificationRequestStatusResponseV23 status = null;
         long startTime = System.currentTimeMillis();
         boolean rifiutata = false;
-        for( int i = 0; i < 10; i++ ) {
+        for( int i = 0; i < 8; i++ ) {
 
             try {
-                Thread.sleep( getAcceptedWait());
+                Thread.sleep( getWorkFlowWait());
             } catch (InterruptedException exc) {
                 throw new RuntimeException( exc );
             }
