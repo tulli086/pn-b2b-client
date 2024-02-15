@@ -670,7 +670,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PG" "Gherkin Irreperibile"
-    When L'operatore usa lo IUN per recuperare gli atti della "PF"
+    Then L'operatore usa lo IUN per recuperare gli atti della "PG"
 
 
   @raddAlt
@@ -686,7 +686,7 @@ Feature: Radd Alternative
       | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa    | SI                            |
       | apply_cost_f24       | SI                            |
-      | payment_multy_number | 2                             |
+      | payment_multy_number | 1                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
@@ -718,7 +718,39 @@ Feature: Radd Alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-57] PF -  Recupero notifica con allegato di pagamento (solo Avviso PagoPA)  con codice IUN esistente associato a CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Mario Cucumber e:
+      | payment_pagoPaForm   | SI   |
+      | payment_f24          | NULL |
+      | apply_cost_pagopa    | SI   |
+      | apply_cost_f24       | NO   |
+      | payment_multy_number | 1    |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Cucumber"
+    Then L'operatore usa lo IUN per recuperare gli atti della "PF"
+
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-58] PF - Recupero notifica con allegati di pagamento (due o più Avvisi PagoPA e due o più F24) con codice IUN esistente associato a CF corretto
-
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Mario Gherkin e:
+      | payment_pagoPaForm   | SI                            |
+      | payment_f24          | PAYMENT_F24_STANDARD          |
+      | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
+      | apply_cost_pagopa    | SI                            |
+      | apply_cost_f24       | SI                            |
+      | payment_multy_number | 1                             |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Cucumber"
+    Then L'operatore usa lo IUN per recuperare gli atti della "PF"
