@@ -28,6 +28,7 @@ public enum NotificationValue {
     TAXONOMY_CODE("taxonomyCode","010202N",false),
     AMOUNT("amount",null,false),
     PA_FEE("paFee","0",false),
+    VAT("vat","0",false),
     PAYMENT_EXPIRATION_DATE("paymentExpirationDate", null,false),
 
     /*RECIPIENT*/

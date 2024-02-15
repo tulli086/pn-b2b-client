@@ -364,6 +364,9 @@ public class AvanzamentoNotificheB2bSteps {
             case "NOTIFICATION_VIEWED":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_VIEWED, 2, waiting * 2);
                 break;
+            case "NOTIFICATION_VIEWED_CREATION_REQUEST":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_VIEWED_CREATION_REQUEST, 2, waiting * 2);
+                break;
             case "SEND_COURTESY_MESSAGE":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.SEND_COURTESY_MESSAGE, 10, sharedSteps.getWorkFlowWait());
                 break;
@@ -2260,12 +2263,12 @@ public class AvanzamentoNotificheB2bSteps {
 
             if (listNotificationPaymentItem != null){
                 for (NotificationPaymentItem notificationPaymentItem: listNotificationPaymentItem) {
-                    NotificationPriceResponse notificationPrice = this.b2bClient.getNotificationPrice(notificationPaymentItem.getPagoPa().getCreditorTaxId(), notificationPaymentItem.getPagoPa().getNoticeCode());
+                    NotificationPriceResponseV23 notificationPrice = this.b2bClient.getNotificationPriceV23(notificationPaymentItem.getPagoPa().getCreditorTaxId(), notificationPaymentItem.getPagoPa().getNoticeCode());
                     try {
                         Assertions.assertEquals(notificationPrice.getIun(), sharedSteps.getSentNotification().getIun());
                         if (price != null) {
-                            logger.info("Costo notifica: {} destinatario: {}", notificationPrice.getAmount(), destinatario);
-                            Assertions.assertEquals(Integer.parseInt(price),notificationPrice.getAmount());
+                            logger.info("Costo notifica: {} destinatario: {}", notificationPrice.getTotalPrice(), destinatario);
+                            Assertions.assertEquals(notificationPrice.getTotalPrice(), Integer.parseInt(price));
                         }
                         if (date != null) {
                             Assertions.assertNotNull(notificationPrice.getRefinementDate());
@@ -2340,7 +2343,7 @@ public class AvanzamentoNotificheB2bSteps {
         try {
             if (price != null) {
                 //TODO Modificare l'assertion
-                
+
                 //logger.info("Costo notifica: {} destinatario: {}", notificationProcessCost.getAmount(), destinatario);
                 //Assertions.assertEquals(notificationProcessCost.getAmount(), Integer.parseInt(price));
             }
@@ -3950,5 +3953,24 @@ public class AvanzamentoNotificheB2bSteps {
         }
     }
 
+    @And("viene verificato data corretta del destinatario {int}")
+    public void verificationDateNotificationPrice(Integer destinatario) {
 
+        List<NotificationPaymentItem> listNotificationPaymentItem = sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments();
+
+        if (listNotificationPaymentItem != null) {
+            for (NotificationPaymentItem notificationPaymentItem : listNotificationPaymentItem) {
+                NotificationPriceResponseV23 notificationPrice = this.b2bClient.getNotificationPriceV23(notificationPaymentItem.getPagoPa().getCreditorTaxId(), notificationPaymentItem.getPagoPa().getNoticeCode());
+                try {
+                    Assertions.assertEquals(notificationPrice.getIun(), sharedSteps.getSentNotification().getIun());
+                    Assertions.assertNotNull(notificationPrice.getNotificationViewDate());
+
+                } catch (AssertionFailedError assertionFailedError) {
+                    sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+                }
+            }
+
+        }
+
+}
 }
