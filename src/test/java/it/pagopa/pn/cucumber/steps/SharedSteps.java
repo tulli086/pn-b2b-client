@@ -56,8 +56,8 @@ public class SharedSteps {
     private final DataTableTypeUtil dataTableTypeUtil;
     private final IPnPaB2bClient b2bClient;
     private final IPnWebPaClient webClient;
-    private final PnGPDClient pnGPDClientImpl;
-    private final PnPaymentInfoClient pnPaymentInfoClient;
+    private final PnGPDClientImpl pnGPDClientImpl;
+    private final PnPaymentInfoClientImpl pnPaymentInfoClientImpl;
 
     //private  String iuvGPD;
 
@@ -219,7 +219,7 @@ public class SharedSteps {
                        PnExternalServiceClientImpl pnExternalServiceClient,
                        IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient,
                        PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey,
-                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey, PnGPDClient pnGPDClientImpl, PnPaymentInfoClient pnPaymentInfoClient) {
+                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey, PnGPDClientImpl pnGPDClientImpl, PnPaymentInfoClientImpl pnPaymentInfoClientImpl) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.webClient = webClient;
@@ -231,7 +231,7 @@ public class SharedSteps {
         this.serviceDeskClientImplNoApiKey=serviceDeskClientImplNoApiKey;
         this.serviceDeskClientImplWrongApiKey=serviceDeskClientImplWrongApiKey;
         this.pnGPDClientImpl=pnGPDClientImpl;
-        this.pnPaymentInfoClient=pnPaymentInfoClient;
+        this.pnPaymentInfoClientImpl = pnPaymentInfoClientImpl;
         this.iuvGPD=new ArrayList<String>();
     }
 
@@ -994,7 +994,7 @@ public class SharedSteps {
         setSenderTaxIdFromProperties();
         sendNotificationWithError();
         Assertions.assertNotNull(this.notificationError);
-        Assertions.assertEquals(this.notificationError.getStatusCode().value(),400);
+        Assertions.assertEquals(400, this.notificationError.getStatusCode().value());
     }
 
     @When("la notifica viene inviata tramite api b2b senza preload allegato dal {string} e si attende che lo stato diventi REFUSED")
@@ -1046,12 +1046,6 @@ public class SharedSteps {
         sendNotificationRefusedOverSizeAllegato();
     }
 
-    @When("la notifica viene inviata tramite api b2b con preload allegato da 25 pagine dal {string} e si attende che lo stato diventi ACCEPTED")
-    public void laNotificaVieneInviataPreloadAllegato50Pagine(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
-        sendNotificationSize50Allegato();
-    }
 
     @When("la notifica viene inviata tramite api b2b injection preload allegato dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataPreloadAllegatoInjection(String paType) {
@@ -1514,36 +1508,6 @@ public class SharedSteps {
         }
     }
 
-    private void sendNotificationSize50Allegato()  {
-        try {
-            Assertions.assertDoesNotThrow(() -> {
-                notificationCreationDate = OffsetDateTime.now();
-                newNotificationResponse = b2bUtils.uploadNotification50size(notificationRequest);
-
-                try {
-                    Thread.sleep(getWorkFlowWait());
-                } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
-                    throw new RuntimeException(e);
-                }
-
-                notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
-            });
-
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
-            Assertions.assertNotNull(notificationResponseComplete);
-
-        } catch (AssertionFailedError assertionFailedError) {
-            String message = assertionFailedError.getMessage() +
-                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
-        }
-    }
 
     private void sendNotificationRefusedInjectionAllegato() {
         try {
@@ -1627,6 +1591,7 @@ public class SharedSteps {
     public void setNotificationError(HttpStatusCodeException notificationError) {
         this.notificationError = notificationError;
     }
+
 
     public void setSenderTaxIdFromProperties() {
         switch (settedPa) {
@@ -1843,6 +1808,10 @@ public class SharedSteps {
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_5);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_5);
                 break;
+            case "mario cucumber con credenziali non valide":
+                webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_SCADUTO);
+                iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_SCADUTO);
+                break;
             default:
                 throw new IllegalArgumentException();
         }
@@ -1856,12 +1825,12 @@ public class SharedSteps {
     public IPnWebPaClient getWebPaClient() {
         return webClient;
     }
-    public PnGPDClient getPnGPDClientImpl() {
+    public PnGPDClientImpl getPnGPDClientImpl() {
         return pnGPDClientImpl;
     }
 
-    public PnPaymentInfoClient getPnPaymentInfoClientImpl() {
-        return pnPaymentInfoClient;
+    public PnPaymentInfoClientImpl getPnPaymentInfoClientImpl() {
+        return pnPaymentInfoClientImpl;
     }
 
     public PnPaB2bUtils getB2bUtils() {

@@ -35,9 +35,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnServiceDeskClientImpl.class,
         PnServiceDeskClientImplNoApiKey.class,
         PnServiceDeskClientImplWrongApiKey.class,
-        PnGPDClient.class,
-        PnPaymentInfoClient.class,
-        PnRaddFsuClient.class
+        PnGPDClientImpl.class,
+        PnPaymentInfoClientImpl.class,
+        PnRaddFsuClientImpl.class
 })
 @EnableScheduling
 public class CucumberSpringIntegration {

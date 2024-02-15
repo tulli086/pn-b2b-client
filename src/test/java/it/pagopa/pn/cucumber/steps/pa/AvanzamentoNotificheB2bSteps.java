@@ -2235,7 +2235,7 @@ public class AvanzamentoNotificheB2bSteps {
                         Assertions.assertEquals(notificationPrice.getIun(), sharedSteps.getSentNotification().getIun());
                         if (price != null) {
                             logger.info("Costo notifica: {} destinatario: {}", notificationPrice.getAmount(), destinatario);
-                            Assertions.assertEquals(notificationPrice.getAmount(), Integer.parseInt(price));
+                            Assertions.assertEquals(Integer.parseInt(price),notificationPrice.getAmount());
                         }
                         if (date != null) {
                             Assertions.assertNotNull(notificationPrice.getRefinementDate());
@@ -2319,6 +2319,22 @@ public class AvanzamentoNotificheB2bSteps {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
 
         }
+    }
+
+    @And("{string} tenta di leggere la notifica ricevuta")
+    public void userReadReceivedNotificationWithError(String recipient) {
+        sharedSteps.selectUser(recipient);
+
+        String iun =sharedSteps.getIunVersionamento();
+
+        try {
+                webRecipientClient.getReceivedNotification(iun, null);
+        } catch (HttpStatusCodeException e) {
+            if (e instanceof HttpStatusCodeException) {
+                sharedSteps.setNotificationError((HttpStatusCodeException) e);
+            }
+        }
+
     }
 
     @And("{string} legge la notifica ricevuta")

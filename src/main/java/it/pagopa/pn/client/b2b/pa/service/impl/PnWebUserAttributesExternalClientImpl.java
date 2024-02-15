@@ -48,6 +48,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
     private final String leonardoBearerToken;
     private final String galileoBearerToken;
     private final String dinoBearerToken;
+    private final String userBearerTokenScaduto;
 
     private final String gherkinSrlBearerToken;
     private final String cucumberSpaBearerToken;
@@ -64,6 +65,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
             @Value("${pn.bearer-token.user3}") String leonardoBearerToken,
             @Value("${pn.bearer-token.user4}") String galileoBearerToken,
             @Value("${pn.bearer-token.user5}") String dinoBearerToken,
+            @Value("${pn.bearer-token.scaduto}") String userBearerTokenScaduto,
             @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
             @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
             @Value("${pn.webapi.external.user-agent}") String userAgent
@@ -76,6 +78,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
         this.leonardoBearerToken = leonardoBearerToken;
         this.galileoBearerToken = galileoBearerToken;
         this.dinoBearerToken = dinoBearerToken;
+        this.userBearerTokenScaduto= userBearerTokenScaduto;
 
         this.gherkinSrlBearerToken = gherkinSrlBearerToken;
         this.cucumberSpaBearerToken = cucumberSpaBearerToken;
@@ -175,6 +178,14 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
                 this.courtesyApiAddressBook.setApiClient(newAddressBookApiClient(restTemplate, basePath, cucumberSpaBearerToken, userAgent));
 
                 this.bearerTokenSetted = BearerTokenType.PG_2;
+                beenSet = true;
+                break;
+            case USER_SCADUTO:
+                this.legalApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, userBearerTokenScaduto, userAgent));
+                this.allApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, userBearerTokenScaduto, userAgent));
+                this.courtesyApiAddressBook.setApiClient(newAddressBookApiClient(restTemplate, basePath, userBearerTokenScaduto, userAgent));
+
+                this.bearerTokenSetted = BearerTokenType.USER_SCADUTO;
                 beenSet = true;
                 break;
 

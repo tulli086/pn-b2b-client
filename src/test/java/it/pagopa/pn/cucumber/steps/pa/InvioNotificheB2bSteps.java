@@ -11,8 +11,8 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
-import it.pagopa.pn.client.b2b.pa.service.impl.PnGPDClient;
-import it.pagopa.pn.client.b2b.pa.service.impl.PnPaymentInfoClient;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnGPDClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnPaymentInfoClientImpl;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.*;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.*;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
@@ -55,9 +55,9 @@ public class InvioNotificheB2bSteps {
     private final IPnPaB2bClient b2bClient;
     private final PnExternalServiceClientImpl safeStorageClient;
     private final SharedSteps sharedSteps;
-    private final PnGPDClient pnGPDClientImpl;
+    private final PnGPDClientImpl pnGPDClientImpl;
 
-    private final PnPaymentInfoClient pnPaymentInfoClient;
+    private final PnPaymentInfoClientImpl pnPaymentInfoClientImpl;
     private List<PaymentPositionModel> paymentPositionModel;
 
     private PaymentResponse paymentResponse;
@@ -86,7 +86,7 @@ public class InvioNotificheB2bSteps {
         this.b2bClient = sharedSteps.getB2bClient();
         this.webPaClient = sharedSteps.getWebPaClient();
         this.pnGPDClientImpl = sharedSteps.getPnGPDClientImpl();
-        this.pnPaymentInfoClient=sharedSteps.getPnPaymentInfoClientImpl();
+        this.pnPaymentInfoClientImpl =sharedSteps.getPnPaymentInfoClientImpl();
         this.paymentPositionModel=new ArrayList<PaymentPositionModel>();
         this.amountNotifica=new ArrayList<Integer>();
     }
@@ -529,14 +529,12 @@ public class InvioNotificheB2bSteps {
             }else if("F24".equalsIgnoreCase(downloadType)) {
                 byte[] bytes = Assertions.assertDoesNotThrow(() ->
                         b2bUtils.downloadFile(this.downloadResponse.getUrl()));
-            }
+                this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
 
+            }
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
-
-
-
     }
 
 
@@ -570,8 +568,8 @@ public class InvioNotificheB2bSteps {
                 throw new IllegalArgumentException();
         }
 
+        try{
         this.downloadResponse = b2bClient
-
                 .getSentNotificationAttachment(sharedSteps.getSentNotification().getIun(), destinatario, downloadType,0);
         if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
             try {
@@ -590,6 +588,10 @@ public class InvioNotificheB2bSteps {
         }else if("F24".equalsIgnoreCase(downloadType)) {
             byte[] bytes = Assertions.assertDoesNotThrow(() ->
                     b2bUtils.downloadFile(this.downloadResponse.getUrl()));
+            this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
+        }
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
         }
     }
 
@@ -692,6 +694,7 @@ public class InvioNotificheB2bSteps {
             this.sharedSteps.setNotificationError(e);
         }
     }
+
 
     @Then("il download si conclude correttamente")
     public void correctlyDownload() {
@@ -960,7 +963,7 @@ public class InvioNotificheB2bSteps {
         for(int i=0; i< NUM_CHECK_PAYMENT_INFO ;i++) {
             try {
                 Assertions.assertDoesNotThrow(() -> {
-                    paymentInfoResponse = pnPaymentInfoClient.getPaymentInfoV21(paymentInfoRequestList);
+                    paymentInfoResponse = pnPaymentInfoClientImpl.getPaymentInfoV21(paymentInfoRequestList);
                     logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
                 });
                 Assertions.assertNotNull(paymentInfoResponse);
@@ -1001,7 +1004,7 @@ public class InvioNotificheB2bSteps {
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                paymentInfoResponse=pnPaymentInfoClient.getPaymentInfoV21(paymentInfoRequestList);
+                paymentInfoResponse= pnPaymentInfoClientImpl.getPaymentInfoV21(paymentInfoRequestList);
                 logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
             });
             Assertions.assertNotNull(paymentInfoResponse);
@@ -1215,7 +1218,7 @@ public class InvioNotificheB2bSteps {
                 .creditorTaxId(creditorTaxId)
                 .noticeCode(noticeCode);
 
-        paymentInfoResponse = Assertions.assertDoesNotThrow(() -> pnPaymentInfoClient.getPaymentInfoV21(Collections.singletonList(paymentInfoRequest)));
+        paymentInfoResponse = Assertions.assertDoesNotThrow(() -> pnPaymentInfoClientImpl.getPaymentInfoV21(Collections.singletonList(paymentInfoRequest)));
         Assertions.assertNotNull(paymentInfoResponse);
         System.out.println("Costo totale previsto: {}"+costoTotale);
         System.out.println("Costo attuale su gpd: {}"+paymentInfoResponse.get(0).getAmount());
@@ -1280,7 +1283,7 @@ public class InvioNotificheB2bSteps {
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                paymentResponse=pnPaymentInfoClient.checkoutCart(paymentRequest);
+                paymentResponse= pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
                 logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
             });
             Assertions.assertNotNull(paymentResponse);
@@ -1313,7 +1316,7 @@ public class InvioNotificheB2bSteps {
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                paymentInfoResponse=pnPaymentInfoClient.getPaymentInfoV21(paymentInfoRequestList);
+                paymentInfoResponse= pnPaymentInfoClientImpl.getPaymentInfoV21(paymentInfoRequestList);
                 logger.info("Informazioni sullo stato del Pagamento: " + paymentInfoResponse.toString());
             });
             Assertions.assertNotNull(paymentInfoResponse);
@@ -1343,7 +1346,7 @@ public class InvioNotificheB2bSteps {
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                paymentInfoResponse=pnPaymentInfoClient.getPaymentInfoV21(paymentInfoRequestList);
+                paymentInfoResponse= pnPaymentInfoClientImpl.getPaymentInfoV21(paymentInfoRequestList);
 
             });
             Assertions.assertNotNull(paymentInfoResponse);
@@ -1375,7 +1378,7 @@ public class InvioNotificheB2bSteps {
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                paymentResponse=pnPaymentInfoClient.checkoutCart(paymentRequest);
+                paymentResponse= pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
 
             });
             Assertions.assertNotNull(paymentResponse);
@@ -1407,7 +1410,7 @@ public class InvioNotificheB2bSteps {
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                paymentResponse=pnPaymentInfoClient.checkoutCart(paymentRequest);
+                paymentResponse= pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
             });
             Assertions.assertNotNull(paymentResponse);
             logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
@@ -1463,6 +1466,23 @@ public class InvioNotificheB2bSteps {
         }
     }
 
+
+    @And("la notifica a 1 avvisi di pagamento con OpenApi V1")
+    public void notificationCanBeRetrievePayment1V1() {
+        AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification> notificationByIun = new AtomicReference<>();
+        String iun =sharedSteps.getIunVersionamento();
+        try {
+            Assertions.assertDoesNotThrow(() ->
+                    notificationByIun.set(b2bUtils.getNotificationByIunV1(iun))
+            );
+            Assertions.assertNotNull(notificationByIun.get());
+            Assertions.assertNotNull(notificationByIun.get().getRecipients().get(0).getPayment().getNoticeCode());
+            //  Assertions.assertNotNull(notificationByIun.get().getRecipients().get(0).getPayment().getNoticeCodeAlternative());
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
     @And("Si effettua la chiamata su external-reg per ricevere l'url di checkout con noticeCode {string} e creditorTaxId {string}")
     public void siEffettuaLaChiamataSuExternalRegPerRicevereLUrlDiCheckoutConNoticeCodeECreditorTaxId(String noticeCode, String creditorTaxId) {
 
@@ -1470,7 +1490,7 @@ public class InvioNotificheB2bSteps {
                 .creditorTaxId(creditorTaxId)
                 .noticeCode(noticeCode);
 
-        List<PaymentInfoV21> getPaymentInfoV21 = Assertions.assertDoesNotThrow(() -> pnPaymentInfoClient.getPaymentInfoV21(Collections.singletonList(paymentInfoRequest)));
+        List<PaymentInfoV21> getPaymentInfoV21 = Assertions.assertDoesNotThrow(() -> pnPaymentInfoClientImpl.getPaymentInfoV21(Collections.singletonList(paymentInfoRequest)));
 
         PaymentRequest paymentRequest= new PaymentRequest();
         PaymentNotice paymentNotice= new PaymentNotice();
@@ -1488,7 +1508,7 @@ public class InvioNotificheB2bSteps {
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                paymentResponse = pnPaymentInfoClient.checkoutCart(paymentRequest);
+                paymentResponse = pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
                 logger.info("Risposta recupero posizione debitoria: " + paymentResponse.toString());
             });
             Assertions.assertNotNull(paymentResponse);
@@ -1502,4 +1522,5 @@ public class InvioNotificheB2bSteps {
         }
 
     }
+
 }

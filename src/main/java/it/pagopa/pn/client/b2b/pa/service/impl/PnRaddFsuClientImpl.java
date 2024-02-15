@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Component
-public class PnRaddFsuClient implements IPnRaddFsuClient {
+public class PnRaddFsuClientImpl implements IPnRaddFsuClient {
 
     private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
@@ -27,7 +27,7 @@ public class PnRaddFsuClient implements IPnRaddFsuClient {
     private final NotificationInquiryApi notificationInquiryApi;
 
 
-    public PnRaddFsuClient(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.base-url}") String basePath) {
+    public PnRaddFsuClientImpl(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.base-url}") String basePath) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.basePath = basePath;
