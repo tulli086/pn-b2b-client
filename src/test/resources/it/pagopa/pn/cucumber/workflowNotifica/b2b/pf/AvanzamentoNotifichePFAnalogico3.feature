@@ -579,7 +579,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
 
     
   @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_74] Attesa elemento di timeline REFINEMENT con physicalAddress OK-REC008_890
+  Scenario: [B2B_TIMELINE_ANALOG_74] Attesa elemento di timeline REFINEMENT con physicalAddress OK-REC008_890 - PN-9929
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
