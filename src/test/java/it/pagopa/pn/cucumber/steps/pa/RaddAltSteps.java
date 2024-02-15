@@ -43,7 +43,11 @@ public class RaddAltSteps {
     private String qrCode;
     private String currentUserCf;
     @Value("${pn.external.bearer-token-pg1.id}")
-    private String idOrganization;
+    private String idOrganization1;
+
+    @Value("${pn.external.bearer-token-pg1.id}")
+    private String idOrganization2;
+
     @Value("${spring.profiles.active}")
     private String ambiente;
     private String operationid;
@@ -77,7 +81,7 @@ public class RaddAltSteps {
 
     @Given("viene verificata la presenza di atti e\\/o attestazioni per l'utente {string} per radd alternative")
     public void vieneVerificataLaPresenzaDiAttiEOAttestazioniPerLUtente(String cf) {
-        AORInquiryResponse pf = this.raddAltClient.aorInquiry(CxTypeAuthFleet.PG, idOrganization, "reprehenderit culpa enim", cf, "PF");
+        AORInquiryResponse pf = this.raddAltClient.aorInquiry(CxTypeAuthFleet.PG, idOrganization1, "reprehenderit culpa enim", cf, "PF");
         System.out.println(pf);
     }
 
@@ -86,7 +90,7 @@ public class RaddAltSteps {
     public void lOperatoreScansioneIlQrCodePerRecuperariGliAttiAlternative(String recipientType,String cf) {
         selectUserRaddAlternative(cf);
         ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
-                idOrganization,
+                idOrganization1,
                 uid,
                 this.currentUserCf,
                 recipientType,
@@ -101,7 +105,7 @@ public class RaddAltSteps {
     public void lOperatoreUsoIUNPerRecuperariGliAtti(String iun,String recipientType,String cf) {
         selectUserRaddAlternative(cf);
         ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
-                idOrganization,
+                idOrganization1,
                 uid,
                 this.currentUserCf,
                 recipientType,
@@ -194,15 +198,20 @@ public class RaddAltSteps {
     @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative")
     public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR() {
         this.operationid = generateRandomNumber();
-        startTransactionActRaddAlternative(this.operationid);
+        startTransactionActRaddAlternative(this.operationid,idOrganization1);
     }
 
     @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR utilizzando il precedente operationId su radd alternative")
     public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationId() {
-        startTransactionActRaddAlternative(this.operationid);
+        startTransactionActRaddAlternative(this.operationid,idOrganization1);
     }
 
-    private void startTransactionActRaddAlternative(String operationid) {
+    @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId da un organizzazione diversa")
+    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa() {
+        startTransactionActRaddAlternative(this.operationid,idOrganization2);
+    }
+
+    private void startTransactionActRaddAlternative(String operationid,String idOrganization) {
         ActStartTransactionRequest actStartTransactionRequest =
                 new ActStartTransactionRequest()
                         .qrCode(this.qrCode)
@@ -214,7 +223,7 @@ public class RaddAltSteps {
                         //.operationDate(OffsetDateTime.now()) TODO: controllare
                         .checksum(this.documentUploadResponse.getValue2());
         System.out.println("actStartTransactionRequest: " + actStartTransactionRequest);
-        this.startTransactionResponse = raddAltClient.startActTransaction(uid, CxTypeAuthFleet.PG, null, actStartTransactionRequest);
+        this.startTransactionResponse = raddAltClient.startActTransaction(uid, CxTypeAuthFleet.PG, idOrganization, actStartTransactionRequest);
         System.out.println("startTransactionResponse: " + startTransactionResponse);
     }
 
@@ -259,7 +268,7 @@ public class RaddAltSteps {
                 new CompleteTransactionRequest()
                         .operationId(this.operationid)
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()));
-        this.completeTransactionResponse = raddAltClient.completeActTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization, completeTransactionRequest);
+        this.completeTransactionResponse = raddAltClient.completeActTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1, completeTransactionRequest);
         System.out.println(completeTransactionResponse);
         Assertions.assertNotNull(completeTransactionResponse);
     }
@@ -269,7 +278,7 @@ public class RaddAltSteps {
     public void ilCittadinoChiedeDiVerificareLaPresenzaDiNotifiche(String typeAuthFleet, String cf) {
         selectUserRaddAlternative(cf);
         this.aorInquiryResponse = raddAltClient.aorInquiry(CxTypeAuthFleet.PG,
-                idOrganization,
+                idOrganization1,
                 uid,
                 cf,
                 typeAuthFleet);
@@ -279,7 +288,7 @@ public class RaddAltSteps {
     public void ilCittadinoSignorCasualeChiedeDiVerificareLaPresenzaDiNotifiche() {
         selectUserRaddAlternative("Signor casuale");
         this.aorInquiryResponse = raddAltClient.aorInquiry(CxTypeAuthFleet.PG,
-                idOrganization,
+                idOrganization1,
                 uid,
                 this.currentUserCf,
                 "PF");
@@ -308,13 +317,13 @@ public class RaddAltSteps {
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                         //.delegateTaxId("")
                         .checksum(this.documentUploadResponse.getValue2());
-        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization, aorStartTransactionRequest);
+        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1, aorStartTransactionRequest);
     }
 
 
 
-    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della {string} con lo stesso operationId su radd alternative")
-    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileStessoOperationId(String recipientType) {
+    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della {string} con lo stesso operationId (dalla)(da una) {string} organizzazione")
+    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileStessoOperationId(String recipientType,String organizzazione) {
         this.operationid = generateRandomNumber();
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
@@ -327,7 +336,11 @@ public class RaddAltSteps {
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                         //.delegateTaxId("")
                         .checksum(this.documentUploadResponse.getValue2());
-        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization, aorStartTransactionRequest);
+        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid,
+                CxTypeAuthFleet.PG,
+                organizzazione.equalsIgnoreCase("stessa")? idOrganization1 :
+                        organizzazione.equalsIgnoreCase("diversa")? idOrganization2 : null,
+                aorStartTransactionRequest);
     }
 
 
@@ -401,7 +414,7 @@ public class RaddAltSteps {
                 new CompleteTransactionRequest()
                         .operationId(this.operationid)
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()));
-        this.completeTransactionResponse = raddAltClient.completeAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization, completeTransactionRequest);
+        this.completeTransactionResponse = raddAltClient.completeAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1, completeTransactionRequest);
         log.info("completeTransactionResponse: {}", completeTransactionResponse);
     }
 
@@ -437,7 +450,7 @@ public class RaddAltSteps {
 
         try {
 
-            DocumentUploadResponse documentUploadResponse = raddAltClient.documentUpload(CxTypeAuthFleet.PG, idOrganization,"1234556",documentUploadRequest);
+            DocumentUploadResponse documentUploadResponse = raddAltClient.documentUpload(CxTypeAuthFleet.PG, idOrganization1,"1234556",documentUploadRequest);
 
             log.debug("DocumentUploadResponse: {}", documentUploadResponse);
         } catch (HttpStatusCodeException httpStatusCodeException) {
@@ -457,14 +470,14 @@ public class RaddAltSteps {
     public void laTransazioneVieneAbortitaAor(String tipologia) {
         switch (tipologia.toLowerCase()) {
             case "aor":
-                this.abortActTransaction = this.raddAltClient.abortAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization,
+                this.abortActTransaction = this.raddAltClient.abortAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1,
                         new AbortTransactionRequest()
                                 .operationId(this.operationid)
                                 .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                                 .reason("TEST"));
                 break;
             case "act":
-                this.abortActTransaction = this.raddAltClient.abortActTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization,
+                this.abortActTransaction = this.raddAltClient.abortActTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1,
                         new AbortTransactionRequest()
                                 .operationId(this.operationid)
                                 .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
@@ -550,7 +563,7 @@ public class RaddAltSteps {
     }
     @When("L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType {string}")
     public void lOperatoreScansioneIlQrCodePerRecuperariGliAtti(String recipientType) {
-        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG, idOrganization, uid, this.currentUserCf, recipientType, qrCode, null);
+        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG, idOrganization1, uid, this.currentUserCf, recipientType, qrCode, null);
         log.info("actInquiryResponse: {}",actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
     }
@@ -562,7 +575,7 @@ public class RaddAltSteps {
                         operationType.equalsIgnoreCase("act")?"act": null,
                 this.operationid,
                 CxTypeAuthFleet.PG,
-                idOrganization);
+                idOrganization1);
 
     Assertions.assertNotNull(download);
     }

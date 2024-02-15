@@ -1131,5 +1131,40 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" con lo stesso operationId su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" con lo stesso operationId dalla "stessa" organizzazione
     Then il recupero degli aar genera un errore "transazione già esistente o con stato completed o aborted" con codice 99 su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-75] PF -  Start di una ACT transaction con stesso operationId da cxId diversi - ricezione OK
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId da un organizzazione diversa
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-76] PF -  Start di una AOR transaction con stesso operationId da cxId diversi - ricezione OK
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" con lo stesso operationId da una "diversa" organizzazione
