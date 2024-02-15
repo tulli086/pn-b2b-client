@@ -101,7 +101,8 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
       | payment_f24           | NULL        |
       | apply_cost_pagopa     | SI          |
       | payment_multy_number  | 1           |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
+    When la notifica viene inviata dal "Comune_1"
+    Then l'operazione ha prodotto un errore con status code "400"
 
 
   @Async

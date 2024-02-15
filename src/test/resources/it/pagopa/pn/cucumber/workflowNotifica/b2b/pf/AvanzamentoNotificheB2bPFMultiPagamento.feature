@@ -3326,10 +3326,13 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | apply_cost_pagopa    | NO                            |
       | apply_cost_f24       | SI                            |
       | payment_multy_number | 1                             |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
-    Then viene richiesto il download del documento "F24"
-    And il download non ha prodotto errori
+    When la notifica viene inviata dal "Comune_1"
+    Then l'operazione ha prodotto un errore con status code "400"
+
+    #When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    #And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    #Then viene richiesto il download del documento "F24"
+    #And il download non ha prodotto errori
 
   @pagamentiMultipli @f24 @dev
   Scenario: [B2B-PA-PAY_MULTI_97] PA - inserimento notifica mono destinatario con un solo F24 SEMPLIFICATO DELIVERY_MODE  e controllo coerenza dei dati del modello F24 (Costi di notifica inclusi)-Only one type of tax payer is allowed. - PN-9070

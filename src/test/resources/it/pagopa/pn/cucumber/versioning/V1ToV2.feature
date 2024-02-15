@@ -45,7 +45,7 @@ Feature: verifica compatibilità tra v1 a v2
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber V2
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata V2
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata "V2"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED" V2
     And la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1
     And vengono letti gli eventi della timeline e si controlla che l'evento di timeline "NOTIFICATION_CANCELLED" non esista con la V1

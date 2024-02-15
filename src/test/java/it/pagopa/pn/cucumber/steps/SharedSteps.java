@@ -948,12 +948,15 @@ public class SharedSteps {
            case "v1":
                setSenderTaxIdFromPropertiesV1(version);
                sendNotificationV1();
+               break;
            case "v2":
                setSenderTaxIdFromPropertiesV2(version);
                sendNotificationV2();
+               break;
            case "v21":
                setSenderTaxIdFromPropertiesV21(version);
                sendNotificationV21();
+               break;
        }
 
     }
