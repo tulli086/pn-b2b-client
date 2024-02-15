@@ -97,16 +97,17 @@ public class RaddAltSteps {
         this.actInquiryResponse = actInquiryResponse;
     }
 
-    @When("L'operatore usa lo IUN per recuperare gli atti della {string}")
-    public void lOperatoreUsoIUNPerRecuperariGliAtti(String recipientType) {
-
+    @When("L'operatore usa lo IUN {string} per recuperare gli atti della {string} {string}")
+    public void lOperatoreUsoIUNPerRecuperariGliAtti(String iun,String recipientType,String cf) {
+        selectUserRaddAlternative(cf);
         ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
                 idOrganization,
                 uid,
                 this.currentUserCf,
                 recipientType,
                 null,
-                sharedSteps.getIunVersionamento());
+                iun.equalsIgnoreCase("corretto")?sharedSteps.getIunVersionamento():
+                        iun.equalsIgnoreCase("erratto")?"UGYD-XHEZ-KLRM":null);
 
         log.info("actInquiryResponse: {}", actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;

@@ -586,8 +586,6 @@ Feature: Radd Alternative
 
 
 
-
-
   @raddAlt
   Scenario: [RADD-ALT_ACT-47] PF - Restituzione errore - Recupero notifica solo con CF corretto
     Given viene generata una nuova notifica
@@ -596,7 +594,7 @@ Feature: Radd Alternative
     And destinatario Mario Cucumber
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When L'operatore scansione il qrCode per recuperare gli atti della "PF" "Mario Cucumber"
+    When L'operatore usa lo IUN "inesistente" per recuperare gli atti della "PF" "Mario Cucumber"
     And la scansione si conclude correttamente su radd alternative
 
 
@@ -608,4 +606,67 @@ Feature: Radd Alternative
     And destinatario Mario Cucumber
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When L'operatore usa lo IUN per recuperare gli atti della "PF"
+    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Cucumber"
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-49] PF - Recupero notifica con codice IUN errato associato a CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore usa lo IUN "erratto" per recuperare gli atti della "PF" "Mario Cucumber"
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-50] PF -  Recupero notifica con codice IUN esistente associato a CF sbagliato
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Gherkin"
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-51] PG - Restituzione errore - Recupero notifica solo con CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore usa lo IUN "inesistente" per recuperare gli atti della "PG" "CucumberSpa"
+    And la scansione si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-52] PG - Recupero notifica con codice IUN esistente associato al CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PG" "CucumberSpa"
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-53] PG - Recupero notifica con codice IUN errato associato a CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore usa lo IUN "erratto" per recuperare gli atti della "PG" "CucumberSpa"
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-54] PG -  Recupero notifica con codice IUN esistente associato a CF sbagliato
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PG" "Gherkin Irreperibile"
