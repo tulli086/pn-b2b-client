@@ -112,7 +112,7 @@ Feature: avanzamento notifiche b2b persona fisica pagamento
 
 
   @workflowDigitale
-  Scenario: [B2B-PA-PAY_9] Verifica restituzione data di visualizzazione a quella del NOTIFICATION_VIEWED_CREATION_REQUEST per la chiamata retrieveNotificationPrice - 8970
+  Scenario: [B2B-PA-PAY_9] Verifica restituzione data di visualizzazione a quella del NOTIFICATION_VIEWED_CREATION_REQUEST per la chiamata retrieveNotificationPrice - PN-8970
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |

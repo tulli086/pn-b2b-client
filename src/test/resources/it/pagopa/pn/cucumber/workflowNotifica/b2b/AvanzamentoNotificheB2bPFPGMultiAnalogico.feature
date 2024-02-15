@@ -542,7 +542,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico
 
 
   @workflowAnalogico
-  Scenario: [B2B_TIMELINE_MULTI_ANALOG_26] Invio notifica multidestinatario analogico con physicalAddress OK-REC008_890
+  Scenario: [B2B_TIMELINE_MULTI_ANALOG_26] Invio notifica multidestinatario analogico con physicalAddress OK-REC008_890 - PN-9929
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
