@@ -562,7 +562,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
     And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
-    When And
+    When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     Then lato destinatario la notifica può essere correttamente recuperata da "Mario Gherkin" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "CucumberSpa" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
@@ -814,12 +814,12 @@ Feature: Radd Alternative
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario CucumberSpa e:
-      | payment_pagoPaForm   | SI                            |
-      | payment_f24          | PAYMENT_F24_STANDARD          |
-      | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
-      | apply_cost_pagopa    | SI                            |
-      | apply_cost_f24       | SI                            |
-      | payment_multy_number | 1                             |
+      | payment_pagoPaForm   | SI                   |
+      | payment_f24          | PAYMENT_F24_STANDARD |
+      | title_payment        | F24_STANDARD_PG      |
+      | apply_cost_pagopa    | SI                   |
+      | apply_cost_f24       | SI                   |
+      | payment_multy_number | 1                    |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
@@ -881,12 +881,12 @@ Feature: Radd Alternative
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario CucumberSpa e:
-      | payment_pagoPaForm   | SI                            |
-      | payment_f24          | PAYMENT_F24_STANDARD          |
-      | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
-      | apply_cost_pagopa    | SI                            |
-      | apply_cost_f24       | SI                            |
-      | payment_multy_number | 2                             |
+      | payment_pagoPaForm   | SI                   |
+      | payment_f24          | PAYMENT_F24_STANDARD |
+      | title_payment        | F24_STANDARD_PG      |
+      | apply_cost_pagopa    | SI                   |
+      | apply_cost_f24       | SI                   |
+      | payment_multy_number | 2                    |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
@@ -901,14 +901,14 @@ Feature: Radd Alternative
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario Signor casuale e:
-      | digitalDomicile         | NULL                                         |
+      | digitalDomicile         | NULL                                          |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
-      | payment_pagoPaForm      | SI                                           |
-      | payment_f24             | PAYMENT_F24_STANDARD                         |
-      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
-      | apply_cost_pagopa       | SI                                           |
-      | apply_cost_f24          | SI                                           |
-      | payment_multy_number    | 1                                            |
+      | payment_pagoPaForm      | SI                                            |
+      | payment_f24             | PAYMENT_F24_STANDARD                          |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
+      | apply_cost_pagopa       | SI                                            |
+      | apply_cost_f24          | SI                                            |
+      | payment_multy_number    | 1                                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
@@ -923,14 +923,14 @@ Feature: Radd Alternative
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario Signor casuale e:
-      | digitalDomicile         | NULL                                         |
+      | digitalDomicile         | NULL                                          |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
-      | payment_pagoPaForm      | NULL                                         |
-      | payment_f24             | PAYMENT_F24_STANDARD                         |
-      | title_payment           | F24_STANDARD_FRMTTR76M06B715E                |
-      | apply_cost_pagopa       | NO                                           |
-      | apply_cost_f24          | SI                                           |
-      | payment_multy_number    | 1                                            |
+      | payment_pagoPaForm      | NULL                                          |
+      | payment_f24             | PAYMENT_F24_STANDARD                          |
+      | title_payment           | F24_STANDARD_FRMTTR76M06B715E                 |
+      | apply_cost_pagopa       | NO                                            |
+      | apply_cost_f24          | SI                                            |
+      | payment_multy_number    | 1                                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
@@ -944,13 +944,13 @@ Feature: Radd Alternative
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario Signor casuale e:
-      | digitalDomicile         | NULL                                         |
+      | digitalDomicile         | NULL                                          |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
-      | payment_pagoPaForm      | SI                                           |
-      | payment_f24             | NULL                                         |
-      | apply_cost_pagopa       | SI                                           |
-      | apply_cost_f24          | NO                                           |
-      | payment_multy_number    | 1                                            |
+      | payment_pagoPaForm      | SI                                            |
+      | payment_f24             | NULL                                          |
+      | apply_cost_pagopa       | SI                                            |
+      | apply_cost_f24          | NO                                            |
+      | payment_multy_number    | 1                                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
@@ -965,14 +965,14 @@ Feature: Radd Alternative
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario Signor casuale e:
-      | digitalDomicile         | NULL                                         |
+      | digitalDomicile         | NULL                                          |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
-      | payment_pagoPaForm      | SI                                           |
-      | payment_f24             | PAYMENT_F24_STANDARD                         |
-      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
-      | apply_cost_pagopa       | SI                                           |
-      | apply_cost_f24          | SI                                           |
-      | payment_multy_number    | 2                                            |
+      | payment_pagoPaForm      | SI                                            |
+      | payment_f24             | PAYMENT_F24_STANDARD                          |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
+      | apply_cost_pagopa       | SI                                            |
+      | apply_cost_f24          | SI                                            |
+      | payment_multy_number    | 2                                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
@@ -987,14 +987,14 @@ Feature: Radd Alternative
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
-      | digitalDomicile         | NULL                                         |
+      | digitalDomicile         | NULL                                          |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
-      | payment_pagoPaForm      | SI                                           |
-      | payment_f24             | PAYMENT_F24_STANDARD                         |
-      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                |
-      | apply_cost_pagopa       | SI                                           |
-      | apply_cost_f24          | SI                                           |
-      | payment_multy_number    | 1                                            |
+      | payment_pagoPaForm      | SI                                            |
+      | payment_f24             | PAYMENT_F24_STANDARD                          |
+      | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
+      | apply_cost_pagopa       | SI                                            |
+      | apply_cost_f24          | SI                                            |
+      | payment_multy_number    | 1                                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
@@ -1009,14 +1009,14 @@ Feature: Radd Alternative
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
-      | digitalDomicile         | NULL                                         |
+      | digitalDomicile         | NULL                                          |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
-      | payment_pagoPaForm      | NULL                                         |
-      | payment_f24             | PAYMENT_F24_STANDARD                         |
-      | title_payment           | F24_STANDARD_FRMTTR76M06B715E                |
-      | apply_cost_pagopa       | NO                                           |
-      | apply_cost_f24          | SI                                           |
-      | payment_multy_number    | 1                                            |
+      | payment_pagoPaForm      | NULL                                          |
+      | payment_f24             | PAYMENT_F24_STANDARD                          |
+      | title_payment           | F24_STANDARD_FRMTTR76M06B715E                 |
+      | apply_cost_pagopa       | NO                                            |
+      | apply_cost_f24          | SI                                            |
+      | payment_multy_number    | 1                                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
@@ -1030,13 +1030,13 @@ Feature: Radd Alternative
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
-      | digitalDomicile         | NULL                                         |
+      | digitalDomicile         | NULL                                          |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
-      | payment_pagoPaForm      | SI                                           |
-      | payment_f24             | NULL                                         |
-      | apply_cost_pagopa       | SI                                           |
-      | apply_cost_f24          | NO                                           |
-      | payment_multy_number    | 1                                            |
+      | payment_pagoPaForm      | SI                                            |
+      | payment_f24             | NULL                                          |
+      | apply_cost_pagopa       | SI                                            |
+      | apply_cost_f24          | NO                                            |
+      | payment_multy_number    | 1                                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
@@ -1097,7 +1097,6 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     When la "PF" "Signor Casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-
 
 
   @raddAlt
