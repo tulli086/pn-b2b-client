@@ -558,7 +558,7 @@ Feature: Radd Alternative
 
 
 #Copre scenari tutti i scenari di test 43-44-45-46
-  @raddAlt
+  @raddAlt @raddAltLog
   Scenario Outline: [RADD-ALT_AUDIT_LOG-42] Scansione QR code o IUN e verifica auditlog AUD_RADD_ACTINQUIRY
     Then viene verificato che esiste un audit log "<audit-log>" in "10y"
     Examples:
