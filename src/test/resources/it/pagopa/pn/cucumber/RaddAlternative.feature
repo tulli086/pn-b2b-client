@@ -585,7 +585,6 @@ Feature: Radd Alternative
       | AUD_NT_RADD_OPEN    |
 
 
-
   @raddAlt
   Scenario: [RADD-ALT_ACT-47] PF - Restituzione errore - Recupero notifica solo con CF corretto
     Given viene generata una nuova notifica
@@ -688,7 +687,7 @@ Feature: Radd Alternative
       | senderDenomination | Comune di Palermo           |
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
-    And destinatario Mario Gherkin e:
+    And destinatario Mario Cucumber e:
       | payment_pagoPaForm   | SI                            |
       | payment_f24          | PAYMENT_F24_STANDARD          |
       | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
@@ -700,7 +699,10 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
     When L'operatore scansione il qrCode per recuperare gli atti della "PF" "Mario Cucumber"
-    Then la scansione si conclude correttamente su radd alternative
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-56] PF - Scansione QR code esistente, associato al CF corretto, per una notifica con allegato di pagamento (solo F24)
@@ -712,7 +714,7 @@ Feature: Radd Alternative
     And destinatario Mario Cucumber e:
       | payment_pagoPaForm   | NULL                          |
       | payment_f24          | PAYMENT_F24_STANDARD          |
-      | title_payment        | F24_STANDARD_FRMTTR76M06B715E |
+      | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
       | apply_cost_pagopa    | NO                            |
       | apply_cost_f24       | SI                            |
       | payment_multy_number | 1                             |
@@ -721,7 +723,10 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
     When L'operatore scansione il qrCode per recuperare gli atti della "PF" "Mario Cucumber"
-    Then la scansione si conclude correttamente su radd alternative
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
 
 
   @raddAlt
@@ -738,12 +743,34 @@ Feature: Radd Alternative
       | apply_cost_f24       | NO   |
       | payment_multy_number | 1    |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Cucumber"
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    Then L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Cucumber"
+    And la lettura si conclude correttamente su radd alternative
 
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-58] PF - Recupero notifica con allegati di pagamento (due o più Avvisi PagoPA e due o più F24) con codice IUN esistente associato a CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario Mario Cucumber e:
+      | payment_pagoPaForm   | SI                            |
+      | payment_f24          | PAYMENT_F24_STANDARD          |
+      | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
+      | apply_cost_pagopa    | SI                            |
+      | apply_cost_f24       | SI                            |
+      | payment_multy_number | 2                             |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    Then L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Cucumber"
+    And la lettura si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-59] PF/PG - Scansione QR code esistente, associato al CF corretto, per una notifica multi destinatario con allegati di pagamento (Avvisi PagoPA e F24)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -756,10 +783,115 @@ Feature: Radd Alternative
       | apply_cost_pagopa    | SI                            |
       | apply_cost_f24       | SI                            |
       | payment_multy_number | 1                             |
+    And destinatario CucumberSpa e:
+      | payment_pagoPaForm   | SI                   |
+      | payment_f24          | PAYMENT_F24_STANDARD |
+      | title_payment        | F24_STANDARD_PG      |
+      | apply_cost_pagopa    | SI                   |
+      | apply_cost_f24       | SI                   |
+      | payment_multy_number | 1                    |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    And  Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti della "PF" "Mario Cucumber"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    When Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And  Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti della "PG" "CucumberSpa"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-60] PG - Scansione QR code esistente, associato al CF corretto, per una notifica con allegati di pagamento (Avviso PagoPA e F24)
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario CucumberSpa e:
+      | payment_pagoPaForm   | SI                            |
+      | payment_f24          | PAYMENT_F24_STANDARD          |
+      | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
+      | apply_cost_pagopa    | SI                            |
+      | apply_cost_f24       | SI                            |
+      | payment_multy_number | 1                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When L'operatore usa lo IUN "corretto" per recuperare gli atti della "PF" "Mario Gherkin"
+    And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
+    When L'operatore scansione il qrCode per recuperare gli atti della "PG" "CucumberSpa"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-61] PG - Scansione QR code esistente, associato al CF corretto, per una notifica con allegato di pagamento (solo F24)
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario CucumberSpa e:
+      | payment_pagoPaForm   | NULL                 |
+      | payment_f24          | PAYMENT_F24_STANDARD |
+      | title_payment        | F24_STANDARD_PG      |
+      | apply_cost_pagopa    | NO                   |
+      | apply_cost_f24       | SI                   |
+      | payment_multy_number | 1                    |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
+    When L'operatore scansione il qrCode per recuperare gli atti della "PG" "CucumberSpa"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-63] PG -  Recupero notifica con allegato di pagamento (solo Avviso PagoPA)  con codice IUN esistente associato a CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario CucumberSpa e:
+      | payment_pagoPaForm   | SI   |
+      | payment_f24          | NULL |
+      | apply_cost_pagopa    | SI   |
+      | apply_cost_f24       | NO   |
+      | payment_multy_number | 1    |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    Then L'operatore usa lo IUN "corretto" per recuperare gli atti della "PG" "CucumberSpa"
+    And la lettura si conclude correttamente su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-64] PG - Recupero notifica con allegati di pagamento (due o più Avvisi PagoPA e due o più F24) con codice IUN esistente associato a CF corretto
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | feePolicy          | DELIVERY_MODE               |
+      | paFee              | 0                           |
+    And destinatario CucumberSpa e:
+      | payment_pagoPaForm   | SI                            |
+      | payment_f24          | PAYMENT_F24_STANDARD          |
+      | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
+      | apply_cost_pagopa    | SI                            |
+      | apply_cost_f24       | SI                            |
+      | payment_multy_number | 2                             |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    Then L'operatore usa lo IUN "corretto" per recuperare gli atti della "PG" "CucumberSpa"
+    And la lettura si conclude correttamente su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-64] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
