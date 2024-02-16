@@ -396,7 +396,6 @@ Feature: avanzamento notifiche webhook b2b V23
     And viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati V23
     And si crea il nuovo stream per il "Comune_1" con replaceId "SET" con un gruppo disponibile "NO_GROUPS" e apiKey aggiornata
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
-
     When viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di palermo                 |
@@ -1825,19 +1824,16 @@ Feature: avanzamento notifiche webhook b2b V23
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
-
     And si predispone 1 nuovo stream denominato "stream-test1" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
     And si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
-
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 1
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
-
     And viene generata una nuova notifica
       | subject            | invio notifica con cucumber 2 |
       | senderDenomination | Comune di milano            |

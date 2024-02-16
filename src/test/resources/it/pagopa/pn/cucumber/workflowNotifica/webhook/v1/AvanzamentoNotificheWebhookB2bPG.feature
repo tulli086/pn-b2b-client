@@ -9,7 +9,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino allo stato "ACCEPTED"
@@ -20,7 +20,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "REQUEST_ACCEPTED"
@@ -31,7 +31,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "AAR_GENERATION"
@@ -42,7 +42,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "GET_ADDRESS"
@@ -53,7 +53,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino allo stato "DELIVERING"
@@ -64,7 +64,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE"
@@ -75,7 +75,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino allo stato "DELIVERED"
@@ -87,7 +87,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa e:
       | digitalDomicile_address | test@fail.it |
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER"
@@ -98,7 +98,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK"
@@ -109,7 +109,7 @@ Feature: avanzamento notifiche webhook b2b per persona giuridica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Gherkin spa
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE"
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_2" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_PROGRESS"
