@@ -41,12 +41,10 @@ import java.util.stream.Collectors;
 
 public class AvanzamentoNotificheWebhookB2bSteps {
 
-
     private final IPnWebhookB2bClient webhookB2bClient;
     private final IPnPaB2bClient b2bClient;
     private final IPnWebRecipientClient webRecipientClient;
     private final SharedSteps sharedSteps;
-
     private LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
     private List<StreamCreationRequest> streamCreationRequestList;
     private List<StreamMetadataResponse> eventStreamList;
@@ -56,10 +54,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private List<StreamMetadataResponseV23> eventStreamListV23;
     private StreamRequestV23 streamRequestV23;
 
-
-
     private  List<String> filterValues;
-
     private Integer requestNumber;
     private HttpStatusCodeException notificationError;
     private StreamRequestV23 streamRequest;
@@ -74,10 +69,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
 
-
     @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream denominat(i)(o) {string} con eventType {string} con versione {string}")
     public void setUpStreamsWithEventType(int number, String title, String eventType, String versione) {
-
         this.requestNumber = number;
         switch (versione) {
             case "V10":
@@ -107,11 +100,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             default:
                 throw new IllegalArgumentException();
         }
-
-
-
-
-
     }
 
     @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream V2 denominat(i)(o) {string} con eventType {string}")
@@ -259,6 +247,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         createdStreamByGroups( pa, replaceId,  position);
     }
+
 
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con replaceId {string} con un gruppo disponibile {string}")
     public void createdStreamByGroups(String pa, String replaceId, String position) {
@@ -660,9 +649,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             logger.info("EventProgress: " + progressResponseElements);
         }catch (HttpStatusCodeException e) {
             this.notificationError = e;
-            if (e instanceof HttpStatusCodeException) {
-                sharedSteps.setNotificationError((HttpStatusCodeException) e);
-            }
+            sharedSteps.setNotificationError(e);
         }
     }
 
