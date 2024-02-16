@@ -1226,7 +1226,7 @@ Feature: Radd Alternative
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario Mario Gherkin e:
-      | digitalDomicile_address | test@fail.it |
+      | digitalDomicile         | NULL           |
       | physicalAddress_address | Via@OK_890_ZIP |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
@@ -1249,7 +1249,7 @@ Feature: Radd Alternative
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario Mario Gherkin e:
-      | digitalDomicile_address | test@fail.it |
+      | digitalDomicile         | NULL           |
       | physicalAddress_address | Via@OK_890_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
@@ -1264,7 +1264,7 @@ Feature: Radd Alternative
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario CucumberSpa e:
-      | digitalDomicile_address | test@fail.it |
+      | digitalDomicile         | NULL           |
       | physicalAddress_address | Via@OK_890_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
@@ -1280,7 +1280,7 @@ Feature: Radd Alternative
       | senderDenomination | Comune di palermo |
       | physicalCommunication |  AR_REGISTERED_LETTER |
     And destinatario Mario Gherkin e:
-      | digitalDomicile | NULL |
+      | digitalDomicile         | NULL          |
       | physicalAddress_address | Via@OK_AR_ZIP |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
@@ -1303,7 +1303,7 @@ Feature: Radd Alternative
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario Mario Gherkin e:
-      | digitalDomicile_address | test@fail.it |
+      | digitalDomicile | NULL |
       | physicalAddress_address | Via@OK_AR_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
@@ -1317,7 +1317,7 @@ Feature: Radd Alternative
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario CucumberSpa e:
-      | digitalDomicile_address | test@fail.it |
+      | digitalDomicile         | NULL          |
       | physicalAddress_address | Via@OK_AR_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
