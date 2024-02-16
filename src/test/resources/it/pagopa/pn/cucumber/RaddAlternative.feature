@@ -1232,6 +1232,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
     And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | loadTimeline     | true     |
       | details          | NOT_NULL |
       | details_recIndex | 0        |
     When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
@@ -1254,6 +1255,7 @@ Feature: Radd Alternative
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
     And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | loadTimeline     | true     |
       | details          | NOT_NULL |
       | details_recIndex | 0        |
 
@@ -1269,6 +1271,7 @@ Feature: Radd Alternative
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
     And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | loadTimeline     | true     |
       | details          | NOT_NULL |
       | details_recIndex | 0        |
 
@@ -1286,6 +1289,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
     And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | loadTimeline     | true     |
       | details          | NOT_NULL |
       | details_recIndex | 0        |
     When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
@@ -1308,6 +1312,7 @@ Feature: Radd Alternative
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
     And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | loadTimeline     | true     |
       | details          | NOT_NULL |
       | details_recIndex | 0        |
 
@@ -1322,6 +1327,7 @@ Feature: Radd Alternative
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
     And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | loadTimeline     | true     |
       | details          | NOT_NULL |
       | details_recIndex | 0        |
 
