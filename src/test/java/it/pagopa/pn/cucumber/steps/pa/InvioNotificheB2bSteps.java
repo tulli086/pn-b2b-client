@@ -428,6 +428,20 @@ public class InvioNotificheB2bSteps {
         }
     }
 
+    @And("viene effettuato un controllo sul type attachment di {string} per l'elemento di timeline {string}")
+    public void attachmentCheckLoadForTimelineElementF24(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws InterruptedException {
+        TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
+        switch (documentType) {
+            case "ATTACHMENTS":
+                Assertions.assertNotNull(timelineElement.getDetails().getAttachments());
+                Assertions.assertTrue("23L".equalsIgnoreCase(timelineElement.getDetails().getAttachments().get(0).getDocumentType()));
+                Assertions.assertTrue(timelineElement.getDetails().getAttachments().get(0).getUrl().contains(".zip");
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
     @And("viene effettuato un controllo sulla durata della retention del PAGOPA di {string} per l'elemento di timeline {string}")
     public void retentionCheckLoadForTimelineElementPAGOPA(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws InterruptedException {
         TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);

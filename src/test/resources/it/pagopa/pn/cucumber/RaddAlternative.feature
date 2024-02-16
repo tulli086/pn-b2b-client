@@ -1170,3 +1170,78 @@ Feature: Radd Alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" con lo stesso operationId da una "diversa" organizzazione
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-80 PF - Stampa documenti disponibili associati a QR code esistente con CF corretto su notifica analogica 890: verifica restituzione link alla ricevuta di postalizzazione (in formato pdf)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_address | Via@OK_890_ZIP |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
+
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-81] Inserimento notifica indirizzata a PF con sequence OK_890_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_address | Via@OK_890_ZIP |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
+    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | details          | NOT_NULL |
+      | details_recIndex | 0        |
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-82] Inserimento notifica indirizzata a PG con sequence OK_890_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+    And destinatario CucumberSpa e:
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_address | Via@OK_890_ZIP |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
+    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | details          | NOT_NULL |
+      | details_recIndex | 0        |
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-83] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto su notifica analogica AR: verifica restituzione link alla ricevuta di postalizzazione (in formato pdf)
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-84] Inserimento notifica indirizzata a PF con sequence OK_AR_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_address | Via@OK_AR_ZIP |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
+    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | details          | NOT_NULL |
+      | details_recIndex | 0        |
+
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-85] Inserimento notifica indirizzata a PG con sequence OK_AR_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+    And destinatario CucumberSpa e:
+      | digitalDomicile_address | test@fail.it |
+      | physicalAddress_address | Via@OK_AR_ZIP |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
+    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | details          | NOT_NULL |
+      | details_recIndex | 0        |
+
