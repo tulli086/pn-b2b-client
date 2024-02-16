@@ -1068,7 +1068,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @Then("vengono letti gli eventi dello stream del {string} fino all'elemento di timeline {string}")
     public void readStreamTimelineElement(String pa,String timelineEventCategory) {
         setPaWebhook(pa);
-        TimelineElementCategoryV23 timelineElementCategory;
+        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23 timelineElementCategory;
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23 timelineElementInternalCategory;
 
         Integer numCheck = 10;
@@ -1077,143 +1077,143 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         switch (timelineEventCategory) {
             case "REQUEST_ACCEPTED":
                 numCheck = 2;
-                timelineElementCategory = TimelineElementCategoryV23.REQUEST_ACCEPTED;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.REQUEST_ACCEPTED;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.REQUEST_ACCEPTED;
                 break;
             case "AAR_GENERATION":
                 numCheck = 2;
                 waiting = waiting * 2;
-                timelineElementCategory = TimelineElementCategoryV23.AAR_GENERATION;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.AAR_GENERATION;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.AAR_GENERATION;
                 break;
             case "GET_ADDRESS":
                 numCheck = 2;
                 waiting = waiting * 2;
-                timelineElementCategory = TimelineElementCategoryV23.GET_ADDRESS;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.GET_ADDRESS;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.GET_ADDRESS;
                 break;
             case "SEND_DIGITAL_DOMICILE":
                 numCheck = 2;
                 waiting = waiting * 2;
-                timelineElementCategory = TimelineElementCategoryV23.SEND_DIGITAL_DOMICILE;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SEND_DIGITAL_DOMICILE;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_DIGITAL_DOMICILE;
                 break;
             case "NOTIFICATION_VIEWED":
                 numCheck = 2;
                 waiting = waiting * 2;
-                timelineElementCategory = TimelineElementCategoryV23.NOTIFICATION_VIEWED;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.NOTIFICATION_VIEWED;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.NOTIFICATION_VIEWED;
                 break;
             case "SEND_COURTESY_MESSAGE":
                 numCheck = 10;
-                timelineElementCategory = TimelineElementCategoryV23.SEND_COURTESY_MESSAGE;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SEND_COURTESY_MESSAGE;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_COURTESY_MESSAGE;
                 break;
             case "DIGITAL_FAILURE_WORKFLOW":
                 numCheck = 9;
-                timelineElementCategory = TimelineElementCategoryV23.DIGITAL_FAILURE_WORKFLOW;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.DIGITAL_FAILURE_WORKFLOW;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.DIGITAL_FAILURE_WORKFLOW;
                 break;
             case "DIGITAL_SUCCESS_WORKFLOW":
                 numCheck = 2;
                 waiting = waiting * 3;
-                timelineElementCategory = TimelineElementCategoryV23.DIGITAL_SUCCESS_WORKFLOW;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.DIGITAL_SUCCESS_WORKFLOW;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.DIGITAL_SUCCESS_WORKFLOW;
                 break;
             case "SCHEDULE_ANALOG_WORKFLOW":
                 numCheck = 2;
                 waiting = waiting * 3;
-                timelineElementCategory = TimelineElementCategoryV23.SCHEDULE_ANALOG_WORKFLOW;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SCHEDULE_ANALOG_WORKFLOW;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SCHEDULE_ANALOG_WORKFLOW;
                 break;
             case "NOT_HANDLED":
                 numCheck = 9;
-                timelineElementCategory = TimelineElementCategoryV23.NOT_HANDLED;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.NOT_HANDLED;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.NOT_HANDLED;
                 break;
             case "SEND_DIGITAL_FEEDBACK":
                 numCheck = 2;
                 waiting = waiting * 3;
-                timelineElementCategory = TimelineElementCategoryV23.SEND_DIGITAL_FEEDBACK;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SEND_DIGITAL_FEEDBACK;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_DIGITAL_FEEDBACK;
                 break;
             case "SEND_ANALOG_PROGRESS":
                 numCheck = 8;
-                timelineElementCategory = TimelineElementCategoryV23.SEND_ANALOG_PROGRESS;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SEND_ANALOG_PROGRESS;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_ANALOG_PROGRESS;
                 break;
             case "SEND_ANALOG_FEEDBACK":
                 numCheck = 10;
-                timelineElementCategory = TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK;
                 break;
             case "SEND_ANALOG_DOMICILE":
                 numCheck = 9;
-                timelineElementCategory = TimelineElementCategoryV23.SEND_ANALOG_DOMICILE;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SEND_ANALOG_DOMICILE;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_ANALOG_DOMICILE;
                 break;
             case "SEND_DIGITAL_PROGRESS":
                 numCheck = 2;
                 waiting = waiting * 3;
-                timelineElementCategory = TimelineElementCategoryV23.SEND_DIGITAL_PROGRESS;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SEND_DIGITAL_PROGRESS;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_DIGITAL_PROGRESS;
                 break;
             case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS":
                 numCheck = 15;
-                timelineElementCategory = TimelineElementCategoryV23.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS;
                 break;
             case "PUBLIC_REGISTRY_CALL":
                 numCheck = 2;
                 waiting = waiting * 4;
-                timelineElementCategory = TimelineElementCategoryV23.PUBLIC_REGISTRY_CALL;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.PUBLIC_REGISTRY_CALL;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.PUBLIC_REGISTRY_CALL;
                 break;
             case "PUBLIC_REGISTRY_RESPONSE":
                 numCheck = 2;
                 waiting = waiting * 4;
-                timelineElementCategory = TimelineElementCategoryV23.PUBLIC_REGISTRY_RESPONSE;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.PUBLIC_REGISTRY_RESPONSE;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.PUBLIC_REGISTRY_RESPONSE;
                 break;
             case "PAYMENT":
                 numCheck = 9;
-                timelineElementCategory = TimelineElementCategoryV23.PAYMENT;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.PAYMENT;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.PAYMENT;
                 break;
             case "NOTIFICATION_CANCELLATION_REQUEST":
                 numCheck = 9;
-                timelineElementCategory = TimelineElementCategoryV23.NOTIFICATION_CANCELLATION_REQUEST;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.NOTIFICATION_CANCELLATION_REQUEST;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.NOTIFICATION_CANCELLATION_REQUEST;
                 break;
             case "NOTIFICATION_CANCELLED":
                 numCheck = 10;
-                timelineElementCategory = TimelineElementCategoryV23.NOTIFICATION_CANCELLED;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.NOTIFICATION_CANCELLED;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.NOTIFICATION_CANCELLED;
                 break;
             case "REFINEMENT":
                 numCheck = 15;
-                timelineElementCategory = TimelineElementCategoryV23.REFINEMENT;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.REFINEMENT;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.REFINEMENT;
                 break;
@@ -1901,10 +1901,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private <T> ProgressResponseElement searchInWebhook(T timeLineOrStatus,String lastEventId, int deepCount){
 
-        TimelineElementCategoryV23 timelineElementCategory = null;
+        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23 timelineElementCategory = null;
         NotificationStatus notificationStatus = null;
-        if(timeLineOrStatus instanceof TimelineElementCategoryV23){
-            timelineElementCategory = (TimelineElementCategoryV23)timeLineOrStatus;
+        if(timeLineOrStatus instanceof it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23){
+            timelineElementCategory = (it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23)timeLineOrStatus;
         }else if(timeLineOrStatus instanceof NotificationStatus){
             notificationStatus = (NotificationStatus)timeLineOrStatus;
         }else{
@@ -1965,10 +1965,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private <T> ProgressResponseElementV23 searchInWebhookV23(T timeLineOrStatus,String lastEventId, int deepCount, int position){
 
-        TimelineElementCategoryV23 timelineElementCategory = null;
+        it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.TimelineElementCategoryV23 timelineElementCategory = null;
         NotificationStatus notificationStatus = null;
         if(timeLineOrStatus instanceof TimelineElementCategoryV23){
-            timelineElementCategory = (TimelineElementCategoryV23)timeLineOrStatus;
+            timelineElementCategory = ( it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.TimelineElementCategoryV23)timeLineOrStatus;
         }else if(timeLineOrStatus instanceof NotificationStatus){
             notificationStatus = (NotificationStatus)timeLineOrStatus;
         }else{
