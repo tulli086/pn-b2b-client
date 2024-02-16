@@ -16,5 +16,5 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 })
 @ExcludeTags({"ignore"})
 @IncludeTags({"oldWebhookTest"})
-public class WebhookTest {
+public class OldWebhookTest {
 }
