@@ -10,6 +10,7 @@ import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
+import it.pagopa.pn.cucumber.utils.Compress;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,11 +176,13 @@ public class RaddAltSteps {
 
     @And("vengono caricati i documento di identità del cittadino su radd alternative")
     public void vengonoCaricatiIDocumentoDiIdentitaDelCittadino() {
+        this.operationid = generateRandomNumber();
         uploadDocumentRaddAlternative(true);
     }
 
     @And("si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative")
     public void siIniziaIlProcessoDiCaricamentoDeiDocumentoDiIdentitàDelCittadinoMaNonSiPortaAConclusione() {
+        this.operationid = generateRandomNumber();
         uploadDocumentRaddAlternative(false);
     }
 
@@ -229,6 +232,16 @@ public class RaddAltSteps {
         Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0, this.startTransactionResponse.getStatus().getCode());
     }
 
+    @And("si verifica se il file richiede l'autenticazione")
+    public void siVerificaSeIlFileRichiedeLAutenticazione() {
+        Assertions.assertNotNull(this.startTransactionResponse.getDownloadUrlList());
+        for (DownloadUrl download : this.startTransactionResponse.getDownloadUrlList() ) {
+            log.info("downloadData: {}",download);
+            Assertions.assertNotNull(download.getUrl());
+            Assertions.assertNotNull(download.getNeedAuthentication());
+
+        }
+    }
 
     @And("l'operazione di download degli atti genera un errore {string} con codice {int} su radd alternative")
     public void lOperazioneDiDownloadDegliAttiGeneraUnErroreConCodice(String errorDescription, int erroCode) {
@@ -573,6 +586,49 @@ public class RaddAltSteps {
                 null);
 
     Assertions.assertNotNull(download);
+    }
+
+
+    public void creazioneZip(){
+
+        try {
+            String[] files = {"classpath:/sample.pdf"};
+            InputStream[] filesJson = {creazioneJSON()};
+            Compress c = new Compress(filesJson,files, "file.zip");
+            c.zip();
+        } catch (IOException e) {
+        }
+
+    }
+
+
+    public InputStream creazioneJSON(){
+        Map<String, String> jsonMap = new HashMap<>();
+        jsonMap.put("operationId", this.operationid);
+        jsonMap.put("docType", "Carta d'indentità");
+        jsonMap.put("docNumber", generateRandomNumber());
+        jsonMap.put("docIssuer", generateRandomNumber());
+        jsonMap.put("issueDate", dateTimeFormatter.format(OffsetDateTime.now()));
+        jsonMap.put("expireDate", dateTimeFormatter.format(OffsetDateTime.now().plusDays(10)));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+
+        try {
+            String jsonString = objectMapper.writeValueAsString(jsonMap);
+            System.out.println(jsonString);
+
+            byte[] jsonBytes = jsonString.getBytes();
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(jsonBytes);
+
+            InputStreamSource inputStreamSource = new InputStreamResource(inputStream);
+
+            return inputStreamSource.getInputStream();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 

@@ -416,7 +416,7 @@ public class InvioNotificheB2bSteps {
         }
     }
 
-    @And("viene effettuato un controllo sul type attachment di {string} per l'elemento di timeline {string}")
+    @And("viene effettuato un controllo sul type zip attachment di {string} per l'elemento di timeline {string}")
     public void attachmentCheckLoadForTimelineElementF24(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws InterruptedException {
         TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
         switch (documentType) {

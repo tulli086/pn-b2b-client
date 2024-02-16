@@ -1,5 +1,7 @@
 package it.pagopa.pn.cucumber.utils;
 
+import org.springframework.core.io.InputStreamSource;
+
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -8,9 +10,11 @@ public class Compress {
 
     private static int BUFFER = 2048;
     private String[] files;
+    private InputStream[] filesJson;
     private String zipFile;
 
-    public Compress(String[] files, String zipFile) {
+    public Compress(InputStream[] filesJson,String[] files, String zipFile) {
+        this.filesJson=filesJson;
         this.files = files;
         this.zipFile = zipFile;
     }
@@ -21,6 +25,7 @@ public class Compress {
         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
         byte data[] = new byte[BUFFER];
         System.out.println(zipFile);
+
         for (int i = 0; i < files.length; i++) {
             FileInputStream fi = new FileInputStream(files[i]);
             origin = new BufferedInputStream(fi, BUFFER);
@@ -32,6 +37,18 @@ public class Compress {
             }
             origin.close();
         }
+
+        for (int i = 0; i < filesJson.length; i++) {
+            origin = new BufferedInputStream(filesJson[i], BUFFER);
+            ZipEntry entry = new ZipEntry("destinatario"+i);
+            out.putNextEntry(entry);
+            int count;
+            while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                out.write(data, 0, count);
+            }
+            origin.close();
+        }
+
         out.close();
     }
 
@@ -74,7 +91,8 @@ public class Compress {
 //Secondo approccio..............
         try {
             String[] files = {"AvvisoPagoPA.pdf", "AvvisoPagoPA1.pdf"};
-            Compress c = new Compress(files, "file.zip");
+            InputStream[] filesJson = {};
+            Compress c = new Compress(filesJson,files, "file.zip");
             c.zip();
         } catch (IOException e) {
         }

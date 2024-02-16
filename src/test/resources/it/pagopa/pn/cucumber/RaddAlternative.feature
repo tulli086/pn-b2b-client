@@ -54,6 +54,11 @@ Feature: Radd Alternative
       | senderDenomination | Comune di Palermo           |
     And destinatario Mario Cucumber
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-6] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto
@@ -195,6 +200,10 @@ Feature: Radd Alternative
       | senderDenomination | Comune di Palermo           |
     And destinatario CucumberSpa
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And Il cittadino "CucumberSpa" mostra il QRCode "appartenente a terzo" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-17] PG - Stampa documenti disponibili associati a QR code esistente con CF corretto
@@ -902,7 +911,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | SI                                            |
       | payment_f24             | PAYMENT_F24_STANDARD                          |
       | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
@@ -924,7 +933,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | NULL                                          |
       | payment_f24             | PAYMENT_F24_STANDARD                          |
       | title_payment           | F24_STANDARD_FRMTTR76M06B715E                 |
@@ -945,7 +954,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | SI                                            |
       | payment_f24             | NULL                                          |
       | apply_cost_pagopa       | SI                                            |
@@ -966,7 +975,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | SI                                            |
       | payment_f24             | PAYMENT_F24_STANDARD                          |
       | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
@@ -988,7 +997,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | SI                                            |
       | payment_f24             | PAYMENT_F24_STANDARD                          |
       | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
@@ -1010,7 +1019,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | NULL                                          |
       | payment_f24             | PAYMENT_F24_STANDARD                          |
       | title_payment           | F24_STANDARD_FRMTTR76M06B715E                 |
@@ -1031,7 +1040,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | SI                                            |
       | payment_f24             | NULL                                          |
       | apply_cost_pagopa       | SI                                            |
@@ -1052,7 +1061,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Gherkin Irreperibile e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | SI                                            |
       | payment_f24             | PAYMENT_F24_STANDARD                          |
       | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
@@ -1074,7 +1083,7 @@ Feature: Radd Alternative
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | SI                                            |
       | payment_f24             | PAYMENT_F24_STANDARD                          |
       | title_payment           | F24_STANDARD_CASUALE                          |
@@ -1083,7 +1092,7 @@ Feature: Radd Alternative
       | payment_multy_number    | 1                                             |
     And destinatario Gherkin Irreperibile e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_890 |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
       | payment_pagoPaForm      | SI                                            |
       | payment_f24             | PAYMENT_F24_STANDARD                          |
       | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
@@ -1112,7 +1121,7 @@ Feature: Radd Alternative
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
-    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR utilizzando il precedente operationId su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
     Then l'operazione di download degli atti genera un errore "transazione già esistente o con stato completed o aborted" con codice 99
 
 
@@ -1163,7 +1172,7 @@ Feature: Radd Alternative
       | digitalDomicile         | NULL                                         |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
@@ -1171,6 +1180,45 @@ Feature: Radd Alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" con lo stesso operationId da una "diversa" organizzazione
 
+  @raddAlt
+  Scenario: [RADD-ALT_AOR-77] PF -  Start di una AOR transaction su notifica irreperibile perfezionata > 120gg - Ricezione errore RetryAfter
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" con lo stesso operationId da una "diversa" organizzazione
+
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-78] PF - Verifica restituzione al cittadino del documento Frontespizio (nome e cognome del destinatario) come primo documento del plico
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    And L'operatore esegue il download del frontespizio del operazione "aor"
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-79] PG - Verifica restituzione al cittadino del documento Frontespizio (ragione sociale dell'impresa destinataria) come primo documento del plico
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    And L'operatore esegue il download del frontespizio del operazione "act"
 
   @raddAlt
   Scenario: [RADD-ALT_AOR-80] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto su notifica analogica 890: verifica restituzione link alla ricevuta di postalizzazione (in formato pdf)
@@ -1183,7 +1231,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
-    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
       | details          | NOT_NULL |
       | details_recIndex | 0        |
     When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
@@ -1205,7 +1253,7 @@ Feature: Radd Alternative
       | physicalAddress_address | Via@OK_890_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
-    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
       | details          | NOT_NULL |
       | details_recIndex | 0        |
 
@@ -1220,7 +1268,7 @@ Feature: Radd Alternative
       | physicalAddress_address | Via@OK_890_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
-    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
       | details          | NOT_NULL |
       | details_recIndex | 0        |
 
@@ -1233,10 +1281,13 @@ Feature: Radd Alternative
       | physicalCommunication |  AR_REGISTERED_LETTER |
     And destinatario Mario Gherkin e:
       | digitalDomicile | NULL |
-      | physicalAddress_address | Via@ok_AR |
+      | physicalAddress_address | Via@OK_AR_ZIP |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | details          | NOT_NULL |
+      | details_recIndex | 0        |
     When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
     Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
     And la scansione si conclude correttamente su radd alternative
@@ -1256,7 +1307,7 @@ Feature: Radd Alternative
       | physicalAddress_address | Via@OK_AR_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
-    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
       | details          | NOT_NULL |
       | details_recIndex | 0        |
 
@@ -1270,7 +1321,128 @@ Feature: Radd Alternative
       | physicalAddress_address | Via@OK_AR_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
-    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
       | details          | NOT_NULL |
       | details_recIndex | 0        |
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-86] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto la cui notifica è in stato avvenuto accesso
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And "Mario Cucumber" legge la notifica
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
+    Then Il cittadino "Mario Cucumber" mostra il QRCode "corretto"
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-87] PG - Stampa documenti disponibili associati a QR code esistente con CF corretto la cui notifica è in stato avvenuto accesso
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And "CucumberSpa" legge la notifica
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
+    Then Il cittadino "CucumberSpa" mostra il QRCode "corretto"
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-88] PF - Interruzione processo recupero atti e avvio nuovo processo su stessa notifica
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And "Mario Cucumber" legge la notifica
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
+    Then Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And la transazione viene abortita per gli "act"
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-89] PG - Interruzione processo recupero atti e avvio nuovo processo su stessa notifica
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And "CucumberSpa" legge la notifica
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
+    Then Il cittadino "CucumberSpa" mostra il QRCode "corretto"
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And la transazione viene abortita per gli "act"
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-90] PF - Recupero documenti allegati alla notifica: verifica presenza attributi (url, needAuth, categoria file)
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Cucumber
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And "Mario Cucumber" legge la notifica
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
+    Then Il cittadino "Mario Cucumber" mostra il QRCode "corretto"
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And si verifica se il file richiede l'autenticazione
+
+
+  @raddAlt
+  Scenario: [RADD-ALT_ACT-91] PG - Recupero documenti allegati alla notifica: verifica presenza attributi (url, needAuth, categoria file)
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario CucumberSpa
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And "CucumberSpa" legge la notifica
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
+    Then Il cittadino "CucumberSpa" mostra il QRCode "corretto"
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And si verifica se il file richiede l'autenticazione
 
