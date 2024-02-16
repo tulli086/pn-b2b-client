@@ -2,7 +2,6 @@ package it.pagopa.pn.cucumber.steps.pa;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -15,7 +14,6 @@ import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.Compress;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -27,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -638,7 +637,14 @@ public class RaddAltSteps {
         return null;
     }
 
-    
-
+    @After("@zip")
+    public void deleteZip() throws IOException {
+        if (fileZip != null) {
+            URI zip_disk = URI.create("target/classes/"+this.fileZip);
+            File file = new File(zip_disk.getPath());
+            boolean deleted = file.delete();
+            System.out.println("delete "+deleted);
+            }
+    }
 
 }

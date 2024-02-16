@@ -47,7 +47,7 @@ Feature: Radd Alternative
     Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 1 su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-5] PF - Scansione documenti e creazione file zip
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
