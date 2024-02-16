@@ -185,7 +185,7 @@ public class RaddAltSteps {
 
     private void uploadDocumentRaddAlternative(boolean usePresignedUrl) {
         try {
-            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddAlternativeDocument("classpath:/sample.zip", usePresignedUrl,this.operationid);
+            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddAlternativeDocument("classpath:/documento.zip", usePresignedUrl,this.operationid);
             Assertions.assertNotNull(uploadResponse);
             this.documentUploadResponse = uploadResponse;
             log.info("documentUploadResponse: {}", documentUploadResponse);
@@ -197,12 +197,6 @@ public class RaddAltSteps {
 
     @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative")
     public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR() {
-        this.operationid = generateRandomNumber();
-        startTransactionActRaddAlternative(this.operationid,idOrganization1);
-    }
-
-    @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR utilizzando il precedente operationId su radd alternative")
-    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationId() {
         startTransactionActRaddAlternative(this.operationid,idOrganization1);
     }
 
@@ -575,7 +569,8 @@ public class RaddAltSteps {
                         operationType.equalsIgnoreCase("act")?"act": null,
                 this.operationid,
                 CxTypeAuthFleet.PG,
-                idOrganization1);
+                idOrganization1,
+                null);
 
     Assertions.assertNotNull(download);
     }

@@ -21,13 +21,10 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
 
     private final String basePath;
 
-    private final ActDocumentInquiryApi actDocumentInquiryApi;
-    private final ActTransactionManagementApi actTransactionManagementApi;
-    private final AorDocumentInquiryApi aorDocumentInquiryApi;
-    private final AorTransactionManagementApi aorTransactionManagementApi;
-    private final DocumentUploadApi documentUploadApi;
+    private final ActOperationsApi actOperationsApi;
+    private final AorOperationsApi aorOperationsApi;
+    private final DocumentOperationsApi documentOperationsApi;
     private final NotificationInquiryApi notificationInquiryApi;
-    private final DocumentDownloadApi documentDownloadApi;
 
 
     public PnRaddAlternativeClientImpl(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.base-url}") String basePath,
@@ -36,12 +33,9 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         this.restTemplate = restTemplate;
         this.basePath = basePath;
 
-        this.actDocumentInquiryApi = new ActDocumentInquiryApi(newApiClientExternal(restTemplate,basePath));
-        this.actTransactionManagementApi = new ActTransactionManagementApi(newApiClientExternal(restTemplate,basePath));
-        this.aorDocumentInquiryApi = new AorDocumentInquiryApi(newApiClientExternal(restTemplate,basePath));
-        this.aorTransactionManagementApi = new AorTransactionManagementApi(newApiClientExternal(restTemplate,basePath));
-        this.documentUploadApi = new DocumentUploadApi(newApiClientExternal(restTemplate,basePath));
-        this.documentDownloadApi = new DocumentDownloadApi(newApiClientExternal(restTemplate,basePath));
+        this.actOperationsApi = new ActOperationsApi(newApiClientExternal(restTemplate,basePath));
+        this.aorOperationsApi = new AorOperationsApi(newApiClientExternal(restTemplate,basePath));
+        this.documentOperationsApi = new DocumentOperationsApi(newApiClientExternal(restTemplate,basePath));
         this.notificationInquiryApi = new NotificationInquiryApi(newApiClient(restTemplate,basePath));
 
     }
@@ -60,45 +54,45 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
 
 
     public ActInquiryResponse actInquiry(CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, String uid, String recipientTaxId, String recipientType, String qrCode, String iun) throws RestClientException {
-        return this.actDocumentInquiryApi.actInquiryWithHttpInfo(xPagopaPnCxType, xPagopaPnCxId,uid, recipientTaxId, recipientType, qrCode, iun).getBody();
+        return this.actOperationsApi.actInquiryWithHttpInfo(xPagopaPnCxType, xPagopaPnCxId,uid, recipientTaxId, recipientType, qrCode, iun).getBody();
     }
 
     public AbortTransactionResponse abortActTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, AbortTransactionRequest abortTransactionRequest) throws RestClientException {
-        return this.actTransactionManagementApi.abortActTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, abortTransactionRequest).getBody();
+        return this.actOperationsApi.abortActTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, abortTransactionRequest).getBody();
     }
 
 
     public CompleteTransactionResponse completeActTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, CompleteTransactionRequest completeTransactionRequest) throws RestClientException {
-        return this.actTransactionManagementApi.completeActTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, completeTransactionRequest).getBody();
+        return this.actOperationsApi.completeActTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, completeTransactionRequest).getBody();
     }
 
 
     public StartTransactionResponse startActTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, ActStartTransactionRequest actStartTransactionRequest) throws RestClientException {
-        return this.actTransactionManagementApi.startActTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, actStartTransactionRequest).getBody();
+        return this.actOperationsApi.startActTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, actStartTransactionRequest).getBody();
     }
 
     public AORInquiryResponse aorInquiry(CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, String uid, String recipientTaxId, String recipientType) throws RestClientException {
-        return this.aorDocumentInquiryApi.aorInquiryWithHttpInfo(xPagopaPnCxType, xPagopaPnCxId, uid, recipientTaxId, recipientType).getBody();
+        return this.aorOperationsApi.aorInquiryWithHttpInfo(xPagopaPnCxType, xPagopaPnCxId, uid, recipientTaxId, recipientType).getBody();
     }
 
 
     public AbortTransactionResponse abortAorTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, AbortTransactionRequest abortTransactionRequest) throws RestClientException {
-        return this.aorTransactionManagementApi.abortAorTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, abortTransactionRequest).getBody();
+        return this.aorOperationsApi.abortAorTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, abortTransactionRequest).getBody();
     }
 
 
     public CompleteTransactionResponse completeAorTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, CompleteTransactionRequest completeTransactionRequest) throws RestClientException {
-        return this.aorTransactionManagementApi.completeAorTransactionWithHttpInfo(uid, xPagopaPnCxType,  xPagopaPnCxId, completeTransactionRequest).getBody();
+        return this.aorOperationsApi.completeAorTransactionWithHttpInfo(uid, xPagopaPnCxType,  xPagopaPnCxId, completeTransactionRequest).getBody();
     }
 
 
     public StartTransactionResponse startAorTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, AorStartTransactionRequest aorStartTransactionRequest) throws RestClientException {
-        return this.aorTransactionManagementApi.startAorTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, aorStartTransactionRequest).getBody();
+        return this.aorOperationsApi.startAorTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, aorStartTransactionRequest).getBody();
     }
 
 
     public DocumentUploadResponse documentUpload(CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, String uid, DocumentUploadRequest documentUploadRequest) throws RestClientException {
-        return this.documentUploadApi.documentUploadWithHttpInfo(xPagopaPnCxType, xPagopaPnCxId, uid, documentUploadRequest).getBody();
+        return this.documentOperationsApi.documentUploadWithHttpInfo(xPagopaPnCxType, xPagopaPnCxId, uid, documentUploadRequest).getBody();
     }
 
     public OperationsActDetailsResponse getActPracticesByInternalId(String internalId, FilterRequest filterRequest) throws RestClientException {
@@ -126,8 +120,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     }
 
     @Override
-    public byte[] documentDownload(String operationType, String operationId, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId) throws RestClientException {
-        return this.documentDownloadApi.documentDownload(operationType,operationId,xPagopaPnCxType,xPagopaPnCxId);
+    public byte[] documentDownload(String operationType, String operationId, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String attchamentId) throws RestClientException {
+        return this.documentOperationsApi.documentDownload(operationType,operationId,xPagopaPnCxType,xPagopaPnCxId, attchamentId);
     }
 
 }

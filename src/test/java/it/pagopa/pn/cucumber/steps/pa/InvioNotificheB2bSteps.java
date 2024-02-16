@@ -435,7 +435,7 @@ public class InvioNotificheB2bSteps {
             case "ATTACHMENTS":
                 Assertions.assertNotNull(timelineElement.getDetails().getAttachments());
                 Assertions.assertTrue("23L".equalsIgnoreCase(timelineElement.getDetails().getAttachments().get(0).getDocumentType()));
-                Assertions.assertTrue(timelineElement.getDetails().getAttachments().get(0).getUrl().contains(".zip");
+                Assertions.assertTrue(timelineElement.getDetails().getAttachments().get(0).getUrl().contains(".zip"));
                 break;
             default:
                 throw new IllegalArgumentException();
