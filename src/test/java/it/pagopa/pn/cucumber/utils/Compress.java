@@ -40,7 +40,7 @@ public class Compress {
 
         for (int i = 0; i < filesJson.length; i++) {
             origin = new BufferedInputStream(filesJson[i], BUFFER);
-            ZipEntry entry = new ZipEntry("destinatario"+i);
+            ZipEntry entry = new ZipEntry(i==0?"destinatario":"delgato");
             out.putNextEntry(entry);
             int count;
             while ((count = origin.read(data, 0, BUFFER)) != -1) {
@@ -50,7 +50,10 @@ public class Compress {
         }
 
         out.close();
+
     }
+
+
 
     public static void main(String[] args) {
 

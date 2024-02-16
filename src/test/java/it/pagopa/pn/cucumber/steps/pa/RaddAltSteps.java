@@ -1,6 +1,8 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -13,6 +15,7 @@ import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.Compress;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -20,6 +23,7 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -42,6 +46,7 @@ public class RaddAltSteps {
     private final PnPaB2bUtils pnPaB2bUtils;
     private ActInquiryResponse actInquiryResponse;
     private String qrCode;
+    private String fileZip;
     private String currentUserCf;
     @Value("${pn.external.bearer-token-pg1.id}")
     private String idOrganization1;
@@ -188,7 +193,8 @@ public class RaddAltSteps {
 
     private void uploadDocumentRaddAlternative(boolean usePresignedUrl) {
         try {
-            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddAlternativeDocument("classpath:/documento.zip", usePresignedUrl,this.operationid);
+            creazioneZip();
+            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddAlternativeDocument("classpath:/"+this.fileZip, usePresignedUrl,this.operationid);
             Assertions.assertNotNull(uploadResponse);
             this.documentUploadResponse = uploadResponse;
             log.info("documentUploadResponse: {}", documentUploadResponse);
@@ -589,15 +595,16 @@ public class RaddAltSteps {
     }
 
 
-    public void creazioneZip(){
+    public void creazioneZip() throws IOException {
 
-        try {
-            String[] files = {"classpath:/sample.pdf"};
-            InputStream[] filesJson = {creazioneJSON()};
-            Compress c = new Compress(filesJson,files, "file.zip");
+        String[] files = {"target/classes/sample.pdf"};
+        InputStream[] filesJson = {creazioneJSON()};
+        String fileDestination="file"+generateRandomNumber()+".zip";
+        Compress c = new Compress(filesJson,files, "target/classes/"+fileDestination);
+
             c.zip();
-        } catch (IOException e) {
-        }
+
+        this.fileZip = fileDestination;
 
     }
 
@@ -630,6 +637,8 @@ public class RaddAltSteps {
 
         return null;
     }
+
+    
 
 
 }
