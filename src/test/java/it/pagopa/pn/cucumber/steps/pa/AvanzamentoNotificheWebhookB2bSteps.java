@@ -1687,7 +1687,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             Assertions.assertNotNull(progressResponseElementList);
 
-            EventTimestamp = progressResponseElementList.stream().filter(elem -> elem.getTimelineEventCategory().equals(TimelineElementCategoryV23.REFINEMENT)).findAny().get().getTimestamp();
+            EventTimestamp = progressResponseElementList.stream().filter(elem -> elem.getTimelineEventCategory().equals( it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.REFINEMENT)).findAny().get().getTimestamp();
             NotificationTimestamp =sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SCHEDULE_REFINEMENT)).findAny().get().getDetails().getSchedulingDate();
             logger.info("event timestamp : {}",EventTimestamp);
             logger.info("notification timestamp : {}",NotificationTimestamp);
