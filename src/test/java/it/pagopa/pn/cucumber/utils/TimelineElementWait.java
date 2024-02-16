@@ -1,5 +1,8 @@
 package it.pagopa.pn.cucumber.utils;
 
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23;
 
 public class TimelineElementWait {
@@ -7,6 +10,7 @@ public class TimelineElementWait {
     private TimelineElementCategoryV23 timelineElementCategory;
     private it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory timelineElementCategoryV1;
     private it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementCategoryV20 timelineElementCategoryV2;
+    private it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.TimelineElementCategoryV20 timelineElementCategoryV21;
     private Integer numCheck;
     private Integer waiting;
 
@@ -28,6 +32,13 @@ public class TimelineElementWait {
         this.waiting = waiting;
     }
 
+    public TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.TimelineElementCategoryV20 timelineElementCategoryV21, Integer numCheck, Integer waiting) {
+        this.timelineElementCategoryV21 = timelineElementCategoryV21;
+        this.numCheck = numCheck;
+        this.waiting = waiting;
+    }
+
+
     public TimelineElementCategoryV23 getTimelineElementCategory() {
         return timelineElementCategory;
     }
@@ -38,6 +49,10 @@ public class TimelineElementWait {
 
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementCategoryV20 getTimelineElementCategoryV2() {
         return timelineElementCategoryV2;
+    }
+
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.TimelineElementCategoryV20 getTimelineElementCategoryV21() {
+        return timelineElementCategoryV21;
     }
 
     public void setTimelineElementCategory(TimelineElementCategoryV23 timelineElementCategory) {
