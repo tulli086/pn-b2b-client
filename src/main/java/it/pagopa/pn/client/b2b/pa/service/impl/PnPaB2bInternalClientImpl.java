@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.ApiClient;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api.*;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v2.NotificationPriceApi;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.CxTypeAuthFleet;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationProcessCostResponse;
@@ -25,7 +26,8 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
     private final NewNotificationApi newNotificationApi;
     private final SenderReadB2BApi senderReadB2BApi;
-    private final NotificationPriceV23Api notificationPriceApi;
+    private final NotificationPriceApi notificationPriceApi;
+    private final NotificationPriceV23Api notificationPriceV23Api;
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v1.SenderReadB2BApi senderReadB2BApiV1;
 
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v2.SenderReadB2BApi senderReadB2BApiV2;
@@ -52,7 +54,8 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
         this.senderReadB2BApi = new SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
         this.senderReadB2BApiV1 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v1.SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
         this.senderReadB2BApiV2 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api_v2.SenderReadB2BApi( newApiClient( restTemplate, deliveryBasePath) );
-        this.notificationPriceApi = new NotificationPriceV23Api(newApiClient(restTemplate, deliveryPushBasePath));
+        this.notificationPriceApi = new NotificationPriceApi(newApiClient(restTemplate, deliveryPushBasePath));
+        this.notificationPriceV23Api = new NotificationPriceV23Api(newApiClient(restTemplate, deliveryPushBasePath));
     }
 
     private static it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internaldeliveryPushb2bpa.ApiClient
@@ -85,11 +88,15 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
     @Override
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationAttachmentDownloadMetadataResponse getSentNotificationDocumentV1(String iun, Integer docidx) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationAttachmentDownloadMetadataResponse getSentNotificationDocumentV2(String iun, Integer docidx) {
-        return null;
+        throw new UnsupportedOperationException();
+    }
+
+    public NotificationAttachmentDownloadMetadataResponse getSentNotificationDocumentV21(String iun, Integer docidx) {
+        throw new UnsupportedOperationException();
     }
 
     public NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachment(String iun, Integer recipientIdx, String attachname,  Integer attachmentIdx) {
@@ -119,12 +126,18 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
 
     @Override
-    public NotificationPriceResponse getNotificationPrice(String paTaxId, String noticeCode) throws RestClientException {
-        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NotificationPriceResponseV23
-                notificationPrice = this.notificationPriceApi.getNotificationPriceV23(paTaxId,noticeCode);
-
-        return deepCopy( notificationPrice, NotificationPriceResponse.class );
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationPriceResponse getNotificationPrice(String paTaxId, String noticeCode) throws RestClientException {
+        throw new UnsupportedOperationException();
     }
+
+    @Override
+    public NotificationPriceResponseV23 getNotificationPriceV23(String paTaxId, String noticeCode) throws RestClientException {
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.NotificationPriceResponseV23
+                notificationPrice = this.notificationPriceV23Api.getNotificationPriceV23(paTaxId,noticeCode);
+
+        return deepCopy( notificationPrice, NotificationPriceResponseV23.class );
+    }
+
 
     @Override
     public void paymentEventsRequestPagoPa(PaymentEventsRequestPagoPa paymentEventsRequestPagoPa) throws RestClientException,UnsupportedOperationException {
@@ -153,10 +166,14 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
     @Override
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachmentV1(String iun, Integer recipientIdx, String attachmentName) {
-        return null;
+        throw new UnsupportedOperationException();
     }
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachmentV2(String iun, Integer recipientIdx, String attachmentName) {
-        return null;
+        throw new UnsupportedOperationException();
+    }
+
+    public NotificationAttachmentDownloadMetadataResponse getSentNotificationAttachmentV21(String iun, Integer recipientIdx, String attachmentName,Integer attachmentIdx) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -211,6 +228,11 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
     }
 
     @Override
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NewNotificationResponse sendNewNotificationV21(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NewNotificationRequestV21 newNotificationRequest) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public FullSentNotificationV23 getSentNotification(String iun) {
 
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.model.FullSentNotificationV23 resp;
@@ -220,6 +242,11 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
 
     @Override
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20 getSentNotificationV2(String iun) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.FullSentNotificationV21 getSentNotificationV21(String iun) {
         throw new UnsupportedOperationException();
     }
 
@@ -251,6 +278,11 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
     }
 
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequestStatusResponse getNotificationRequestStatusV2(String notificationRequestId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NewNotificationRequestStatusResponseV21 getNotificationRequestStatusV21(String notificationRequestId) {
         throw new UnsupportedOperationException();
     }
 
