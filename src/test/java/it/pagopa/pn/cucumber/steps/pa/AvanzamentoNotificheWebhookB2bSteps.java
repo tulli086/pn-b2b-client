@@ -1755,7 +1755,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_ANALOG_PROGRESS;
                 break;
             case "SEND_ANALOG_FEEDBACK":
-                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.imelineElementCategoryV23.SEND_ANALOG_FEEDBACK;
+                timelineElementCategory = it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK;
                 timelineElementInternalCategory =
                         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK;
                 break;
