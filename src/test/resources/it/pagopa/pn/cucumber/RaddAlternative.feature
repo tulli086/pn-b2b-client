@@ -335,7 +335,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative
-    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
@@ -1173,15 +1173,25 @@ Feature: Radd Alternative
 
 
   @raddAlt
-  Scenario: [RADD-ALT_AOR-80 PF - Stampa documenti disponibili associati a QR code esistente con CF corretto su notifica analogica 890: verifica restituzione link alla ricevuta di postalizzazione (in formato pdf)
+  Scenario: [RADD-ALT_AOR-80] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto su notifica analogica 890: verifica restituzione link alla ricevuta di postalizzazione (in formato pdf)
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@OK_890_ZIP |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
+    And viene effettuato un controllo sul type attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+      | details          | NOT_NULL |
+      | details_recIndex | 0        |
+    When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
 
 
 
@@ -1214,8 +1224,27 @@ Feature: Radd Alternative
       | details          | NOT_NULL |
       | details_recIndex | 0        |
 
+
   @raddAlt
   Scenario: [RADD-ALT_AOR-83] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto su notifica analogica AR: verifica restituzione link alla ricevuta di postalizzazione (in formato pdf)
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@ok_AR |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
+    When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+
+
 
   @raddAlt
   Scenario: [RADD-ALT_AOR-84] Inserimento notifica indirizzata a PF con sequence OK_AR_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
