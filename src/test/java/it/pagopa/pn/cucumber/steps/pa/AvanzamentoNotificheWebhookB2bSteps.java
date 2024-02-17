@@ -2444,14 +2444,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     }
 
-
-    public List<String> getFilterValues() {
-        return filterValues;
-    }
-
-    public void setFilterValues(List<String> filterValues) {
-        this.filterValues = filterValues;
-    }
 }
 
 
