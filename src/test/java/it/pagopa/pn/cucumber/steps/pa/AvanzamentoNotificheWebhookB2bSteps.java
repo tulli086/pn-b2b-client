@@ -2,6 +2,7 @@ package it.pagopa.pn.cucumber.steps.pa;
 
 import com.google.common.collect.ComparisonChain;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterAll;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -1031,36 +1032,37 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         Assertions.assertNotNull(progressResponseElement);
     }
 
+    //TODO: serve un beforeAll
 
     @After("@clean")
     public void doSomethingAfter() {
         setPaWebhook("Comune_1");
-        cleanOldWebhook();
+        cleanWebhook();
     }
 
     @After("@cleanC2")
     public void cleanC2() {
         setPaWebhook("Comune_2");
-        cleanOldWebhook();
+        cleanWebhook();
     }
 
     @After("@cleanC3")
     public void cleanC3() {
         setPaWebhook("Comune_Multi");
-        cleanOldWebhook();
+        cleanWebhook();
         SharedSteps.lastEventID = 0;
     }
 
-    //TODO: old version
-    private void cleanOldWebhook(){
-        for(StreamMetadataResponse eventStream: eventStreamList){
-            webhookB2bClient.deleteEventStream(eventStream.getStreamId());
-            List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
-            it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement streamListElement =
-                    streamListElements.stream().filter(elem -> elem.getStreamId() == eventStream.getStreamId()).findAny().orElse(null);
-            log.info("STREAM SIZE: " + streamListElements.size());
-            log.info("UUID DELETED: " + this.eventStreamList.get(0).getStreamId());
-            Assertions.assertNull(streamListElement);
+    private void cleanWebhook(){
+        if(eventStreamList != null){
+            for(StreamMetadataResponse eventStream: eventStreamList){
+                Assertions.assertDoesNotThrow(()-> webhookB2bClient.deleteEventStream(eventStream.getStreamId()));
+            }
+        }
+        if(eventStreamListV23 != null){
+            for(StreamMetadataResponseV23 streamV23: eventStreamListV23){
+                Assertions.assertDoesNotThrow(()-> webhookB2bClient.deleteEventStreamV23(streamV23.getStreamId()));
+            }
         }
     }
 
@@ -1075,7 +1077,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 (this.notificationError.getStatusCode().toString().substring(0,3).equals(statusCode)) && (eventStreamList.size() == (requestNumber-1)));
     }
 
-
+    //TODO: Eliminare
     @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string}")
     public void deleteAll(String pa,String versione) {
         setPaWebhook(pa);
@@ -1486,48 +1488,40 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
     private void createStream(StreamVersion streamVersion,List<String> listGroups, boolean replaceId,List<String> filteredValues){
-        switch (streamVersion){
-            case V10 -> {
-                this.eventStreamList = new LinkedList<>();
-                for(StreamCreationRequest request: streamCreationRequestList){
-                    if (filteredValues!= null && !filteredValues.isEmpty()){
-                        request.setFilterValues(filteredValues);
-                    }
-                    try{
+        try{
+            switch (streamVersion){
+                case V10 -> {
+                    this.eventStreamList = new LinkedList<>();
+                    for(StreamCreationRequest request: streamCreationRequestList){
+                        if (filteredValues!= null && !filteredValues.isEmpty()){
+                            request.setFilterValues(filteredValues);
+                        }
                         StreamMetadataResponse eventStream = webhookB2bClient.createEventStream(request);
                         this.eventStreamList.add(eventStream);
-                    }catch (HttpStatusCodeException e) {
-                        log.error("Error {} in create Stream version {}, group {}, replaceID {}, filteredValues {}",
-                                e.getStatusCode(),streamVersion,listGroups,replaceId,filteredValues);
-                        this.notificationError = e;
-                        sharedSteps.setNotificationError(e);
                     }
                 }
-            }
-            case V23 -> {
-                this.eventStreamListV23 = new LinkedList<>();
-                for(StreamCreationRequestV23 request: streamCreationRequestListV23){
-                    if (filteredValues!= null && !filteredValues.isEmpty()){
-                        request.setFilterValues(filteredValues);
-                    }
-                    if(listGroups != null){
-                        request.setGroups(listGroups);
-                    }
-                    if (replaceId){
-                        request.setReplacedStreamId(sharedSteps.getEventStreamV23().getStreamId());
-                    }
-
-                    try{
+                case V23 -> {
+                    this.eventStreamListV23 = new LinkedList<>();
+                    for(StreamCreationRequestV23 request: streamCreationRequestListV23){
+                        if (filteredValues!= null && !filteredValues.isEmpty()){
+                            request.setFilterValues(filteredValues);
+                        }
+                        if(listGroups != null){
+                            request.setGroups(listGroups);
+                        }
+                        if (replaceId){
+                            request.setReplacedStreamId(sharedSteps.getEventStreamV23().getStreamId());
+                        }
                         StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
                         this.eventStreamListV23.add(eventStream);
-                    }catch (HttpStatusCodeException e) {
-                        log.error("Error {} in create Stream version {}, group {}, replaceID {}, filteredValues {}",
-                                e.getStatusCode(),streamVersion,listGroups,replaceId,filteredValues);
-                        this.notificationError = e;
-                        sharedSteps.setNotificationError(e);
                     }
                 }
             }
+        }catch (HttpStatusCodeException e) {
+            log.error("Error {} in create Stream version {}, group {}, replaceID {}, filteredValues {}",
+                    e.getStatusCode(),streamVersion,listGroups,replaceId,filteredValues);
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
         }
     }
 
