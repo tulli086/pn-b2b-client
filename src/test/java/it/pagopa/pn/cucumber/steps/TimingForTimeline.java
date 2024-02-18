@@ -1,15 +1,23 @@
-package it.pagopa.pn.cucumber.utils;
+package it.pagopa.pn.cucumber.steps;
 
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 //TODO: Usare ovunque è necessario il timing e verificare se parametrizzare da propertiesFile
+
 public class TimingForTimeline {
 
-    @Autowired
-    private SharedSteps sharedSteps;
+    private final SharedSteps sharedSteps;
     public record TimingResult(int numCheck,int waiting) { }
+
+    public TimingForTimeline(SharedSteps sharedSteps){
+        this.sharedSteps = sharedSteps;
+    }
+
 
     public TimingResult getTimingForElement(String element){
         element = element.trim().toUpperCase();
