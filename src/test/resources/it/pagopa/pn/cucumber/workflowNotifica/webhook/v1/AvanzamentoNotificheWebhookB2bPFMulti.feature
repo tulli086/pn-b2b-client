@@ -245,8 +245,7 @@ Feature: avanzamento notifiche webhook b2b multi
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
-    And Si verifica che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
+    Then Si verifica che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
   @cleanC3 @webhook2
   Scenario: [B2B-STREAM-TIMELINE_MULTI_PF_12] Invio notifica digitale lettura evento PAYMENT nel webhook con controllo data
@@ -262,8 +261,7 @@ Feature: avanzamento notifiche webhook b2b multi
     And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And l'avviso pagopa viene pagato correttamente dall'utente 1
-    Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "PAYMENT"
-    And Si verifica che l'elemento di timeline "PAYMENT" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
+    Then Si verifica che l'elemento di timeline "PAYMENT" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
   @cleanC3 @webhook2
   Scenario: [B2B-STREAM-TIMELINE_MULTI_PF_13]Invio notifica digitale lettura evento SEND_ANALOG_PROGRESS nel webhook con controllo data
@@ -277,8 +275,7 @@ Feature: avanzamento notifiche webhook b2b multi
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_ANALOG_PROGRESS"
-    And Si verifica che l'elemento di timeline "SEND_ANALOG_PROGRESS" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
+    Then Si verifica che l'elemento di timeline "SEND_ANALOG_PROGRESS" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
 
   @cleanC3 @webhook2
@@ -293,8 +290,7 @@ Feature: avanzamento notifiche webhook b2b multi
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_ANALOG_FEEDBACK"
-    And Si verifica che l'elemento di timeline "SEND_ANALOG_FEEDBACK" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
+    Then Si verifica che l'elemento di timeline "SEND_ANALOG_FEEDBACK" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
   @cleanC3 @webhook2
   Scenario: [B2B-STREAM-TIMELINE_MULTI_PF_15] Invio notifica digitale lettura evento SEND_DIGITAL_PROGRESS nel webhook con controllo data
@@ -306,8 +302,7 @@ Feature: avanzamento notifiche webhook b2b multi
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_DIGITAL_PROGRESS"
-    And Si verifica che l'elemento di timeline "SEND_DIGITAL_PROGRESS" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
+    Then Si verifica che l'elemento di timeline "SEND_DIGITAL_PROGRESS" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
 
   @cleanC3 @webhook2
@@ -320,8 +315,7 @@ Feature: avanzamento notifiche webhook b2b multi
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK"
-    And Si verifica che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
+    Then Si verifica che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
 
   @clean3 @webhook2 @oldWebhookTest
@@ -336,8 +330,7 @@ Feature: avanzamento notifiche webhook b2b multi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi dello stream del "Comune_Multi" fino allo stato "DELIVERING"
     And "Mario Gherkin" legge la notifica
-    Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "NOTIFICATION_VIEWED"
-    And Si verifica che l'elemento di timeline "NOTIFICATION_VIEWED" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
+    Then Si verifica che l'elemento di timeline "NOTIFICATION_VIEWED" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
 
   @cleanC3 @webhook2 @oldWebhookTest

@@ -692,6 +692,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             Assertions.assertNotNull(progressResponseElement);
             //TODO: ATTENZIONE Assertions.assertNotEquals(progressResponseElement.getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
+            Assertions.assertNotSame(progressResponseElement.getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
             log.info("EventProgress: " + progressResponseElement);
 
         }catch(AssertionFailedError assertionFailedError){
@@ -734,7 +735,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         try{
             Assertions.assertNotNull(progressResponseElement);
-            // Assertions.assertNotSame(progressResponseElement.getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
+            Assertions.assertNotEquals(progressResponseElement.getElement().getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
             log.info("EventProgress: " + progressResponseElement);
 
         }catch(AssertionFailedError assertionFailedError){
@@ -786,7 +787,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             Assertions.assertNotNull(progressResponseElement);
             //TODO Verificare...
-            Assertions.assertNotSame(progressResponseElement.getElement().getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
+            Assertions.assertNotEquals(progressResponseElement.getElement().getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
             log.info("EventProgress: " + progressResponseElement);
             sharedSteps.setProgressResponseElementV23(progressResponseElement);
             sharedSteps.getTimelineElementV23().getDetails();
@@ -811,6 +812,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             log.info("event timestamp : {}",EventTimestamp);
             log.info("notification timestamp : {}",NotificationTimestamp);
 
+            //TODO: assertNotSame ????!!!!
             Assertions.assertNotSame(EventTimestamp,NotificationTimestamp);
 
         }catch(AssertionFailedError assertionFailedError){
@@ -845,73 +847,14 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Then("Si verifica che l'elemento di timeline {string} dello stream di {string} non abbia il timestamp uguale a quella della notifica")
     public void readStreamTimelineElementAndVerify(String timelineEventCategory,String pa) {
-        setPaWebhook(pa);
-
-        TimelineElementSearchResult<TimelineElementCategoryV20> timelineEventForStream = getTimelineEventForStream(StreamVersion.V10, timelineEventCategory);
-
-        TimelineElementCategoryV20 timelineElementCategory = timelineEventForStream.getTimelineElementCategory();
-        int numCheck = timelineEventForStream.getNumCheck();
-        int waiting = timelineEventForStream.getWaiting();
-
-        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23 timelineElementInternalCategory =
-                it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.valueOf(timelineElementCategory.name());
-
-        boolean finish = checkInternalTimeline(timelineElementCategory.name(),numCheck,waiting);
-        Assertions.assertTrue(finish);
-
-        OffsetDateTime EventTimestamp;
-        OffsetDateTime NotificationTimestamp;
-        try{
-            Assertions.assertNotNull(progressResponseElementList);
-
-            EventTimestamp = progressResponseElementList.stream().filter(elem -> elem.getTimelineEventCategory().equals(timelineElementCategory)).findAny().get().getTimestamp();
-            NotificationTimestamp =sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp();
-
-            log.info("event timestamp : {}",EventTimestamp);
-            log.info("notification timestamp : {}",NotificationTimestamp);
-
-            Assertions.assertNotEquals(EventTimestamp, NotificationTimestamp);
-
-        }catch(AssertionFailedError assertionFailedError){
-            String message = assertionFailedError.getMessage()+
-                    "{IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" }";
-            throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
-        }
+        //il controllo viene già fatto però ATTENZIONE era fatto in maniera errata
+        readStreamTimelineElement(pa,timelineEventCategory);
     }
 
     @Then("Si verifica che l'elemento di timeline {string} dello stream di {string} non abbia il timestamp uguale a quella della notifica con la versione V23")
     public void readStreamTimelineElementAndVerifyV23(String timelineEventCategory,String pa) {
-        setPaWebhook(pa);
-
-        TimelineElementSearchResult<TimelineElementCategoryV23> timelineForStream = getTimelineEventForStream(StreamVersion.V23, timelineEventCategory);
-        TimelineElementCategoryV23 timelineElementCategory = timelineForStream.getTimelineElementCategory();
-        int numCheck = timelineForStream.getNumCheck();
-        int waiting = timelineForStream.getWaiting();
-
-        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23 timelineElementInternalCategory =
-                it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23.valueOf(timelineForStream.timelineElementCategory.name());
-
-        boolean finish = checkInternalTimeline(timelineElementCategory.name(),numCheck,waiting);
-        Assertions.assertTrue(finish);
-
-        OffsetDateTime EventTimestamp;
-        OffsetDateTime NotificationTimestamp;
-        try{
-            Assertions.assertNotNull(progressResponseElementListV23);
-            //TODO Verificare...
-            EventTimestamp = progressResponseElementListV23.stream().filter(elem -> elem.getElement().getCategory().equals(timelineElementCategory)).findAny().get().getElement().getTimestamp();
-            NotificationTimestamp =sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp();
-
-            log.info("event timestamp : {}",EventTimestamp);
-            log.info("notification timestamp : {}",NotificationTimestamp);
-
-            Assertions.assertNotEquals(EventTimestamp,NotificationTimestamp);
-
-        }catch(AssertionFailedError assertionFailedError){
-            String message = assertionFailedError.getMessage()+
-                    "{IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamListV23.get(0).getStreamId()+" }";
-            throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
-        }
+        //Il controllo viene effettuato
+        readStreamTimelineElementV23(pa,timelineEventCategory);
     }
 
 
@@ -1266,7 +1209,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Then("viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati V23")
     public void vieneVerificatoCheIlProgressResponseElementIdDelWebhookSiaIncrementaleESenzaDuplicatiV23() {
-
         List<ProgressResponseElementV23> progressResponseElements = sharedSteps.getProgressResponseElementsV23();
         Assertions.assertNotNull(progressResponseElements);
         boolean counterIncrement = true ;
@@ -1381,7 +1323,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
         //TODO Verificare il corretto funziionamento...
 
-       Assertions.assertNotNull(timelineElementDetails);
+        //Assertion for null check
+        Assertions.assertNotNull(timelineElementDetails);
         Assertions.assertNotNull(timelineElementDetails.getLegalFactId());
         Assertions.assertNotNull(timelineElementWebhookDetails);
         Assertions.assertNotNull(timelineElementWebhookDetails.getLegalFactId());
