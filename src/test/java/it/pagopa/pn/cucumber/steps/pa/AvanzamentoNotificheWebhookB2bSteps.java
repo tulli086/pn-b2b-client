@@ -146,9 +146,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si {string} un gruppo allo stream creat(o)(i) con versione {string} per il comune {string} e apiKey aggiornata")
     public void updateGroupsStreamUpadateApiKey(String action, String versione, String pa) {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         if(sharedSteps.getRequestNewApiKey()!= null){
             streamRequestV23 = new StreamRequestV23();
             if ("rimuove".equalsIgnoreCase(action) && sharedSteps.getRequestNewApiKey()!= null && sharedSteps.getRequestNewApiKey().getGroups().size()>=2) {
@@ -162,7 +160,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} con un gruppo che non appartiene al comune {string}")
     public void updateStreamByGroupsNoPA(String versione,String pa) {
-
         try {
             streamRequest = new StreamRequestV23();
             if ("Comune_1".equalsIgnoreCase(pa)) {
@@ -237,17 +234,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si disabilita(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
     public void disableStreamUpdateApiKey(String versione) {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         disableStream(versione);
     }
 
     @And("si disabilita(no) (lo)(gli) stream che non esiste e apiKey aggiornata")
     public void disableStreamNotexist() {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         try{
             webhookB2bClient.disableEventStreamV23(UUID.randomUUID());
         }catch (HttpStatusCodeException e) {
@@ -258,9 +251,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si cancella(no) (lo)(gli) stream che non esiste e apiKey aggiornata")
     public void deleteStreamNotexist() {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         try{
             webhookB2bClient.deleteEventStreamV23(UUID.randomUUID());
         }catch (HttpStatusCodeException e) {
@@ -271,9 +262,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si consuma(no) (lo)(gli) stream che non esiste e apiKey aggiornata")
     public void consumeStreamNotexist() {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         try{
             webhookB2bClient.consumeEventStreamHttpV23(UUID.randomUUID(), null);
         }catch (HttpStatusCodeException e) {
@@ -284,9 +273,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si legge(no) (lo)(gli) stream che non esiste e apiKey aggiornata")
     public void readStreamNotexist() {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         try{
             webhookB2bClient.getEventStream(UUID.randomUUID());
         }catch (HttpStatusCodeException e) {
@@ -297,9 +284,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si aggiorna(no) (lo)(gli) stream che non esiste e apiKey aggiornata")
     public void updateStreamNotexist() {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         try{
             webhookB2bClient.updateEventStreamV23(UUID.randomUUID(),new StreamRequestV23());
         }catch (HttpStatusCodeException e) {
@@ -344,9 +329,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Then("lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione {string} e apiKey aggiornata")
     public void streamBeenCreatedAndCorrectlyRetrievedByStreamIdUpdateApiKey(String versione) {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         streamBeenCreatedAndCorrectlyRetrievedByStreamId(versione);
     }
 
@@ -373,9 +356,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("lo stream viene recuperato dal sistema tramite stream id con versione {string} e apiKey aggiornata")
     public void streamBeenRetrievedByStreamIdUpdateApiKey(String versione) {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         streamBeenRetrievedByStreamId(versione);
     }
 
@@ -625,9 +606,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("vengono letti gli eventi dello stream del {string} fino allo stato {string} con versione V23 e apiKey aggiornata con position {int}")
     public void readStreamEventsStateV23(String pa,String status, Integer position) {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         setPaWebhook(pa);
         NotificationStatus notificationStatus;
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatus notificationInternalStatus;
@@ -1235,9 +1214,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Then("vengono letti gli eventi dello stream del {string} fino all'elemento di timeline {string} con versione V23 e apiKey aggiornata con position {int}")
     public void readStreamTimelineElementV23(String pa,String timelineEventCategory,Integer position) {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         setPaWebhook(pa);
         TimelineElementCategoryV23 timelineElementCategory;
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23 timelineElementInternalCategory;
