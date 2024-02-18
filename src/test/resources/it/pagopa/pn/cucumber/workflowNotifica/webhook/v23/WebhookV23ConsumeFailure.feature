@@ -11,7 +11,8 @@ Feature: tentativo consumo stream
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream per il "Comune_1" con versione "V23"
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -32,7 +33,8 @@ Feature: tentativo consumo stream
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream per il "Comune_1" con versione "V23"
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And viene modificato lo stato dell'apiKey in "BLOCK"
@@ -54,7 +56,8 @@ Feature: tentativo consumo stream
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream per il "Comune_1" con versione "V23"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And si disabilita lo stream creato con versione "V23"
     And l'operazione non ha prodotto errori
@@ -72,7 +75,8 @@ Feature: tentativo consumo stream
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream per il "Comune_1" con versione "V23"
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -92,7 +96,8 @@ Feature: tentativo consumo stream
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream per il "Comune_1" con versione "V23"
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     When vengono letti gli eventi di timeline dello stream con versione "V10" -Cross Versioning
@@ -127,7 +132,8 @@ Feature: tentativo consumo stream
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream per il "Comune_1" con versione "V23"
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And viene modificato lo stato dell'apiKey in "BLOCK"
@@ -149,7 +155,8 @@ Feature: tentativo consumo stream
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con due gruppi
     And viene impostata l'apikey appena generata
-    And si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "UGUALI" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "UGUALI"
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And viene modificato lo stato dell'apiKey in "BLOCK"

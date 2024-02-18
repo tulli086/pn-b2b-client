@@ -6,7 +6,8 @@ Feature: verifica creazione stream
     Given si predispone 10 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    When si creano i nuovi stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si creano i nuovi stream per il "Comune_1" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
@@ -18,7 +19,8 @@ Feature: verifica creazione stream
     Given si predispone 10 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si creano i nuovi stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si creano i nuovi stream per il "Comune_1" con versione "V23"
     When si predispone 1 nuovo stream denominato "stream-test-11" con eventType "TIMELINE" con versione "V23"
     And si crea il nuovo stream per il "Comune_1" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
@@ -30,7 +32,8 @@ Feature: verifica creazione stream
     Given si predispone 10 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si creano i nuovi stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si creano i nuovi stream per il "Comune_1" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
@@ -42,7 +45,8 @@ Feature: verifica creazione stream
     Given si predispone 10 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    And si creano i nuovi stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si creano i nuovi stream per il "Comune_1" con versione "V23"
     When si predispone 1 nuovo stream denominato "stream-test-11" con eventType "TIMELINE" con versione "V23"
     And si crea il nuovo stream per il "Comune_1" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
@@ -54,7 +58,8 @@ Feature: verifica creazione stream
     Given si predispone 10 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream per il "Comune_1" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
@@ -66,7 +71,8 @@ Feature: verifica creazione stream
     Given si predispone 10 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    And si creano i nuovi stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si creano i nuovi stream per il "Comune_1" con versione "V23"
     When si predispone 1 nuovo stream denominato "stream-test-11" con eventType "STATUS" con versione "V23"
     And si crea il nuovo stream per il "Comune_1" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
@@ -78,7 +84,8 @@ Feature: verifica creazione stream
     Given si predispone 10 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si creano i nuovi stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si creano i nuovi stream per il "Comune_1" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
@@ -90,7 +97,8 @@ Feature: verifica creazione stream
     Given si predispone 10 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    And si creano i nuovi stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si creano i nuovi stream per il "Comune_1" con versione "V23"
     When si predispone 1 nuovo stream denominato "stream-test-11" con eventType "STATUS" con versione "V23"
     And si crea il nuovo stream per il "Comune_1" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
@@ -103,7 +111,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "FIRST" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "FIRST"
     Then si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
     And viene modificato lo stato dell'apiKey in "BLOCK"
@@ -114,7 +123,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "ALTRA_PA" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "ALTRA_PA"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -124,7 +134,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "LAST" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "LAST"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -134,7 +145,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si creano i nuovi stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si creano i nuovi stream per il "Comune_1" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
@@ -147,7 +159,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "FIRST" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "FIRST"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -157,7 +170,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "ALTRA_PA" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "ALTRA_PA"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -167,7 +181,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "LAST" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "LAST"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -177,7 +192,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si creano i nuovi stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si creano i nuovi stream per il "Comune_1" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
@@ -189,7 +205,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream per il "Comune_1" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
@@ -201,7 +218,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "NO_GROUPS" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "NO_GROUPS"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -211,7 +229,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con versione "V23" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream per il "Comune_1" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
@@ -223,7 +242,9 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "NO_GROUPS" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "NO_GROUPS"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -233,7 +254,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "FIRST" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "FIRST"
     Then si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
     And viene modificato lo stato dell'apiKey in "BLOCK"
@@ -244,7 +266,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con due gruppi
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "LAST" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "LAST"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
@@ -256,7 +279,8 @@ Feature: verifica creazione stream
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
-    When si crea il nuovo stream per il "Comune_1" con replaceId "NO_SET" con un gruppo disponibile "ALL" e apiKey aggiornata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "ALL"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata

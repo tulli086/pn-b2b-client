@@ -38,6 +38,8 @@ import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.V10;
+
 @Slf4j
 public class AvanzamentoNotificheWebhookB2bSteps {
 
@@ -59,7 +61,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private HttpStatusCodeException notificationError;
     private StreamRequestV23 streamRequest;
 
-    public enum StreamVersion {V23,V1};
+    public enum StreamVersion {V23,V10};
 
     @Autowired
     public AvanzamentoNotificheWebhookB2bSteps(IPnWebhookB2bClient webhookB2bClient, SharedSteps sharedSteps) {
@@ -69,17 +71,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         this.b2bClient = sharedSteps.getB2bClient();
     }
 
-
-    @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream denominat(i)(o) {string} con eventType {string} con versione V10")
-    public void setUpStreamsWithEventType(int number, String title, String eventType) {
+    @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream denominat(i)(o) {string} con eventType {string} con versione {string}")
+    public void setUpStreamsWithEventType(int number, String title, String eventType, String version) {
         this.requestNumber = number;
-        createStreamRequest(StreamVersion.V1,new LinkedList<>(),number,title,eventType);
-    }
-
-    @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream denominat(i)(o) {string} con eventType {string} con versione V23")
-    public void setUpStreamsWithEventTypeV23(int number, String title, String eventType) {
-        this.requestNumber = number;
-        createStreamRequest(StreamVersion.V23,new LinkedList<>(),number,title,eventType);
+        createStreamRequest(StreamVersion.valueOf(version.trim().toUpperCase()),new LinkedList<>(),number,title,eventType);
     }
 
     @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream V2 denominat(i)(o) {string} con eventType {string}")
@@ -89,168 +84,57 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 Arrays.stream(NotificationStatus.values()).map(Enum::toString).toList() :
                 Arrays.stream(TimelineElementCategory.values()).map(Enum::toString).toList();
 
-        createStreamRequest(StreamVersion.V1,filteredValues,number,title,eventType);
-    }
-
-
-
-
-
-    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} e apiKey aggiornata")
-    public void createdStreamNewApiKey(String pa, String versione) {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
-        createdStream(pa, versione);
+        createStreamRequest(V10,filteredValues,number,title,eventType);
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} e filtro di timeline {string}")
-    public void createdStreamByFilterValue(String pa, String versione,String filter) {
-        filterValues.add(filter);
-        createdStream(pa, versione);
+    public void createdStreamByFilterValue(String pa,String version,String filter) {
+        setPaWebhook(pa);
+        createStream(StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null);
     }
-
 
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string}")
-    public void createdStream(String pa, String versione) {
+    public void createdStream(String pa,String version) {
         setPaWebhook(pa);
-        switch (versione) {
-            case "V10":
-                this.eventStreamList = new LinkedList<>();
-                for(StreamCreationRequest request: streamCreationRequestList){
-                    try{
-                        if (filterValues!= null && !filterValues.isEmpty()){
-                            request.setFilterValues(filterValues);
-                        }
-                        StreamMetadataResponse eventStream = webhookB2bClient.createEventStream(request);
-                        this.eventStreamList.add(eventStream);
-                    }catch (HttpStatusCodeException e) {
-                        this.notificationError = e;
-                        if (e instanceof HttpStatusCodeException) {
-                            sharedSteps.setNotificationError((HttpStatusCodeException) e);
-                        }
-                    }
-                }
-                break;
-            case "V23":
-                this.eventStreamListV23 = new LinkedList<>();
-                for(StreamCreationRequestV23 request: streamCreationRequestListV23){
-                    try{
-                        if (filterValues!= null && !filterValues.isEmpty()){
-                            request.setFilterValues(filterValues);
-                        }
-                        request.setGroups(sharedSteps.getRequestNewApiKey().getGroups());
-                        StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
-                        this.eventStreamListV23.add(eventStream);
-                    }catch (HttpStatusCodeException e) {
-                        this.notificationError = e;
-                        if (e instanceof HttpStatusCodeException) {
-                            sharedSteps.setNotificationError((HttpStatusCodeException) e);
-                        }
-                    }
-                }
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
+        createStream(StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null);
     }
 
-    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con replaceId {string} con un gruppo disponibile {string} e apiKey aggiornata")
-    public void createdStreamByGroupsUpdateApiKey(String pa, String replaceId, String position) {
+    @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con un gruppo disponibile {string}")
+    public void createdStreamByGroups(String pa, String position) {
+        setPaWebhook(pa);
         if(sharedSteps.getResponseNewApiKey()!= null){
             webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
         }
-        createdStreamByGroups( pa, replaceId,  position);
+        createStream(StreamVersion.V23,getGruopForStream(position,pa),false, null);
     }
 
-
-    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con replaceId {string} con un gruppo disponibile {string}")
-    public void createdStreamByGroups(String pa, String replaceId, String position) {
+    @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con replaceId con un gruppo disponibile {string}")
+    public void createdStreamByGroupsWithReplaceId(String pa, String position) {
         setPaWebhook(pa);
-        List<String> listGroups = new ArrayList<>();
-        switch (position) {
-            case "FIRST":
-                Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.FIRST));
-                listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.FIRST));
-                break;
-            case "LAST":
-                Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
-                listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
-                break;
-            case "ALL":
-                Assertions.assertNotNull(sharedSteps.getGroupAllActiveByPa(pa));
-                listGroups = sharedSteps.getGroupAllActiveByPa(pa);
-                break;
-            case "UGUALI":
-                Assertions.assertNotNull(sharedSteps.getRequestNewApiKey());
-                listGroups = sharedSteps.getRequestNewApiKey().getGroups();
-                break;
-            case "ALTRA_PA":
-                if ("Comune_1".equalsIgnoreCase(pa)){
-                    pa = "Comune_Multi";
-                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
-                    listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
-                }else {
-                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
-                    listGroups.add(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
-                }
-                break;
-            case "NO_GROUPS":
-                listGroups = null;
-                break;
-
-            default:
-                throw new IllegalArgumentException();
-        }
-
-        this.eventStreamListV23 = new LinkedList<>();
-        for(StreamCreationRequestV23 request: streamCreationRequestListV23){
-            try{
-                request.setGroups(listGroups);
-                if ("SET".equalsIgnoreCase(replaceId)){
-                    request.setReplacedStreamId(sharedSteps.getEventStreamV23().getStreamId());
-                }
-                StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
-                this.eventStreamListV23.add(eventStream);
-            }catch (HttpStatusCodeException e) {
-                this.notificationError = e;
-                if (e instanceof HttpStatusCodeException) {
-                    sharedSteps.setNotificationError((HttpStatusCodeException) e);
-                }
-            }
-        }
+        createStream(StreamVersion.V23,getGruopForStream(position,pa),true, null);
     }
 
-    @And("si cancella(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
-    public void deleteStreamUpadateApiKey(String versione) {
+    @When("viene aggiornata la apiKey utilizzata per gli stream")
+    public void updateApiKeyForStream() {
         if(sharedSteps.getResponseNewApiKey()!= null){
             webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
         }
-        deleteStream(versione);
     }
+
     @And("si cancella(no) (lo)(gli) stream creat(o)(i) con versione {string}")
     public void deleteStream(String versione) {
-        switch (versione) {
-            case "V10":
-                for(StreamMetadataResponse eventStream: eventStreamList){
+        switch (StreamVersion.valueOf(versione.trim().toUpperCase())) {
+            case V10 -> {
+                for (StreamMetadataResponse eventStream : eventStreamList) {
                     webhookB2bClient.deleteEventStream(eventStream.getStreamId());
                 }
-                break;
-            case "V23":
-                try{
-                    for(StreamMetadataResponseV23 eventStream: eventStreamListV23){
-                        webhookB2bClient.deleteEventStreamV23(eventStream.getStreamId());
-                    }
-                }catch (HttpStatusCodeException e) {
-                    this.notificationError = e;
-                    if (e instanceof HttpStatusCodeException) {
-                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
-                    }
+            }
+            case V23 -> {
+                for(StreamMetadataResponseV23 eventStream: eventStreamListV23){
+                    webhookB2bClient.deleteEventStreamV23(eventStream.getStreamId());
                 }
-
-                break;
-            default:
-                throw new IllegalArgumentException();
+            }
+            default -> throw new IllegalArgumentException();
         }
     }
 
@@ -276,8 +160,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 streamRequestV23.setGroups(sharedSteps.getGroupAllActiveByPa(pa));
             }
         }
-
-
         updateStream(versione);
     }
 
@@ -334,7 +216,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string}")
     public void updateStream (String versione) {
-
         switch (versione) {
             case "V10":
                 for(StreamMetadataResponse eventStream: eventStreamList){
@@ -360,7 +241,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 throw new IllegalArgumentException();
         }
     }
-
 
 
     @And("si disabilita(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
@@ -2365,7 +2245,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private void createStreamRequest(StreamVersion streamVersion, List<String> filterValues, int number, String title, String eventType){
         switch(streamVersion){
-            case V1 -> {
+            case V10 -> {
                 this.streamCreationRequestList = new LinkedList<>();
                 for(int i = 0; i<number; i++){
                     StreamCreationRequest streamRequest = new StreamCreationRequest();
@@ -2390,6 +2270,78 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+    private void createStream(StreamVersion streamVersion,List<String> listGroups, boolean replaceId,List<String> filteredValues){
+        switch (streamVersion){
+            case V10 -> {
+                this.eventStreamList = new LinkedList<>();
+                for(StreamCreationRequest request: streamCreationRequestList){
+                    if (filteredValues!= null && !filteredValues.isEmpty()){
+                        request.setFilterValues(filteredValues);
+                    }
+                    try{
+                        StreamMetadataResponse eventStream = webhookB2bClient.createEventStream(request);
+                        this.eventStreamList.add(eventStream);
+                    }catch (HttpStatusCodeException e) {
+                        log.error("Error {} in create Stream version {}, group {}, replaceID {}, filteredValues {}",
+                                e.getStatusCode(),streamVersion,listGroups,replaceId,filteredValues);
+                        this.notificationError = e;
+                        sharedSteps.setNotificationError(e);
+                    }
+                }
+            }
+            case V23 -> {
+                this.eventStreamListV23 = new LinkedList<>();
+                for(StreamCreationRequestV23 request: streamCreationRequestListV23){
+                    if (filteredValues!= null && !filteredValues.isEmpty()){
+                        request.setFilterValues(filteredValues);
+                    }
+                    if(listGroups != null){
+                        request.setGroups(listGroups);
+                    }
+                    if (replaceId){
+                        request.setReplacedStreamId(sharedSteps.getEventStreamV23().getStreamId());
+                    }
+
+                    try{
+                        StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
+                        this.eventStreamListV23.add(eventStream);
+                    }catch (HttpStatusCodeException e) {
+                        log.error("Error {} in create Stream version {}, group {}, replaceID {}, filteredValues {}",
+                                e.getStatusCode(),streamVersion,listGroups,replaceId,filteredValues);
+                        this.notificationError = e;
+                        sharedSteps.setNotificationError(e);
+                    }
+                }
+            }
+        }
+    }
+
+    private List<String> getGruopForStream(String position, String pa){
+        List<String> groupList;
+        position = position.trim().toUpperCase();
+        switch (position) {
+            case "FIRST", "LAST" -> groupList = List.of(sharedSteps.getGroupIdByPa(pa, GroupPosition.valueOf(position));
+            case "ALL" ->  groupList = sharedSteps.getGroupAllActiveByPa(pa);
+            case "NO_GROUPS" -> groupList = null;
+            case "UGUALI" -> {
+                Assertions.assertNotNull(sharedSteps.getRequestNewApiKey());
+                groupList = sharedSteps.getRequestNewApiKey().getGroups();
+            }
+            case "ALTRA_PA" -> {
+                if ("Comune_1".equalsIgnoreCase(pa)) {
+                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.LAST));
+                    groupList = List.of(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.LAST));
+                } else {
+                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
+                    groupList = List.of(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
+                }
+            }
+            default -> throw new IllegalArgumentException();
+        }
+        return groupList;
+    }
+
+
     private void setPaWebhook(String pa){
         switch (pa){
             case "Comune_1":
@@ -2408,6 +2360,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 throw new IllegalArgumentException();
         }
     }
+
+
+
 }
 
 

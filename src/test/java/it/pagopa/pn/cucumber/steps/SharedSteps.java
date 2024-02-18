@@ -116,7 +116,7 @@ public class SharedSteps {
     private ProgressResponseElementV23 progressResponseElementV23;
 
 
-    private it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse eventStream;
+    private it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse eventStream;
     private StreamMetadataResponseV23 eventStreamV23;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -197,7 +197,7 @@ public class SharedSteps {
     private final Duration waitingForReadCourtesyMessageDefault = DurationStyle.detectAndParse("5m");
 
 
-    private List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.ProgressResponseElement> progressResponseElements = null;
+    private List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement> progressResponseElements = null;
 
 
 
@@ -2352,11 +2352,11 @@ public class SharedSteps {
     }
 
 
-    public List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.ProgressResponseElement> getProgressResponseElements() {
+    public List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement> getProgressResponseElements() {
         return progressResponseElements;
     }
 
-    public void setProgressResponseElements(List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.ProgressResponseElement> progressResponseElements) {
+    public void setProgressResponseElements(List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement> progressResponseElements) {
         this.progressResponseElements = progressResponseElements;
     }
 
@@ -2466,11 +2466,11 @@ public class SharedSteps {
         this.eventStreamV23 = eventStreamV23;
     }
 
-    public it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse getEventStream() {
+    public it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse getEventStream() {
         return eventStream;
     }
 
-    public void setEventStream(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.StreamMetadataResponse eventStream) {
+    public void setEventStream(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse eventStream) {
         this.eventStream = eventStream;
     }
 
