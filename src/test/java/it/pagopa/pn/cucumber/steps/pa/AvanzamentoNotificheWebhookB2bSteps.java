@@ -55,8 +55,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private List<StreamCreationRequestV23> streamCreationRequestListV23;
     private List<StreamMetadataResponseV23> eventStreamListV23;
     private StreamRequestV23 streamRequestV23;
-
-    private  List<String> filterValues;
     private Integer requestNumber;
     private HttpStatusCodeException notificationError;
     private StreamRequestV23 streamRequest;
@@ -70,6 +68,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         this.webRecipientClient = sharedSteps.getWebRecipientClient();
         this.b2bClient = sharedSteps.getB2bClient();
     }
+
 
     @Given("si predispo(ngono)(ne) {int} nuov(i)(o) stream denominat(i)(o) {string} con eventType {string} con versione {string}")
     public void setUpStreamsWithEventType(int number, String title, String eventType, String version) {
@@ -141,9 +140,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
     public void updateStreamUpadateApiKey(String versione) {
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
+        updateApiKeyForStream();
         updateStream(versione);
     }
 
@@ -176,9 +173,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
         } catch (HttpStatusCodeException e) {
             this.notificationError = e;
-            if (e instanceof HttpStatusCodeException) {
-                sharedSteps.setNotificationError((HttpStatusCodeException) e);
-            }
+            sharedSteps.setNotificationError(e);
         }
         updateStream(versione);
     }
@@ -204,9 +199,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     webhookB2bClient.updateEventStreamV23(idStream,streamRequestV23);
                 }catch (HttpStatusCodeException e) {
                     this.notificationError = e;
-                    if (e instanceof HttpStatusCodeException) {
-                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
-                    }
+                    sharedSteps.setNotificationError(e);
                 }
                 break;
             default:
@@ -231,9 +224,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     }
                 }catch (HttpStatusCodeException e) {
                     this.notificationError = e;
-                    if (e instanceof HttpStatusCodeException) {
-                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
-                    }
+                    sharedSteps.setNotificationError(e);
                 }
 
                 break;
@@ -241,6 +232,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 throw new IllegalArgumentException();
         }
     }
+
 
 
     @And("si disabilita(no) (lo)(gli) stream creat(o)(i) con versione {string} e apiKey aggiornata")
@@ -260,9 +252,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             webhookB2bClient.disableEventStreamV23(UUID.randomUUID());
         }catch (HttpStatusCodeException e) {
             this.notificationError = e;
-            if (e instanceof HttpStatusCodeException) {
-                sharedSteps.setNotificationError((HttpStatusCodeException) e);
-            }
+            sharedSteps.setNotificationError(e);
         }
     }
 
@@ -275,9 +265,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             webhookB2bClient.deleteEventStreamV23(UUID.randomUUID());
         }catch (HttpStatusCodeException e) {
             this.notificationError = e;
-            if (e instanceof HttpStatusCodeException) {
-                sharedSteps.setNotificationError((HttpStatusCodeException) e);
-            }
+            sharedSteps.setNotificationError(e);
         }
     }
 
@@ -290,9 +278,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             webhookB2bClient.consumeEventStreamHttpV23(UUID.randomUUID(), null);
         }catch (HttpStatusCodeException e) {
             this.notificationError = e;
-            if (e instanceof HttpStatusCodeException) {
-                sharedSteps.setNotificationError((HttpStatusCodeException) e);
-            }
+            sharedSteps.setNotificationError(e);
         }
     }
 
@@ -305,9 +291,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             webhookB2bClient.getEventStream(UUID.randomUUID());
         }catch (HttpStatusCodeException e) {
             this.notificationError = e;
-            if (e instanceof HttpStatusCodeException) {
-                sharedSteps.setNotificationError((HttpStatusCodeException) e);
-            }
+            sharedSteps.setNotificationError(e);
         }
     }
 
@@ -320,29 +304,19 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             webhookB2bClient.updateEventStreamV23(UUID.randomUUID(),new StreamRequestV23());
         }catch (HttpStatusCodeException e) {
             this.notificationError = e;
-            if (e instanceof HttpStatusCodeException) {
-                sharedSteps.setNotificationError((HttpStatusCodeException) e);
-            }
+            sharedSteps.setNotificationError(e);
         }
     }
 
-    @And("si disabilita(no) (lo)(gli) stream creat(o)(i) con versione {string}")
+    @And("si disabilita(no) (lo)(gli) stream V23 creat(o)(i)")
     public void disableStream(String versione) {
-        switch (versione) {
-            case "V23":
-                try{
-                    for(StreamMetadataResponseV23 eventStream: eventStreamListV23){
-                        webhookB2bClient.disableEventStreamV23(eventStream.getStreamId());
-                    }
-                }catch (HttpStatusCodeException e) {
-                    this.notificationError = e;
-                    if (e instanceof HttpStatusCodeException) {
-                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
-                    }
-                }
-                break;
-            default:
-                throw new IllegalArgumentException();
+        try{
+            for(StreamMetadataResponseV23 eventStream: eventStreamListV23){
+                webhookB2bClient.disableEventStreamV23(eventStream.getStreamId());
+            }
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
         }
     }
 
@@ -414,9 +388,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     StreamMetadataResponse eventStream = webhookB2bClient.getEventStream(this.eventStreamList.get(0).getStreamId());
                 }catch (HttpStatusCodeException e) {
                     this.notificationError = e;
-                    if (e instanceof HttpStatusCodeException) {
-                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
-                    }
+                    sharedSteps.setNotificationError((HttpStatusCodeException) e);
                 }
                 break;
             case "V23":
@@ -424,9 +396,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     StreamMetadataResponseV23 eventStream = webhookB2bClient.getEventStreamV23(this.eventStreamListV23.get(0).getStreamId());
                 }catch (HttpStatusCodeException e) {
                     this.notificationError = e;
-                    if (e instanceof HttpStatusCodeException) {
-                        sharedSteps.setNotificationError((HttpStatusCodeException) e);
-                    }
+                    sharedSteps.setNotificationError((HttpStatusCodeException) e);
                 }
                 break;
             default:
@@ -1924,7 +1894,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             Thread.sleep(sharedSteps.getWait()*2);
         } catch (InterruptedException interruptedException) {
-            interruptedException.printStackTrace();
+           log.error("interruptedException {}",interruptedException.getMessage());
         }
         setPaWebhook(pa);
         switch (versione) {
@@ -1947,7 +1917,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             Thread.sleep(sharedSteps.getWait()*2);
         } catch (InterruptedException interruptedException) {
-            interruptedException.printStackTrace();
+            log.error("interruptedException {}",interruptedException.getMessage());
         }
         setPaWebhook(pa);
         ProgressResponseElement progressResponseElement = searchInWebhook(NotificationStatus.VIEWED, null, 0);

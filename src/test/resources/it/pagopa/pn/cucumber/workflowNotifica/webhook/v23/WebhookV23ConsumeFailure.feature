@@ -59,7 +59,7 @@ Feature: tentativo consumo stream
     And viene aggiornata la apiKey utilizzata per gli stream
     And si crea il nuovo stream per il "Comune_1" con versione "V23"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    And si disabilita lo stream creato con versione "V23"
+    And si disabilita lo stream V23 creato
     And l'operazione non ha prodotto errori
     When vengono letti gli eventi dello stream versione V23
     Then l'operazione ha prodotto un errore con status code "403"

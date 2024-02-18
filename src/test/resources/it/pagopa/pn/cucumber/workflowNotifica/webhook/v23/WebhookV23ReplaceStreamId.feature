@@ -105,7 +105,7 @@ Feature: replace streamID webhook
     And viene aggiornata la apiKey utilizzata per gli stream
     And si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "FIRST"
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
-    When si crea il nuovo stream V23 per il "Comune_1" con replaceId "SET" con un gruppo disponibile "FIRST"
+    When si crea il nuovo stream V23 per il "Comune_1" con replaceId con un gruppo disponibile "FIRST"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -214,7 +214,7 @@ Feature: replace streamID webhook
     And viene aggiornata la apiKey utilizzata per gli stream
     And si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "NO_GROUPS"
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
-    And si disabilita lo stream creato con versione "V23"
+    And si disabilita lo stream V23 creato
     And l'operazione non ha prodotto errori
     When si crea il nuovo stream V23 per il "Comune_1" con replaceId con un gruppo disponibile "NO_GROUPS"
     Then l'operazione ha prodotto un errore con status code "403"
