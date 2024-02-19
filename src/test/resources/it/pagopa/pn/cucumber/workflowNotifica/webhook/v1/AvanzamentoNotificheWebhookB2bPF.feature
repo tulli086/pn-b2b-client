@@ -2,11 +2,11 @@ Feature: avanzamento notifiche webhook b2b
 
   #Background:
    # Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
-  #Scenario: [B2B-STREAM_STATUS_7777] Creazione stream notifica
-   # Given vengono cancellati tutti gli stream presenti del "Comune_Multi" con versione "V10"
+  Scenario: [B2B-STREAM_STATUS_7777] Creazione stream notifica
+    Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10" - ONLY FOR DEBUG
 
   #@testLite @webhook1 @oldWebhookTest
-  @oldWebhookTest
+  @oldWebhookTest @oldWebhookTest
   Scenario: [B2B-STREAM_STATUS_1] Creazione stream notifica
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V10"
     When si crea il nuovo stream per il "Comune_1" con versione "V10"
@@ -15,7 +15,7 @@ Feature: avanzamento notifiche webhook b2b
     And viene verificata la corretta cancellazione con versione "V10"
 
   #@testLite @webhook1 @oldWebhookTest
-  @oldWebhookTest
+  @oldWebhookTest @oldWebhookTest
   Scenario: [B2B-STREAM_TIMELINE_1] Creazione stream notifica
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     When si crea il nuovo stream per il "Comune_1" con versione "V10"

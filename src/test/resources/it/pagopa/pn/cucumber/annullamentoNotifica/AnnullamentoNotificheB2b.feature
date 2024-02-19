@@ -841,8 +841,8 @@ Feature: annullamento notifiche b2b
 
   @Annullamento @webhook1 @clean
   Scenario: [B2B-STREAM_TIMELINE_24] Invio notifica digitale ed attesa Timeline NOTIFICATION_CANCELLATION_REQUEST stream v2_scenario positivo
-    Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
-    And viene generata una nuova notifica
+    #Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
+    Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin
@@ -854,8 +854,8 @@ Feature: annullamento notifiche b2b
 
   @Annullamento @webhook1 @clean
   Scenario: [B2B-STREAM_TIMELINE_24_1]Invio notifica digitale ed attesa Timeline NOTIFICATION_CANCELLED stream v2_scenario positivo
-    Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
-    And viene generata una nuova notifica
+    #Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
+    Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin
@@ -867,8 +867,8 @@ Feature: annullamento notifiche b2b
 
   @Annullamento @webhook1 @clean
   Scenario: [B2B-STREAM_TIMELINE_25] Invio notifica digitale ed attesa stato CANCELLED stream v2_scenario positivo
-    Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
-    And viene generata una nuova notifica
+    #Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
+    Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin
@@ -880,8 +880,8 @@ Feature: annullamento notifiche b2b
 
   @Annullamento1 @webhook2  @cleanC3
   Scenario: [B2B-STREAM_TIMELINE_24_2] Invio notifica digitale ed attesa di un eventi di Timeline stream v2  con controllo EventId incrementale e senza duplicati scenario positivo
-    Given vengono cancellati tutti gli stream presenti del "Comune_Multi" con versione "V10"
-    And viene generata una nuova notifica
+    #Given vengono cancellati tutti gli stream presenti del "Comune_Multi" con versione "V10"
+    Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di palermo           |
     And destinatario Mario Gherkin
@@ -902,8 +902,8 @@ Feature: annullamento notifiche b2b
 
   @Annullamento @webhook3 @ignore
   Scenario: [B2B-STREAM_TIMELINE_24_3] Invio notifica digitale ed attesa di un eventi di Timeline stream v2  con controllo EventId incrementale e senza duplicati scenario positivo
-    Given vengono cancellati tutti gli stream presenti del "Comune_2" con versione "V10"
-    And viene generata una nuova notifica
+    #Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
+    Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di palermo                |
     And destinatario Mario Gherkin
@@ -931,8 +931,8 @@ Feature: annullamento notifiche b2b
 
   @Annullamento1 @webhook2 @cleanC3
   Scenario: [B2B-STREAM_TIMELINE_24_4] Invio notifica digitale ed attesa di un eventi di Timeline stream v1  con controllo EventId incrementale e senza duplicati scenario positivo
-    Given vengono cancellati tutti gli stream presenti del "Comune_Multi" con versione "V10"
-    And viene generata una nuova notifica
+   #Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
+    Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di palermo                |
     And destinatario Mario Gherkin
