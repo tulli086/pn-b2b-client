@@ -203,17 +203,17 @@ public class RaddAltSteps {
     }
 
 
-    @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR su radd alternative")
-    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR() {
-        startTransactionActRaddAlternative(this.operationid,idOrganization1);
+    @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la {string} su radd alternative")
+    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR(String recipientType) {
+        startTransactionActRaddAlternative(this.operationid,idOrganization1,recipientType);
     }
 
-    @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId da un organizzazione diversa")
-    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa() {
-        startTransactionActRaddAlternative(this.operationid,idOrganization2);
+    @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la {string} con lo stesso operationId da un organizzazione diversa")
+    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa(String recipientType) {
+        startTransactionActRaddAlternative(this.operationid, idOrganization2, recipientType);
     }
 
-    private void startTransactionActRaddAlternative(String operationid,String idOrganization) {
+    private void startTransactionActRaddAlternative(String operationid,String idOrganization, String recipentType) {
         ActStartTransactionRequest actStartTransactionRequest =
                 new ActStartTransactionRequest()
                         .qrCode(this.qrCode)
@@ -221,7 +221,8 @@ public class RaddAltSteps {
                         .fileKey(this.documentUploadResponse.getValue1())
                         .operationId(operationid)
                         .recipientTaxId(this.currentUserCf)
-                        .recipientType(ActStartTransactionRequest.RecipientTypeEnum.PF)
+                        .recipientType(recipentType.equalsIgnoreCase("PF")? ActStartTransactionRequest.RecipientTypeEnum.PF:
+                                ActStartTransactionRequest.RecipientTypeEnum.PG)
                         //.operationDate(OffsetDateTime.now()) TODO: controllare
                         .checksum(this.documentUploadResponse.getValue2());
         System.out.println("actStartTransactionRequest: " + actStartTransactionRequest);
@@ -292,7 +293,7 @@ public class RaddAltSteps {
         this.aorInquiryResponse = raddAltClient.aorInquiry(CxTypeAuthFleet.PG,
                 idOrganization1,
                 uid,
-                cf,
+                this.currentUserCf,
                 typeAuthFleet);
     }
 
@@ -550,9 +551,17 @@ public class RaddAltSteps {
             }
             case "dopo 120gg" -> {
                 if(ambiente.equalsIgnoreCase("dev")){
-                    vieneRichiestoIlCodiceQRPerLoIUN("");
+                    if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
+                        vieneRichiestoIlCodiceQRPerLoIUN("WZVR-URNV-VHRZ-202402-H-1");
+                    } else {
+                        vieneRichiestoIlCodiceQRPerLoIUN("NYAW-QMDQ-WPDK-202311-M-1");
+                    }
                 }else if(ambiente.equalsIgnoreCase("test")){
-                    vieneRichiestoIlCodiceQRPerLoIUN("");
+                    if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
+                        vieneRichiestoIlCodiceQRPerLoIUN("JEKU-RVGP-RZVJ-202402-A-1");
+                    } else {
+                        vieneRichiestoIlCodiceQRPerLoIUN("ZHDG-DYJZ-HLGL-202402-T-1");
+                    }
                 }else if(ambiente.equalsIgnoreCase("uat")){
                     vieneRichiestoIlCodiceQRPerLoIUN("");
                 }else if(ambiente.equalsIgnoreCase("hotfix")){
@@ -637,8 +646,8 @@ public class RaddAltSteps {
         return null;
     }
 
-    @After("@zip")
-    public void deleteZip() throws IOException {
+    @After("@raddAlt")
+    public void deleteZip() {
         if (fileZip != null) {
             URI zip_disk = URI.create("target/classes/"+this.fileZip);
             File file = new File(zip_disk.getPath());
