@@ -87,7 +87,7 @@ Feature: ricerca di uno stream
     And viene aggiornata la apiKey utilizzata per gli stream
     And si crea il nuovo stream per il "Comune_1" con versione "V23"
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
-    And si cancella lo stream creato con versione "V23"
+    And si cancella lo stream creato per il "Comune_1" con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -101,7 +101,7 @@ Feature: ricerca di uno stream
     And viene aggiornata la apiKey utilizzata per gli stream
     And si crea il nuovo stream per il "Comune_1" con versione "V23"
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
-    And si cancella lo stream creato con versione "V23"
+    And si cancella lo stream creato per il "Comune_1" con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -131,7 +131,7 @@ Feature: ricerca di uno stream
     And viene aggiornata la apiKey utilizzata per gli stream
     When si crea il nuovo stream per il "Comune_1" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
-    And si cancella lo stream creato con versione "V23"
+    And si cancella lo stream creato per il "Comune_1" con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -173,7 +173,7 @@ Feature: ricerca di uno stream
     And viene aggiornata la apiKey utilizzata per gli stream
     When si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "LAST"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
-    And si cancella lo stream creato con versione "V23"
+    And si cancella lo stream creato per il "Comune_1" con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
