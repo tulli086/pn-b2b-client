@@ -562,7 +562,7 @@ public class RicezioneNotificheWebDelegheSteps {
             FullReceivedNotificationV23 result = webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.TimelineElementV23 timelineElement = result.getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.NOTIFICATION_RADD_RETRIEVED.name())).findAny().orElse(null);
+            it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.TimelineElementV23 timelineElement = result.getTimeline().stream().filter(elem -> elem.getCategory().equals(it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.TimelineElementCategoryV23.NOTIFICATION_RADD_RETRIEVED)).findAny().orElse(null);
 
             Assertions.assertNotNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {

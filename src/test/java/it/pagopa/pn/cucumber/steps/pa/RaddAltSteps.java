@@ -50,7 +50,7 @@ public class RaddAltSteps {
     @Value("${pn.external.bearer-token-pg1.id}")
     private String idOrganization1;
 
-    @Value("${pn.external.bearer-token-pg1.id}")
+    @Value("${pn.external.bearer-token-pg2.id}")
     private String idOrganization2;
 
     @Value("${spring.profiles.active}")
@@ -116,7 +116,7 @@ public class RaddAltSteps {
                 recipientType,
                 null,
                 iun.equalsIgnoreCase("corretto")?sharedSteps.getIunVersionamento():
-                        iun.equalsIgnoreCase("erratto")?"UGYD-XHEZ-KLRM":null);
+                        iun.equalsIgnoreCase("erratto")?"UGYD-XHEZ-KLRM-202402-H-A":null);
 
         log.info("actInquiryResponse: {}", actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
@@ -157,7 +157,7 @@ public class RaddAltSteps {
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertEquals(error, actInquiryResponse.getStatus().getCode());
             }
-            case "stampa già eseguita","notifica annullata" -> {
+            case "stampa già eseguita","notifica annullata","documenti non più disponibili" -> {
                 Assertions.assertEquals(false, actInquiryResponse.getResult());
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertNotNull(actInquiryResponse.getStatus().getMessage());
