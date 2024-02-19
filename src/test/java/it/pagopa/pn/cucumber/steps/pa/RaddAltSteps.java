@@ -7,6 +7,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationRecipientV23;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
@@ -337,7 +338,6 @@ public class RaddAltSteps {
 
     @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della {string} con lo stesso operationId (dalla)(da una) {string} organizzazione")
     public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileStessoOperationId(String recipientType,String organizzazione) {
-        this.operationid = generateRandomNumber();
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
                         .versionToken("string")
@@ -605,7 +605,12 @@ public class RaddAltSteps {
 
     public void creazioneZip() throws IOException {
 
-        String[] files = {"target/classes/sample.pdf"};
+        String[] files = {};
+
+        if(sharedSteps.getSentNotification().getRecipients().get(0).getRecipientType().equals(NotificationRecipientV23.RecipientTypeEnum.PG)) {
+            files = new String[]{"target/classes/sample.pdf"};
+        }
+
         InputStream[] filesJson = {creazioneJSON()};
         String fileDestination="file"+generateRandomNumber()+".zip";
         Compress c = new Compress(filesJson,files, "target/classes/"+fileDestination);

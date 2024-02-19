@@ -1135,7 +1135,7 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PF" su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PF" su radd alternative
-    Then l'operazione di download degli atti genera un errore "transazione già esistente o con stato completed o aborted" con codice 99
+    Then l'operazione di download degli atti genera un errore "transazione già esistente o con stato completed o aborted" con codice 99 su radd alternative
 
 
   @raddAlt
@@ -1198,11 +1198,6 @@ Feature: Radd Alternative
   Scenario: [RADD-ALT_AOR-77] PF -  Start di una AOR transaction su notifica irreperibile perfezionata > 120gg - Ricezione errore RetryAfter
     When la "PF" "Mario Cucumber" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    And vengono caricati i documento di identità del cittadino su radd alternative
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
-    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" con lo stesso operationId da una "diversa" organizzazione
-
 
 
   @raddAlt
@@ -1215,10 +1210,14 @@ Feature: Radd Alternative
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    When la "PF" "Signor casuale" chiede di verificare la presenza di notifiche
-    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    When Il cittadino "Signor Casuale" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
-    And L'operatore esegue il download del frontespizio del operazione "aor"
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PF" su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And L'operatore esegue il download del frontespizio del operazione "act"
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-79] PG - Verifica restituzione al cittadino del documento Frontespizio (ragione sociale dell'impresa destinataria) come primo documento del plico
@@ -1228,10 +1227,13 @@ Feature: Radd Alternative
     And destinatario CucumberSpa
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
-    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
+    When Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
+    Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PG" su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And L'operatore esegue il download del frontespizio del operazione "act"
 
   @raddAlt
@@ -1281,7 +1283,7 @@ Feature: Radd Alternative
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario CucumberSpa e:
+    And destinatario Gherkin Analogic e:
       | digitalDomicile         | NULL           |
       | physicalAddress_address | Via@OK_890_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -1343,7 +1345,7 @@ Feature: Radd Alternative
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
       | physicalCommunication | AR_REGISTERED_LETTER            |
-    And destinatario CucumberSpa e:
+    And destinatario Gherkin Analogic e:
       | digitalDomicile         | NULL          |
       | physicalAddress_address | Via@OK_AR_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
