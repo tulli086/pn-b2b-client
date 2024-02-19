@@ -304,7 +304,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
 
-
     @And("viene verificata la corretta cancellazione con versione {string}")
     public void verifiedTheCorrectDeletion(String versione) {
         switch (versione) {
@@ -1581,16 +1580,27 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             log.error("ERROR IN DELETE STREAM id {} streamVersion{} pa {}",streamID,streamVersion.name(),pa);
             return;
         }
-        if(this.numberOfStreamSlotAcquiredForPa.get(pa).getValue2() <= 0)throw new IllegalStateException();
-        webhookSynchronizer.releaseStreamCreationSlot(1,pa);
-        Integer numberOfStreamSlot = this.numberOfStreamSlotAcquiredForPa.get(pa).getValue2();
-        this.numberOfStreamSlotAcquiredForPa.get(pa).setValue2(numberOfStreamSlot-1);
+        if(numberOfStreamSlotAcquiredForPa.containsKey(pa)){
+            if(numberOfStreamSlotAcquiredForPa.get(pa).getValue2() <= 0)throw new IllegalStateException();
+            webhookSynchronizer.releaseStreamCreationSlot(1,pa);
+            Integer numberOfStreamSlot = this.numberOfStreamSlotAcquiredForPa.get(pa).getValue2();
+            this.numberOfStreamSlotAcquiredForPa.get(pa).setValue2(numberOfStreamSlot-1);
+        }
+
     }
 
     private void acquireStreamCreationSlotInternal(String pa,int numberOfStream){
         try{
-            this.numberOfStreamSlotAcquiredForPa.put(pa,new PnPaB2bUtils.Pair<>(
-                    webhookSynchronizer.acquireStreamCreationSlot(numberOfStream, pa),numberOfStream));
+            if(!numberOfStreamSlotAcquiredForPa.containsKey(pa)){
+                this.numberOfStreamSlotAcquiredForPa.put(pa,new PnPaB2bUtils.Pair<>(
+                        webhookSynchronizer.acquireStreamCreationSlot(numberOfStream, pa),numberOfStream));
+            }else{
+                if(webhookSynchronizer.acquireStreamCreationSlot(numberOfStream, pa)){
+                    PnPaB2bUtils.Pair<Boolean, Integer> numberOfStreamPa = numberOfStreamSlotAcquiredForPa.get(pa);
+                    numberOfStreamPa.setValue2(numberOfStreamPa.getValue2()+numberOfStream);
+                    numberOfStreamSlotAcquiredForPa.put(pa,numberOfStreamPa);
+                }
+            }
         }catch (InterruptedException e) {
             log.error("Error in acquire stream slot!!");
             throw new RuntimeException(e);

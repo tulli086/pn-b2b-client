@@ -1,7 +1,7 @@
 Feature: avanzamento notifiche webhook b2b per persona giuridica
 
-  Background:
-    Given vengono cancellati tutti gli stream presenti del "Comune_2" con versione "V10"
+  #Background:
+   # Given vengono cancellati tutti gli stream presenti del "Comune_2" con versione "V10"
 
   @cleanC2 @webhook3
   Scenario: [B2B-STREAM_TIMELINE_PG_1] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
