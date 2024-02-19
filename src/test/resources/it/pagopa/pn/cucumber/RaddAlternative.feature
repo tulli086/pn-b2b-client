@@ -622,7 +622,7 @@ Feature: Radd Alternative
     And destinatario Mario Cucumber
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When L'operatore usa lo IUN "erratto" per recuperare gli atti della "PF" "Mario Cucumber"
+    When L'operatore usa lo IUN "errato" per recuperare gli atti della "PF" "Mario Cucumber"
     Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
 
 
@@ -646,7 +646,7 @@ Feature: Radd Alternative
     And destinatario Mario Cucumber
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When L'operatore usa lo IUN "erratto" per recuperare gli atti della "PF" "Mario Cucumber"
+    When L'operatore usa lo IUN "errato" per recuperare gli atti della "PF" "Mario Cucumber"
     Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
 
 
@@ -670,7 +670,7 @@ Feature: Radd Alternative
     And destinatario CucumberSpa
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When L'operatore usa lo IUN "erratto" per recuperare gli atti della "PG" "CucumberSpa"
+    When L'operatore usa lo IUN "errato" per recuperare gli atti della "PG" "CucumberSpa"
     Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
 
 
@@ -693,7 +693,7 @@ Feature: Radd Alternative
     And destinatario CucumberSpa
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When L'operatore usa lo IUN "erratto" per recuperare gli atti della "PG" "CucumberSpa"
+    When L'operatore usa lo IUN "errato" per recuperare gli atti della "PG" "CucumberSpa"
     Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
 
 
@@ -825,7 +825,7 @@ Feature: Radd Alternative
     And L'operatore scansione il qrCode per recuperare gli atti della "PF" "Mario Cucumber"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
-    When Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PF" su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PF" su radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And  Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative

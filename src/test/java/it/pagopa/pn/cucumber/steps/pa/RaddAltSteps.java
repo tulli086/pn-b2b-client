@@ -117,7 +117,7 @@ public class RaddAltSteps {
                 recipientType,
                 null,
                 iun.equalsIgnoreCase("corretto")?sharedSteps.getIunVersionamento():
-                        iun.equalsIgnoreCase("erratto")?"IUN_GLDZ-MGZD-AGAR-202402-Y-1":null);
+                        iun.equalsIgnoreCase("errato")?"GLDZ-MGZD-AGAR-202402-Y-1":null);
 
         log.info("actInquiryResponse: {}", actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
