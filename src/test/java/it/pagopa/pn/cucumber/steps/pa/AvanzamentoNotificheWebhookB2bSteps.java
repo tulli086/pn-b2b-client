@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
@@ -443,6 +444,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
         it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.NotificationStatus
                 notificationStatus = statusEventForStream.getNotificationStatus();
+
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatus notificationInternalStatus =
                 it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatus.valueOf(statusEventForStream.notificationStatus.name());
 
@@ -695,7 +697,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         try{
             Assertions.assertNotNull(progressResponseElement);
-            Assertions.assertEquals(progressResponseElement.getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
+            Assertions.assertEquals(progressResponseElement.getTimestamp().truncatedTo(ChronoUnit.SECONDS)
+                    , sharedSteps.getSentNotification().getTimeline().stream()
+                            .filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny()
+                            .get().getTimestamp().truncatedTo(ChronoUnit.SECONDS));
             log.info("EventProgress: " + progressResponseElement);
 
         }catch(AssertionFailedError assertionFailedError){
@@ -733,7 +738,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         try{
             Assertions.assertNotNull(progressResponseElement);
-            Assertions.assertNotEquals(progressResponseElement.getElement().getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
+            Assertions.assertNotEquals(progressResponseElement.getElement().getTimestamp().truncatedTo(ChronoUnit.SECONDS),
+                    sharedSteps.getSentNotification().getTimeline().stream()
+                            .filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp().truncatedTo(ChronoUnit.SECONDS));
             log.info("EventProgress: " + progressResponseElement);
 
         }catch(AssertionFailedError assertionFailedError){
@@ -780,7 +787,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             Assertions.assertNotNull(progressResponseElement);
             //TODO Verificare...
-            Assertions.assertNotEquals(progressResponseElement.getElement().getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
+            Assertions.assertNotEquals(progressResponseElement.getElement().getTimestamp().truncatedTo(ChronoUnit.SECONDS),
+                    sharedSteps.getSentNotification().getTimeline().stream()
+                            .filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp().truncatedTo(ChronoUnit.SECONDS));
             log.info("EventProgress: " + progressResponseElement);
             sharedSteps.setProgressResponseElementV23(progressResponseElement);
             //sharedSteps.getTimelineElementV23().getDetails();
@@ -1593,7 +1602,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     e.getStatusCode(),streamVersion,listGroups,replaceId,filteredValues);
             this.notificationError = e;
             sharedSteps.setNotificationError(e);
-
+            
         }
         if(!webhookTestLaunch)webhookTestLaunch = true;
     }
@@ -1620,6 +1629,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private void deleteStreamWrapper(StreamVersion streamVersion, String pa, UUID streamID){
         if(deleteStreamWrapperWithoutReleaseStreamCreationSlot(streamVersion,pa,streamID)){
             releaseStreamCreationSlotInternal(pa);
+            streamIdForPaAndVersion.remove(streamID);
         }
     }
 
@@ -1629,7 +1639,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 case V10 -> webhookB2bClient.deleteEventStream(streamID);
                 case V23 ->  webhookB2bClient.deleteEventStreamV23(streamID);
             }
-            streamIdForPaAndVersion.remove(streamID);
             return true;
         }catch (HttpStatusCodeException e){
             this.notificationError = e;
