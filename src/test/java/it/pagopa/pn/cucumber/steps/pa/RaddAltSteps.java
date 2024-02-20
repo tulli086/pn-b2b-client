@@ -46,8 +46,10 @@ public class RaddAltSteps {
     private final PnPaB2bUtils pnPaB2bUtils;
     private ActInquiryResponse actInquiryResponse;
     private String qrCode;
+    private String iun;
     private String fileZip;
     private String currentUserCf;
+    private String recipientType;
     @Value("${pn.external.bearer-token-pg1.id}")
     private String idOrganization1;
 
@@ -92,14 +94,14 @@ public class RaddAltSteps {
     }
 
 
-    @When("L'operatore scansione il qrCode per recuperare gli atti della {string} {string}")
-    public void lOperatoreScansioneIlQrCodePerRecuperariGliAttiAlternative(String recipientType,String cf) {
+    @When("L'operatore scansione il qrCode per recuperare gli atti di {string}")
+    public void lOperatoreScansioneIlQrCodePerRecuperariGliAttiAlternative(String cf) {
         selectUserRaddAlternative(cf);
         ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
                 idOrganization1,
                 uid,
                 this.currentUserCf,
-                recipientType,
+                this.recipientType,
                 qrCode,
                 null);
 
@@ -107,24 +109,24 @@ public class RaddAltSteps {
         this.actInquiryResponse = actInquiryResponse;
     }
 
-    @When("L'operatore usa lo IUN {string} per recuperare gli atti della {string} {string}")
-    public void lOperatoreUsoIUNPerRecuperariGliAtti(String iun,String recipientType,String cf) {
+    @When("L'operatore usa lo IUN {string} per recuperare gli atti di {string}")
+    public void lOperatoreUsoIUNPerRecuperariGliAtti(String tipologiaIun, String cf) {
         selectUserRaddAlternative(cf);
             ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
                     idOrganization1,
                     uid,
                     this.currentUserCf,
-                    recipientType,
+                    this.recipientType,
                     null,
-                    iun.equalsIgnoreCase("corretto") ? sharedSteps.getIunVersionamento() :
-                            iun.equalsIgnoreCase("errato") ? "GLDZ-MGZD-AGAR-202402-Y-1" : null);
+                    tipologiaIun.equalsIgnoreCase("corretto") ? this.iun= sharedSteps.getIunVersionamento() :
+                            tipologiaIun.equalsIgnoreCase("errato") ? this.iun= "GLDZ-MGZD-AGAR-202402-Y-1" : null);
 
         log.info("actInquiryResponse: {}", actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
     }
 
-    @When("L'operatore usa lo IUN {string} per recuperare gli atti della {string} {string} con restituzione errore")
-    public void lOperatoreUsoIUNPerRecuperariGliAttiWithError(String iun,String recipientType,String cf) {
+    @When("L'operatore usa lo IUN {string} per recuperare gli atti di {string} con restituzione errore")
+    public void lOperatoreUsoIUNPerRecuperariGliAttiWithError(String iun,String cf) {
         selectUserRaddAlternative(cf);
         ActInquiryResponse actInquiryResponse =null;
         try {
@@ -132,10 +134,10 @@ public class RaddAltSteps {
                     idOrganization1,
                     uid,
                     this.currentUserCf,
-                    recipientType,
+                    this.recipientType,
                     null,
-                    iun.equalsIgnoreCase("corretto") ? sharedSteps.getIunVersionamento() :
-                            iun.equalsIgnoreCase("errato") ? "GLDZ-MGZD-AGAR-202402-Y-1" : null);
+                    iun.equalsIgnoreCase("corretto") ? this.iun= sharedSteps.getIunVersionamento() :
+                            iun.equalsIgnoreCase("errato") ? this.iun= "GLDZ-MGZD-AGAR-202402-Y-1" : null);
         }catch (HttpStatusCodeException exception){
             sharedSteps.setNotificationError(exception);
         }
@@ -181,7 +183,7 @@ public class RaddAltSteps {
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertEquals(error, actInquiryResponse.getStatus().getCode());
             }
-            case "stampa già eseguita","notifica annullata","documenti non più disponibili","ko generico" -> {
+            case "stampa già eseguita","notifica annullata","documenti non più disponibili","ko generico", "input non valido" -> {
                 Assertions.assertEquals(false, actInquiryResponse.getResult());
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertNotNull(actInquiryResponse.getStatus().getMessage());
@@ -227,17 +229,17 @@ public class RaddAltSteps {
     }
 
 
-    @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la {string} su radd alternative")
-    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR(String recipientType) {
-        startTransactionActRaddAlternative(this.operationid,idOrganization1,recipientType);
+    @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative")
+    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR() {
+        startTransactionActRaddAlternative(this.operationid,idOrganization1);
     }
 
-    @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la {string} con lo stesso operationId da un organizzazione diversa")
-    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa(String recipientType) {
-        startTransactionActRaddAlternative(this.operationid, idOrganization2, recipientType);
+    @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId da un organizzazione diversa")
+    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa( ) {
+        startTransactionActRaddAlternative(this.operationid, idOrganization2);
     }
 
-    private void startTransactionActRaddAlternative(String operationid,String idOrganization, String recipentType) {
+    private void startTransactionActRaddAlternative(String operationid,String idOrganization) {
         ActStartTransactionRequest actStartTransactionRequest =
                 new ActStartTransactionRequest()
                         .qrCode(this.qrCode)
@@ -245,8 +247,9 @@ public class RaddAltSteps {
                         .fileKey(this.documentUploadResponse.getValue1())
                         .operationId(operationid)
                         .recipientTaxId(this.currentUserCf)
-                        .recipientType(recipentType.equalsIgnoreCase("PF")? ActStartTransactionRequest.RecipientTypeEnum.PF:
+                        .recipientType(this.recipientType.equalsIgnoreCase("PF")? ActStartTransactionRequest.RecipientTypeEnum.PF:
                                 ActStartTransactionRequest.RecipientTypeEnum.PG)
+                        .iun(this.iun)
                         //.operationDate(OffsetDateTime.now()) TODO: controllare
                         .checksum(this.documentUploadResponse.getValue2());
         System.out.println("actStartTransactionRequest: " + actStartTransactionRequest);
@@ -292,6 +295,9 @@ public class RaddAltSteps {
             case 2 -> {
                 return StartTransactionResponseStatus.CodeEnum.NUMBER_2;
             }
+            case 5 -> {
+                return StartTransactionResponseStatus.CodeEnum.NUMBER_5;
+            }
             case 99 -> {
                 return StartTransactionResponseStatus.CodeEnum.NUMBER_99;
             }
@@ -311,25 +317,16 @@ public class RaddAltSteps {
     }
 
 
-    @Given("la {string} {string} chiede di verificare la presenza di notifiche")
-    public void ilCittadinoChiedeDiVerificareLaPresenzaDiNotifiche(String typeAuthFleet, String cf) {
+    @Given("la persona (fisica)(giuridica) {string} chiede di verificare la presenza di notifiche")
+    public void ilCittadinoChiedeDiVerificareLaPresenzaDiNotifiche( String cf) {
         selectUserRaddAlternative(cf);
         this.aorInquiryResponse = raddAltClient.aorInquiry(CxTypeAuthFleet.PG,
                 idOrganization1,
                 uid,
                 this.currentUserCf,
-                typeAuthFleet);
+                this.recipientType);
     }
 
-    @When("Il cittadino Signor casuale chiede di verificare la presenza di notifiche su radd alternative")
-    public void ilCittadinoSignorCasualeChiedeDiVerificareLaPresenzaDiNotifiche() {
-        selectUserRaddAlternative("Signor casuale");
-        this.aorInquiryResponse = raddAltClient.aorInquiry(CxTypeAuthFleet.PG,
-                idOrganization1,
-                uid,
-                this.currentUserCf,
-                "PF");
-    }
 
     @When("La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative")
     public void laVerificaAorMostraCorrettamenteLeNotificheInStatoIrreperibile() {
@@ -340,8 +337,8 @@ public class RaddAltSteps {
         log.info("aorInquiryResponse: {}", this.aorInquiryResponse);
     }
 
-    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della {string} su radd alternative")
-    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile(String recipientType) {
+    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) su radd alternative")
+    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile() {
         this.operationid = generateRandomNumber();
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
@@ -349,7 +346,7 @@ public class RaddAltSteps {
                         .fileKey(this.documentUploadResponse.getValue1())
                         .operationId(this.operationid)
                         .recipientTaxId(this.currentUserCf)
-                        .recipientType(recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
+                        .recipientType(this.recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
                                 AorStartTransactionRequest.RecipientTypeEnum.PG)
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                         //.delegateTaxId("")
@@ -359,15 +356,15 @@ public class RaddAltSteps {
 
 
 
-    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della {string} con lo stesso operationId (dalla)(da una) {string} organizzazione")
-    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileStessoOperationId(String recipientType,String organizzazione) {
+    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) con lo stesso operationId (dalla)(da una) {string} organizzazione")
+    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileStessoOperationId(String organizzazione) {
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
                         .versionToken("string")
                         .fileKey(this.documentUploadResponse.getValue1())
                         .operationId(this.operationid)
                         .recipientTaxId(this.currentUserCf)
-                        .recipientType(recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
+                        .recipientType(this.recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
                                 AorStartTransactionRequest.RecipientTypeEnum.PG)
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                         //.delegateTaxId("")
@@ -536,20 +533,44 @@ public class RaddAltSteps {
 
     private void selectUserRaddAlternative(String cf) {
         switch (cf.toUpperCase()) {
-            case "MARIO CUCUMBER" -> this.currentUserCf = sharedSteps.getMarioCucumberTaxID();
-            case "MARIO GHERKIN" -> this.currentUserCf = sharedSteps.getMarioGherkinTaxID();
-            case "CUCUMBERSPA" -> this.currentUserCf = sharedSteps.getCucumberSpataxId();
-            case "SIGNOR CASUALE" ->
-                    this.currentUserCf = sharedSteps.getSentNotification().getRecipients().get(0).getTaxId();
-            case "SIGNOR GENERATO" -> this.currentUserCf = generateCF(System.nanoTime());
-            case "GHERKIN IRREPERIBILE" -> this.currentUserCf = sharedSteps.getGherkinIrreperibileTaxId();
-            case "DINO" -> this.currentUserCf = "DSRDNI00A01A225I";
+            case "MARIO CUCUMBER" -> {
+                this.currentUserCf = sharedSteps.getMarioCucumberTaxID();
+                this.recipientType="PF";
+            }
+            case "MARIO GHERKIN" -> {
+                this.currentUserCf = sharedSteps.getMarioGherkinTaxID();
+                this.recipientType="PF";
+            }
+            case "LEONARDO DA VINCI" -> {
+                this.currentUserCf = "DVNLRD52D15M059P";
+                this.recipientType="PF";
+            }
+            case "CUCUMBERSPA" -> {
+                this.currentUserCf = sharedSteps.getCucumberSpataxId();
+                this.recipientType="PG";
+            }
+            case "SIGNOR CASUALE" -> {
+                this.currentUserCf = sharedSteps.getSentNotification().getRecipients().get(0).getTaxId();
+                this.recipientType="PF";
+            }
+            case "SIGNOR GENERATO" -> {
+                this.currentUserCf = generateCF(System.nanoTime());
+                this.recipientType="PF";
+            }
+            case "GHERKIN IRREPERIBILE" -> {
+                this.currentUserCf = sharedSteps.getGherkinIrreperibileTaxId();
+                this.recipientType="PG";
+            }
+            case "DINO" -> {
+                this.currentUserCf = "DSRDNI00A01A225I";
+                this.recipientType="PF";
+            }
             default -> this.currentUserCf = cf;
         }
     }
 
-    @Given("Il cittadino {string} come destinatario {int} mostra il QRCode {string} su radd alternative")
-    public void ilCittadinoMostraIlQRCodeAlternative(String cf,Integer destinatario, String qrCodeType) {
+    @Given("Il cittadino {string} come destinatario {int} mostra il QRCode {string}")
+    public void ilCittadinoMostraIlQRCodeRaddAlternative(String cf,Integer destinatario, String qrCodeType) {
         selectUserRaddAlternative(cf);
         qrCodeType = qrCodeType.toLowerCase();
         switch (qrCodeType) {
@@ -605,9 +626,9 @@ public class RaddAltSteps {
         this.qrCode = quickAccessLink.get(quickAccessLink.keySet().toArray()[destinatario]);
         log.debug("qrCode: {}",qrCode);
     }
-    @When("L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType {string}")
-    public void lOperatoreScansioneIlQrCodePerRecuperariGliAtti(String recipientType) {
-        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG, idOrganization1, uid, this.currentUserCf, recipientType, qrCode, null);
+    @When("L'operatore scansione il qrCode per recuperare gli atti da radd alternative")
+    public void lOperatoreScansioneIlQrCodePerRecuperariGliAtti() {
+        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG, idOrganization1, uid, this.currentUserCf, this.recipientType, qrCode, null);
         log.info("actInquiryResponse: {}",actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
     }
@@ -630,7 +651,7 @@ public class RaddAltSteps {
 
         String[] files = {};
 
-        if(sharedSteps.getSentNotification().getRecipients().get(0).getRecipientType().equals(NotificationRecipientV23.RecipientTypeEnum.PG)) {
+        if(this.recipientType.equalsIgnoreCase("PG")) {
             files = new String[]{"target/classes/sample.pdf"};
         }
 
