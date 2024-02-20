@@ -130,14 +130,17 @@ Feature: Radd Alternative
     And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
     And Viene restituito un messaggio di errore "Stampa già eseguita" con codice di errore 3 su radd alternative
 
+  @raddAlt
   Scenario: [RADD-ALT_ACT-10] PF - Notifica annullata - Restituzione errore al tentativo di recupero documenti di notifica
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION" e successivamente annullata
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When Il cittadino "Mario Cucumber" mostra il QRCode "corretto" su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
     And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
     And Viene restituito un messaggio di errore "notifica annullata" con codice di errore 80 su radd alternative
 
@@ -288,9 +291,9 @@ Feature: Radd Alternative
     And destinatario CucumberSpa
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
     And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
-    And Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
     When L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
     Then Viene restituito un messaggio di errore "notifica annullata" con codice di errore 80 su radd alternative
 
@@ -411,7 +414,7 @@ Feature: Radd Alternative
       | digitalDomicile         | NULL                                         |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PF" "SIGNOR CASUALE" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
@@ -519,7 +522,7 @@ Feature: Radd Alternative
       | digitalDomicile         | NULL                                         |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
@@ -542,6 +545,8 @@ Feature: Radd Alternative
     Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PF" su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
 
@@ -557,9 +562,13 @@ Feature: Radd Alternative
     And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PF" su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
+      | details          | NOT_NULL |
+      | details_recIndex | 0        |
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-39] PF - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
@@ -573,8 +582,9 @@ Feature: Radd Alternative
     And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PF" su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     Then lato destinatario la notifica può essere correttamente recuperata da "Mario Gherkin" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "Mario Gherkin" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
@@ -590,6 +600,8 @@ Feature: Radd Alternative
     And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PG" su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     Then lato destinatario la notifica può essere correttamente recuperata da "CucumberSpa" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
@@ -616,14 +628,9 @@ Feature: Radd Alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-47] PF - Restituzione errore - Recupero notifica solo con CF corretto
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "errato" per recuperare gli atti della "PF" "Mario Cucumber"
-    Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
+    Then Viene restituito un messaggio di errore "QrCode non valido" con codice di errore 10 su radd alternative
 
 
   @raddAlt
@@ -640,14 +647,9 @@ Feature: Radd Alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-49] PF - Recupero notifica con codice IUN errato associato a CF corretto
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "errato" per recuperare gli atti della "PF" "Mario Cucumber"
-    Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
+    Then Viene restituito un messaggio di errore "QrCode non valido" con codice di errore 10 su radd alternative
 
 
   @raddAlt
@@ -664,14 +666,9 @@ Feature: Radd Alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-51] PG - Restituzione errore - Recupero notifica solo con CF corretto
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario CucumberSpa
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "errato" per recuperare gli atti della "PG" "CucumberSpa"
-    Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
+    Then Viene restituito un messaggio di errore "QrCode non valido" con codice di errore 10 su radd alternative
 
 
   @raddAlt
@@ -687,14 +684,9 @@ Feature: Radd Alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-53] PG - Recupero notifica con codice IUN errato associato a CF corretto
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario CucumberSpa
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When L'operatore usa lo IUN "errato" per recuperare gli atti della "PG" "CucumberSpa"
-    Then Viene restituito un messaggio di errore "KO generico" con codice di errore 99 su radd alternative
+    Then Viene restituito un messaggio di errore "QrCode non valido" con codice di errore 10 su radd alternative
 
 
   @raddAlt
@@ -827,7 +819,6 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PF" su radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
-    When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And  Il cittadino "CucumberSpa" mostra il QRCode "corretto" su radd alternative
     And L'operatore scansione il qrCode per recuperare gli atti della "PG" "CucumberSpa"
     And la scansione si conclude correttamente su radd alternative
@@ -1123,10 +1114,16 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE" per l'utente 0
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE" per l'utente 1
-    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
-    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     When la "PF" "Signor Casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PF" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    When la "PG" "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della "PG" su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
 
   @raddAlt
@@ -1213,12 +1210,10 @@ Feature: Radd Alternative
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
-    And destinatario Signor casuale e:
-      | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+    And destinatario Mario Gherkin
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    When Il cittadino "Signor Casuale" mostra il QRCode "corretto" su radd alternative
+    When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
     Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
@@ -1255,7 +1250,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
-    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS" con DOC "23L"
       | loadTimeline               | true      |
       | details                    | NOT_NULL  |
       | details_recIndex           | 0         |
@@ -1279,7 +1274,7 @@ Feature: Radd Alternative
       | physicalAddress_address | Via@OK_890_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
-    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS" con DOC "23L"
       | loadTimeline               | true      |
       | details                    | NOT_NULL  |
       | details_recIndex           | 0         |
@@ -1296,7 +1291,7 @@ Feature: Radd Alternative
       | physicalAddress_address | Via@OK_890_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B"
-    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS" con DOC "23L"
       | loadTimeline               | true      |
       | details                    | NOT_NULL  |
       | details_recIndex           | 0         |
@@ -1315,7 +1310,7 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRN001B"
-    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS" con DOC "AR"
       | loadTimeline               | true      |
       | details                    | NOT_NULL  |
       | details_recIndex           | 0         |
@@ -1340,7 +1335,7 @@ Feature: Radd Alternative
       | physicalAddress_address | Via@OK_AR_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRN001B"
-    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS" con DOC "AR"
       | loadTimeline               | true      |
       | details                    | NOT_NULL  |
       | details_recIndex           | 0         |
@@ -1358,7 +1353,7 @@ Feature: Radd Alternative
       | physicalAddress_address | Via@OK_AR_ZIP |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRN001B"
-    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS"
+    And viene effettuato un controllo sul type zip attachment di "ATTACHMENTS" per l'elemento di timeline "SEND_ANALOG_PROGRESS" con DOC "AR"
       | loadTimeline               | true      |
       | details                    | NOT_NULL  |
       | details_recIndex           | 0         |
@@ -1446,6 +1441,9 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PG" su radd alternative
     And la transazione viene abortita per gli "act"
+    And L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PG"
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR per la "PG" su radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative

@@ -158,7 +158,7 @@ public class RaddAltSteps {
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertEquals(error, actInquiryResponse.getStatus().getCode());
             }
-            case "stampa già eseguita","notifica annullata","documenti non più disponibili" -> {
+            case "stampa già eseguita","notifica annullata","documenti non più disponibili","ko generico" -> {
                 Assertions.assertEquals(false, actInquiryResponse.getResult());
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertNotNull(actInquiryResponse.getStatus().getMessage());
