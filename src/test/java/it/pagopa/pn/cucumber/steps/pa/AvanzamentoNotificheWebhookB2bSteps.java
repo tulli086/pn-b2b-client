@@ -1064,21 +1064,21 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @After("@clean")
     public void doSomethingAfter() {
         String pa = "Comune_1";
-        setPaWebhook(pa);
+        //setPaWebhook(pa);
         //cleanWebhook(pa);
     }
 
     @After("@cleanC2")
     public void cleanC2() {
         String pa = "Comune_2";
-        setPaWebhook(pa);
+        //setPaWebhook(pa);
         //cleanWebhook(pa);
     }
 
     @After("@cleanC3")
     public void cleanC3() {
         String pa = "Comune_Multi";
-        setPaWebhook(pa);
+        //setPaWebhook(pa);
         //cleanWebhook(pa);
         SharedSteps.lastEventID = 0;
     }
@@ -1097,7 +1097,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
-    @After
+    @After("@cleanWebhook")
     public void afterStreamTestRun(){
         log.info("After StreamTest started");
         //releaseStreamSlot
@@ -1648,7 +1648,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     numberOfStreamSlotAcquiredForPa.put(pa,numberOfStreamPa);
                 }
             }
-            sleepTest(500);
+            sleepTest(800);
         }catch (InterruptedException e) {
             log.error("Error in acquire stream slot!!");
             throw new RuntimeException(e);
