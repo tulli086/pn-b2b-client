@@ -15,7 +15,7 @@ Feature: avanzamento notifiche webhook b2b multi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "GET_ADDRESS"
 
-  @cleanC3 #@dev @webhook2 @oldWebhookTest
+
   @oldWebhookTest
   Scenario: [B2B-STREAM-TIMELINE_MULTI_2] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
     Given viene generata una nuova notifica
@@ -44,7 +44,7 @@ Feature: avanzamento notifiche webhook b2b multi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "PUBLIC_REGISTRY_RESPONSE"
 
-  @cleanC3 #@dev @webhook2 @oldWebhookTest
+
   @oldWebhookTest
   Scenario: [B2B-STREAM-TIMELINE_MULTI_4] Invio notifica digitale ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
@@ -72,7 +72,7 @@ Feature: avanzamento notifiche webhook b2b multi
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_DIGITAL_PROGRESS"
 
-  @cleanC3 #@webhook2 @oldWebhookTest
+
   @oldWebhookTest
   Scenario: [B2B-STREAM-TIMELINE_MULTI_6] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
     Given viene generata una nuova notifica
@@ -165,7 +165,7 @@ Feature: avanzamento notifiche webhook b2b multi
     Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK"
 
 
-  @cleanC3 #@webhook2 @oldWebhookTest
+
   @oldWebhookTest
   Scenario: [B2B-STREAM-TIMELINE_MULTI_PF_6] Invio notifica digitale multi PG ed attesa elemento di timeline SEND_ANALOG_DOMICILE_scenario positivo
     Given viene generata una nuova notifica
@@ -322,7 +322,7 @@ Feature: avanzamento notifiche webhook b2b multi
     Then Si verifica che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
 
-  @clean3 #@webhook2 @oldWebhookTest
+
   @oldWebhookTest
   Scenario: [B2B-STREAM-TIMELINE_MULTI_PF_17] Invio notifica digitale lettura evento NOTIFICATION_VIEWED nel webhook con controllo data
     Given viene generata una nuova notifica
@@ -338,7 +338,7 @@ Feature: avanzamento notifiche webhook b2b multi
     Then Si verifica che l'elemento di timeline "NOTIFICATION_VIEWED" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
 
-  @cleanC3 #@webhook2 @oldWebhookTest
+
   @oldWebhookTest
   Scenario: [B2B-STREAM-TIMELINE_MULTI_18] Invio notifica digitale ed attesa elemento di timeline ACCEPTED_scenario positivo
     Given viene generata una nuova notifica
