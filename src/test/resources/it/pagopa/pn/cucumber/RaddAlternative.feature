@@ -1232,7 +1232,7 @@ Feature: Radd Alternative
       | senderDenomination | Comune di Palermo           |
     And destinatario Mario Gherkin
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     When Il cittadino "Mario Gherkin" mostra il QRCode "corretto" su radd alternative
     Then L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType "PF"
     And la scansione si conclude correttamente su radd alternative
