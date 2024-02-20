@@ -2,7 +2,7 @@ Feature: tentativo consumo stream
 
    #--------------CONSUMO DI EVENTI DI UNO STREAM------------
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_126] Consumo di uno stream notifica con gruppo, con eventType "STATUS"  utilizzando un apikey con gruppo diverso.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -24,7 +24,7 @@ Feature: tentativo consumo stream
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_130] Consumo di uno stream notifica con gruppo, con eventType "TIMELINE"  utilizzando un apikey con gruppo diverso.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -47,7 +47,7 @@ Feature: tentativo consumo stream
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_125] Consumo di uno stream notifica disabilitato senza gruppo, con eventType "STATUS"  utilizzando un apikey master.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -66,7 +66,7 @@ Feature: tentativo consumo stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_133] Consumo di uno stream notifica senza gruppo, con eventType "STATUS"  utilizzando un apikey con gruppo.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -87,7 +87,7 @@ Feature: tentativo consumo stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.5_139] Creazione di uno stream senza gruppo con la V23 e lettura Eventi di timeline o di cambio di stato con la versione V10  utilzzando un apikey abilitata
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -105,7 +105,7 @@ Feature: tentativo consumo stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.5_141] Creazione di uno stream senza gruppo con la V10 e  lettura Eventi di timeline o di cambio di stato con la versione V23 utilzzando un apikey abilitata.
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -123,7 +123,7 @@ Feature: tentativo consumo stream
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_135] Consumo di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey con gruppo.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -146,7 +146,7 @@ Feature: tentativo consumo stream
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_159] Consumo di uno stream notifica con gruppi non appartenenti ad un sottinsieme dei gruppi dell'apikey utilizzata.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |

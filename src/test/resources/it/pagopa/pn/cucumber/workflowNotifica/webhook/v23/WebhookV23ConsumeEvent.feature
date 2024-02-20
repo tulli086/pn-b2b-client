@@ -1,7 +1,7 @@
 Feature: avanzamento notifiche webhook b2b V23
   
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_112] Creazione con replaceID di uno stream notifica senza gruppo uguale al precedente stream con eventType "TIMELINE" utilizzando un apikey master. (replacedStreamId settato) con controllo EventId incrementale e senza duplicati.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -30,7 +30,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_127] Consumo di uno stream notifica con gruppo, con eventType "STATUS"  utilizzando un apikey con stesso gruppo.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -47,7 +47,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_128] Consumo di uno stream notifica con gruppo, con eventType "TIMELINE"  utilizzando un apikey master.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -69,7 +69,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_131] Consumo di uno stream notifica con gruppo, con eventType "TIMELINE"  utilizzando un apikey con stesso gruppo.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -86,7 +86,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_132] Consumo di uno stream notifica senza gruppo, con eventType "STATUS"  utilizzando un apikey master.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -103,7 +103,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_50] Consumo di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey master e verifica corrispondenza tra i detail del webhook e quelli della timeline.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -121,7 +121,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_134] Consumo di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey master.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -139,7 +139,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
 
-  @webhookV23  @deleghe1
+  @webhookV23 @cleanWebhook @deleghe1
   Scenario: [B2B-STREAM_ES3.1_144] Lettura e verifica de-anonimizzazione con un apikey master degli eventi di timeline di una notifica inviata con un apikey master e salvati in uno stream dell'ente senza gruppo
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
     And "Mario Gherkin" viene delegato da "Mario Cucumber"
@@ -161,7 +161,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
 
-  @webhookV23  @deleghe1
+  @webhookV23 @cleanWebhook @deleghe1
   Scenario: [B2B-STREAM_ES3.1_146] Lettura e verifica de-anonimizzazione con un apiKey con gruppo degli eventi di timeline di una notifica inviata con un apikey con gruppo e salvati in uno stream dell'ente con gruppo (Stesso gruppo)
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
     And "Mario Gherkin" viene delegato da "Mario Cucumber"
@@ -183,7 +183,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_158] Consumo di uno stream notifica con gruppi appartenenti ad un sottinsieme dei gruppi dell'apikey utilizzata.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -206,7 +206,7 @@ Feature: avanzamento notifiche webhook b2b V23
  #--------------LETTURA NUOVO EVENTO DI TIMELINE DI UNO STREAM------------
 
   #SERVE INTEGRAZIONE CON RADD
-  @webhookV23  @ignore
+  @webhookV23 @cleanWebhook @ignore
   Scenario: [B2B-STREAM_ES1.4_136] Lettura degli eventi di timeline  dello stream senza gruppo con visualizzazione del nuovo evento di timeline utilzzando un apikey abilitata.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -224,7 +224,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
  #SERVE INTEGRAZIONE CON RADD
-  @webhookV23  @ignore
+  @webhookV23 @cleanWebhook @ignore
   Scenario: [B2B-STREAM_ES1.4_137] Lettura degli eventi di timeline  dello stream con gruppo con visualizzazione  del nuovo evento di timeline utilzzando un apikey abilitata.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -246,7 +246,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
  #SERVE INTEGRAZIONE CON RADD
-  @webhookV23  @ignore
+  @webhookV23 @cleanWebhook @ignore
   Scenario: [B2B-STREAM_ES3.1_145] Creazione di uno stream senza gruppo con la V10 e  lettura di nuovi eventi di timeline con un apikey abilitata.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -263,7 +263,7 @@ Feature: avanzamento notifiche webhook b2b V23
 
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.2_123] Creazione di stream con apiKey con gruppi differenti e verifica corretta scrittura degli eventi di notifiche create con le stesse apiKey.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -301,7 +301,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And l'apiKey viene cancellata
 
 
-  @webhookV23 
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.2_124] Verifica corretta scrittura degli eventi di una notifica creata con un apikey master, dove l’evento stesso deve essere salvato solo negli stream senza gruppi.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
