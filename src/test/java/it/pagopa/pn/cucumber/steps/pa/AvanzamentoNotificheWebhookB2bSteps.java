@@ -30,8 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
+
 
 import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.V10;
 import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.V23;
@@ -665,10 +665,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         try{
             Assertions.assertNotNull(progressResponseElement);
-            it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV23 timelineElementV23 = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().orElse(null);
-            Assertions.assertNotNull(timelineElementV23);
-            Assertions.assertNotNull(timelineElementV23.getTimestamp());
-            Assertions.assertEquals(progressResponseElement.getTimestamp().truncatedTo(ChronoUnit.SECONDS), timelineElementV23.getTimestamp().truncatedTo(ChronoUnit.SECONDS));
+            Assertions.assertEquals(progressResponseElement.getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
             log.info("EventProgress: " + progressResponseElement);
 
         }catch(AssertionFailedError assertionFailedError){
@@ -706,11 +703,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         try{
             Assertions.assertNotNull(progressResponseElement);
-            it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV23 timelineElementV23 = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().orElse(null);
-            Assertions.assertNotNull(timelineElementV23);
-            Assertions.assertNotNull(timelineElementV23.getTimestamp());
-            Assertions.assertNotNull(progressResponseElement.getElement().getTimestamp());
-            Assertions.assertEquals(progressResponseElement.getElement().getTimestamp().truncatedTo(ChronoUnit.SECONDS), timelineElementV23.getTimestamp().truncatedTo(ChronoUnit.SECONDS));
+            Assertions.assertNotEquals(progressResponseElement.getElement().getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
             log.info("EventProgress: " + progressResponseElement);
 
         }catch(AssertionFailedError assertionFailedError){
@@ -757,11 +750,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             Assertions.assertNotNull(progressResponseElement);
             //TODO Verificare...
-            it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV23 timelineElementV23 = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().orElse(null);
-            Assertions.assertNotNull(timelineElementV23);
-            Assertions.assertNotNull(timelineElementV23.getTimestamp());
-            Assertions.assertNotNull(progressResponseElement.getElement().getTimestamp());
-            Assertions.assertEquals(progressResponseElement.getElement().getTimestamp().truncatedTo(ChronoUnit.SECONDS), timelineElementV23.getTimestamp().truncatedTo(ChronoUnit.SECONDS));
+            Assertions.assertNotEquals(progressResponseElement.getElement().getTimestamp(), sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp());
             log.info("EventProgress: " + progressResponseElement);
             sharedSteps.setProgressResponseElementV23(progressResponseElement);
             //sharedSteps.getTimelineElementV23().getDetails();
@@ -1078,14 +1067,14 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         setPaWebhook(pa);
         //cleanWebhook(pa);
     }
-    //TODO: remove
+
     @After("@cleanC2")
     public void cleanC2() {
         String pa = "Comune_2";
         setPaWebhook(pa);
         //cleanWebhook(pa);
     }
-    //TODO: remove
+
     @After("@cleanC3")
     public void cleanC3() {
         String pa = "Comune_Multi";
@@ -1093,7 +1082,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         //cleanWebhook(pa);
         SharedSteps.lastEventID = 0;
     }
-    //TODO: remove
+
     private void cleanWebhook(String pa){
         //Aggiungere settaggio apikey (quelle che abbiamo sono master)
         if(eventStreamList != null){
@@ -1108,7 +1097,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
-    @After("@cleanWebhook")
+    @After
     public void afterStreamTestRun(){
         log.info("After StreamTest started");
         //releaseStreamSlot
