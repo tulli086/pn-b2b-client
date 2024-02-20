@@ -9,6 +9,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatusHistoryElement;
+import it.pagopa.pn.client.b2b.pa.service.IPnApiKeyManagerClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebRecipientClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebhookB2bClient;
@@ -19,6 +20,8 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.TimelineElementCategoryV20;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.*;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.GroupPosition;
 import it.pagopa.pn.cucumber.steps.TimingForTimeline;
@@ -96,6 +99,33 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 //                webhookClientForClean.deleteEventStreamV23(elem.getStreamId());
 //            }
             }
+        }
+    }
+
+
+    @After("@cleanWebhook")
+    public void afterStreamTestRun(){
+        log.info("After StreamTest started");
+        //releaseStreamSlot
+        Iterator<String> iteratorNumberOfStreamSlotAcquiredForPa = numberOfStreamSlotAcquiredForPa.keySet().iterator();
+        while(iteratorNumberOfStreamSlotAcquiredForPa.hasNext()){
+            String pa = iteratorNumberOfStreamSlotAcquiredForPa.next();
+            log.info("releaseStreamCreationSlot phase start for pa {}",pa);
+            PnPaB2bUtils.Pair<Boolean, Integer> isAcquireNumberOfStramSlot = numberOfStreamSlotAcquiredForPa.get(pa);
+            if(isAcquireNumberOfStramSlot.getValue1() && isAcquireNumberOfStramSlot.getValue2() > 0){
+                log.info("release n.{} of streamCreationSlot for pa {}",isAcquireNumberOfStramSlot.getValue2(),pa);
+                webhookSynchronizer.releaseStreamCreationSlot(isAcquireNumberOfStramSlot.getValue2(),pa);
+            }
+        }
+        //removeStream
+        Iterator<UUID> iteratorStreamIdForPaAndVersion = streamIdForPaAndVersion.keySet().iterator();
+        while(iteratorStreamIdForPaAndVersion.hasNext()){
+            UUID streamId = iteratorStreamIdForPaAndVersion.next();
+            log.info("removeStream phase start for id {}",streamId);
+            PnPaB2bUtils.Pair<String, StreamVersion> paAndVersion = streamIdForPaAndVersion.get(streamId);
+            log.info("removeStream id {} for pa {} with version {}",streamId,paAndVersion.getValue1(),paAndVersion.getValue2());
+            setPaWebhook(paAndVersion.getValue1());
+            deleteStreamWrapperWithoutReleaseStreamCreationSlot(paAndVersion.getValue2(),paAndVersion.getValue1(),streamId);
         }
     }
 
@@ -1097,27 +1127,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
-    @After("@cleanWebhook")
-    public void afterStreamTestRun(){
-        log.info("After StreamTest started");
-        //releaseStreamSlot
-        for(String pa: this.numberOfStreamSlotAcquiredForPa.keySet()){
-            log.info("releaseStreamCreationSlot phase start for pa {}",pa);
-            PnPaB2bUtils.Pair<Boolean, Integer> isAcquireNumberOfStramSlot = numberOfStreamSlotAcquiredForPa.get(pa);
-            if(isAcquireNumberOfStramSlot.getValue1() && isAcquireNumberOfStramSlot.getValue2() > 0){
-                log.info("release n.{} of streamCreationSlot for pa {}",isAcquireNumberOfStramSlot.getValue2(),pa);
-                webhookSynchronizer.releaseStreamCreationSlot(isAcquireNumberOfStramSlot.getValue2(),pa);
-            }
-        }
-        //removeStream
-        for(UUID streamId: this.streamIdForPaAndVersion.keySet()){
-            log.info("removeStream phase start for id {}",streamId);
-            PnPaB2bUtils.Pair<String, StreamVersion> paAndVersion = streamIdForPaAndVersion.get(streamId);
-            log.info("removeStream id {} for pa {} with version {}",streamId,paAndVersion.getValue1(),paAndVersion.getValue2());
-            setPaWebhook(paAndVersion.getValue1());
-            deleteStreamWrapperWithoutReleaseStreamCreationSlot(paAndVersion.getValue2(),paAndVersion.getValue1(),streamId);
-        }
-    }
 
 
     //TODO: old version
@@ -1138,12 +1147,14 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             case "V10":
                 List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement> streamListElements = webhookB2bClient.listEventStreams();
                 for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement elem: streamListElements){
+                    System.out.println(elem);
                     deleteStreamWrapper(V10,pa,elem.getStreamId());
                 }
                 break;
             case "V23":
                 List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement> streamListElementsV23 = webhookB2bClient.listEventStreamsV23();
                 for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement elem: streamListElementsV23){
+                    System.out.println(elem);
                     deleteStreamWrapper(V23,pa,elem.getStreamId());
                 }
                 break;
@@ -1582,6 +1593,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     e.getStatusCode(),streamVersion,listGroups,replaceId,filteredValues);
             this.notificationError = e;
             sharedSteps.setNotificationError(e);
+
         }
         if(!webhookTestLaunch)webhookTestLaunch = true;
     }
