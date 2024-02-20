@@ -1144,7 +1144,7 @@ Feature: Radd Alternative
     Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
-    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alterna
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     Then l'operazione di download degli atti genera un errore "operation id già presente" con codice 5 su radd alternative
 
