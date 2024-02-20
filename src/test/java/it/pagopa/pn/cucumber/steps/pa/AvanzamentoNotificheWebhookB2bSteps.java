@@ -60,12 +60,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private Map<UUID,PnPaB2bUtils.Pair<String,StreamVersion>> streamIdForPaAndVersion = new HashMap<>(); //for streamId check
 
     //TODO: rimuovere
-    private final LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
-    private final LinkedList<ProgressResponseElementV23> progressResponseElementListV23 = new LinkedList<>();
+    private LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
+    private LinkedList<ProgressResponseElementV23> progressResponseElementListV23 = new LinkedList<>();
 
     private static IPnWebhookB2bClient webhookClientForClean;
     private static boolean webhookTestLaunch;
     private static final List<SettableApiKey.ApiKeyType> paForStream = List.of(SettableApiKey.ApiKeyType.MVP_1, SettableApiKey.ApiKeyType.MVP_2, SettableApiKey.ApiKeyType.GA);
+
     @Autowired
     public AvanzamentoNotificheWebhookB2bSteps(IPnWebhookB2bClient webhookB2bClient, SharedSteps sharedSteps,WebhookSynchronizer webhookSynchronizer) {
         this.sharedSteps = sharedSteps;
@@ -1521,8 +1522,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     streamRequest.setTitle(title+"_"+i);
                     streamRequest.setEventType(eventType.equalsIgnoreCase("STATUS") ?
                             StreamCreationRequest.EventTypeEnum.STATUS : StreamCreationRequest.EventTypeEnum.TIMELINE);
-                    streamCreationRequestList.add(streamRequest);
                     streamRequest.setFilterValues(filterValues);
+                    streamCreationRequestList.add(streamRequest);
                 }
             }
             case V23 -> {
@@ -1532,8 +1533,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     streamRequest.setTitle(title+"_"+i);
                     streamRequest.setEventType(eventType.equalsIgnoreCase("STATUS") ?
                             StreamCreationRequestV23.EventTypeEnum.STATUS : StreamCreationRequestV23.EventTypeEnum.TIMELINE);
+                    streamRequest.setFilterValues(filterValues);
                     streamCreationRequestListV23.add(streamRequest);
-                    streamRequest.setFilterValues(new LinkedList<>());
                 }
             }
         }
@@ -1543,7 +1544,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             switch (streamVersion){
                 case V10 -> {
-                    this.eventStreamList = new LinkedList<>();
+                    if(this.eventStreamList == null)this.eventStreamList = new LinkedList<>();
                     acquireStreamCreationSlotInternal(pa,streamCreationRequestList.size());
 
                     for(StreamCreationRequest request: streamCreationRequestList){
@@ -1557,7 +1558,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
                 }
                 case V23 -> {
-                    this.eventStreamListV23 = new LinkedList<>();
+                    if(this.eventStreamListV23 == null)this.eventStreamListV23 = new LinkedList<>();
                     acquireStreamCreationSlotInternal(pa,streamCreationRequestListV23.size());
 
                     for(StreamCreationRequestV23 request: streamCreationRequestListV23){
@@ -1647,6 +1648,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     numberOfStreamSlotAcquiredForPa.put(pa,numberOfStreamPa);
                 }
             }
+            sleepTest(500);
         }catch (InterruptedException e) {
             log.error("Error in acquire stream slot!!");
             throw new RuntimeException(e);
