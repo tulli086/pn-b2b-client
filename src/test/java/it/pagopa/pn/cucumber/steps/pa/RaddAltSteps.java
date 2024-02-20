@@ -110,15 +110,35 @@ public class RaddAltSteps {
     @When("L'operatore usa lo IUN {string} per recuperare gli atti della {string} {string}")
     public void lOperatoreUsoIUNPerRecuperariGliAtti(String iun,String recipientType,String cf) {
         selectUserRaddAlternative(cf);
-        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
-                idOrganization1,
-                uid,
-                this.currentUserCf,
-                recipientType,
-                null,
-                iun.equalsIgnoreCase("corretto")?sharedSteps.getIunVersionamento():
-                        iun.equalsIgnoreCase("errato")?"GLDZ-MGZD-AGAR-202402-Y-1":null);
+            ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
+                    idOrganization1,
+                    uid,
+                    this.currentUserCf,
+                    recipientType,
+                    null,
+                    iun.equalsIgnoreCase("corretto") ? sharedSteps.getIunVersionamento() :
+                            iun.equalsIgnoreCase("errato") ? "GLDZ-MGZD-AGAR-202402-Y-1" : null);
 
+        log.info("actInquiryResponse: {}", actInquiryResponse);
+        this.actInquiryResponse = actInquiryResponse;
+    }
+
+    @When("L'operatore usa lo IUN {string} per recuperare gli atti della {string} {string} con restituzione errore")
+    public void lOperatoreUsoIUNPerRecuperariGliAttiWithError(String iun,String recipientType,String cf) {
+        selectUserRaddAlternative(cf);
+        ActInquiryResponse actInquiryResponse =null;
+        try {
+            actInquiryResponse = raddAltClient.actInquiry(CxTypeAuthFleet.PG,
+                    idOrganization1,
+                    uid,
+                    this.currentUserCf,
+                    recipientType,
+                    null,
+                    iun.equalsIgnoreCase("corretto") ? sharedSteps.getIunVersionamento() :
+                            iun.equalsIgnoreCase("errato") ? "GLDZ-MGZD-AGAR-202402-Y-1" : null);
+        }catch (HttpStatusCodeException exception){
+            sharedSteps.setNotificationError(exception);
+        }
         log.info("actInquiryResponse: {}", actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
     }
@@ -528,17 +548,17 @@ public class RaddAltSteps {
         }
     }
 
-    @Given("Il cittadino {string} mostra il QRCode {string} su radd alternative")
-    public void ilCittadinoMostraIlQRCodeAlternative(String cf, String qrCodeType) {
+    @Given("Il cittadino {string} come destinatario {int} mostra il QRCode {string} su radd alternative")
+    public void ilCittadinoMostraIlQRCodeAlternative(String cf,Integer destinatario, String qrCodeType) {
         selectUserRaddAlternative(cf);
         qrCodeType = qrCodeType.toLowerCase();
         switch (qrCodeType) {
             case "malformato" -> {
-                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
+                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun(), destinatario);
                 this.qrCode = this.qrCode+"MALF";
             }
             case "inesistente" -> {
-                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
+                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun(), destinatario);
                 char toReplace = this.qrCode.charAt(0);
                 char replace = toReplace == 'B' ? 'C' : 'B';
                 this.qrCode = this.qrCode.replace(toReplace,replace);
@@ -547,28 +567,28 @@ public class RaddAltSteps {
                 if(this.currentUserCf.equalsIgnoreCase(sharedSteps.getSentNotification().getRecipients().get(0).getTaxId())){
                     throw new IllegalArgumentException();
                 }
-                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
+                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun(), destinatario);
             }
             case "corretto" -> {
-                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun());
+                vieneRichiestoIlCodiceQRPerLoIUN(sharedSteps.getSentNotification().getIun(), destinatario);
             }
             case "dopo 120gg" -> {
                 if(ambiente.equalsIgnoreCase("dev")){
                     if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
-                        vieneRichiestoIlCodiceQRPerLoIUN("WZVR-URNV-VHRZ-202402-H-1");
+                        vieneRichiestoIlCodiceQRPerLoIUN("WZVR-URNV-VHRZ-202402-H-1",0);
                     } else {
-                        vieneRichiestoIlCodiceQRPerLoIUN("NYAW-QMDQ-WPDK-202311-M-1");
+                        vieneRichiestoIlCodiceQRPerLoIUN("NYAW-QMDQ-WPDK-202311-M-1",0);
                     }
                 }else if(ambiente.equalsIgnoreCase("test")){
                     if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
-                        vieneRichiestoIlCodiceQRPerLoIUN("JEKU-RVGP-RZVJ-202402-A-1");
+                        vieneRichiestoIlCodiceQRPerLoIUN("JEKU-RVGP-RZVJ-202402-A-1",0);
                     } else {
-                        vieneRichiestoIlCodiceQRPerLoIUN("ZHDG-DYJZ-HLGL-202402-T-1");
+                        vieneRichiestoIlCodiceQRPerLoIUN("ZHDG-DYJZ-HLGL-202402-T-1",0);
                     }
                 }else if(ambiente.equalsIgnoreCase("uat")){
-                    vieneRichiestoIlCodiceQRPerLoIUN("");
+                    vieneRichiestoIlCodiceQRPerLoIUN("",destinatario);
                 }else if(ambiente.equalsIgnoreCase("hotfix")){
-                    vieneRichiestoIlCodiceQRPerLoIUN("");
+                    vieneRichiestoIlCodiceQRPerLoIUN("",destinatario);
                 }else{
                     throw new IllegalArgumentException();
                 }
@@ -578,11 +598,11 @@ public class RaddAltSteps {
         }
     }
 
-    @Given("viene richiesto il codice QR per lo IUN {string} su radd alternative")
-    public void vieneRichiestoIlCodiceQRPerLoIUN(String iun) {
+    @Given("viene richiesto il codice QR per lo IUN {string} per il destinatario {int} su radd alternative")
+    public void vieneRichiestoIlCodiceQRPerLoIUN(String iun, Integer destinatario) {
         HashMap<String, String> quickAccessLink = externalServiceClient.getQuickAccessLink(iun);
         log.debug("quickAccessLink: {}",quickAccessLink.toString());
-        this.qrCode = quickAccessLink.get(quickAccessLink.keySet().toArray()[0]);
+        this.qrCode = quickAccessLink.get(quickAccessLink.keySet().toArray()[destinatario]);
         log.debug("qrCode: {}",qrCode);
     }
     @When("L'operatore scansione il qrCode per recuperare gli atti su radd alternative per il recipientType {string}")
