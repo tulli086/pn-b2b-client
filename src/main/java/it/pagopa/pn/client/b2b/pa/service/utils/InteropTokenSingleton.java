@@ -15,6 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -56,6 +57,9 @@ public class InteropTokenSingleton implements InteropTokenRefresh{
     @Synchronized
     public String getTokenInterop(){
         if(tokenInterop == null){
+            tokenInterop = getBearerToken();
+            tokenCreationDate = OffsetDateTime.now();
+        }else if(tokenInterop != null && !(Duration.between(tokenCreationDate, OffsetDateTime.now()).getSeconds() <= (60*8))){
             tokenInterop = getBearerToken();
             tokenCreationDate = OffsetDateTime.now();
         }
