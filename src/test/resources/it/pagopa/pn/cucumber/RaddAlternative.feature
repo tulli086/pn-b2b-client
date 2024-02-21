@@ -18,7 +18,10 @@ Feature: Radd Alternative
   Scenario: [RADD-ALT_ACT-2] PF - Scansione QR code esistente associato al CF corretto, ma relativo a una notifica con perfezionamento > 120 giorni
     When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "dopo 120gg"
     Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    And Viene restituito un messaggio di errore "QRcode non valido" con codice di errore 1 su radd alternative
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
 
 
   @raddAlt
@@ -47,7 +50,7 @@ Feature: Radd Alternative
     Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 1 su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-5] PF - Scansione documenti e creazione file zip
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -60,7 +63,7 @@ Feature: Radd Alternative
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-6] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -76,7 +79,7 @@ Feature: Radd Alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-7] PF - Consegna documenti al cittadino successivi alla stampa
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -92,7 +95,8 @@ Feature: Radd Alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
 
-  @raddAlt
+
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-8] PF - Visualizzazione in timeline nuovo evento di avvenuta consegna documenti tramite RADD (NOTIFICATION_RADD_RETRIEVED)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -111,7 +115,7 @@ Feature: Radd Alternative
     When lato destinatario la notifica può essere correttamente recuperata da "Mario Cucumber" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     Then lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-9] PF - Restituzione errore - Documenti già stampati
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -130,7 +134,8 @@ Feature: Radd Alternative
     And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And Viene restituito un messaggio di errore "Stampa già eseguita" con codice di errore 3 su radd alternative
 
-  @raddAlt
+    #da verificare se il mesaggio dovrebbe essere - notifica annullata dalla PA
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-10] PF - Notifica annullata - Restituzione errore al tentativo di recupero documenti di notifica
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -142,9 +147,9 @@ Feature: Radd Alternative
     And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
     And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    And Viene restituito un messaggio di errore "notifica annullata" con codice di errore 80 su radd alternative
+    And Viene restituito un messaggio di errore "Questa notifica è stata annullata dall’ente mittente" con codice di errore 80 su radd alternative
 
-
+  @raddAlt
   Scenario: [RADD-ALT_ACT-11] PF - Restituzione errore - Documento non stampabile tra quelli disponibili nella lista dei documenti associati a QR code esistente con CF corretto
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -157,7 +162,7 @@ Feature: Radd Alternative
     And la scansione si conclude correttamente su radd alternative
     And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
-    And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 99
+    And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 99 su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-12] PG - Scansione QR code esistente associato al CF corretto
@@ -175,7 +180,10 @@ Feature: Radd Alternative
   Scenario: [RADD-ALT_ACT-13] PG - Scansione QR code esistente associato al CF corretto, ma relativo a una notifica con perfezionamento > 120 giorni.
     When Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "dopo 120gg"
     Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    And Viene restituito un messaggio di errore "QRcode non valido" con codice di errore 1 su radd alternative
+    And la scansione si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-14] PG - Scansione QR code inesistente
@@ -201,7 +209,7 @@ Feature: Radd Alternative
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 1 su radd alternative
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-16] PG - Scansione documenti e creazione file zip
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -213,7 +221,7 @@ Feature: Radd Alternative
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-17] PG - Stampa documenti disponibili associati a QR code esistente con CF corretto
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -228,7 +236,7 @@ Feature: Radd Alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-18] PG - Consegna documenti al cittadino successivi alla stampa
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -243,7 +251,7 @@ Feature: Radd Alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-19] PG - Visualizzazione in timeline nuovo evento di avvenuta consegna documenti tramite RADD (NOTIFICATION_RADD_RETRIEVED)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -262,7 +270,7 @@ Feature: Radd Alternative
     And lato desinatario "CucumberSpa" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-20] PG - Restituzione errore - Documenti già stampati
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -279,6 +287,7 @@ Feature: Radd Alternative
     When L'operatore usa lo IUN "corretto" per recuperare gli atti di "CucumberSpa"
     And Viene restituito un messaggio di errore "Stampa già eseguita" con codice di errore 3 su radd alternative
 
+    #da verificare se il mesaggio dovrebbe essere - notifica annullata dalla PA
   @raddAlt
   Scenario: [RADD-ALT_ACT-21] PG - Notifica annullata - Restituzione errore al tentativo di recupero documenti di notifica
     Given viene generata una nuova notifica
@@ -290,8 +299,7 @@ Feature: Radd Alternative
     And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLED"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti di "CucumberSpa"
-    Then la lettura si conclude correttamente su radd alternative
-    Then Viene restituito un messaggio di errore "notifica annullata" con codice di errore 80 su radd alternative
+    Then Viene restituito un messaggio di errore "Questa notifica è stata annullata dall’ente mittente" con codice di errore 80 su radd alternative
 
 
   @raddAlt
@@ -323,7 +331,7 @@ Feature: Radd Alternative
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_AOR-24] PF - Visualizzazione link AAR disponibili associati a notifica esistente in stato irreperibile con CF corretto
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -341,7 +349,7 @@ Feature: Radd Alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_AOR-25] PF - Stampa documenti disponibili associati a notifica esistente con CF corretto, mai visualizzata
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -359,7 +367,7 @@ Feature: Radd Alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_AOR-26] PF - Consegna documenti al cittadino successivi alla stampa
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -378,7 +386,7 @@ Feature: Radd Alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
-
+  @zip
   Scenario: [RADD-ALT_AOR-26_1] PF - Consegna documenti al cittadino successivi alla stampa con tanti AAR
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -411,7 +419,7 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99 su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_AOR-29] PF - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, ma inibizione stampa documenti associati alla notifica
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -432,7 +440,7 @@ Feature: Radd Alternative
     And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2 su radd alternative
 
 
-  @raddAlt
+  @raddAltManuale
   Scenario: [RADD-ALT_AOR-30] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale)
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -445,8 +453,10 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
-  @raddAlt
+
+  @raddAltManuale @zip
   Scenario: [RADD-ALT_AOR-31] PG - Visualizzazione link AAR disponibili associati a notifica esistente in stato irreperibile con CF corretto
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -462,9 +472,11 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona giuridica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
-  @raddAlt
+
+  @raddAltManuale @zip
   Scenario: [RADD-ALT_AOR-32] PG - Stampa documenti disponibili associati a notifica esistente con CF corretto, mai visualizzata
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -480,9 +492,11 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona giuridica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
-  @raddAlt
+
+  @raddAltManuale @zip
   Scenario: [RADD-ALT_AOR-33] PG - Consegna documenti al cittadino successivi alla stampa
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -500,6 +514,8 @@ Feature: Radd Alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
+
 
 
   @raddAlt
@@ -519,7 +535,7 @@ Feature: Radd Alternative
     Given la persona giuridica "cucumberspa" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile genera un errore "Non ci sono notifiche non consegnate per questo codice fiscale" con codice 99 su radd alternative
 
-  @raddAlt
+  @raddAltManuale @zip
   Scenario: [RADD-ALT_AOR-36] PG - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, ma inibizione stampa documenti associati alla notifica
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -538,8 +554,10 @@ Feature: Radd Alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     And la transazione viene abortita per gli "aor"
     And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2 su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
-  @raddAlt
+
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-37] PA - Visualizzazione in timeline nuovo evento di avvenuta consegna documenti tramite RADD (NOTIFICATION_RADD_RETRIEVED)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -556,7 +574,7 @@ Feature: Radd Alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-38] PA - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -576,7 +594,7 @@ Feature: Radd Alternative
       | details          | NOT_NULL |
       | details_recIndex | 0        |
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-39] PF - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -594,7 +612,7 @@ Feature: Radd Alternative
     Then lato destinatario la notifica può essere correttamente recuperata da "Mario Gherkin" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "Mario Gherkin" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-40] PG - Verifica notifiche visualizzate tramite RADD: stato Avvenuto Accesso non presente in timeline
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -637,7 +655,7 @@ Feature: Radd Alternative
     When L'operatore usa lo IUN "non esitente" per recuperare gli atti di "Mario Cucumber" con restituzione errore
     Then l'operazione ha prodotto un errore con status code "400"
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-48] PF - Recupero notifica con codice IUN esistente associato al CF corretto
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -707,14 +725,14 @@ Feature: Radd Alternative
     Then Viene restituito un messaggio di errore "input non valido" con codice di errore 10 su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-55] PF - Scansione QR code esistente, associato al CF corretto, per una notifica con allegati di pagamento (Avviso PagoPA e F24)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
       | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
-    And destinatario Mario Cucumber e:
+    And destinatario Mario Gherkin e:
       | payment_pagoPaForm   | SI                            |
       | payment_f24          | PAYMENT_F24_STANDARD          |
       | title_payment        | F24_STANDARD_CLMCST42R12D969Z |
@@ -722,16 +740,15 @@ Feature: Radd Alternative
       | apply_cost_f24       | SI                            |
       | payment_multy_number | 1                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-    When L'operatore scansione il qrCode per recuperare gli atti di "Mario Cucumber"
+    And Il cittadino "Mario Gherkin" come destinatario 0 mostra il QRCode "corretto"
+    When L'operatore scansione il qrCode per recuperare gli atti di "Mario Gherkin"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-56] PF - Scansione QR code esistente, associato al CF corretto, per una notifica con allegato di pagamento (solo F24)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -746,7 +763,6 @@ Feature: Radd Alternative
       | apply_cost_f24       | SI                            |
       | payment_multy_number | 1                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti di "Mario Cucumber"
@@ -790,13 +806,12 @@ Feature: Radd Alternative
       | apply_cost_f24       | SI                            |
       | payment_multy_number | 2                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "Mario Cucumber"
     And la lettura si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-59] PF/PG - Scansione QR code esistente, associato al CF corretto, per una notifica multi destinatario con allegati di pagamento (Avvisi PagoPA e F24)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -817,15 +832,15 @@ Feature: Radd Alternative
       | apply_cost_pagopa    | SI                   |
       | apply_cost_f24       | SI                   |
       | payment_multy_number | 1                    |
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And  Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     And L'operatore scansione il qrCode per recuperare gli atti di "Mario Cucumber"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
-    And  Il cittadino "CucumberSpa" come destinatario 1 mostra il QRCode "corretto"
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    Then  Il cittadino "CucumberSpa" come destinatario 1 mostra il QRCode "corretto"
     And L'operatore scansione il qrCode per recuperare gli atti di "CucumberSpa"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
@@ -833,7 +848,7 @@ Feature: Radd Alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-60] PG - Scansione QR code esistente, associato al CF corretto, per una notifica con allegati di pagamento (Avviso PagoPA e F24)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -848,7 +863,6 @@ Feature: Radd Alternative
       | apply_cost_f24       | SI                   |
       | payment_multy_number | 1                    |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti di "CucumberSpa"
@@ -857,7 +871,7 @@ Feature: Radd Alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-61] PG - Scansione QR code esistente, associato al CF corretto, per una notifica con allegato di pagamento (solo F24)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -872,7 +886,6 @@ Feature: Radd Alternative
       | apply_cost_f24       | SI                   |
       | payment_multy_number | 1                    |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     And Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti di "CucumberSpa"
@@ -915,7 +928,6 @@ Feature: Radd Alternative
       | apply_cost_f24       | SI                   |
       | payment_multy_number | 2                    |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "CucumberSpa"
     And la lettura si conclude correttamente su radd alternative
@@ -1006,7 +1018,7 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAltManuale
   Scenario: [RADD-ALT_AOR-68] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1026,9 +1038,11 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
-  @raddAlt
+
+  @raddAltManuale
   Scenario: [RADD-ALT_AOR-69] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1048,8 +1062,10 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
-  @raddAlt
+
+  @raddAltManuale
   Scenario: [RADD-ALT_AOR-70] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato un Avviso PagoPA
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1068,9 +1084,11 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
-  @raddAlt
+
+  @raddAltManuale
   Scenario: [RADD-ALT_AOR-71] PG - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegati due o più Avvisi PagoPA e due o più F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1090,9 +1108,10 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
-  @raddAlt
+  @raddAltManuale @zip
   Scenario: [RADD-ALT_AOR-72] PF/PG - Notifica multi destinatario disponibile associata al CF corretto fornito dal destinatario (irreperibile totale) con allegati Avvisi PagoPA e F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1130,9 +1149,10 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona giuridica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-73] PF -  Start di una ACT transaction con stesso operationId - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1145,11 +1165,12 @@ Feature: Radd Alternative
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
-    Then l'operazione di download degli atti genera un errore "operation id già presente" con codice 5 su radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_AOR-74] PF -  Start di una AOR transaction con stesso operationId - ricezione Errore
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -1165,11 +1186,11 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica con lo stesso operationId dalla "stessa" organizzazione
-    Then il recupero degli aar genera un errore "operation id già presente" con codice 5 su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-75] PF -  Start di una ACT transaction con stesso operationId da cxId diversi - ricezione OK
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1187,7 +1208,7 @@ Feature: Radd Alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_AOR-76] PF -  Start di una AOR transaction con stesso operationId da cxId diversi - ricezione OK
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1211,7 +1232,7 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-78] PF - Verifica restituzione al cittadino del documento Frontespizio (nome e cognome del destinatario) come primo documento del plico
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1225,10 +1246,11 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
-    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And L'operatore esegue il download del frontespizio del operazione "act"
+    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
 
-  @raddAlt
+
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-79] PG - Verifica restituzione al cittadino del documento Frontespizio (ragione sociale dell'impresa destinataria) come primo documento del plico
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1245,7 +1267,7 @@ Feature: Radd Alternative
     Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And L'operatore esegue il download del frontespizio del operazione "act"
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-80] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto su notifica analogica 890: verifica restituzione link alla ricevuta di postalizzazione (in formato pdf)
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1304,7 +1326,7 @@ Feature: Radd Alternative
       | details_deliveryDetailCode | RECAG001B |
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-83] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto su notifica analogica AR: verifica restituzione link alla ricevuta di postalizzazione (in formato pdf)
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1330,7 +1352,7 @@ Feature: Radd Alternative
 
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-84] Inserimento notifica indirizzata a PF con sequence OK_AR_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -1348,7 +1370,7 @@ Feature: Radd Alternative
       | details_deliveryDetailCode | RECRN001B |
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-85] Inserimento notifica indirizzata a PG con sequence OK_AR_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -1367,7 +1389,7 @@ Feature: Radd Alternative
 
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-86] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto la cui notifica è in stato avvenuto accesso
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1386,7 +1408,7 @@ Feature: Radd Alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-87] PG - Stampa documenti disponibili associati a QR code esistente con CF corretto la cui notifica è in stato avvenuto accesso
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1406,7 +1428,7 @@ Feature: Radd Alternative
 
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-88] PF - Interruzione processo recupero atti e avvio nuovo processo su stessa notifica
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1431,7 +1453,7 @@ Feature: Radd Alternative
 
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-89] PG - Interruzione processo recupero atti e avvio nuovo processo su stessa notifica
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1456,7 +1478,7 @@ Feature: Radd Alternative
 
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-90] PF - Recupero documenti allegati alla notifica: verifica presenza attributi (url, needAuth, categoria file)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1475,7 +1497,7 @@ Feature: Radd Alternative
     And si verifica se il file richiede l'autenticazione
 
 
-  @raddAlt
+  @raddAlt @zip
   Scenario: [RADD-ALT_ACT-91] PG - Recupero documenti allegati alla notifica: verifica presenza attributi (url, needAuth, categoria file)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |

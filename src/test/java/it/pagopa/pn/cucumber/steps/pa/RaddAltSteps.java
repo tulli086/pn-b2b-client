@@ -183,7 +183,7 @@ public class RaddAltSteps {
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertEquals(error, actInquiryResponse.getStatus().getCode());
             }
-            case "stampa già eseguita","notifica annullata","documenti non più disponibili","ko generico", "input non valido" -> {
+            case "stampa già eseguita","questa notifica è stata annullata dall’ente mittente","documenti non più disponibili","ko generico", "input non valido" -> {
                 Assertions.assertEquals(false, actInquiryResponse.getResult());
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertNotNull(actInquiryResponse.getStatus().getMessage());
@@ -265,6 +265,14 @@ public class RaddAltSteps {
         Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0, this.startTransactionResponse.getStatus().getCode());
     }
 
+    @And("l'operazione di download degli atti restituisce {int} atti")
+    public void loperazioneDiDownloadRestituisceTotDocumenti(Integer atti) {
+        Assertions.assertNotNull(this.startTransactionResponse.getDownloadUrlList());
+        Assertions.assertFalse(this.startTransactionResponse.getDownloadUrlList().isEmpty());
+        Assertions.assertEquals(atti,this.startTransactionResponse.getDownloadUrlList().size());
+        Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0, this.startTransactionResponse.getStatus().getCode());
+    }
+
     @And("si verifica se il file richiede l'autenticazione")
     public void siVerificaSeIlFileRichiedeLAutenticazione() {
         Assertions.assertNotNull(this.startTransactionResponse.getDownloadUrlList());
@@ -339,7 +347,6 @@ public class RaddAltSteps {
 
     @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) su radd alternative")
     public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile() {
-        this.operationid = generateRandomNumber();
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
                         .versionToken("string")
@@ -596,9 +603,9 @@ public class RaddAltSteps {
             case "dopo 120gg" -> {
                 if(ambiente.equalsIgnoreCase("dev")){
                     if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
-                        vieneRichiestoIlCodiceQRPerLoIUN("WZVR-URNV-VHRZ-202402-H-1",0);
+                        vieneRichiestoIlCodiceQRPerLoIUN("KMNG-VHZH-QEMZ-202310-M-1",0);
                     } else {
-                        vieneRichiestoIlCodiceQRPerLoIUN("NYAW-QMDQ-WPDK-202311-M-1",0);
+                        vieneRichiestoIlCodiceQRPerLoIUN("PYRW-NMEZ-TGPZ-202310-Z-1",0);
                     }
                 }else if(ambiente.equalsIgnoreCase("test")){
                     if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
@@ -695,7 +702,7 @@ public class RaddAltSteps {
         return null;
     }
 
-    @After("@raddAlt")
+    @After("@zip")
     public void deleteZip() {
         if (fileZip != null) {
             URI zip_disk = URI.create("target/classes/"+this.fileZip);
