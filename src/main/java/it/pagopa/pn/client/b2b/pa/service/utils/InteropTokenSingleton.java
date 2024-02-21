@@ -59,9 +59,6 @@ public class InteropTokenSingleton implements InteropTokenRefresh{
         if(tokenInterop == null){
             tokenInterop = getBearerToken();
             tokenCreationDate = OffsetDateTime.now();
-        }else if(tokenInterop != null && !(Duration.between(tokenCreationDate, OffsetDateTime.now()).getSeconds() <= (60*8))){
-            tokenInterop = getBearerToken();
-            tokenCreationDate = OffsetDateTime.now();
         }
         return tokenInterop;
         /*
