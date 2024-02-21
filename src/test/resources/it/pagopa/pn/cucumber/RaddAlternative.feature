@@ -453,7 +453,6 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
   @raddAltManuale @zip
@@ -472,7 +471,6 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona giuridica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
 
@@ -492,7 +490,6 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona giuridica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
 
@@ -514,7 +511,6 @@ Feature: Radd Alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
 
@@ -554,7 +550,6 @@ Feature: Radd Alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     And la transazione viene abortita per gli "aor"
     And l'operazione di abort genera un errore "La transazione risulta già completa" con codice 2 su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
   @raddAlt @zip
@@ -1038,7 +1033,6 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
 
@@ -1062,7 +1056,6 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
   @raddAltManuale
@@ -1084,7 +1077,6 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
 
@@ -1108,7 +1100,6 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
   @raddAltManuale @zip
@@ -1149,7 +1140,6 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona giuridica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
-    And la notifica può essere annullata dal sistema tramite codice IUN dal comune "Comune_Multi"
 
 
   @raddAlt @zip
@@ -1224,6 +1214,7 @@ Feature: Radd Alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica con lo stesso operationId da una "diversa" organizzazione
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
 
   @raddAlt @ignore
@@ -1515,3 +1506,41 @@ Feature: Radd Alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And si verifica se il file richiede l'autenticazione
 
+  @raddAlt @zip
+  Scenario: [RADD-ALT_AOR-92] PF - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, ma inibizione 2 volte
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la persona fisica "Signor Casuale" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And la transazione viene abortita per gli "aor"
+    And la transazione viene abortita per gli "aor"
+    And l'operazione di abort genera un errore "La transazione risulta annullata" con codice 99 su radd alternative
+
+
+  @raddAlt @zip
+  Scenario: [RADD-ALT_AOR-93] PF - Visualizzazione AAR di notifiche i cui documenti sono già stati stampati, inibizione poi complete
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la persona fisica "Signor Casuale" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And la transazione viene abortita per gli "aor"
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar ha generato l'errore "La transazione risulta annullata" con statusCode 99 su radd alternative

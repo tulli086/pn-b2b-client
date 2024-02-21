@@ -269,7 +269,7 @@ public class RaddAltSteps {
     public void loperazioneDiDownloadRestituisceTotDocumenti(Integer atti) {
         Assertions.assertNotNull(this.startTransactionResponse.getDownloadUrlList());
         Assertions.assertFalse(this.startTransactionResponse.getDownloadUrlList().isEmpty());
-        Assertions.assertEquals(atti,this.startTransactionResponse.getDownloadUrlList().size());
+        Assertions.assertEquals(atti, this.startTransactionResponse.getDownloadUrlList().size());
         Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0, this.startTransactionResponse.getStatus().getCode());
     }
 
