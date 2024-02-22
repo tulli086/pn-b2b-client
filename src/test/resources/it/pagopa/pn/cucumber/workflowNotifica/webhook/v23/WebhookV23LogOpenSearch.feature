@@ -1,7 +1,7 @@
 Feature: lettura log stream da open search
 
   #--------------AUDIT LOG DI UNO STREAM------------
-  @webhookV23
+  #@webhookV23
   Scenario Outline: [B2B-STREAM_ES2.1] Impostare nuova tipologia di Audit Log
     Then viene verificato che esiste un audit log "<audit-log>" in "10y"
     Examples:
