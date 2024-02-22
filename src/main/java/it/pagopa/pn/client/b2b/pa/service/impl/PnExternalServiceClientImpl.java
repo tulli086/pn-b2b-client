@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -227,6 +228,7 @@ public class PnExternalServiceClientImpl {
     private static List<HashMap<String, String>> sonGroup = null;
     private static List<HashMap<String, String>> rootGroup = null;
 
+    @Synchronized
     public List<HashMap<String, String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType) throws RestClientException {
         //TODO: usare @Cacheable
         //Si suppone che nel corso della run di test i gruppi non cambino
