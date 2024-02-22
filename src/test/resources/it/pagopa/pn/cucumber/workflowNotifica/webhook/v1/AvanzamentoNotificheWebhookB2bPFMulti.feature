@@ -267,7 +267,7 @@ Feature: avanzamento notifiche webhook b2b multi
     And l'avviso pagopa viene pagato correttamente dall'utente 1
     Then Si verifica che l'elemento di timeline "PAYMENT" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
-  @cleanC3 @webhook2
+  @oldWebhookTest @cleanWebhook
   Scenario: [B2B-STREAM-TIMELINE_MULTI_PF_13]Invio notifica digitale lettura evento SEND_ANALOG_PROGRESS nel webhook con controllo data
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -282,7 +282,7 @@ Feature: avanzamento notifiche webhook b2b multi
     Then Si verifica che l'elemento di timeline "SEND_ANALOG_PROGRESS" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
 
-  @cleanC3 @webhook2
+  @oldWebhookTest @cleanWebhook
   Scenario: [B2B-STREAM-TIMELINE_MULTI_PF_14] Invio notifica digitale lettura evento SEND_ANALOG_FEEDBACK nel webhook con controllo data
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -309,7 +309,7 @@ Feature: avanzamento notifiche webhook b2b multi
     Then Si verifica che l'elemento di timeline "SEND_DIGITAL_PROGRESS" dello stream di "Comune_Multi" non abbia il timestamp uguale a quella della notifica
 
 
-  @cleanC3 @webhook2
+  @oldWebhookTest @cleanWebhook
   Scenario: [B2B-STREAM-TIMELINE_MULTI_PF_16] Invio notifica digitale lettura evento SEND_DIGITAL_FEEDBACK nel webhook con controllo data
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |

@@ -28,7 +28,7 @@ public class WebhookSynchronizer {
         };
         return semaphoreToAcquire.tryAcquire(numberOfStreamRequest,90, TimeUnit.MINUTES);
     }
-    @Synchronized
+
     public void releaseStreamCreationSlot(int numberOfStreamRequest, String pa) {
         Semaphore semaphoreToRelease = switch(pa){
             case "Comune_1" -> semaphoreForPa1;

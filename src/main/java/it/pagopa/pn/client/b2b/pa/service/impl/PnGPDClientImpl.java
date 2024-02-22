@@ -98,6 +98,6 @@ public class PnGPDClientImpl implements IPnGPDClient {
 
     @Override
     public PaymentPositionModel updatePosition(String organizationfiscalcode, String iupd, PaymentPositionModel paymentPositionModel, String xRequestId) throws RestClientException {
-        return debtPositionsApiApi.updatePositionWithHttpInfo(organizationfiscalcode, iupd, paymentPositionModel, xRequestId).getBody();
+        return debtPositionsApiApi.updatePositionWithHttpInfo(organizationfiscalcode, iupd, paymentPositionModel, xRequestId,false).getBody();
     }
 }
