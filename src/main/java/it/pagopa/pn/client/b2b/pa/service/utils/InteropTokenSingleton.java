@@ -59,6 +59,10 @@ public class InteropTokenSingleton implements InteropTokenRefresh{
         if(tokenInterop == null){
             tokenInterop = getBearerToken();
             tokenCreationDate = OffsetDateTime.now();
+        } else if (tokenInterop != null && (Duration.between(tokenCreationDate, OffsetDateTime.now()).getSeconds() >= (60*8))) {
+            log.info("refresh interop token1");
+            tokenInterop = getBearerToken();
+            tokenCreationDate = OffsetDateTime.now();
         }
         return tokenInterop;
         /*
@@ -71,6 +75,9 @@ public class InteropTokenSingleton implements InteropTokenRefresh{
             return tokenInterop;
         }
          */
+    }
+    public static void main (String[] args){
+        System.out.println(Duration.between(OffsetDateTime.now(), OffsetDateTime.now().plusMinutes(9)).getSeconds());
     }
 
     @Scheduled(cron = "0 0/01 * * * ?")
