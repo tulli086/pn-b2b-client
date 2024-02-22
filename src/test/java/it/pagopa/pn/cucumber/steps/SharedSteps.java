@@ -25,6 +25,7 @@ import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.cucumber.utils.*;
+import lombok.Synchronized;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
@@ -1815,7 +1816,7 @@ public class SharedSteps {
 
     private void setGrup(SettableApiKey.ApiKeyType apiKeyType) {
         if (groupToSet && this.notificationRequest.getGroup() == null) {
-            List<HashMap<String, String>> hashMapsList = pnExternalServiceClient.paGroupInfo(apiKeyType);
+            List<HashMap<String, String>> hashMapsList = getGroupsInternal(apiKeyType);
             if (hashMapsList == null || hashMapsList.size() == 0) return;
             String id = null;
             for (HashMap<String, String> elem : hashMapsList) {
@@ -1841,7 +1842,7 @@ public class SharedSteps {
         }
 
         if (groupToSet && group == null) {
-            List<HashMap<String, String>> hashMapsList = pnExternalServiceClient.paGroupInfo(apiKeyType);
+            List<HashMap<String, String>> hashMapsList = getGroupsInternal(apiKeyType);
             if (hashMapsList == null || hashMapsList.size() == 0) return;
             String id = null;
             for (HashMap<String, String> elem : hashMapsList) {
@@ -2092,30 +2093,45 @@ public class SharedSteps {
     }
 
     public List<HashMap<String, String>> getGroupsByPa(String settedPa) {
-        List<HashMap<String, String>> hashMapsList = null;
-        switch (settedPa) {
-            case "Comune_1":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.MVP_1);
-                break;
-            case "Comune_2":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.MVP_2);
-                break;
-            case "Comune_Multi":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.GA);
-                break;
-            case "Comune_Son":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.SON);
-                break;
-            case "Comune_Root":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.ROOT);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-
+        SettableApiKey.ApiKeyType apiKeyToUse  = switch (settedPa) {
+            case "Comune_1" -> SettableApiKey.ApiKeyType.MVP_1;
+            case "Comune_2" -> SettableApiKey.ApiKeyType.MVP_2;
+            case "Comune_Multi" -> SettableApiKey.ApiKeyType.GA;
+            case "Comune_Son" -> SettableApiKey.ApiKeyType.SON;
+            case "Comune_Root" -> SettableApiKey.ApiKeyType.ROOT;
+            default -> throw new IllegalArgumentException();
+        };
+        List<HashMap<String, String>> hashMapsList = getGroupsInternal(apiKeyToUse);
         Assertions.assertNotNull(hashMapsList);
-        Assertions.assertTrue(hashMapsList.size() > 0);
+        Assertions.assertFalse(hashMapsList.isEmpty());
         return hashMapsList;
+    }
+
+
+    private static List<HashMap<String, String>> mvp1Group = new LinkedList<>();
+    private static List<HashMap<String, String>> mvp2Group = new LinkedList<>();
+    private static List<HashMap<String, String>> gaGroup = new LinkedList<>();
+    private static List<HashMap<String, String>> sonGroup = new LinkedList<>();
+    private static List<HashMap<String, String>> rootGroup = new LinkedList<>();
+
+    @Synchronized
+    private List<HashMap<String, String>> getGroupsInternal(SettableApiKey.ApiKeyType apiKeyType) {
+        List<HashMap<String, String>> groupResult = switch (apiKeyType) {
+            case MVP_1 -> mvp1Group;
+            case MVP_2 -> mvp2Group;
+            case GA -> gaGroup;
+            case SON -> sonGroup;
+            case ROOT -> rootGroup;
+        };
+        //Si suppone che nel corso della run di test i gruppi non cambino
+        //TODO: usare @Cacheable
+        if(groupResult.isEmpty()){
+            logger.info("Assign group list: apikeyTipe{} ",apiKeyType);
+            groupResult = this.pnExternalServiceClient.paGroupInfo(apiKeyType);
+        }
+        Assertions.assertNotNull(groupResult);
+        Assertions.assertFalse(groupResult.isEmpty());
+        return groupResult;
     }
 
     public String getGroupIdByPa(String settedPa, GroupPosition position) {
