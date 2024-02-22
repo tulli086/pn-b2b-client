@@ -59,6 +59,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private final TimingForTimeline timingForTimeline;
 
     private final WebhookSynchronizer webhookSynchronizer;
+
+
     public enum StreamVersion {V23,V10}
     private Map<String, PnPaB2bUtils.Pair<Boolean,Integer>> numberOfStreamSlotAcquiredForPa = new HashMap<>(); //forPermissionCheck
     private Map<UUID,PnPaB2bUtils.Pair<String,StreamVersion>> streamIdForPaAndVersion = new HashMap<>(); //for streamId check
@@ -154,28 +156,39 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} e filtro di timeline {string}")
     public void createdStreamByFilterValue(String pa,String version,String filter) {
         setPaWebhook(pa);
-        createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, List.of(filter));
+        createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, List.of(filter),false);
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string}")
     public void createdStream(String pa,String version) {
         setPaWebhook(pa);
-        createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null);
+        createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null,false);
+    }
+
+    @And("si crea il nuovo stream per il {string} con versione {string} \\(caso errato)")
+    public void siCreaIlNuovoStreamPerIlConVersioneFORZATOSoloPerCasoErrato(String pa, String version) {
+        setPaWebhook(pa);
+        createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null,true);
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con un gruppo disponibile {string}")
     public void createdStreamByGroups(String pa, String position) {
         setPaWebhook(pa);
-        if(sharedSteps.getResponseNewApiKey()!= null){
-            webhookB2bClient.setApiKey(sharedSteps.getResponseNewApiKey().getApiKey());
-        }
-        createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),false, null);
+        updateApiKeyForStream();
+        createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),false, null,false);
+    }
+
+    @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con un gruppo disponibile {string} \\(caso errato)")
+    public void createdStreamByGroupsForced(String pa, String position) {
+        setPaWebhook(pa);
+        updateApiKeyForStream();
+        createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),false, null,true);
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con replaceId con un gruppo disponibile {string}")
     public void createdStreamByGroupsWithReplaceId(String pa, String position) {
         setPaWebhook(pa);
-        createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),true, null);
+        createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),true, null,false);
     }
 
     @When("viene aggiornata la apiKey utilizzata per gli stream")
@@ -1565,12 +1578,12 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
-    private void createStream(String pa,StreamVersion streamVersion,List<String> listGroups, boolean replaceId,List<String> filteredValues){
+    private void createStream(String pa,StreamVersion streamVersion,List<String> listGroups, boolean replaceId,List<String> filteredValues, boolean forced){
         try{
             switch (streamVersion){
                 case V10 -> {
                     if(this.eventStreamList == null)this.eventStreamList = new LinkedList<>();
-                    acquireStreamCreationSlotInternal(pa,streamCreationRequestList.size());
+                    if(!forced)acquireStreamCreationSlotInternal(pa,streamCreationRequestList.size());
 
                     for(StreamCreationRequest request: streamCreationRequestList){
                         if (filteredValues!= null && !filteredValues.isEmpty()){
@@ -1584,7 +1597,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 }
                 case V23 -> {
                     if(this.eventStreamListV23 == null)this.eventStreamListV23 = new LinkedList<>();
-                    acquireStreamCreationSlotInternal(pa,streamCreationRequestListV23.size());
+                    if(!forced)acquireStreamCreationSlotInternal(pa,streamCreationRequestListV23.size());
 
                     for(StreamCreationRequestV23 request: streamCreationRequestListV23){
                         if (filteredValues!= null && !filteredValues.isEmpty()){
@@ -1607,6 +1620,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     e.getStatusCode(),streamVersion,listGroups,replaceId,filteredValues);
             this.notificationError = e;
             sharedSteps.setNotificationError(e);
+            if(!forced)throw e;
         }
         if(!webhookTestLaunch)webhookTestLaunch = true;
     }

@@ -23,7 +23,6 @@ public class ApikeyManagerSteps {
 
     private final IPnApiKeyManagerClient apiKeyManagerClient;
     private final SharedSteps sharedSteps;
-    private final PnApiKeyManagerExternalClientImpl apiKeyManagerClientImpl;
     private ApiKeysResponse apiKeys;
     private RequestNewApiKey requestNewApiKey;
     private ResponseNewApiKey responseNewApiKey;
@@ -40,10 +39,9 @@ public class ApikeyManagerSteps {
     private String env;
 
     @Autowired
-    public ApikeyManagerSteps(IPnApiKeyManagerClient apiKeyManagerClient, SharedSteps sharedSteps,PnApiKeyManagerExternalClientImpl apiKeyManagerClientImpl) {
+    public ApikeyManagerSteps(IPnApiKeyManagerClient apiKeyManagerClient, SharedSteps sharedSteps) {
         this.sharedSteps = sharedSteps;
         this.apiKeyManagerClient = apiKeyManagerClient;
-        this.apiKeyManagerClientImpl=apiKeyManagerClientImpl;
     }
 
     @Given("vengono lette le apiKey esistenti")
@@ -250,7 +248,7 @@ public class ApikeyManagerSteps {
 
         requestNewApiKey = new RequestNewApiKey().name("CUCUMBER GROUP TEST");
         responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
-        Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClientImpl.newApiKey(requestNewApiKey));
+        Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
         sharedSteps.setRequestNewApiKey(requestNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
@@ -259,16 +257,16 @@ public class ApikeyManagerSteps {
     private void setBearerToken(String settedPa){
         switch (settedPa) {
             case "Comune_1":
-                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
                 break;
             case "Comune_Multi":
-                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.GA);
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.GA);
                 break;
             case "Comune_Son":
-                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.SON);
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.SON);
                 break;
             case "Comune_Root":
-                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.ROOT);
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.ROOT);
                 break;
         }
     }
@@ -365,16 +363,16 @@ public class ApikeyManagerSteps {
         sharedSteps.selectPA(settedPa);
         switch (settedPa){
             case "Comune_1":
-                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
                 break;
             case "Comune_Multi":
-                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.GA);
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.GA);
                 break;
             case "Comune_Son":
-                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.SON);
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.SON);
                 break;
             case "Comune_Root":
-                apiKeyManagerClientImpl.setApiKeys(SettableApiKey.ApiKeyType.ROOT);
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.ROOT);
                 break;
         }
 
