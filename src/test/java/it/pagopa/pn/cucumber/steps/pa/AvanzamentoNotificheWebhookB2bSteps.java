@@ -90,15 +90,19 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         if(webhookTestLaunch){
             log.info("Starting cleaning");
             for(SettableApiKey.ApiKeyType pa: paForStream){
-                webhookClientForClean.setApiKeys(pa);
-                List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement> streamListElements = webhookClientForClean.listEventStreams();
-                for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement elem: streamListElements){
-                    webhookClientForClean.deleteEventStream(elem.getStreamId());
-                }
+                try{
+                    webhookClientForClean.setApiKeys(pa);
+                    List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement> streamListElements = webhookClientForClean.listEventStreams();
+                    for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement elem: streamListElements){
+                        webhookClientForClean.deleteEventStream(elem.getStreamId());
+                    }
 //            List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement> streamListElementsV23 = webhookClientForClean.listEventStreamsV23();
 //            for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement elem: streamListElementsV23){
 //                webhookClientForClean.deleteEventStreamV23(elem.getStreamId());
 //            }
+                }catch (HttpStatusCodeException statusCodeException){
+                    log.error("HTTP Error: statusCode {} message {}",statusCodeException.getStatusCode(),statusCodeException.getMessage());
+                }
             }
         }
     }
@@ -107,6 +111,17 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @After("@cleanWebhook")
     public void afterStreamTestRun(){
         log.info("After StreamTest started");
+        //removeStream
+        //si può solo cancellare
+        Iterator<UUID> iteratorStreamIdForPaAndVersion = streamIdForPaAndVersion.keySet().iterator();
+        while(iteratorStreamIdForPaAndVersion.hasNext()){
+            UUID streamId = iteratorStreamIdForPaAndVersion.next();
+            log.info("removeStream phase start for id {}",streamId);
+            PnPaB2bUtils.Pair<String, StreamVersion> paAndVersion = streamIdForPaAndVersion.get(streamId);
+            log.info("removeStream id {} for pa {} with version {}",streamId,paAndVersion.getValue1(),paAndVersion.getValue2());
+            setPaWebhook(paAndVersion.getValue1());
+            deleteStreamWrapperWithoutReleaseStreamCreationSlot(paAndVersion.getValue2(),paAndVersion.getValue1(),streamId);
+        }
         //releaseStreamSlot
         Iterator<String> iteratorNumberOfStreamSlotAcquiredForPa = numberOfStreamSlotAcquiredForPa.keySet().iterator();
         while(iteratorNumberOfStreamSlotAcquiredForPa.hasNext()){
@@ -117,16 +132,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 log.info("release n.{} of streamCreationSlot for pa {}",isAcquireNumberOfStramSlot.getValue2(),pa);
                 webhookSynchronizer.releaseStreamCreationSlot(isAcquireNumberOfStramSlot.getValue2(),pa);
             }
-        }
-        //removeStream
-        Iterator<UUID> iteratorStreamIdForPaAndVersion = streamIdForPaAndVersion.keySet().iterator();
-        while(iteratorStreamIdForPaAndVersion.hasNext()){
-            UUID streamId = iteratorStreamIdForPaAndVersion.next();
-            log.info("removeStream phase start for id {}",streamId);
-            PnPaB2bUtils.Pair<String, StreamVersion> paAndVersion = streamIdForPaAndVersion.get(streamId);
-            log.info("removeStream id {} for pa {} with version {}",streamId,paAndVersion.getValue1(),paAndVersion.getValue2());
-            setPaWebhook(paAndVersion.getValue1());
-            deleteStreamWrapperWithoutReleaseStreamCreationSlot(paAndVersion.getValue2(),paAndVersion.getValue1(),streamId);
         }
     }
 
@@ -787,7 +792,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             Assertions.assertNotNull(progressResponseElement);
             //TODO Verificare...
-            Assertions.assertNotEquals(progressResponseElement.getElement().getTimestamp().truncatedTo(ChronoUnit.SECONDS),
+            Assertions.assertEquals(progressResponseElement.getElement().getTimestamp().truncatedTo(ChronoUnit.SECONDS),
                     sharedSteps.getSentNotification().getTimeline().stream()
                             .filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp().truncatedTo(ChronoUnit.SECONDS));
             log.info("EventProgress: " + progressResponseElement);
@@ -795,7 +800,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             //sharedSteps.getTimelineElementV23().getDetails();
         }catch(AssertionFailedError assertionFailedError){
             String message = assertionFailedError.getMessage()+
-                    "{IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" }";
+                    "{IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamListV23.get(0).getStreamId()+" }";
             throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
         }
     }
@@ -931,7 +936,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             throw new IllegalArgumentException();
         }
         ProgressResponseElementV23 progressResponseElement = null;
-        ResponseEntity<List<ProgressResponseElementV23>> listResponseEntity = webhookB2bClient.consumeEventStreamHttpV23(this.eventStreamList.get(position).getStreamId(), lastEventId);
+        ResponseEntity<List<ProgressResponseElementV23>> listResponseEntity = webhookB2bClient.consumeEventStreamHttpV23(this.eventStreamListV23.get(position).getStreamId(), lastEventId);
         int retryAfter = Integer.parseInt(listResponseEntity.getHeaders().get("retry-after").get(0));
         List<ProgressResponseElementV23> progressResponseElements = listResponseEntity.getBody();
 
@@ -940,7 +945,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         System.out.println("ELEMENTI NEL WEBHOOK: "+progressResponseElements.toString());
         if(deepCount >= 250){
             throw new IllegalStateException("LOP: PROGRESS-ELEMENTS: "+progressResponseElements
-                    +" WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" IUN: "+sharedSteps.getSentNotification().getIun()+" DEEP: "+deepCount);
+                    +" WEBHOOK: "+this.eventStreamListV23.get(0).getStreamId()+" IUN: "+sharedSteps.getSentNotification().getIun()+" DEEP: "+deepCount);
         }
         ProgressResponseElementV23 lastProgress = null;
         for(ProgressResponseElementV23 elem: progressResponseElements){
@@ -971,7 +976,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             }catch (IllegalStateException illegalStateException){
                 if(deepCount == 249 || deepCount == 248 || deepCount == 247){
                     throw new IllegalStateException((illegalStateException.getMessage()+("LOP: PROGRESS-ELEMENTS: "+progressResponseElements
-                            +" WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" IUN: "+sharedSteps.getSentNotification().getIun()+" DEEP: "+deepCount)));
+                            +" WEBHOOK: "+this.eventStreamListV23.get(0).getStreamId()+" IUN: "+sharedSteps.getSentNotification().getIun()+" DEEP: "+deepCount)));
                 }else{
                     throw illegalStateException;
                 }
@@ -1095,7 +1100,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         sleepTest((sharedSteps.getWait()*2));
 
         setPaWebhook(pa);
-        ProgressResponseElement progressResponseElement = searchInWebhook(NotificationStatus.VIEWED, null, 0);
+        ProgressResponseElement progressResponseElement = searchInWebhook(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.NotificationStatus.VIEWED, null, 0);
         Assertions.assertNotNull(progressResponseElement);
     }
 
@@ -1602,7 +1607,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     e.getStatusCode(),streamVersion,listGroups,replaceId,filteredValues);
             this.notificationError = e;
             sharedSteps.setNotificationError(e);
-            
         }
         if(!webhookTestLaunch)webhookTestLaunch = true;
     }
