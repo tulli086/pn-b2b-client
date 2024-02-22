@@ -93,7 +93,8 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
-    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAlt @zip
@@ -111,6 +112,7 @@ Feature: Radd Alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     When lato destinatario la notifica può essere correttamente recuperata da "Mario Cucumber" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     Then lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
@@ -163,6 +165,7 @@ Feature: Radd Alternative
     And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 99 su radd alternative
+
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-12] PG - Scansione QR code esistente associato al CF corretto
@@ -250,6 +253,7 @@ Feature: Radd Alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
   @raddAlt @zip
   Scenario: [RADD-ALT_ACT-19] PG - Visualizzazione in timeline nuovo evento di avvenuta consegna documenti tramite RADD (NOTIFICATION_RADD_RETRIEVED)
@@ -265,6 +269,7 @@ Feature: Radd Alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     Then lato destinatario la notifica può essere correttamente recuperata da "CucumberSpa" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "CucumberSpa" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
@@ -567,6 +572,7 @@ Feature: Radd Alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
 
   @raddAlt @zip
@@ -584,6 +590,7 @@ Feature: Radd Alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
       | details          | NOT_NULL |
@@ -604,6 +611,7 @@ Feature: Radd Alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     Then lato destinatario la notifica può essere correttamente recuperata da "Mario Gherkin" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "Mario Gherkin" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
@@ -622,6 +630,7 @@ Feature: Radd Alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     Then lato destinatario la notifica può essere correttamente recuperata da "CucumberSpa" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "CucumberSpa" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
@@ -664,6 +673,7 @@ Feature: Radd Alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAlt
@@ -742,6 +752,7 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And l'operazione di download degli atti restituisce 5 atti
 
   @raddAlt @zip
   Scenario: [RADD-ALT_ACT-56] PF - Scansione QR code esistente, associato al CF corretto, per una notifica con allegato di pagamento (solo F24)
@@ -765,6 +776,9 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And l'operazione di download restituisce 4 documenti
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAlt
@@ -784,7 +798,12 @@ Feature: Radd Alternative
     When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "Mario Cucumber"
     And la lettura si conclude correttamente su radd alternative
-
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And l'operazione di download restituisce 4 documenti
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-58] PF - Recupero notifica con allegati di pagamento (due o più Avvisi PagoPA e due o più F24) con codice IUN esistente associato a CF corretto
@@ -804,6 +823,12 @@ Feature: Radd Alternative
     When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "Mario Cucumber"
     And la lettura si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And l'operazione di download restituisce 4 documenti
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAlt @zip
@@ -832,16 +857,20 @@ Feature: Radd Alternative
     And L'operatore scansione il qrCode per recuperare gli atti di "Mario Cucumber"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
-    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And l'operazione di download restituisce 5 documenti
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     Then  Il cittadino "CucumberSpa" come destinatario 1 mostra il QRCode "corretto"
     And L'operatore scansione il qrCode per recuperare gli atti di "CucumberSpa"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
-
+    And l'operazione di download restituisce 5 documenti
+    And l'operazione di download restituisce 5 documenti
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
 
   @raddAlt @zip
   Scenario: [RADD-ALT_ACT-60] PG - Scansione QR code esistente, associato al CF corretto, per una notifica con allegati di pagamento (Avviso PagoPA e F24)
@@ -865,6 +894,10 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And l'operazione di download restituisce 5 documenti
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
+
 
   @raddAlt @zip
   Scenario: [RADD-ALT_ACT-61] PG - Scansione QR code esistente, associato al CF corretto, per una notifica con allegato di pagamento (solo F24)
@@ -888,6 +921,10 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And l'operazione di download restituisce 4 documenti
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
+
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-62] PG -  Recupero notifica con allegato di pagamento (solo Avviso PagoPA)  con codice IUN esistente associato a CF corretto
@@ -906,6 +943,12 @@ Feature: Radd Alternative
     When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "CucumberSpa"
     And la lettura si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And l'operazione di download restituisce 5 documenti
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAlt
@@ -926,6 +969,13 @@ Feature: Radd Alternative
     When vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "CucumberSpa"
     And la lettura si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
+    And l'operazione di download degli atti si conclude correttamente su radd alternative
+    And l'operazione di download restituisce 7 documenti
+    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
+
 
   @raddAlt
   Scenario: [RADD-ALT_AOR-64] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
@@ -947,6 +997,12 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And l'operazione di download restituisce 7 documenti
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAlt
@@ -969,6 +1025,12 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
+
 
   @raddAlt
   Scenario: [RADD-ALT_AOR-66] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato un Avviso PagoPA
@@ -988,7 +1050,11 @@ Feature: Radd Alternative
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
-    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAlt
@@ -1011,6 +1077,11 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAltManuale
@@ -1033,6 +1104,11 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
 
@@ -1056,6 +1132,11 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAltManuale
@@ -1077,6 +1158,11 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
 
@@ -1100,6 +1186,11 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAltManuale @zip
@@ -1135,11 +1226,15 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona giuridica su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAlt @zip
@@ -1466,6 +1561,7 @@ Feature: Radd Alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
 
@@ -1543,4 +1639,4 @@ Feature: Radd Alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And la transazione viene abortita per gli "aor"
     And viene chiusa la transazione per il recupero degli aar su radd alternative
-    And la chiusura delle transazione per il recupero degli aar ha generato l'errore "La transazione risulta annullata" con statusCode 99 su radd alternative
+    And la chiusura delle transazione per il recupero degli aar ha generato l'errore "La transazione risulta annullata" con statusCode 2 su radd alternative

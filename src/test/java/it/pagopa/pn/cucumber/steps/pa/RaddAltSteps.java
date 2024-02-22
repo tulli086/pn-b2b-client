@@ -265,11 +265,11 @@ public class RaddAltSteps {
         Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0, this.startTransactionResponse.getStatus().getCode());
     }
 
-    @And("l'operazione di download degli atti restituisce {int} atti")
-    public void loperazioneDiDownloadRestituisceTotDocumenti(Integer atti) {
+    @And("l'operazione di (download)(recupero) restituisce {int} documenti")
+    public void loperazioneDiDownloadRestituisceTotDocumenti(Integer documenti) {
         Assertions.assertNotNull(this.startTransactionResponse.getDownloadUrlList());
         Assertions.assertFalse(this.startTransactionResponse.getDownloadUrlList().isEmpty());
-        Assertions.assertEquals(atti, this.startTransactionResponse.getDownloadUrlList().size());
+        Assertions.assertEquals(documenti, this.startTransactionResponse.getDownloadUrlList().size());
         Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0, this.startTransactionResponse.getStatus().getCode());
     }
 
@@ -359,6 +359,25 @@ public class RaddAltSteps {
                         //.delegateTaxId("")
                         .checksum(this.documentUploadResponse.getValue2());
         this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1, aorStartTransactionRequest);
+    }
+
+
+    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) 2 volte su radd alternative")
+    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile2volte() {
+        AorStartTransactionRequest aorStartTransactionRequest =
+                new AorStartTransactionRequest()
+                        .versionToken("string")
+                        .fileKey(this.documentUploadResponse.getValue1())
+                        .operationId(this.operationid)
+                        .recipientTaxId(this.currentUserCf)
+                        .recipientType(this.recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
+                                AorStartTransactionRequest.RecipientTypeEnum.PG)
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                        //.delegateTaxId("")
+                        .checksum(this.documentUploadResponse.getValue2());
+        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1, aorStartTransactionRequest);
+        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1, aorStartTransactionRequest);
+
     }
 
 
