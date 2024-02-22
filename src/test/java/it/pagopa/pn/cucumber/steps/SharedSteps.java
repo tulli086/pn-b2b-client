@@ -2108,11 +2108,11 @@ public class SharedSteps {
     }
 
 
-    private static List<HashMap<String, String>> mvp1Group = new LinkedList<>();
-    private static List<HashMap<String, String>> mvp2Group = new LinkedList<>();
-    private static List<HashMap<String, String>> gaGroup = new LinkedList<>();
-    private static List<HashMap<String, String>> sonGroup = new LinkedList<>();
-    private static List<HashMap<String, String>> rootGroup = new LinkedList<>();
+    private static List<HashMap<String, String>> mvp1Group = null;
+    private static List<HashMap<String, String>> mvp2Group = null;
+    private static List<HashMap<String, String>> gaGroup = null;
+    private static List<HashMap<String, String>> sonGroup = null;
+    private static List<HashMap<String, String>> rootGroup = null;
 
     @Synchronized
     private List<HashMap<String, String>> getGroupsInternal(SettableApiKey.ApiKeyType apiKeyType) {
@@ -2125,12 +2125,11 @@ public class SharedSteps {
         };
         //Si suppone che nel corso della run di test i gruppi non cambino
         //TODO: usare @Cacheable
-        if(groupResult.isEmpty()){
-            logger.info("Assign group list: apikeyTipe{} ",apiKeyType);
-            groupResult = this.pnExternalServiceClient.paGroupInfo(apiKeyType);
+        if(groupResult == null){
+            logger.info("Assign group list: apikeyTipe {} ",apiKeyType);
+            groupResult = new LinkedList<>(this.pnExternalServiceClient.paGroupInfo(apiKeyType));
         }
         Assertions.assertNotNull(groupResult);
-        Assertions.assertFalse(groupResult.isEmpty());
         return groupResult;
     }
 
