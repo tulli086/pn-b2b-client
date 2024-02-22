@@ -5,8 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -39,6 +42,8 @@ import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENE
 
 
 @Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Slf4j
 public class PnExternalServiceClientImpl {
 
     private final ApplicationContext ctx;
@@ -215,21 +220,53 @@ public class PnExternalServiceClientImpl {
         return invokeAPI(deliveryBasePath, "/delivery-private/notifications/{iun}/quick-access-link-tokens", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
     }
 
+    //TODO spostare in classe apposita
+    private static List<HashMap<String, String>> mvp1Group = null;
+    private static List<HashMap<String, String>> mvp2Group = null;
+    private static List<HashMap<String, String>> gaGroup = null;
+    private static List<HashMap<String, String>> sonGroup = null;
+    private static List<HashMap<String, String>> rootGroup = null;
+
     public List<HashMap<String, String>> paGroupInfo(SettableApiKey.ApiKeyType apiKeyType) throws RestClientException {
-        switch (apiKeyType) {
-            case MVP_1:
-                return paGroupInfoWithHttpInfo(apiKeyMvp1).getBody();
-            case MVP_2:
-                return paGroupInfoWithHttpInfo(apiKeyMvp2).getBody();
-            case GA:
-                return paGroupInfoWithHttpInfo(apiKeyGa).getBody();
-            case SON:
-                return paGroupInfoWithHttpInfo(apiKeySON).getBody();
-            case ROOT:
-                return paGroupInfoWithHttpInfo(apiKeyROOT).getBody();
-            default:
-                throw new IllegalArgumentException();
-        }
+        //TODO: usare @Cacheable
+        //Si suppone che nel corso della run di test i gruppi non cambino
+        return switch (apiKeyType) {
+            case MVP_1 -> {
+                if(mvp1Group == null){
+                    log.info("Assign group list: apikeyTipe {} ",apiKeyType);
+                    mvp1Group = new LinkedList<>(Objects.requireNonNull(paGroupInfoWithHttpInfo(apiKeyMvp1).getBody()));
+                }
+                yield mvp1Group;
+            }
+            case MVP_2 -> {
+                if(mvp2Group == null){
+                    log.info("Assign group list: apikeyTipe {} ",apiKeyType);
+                    mvp2Group = new LinkedList<>(Objects.requireNonNull(paGroupInfoWithHttpInfo(apiKeyMvp2).getBody()));
+                }
+                yield mvp2Group;
+            }
+            case GA -> {
+                if(gaGroup == null){
+                    log.info("Assign group list: apikeyTipe {} ",apiKeyType);
+                    gaGroup = new LinkedList<>(Objects.requireNonNull(paGroupInfoWithHttpInfo(apiKeyGa).getBody()));
+                }
+                yield gaGroup;
+            }
+            case SON -> {
+                if(sonGroup == null){
+                    log.info("Assign group list: apikeyTipe {} ",apiKeyType);
+                    sonGroup = new LinkedList<>(Objects.requireNonNull(paGroupInfoWithHttpInfo(apiKeySON).getBody()));
+                }
+                yield sonGroup;
+            }
+            case ROOT -> {
+                if(rootGroup == null){
+                    log.info("Assign group list: apikeyTipe {} ",apiKeyType);
+                    rootGroup = new LinkedList<>(Objects.requireNonNull(paGroupInfoWithHttpInfo(apiKeyROOT).getBody()));
+                }
+                yield rootGroup;
+            }
+        };
     }
 
     public List<HashMap<String, String>> pgGroupInfo(SettableBearerToken.BearerTokenType settableBearerToken) throws RestClientException {
