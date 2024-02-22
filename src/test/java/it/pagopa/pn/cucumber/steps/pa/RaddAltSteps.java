@@ -265,7 +265,7 @@ public class RaddAltSteps {
         Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0, this.startTransactionResponse.getStatus().getCode());
     }
 
-    @And("l'operazione di (download)(recupero) restituisce {int} documenti")
+    @And("l'operazione di download restituisce {int} documenti")
     public void loperazioneDiDownloadRestituisceTotDocumenti(Integer documenti) {
         Assertions.assertNotNull(this.startTransactionResponse.getDownloadUrlList());
         Assertions.assertFalse(this.startTransactionResponse.getDownloadUrlList().isEmpty());
