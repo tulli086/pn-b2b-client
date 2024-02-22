@@ -54,26 +54,22 @@ public class InteropTokenSingleton implements InteropTokenRefresh{
         this.enableInterop = enableInterop;
     }
 
-    @Synchronized
     public String getTokenInterop(){
+        if(tokenInterop == null){
+            initializeToken();
+        }
+        return tokenInterop;
+    }
+
+    private synchronized void initializeToken(){
         if(tokenInterop == null){
             tokenInterop = getBearerToken();
             tokenCreationDate = OffsetDateTime.now();
         }
-        return tokenInterop;
-        /*
-        if(tokenInterop != null && (Duration.between(tokenCreationDate, OffsetDateTime.now()).getSeconds() <= (60*8)) ){
-            return tokenInterop;
-        }else{
-            log.info("refresh interop token");
-            tokenInterop = getBearerToken();
-            tokenCreationDate = OffsetDateTime.now();
-            return tokenInterop;
-        }
-         */
     }
 
-    @Scheduled(cron = "0 0/01 * * * ?")
+    //@Scheduled(cron = "0 0/01 * * * ?")
+    @Scheduled(fixedDelay = 60000, initialDelay = 0)
     public void refreshTokenInteropClient() {
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
             log.info("refresh interop token");
