@@ -4,14 +4,14 @@ Feature: verifica creazione stream
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_1] Creazione per una PA di 10 nuovi stream notifica con eventType TIMELINE e senza gruppo.
     Given si predispone 10 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
-    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And Viene creata una nuova apiKey per il comune "Comune_Multi" senza gruppo
     And viene impostata l'apikey appena generata
     And viene aggiornata la apiKey utilizzata per gli stream
-    When si creano i nuovi stream per il "Comune_1" con versione "V23"
+    When si creano i nuovi stream per il "Comune_Multi" con versione "V23"
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
-    And si cancella lo stream creato per il "Comune_1" con versione "V23"
+    And si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And viene modificato lo stato dell'apiKey in "BLOCK" per il "Comune_Multi"
     And l'apiKey viene cancellata
 
   @webhookV23 @cleanWebhook
