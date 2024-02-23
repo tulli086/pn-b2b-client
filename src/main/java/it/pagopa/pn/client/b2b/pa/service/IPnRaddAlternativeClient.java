@@ -21,6 +21,6 @@ public interface IPnRaddAlternativeClient {
     OperationsAorDetailsResponse getAorPracticesByInternalId(String internalId, FilterRequest filterRequest) throws RestClientException;
     OperationsResponse getAorPracticesByIun(String iun) throws RestClientException;
     OperationAorResponse getAorTransactionByOperationId(String transactionId) throws RestClientException;
-    Object documentDownload(String operationType, String operationId, String attachmentId) throws RestClientException;
+    byte[] documentDownload(String operationType, String operationId, String attachmentId) throws RestClientException;
 
     }

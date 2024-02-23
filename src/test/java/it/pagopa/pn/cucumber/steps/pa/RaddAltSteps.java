@@ -76,10 +76,6 @@ public class RaddAltSteps {
         this.sharedSteps = sharedSteps;
         this.pnPaB2bUtils = pnPaB2bUtils;
 
-    @Given("viene verificata la presenza di atti e\\/o attestazioni per l'utente {string} per radd alternative")
-    public void vieneVerificataLaPresenzaDiAttiEOAttestazioniPerLUtente(String cf) {
-        AORInquiryResponse pf = this.raddAltClient.aorInquiry(CxTypeAuthFleet.PG, idOrganization1, "reprehenderit culpa enim", cf, "PF");
-        System.out.println(pf);
     }
 
 
@@ -253,6 +249,7 @@ public class RaddAltSteps {
         Assertions.assertNotNull(this.startTransactionResponse.getDownloadUrlList());
         Assertions.assertFalse(this.startTransactionResponse.getDownloadUrlList().isEmpty());
         Assertions.assertEquals(documenti, this.startTransactionResponse.getDownloadUrlList().size());
+        Assertions.assertNotNull(this.startTransactionResponse.getStatus());
         Assertions.assertEquals(StartTransactionResponseStatus.CodeEnum.NUMBER_0, this.startTransactionResponse.getStatus().getCode());
     }
 
@@ -510,22 +507,17 @@ public class RaddAltSteps {
     @Then("la transazione viene abortita per gli {string}")
     public void laTransazioneVieneAbortitaAor(String tipologia) {
         switch (tipologia.toLowerCase()) {
-            case "aor":
-                this.abortActTransaction = this.raddAltClient.abortAorTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1,
-                        new AbortTransactionRequest()
-                                .operationId(this.operationid)
-                                .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
-                                .reason("TEST"));
-                break;
-            case "act":
-                this.abortActTransaction = this.raddAltClient.abortActTransaction(this.uid, CxTypeAuthFleet.PG, idOrganization1,
-                        new AbortTransactionRequest()
-                                .operationId(this.operationid)
-                                .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
-                                .reason("TEST"));
-                break;
-            default:
-                throw new IllegalArgumentException();
+            case "aor" -> this.abortActTransaction = this.raddAltClient.abortAorTransaction(this.uid,
+                    new AbortTransactionRequest()
+                            .operationId(this.operationid)
+                            .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                            .reason("TEST"));
+            case "act" -> this.abortActTransaction = this.raddAltClient.abortActTransaction(this.uid,
+                    new AbortTransactionRequest()
+                            .operationId(this.operationid)
+                            .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                            .reason("TEST"));
+            default -> throw new IllegalArgumentException();
         }
     }
 
@@ -647,8 +639,10 @@ public class RaddAltSteps {
     public void lOperatoreEsegueDownloadFrontespizio(String operationType) {
         Object download = raddAltClient.documentDownload(operationType.equalsIgnoreCase("aor")?"aor":
                         operationType.equalsIgnoreCase("act")?"act": null,
+        byte[] download = raddAltClient.documentDownload(operationType.toUpperCase(),
                 this.operationid,
                 null);
+
 
     Assertions.assertNotNull(download);
     }
