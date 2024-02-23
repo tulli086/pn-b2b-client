@@ -1427,8 +1427,14 @@ public class PnPaB2bUtils {
 
 
     private void loadToPresigned( String url, String secret, String sha256, String resource,String resourceType, int depth ) {
-        if(depth >= 5){
-            throw new ResourceAccessException("max depth, PUT not working");
+        if(depth == 1){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }else if(depth > 1){
+            throw new IllegalStateException();
         }
         try{
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -1439,8 +1445,13 @@ public class PnPaB2bUtils {
             HttpEntity<Resource> req = new HttpEntity<>( ctx.getResource( resource), headers);
             restTemplate.exchange( URI.create(url), HttpMethod.PUT, req, Object.class);
         }catch (Exception e){
-            log.info("Upload in catch, retry");
-            loadToPresigned(url,secret,sha256,resource,resourceType,depth+1);
+            if(depth > 0){
+                log.error("max depth, PUT not working");
+                throw e;
+            }else{
+                log.info("Upload in catch, retry");
+                loadToPresigned(url,secret,sha256,resource,resourceType,depth+1);
+            }
         }
     }
 
