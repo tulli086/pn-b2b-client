@@ -250,7 +250,7 @@ Feature: verifica creazione stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @webhookV23 @cleanWebhook #VERIFICARE
+  @webhookV23 @cleanWebhook #VERIFICARE_BUG
   Scenario: [B2B-STREAM_ES1.1_148] Creazione di uno stream notifica con gruppi appartenenti ad un sottinsieme dei gruppi dell'apikey utilizzata.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_Multi" con due gruppi
