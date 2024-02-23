@@ -637,8 +637,6 @@ public class RaddAltSteps {
 
     @Given("L'operatore esegue il download del frontespizio del operazione {string}")
     public void lOperatoreEsegueDownloadFrontespizio(String operationType) {
-        Object download = raddAltClient.documentDownload(operationType.equalsIgnoreCase("aor")?"aor":
-                        operationType.equalsIgnoreCase("act")?"act": null,
         byte[] download = raddAltClient.documentDownload(operationType.toUpperCase(),
                 this.operationid,
                 null);

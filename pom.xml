@@ -266,8 +266,9 @@
                         <configuration>
                             <typeMappings>
                                 <typeMapping>OffsetDateTime=java.lang.String</typeMapping>
+                                <typeMapping>Object=byte[]</typeMapping>
                             </typeMappings>
-                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-radd-alt/${open.api.version.radd.alt}/docs/openapi/pn-radd-alt-internal.yaml</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-radd-alt/${open.api.version.radd.alt}/docs/openapi/pn-radd-alt-external.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
                             <generateApiTests>false</generateApiTests>

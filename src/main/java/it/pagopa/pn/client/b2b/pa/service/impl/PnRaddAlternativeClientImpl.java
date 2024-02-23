@@ -28,7 +28,7 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final NotificationInquiryApi notificationInquiryApi;
 
 
-    public PnRaddAlternativeClientImpl(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.base-url}") String basePath,
+    public PnRaddAlternativeClientImpl(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.alt.external.base-url}") String basePath,
                                        @Value("${pn.external.bearer-token-radd}") String tokenRadd) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
@@ -123,7 +123,7 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     }
 
     @Override
-    public Object documentDownload(String operationType, String operationId, String attchamentId) throws RestClientException {
+    public byte[] documentDownload(String operationType, String operationId, String attchamentId) throws RestClientException {
         return this.documentOperationsApi.documentDownload(operationType,operationId, attchamentId);
     }
 
