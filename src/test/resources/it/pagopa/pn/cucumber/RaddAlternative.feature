@@ -164,7 +164,7 @@ Feature: Radd Alternative
     And la scansione si conclude correttamente su radd alternative
     And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
-    And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 99 su radd alternative
+    And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 4 su radd alternative
 
 
   @raddAlt
@@ -320,7 +320,7 @@ Feature: Radd Alternative
     And la scansione si conclude correttamente su radd alternative
     And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
-    And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 99 su radd alternative
+    And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 4 su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_AOR-23] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale)
@@ -1319,19 +1319,17 @@ Feature: Radd Alternative
 
   @raddAlt @zip
   Scenario: [RADD-ALT_ACT-78] PF - Verifica restituzione al cittadino del documento Frontespizio (nome e cognome del destinatario) come primo documento del plico
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario Mario Gherkin
+    And destinatario Signor casuale e:
+      | digitalDomicile         | NULL                                         |
+      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
-    When Il cittadino "Mario Gherkin" come destinatario 0 mostra il QRCode "corretto"
-    Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    And la scansione si conclude correttamente su radd alternative
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+    When la persona fisica "Signor Casuale" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
-    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
-    And l'operazione di download degli atti si conclude correttamente su radd alternative
-    And L'operatore esegue il download del frontespizio del operazione "act"
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    And L'operatore esegue il download del frontespizio del operazione "aor"
     Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
 
 
@@ -1349,8 +1347,9 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
-    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And L'operatore esegue il download del frontespizio del operazione "act"
+    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+
 
   @raddAlt @zip
   Scenario: [RADD-ALT_ACT-80] PF - Stampa documenti disponibili associati a QR code esistente con CF corretto su notifica analogica 890: verifica restituzione link alla ricevuta di postalizzazione (in formato pdf)

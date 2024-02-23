@@ -250,7 +250,7 @@ public class RaddAltSteps {
                         .recipientType(this.recipientType.equalsIgnoreCase("PF")? ActStartTransactionRequest.RecipientTypeEnum.PF:
                                 ActStartTransactionRequest.RecipientTypeEnum.PG)
                         .iun(this.iun)
-                        //.operationDate(OffsetDateTime.now()) TODO: controllare
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                         .checksum(this.documentUploadResponse.getValue2());
         System.out.println("actStartTransactionRequest: " + actStartTransactionRequest);
         this.startTransactionResponse = raddAltClient.startActTransaction(uid, CxTypeAuthFleet.PG, idOrganization, actStartTransactionRequest);
@@ -302,6 +302,9 @@ public class RaddAltSteps {
             }
             case 2 -> {
                 return StartTransactionResponseStatus.CodeEnum.NUMBER_2;
+            }
+            case 4 -> {
+                return StartTransactionResponseStatus.CodeEnum.NUMBER_4;
             }
             case 5 -> {
                 return StartTransactionResponseStatus.CodeEnum.NUMBER_5;
