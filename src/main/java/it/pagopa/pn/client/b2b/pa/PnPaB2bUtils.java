@@ -4,7 +4,6 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddFsuClient;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.CxTypeAuthFleet;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadResponse;
 import lombok.AllArgsConstructor;
@@ -48,8 +47,6 @@ public class PnPaB2bUtils {
     @Value("${pn.configuration.workflow.wait.accepted.millis:91000}")
     private Integer workFlowAcceptedWait;
 
-    @Value("${pn.external.bearer-token-pg1.id}")
-    private String idOrganization;
     private final RestTemplate restTemplate;
     private final ApplicationContext ctx;
 
@@ -1150,7 +1147,7 @@ public class PnPaB2bUtils {
                 .operationId(operationid)
                 .checksum(sha256);
 
-        it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.DocumentUploadResponse documentUploadResponse = raddAltClient.documentUpload(CxTypeAuthFleet.PG,idOrganization,"1234556", documentUploadRequest);
+        it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.DocumentUploadResponse documentUploadResponse = raddAltClient.documentUpload("1234556", documentUploadRequest);
         return documentUploadResponse;
     }
 

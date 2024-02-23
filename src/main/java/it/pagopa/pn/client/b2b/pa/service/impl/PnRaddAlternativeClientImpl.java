@@ -56,46 +56,46 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     }
 
 
-    public ActInquiryResponse actInquiry(CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, String uid, String recipientTaxId, String recipientType, String qrCode, String iun) throws RestClientException {
-        return this.actOperationsApi.actInquiryWithHttpInfo(xPagopaPnCxType, xPagopaPnCxId,uid, recipientTaxId, recipientType, qrCode, iun).getBody();
+    public ActInquiryResponse actInquiry( String uid, String recipientTaxId, String recipientType, String qrCode, String iun) throws RestClientException {
+        return this.actOperationsApi.actInquiryWithHttpInfo(uid, recipientTaxId, recipientType, qrCode, iun).getBody();
     }
 
-    public AbortTransactionResponse abortActTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, AbortTransactionRequest abortTransactionRequest) throws RestClientException {
-        return this.actOperationsApi.abortActTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, abortTransactionRequest).getBody();
-    }
-
-
-    public CompleteTransactionResponse completeActTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, CompleteTransactionRequest completeTransactionRequest) throws RestClientException {
-        return this.actOperationsApi.completeActTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, completeTransactionRequest).getBody();
+    public AbortTransactionResponse abortActTransaction(String uid, AbortTransactionRequest abortTransactionRequest) throws RestClientException {
+        return this.actOperationsApi.abortActTransactionWithHttpInfo(uid, abortTransactionRequest).getBody();
     }
 
 
-    public StartTransactionResponse startActTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, ActStartTransactionRequest actStartTransactionRequest) throws RestClientException {
-        return this.actOperationsApi.startActTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, actStartTransactionRequest).getBody();
-    }
-
-    public AORInquiryResponse aorInquiry(CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, String uid, String recipientTaxId, String recipientType) throws RestClientException {
-        return this.aorOperationsApi.aorInquiryWithHttpInfo(xPagopaPnCxType, xPagopaPnCxId, uid, recipientTaxId, recipientType).getBody();
+    public CompleteTransactionResponse completeActTransaction(String uid, CompleteTransactionRequest completeTransactionRequest) throws RestClientException {
+        return this.actOperationsApi.completeActTransactionWithHttpInfo(uid, completeTransactionRequest).getBody();
     }
 
 
-    public AbortTransactionResponse abortAorTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, AbortTransactionRequest abortTransactionRequest) throws RestClientException {
-        return this.aorOperationsApi.abortAorTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, abortTransactionRequest).getBody();
+    public StartTransactionResponse startActTransaction(String uid, ActStartTransactionRequest actStartTransactionRequest) throws RestClientException {
+        return this.actOperationsApi.startActTransactionWithHttpInfo(uid, actStartTransactionRequest).getBody();
+    }
+
+    public AORInquiryResponse aorInquiry( String uid, String recipientTaxId, String recipientType) throws RestClientException {
+        return this.aorOperationsApi.aorInquiryWithHttpInfo( uid, recipientTaxId, recipientType).getBody();
     }
 
 
-    public CompleteTransactionResponse completeAorTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, CompleteTransactionRequest completeTransactionRequest) throws RestClientException {
-        return this.aorOperationsApi.completeAorTransactionWithHttpInfo(uid, xPagopaPnCxType,  xPagopaPnCxId, completeTransactionRequest).getBody();
+    public AbortTransactionResponse abortAorTransaction(String uid, AbortTransactionRequest abortTransactionRequest) throws RestClientException {
+        return this.aorOperationsApi.abortAorTransactionWithHttpInfo(uid, abortTransactionRequest).getBody();
     }
 
 
-    public StartTransactionResponse startAorTransaction(String uid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, AorStartTransactionRequest aorStartTransactionRequest) throws RestClientException {
-        return this.aorOperationsApi.startAorTransactionWithHttpInfo(uid, xPagopaPnCxType, xPagopaPnCxId, aorStartTransactionRequest).getBody();
+    public CompleteTransactionResponse completeAorTransaction(String uid, CompleteTransactionRequest completeTransactionRequest) throws RestClientException {
+        return this.aorOperationsApi.completeAorTransactionWithHttpInfo(uid, completeTransactionRequest).getBody();
     }
 
 
-    public DocumentUploadResponse documentUpload(CxTypeAuthFleet xPagopaPnCxType, String  xPagopaPnCxId, String uid, DocumentUploadRequest documentUploadRequest) throws RestClientException {
-        return this.documentOperationsApi.documentUploadWithHttpInfo(xPagopaPnCxType, xPagopaPnCxId, uid, documentUploadRequest).getBody();
+    public StartTransactionResponse startAorTransaction(String uid, AorStartTransactionRequest aorStartTransactionRequest) throws RestClientException {
+        return this.aorOperationsApi.startAorTransactionWithHttpInfo(uid, aorStartTransactionRequest).getBody();
+    }
+
+
+    public DocumentUploadResponse documentUpload( String uid, DocumentUploadRequest documentUploadRequest) throws RestClientException {
+        return this.documentOperationsApi.documentUploadWithHttpInfo( uid, documentUploadRequest).getBody();
     }
 
     public OperationsActDetailsResponse getActPracticesByInternalId(String internalId, FilterRequest filterRequest) throws RestClientException {
@@ -123,8 +123,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     }
 
     @Override
-    public byte[] documentDownload(String operationType, String operationId, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String attchamentId) throws RestClientException {
-        return this.documentOperationsApi.documentDownload(operationType,operationId,xPagopaPnCxType,xPagopaPnCxId, attchamentId);
+    public Object documentDownload(String operationType, String operationId, String attchamentId) throws RestClientException {
+        return this.documentOperationsApi.documentDownload(operationType,operationId, attchamentId);
     }
 
 }
