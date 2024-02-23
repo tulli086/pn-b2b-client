@@ -20,6 +20,7 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final RestTemplate restTemplate;
 
     private final String basePath;
+    private final String tokenRadd;
 
     private final ActOperationsApi actOperationsApi;
     private final AorOperationsApi aorOperationsApi;
@@ -28,14 +29,15 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
 
 
     public PnRaddAlternativeClientImpl(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.base-url}") String basePath,
-     @Value("${pn.external.api-key}") String apiKeyMvp1) {
+                                       @Value("${pn.external.bearer-token-radd}") String tokenRadd) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.basePath = basePath;
+        this.tokenRadd=tokenRadd;
 
-        this.actOperationsApi = new ActOperationsApi(newApiClientExternal(restTemplate,basePath));
-        this.aorOperationsApi = new AorOperationsApi(newApiClientExternal(restTemplate,basePath));
-        this.documentOperationsApi = new DocumentOperationsApi(newApiClientExternal(restTemplate,basePath));
+        this.actOperationsApi = new ActOperationsApi(newApiClientExternal(restTemplate,basePath, tokenRadd));
+        this.aorOperationsApi = new AorOperationsApi(newApiClientExternal(restTemplate,basePath, tokenRadd));
+        this.documentOperationsApi = new DocumentOperationsApi(newApiClientExternal(restTemplate,basePath, tokenRadd));
         this.notificationInquiryApi = new NotificationInquiryApi(newApiClient(restTemplate,basePath));
 
     }
@@ -46,9 +48,10 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         return newApiClient;
     }
 
-    private static it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClientExternal(RestTemplate restTemplate, String basePath ) {
+    private static it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClientExternal(RestTemplate restTemplate, String basePath,String token ) {
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClient = new it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
+        newApiClient.addDefaultHeader("Authorization", "Bearer " + token);
         return newApiClient;
     }
 
