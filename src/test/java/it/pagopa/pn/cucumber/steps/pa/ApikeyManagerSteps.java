@@ -319,6 +319,7 @@ public class ApikeyManagerSteps {
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
         sharedSteps.setRequestNewApiKey(requestNewApiKey);
+        sharedSteps.setResponseNewApiKey(responseNewApiKey);
         System.out.println("New ApiKey: " + responseNewApiKey);
     }
 

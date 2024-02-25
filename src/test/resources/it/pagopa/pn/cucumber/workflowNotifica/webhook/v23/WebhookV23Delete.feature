@@ -5,17 +5,17 @@ Feature: eliminazione stream
   @webhookV23 @cleanWebhook #VERIFICARE_BUG
   Scenario: [B2B-STREAM_ES1.1_73] Cancellazione di uno stream notifica con gruppo, con eventType "STATUS"  utilizzando un apikey con gruppo diverso.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
-    And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
+    And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
     And viene aggiornata la apiKey utilizzata per gli stream
-    And si crea il nuovo stream per il "Comune_Multi" con versione "V23"
+    And si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "FIRST"
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
-    And Viene creata una nuova apiKey per il comune "Comune_Multi" con gruppo differente dallo stream
+    And Viene creata una nuova apiKey per il comune "Comune_1" con gruppo differente dallo stream
     And viene impostata l'apikey appena generata
     And viene aggiornata la apiKey utilizzata per gli stream
-    When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
+    When si cancella lo stream creato per il "Comune_1" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
