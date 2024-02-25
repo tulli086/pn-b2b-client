@@ -706,10 +706,11 @@ public class InvioNotificheB2bSteps {
     }
 
     @Then("l'operazione non ha prodotto errori")
-    public void operationProducedNotAnError(String statusCode) {
+    public void operationProducedNotAnError() {
         HttpStatusCodeException httpStatusCodeException = this.sharedSteps.consumeNotificationError();
-        Assertions.assertFalse((httpStatusCodeException != null) &&
-                (httpStatusCodeException.getStatusCode().toString().substring(0, 3).equals(statusCode)));
+        Assertions.assertNull(httpStatusCodeException);
+//        Assertions.assertFalse((httpStatusCodeException != null) &&
+//                (httpStatusCodeException.getStatusCode().toString().substring(0, 3).equals(statusCode)));
     }
 
 

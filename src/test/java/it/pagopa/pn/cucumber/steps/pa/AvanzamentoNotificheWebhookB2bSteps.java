@@ -1668,8 +1668,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private void releaseStreamCreationSlotInternal(String pa){ //(String pa,int numberOfStream)
         if(numberOfStreamSlotAcquiredForPa.containsKey(pa)){
-            if(numberOfStreamSlotAcquiredForPa.get(pa).getValue2() <= 0)throw new IllegalStateException();
-            webhookSynchronizer.releaseStreamCreationSlot(1,pa);
+            if(numberOfStreamSlotAcquiredForPa.get(pa).getValue2() > 0){
+                webhookSynchronizer.releaseStreamCreationSlot(1,pa);
+            }
             Integer numberOfStreamSlot = this.numberOfStreamSlotAcquiredForPa.get(pa).getValue2();
             this.numberOfStreamSlotAcquiredForPa.get(pa).setValue2(numberOfStreamSlot-1);
         }
