@@ -15,6 +15,6 @@ import static io.cucumber.junit.platform.engine.Constants.*;
         @ConfigurationParameter(key = EXECUTION_MODE_FEATURE_PROPERTY_NAME, value = "concurrent"),
 })
 @ExcludeTags({"ignore","mockNR"})
-@IncludeTags({"safeStorageProblem1", "safeStorageProblem2"})
-public class SafeStorageProblemTest {
+@IncludeTags({"safeStorageProblem1"})
+public class SafeStorageProblemTest1 {
 }
