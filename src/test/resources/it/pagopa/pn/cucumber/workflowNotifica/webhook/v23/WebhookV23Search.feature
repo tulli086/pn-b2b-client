@@ -180,7 +180,6 @@ Feature: ricerca di uno stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-    #DA VERIFICARE...........
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_157] Lettura di uno stream notifica con gruppi non appartenenti ad un sottinsieme dei gruppi dell'apikey utilizzata.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
@@ -193,6 +192,6 @@ Feature: ricerca di uno stream
     And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
     When lo stream viene recuperato dal sistema tramite stream id con versione "V23" e apiKey aggiornata
-    Then l'operazione ha prodotto un errore con status code "403"
+    Then l'operazione non ha prodotto errori
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata

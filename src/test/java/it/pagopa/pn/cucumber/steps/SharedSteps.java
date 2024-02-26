@@ -2495,6 +2495,6 @@ public class SharedSteps {
     }
 
     public void setProgressResponseElementV23(ProgressResponseElementV23 progressResponseElement) {
-        this.progressResponseElementV23 = progressResponseElementV23;
+        this.progressResponseElementV23 = progressResponseElement;
     }
 }
