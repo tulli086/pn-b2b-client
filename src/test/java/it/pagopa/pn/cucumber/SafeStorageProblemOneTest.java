@@ -16,5 +16,5 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 })
 @ExcludeTags({"ignore","mockNR"})
 @IncludeTags({"safeStorageProblem1"})
-public class SafeStorageProblemTest1 {
+public class SafeStorageProblemOneTest {
 }
