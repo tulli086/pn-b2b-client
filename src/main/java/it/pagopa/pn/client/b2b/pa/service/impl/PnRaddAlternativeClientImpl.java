@@ -7,20 +7,24 @@ import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.api.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.model.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 
 @Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
 
     private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
 
     private final String basePath;
-    private final String tokenRadd;
+    private final String Raddista1;
+    private final String Raddista2;
 
     private final ActOperationsApi actOperationsApi;
     private final AorOperationsApi aorOperationsApi;
@@ -29,15 +33,16 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
 
 
     public PnRaddAlternativeClientImpl(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.alt.external.base-url}") String basePath,
-                                       @Value("${pn.external.bearer-token-radd}") String tokenRadd) {
+                                       @Value("${pn.external.bearer-token-radd-1}") String Raddista1, @Value("${pn.external.bearer-token-radd-2}") String Raddista2) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.basePath = basePath;
-        this.tokenRadd=tokenRadd;
+        this.Raddista1=Raddista1;
+        this.Raddista2=Raddista2;
 
-        this.actOperationsApi = new ActOperationsApi(newApiClientExternal(restTemplate,basePath, tokenRadd));
-        this.aorOperationsApi = new AorOperationsApi(newApiClientExternal(restTemplate,basePath, tokenRadd));
-        this.documentOperationsApi = new DocumentOperationsApi(newApiClientExternal(restTemplate,basePath, tokenRadd));
+        this.actOperationsApi = new ActOperationsApi(newApiClientExternal(restTemplate,basePath, Raddista1));
+        this.aorOperationsApi = new AorOperationsApi(newApiClientExternal(restTemplate,basePath, Raddista1));
+        this.documentOperationsApi = new DocumentOperationsApi(newApiClientExternal(restTemplate,basePath, Raddista1));
         this.notificationInquiryApi = new NotificationInquiryApi(newApiClient(restTemplate,basePath));
 
     }
@@ -53,6 +58,13 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         newApiClient.setBasePath( basePath );
         newApiClient.addDefaultHeader("Authorization", "Bearer " + token);
         return newApiClient;
+    }
+
+
+    public void selectRaddista(String token){
+        this.actOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
+        this.aorOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
+        this.documentOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
     }
 
 
@@ -125,6 +137,15 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     @Override
     public byte[] documentDownload(String operationType, String operationId, String attchamentId) throws RestClientException {
         return this.documentOperationsApi.documentDownload(operationType,operationId, attchamentId);
+    }
+
+
+    public void changeRaddista(String raddista){
+        switch (raddista.toLowerCase()) {
+            case "raddista 1" -> selectRaddista(this.Raddista1);
+            case "raddista 2" -> selectRaddista(this.Raddista2);
+            default -> throw new IllegalArgumentException();
+        }
     }
 
 }

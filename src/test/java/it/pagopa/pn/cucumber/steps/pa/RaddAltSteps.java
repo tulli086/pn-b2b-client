@@ -9,11 +9,13 @@ import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnRaddAlternativeClientImpl;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.Compress;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
+import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -38,7 +40,7 @@ import static it.pagopa.pn.cucumber.utils.NotificationValue.generateRandomNumber
 @Slf4j
 public class RaddAltSteps {
 
-    private final IPnRaddAlternativeClient raddAltClient;
+    private final PnRaddAlternativeClientImpl raddAltClient;
     private final PnExternalServiceClientImpl externalServiceClient;
     private final SharedSteps sharedSteps;
     private final PnPaB2bUtils pnPaB2bUtils;
@@ -69,7 +71,7 @@ public class RaddAltSteps {
 
 
     @Autowired
-    public RaddAltSteps(IPnRaddAlternativeClient raddAltClient, PnExternalServiceClientImpl externalServiceClient,
+    public RaddAltSteps(PnRaddAlternativeClientImpl raddAltClient, PnExternalServiceClientImpl externalServiceClient,
                         PnPaB2bUtils pnPaB2bUtils, SharedSteps sharedSteps) {
         this.raddAltClient = raddAltClient;
         this.externalServiceClient = externalServiceClient;
@@ -215,6 +217,7 @@ public class RaddAltSteps {
 
     @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId da un organizzazione diversa")
     public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa( ) {
+        raddAltClient.changeRaddista("raddista 2");
         startTransactionActRaddAlternative(this.operationid);
     }
 
@@ -365,6 +368,10 @@ public class RaddAltSteps {
 
     @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) con lo stesso operationId (dalla)(da una) {string} organizzazione")
     public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileStessoOperationId(String organizzazione) {
+        if(organizzazione.equalsIgnoreCase("diversa")){
+            raddAltClient.changeRaddista("raddista 2");
+        }
+
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
                         .versionToken("string")
@@ -378,7 +385,6 @@ public class RaddAltSteps {
                         .checksum(this.documentUploadResponse.getValue2());
         this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid,
                 aorStartTransactionRequest);
-        // TODO chiedere se si può avere un altra
     }
 
 
@@ -694,7 +700,7 @@ public class RaddAltSteps {
         return null;
     }
 
-    @After("@zip")
+    @After("@raddAlt")
     public void deleteZip() {
         if (fileZip != null) {
             URI zip_disk = URI.create("target/classes/"+this.fileZip);
