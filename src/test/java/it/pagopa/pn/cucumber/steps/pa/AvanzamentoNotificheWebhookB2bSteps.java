@@ -70,6 +70,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
     private LinkedList<ProgressResponseElementV23> progressResponseElementListV23 = new LinkedList<>();
 
+    private ProgressResponseElementV23 progressResponseElementResultV23;
+
     private static IPnWebhookB2bClient webhookClientForClean;
     private static boolean webhookTestLaunch;
     private static final List<SettableApiKey.ApiKeyType> paForStream = List.of(SettableApiKey.ApiKeyType.MVP_1, SettableApiKey.ApiKeyType.MVP_2, SettableApiKey.ApiKeyType.GA);
@@ -863,6 +865,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         try{
             Assertions.assertNotNull(progressResponseElement);
+            progressResponseElementResultV23 = progressResponseElement;
             //TODO Verificare...
             Assertions.assertEquals(progressResponseElement.getElement().getTimestamp().truncatedTo(ChronoUnit.SECONDS),
                     sharedSteps.getSentNotification().getTimeline().stream()
@@ -875,6 +878,11 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                     "{IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamListV23.get(0).getStreamId()+" }";
             throw new AssertionFailedError(message,assertionFailedError.getExpected(),assertionFailedError.getActual(),assertionFailedError.getCause());
         }
+    }
+
+    @Then("non ci sono nuovi eventi nello stream")
+    public void noyReadStreamTimelineElementV23() {
+        Assertions.assertNull(progressResponseElementResultV23);
     }
 
 
