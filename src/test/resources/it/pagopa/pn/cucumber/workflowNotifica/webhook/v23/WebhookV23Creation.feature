@@ -1,5 +1,9 @@
 Feature: verifica creazione stream
 
+  Scenario: [ONLY_FOR_DEBUG] Cancellazione stream notifica
+    Given vengono cancellati tutti gli stream presenti del "Comune_Multi" con versione "V23" - ONLY FOR DEBUG
+    Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V23" - ONLY FOR DEBUG
+
   #--------------CREAZIONE DI UNO STREAM--------------------
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_1] Creazione per una PA di 10 nuovi stream notifica con eventType TIMELINE e senza gruppo.
