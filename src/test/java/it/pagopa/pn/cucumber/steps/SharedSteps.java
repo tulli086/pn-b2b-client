@@ -512,7 +512,7 @@ public class SharedSteps {
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
                         .digitalDomicile(new NotificationDigitalAddress()
                                 .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                .address(getDigitalAddressValue()))), new HashMap<>());
+                                .address("testinvio@pec.it"))), new HashMap<>());
         /*
         this.notificationRequest.addRecipientsItem(
                 dataTableTypeUtil.convertNotificationRecipient(new HashMap<>())
@@ -637,7 +637,7 @@ public class SharedSteps {
                         .recipientType(NotificationRecipientV21.RecipientTypeEnum.PG)
                         .digitalDomicile(new NotificationDigitalAddress()
                                 .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                .address(getDigitalAddressValue()))), new HashMap<>());
+                                .address("testinvio@pec.it"))), new HashMap<>());
         /*
         this.notificationRequest.addRecipientsItem(
                 dataTableTypeUtil.convertNotificationRecipient(new HashMap<>())
