@@ -34,7 +34,7 @@ Feature: tentativo consumo stream
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
     And viene aggiornata la apiKey utilizzata per gli stream
-    And si crea il nuovo stream V23 per il "Comune_Multi" con un gruppo disponibile "FIRST"
+    And si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "FIRST"
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And viene modificato lo stato dell'apiKey in "BLOCK"
