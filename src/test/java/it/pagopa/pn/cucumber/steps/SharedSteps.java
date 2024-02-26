@@ -731,6 +731,12 @@ public class SharedSteps {
 
     @And("destinatario Signor casuale e:")
     public void destinatarioSignorCasualeMap(Map<String, String> data) {
+        try {
+            Thread.sleep(new Random().nextInt(350));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
                 (notificationRecipientV23
