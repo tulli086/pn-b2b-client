@@ -41,7 +41,6 @@ import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENE
 
 
 @Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnExternalServiceClientImpl {
 
     private final ApplicationContext ctx;
