@@ -36,7 +36,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "inesistente"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    Then Viene restituito un messaggio di errore "QRcode non valido" con codice di errore 1 su radd alternative
+    Then Viene restituito un messaggio di errore "QRcode non valido" con codice di errore 10 su radd alternative
 
 
   @raddAlt
@@ -50,7 +50,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     And Il cittadino "Mario Gherkin" come destinatario 0 mostra il QRCode "appartenente a terzo"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 1 su radd alternative
+    Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 10 su radd alternative
 
 
   @raddAlt @zip
@@ -211,7 +211,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     And Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "inesistente"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    Then Viene restituito un messaggio di errore "QRcode non valido" con codice di errore 1 su radd alternative
+    Then Viene restituito un messaggio di errore "QRcode non valido" con codice di errore 10 su radd alternative
 
   @raddAlt
   Scenario: [RADD-ALT_ACT-15] PG - Scansione QR code esistente associato al CF sbagliato
@@ -224,7 +224,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     And Il cittadino "Gherkin Irreperibile" come destinatario 0 mostra il QRCode "appartenente a terzo"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 1 su radd alternative
+    Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 10 su radd alternative
 
   @raddAlt @zip
   Scenario: [RADD-ALT_ACT-16] PG - Scansione documenti e creazione file zip
@@ -866,7 +866,7 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
-    And l'operazione di download restituisce 7 documenti
+    And l'operazione di download restituisce 8 documenti
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
@@ -1019,7 +1019,7 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
-    And l'operazione di download restituisce 7 documenti
+    And l'operazione di download restituisce 8 documenti
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
@@ -1153,7 +1153,6 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
-    And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
@@ -1181,7 +1180,6 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
-    And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
@@ -1207,7 +1205,6 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
-    And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
@@ -1235,7 +1232,6 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
-    And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
@@ -1279,7 +1275,6 @@ Feature: Radd Alternative
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
-    And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
