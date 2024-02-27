@@ -26,6 +26,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final String Raddista1;
     private final String Raddista2;
 
+    private AuthTokenRaddType IssuerTokenSetted = AuthTokenRaddType.ISSUER_1;
+
     private final ActOperationsApi actOperationsApi;
     private final AorOperationsApi aorOperationsApi;
     private final DocumentOperationsApi documentOperationsApi;
@@ -140,12 +142,43 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     }
 
 
-    public void changeRaddista(String raddista){
-        switch (raddista.toLowerCase()) {
-            case "raddista 1" -> selectRaddista(this.Raddista1);
-            case "raddista 2" -> selectRaddista(this.Raddista2);
-            default -> throw new IllegalArgumentException();
+
+
+    @Override
+    public boolean setAuthTokenRadd(AuthTokenRaddType issuerToken) {
+        boolean beenSet = false;
+        switch (issuerToken){
+            case ISSUER_1 -> {
+                selectRaddista(this.Raddista1);
+                beenSet=true;
+            }
+            case ISSUER_2 -> {
+                selectRaddista(this.Raddista2);
+                beenSet=true;
+            }
+            case ISSUER_ERRATO -> {
+                selectRaddista("1");
+                beenSet=true;
+            }
+            case DATI_ERRATI -> {
+                selectRaddista("2");
+                beenSet=true;
+            }
+            case ISSUER_SCADUTO -> {
+                selectRaddista("3");
+                beenSet=true;
+            }
+            case AUD_ERRATA -> {
+                selectRaddista("4");
+                beenSet=true;
+            }
         }
+
+        return beenSet;
     }
 
+    @Override
+    public AuthTokenRaddType getAuthTokenRaddSetted() {
+        return this.IssuerTokenSetted;
+    }
 }

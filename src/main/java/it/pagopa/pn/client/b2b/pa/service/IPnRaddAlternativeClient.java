@@ -1,10 +1,11 @@
 package it.pagopa.pn.client.b2b.pa.service;
 
+import it.pagopa.pn.client.b2b.pa.service.utils.SettableAuthTokenRadd;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.model.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
 import org.springframework.web.client.RestClientException;
 
-public interface IPnRaddAlternativeClient {
+public interface IPnRaddAlternativeClient extends SettableAuthTokenRadd {
 
     ActInquiryResponse actInquiry( String uid, String recipientTaxId, String recipientType, String qrCode, String iun) throws RestClientException;
     AbortTransactionResponse abortActTransaction(String uid, AbortTransactionRequest abortTransactionRequest) throws RestClientException;

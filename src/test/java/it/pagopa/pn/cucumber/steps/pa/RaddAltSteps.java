@@ -7,9 +7,11 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
+import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnRaddAlternativeClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.utils.SettableAuthTokenRadd;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.Compress;
@@ -103,6 +105,21 @@ public class RaddAltSteps {
                     null,
                     tipologiaIun.equalsIgnoreCase("corretto") ? this.iun= sharedSteps.getIunVersionamento() :
                             tipologiaIun.equalsIgnoreCase("errato") ? this.iun= "GLDZ-MGZD-AGAR-202402-Y-1" : null);
+
+        log.info("actInquiryResponse: {}", actInquiryResponse);
+        this.actInquiryResponse = actInquiryResponse;
+    }
+
+    @When("L'operatore usa lo IUN {string} per recuperare gli atti di {string} da issuer {string}")
+    public void lOperatoreUsoIUNPerRecuperariGliAttiDaIssuer(String tipologiaIun, String cf, String issuer) {
+        changeRaddista(issuer);
+        selectUserRaddAlternative(cf);
+        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(uid,
+                this.currentUserCf,
+                this.recipientType,
+                null,
+                tipologiaIun.equalsIgnoreCase("corretto") ? this.iun= sharedSteps.getIunVersionamento() :
+                        tipologiaIun.equalsIgnoreCase("errato") ? this.iun= "GLDZ-MGZD-AGAR-202402-Y-1" : null);
 
         log.info("actInquiryResponse: {}", actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
@@ -217,7 +234,7 @@ public class RaddAltSteps {
 
     @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId da un organizzazione diversa")
     public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa( ) {
-        raddAltClient.changeRaddista("raddista 2");
+        changeRaddista("raddista 2");
         startTransactionActRaddAlternative(this.operationid);
     }
 
@@ -379,7 +396,7 @@ public class RaddAltSteps {
     @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) con lo stesso operationId (dalla)(da una) {string} organizzazione")
     public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileStessoOperationId(String organizzazione) {
         if(organizzazione.equalsIgnoreCase("diversa")){
-            raddAltClient.changeRaddista("raddista 2");
+            changeRaddista("raddista 2");
         }
 
         AorStartTransactionRequest aorStartTransactionRequest =
@@ -720,4 +737,12 @@ public class RaddAltSteps {
             }
     }
 
+
+    public void changeRaddista(String raddista) {
+        switch (raddista.toLowerCase()) {
+            case "issuer_1" -> raddAltClient.setAuthTokenRadd(SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_1);
+            case "issuer_2" -> raddAltClient.setAuthTokenRadd(SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_2);
+            default -> throw new IllegalArgumentException();
+        }
+    }
 }
