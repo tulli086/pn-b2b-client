@@ -1374,6 +1374,11 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
         it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
 
+        
+
+
+
+
         //TODO SBAGLIATO: Da capire cosa si voleva fare
         TimelineElementDetailsV23 timelineElementDetailsV23 = new TimelineElementDetailsV23();
         timelineElementDetailsV23 = sharedSteps.deepCopy( timelineElementWebhookDetails, TimelineElementDetailsV23.class );
@@ -1464,8 +1469,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         Assertions.assertTrue(comparisonResult>0);
     }
 
-    @Then("verifica deanonimizzazione degli eventi di timeline")
-    public void verificaDeanonimizzazioneDegliEventiDiTimeline() {
+    @Then("verifica deanonimizzazione degli eventi di timeline con delega {string}")
+    public void verificaDeanonimizzazioneDegliEventiDiTimeline(String delega) {
         TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
 
         Assertions.assertNotNull(timelineElementWebhookDetails);
@@ -1474,9 +1479,11 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getProvince());
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getZip());
         Assertions.assertNotNull(timelineElementWebhookDetails.getDigitalAddress().getAddress());
-        Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo() );
-        Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getTaxId());
-        Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getDenomination());
+        if ("SI".equalsIgnoreCase(delega)) {
+            Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo());
+            Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getTaxId());
+            Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getDenomination());
+        }
     }
 
     @When("vengono letti gli eventi di timeline dello stream con versione {string} -Cross Versioning")

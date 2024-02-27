@@ -158,8 +158,8 @@ Feature: avanzamento notifiche webhook b2b V23
     And si crea il nuovo stream per il "Comune_Multi" con versione "V23"
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
-    When vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 0
-    Then verifica deanonimizzazione degli eventi di timeline
+    When vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "NORMALIZED_ADDRESS" con versione V23 e apiKey aggiornata con position 0
+    Then verifica deanonimizzazione degli eventi di timeline con delega "SI"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -177,11 +177,11 @@ Feature: avanzamento notifiche webhook b2b V23
     And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
     And viene aggiornata la apiKey utilizzata per gli stream
-    And si crea il nuovo stream per il "Comune_1" con versione "V23"
+    And si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "FIRST"
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
-    When vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 0
-    Then verifica deanonimizzazione degli eventi di timeline
+    When vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "NORMALIZED_ADDRESS" con versione V23 e apiKey aggiornata con position 0
+    Then verifica deanonimizzazione degli eventi di timeline con delega "SI"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -372,3 +372,22 @@ Feature: avanzamento notifiche webhook b2b V23
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 1
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
+
+
+
+  @oldWebhookTest @cleanWebhook
+  Scenario: [B2B-STREAM_TIMELINE_124_1] Invio notifica digitale ed attesa elemento di timeline REFINEMENT e verifica corretteza data PN-9059
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Mario Gherkin
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream per il "Comune_1" con versione "V23"
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And l'avviso pagopa viene pagato correttamente
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
+    Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REFINEMENT" con versione V23 e apiKey aggiornata con position 0
+    And Si verifica che l'elemento di timeline REFINEMENT abbia il timestamp uguale a quella presente nel webhook con la versione V23
