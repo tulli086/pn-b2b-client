@@ -94,18 +94,26 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             log.info("Starting cleaning");
             for(SettableApiKey.ApiKeyType pa: paForStream){
                 //TODO: MODIFICARE
-                try{
-                    webhookClientForClean.setApiKeys(pa);
-                    List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement> streamListElements = webhookClientForClean.listEventStreams();
-                    for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement elem: streamListElements){
+                webhookClientForClean.setApiKeys(pa);
+
+                //DELETE V1
+                List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement> streamListElements = webhookClientForClean.listEventStreams();
+                for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement elem: streamListElements){
+                    try{
                         webhookClientForClean.deleteEventStream(elem.getStreamId());
+                    }catch (HttpStatusCodeException statusCodeException){
+                        log.error("HTTP Error: statusCode {} message {}",statusCodeException.getStatusCode(),statusCodeException.getMessage());
                     }
-                    List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement> streamListElementsV23 = webhookClientForClean.listEventStreamsV23();
-                    for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement elem: streamListElementsV23){
+                }
+
+                //DELETE V2.3
+                List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement> streamListElementsV23 = webhookClientForClean.listEventStreamsV23();
+                for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement elem: streamListElementsV23){
+                    try{
                         webhookClientForClean.deleteEventStreamV23(elem.getStreamId());
+                    }catch (HttpStatusCodeException statusCodeException){
+                        log.error("HTTP Error: statusCode {} message {}",statusCodeException.getStatusCode(),statusCodeException.getMessage());
                     }
-                }catch (HttpStatusCodeException statusCodeException){
-                    log.error("HTTP Error: statusCode {} message {}",statusCodeException.getStatusCode(),statusCodeException.getMessage());
                 }
             }
         }
