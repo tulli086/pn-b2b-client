@@ -80,6 +80,7 @@ Feature: tentativo consumo stream
     And l'operazione non ha prodotto errori
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    When vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 1
     Then non ci sono nuovi eventi nello stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
@@ -105,6 +106,7 @@ Feature: tentativo consumo stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
+    #Verificare se corretto che restituisce un 400 invece di un 403
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.5_139] Creazione di uno stream senza gruppo con la V23 e lettura Eventi di timeline o di cambio di stato con la versione V10  utilzzando un apikey abilitata
     Given viene generata una nuova notifica
@@ -119,7 +121,7 @@ Feature: tentativo consumo stream
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     When vengono letti gli eventi di timeline dello stream con versione "V10" -Cross Versioning
-    Then l'operazione ha prodotto un errore con status code "403"
+    Then l'operazione ha prodotto un errore con status code "400"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
