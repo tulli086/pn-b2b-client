@@ -1427,9 +1427,6 @@ public class PnPaB2bUtils {
 
 
     private void loadToPresigned( String url, String secret, String sha256, String resource,String resourceType, int depth ) {
-        if(depth >= 5){
-            throw new ResourceAccessException("max depth, PUT not working");
-        }
         try{
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
             headers.add("Content-type", resourceType);
@@ -1439,14 +1436,19 @@ public class PnPaB2bUtils {
             HttpEntity<Resource> req = new HttpEntity<>( ctx.getResource( resource), headers);
             restTemplate.exchange( URI.create(url), HttpMethod.PUT, req, Object.class);
         }catch (Exception e){
+            if(depth >= 5){
+                throw e;
+            }
             log.info("Upload in catch, retry");
+            try{
+                Thread.sleep(2000);
+                log.error("[THREAD IN SLEEP PRELOAD] id: {} , attempt: {} , url: {}, secret: {}, sha256: {}, resourceType: {}",Thread.currentThread().getId(), depth, url,secret,sha256,resourceType);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
             loadToPresigned(url,secret,sha256,resource,resourceType,depth+1);
         }
     }
-
-
-
-
 
 
     private PreLoadResponse getPreLoadResponse(String sha256) {
