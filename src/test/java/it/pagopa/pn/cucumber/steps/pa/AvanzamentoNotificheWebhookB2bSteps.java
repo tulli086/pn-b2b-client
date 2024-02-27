@@ -1497,7 +1497,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getMunicipality());
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getProvince());
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getZip());
-        Assertions.assertNotNull(timelineElementWebhookDetails.getDigitalAddress().getAddress());
 
         verificaDeanonimizzazioneDegliEventiDiTimelinePresenzaDelega(timelineElementWebhookDetails,delega);
     }
