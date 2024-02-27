@@ -1758,7 +1758,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
     private List<String> getGruopForStream(String position, String pa){
-        List<String> groupList;
+        List<String> groupList = null;
         position = position.trim().toUpperCase();
         switch (position) {
             case "FIRST", "LAST" -> groupList = List.of(sharedSteps.getGroupIdByPa(pa, GroupPosition.valueOf(position)));
@@ -1772,9 +1772,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 if ("Comune_1".equalsIgnoreCase(pa)) {
                     Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.LAST));
                     groupList = List.of(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.LAST));
-                } else {
-                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
-                    groupList = List.of(sharedSteps.getGroupIdByPa(pa, GroupPosition.LAST));
+                } else if("Comune_Multi".equalsIgnoreCase(pa) ){
+                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.LAST));
+                    groupList = List.of(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.LAST));
                 }
             }
             default -> throw new IllegalArgumentException();

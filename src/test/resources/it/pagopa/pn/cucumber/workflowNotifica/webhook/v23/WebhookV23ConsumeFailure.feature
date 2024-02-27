@@ -45,7 +45,7 @@ Feature: tentativo consumo stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-#VERIFICARE IL CORRETTO COMPORTAMENTO
+
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_125] Consumo di uno stream notifica disabilitato senza gruppo, con eventType "STATUS"  utilizzando un apikey master.
     Given viene generata una nuova notifica
