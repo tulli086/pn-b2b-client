@@ -163,27 +163,6 @@ Feature: avanzamento notifiche webhook b2b V23
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-  @webhookV23 @cleanWebhook @deleghe1 @ignore
-  Scenario: [B2B-STREAM_ES3.1_144] Lettura e verifica de-anonimizzazione con un apikey master degli eventi di timeline di una notifica inviata con un apikey master e salvati in uno stream dell'ente senza gruppo
-    Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
-    And "Mario Gherkin" viene delegato da "Mario Cucumber"
-    And "Mario Gherkin" accetta la delega "Mario Cucumber"
-    And viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-    And destinatario Mario Cucumber
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
-    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
-    And viene impostata l'apikey appena generata
-    And viene aggiornata la apiKey utilizzata per gli stream
-    And si crea il nuovo stream per il "Comune_1" con versione "V23"
-    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
-    When vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 0
-    Then verifica deanonimizzazione degli eventi di timeline con delega "SI" digitale
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
-
 
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES3.1_146_1] Lettura e verifica de-anonimizzazione con un apiKey con gruppo degli eventi di timeline di una notifica digitale inviata con un apikey con gruppo e salvati in uno stream dell'ente con gruppo (Stesso gruppo)
@@ -237,7 +216,7 @@ Feature: avanzamento notifiche webhook b2b V23
 
     And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_ANALOG_DOMICILE" con versione V23 e apiKey aggiornata con position 0
     And verifica deanonimizzazione degli eventi di timeline con delega "NO" analogico
-    
+
     And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" con versione V23 e apiKey aggiornata con position 0
     And verifica deanonimizzazione degli eventi di timeline con delega "NO" analogico
     And viene modificato lo stato dell'apiKey in "BLOCK"
