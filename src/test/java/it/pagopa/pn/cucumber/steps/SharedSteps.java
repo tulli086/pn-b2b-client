@@ -2487,7 +2487,7 @@ public class SharedSteps {
     }
 
     public void setTimelineElementV23(TimelineElementV23 timelineElement) {
-        this.timelineElementV23 = timelineElementV23;
+        this.timelineElementV23 = timelineElement;
     }
 
     public ProgressResponseElementV23 getProgressResponseElementV23() {
@@ -2495,6 +2495,6 @@ public class SharedSteps {
     }
 
     public void setProgressResponseElementV23(ProgressResponseElementV23 progressResponseElement) {
-        this.progressResponseElementV23 = progressResponseElementV23;
+        this.progressResponseElementV23 = progressResponseElement;
     }
 }

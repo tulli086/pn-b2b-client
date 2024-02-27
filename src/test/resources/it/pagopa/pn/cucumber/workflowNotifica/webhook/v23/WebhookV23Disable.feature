@@ -2,7 +2,7 @@ Feature: disabilitazione stream
 
   #--------------DISABILITAZIONE DI UNO STREAM------------
 
-  @webhookV23 @cleanWebhook #VERIFICARE_BUG
+  @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_58] Disabilitazione di uno stream notifica con gruppo, con eventType "STATUS"  utilizzando un apikey con gruppo diverso.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
@@ -102,7 +102,7 @@ Feature: disabilitazione stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-#VERIFICARE IL CORRETTO COMPORTAMENTO
+
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_67] Disabilitazione di uno stream notifica senza gruppo, con eventType "STATUS"  utilizzando un apikey con gruppo.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
@@ -135,7 +135,6 @@ Feature: disabilitazione stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-    #VERIFICARE IL CORRETTO COMPORTAMENTO
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_70] Disabilitazione di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey con gruppo.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"

@@ -15,7 +15,7 @@ Feature: replace streamID webhook
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-#CONTROLLARE CORRETTO COMPORTAMENTO
+
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_103]  Creazione con replaceID di uno stream notifica con gruppo  non appartenente alla PA, con eventType "STATUS" utilizzando un apikey master.(replacedStreamId settato).
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
@@ -29,7 +29,7 @@ Feature: replace streamID webhook
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-#CONTROLLARE CORRETTO COMPORTAMENTO
+
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_104]  Creazione con replaceID di uno stream notifica con gruppo diverso al precedente stream con eventType "STATUS" utilizzando un apikey master. (replacedStreamId settato).
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
@@ -39,7 +39,7 @@ Feature: replace streamID webhook
     And si crea il nuovo stream V23 per il "Comune_Multi" con un gruppo disponibile "FIRST"
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     When si crea il nuovo stream V23 per il "Comune_Multi" con replaceId con un gruppo disponibile "LAST"
-    Then l'operazione ha prodotto un errore con status code "403"
+    Then l'operazione non ha prodotto errori
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -70,7 +70,7 @@ Feature: replace streamID webhook
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-#CONTROLLARE CORRETTO COMPORTAMENTO
+
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_108] Creazione con replaceID di uno stream notifica con gruppo  non appartenente alla PA, con eventType "TIMELINE" utilizzando un apikey master.(replacedStreamId settato).
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
@@ -123,9 +123,9 @@ Feature: replace streamID webhook
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-    #VERIFICARE IL CORRETTO COMPORTAMENTO VIENE AGGIORNATO
+
   @webhookV23 @cleanWebhook
-  Scenario: [B2B-STREAM_ES1.1_113]  Creazione con replaceID di uno stream notifica senza gruppo uguale al precedente stream con eventType "STATUS" utilizzando un apikey con gruppo. (replacedStreamId settato).
+  Scenario: [B2B-STREAM_ES1.1_113]  Creazione con replaceID di uno stream notifica senza gruppo con uno stream con gruppo con eventType "STATUS" utilizzando un apikey con gruppo. (replacedStreamId settato)..
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_Multi" senza gruppo
     And viene impostata l'apikey appena generata
@@ -170,9 +170,9 @@ Feature: replace streamID webhook
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-   #VERIFICARE IL CORRETTO COMPORTAMENTO VIENE AGGIORNATO
+
   @webhookV23 @cleanWebhook
-  Scenario: [B2B-STREAM_ES1.1_116]  Creazione con replaceID di uno stream notifica senza gruppo uguale al precedente stream con eventType "TIMELINE" utilizzando un apikey con gruppo. (replacedStreamId settato).
+  Scenario: [B2B-STREAM_ES1.1_116]  Creazione con replaceID di uno stream notifica senza gruppo con uno stream con gruppo con eventType "TIMELINE" utilizzando un apikey con gruppo. (replacedStreamId settato).
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_Multi" senza gruppo
     And viene impostata l'apikey appena generata
@@ -200,10 +200,10 @@ Feature: replace streamID webhook
     And si creano i nuovi stream per il "Comune_Multi" con versione "V23"
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si disabilita lo stream creato per il comune "Comune_Multi" con versione V23 e apiKey aggiornata
-    #And l'operazione non ha prodotto errori
+    And l'operazione non ha prodotto errori
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     When si creano i nuovi stream per il "Comune_Multi" con versione "V23"
-    And l'operazione non ha prodotto errori
+    Then l'operazione non ha prodotto errori
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -216,7 +216,7 @@ Feature: replace streamID webhook
     And si crea il nuovo stream V23 per il "Comune_Multi" con un gruppo disponibile "NO_GROUPS"
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si disabilita lo stream V23 creato per il comune "Comune_Multi"
-    #And l'operazione non ha prodotto errori
+    And l'operazione non ha prodotto errori
     When si crea il nuovo stream V23 per il "Comune_Multi" con replaceId con un gruppo disponibile "NO_GROUPS"
     Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
