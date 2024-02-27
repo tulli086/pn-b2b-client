@@ -32,6 +32,8 @@ import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
+
+import java.lang.reflect.Field;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -165,6 +167,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string}")
     public void createdStream(String pa,String version) {
         setPaWebhook(pa);
+        updateApiKeyForStream();
         createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null,false);
     }
 
@@ -1368,17 +1371,30 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
 
     @And("verifica corrispondenza tra i detail del webhook e quelli della timeline")
-    public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() {
+    public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() throws IllegalAccessException {
 
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementDetailsV23 timelineElementDetails = sharedSteps.getTimelineElementV23().getDetails();//PERCHè NON TENERLO NELLA CLASSE ?!
 
         it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
 
-        
+        Object s1 = timelineElementDetails;
+        Object s2 = timelineElementWebhookDetails;
+        List values = new ArrayList<>();
+        for (Field field : s1.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            Object value1 = field.get(s1);
+            Object value2 = field.get(s2);
+            if (value1 != null && value2 != null) {
+                if (!Objects.equals(value1, value2)) {
+                    values.add(String.valueOf(field.getName()+": "+value1+" -> "+value2));
+                }
+            }
+        }
 
+        Assertions.assertNotNull(values);
+        Assertions.assertTrue(values.isEmpty());
 
-
-
+/**
         //TODO SBAGLIATO: Da capire cosa si voleva fare
         TimelineElementDetailsV23 timelineElementDetailsV23 = new TimelineElementDetailsV23();
         timelineElementDetailsV23 = sharedSteps.deepCopy( timelineElementWebhookDetails, TimelineElementDetailsV23.class );
@@ -1467,6 +1483,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 .result();
 
         Assertions.assertTrue(comparisonResult>0);
+ **/
     }
 
     @Then("verifica deanonimizzazione degli eventi di timeline con delega {string}")
