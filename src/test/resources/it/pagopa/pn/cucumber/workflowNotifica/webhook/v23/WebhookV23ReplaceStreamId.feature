@@ -170,7 +170,7 @@ Feature: replace streamID webhook
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-   #VERIFICARE IL CORRETTO COMPORTAMENTO VIENE AGGIORNATO
+
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_116]  Creazione con replaceID di uno stream notifica senza gruppo con uno stream con gruppo con eventType "TIMELINE" utilizzando un apikey con gruppo. (replacedStreamId settato).
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
