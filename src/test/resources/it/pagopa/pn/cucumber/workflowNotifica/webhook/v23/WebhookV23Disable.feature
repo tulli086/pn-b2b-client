@@ -239,7 +239,7 @@ Feature: disabilitazione stream
     When si disabilita lo stream V23 creato per il comune "Comune_Multi"
     Then l'operazione non ha prodotto errori
     When si aggiorna lo stream creato con versione "V23"
-    Then l'operazione ha prodotto un errore con status code "404"
+    Then l'operazione ha prodotto un errore con status code "403"
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 

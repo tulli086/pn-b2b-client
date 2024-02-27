@@ -278,37 +278,28 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} con un gruppo che non appartiene al comune {string}")
     public void updateStreamByGroupsNoPA(String versione,String pa) {
-        try {
-            streamRequest = new StreamRequestV23();
-            if ("Comune_1".equalsIgnoreCase(pa)) {
-                streamRequest.setGroups(List.of(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.FIRST)));
-            }else {
-                streamRequest.setGroups(List.of(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.FIRST)));
-            }
-
-        } catch (HttpStatusCodeException e) {
-            this.notificationError = e;
-            sharedSteps.setNotificationError(e);
-        }
-        updateStream(versione);
+        updateStreamByGroupsPA(versione,pa,false);
     }
 
-    //TODO Rivedere la gestione codice duplicato
     @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} con un gruppo che appartiene al comune {string}")
     public void updateStreamByGroupsPA(String versione, String pa) {
+        updateStreamByGroupsPA(versione,pa,true);
+    }
+
+    private void updateStreamByGroupsPA(String version, String pa, boolean groupOfPa){
+        String groupToUse = switch (pa){
+            case "Comune_Multi" -> groupOfPa ? "Comune_Multi" : "Comune_1";
+            case "Comune_1" -> groupOfPa ? "Comune_1" : "Comune_Multi";
+            default -> "Comune_Multi";
+        };
         try {
             streamRequestV23 = new StreamRequestV23();
-            if ("Comune_Multi".equalsIgnoreCase(pa)) {
-                streamRequestV23.setGroups(List.of(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.FIRST)));
-            } else {
-                streamRequestV23.setGroups(List.of(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.FIRST)));
-            }
-
+            streamRequestV23.setGroups(List.of(sharedSteps.getGroupIdByPa(groupToUse, GroupPosition.FIRST)));
         } catch (HttpStatusCodeException e) {
             this.notificationError = e;
             sharedSteps.setNotificationError(e);
         }
-        updateStream(versione);
+        updateStream(version);
     }
 
     @And("si aggiorna(no) (lo)(gli) stream creat(o)(i) con versione {string} -Cross Versioning")
@@ -1641,26 +1632,22 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                         if (replaceId){
                             request.setReplacedStreamId(sharedSteps.getEventStreamV23().getStreamId());
                         }
-                        try {
-                            StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
-                            if (replaceId) {
-                                StreamMetadataResponseV23 eventStreamV23 =
-                                        webhookB2bClient.getEventStreamV23(this.eventStreamListV23.get(0).getStreamId());
-                                sharedSteps.setEventStreamV23(eventStreamV23);
-                                Assertions.assertNotNull(eventStreamV23);
-                                Assertions.assertNotNull(eventStreamV23.getStreamId());
-                                Assertions.assertNotNull(eventStreamV23.getDisabledDate());
-                                log.info("EVENTSTREAM REPLACED: {}", eventStreamV23);
 
-                                this.eventStreamListV23 = new LinkedList<>();
-                            }
-                            this.eventStreamListV23.add(eventStream);
-                            addStreamId(pa, eventStream.getStreamId(), streamVersion);
+                        StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
+                        if (replaceId) {
+                            StreamMetadataResponseV23 eventStreamV23 =
+                                    webhookB2bClient.getEventStreamV23(this.eventStreamListV23.get(0).getStreamId());
+                            sharedSteps.setEventStreamV23(eventStreamV23);
+                            Assertions.assertNotNull(eventStreamV23);
+                            Assertions.assertNotNull(eventStreamV23.getStreamId());
+                            Assertions.assertNotNull(eventStreamV23.getDisabledDate());
+                            log.info("EVENTSTREAM REPLACED: {}", eventStreamV23);
 
-                        } catch (HttpStatusCodeException e) {
-                            this.notificationError = e;
-                            sharedSteps.setNotificationError(e);
+                            this.eventStreamListV23 = new LinkedList<>();
                         }
+                        this.eventStreamListV23.add(eventStream);
+                        addStreamId(pa, eventStream.getStreamId(), streamVersion);
+
                     }
                 }
                 case V10_V23 -> {
@@ -1791,12 +1778,12 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 groupList = sharedSteps.getRequestNewApiKey().getGroups();
             }
             case "ALTRA_PA" -> {
-                if ("Comune_1".equalsIgnoreCase(pa)) {
-                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.LAST));
-                    groupList = List.of(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.LAST));
-                } else if("Comune_Multi".equalsIgnoreCase(pa) ){
-                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.LAST));
-                    groupList = List.of(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.LAST));
+                if (!"Comune_Multi".equalsIgnoreCase(pa)) {
+                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.FIRST));
+                    groupList = List.of(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.FIRST));
+                } else {
+                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.FIRST));
+                    groupList = List.of(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.FIRST));
                 }
             }
             default -> throw new IllegalArgumentException();

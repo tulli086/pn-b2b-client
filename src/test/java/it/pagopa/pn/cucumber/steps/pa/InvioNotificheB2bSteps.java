@@ -709,8 +709,6 @@ public class InvioNotificheB2bSteps {
     public void operationProducedNotAnError() {
         HttpStatusCodeException httpStatusCodeException = this.sharedSteps.consumeNotificationError();
         Assertions.assertNull(httpStatusCodeException);
-//        Assertions.assertFalse((httpStatusCodeException != null) &&
-//                (httpStatusCodeException.getStatusCode().toString().substring(0, 3).equals(statusCode)));
     }
 
 
