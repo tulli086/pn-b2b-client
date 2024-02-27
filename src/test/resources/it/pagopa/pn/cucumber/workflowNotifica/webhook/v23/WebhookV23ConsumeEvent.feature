@@ -159,7 +159,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     When vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 0
-    Then verifica deanonimizzazione degli eventi di timeline con delega "SI"
+    Then verifica deanonimizzazione degli eventi di timeline con delega "SI" digitale
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
