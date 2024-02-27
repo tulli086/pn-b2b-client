@@ -198,18 +198,13 @@ Feature: avanzamento notifiche webhook b2b V23
     And si crea il nuovo stream V23 per il "Comune_1" con un gruppo disponibile "FIRST"
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
 
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_COURTESY_MESSAGE"
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_COURTESY_MESSAGE" con versione V23 e apiKey aggiornata con position 0
     And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
     And vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE" con versione V23 e apiKey aggiornata con position 0
     And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
-
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK"
     And vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK" con versione V23 e apiKey aggiornata con position 0
     And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
-
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
     And vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "DIGITAL_SUCCESS_WORKFLOW" con versione V23 e apiKey aggiornata con position 0
     And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
 
@@ -236,15 +231,13 @@ Feature: avanzamento notifiche webhook b2b V23
 
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
     And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "PREPARE_ANALOG_DOMICILE" con versione V23 e apiKey aggiornata con position 0
     And verifica deanonimizzazione degli eventi di timeline con delega "NO" analogico
 
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_ANALOG_DOMICILE" con versione V23 e apiKey aggiornata con position 0
     And verifica deanonimizzazione degli eventi di timeline con delega "NO" analogico
-
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
+    
     And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" con versione V23 e apiKey aggiornata con position 0
     And verifica deanonimizzazione degli eventi di timeline con delega "NO" analogico
     And viene modificato lo stato dell'apiKey in "BLOCK"
