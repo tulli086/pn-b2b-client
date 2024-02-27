@@ -104,7 +104,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-#TODO Verificare..............da sistemare
+
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.3_50] Consumo di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey master e verifica corrispondenza tra i detail del webhook e quelli della timeline.
     Given viene generata una nuova notifica
