@@ -204,7 +204,7 @@ Feature: aggiornamento stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
-#VERIFICARE IL CORRETTO COMPORTAMENTO SEGNALATO
+
   @webhookV23 @cleanWebhook
   Scenario: [B2B-STREAM_ES1.1_100] Aggiornamento di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey con gruppo.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
