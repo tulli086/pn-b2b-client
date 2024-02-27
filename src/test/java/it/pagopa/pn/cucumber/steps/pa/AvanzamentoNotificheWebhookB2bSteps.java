@@ -1370,6 +1370,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
 
+
     @And("verifica corrispondenza tra i detail del webhook e quelli della timeline")
     public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() throws IllegalAccessException {
 
@@ -1384,6 +1385,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             field.setAccessible(true);
             Object value1 = field.get(s1);
             Object value2 = field.get(s2);
+            System.out.println("ELEMENTI NEL WEBHOOK E TIMELINE: "+field + " "+value1);
             if (value1 != null && value2 != null) {
                 if (!Objects.equals(value1, value2)) {
                     values.add(String.valueOf(field.getName()+": "+value1+" -> "+value2));
@@ -1392,6 +1394,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
 
         Assertions.assertNotNull(values);
+        System.out.println("ELEMENTI NEL WEBHOOK: "+values.size());
         Assertions.assertTrue(values.isEmpty());
 
 /**
@@ -1486,22 +1489,34 @@ public class AvanzamentoNotificheWebhookB2bSteps {
  **/
     }
 
-    @Then("verifica deanonimizzazione degli eventi di timeline con delega {string}")
-    public void verificaDeanonimizzazioneDegliEventiDiTimeline(String delega) {
+    @Then("verifica deanonimizzazione degli eventi di timeline con delega {string} analogico")
+    public void verificaDeanonimizzazioneDegliEventiDiTimelineAnalogico(String delega) {
         TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
-
         Assertions.assertNotNull(timelineElementWebhookDetails);
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getAddress());
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getMunicipality());
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getProvince());
         Assertions.assertNotNull(timelineElementWebhookDetails.getPhysicalAddress().getZip());
         Assertions.assertNotNull(timelineElementWebhookDetails.getDigitalAddress().getAddress());
+
+        verificaDeanonimizzazioneDegliEventiDiTimelinePresenzaDelega(timelineElementWebhookDetails,delega);
+    }
+
+    @Then("verifica deanonimizzazione degli eventi di timeline con delega {string} digitale")
+    public void verificaDeanonimizzazioneDegliEventiDiTimelineDigitale(String delega) {
+        TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
+        Assertions.assertNotNull(timelineElementWebhookDetails.getDigitalAddress());
+        verificaDeanonimizzazioneDegliEventiDiTimelinePresenzaDelega(timelineElementWebhookDetails,delega);
+    }
+
+    public void verificaDeanonimizzazioneDegliEventiDiTimelinePresenzaDelega (TimelineElementDetailsV23 timelineElementWebhookDetails,String delega) {
         if ("SI".equalsIgnoreCase(delega)) {
             Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo());
             Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getTaxId());
             Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo().getDenomination());
         }
     }
+
 
     @When("vengono letti gli eventi di timeline dello stream con versione {string} -Cross Versioning")
     public void vengonoLettiGliEventiDiTimelineDelloStreamDel(String versione) {
