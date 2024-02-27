@@ -192,7 +192,7 @@ Feature: aggiornamento stream
 
 
   @webhookV23 @cleanWebhook
-  Scenario: [B2B-STREAM_ES1.1_98] Aggiornamento di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey master.
+  Scenario: [B2B-STREAM_ES1.1_190] Aggiornamento di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey master.
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_Multi" senza gruppo
     And viene impostata l'apikey appena generata
