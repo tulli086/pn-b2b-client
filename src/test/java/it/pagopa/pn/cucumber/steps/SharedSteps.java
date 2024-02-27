@@ -732,7 +732,7 @@ public class SharedSteps {
     @And("destinatario Signor casuale e:")
     public void destinatarioSignorCasualeMap(Map<String, String> data) {
         try {
-            Thread.sleep(new Random().nextInt(350));
+            Thread.sleep(new Random().nextInt(500));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

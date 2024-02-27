@@ -132,14 +132,14 @@ public class RaddAltSteps {
             case 0 -> {
                 return ActInquiryResponseStatus.CodeEnum.NUMBER_0;
             }
-            case 1 -> {
-                return ActInquiryResponseStatus.CodeEnum.NUMBER_1;
-            }
             case 2 -> {
                 return ActInquiryResponseStatus.CodeEnum.NUMBER_2;
             }
             case 3 -> {
                 return ActInquiryResponseStatus.CodeEnum.NUMBER_3;
+            }
+            case 4 -> {
+                return ActInquiryResponseStatus.CodeEnum.NUMBER_4;
             }
             case 10 -> {
                 return ActInquiryResponseStatus.CodeEnum.NUMBER_10;
