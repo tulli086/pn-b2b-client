@@ -62,6 +62,13 @@ public class InteropTokenSingleton implements InteropTokenRefresh{
         if(tokenInterop == null){
            generateToken();
         }
+        //REMOVE
+        try{
+            Thread.sleep(Thread.currentThread().getId() * 3);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         return tokenInterop;
     }
 
