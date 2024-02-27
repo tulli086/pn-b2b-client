@@ -236,6 +236,16 @@ public class RaddAltSteps {
                         .checksum(this.documentUploadResponse.getValue2());
         System.out.println("actStartTransactionRequest: " + actStartTransactionRequest);
         this.startTransactionResponse = raddAltClient.startActTransaction(uid, actStartTransactionRequest);
+
+        if(this.startTransactionResponse.getStatus().getCode().equals(StartTransactionResponseStatus.CodeEnum.NUMBER_2)){
+            try {
+                Thread.sleep(this.startTransactionResponse.getStatus().getRetryAfter().longValue());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            this.startTransactionResponse = raddAltClient.startActTransaction(uid, actStartTransactionRequest);
+        }
+
         System.out.println("startTransactionResponse: " + startTransactionResponse);
     }
 
