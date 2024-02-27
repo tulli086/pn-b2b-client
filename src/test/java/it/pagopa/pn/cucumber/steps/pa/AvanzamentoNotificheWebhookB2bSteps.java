@@ -1,5 +1,9 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.collect.ComparisonChain;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
@@ -1372,121 +1376,22 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
 
     @And("verifica corrispondenza tra i detail del webhook e quelli della timeline")
-    public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() throws IllegalAccessException {
+    public void verificaCorrispondenzaTraIDetailDelWebhookEQuelliDellaTimeline() throws IllegalAccessException, JsonProcessingException {
 
         it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementDetailsV23 timelineElementDetails = sharedSteps.getTimelineElementV23().getDetails();//PERCHè NON TENERLO NELLA CLASSE ?!
 
         it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.TimelineElementDetailsV23 timelineElementWebhookDetails = sharedSteps.getProgressResponseElementV23().getElement().getDetails();
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String json = ow.writeValueAsString(timelineElementDetails);
+        System.out.println(json);
 
-        Object s1 = timelineElementDetails;
-        Object s2 = timelineElementWebhookDetails;
-        List values = new ArrayList<>();
-        for (Field field : s1.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            Object value1 = field.get(s1);
-            Object value2 = field.get(s2);
-            System.out.println("ELEMENTI NEL WEBHOOK E TIMELINE: "+field + " "+value1);
-            if (value1 != null && value2 != null) {
-                if (!Objects.equals(value1, value2)) {
-                    values.add(String.valueOf(field.getName()+": "+value1+" -> "+value2));
-                }
-            }
-        }
+        ObjectWriter ow1 = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String json1 = ow1.writeValueAsString(timelineElementDetails);
+        System.out.println(json1);
 
-        Assertions.assertNotNull(values);
-        System.out.println("ELEMENTI NEL WEBHOOK: "+values.size());
-        Assertions.assertTrue(values.isEmpty());
+        ObjectMapper mapper = new ObjectMapper();
+        Assertions.assertEquals(mapper.readTree(json), mapper.readTree(json1));
 
-/**
-        //TODO SBAGLIATO: Da capire cosa si voleva fare
-        TimelineElementDetailsV23 timelineElementDetailsV23 = new TimelineElementDetailsV23();
-        timelineElementDetailsV23 = sharedSteps.deepCopy( timelineElementWebhookDetails, TimelineElementDetailsV23.class );
-        //TODO: tipi errati Assertions.assertEquals(timelineElementDetails, timelineElementDetailsV23);
-
-        timelineElementDetailsV23 = sharedSteps.deepCopy( timelineElementWebhookDetails, TimelineElementDetailsV23.class );
-
-        //TODO: tipi errati Assertions.assertEquals(timelineElementDetails, timelineElementDetailsV23);
-
-        //TODO Verificare il corretto funziionamento...
-
-        //Assertion for null check
-        Assertions.assertNotNull(timelineElementDetails);
-        Assertions.assertNotNull(timelineElementDetails.getLegalFactId());
-        Assertions.assertNotNull(timelineElementWebhookDetails);
-        Assertions.assertNotNull(timelineElementWebhookDetails.getLegalFactId());
-        Assertions.assertNotNull( timelineElementDetails.getOldAddress().getProvince());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getOldAddress().getProvince());
-        Assertions.assertNotNull( timelineElementDetails.getOldAddress().getZip());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getOldAddress().getZip());
-        Assertions.assertNotNull( timelineElementDetails.getLegalfactId());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getLegalfactId());
-        Assertions.assertNotNull( timelineElementDetails.getEndWorkflowStatus());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getEndWorkflowStatus());
-        Assertions.assertNotNull( timelineElementDetails.getCompletionWorkflowDate());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getLegalFactGenerationDate());
-        Assertions.assertNotNull( timelineElementDetails.getLegalFactGenerationDate());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getCompletionWorkflowDate());
-        Assertions.assertNotNull(timelineElementDetails.getDelegateInfo());
-        Assertions.assertNotNull( timelineElementDetails.getDelegateInfo().getTaxId());
-        Assertions.assertNotNull(timelineElementWebhookDetails.getDelegateInfo());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getDelegateInfo().getTaxId());
-        Assertions.assertNotNull( timelineElementDetails.getSchedulingDate());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getSchedulingDate());
-        Assertions.assertNotNull( timelineElementDetails.getAnalogCost());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getAnalogCost());
-        Assertions.assertNotNull( timelineElementDetails.getEnvelopeWeight());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getEnvelopeWeight());
-        Assertions.assertNotNull( timelineElementDetails.getProductType());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getAmount());
-        Assertions.assertNotNull( timelineElementDetails.getAmount());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getCreditorTaxId());
-        Assertions.assertNotNull( timelineElementDetails.getCreditorTaxId());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getDeliveryDetailCode());
-        Assertions.assertNotNull( timelineElementDetails.getDeliveryDetailCode());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getNoticeCode());
-        Assertions.assertNotNull( timelineElementDetails.getNoticeCode());
-        Assertions.assertNotNull( timelineElementWebhookDetails.getProductType());
-
-        int comparisonResult = ComparisonChain.start()
-                .compare(timelineElementDetails.getLegalFactId(), timelineElementWebhookDetails.getLegalFactId())
-                .compare(timelineElementDetails.getRecIndex(), timelineElementWebhookDetails.getRecIndex())
-                .compare(timelineElementDetails.getOldAddress().getAddress(), timelineElementWebhookDetails.getOldAddress().getAddress())
-                .compare(timelineElementDetails.getOldAddress().getMunicipality(), timelineElementWebhookDetails.getOldAddress().getMunicipality())
-                .compare(timelineElementDetails.getOldAddress().getProvince(), timelineElementWebhookDetails.getOldAddress().getProvince())
-                .compare(timelineElementDetails.getOldAddress().getZip(), timelineElementWebhookDetails.getOldAddress().getZip())
-                .compare(timelineElementDetails.getGeneratedAarUrl(), timelineElementWebhookDetails.getGeneratedAarUrl())
-                .compare(timelineElementDetails.getPhysicalAddress().getAddress(), timelineElementWebhookDetails.getPhysicalAddress().getAddress())
-                .compare(timelineElementDetails.getLegalfactId(), timelineElementWebhookDetails.getLegalfactId())
-                .compare(timelineElementDetails.getEndWorkflowStatus(), timelineElementWebhookDetails.getEndWorkflowStatus())
-                .compare(timelineElementDetails.getCompletionWorkflowDate(), timelineElementWebhookDetails.getCompletionWorkflowDate())
-                .compare(timelineElementDetails.getLegalFactGenerationDate(), timelineElementWebhookDetails.getLegalFactGenerationDate())
-                .compare(timelineElementDetails.getDigitalAddress().getAddress(), timelineElementWebhookDetails.getDigitalAddress().getAddress())
-                .compare(timelineElementDetails.getDigitalAddress().getType(), timelineElementWebhookDetails.getDigitalAddress().getType())
-                .compare(timelineElementDetails.getAttemptDate(), timelineElementWebhookDetails.getAttemptDate())
-                .compare(timelineElementDetails.getIsAvailable(), timelineElementWebhookDetails.getIsAvailable())
-                .compare(timelineElementDetails.getEventTimestamp(), timelineElementWebhookDetails.getEventTimestamp())
-                .compare(timelineElementDetails.getRaddType(), timelineElementWebhookDetails.getRaddType())
-                .compare(timelineElementDetails.getRaddTransactionId(), timelineElementWebhookDetails.getRaddTransactionId())
-                .compare(timelineElementDetails.getDelegateInfo().getTaxId(), timelineElementWebhookDetails.getDelegateInfo().getTaxId())
-                .compare(timelineElementDetails.getNotificationCost(), timelineElementWebhookDetails.getNotificationCost())
-                .compare(timelineElementDetails.getNotificationDate(), timelineElementWebhookDetails.getNotificationDate())
-                .compare(timelineElementDetails.getSendDate(), timelineElementWebhookDetails.getSendDate())
-                .compare(timelineElementDetails.getSchedulingDate(), timelineElementWebhookDetails.getSchedulingDate())
-                .compare(timelineElementDetails.getLastAttemptDate(), timelineElementWebhookDetails.getLastAttemptDate())
-                .compare(timelineElementDetails.getAnalogCost(), timelineElementWebhookDetails.getAnalogCost())
-                .compare(timelineElementDetails.getAttemptDate(), timelineElementWebhookDetails.getAttemptDate())
-                .compare(timelineElementDetails.getNumberOfPages(), timelineElementWebhookDetails.getNumberOfPages())
-                .compare(timelineElementDetails.getEnvelopeWeight(), timelineElementWebhookDetails.getEnvelopeWeight())
-                .compare(timelineElementDetails.getProductType(), timelineElementWebhookDetails.getProductType())
-                .compare(timelineElementDetails.getAmount(), timelineElementWebhookDetails.getAmount())
-                .compare(timelineElementDetails.getCreditorTaxId(), timelineElementWebhookDetails.getCreditorTaxId())
-                .compare(timelineElementDetails.getDeliveryDetailCode(), timelineElementWebhookDetails.getDeliveryDetailCode())
-                .compare(timelineElementDetails.getNoticeCode(), timelineElementWebhookDetails.getNoticeCode())
-                .compare(timelineElementDetails.getSchedulingAnalogDate(), timelineElementWebhookDetails.getSchedulingAnalogDate())
-                .result();
-
-        Assertions.assertTrue(comparisonResult>0);
- **/
     }
 
     @Then("verifica deanonimizzazione degli eventi di timeline con delega {string} analogico")
