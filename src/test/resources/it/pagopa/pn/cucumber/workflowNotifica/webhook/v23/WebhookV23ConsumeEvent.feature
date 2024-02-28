@@ -106,7 +106,7 @@ Feature: avanzamento notifiche webhook b2b V23
 
 
   @webhookV23 @cleanWebhook
-  Scenario: [B2B-STREAM_ES1.3_50] Consumo di uno stream notifica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey master e verifica corrispondenza tra i detail del webhook e quelli della timeline.
+  Scenario: [B2B-STREAM_ES1.3_50] Consumo di uno stream notifica digitale senza gruppo, con eventType "TIMELINE"  utilizzando un apikey master e verifica corrispondenza tra i detail del webhook e quelli della timeline.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -117,8 +117,41 @@ Feature: avanzamento notifiche webhook b2b V23
     And viene aggiornata la apiKey utilizzata per gli stream
     And si crea il nuovo stream per il "Comune_1" con versione "V23"
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
-    Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "DIGITAL_SUCCESS_WORKFLOW" con versione V23 e apiKey aggiornata con position 0
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
+    Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_COURTESY_MESSAGE" con versione V23 e apiKey aggiornata con position 0
+    And verifica corrispondenza tra i detail del webhook e quelli della timeline
+    And vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE" con versione V23 e apiKey aggiornata con position 0
+    And verifica corrispondenza tra i detail del webhook e quelli della timeline
+    And vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK" con versione V23 e apiKey aggiornata con position 0
+    And verifica corrispondenza tra i detail del webhook e quelli della timeline
+    And vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "DIGITAL_SUCCESS_WORKFLOW" con versione V23 e apiKey aggiornata con position 0
+    And verifica corrispondenza tra i detail del webhook e quelli della timeline
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
+
+  @webhookV23 @cleanWebhook
+  Scenario: [B2B-STREAM_ES1.3_50_1] Consumo di uno stream notifica analogica senza gruppo, con eventType "TIMELINE"  utilizzando un apikey master e verifica corrispondenza tra i detail del webhook e quelli della timeline.
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario
+      | denomination | Giovanna D'Arco |
+      | taxId | DRCGNN12A46A326K |
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@ok_AR |
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
+    And Viene creata una nuova apiKey per il comune "Comune_Multi" senza gruppo
+    And viene impostata l'apikey appena generata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream per il "Comune_Multi" con versione "V23"
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
+    Then vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "PREPARE_ANALOG_DOMICILE" con versione V23 e apiKey aggiornata con position 0
+    And verifica corrispondenza tra i detail del webhook e quelli della timeline
+    And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "SEND_ANALOG_DOMICILE" con versione V23 e apiKey aggiornata con position 0
+    And verifica corrispondenza tra i detail del webhook e quelli della timeline
+    And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" con versione V23 e apiKey aggiornata con position 0
     And verifica corrispondenza tra i detail del webhook e quelli della timeline
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
