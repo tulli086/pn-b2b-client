@@ -25,6 +25,12 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final String basePath;
     private final String Raddista1;
     private final String Raddista2;
+    private final String RaddistaNonCensito;
+    private final String RaddistaDatiErrati;
+    private final String RaddistaJwtScaduto;
+
+    private final String RaddistaAudErrato;
+    private final String RaddistaJwtKidDiverso;
 
     private AuthTokenRaddType IssuerTokenSetted = AuthTokenRaddType.ISSUER_1;
 
@@ -35,12 +41,24 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
 
 
     public PnRaddAlternativeClientImpl(ApplicationContext ctx, RestTemplate restTemplate, @Value("${pn.radd.alt.external.base-url}") String basePath,
-                                       @Value("${pn.external.bearer-token-radd-1}") String Raddista1, @Value("${pn.external.bearer-token-radd-2}") String Raddista2) {
+                                       @Value("${pn.external.bearer-token-radd-1}") String Raddista1,
+                                       @Value("${pn.external.bearer-token-radd-2}") String Raddista2,
+                                       @Value("${pn.external.bearer-token-radd-non-censito}") String RaddistaNonCensito,
+                                       @Value("${pn.external.bearer-token-radd-dati-errati}") String RaddistaDatiErrati,
+                                       @Value("${pn.external.bearer-token-radd-jwt-scaduto}") String RaddistaJwtScaduto,
+                                       @Value("${pn.external.bearer-token-radd-aud-erratto}") String RaddistaAudErrato,
+                                       @Value("${pn.external.bearer-token-radd-kid-diverso}") String RaddistaJwtKidDiverso) {
         this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.basePath = basePath;
         this.Raddista1=Raddista1;
         this.Raddista2=Raddista2;
+        this.RaddistaNonCensito=RaddistaNonCensito;
+        this.RaddistaDatiErrati=RaddistaDatiErrati;
+        this.RaddistaJwtScaduto=RaddistaJwtScaduto;
+        this.RaddistaAudErrato=RaddistaAudErrato;
+        this.RaddistaJwtKidDiverso=RaddistaJwtKidDiverso;
+
 
         this.actOperationsApi = new ActOperationsApi(newApiClientExternal(restTemplate,basePath, Raddista1));
         this.aorOperationsApi = new AorOperationsApi(newApiClientExternal(restTemplate,basePath, Raddista1));
@@ -156,20 +174,24 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
                 selectRaddista(this.Raddista2);
                 beenSet=true;
             }
-            case ISSUER_ERRATO -> {
-                selectRaddista("1");
+            case ISSUER_NON_CENSITO -> {
+                selectRaddista(this.RaddistaNonCensito);
                 beenSet=true;
             }
             case DATI_ERRATI -> {
-                selectRaddista("2");
+                selectRaddista(this.RaddistaDatiErrati);
                 beenSet=true;
             }
             case ISSUER_SCADUTO -> {
-                selectRaddista("3");
+                selectRaddista(this.RaddistaJwtScaduto);
                 beenSet=true;
             }
             case AUD_ERRATA -> {
-                selectRaddista("4");
+                selectRaddista(this.RaddistaAudErrato);
+                beenSet=true;
+            }
+            case KID_DIVERSO -> {
+                selectRaddista(this.RaddistaJwtKidDiverso);
                 beenSet=true;
             }
         }
