@@ -232,9 +232,9 @@ public class RaddAltSteps {
         startTransactionActRaddAlternative(this.operationid);
     }
 
-    @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId da un organizzazione diversa")
-    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa( ) {
-        changeRaddista("raddista 2");
+    @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId dal raddista {string}")
+    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa(String raddista ) {
+        changeRaddista(raddista);
         startTransactionActRaddAlternative(this.operationid);
     }
 
@@ -393,11 +393,9 @@ public class RaddAltSteps {
 
 
 
-    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) con lo stesso operationId (dalla)(da una) {string} organizzazione")
+    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) con lo stesso operationId dal raddista {string}")
     public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileStessoOperationId(String organizzazione) {
-        if(organizzazione.equalsIgnoreCase("diversa")){
-            changeRaddista("raddista 2");
-        }
+        changeRaddista(organizzazione);
 
         AorStartTransactionRequest aorStartTransactionRequest =
                 new AorStartTransactionRequest()
@@ -521,11 +519,10 @@ public class RaddAltSteps {
 
         try {
 
-            DocumentUploadResponse documentUploadResponse = raddAltClient.documentUpload("1234556",documentUploadRequest);
+            DocumentUploadResponse documentUploadResponse = raddAltClient.documentUpload(this.uid,documentUploadRequest);
 
             log.debug("DocumentUploadResponse: {}", documentUploadResponse);
         } catch (HttpStatusCodeException httpStatusCodeException) {
-            log.debug("HttpStatusCodeException {}", httpStatusCodeException);
             this.documentUploadError = httpStatusCodeException;
         }
     }
