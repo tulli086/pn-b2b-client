@@ -260,6 +260,9 @@ public class ApikeyManagerSteps {
             case "Comune_1":
                 apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
                 break;
+            case "Comune_2":
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.MVP_2);
+                break;
             case "Comune_Multi":
                 apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.GA);
                 break;
@@ -366,6 +369,9 @@ public class ApikeyManagerSteps {
         switch (settedPa){
             case "Comune_1":
                 apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
+                break;
+            case "Comune_2":
+                apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.MVP_2);
                 break;
             case "Comune_Multi":
                 apiKeyManagerClient.setApiKeys(SettableApiKey.ApiKeyType.GA);

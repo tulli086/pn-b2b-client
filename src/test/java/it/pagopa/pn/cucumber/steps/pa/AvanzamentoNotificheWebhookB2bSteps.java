@@ -259,6 +259,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con replaceId con un gruppo disponibile {string}")
     public void createdStreamByGroupsWithReplaceId(String pa, String position) {
         setPaWebhook(pa);
+        updateApiKeyForStream();
         createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),true, null,false);
     }
 
@@ -309,6 +310,11 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 streamRequestV23.setGroups(sharedSteps.getRequestNewApiKey().getGroups().subList(0, 0));
             } else if ("aggiunge".equalsIgnoreCase(action)) {
                 streamRequestV23.setGroups(sharedSteps.getGroupAllActiveByPa(pa));
+            }else if ("stesso".equalsIgnoreCase(action)) {
+                for (StreamMetadataResponseV23 eventStream : eventStreamListV23) {
+                    streamRequestV23.setGroups(eventStream.getGroups());
+                }
+
             }
         }
         updateStream(versione);
@@ -392,12 +398,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 try{
                     if (streamRequestV23 == null) {
                         streamRequestV23 = new StreamRequestV23();
-                    }
-                    streamRequestV23.setTitle("Stream Update");
-                    //TODO Verificare il corretto comportamento
-                    if (streamRequestV23.getGroups() == null) {
                         streamRequestV23.setGroups(sharedSteps.getRequestNewApiKey().getGroups());
                     }
+                    streamRequestV23.setTitle("Stream Update");
+
                     streamRequestV23.setEventType(StreamRequestV23.EventTypeEnum.TIMELINE);
                     for (StreamMetadataResponseV23 eventStream : eventStreamListV23) {
                         StreamMetadataResponseV23 result = webhookB2bClient.updateEventStreamV23(eventStream.getStreamId(), streamRequestV23);
@@ -1634,20 +1638,27 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                             request.setReplacedStreamId(sharedSteps.getEventStreamV23().getStreamId());
                         }
 
-                        StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
-                        if (replaceId) {
-                            StreamMetadataResponseV23 eventStreamV23 =
-                                    webhookB2bClient.getEventStreamV23(this.eventStreamListV23.get(0).getStreamId());
-                            sharedSteps.setEventStreamV23(eventStreamV23);
-                            Assertions.assertNotNull(eventStreamV23);
-                            Assertions.assertNotNull(eventStreamV23.getStreamId());
-                            Assertions.assertNotNull(eventStreamV23.getDisabledDate());
-                            log.info("EVENTSTREAM REPLACED: {}", eventStreamV23);
 
-                            this.eventStreamListV23 = new LinkedList<>();
+                        try {
+                            StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
+                            if (replaceId) {
+                                StreamMetadataResponseV23 eventStreamV23 =
+                                        webhookB2bClient.getEventStreamV23(this.eventStreamListV23.get(0).getStreamId());
+                                sharedSteps.setEventStreamV23(eventStreamV23);
+                                Assertions.assertNotNull(eventStreamV23);
+                                Assertions.assertNotNull(eventStreamV23.getStreamId());
+                                Assertions.assertNotNull(eventStreamV23.getDisabledDate());
+                                log.info("EVENTSTREAM REPLACED: {}", eventStreamV23);
+
+                                this.eventStreamListV23 = new LinkedList<>();
+                            }
+                            this.eventStreamListV23.add(eventStream);
+                            addStreamId(pa, eventStream.getStreamId(), streamVersion);
+
+                        } catch (HttpStatusCodeException e) {
+                            this.notificationError = e;
+                            sharedSteps.setNotificationError(e);
                         }
-                        this.eventStreamListV23.add(eventStream);
-                        addStreamId(pa, eventStream.getStreamId(), streamVersion);
 
                     }
                 }
@@ -1780,10 +1791,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 groupList = sharedSteps.getRequestNewApiKey().getGroups();
             }
             case "ALTRA_PA" -> {
-                if (!"Comune_Multi".equalsIgnoreCase(pa)) {
+                if ("Comune_1".equalsIgnoreCase(pa)) {
                     Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.FIRST));
                     groupList = List.of(sharedSteps.getGroupIdByPa("Comune_Multi", GroupPosition.FIRST));
-                } else {
+                } else if("Comune_Multi".equalsIgnoreCase(pa) ) {
+                    Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.FIRST));
+                    groupList = List.of(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.FIRST));
+                }else{
                     Assertions.assertNotNull(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.FIRST));
                     groupList = List.of(sharedSteps.getGroupIdByPa("Comune_1", GroupPosition.FIRST));
                 }
