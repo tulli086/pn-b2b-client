@@ -3,18 +3,22 @@ package it.pagopa.pn.client.b2b.pa.utils;
 
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-@Component
+
 @Slf4j
-public class WebhookSynchronizer {
+public enum WebhookSynchronizer {
+    WEBHOOKSYNCHRONIZER;
+
     private static final int MAX_NUMBER_OF_STREAM = 10;
-    private final static Semaphore semaphoreForPa1 = new Semaphore(MAX_NUMBER_OF_STREAM,true);
-    private final static Semaphore semaphoreForPa2 = new Semaphore(MAX_NUMBER_OF_STREAM,true);
-    private final static Semaphore semaphoreForPa3 = new Semaphore(MAX_NUMBER_OF_STREAM,true);
+    private static final Semaphore semaphoreForPa1 = new Semaphore(MAX_NUMBER_OF_STREAM,true);
+    private static final Semaphore semaphoreForPa2 = new Semaphore(MAX_NUMBER_OF_STREAM,true);
+    private static final Semaphore semaphoreForPa3 = new Semaphore(MAX_NUMBER_OF_STREAM,true);
 
 
     @Synchronized

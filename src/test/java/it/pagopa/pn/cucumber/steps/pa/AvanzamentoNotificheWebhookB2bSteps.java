@@ -43,6 +43,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
+import static it.pagopa.pn.client.b2b.pa.utils.WebhookSynchronizer.WEBHOOKSYNCHRONIZER;
 import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.V10;
 import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.V23;
 
@@ -65,12 +66,14 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private final TimingForTimeline timingForTimeline;
 
-    private final WebhookSynchronizer webhookSynchronizer;
+    //private final WebhookSynchronizer webhookSynchronizer;
 
 
     public enum StreamVersion {V23,V10,V10_V23}
     private Map<String, PnPaB2bUtils.Pair<Boolean,Integer>> numberOfStreamSlotAcquiredForPa = new HashMap<>(); //forPermissionCheck
     private Map<UUID,PnPaB2bUtils.Pair<String,StreamVersion>> streamIdForPaAndVersion = new HashMap<>(); //for streamId check
+
+    private Set<String> paStreamOwner = new HashSet<>();
 
     //TODO: rimuovere
     private LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
@@ -80,28 +83,31 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private static IPnWebhookB2bClient webhookClientForClean;
     private static boolean webhookTestLaunch;
-    private static final List<SettableApiKey.ApiKeyType> paForStream = List.of(SettableApiKey.ApiKeyType.MVP_1, SettableApiKey.ApiKeyType.MVP_2, SettableApiKey.ApiKeyType.GA);
+    private static final Map<String,SettableApiKey.ApiKeyType> paForStream =
+            Map.of(
+            "Comune_1",SettableApiKey.ApiKeyType.MVP_1,
+            "Comune_2", SettableApiKey.ApiKeyType.MVP_2,
+            "Comune_Multi", SettableApiKey.ApiKeyType.GA);
 
     @Autowired
-    public AvanzamentoNotificheWebhookB2bSteps(IPnWebhookB2bClient webhookB2bClient, SharedSteps sharedSteps,WebhookSynchronizer webhookSynchronizer) {
+    public AvanzamentoNotificheWebhookB2bSteps(IPnWebhookB2bClient webhookB2bClient, SharedSteps sharedSteps) {
         this.sharedSteps = sharedSteps;
         this.webhookB2bClient = webhookB2bClient;
         this.webRecipientClient = sharedSteps.getWebRecipientClient();
         this.timingForTimeline = new TimingForTimeline(this.sharedSteps);
         this.b2bClient = sharedSteps.getB2bClient();
-        this.webhookSynchronizer = webhookSynchronizer;
         webhookTestLaunch = true;
         AvanzamentoNotificheWebhookB2bSteps.webhookClientForClean = webhookB2bClient;
     }
 
-    @AfterAll
+    //@AfterAll -> problema con esecuzione concorrente
     public static void afterAll() {
         log.info("Start clean Webhook!!!");
         log.info("webhookClientForClean state: "+webhookClientForClean);
         log.info("webhook eseguito: "+webhookTestLaunch);
         if(webhookTestLaunch){
             log.info("Starting cleaning");
-            for(SettableApiKey.ApiKeyType pa: paForStream){
+            for(SettableApiKey.ApiKeyType pa: paForStream.values()){
                 //TODO: MODIFICARE
                 webhookClientForClean.setApiKeys(pa);
 
@@ -131,32 +137,65 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @After("@cleanWebhook")
     public void afterStreamTestRun(){
-        log.info("After StreamTest started");
-        //removeStream
-        //si può solo cancellare
-        try{
-            Iterator<UUID> iteratorStreamIdForPaAndVersion = streamIdForPaAndVersion.keySet().iterator();
-            while(iteratorStreamIdForPaAndVersion.hasNext()){
-                UUID streamId = iteratorStreamIdForPaAndVersion.next();
-                log.info("removeStream phase start for id {}",streamId);
-                PnPaB2bUtils.Pair<String, StreamVersion> paAndVersion = streamIdForPaAndVersion.get(streamId);
-                log.info("removeStream id {} for pa {} with version {}",streamId,paAndVersion.getValue1(),paAndVersion.getValue2());
-                setPaWebhook(paAndVersion.getValue1());
-                deleteStreamWrapperWithoutReleaseStreamCreationSlot(paAndVersion.getValue2(),paAndVersion.getValue1(),streamId);
-            }
-        }catch(Exception e){
-            log.info("Exception in delete after: {}",e.getMessage());
+        log.info("Starting cleaning");
+        for(String pa: paStreamOwner){
+            if(paForStream.containsKey(pa)){ deleteAllPaStreamForAllVersion(paForStream.get(pa)); };
         }
 
-        //releaseStreamSlot
-        Iterator<String> iteratorNumberOfStreamSlotAcquiredForPa = numberOfStreamSlotAcquiredForPa.keySet().iterator();
-        while(iteratorNumberOfStreamSlotAcquiredForPa.hasNext()){
-            String pa = iteratorNumberOfStreamSlotAcquiredForPa.next();
-            log.info("releaseStreamCreationSlot phase start for pa {}",pa);
-            PnPaB2bUtils.Pair<Boolean, Integer> isAcquireNumberOfStramSlot = numberOfStreamSlotAcquiredForPa.get(pa);
-            if(isAcquireNumberOfStramSlot.getValue1() && isAcquireNumberOfStramSlot.getValue2() > 0){
-                log.info("release n.{} of streamCreationSlot for pa {}",isAcquireNumberOfStramSlot.getValue2(),pa);
-                webhookSynchronizer.releaseStreamCreationSlot(isAcquireNumberOfStramSlot.getValue2(),pa);
+        //TODO: Da ripristinare con concorrenza
+//        log.info("After StreamTest started");
+//        //removeStream
+//        //si può solo cancellare
+//        try{
+//            Iterator<UUID> iteratorStreamIdForPaAndVersion = streamIdForPaAndVersion.keySet().iterator();
+//            while(iteratorStreamIdForPaAndVersion.hasNext()){
+//                UUID streamId = iteratorStreamIdForPaAndVersion.next();
+//                log.info("removeStream phase start for id {}",streamId);
+//                PnPaB2bUtils.Pair<String, StreamVersion> paAndVersion = streamIdForPaAndVersion.get(streamId);
+//                log.info("removeStream id {} for pa {} with version {}",streamId,paAndVersion.getValue1(),paAndVersion.getValue2());
+//                setPaWebhook(paAndVersion.getValue1());
+//                deleteStreamWrapper(paAndVersion.getValue2(),paAndVersion.getValue1(),streamId);
+//            }
+//        }catch(Exception e){
+//            log.info("Exception in delete after: {}",e.getMessage());
+//        }
+//
+//        //releaseStreamSlot
+//        Iterator<String> iteratorNumberOfStreamSlotAcquiredForPa = numberOfStreamSlotAcquiredForPa.keySet().iterator();
+//        while(iteratorNumberOfStreamSlotAcquiredForPa.hasNext()){
+//            String pa = iteratorNumberOfStreamSlotAcquiredForPa.next();
+//            log.info("releaseStreamCreationSlot phase start for pa {}",pa);
+//            PnPaB2bUtils.Pair<Boolean, Integer> isAcquireNumberOfStramSlot = numberOfStreamSlotAcquiredForPa.get(pa);
+//            if(isAcquireNumberOfStramSlot.getValue1() && isAcquireNumberOfStramSlot.getValue2() > 0){
+//                log.info("release n.{} of streamCreationSlot for pa {}",isAcquireNumberOfStramSlot.getValue2(),pa);
+//                WEBHOOKSYNCHRONIZER.releaseStreamCreationSlot(isAcquireNumberOfStramSlot.getValue2(),pa);
+//            }
+//        }
+    }
+
+
+
+    private void deleteAllPaStreamForAllVersion(SettableApiKey.ApiKeyType pa){
+        //TODO: MODIFICARE
+        webhookClientForClean.setApiKeys(pa);
+
+        //DELETE V1
+        List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement> streamListElements = webhookClientForClean.listEventStreams();
+        for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamListElement elem: streamListElements){
+            try{
+                webhookClientForClean.deleteEventStream(elem.getStreamId());
+            }catch (HttpStatusCodeException statusCodeException){
+                log.error("HTTP Error: statusCode {} message {}",statusCodeException.getStatusCode(),statusCodeException.getMessage());
+            }
+        }
+
+        //DELETE V2.3
+        List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement> streamListElementsV23 = webhookClientForClean.listEventStreamsV23();
+        for(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamListElement elem: streamListElementsV23){
+            try{
+                webhookClientForClean.deleteEventStreamV23(elem.getStreamId());
+            }catch (HttpStatusCodeException statusCodeException){
+                log.error("HTTP Error: statusCode {} message {}",statusCodeException.getStatusCode(),statusCodeException.getMessage());
             }
         }
     }
@@ -1204,44 +1243,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         Assertions.assertNotNull(progressResponseElement);
     }
 
-    //TODO: remove
-    @After("@clean")
-    public void doSomethingAfter() {
-        String pa = "Comune_1";
-        //setPaWebhook(pa);
-        //cleanWebhook(pa);
-    }
-
-    @After("@cleanC2")
-    public void cleanC2() {
-        String pa = "Comune_2";
-        //setPaWebhook(pa);
-        //cleanWebhook(pa);
-    }
-
-    @After("@cleanC3")
-    public void cleanC3() {
-        String pa = "Comune_Multi";
-        //setPaWebhook(pa);
-        //cleanWebhook(pa);
-        SharedSteps.lastEventID = 0;
-    }
-
-    private void cleanWebhook(String pa){
-        //Aggiungere settaggio apikey (quelle che abbiamo sono master)
-        if(eventStreamList != null){
-            for(StreamMetadataResponse eventStream: eventStreamList){
-                deleteStreamWrapper(V10,pa,eventStream.getStreamId());
-            }
-        }
-        if(eventStreamListV23 != null){
-            for(StreamMetadataResponseV23 streamV23: eventStreamListV23){
-                deleteStreamWrapper(V23,pa,streamV23.getStreamId());
-            }
-        }
-    }
-
-
 
     //TODO: old version
     @Then("l'ultima creazione ha prodotto un errore con status code {string}")
@@ -1606,7 +1607,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             switch (streamVersion){
                 case V10 -> {
                     if(this.eventStreamList == null)this.eventStreamList = new LinkedList<>();
-                    if(!forced)acquireStreamCreationSlotInternal(pa,streamCreationRequestList.size());
+                    //if(!forced)acquireStreamCreationSlotInternal(pa,streamCreationRequestList.size());
 
                     for(StreamCreationRequest request: streamCreationRequestList){
                         if (filteredValues!= null && !filteredValues.isEmpty()){
@@ -1620,7 +1621,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 }
                 case V23 -> {
                     if(this.eventStreamListV23 == null)this.eventStreamListV23 = new LinkedList<>();
-                    if(!forced)acquireStreamCreationSlotInternal(pa,streamCreationRequestListV23.size());
+                    //if(!forced)acquireStreamCreationSlotInternal(pa,streamCreationRequestListV23.size());
 
                     for(StreamCreationRequestV23 request: streamCreationRequestListV23){
                         if (filteredValues!= null && !filteredValues.isEmpty()){
@@ -1696,6 +1697,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private void addStreamId(String pa, UUID streamId, StreamVersion version) {
         streamIdForPaAndVersion.put(streamId,new PnPaB2bUtils.Pair<>(pa,version));
+        paStreamOwner.add(pa);
     }
 
 
@@ -1706,7 +1708,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 Assertions.assertNotNull(result);
                 Assertions.assertNotNull(result.getDisabledDate());
                 streamIdForPaAndVersion.remove(eventStream.getStreamId());
-                releaseStreamCreationSlotInternal(pa);
+                //releaseStreamCreationSlotInternal(pa);
             }
         }catch (HttpStatusCodeException e) {
             this.notificationError = e;
@@ -1717,7 +1719,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private void deleteStreamWrapper(StreamVersion streamVersion, String pa, UUID streamID){
         if(deleteStreamWrapperWithoutReleaseStreamCreationSlot(streamVersion,pa,streamID)){
-            releaseStreamCreationSlotInternal(pa);
+            //releaseStreamCreationSlotInternal(pa);
             streamIdForPaAndVersion.remove(streamID);
         }
     }
@@ -1740,7 +1742,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private void releaseStreamCreationSlotInternal(String pa){ //(String pa,int numberOfStream)
         if(numberOfStreamSlotAcquiredForPa.containsKey(pa)){
             if(numberOfStreamSlotAcquiredForPa.get(pa).getValue2() > 0){
-                webhookSynchronizer.releaseStreamCreationSlot(1,pa);
+                WEBHOOKSYNCHRONIZER.releaseStreamCreationSlot(1,pa);
             }
             Integer numberOfStreamSlot = this.numberOfStreamSlotAcquiredForPa.get(pa).getValue2();
             this.numberOfStreamSlotAcquiredForPa.get(pa).setValue2(numberOfStreamSlot-1);
@@ -1751,9 +1753,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         try{
             if(!numberOfStreamSlotAcquiredForPa.containsKey(pa)){
                 this.numberOfStreamSlotAcquiredForPa.put(pa,new PnPaB2bUtils.Pair<>(
-                        webhookSynchronizer.acquireStreamCreationSlot(numberOfStream, pa),numberOfStream));
+                        WEBHOOKSYNCHRONIZER.acquireStreamCreationSlot(numberOfStream, pa),numberOfStream));
             }else{
-                if(webhookSynchronizer.acquireStreamCreationSlot(numberOfStream, pa)){
+                if(WEBHOOKSYNCHRONIZER.acquireStreamCreationSlot(numberOfStream, pa)){
                     PnPaB2bUtils.Pair<Boolean, Integer> numberOfStreamPa = numberOfStreamSlotAcquiredForPa.get(pa);
                     numberOfStreamPa.setValue2(numberOfStreamPa.getValue2()+numberOfStream);
                     numberOfStreamSlotAcquiredForPa.put(pa,numberOfStreamPa);

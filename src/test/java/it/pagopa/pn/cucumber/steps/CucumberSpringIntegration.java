@@ -38,8 +38,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnServiceDeskClientImplWrongApiKey.class,
         PnGPDClientImpl.class,
         PnPaymentInfoClientImpl.class,
-        PnRaddFsuClientImpl.class,
-        WebhookSynchronizer.class
+        PnRaddFsuClientImpl.class
 })
 @EnableScheduling
 public class CucumberSpringIntegration {
