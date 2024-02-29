@@ -26,6 +26,7 @@ public class PnApiKeyManagerExternalClientImpl implements IPnApiKeyManagerClient
     private final ApiKeysApi apiKeysApi;
     private final String basePath;
     private final String bearerTokenCom1;
+    private final String bearerTokenCom2;
     private final String bearerTokenSON;
     private final String bearerTokenROOT;
     private final String bearerTokenGA;
@@ -39,6 +40,7 @@ public class PnApiKeyManagerExternalClientImpl implements IPnApiKeyManagerClient
             RestTemplate restTemplate,
             @Value("${pn.webapi.external.base-url}") String basePath,
             @Value("${pn.external.bearer-token-pa-1}") String bearerTokenCom1,
+            @Value("${pn.external.bearer-token-pa-2}") String bearerTokenCom2,
             @Value("${pn.external.bearer-token-pa-SON}") String bearerTokenSON,
             @Value("${pn.external.bearer-token-pa-ROOT}") String bearerTokenROOT,
             @Value("${pn.external.bearer-token-pa-GA}") String bearerTokenGA,
@@ -49,6 +51,7 @@ public class PnApiKeyManagerExternalClientImpl implements IPnApiKeyManagerClient
         this.basePath = basePath;
 
         this.bearerTokenCom1 = bearerTokenCom1;
+        this.bearerTokenCom2 = bearerTokenCom2;
         this.bearerTokenSON = bearerTokenSON;
         this.bearerTokenROOT = bearerTokenROOT;
         this.bearerTokenGA = bearerTokenGA;
@@ -98,6 +101,13 @@ public class PnApiKeyManagerExternalClientImpl implements IPnApiKeyManagerClient
                 if (this.apiKeySetted != ApiKeyType.MVP_1) {
                     setApiKey(bearerTokenCom1);
                     this.apiKeySetted = ApiKeyType.MVP_1;
+                }
+                yield true;
+            }
+            case MVP_2 -> {
+                if (this.apiKeySetted != ApiKeyType.MVP_2) {
+                    setApiKey(bearerTokenCom2);
+                    this.apiKeySetted = ApiKeyType.MVP_2;
                 }
                 yield true;
             }
