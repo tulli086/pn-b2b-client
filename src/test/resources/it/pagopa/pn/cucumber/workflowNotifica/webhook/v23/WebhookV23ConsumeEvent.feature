@@ -36,7 +36,6 @@ Feature: avanzamento notifiche webhook b2b V23
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REFINEMENT" con versione V23 e apiKey aggiornata con position 0
     And Si verifica che l'elemento di timeline REFINEMENT abbia il timestamp uguale a quella presente nel webhook con la versione V23
-    And viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati V23
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -100,6 +99,16 @@ Feature: avanzamento notifiche webhook b2b V23
     When Viene creata una nuova apiKey per il comune "Comune_2" senza gruppo
     And viene impostata l'apikey appena generata
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 0
+    #TEST DEANONIMIZZAZIONE
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
+    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_COURTESY_MESSAGE" con versione V23 e apiKey aggiornata con position 0
+    And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
+    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE" con versione V23 e apiKey aggiornata con position 0
+    And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
+    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK" con versione V23 e apiKey aggiornata con position 0
+    And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
+    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "DIGITAL_SUCCESS_WORKFLOW" con versione V23 e apiKey aggiornata con position 0
+    And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
@@ -121,30 +130,6 @@ Feature: avanzamento notifiche webhook b2b V23
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     When vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 1
     Then non ci sono nuovi eventi nello stream
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
-
-  @webhookV23 @cleanWebhook @webhook3
-  Scenario: [B2B-STREAM_ES3.1_146_1] Lettura e verifica de-anonimizzazione con un apiKey con gruppo degli eventi di timeline di una notifica digitale inviata con un apikey con gruppo e salvati in uno stream dell'ente con gruppo (Stesso gruppo)
-    And viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-    And destinatario Mario Cucumber
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
-    And Viene creata una nuova apiKey per il comune "Comune_2" con il primo gruppo disponibile
-    And viene impostata l'apikey appena generata
-    And viene aggiornata la apiKey utilizzata per gli stream
-    And si crea il nuovo stream V23 per il "Comune_2" con un gruppo disponibile "FIRST"
-    And la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
-    Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_COURTESY_MESSAGE" con versione V23 e apiKey aggiornata con position 0
-    And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
-    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE" con versione V23 e apiKey aggiornata con position 0
-    And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
-    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_FEEDBACK" con versione V23 e apiKey aggiornata con position 0
-    And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
-    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "DIGITAL_SUCCESS_WORKFLOW" con versione V23 e apiKey aggiornata con position 0
-    And verifica deanonimizzazione degli eventi di timeline con delega "NO" digitale
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
