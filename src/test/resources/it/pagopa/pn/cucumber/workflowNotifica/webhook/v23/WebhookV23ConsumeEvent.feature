@@ -246,7 +246,7 @@ Feature: avanzamento notifiche webhook b2b V23
 
 
 
- #--------------LETTURA NUOVO EVENTO DI TIMELINE DI UNO STREAM------------
+ #--------------LETTURA NUOVO EVENTO DI TIMELINE DI UNO STREAM------------DA ATTIVARE
 
   #SERVE INTEGRAZIONE CON RADD
   @webhookV23 @cleanWebhook @ignore
