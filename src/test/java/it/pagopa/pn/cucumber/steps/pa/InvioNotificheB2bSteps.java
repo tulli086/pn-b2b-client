@@ -416,6 +416,20 @@ public class InvioNotificheB2bSteps {
         }
     }
 
+    @And("viene effettuato un controllo sul type zip attachment di {string} per l'elemento di timeline {string} con DOC {string}")
+    public void attachmentCheckLoadForTimelineElementF24(String documentType, String timelineEventCategory, String doc, @Transpose DataTest dataFromTest) throws InterruptedException {
+        TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
+        switch (documentType) {
+            case "ATTACHMENTS":
+                Assertions.assertNotNull(timelineElement.getDetails().getAttachments());
+                Assertions.assertTrue(doc.equalsIgnoreCase(timelineElement.getDetails().getAttachments().get(0).getDocumentType()));
+                Assertions.assertTrue(timelineElement.getDetails().getAttachments().get(0).getUrl().contains(".zip"));
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
     @And("viene effettuato un controllo sulla durata della retention del PAGOPA di {string} per l'elemento di timeline {string}")
     public void retentionCheckLoadForTimelineElementPAGOPA(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws InterruptedException {
         TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
@@ -703,6 +717,12 @@ public class InvioNotificheB2bSteps {
         HttpStatusCodeException httpStatusCodeException = this.sharedSteps.consumeNotificationError();
         Assertions.assertTrue((httpStatusCodeException != null) &&
                 (httpStatusCodeException.getStatusCode().toString().substring(0, 3).equals(statusCode)));
+    }
+
+    @Then("l'operazione non ha prodotto errori")
+    public void operationProducedNotAnError() {
+        HttpStatusCodeException httpStatusCodeException = this.sharedSteps.consumeNotificationError();
+        Assertions.assertNull(httpStatusCodeException);
     }
 
 

@@ -22,6 +22,10 @@ import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import it.pagopa.pn.client.b2b.pa.springconfig.RestTemplateConfiguration;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.ProgressResponseElementV23;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamMetadataResponseV23;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.cucumber.utils.*;
@@ -102,6 +106,18 @@ public class SharedSteps {
 
     private static final Integer WAITING_GPD = 2000;
 
+    private RequestNewApiKey requestNewApiKey;
+    private ResponseNewApiKey responseNewApiKey;
+
+
+
+
+    private TimelineElementV23 timelineElementV23;
+    private ProgressResponseElementV23 progressResponseElementV23;
+
+
+    private it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse eventStream;
+    private StreamMetadataResponseV23 eventStreamV23;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -181,7 +197,11 @@ public class SharedSteps {
     private final Duration waitingForReadCourtesyMessageDefault = DurationStyle.detectAndParse("5m");
 
 
-    private List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.ProgressResponseElement> progressResponseElements = null;
+    private List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement> progressResponseElements = null;
+
+
+
+    private List<ProgressResponseElementV23> progressResponseElementsV23 = null;
     public static Integer lastEventID = 0;
 
     private String gherkinSpaTaxID = "12666810299";
@@ -193,6 +213,7 @@ public class SharedSteps {
     private String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
     // private String gherkinSrltaxId = "CCRMCT06A03A433H";
     private String gherkinAnalogicTaxID = "05722930657";
+    private String gherkinIrreperibileTaxID = "00749900049";
     private String gherkinSrltaxId = "12666810299";
     private String cucumberSpataxId = "20517490320"; //
 
@@ -730,6 +751,12 @@ public class SharedSteps {
 
     @And("destinatario Signor casuale e:")
     public void destinatarioSignorCasualeMap(Map<String, String> data) {
+        try {
+            Thread.sleep(new Random().nextInt(500));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
                 (notificationRecipientV23
@@ -752,12 +779,24 @@ public class SharedSteps {
     }
 
     @And("destinatario Gherkin Analogic e:")
-    public void destinatarioGherkinAnalogicParam(Map<String, String> data) {//@Transpose NotificationRecipientV21 recipient
+    public void destinatarioGherkinAnalogicParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
                 (notificationRecipientV23
                         .denomination("Gherkin Analogic")
                         .taxId(gherkinAnalogicTaxID)
+                        .recipientType(NotificationRecipientV23.RecipientTypeEnum.PG)),
+                data);
+
+    }
+
+    @And("destinatario Gherkin Irreperibile e:")
+    public void destinatarioGherkinIrreperibileParam(Map<String, String> data) {
+        NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
+        addRecipientToNotification(this.notificationRequest,
+                (notificationRecipientV23
+                        .denomination("Gherkin Irreperibile")
+                        .taxId(gherkinIrreperibileTaxID)
                         .recipientType(NotificationRecipientV23.RecipientTypeEnum.PG)),
                 data);
 
@@ -1162,6 +1201,9 @@ public class SharedSteps {
         try {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
+                //TODO Eliminare
+                notificationRequest.setPaFee(0);
+                notificationRequest.setVat(22);
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
 
                 try {
@@ -2015,6 +2057,10 @@ public class SharedSteps {
         return cucumberSpataxId;
     }
 
+    public String getGherkinIrreperibileTaxId() {
+        return gherkinIrreperibileTaxID;
+    }
+
     public PnExternalServiceClientImpl getPnExternalServiceClient() {
         return pnExternalServiceClient;
     }
@@ -2139,6 +2185,25 @@ public class SharedSteps {
         }
 
         return id;
+    }
+
+    public List<String> getGroupAllActiveByPa(String settedPa) {
+        List<HashMap<String, String>> hashMapsList = getGroupsByPa(settedPa);
+        List<String> groups = new ArrayList<>();
+        String id = null;
+        Integer count = 0;
+
+        for (HashMap<String, String> elem : hashMapsList) {
+            if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
+                id = elem.get("id");
+                count++;
+                groups.add(id);
+            }
+        }
+
+        Assertions.assertTrue(count >= 2);
+
+        return groups;
     }
 
     @And("viene rimossa se presente la pec di piattaforma di {string}")
@@ -2310,11 +2375,11 @@ public class SharedSteps {
     }
 
 
-    public List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.ProgressResponseElement> getProgressResponseElements() {
+    public List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement> getProgressResponseElements() {
         return progressResponseElements;
     }
 
-    public void setProgressResponseElements(List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model.ProgressResponseElement> progressResponseElements) {
+    public void setProgressResponseElements(List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement> progressResponseElements) {
         this.progressResponseElements = progressResponseElements;
     }
 
@@ -2400,4 +2465,59 @@ public class SharedSteps {
 
 
 
+    public RequestNewApiKey getRequestNewApiKey() {
+        return requestNewApiKey;
+    }
+
+    public void setRequestNewApiKey(RequestNewApiKey requestNewApiKey) {
+        this.requestNewApiKey = requestNewApiKey;
+    }
+
+    public ResponseNewApiKey getResponseNewApiKey() {
+        return responseNewApiKey;
+    }
+
+    public void setResponseNewApiKey(ResponseNewApiKey responseNewApiKey) {
+        this.responseNewApiKey = responseNewApiKey;
+    }
+
+    public StreamMetadataResponseV23 getEventStreamV23() {
+        return eventStreamV23;
+    }
+
+    public void setEventStreamV23(StreamMetadataResponseV23 eventStreamV23) {
+        this.eventStreamV23 = eventStreamV23;
+    }
+
+    public it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse getEventStream() {
+        return eventStream;
+    }
+
+    public void setEventStream(it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse eventStream) {
+        this.eventStream = eventStream;
+    }
+
+    public List<ProgressResponseElementV23> getProgressResponseElementsV23() {
+        return progressResponseElementsV23;
+    }
+
+    public void setProgressResponseElementsV23(List<ProgressResponseElementV23> progressResponseElementsV23) {
+        this.progressResponseElementsV23 = progressResponseElementsV23;
+    }
+
+    public TimelineElementV23 getTimelineElementV23() {
+        return timelineElementV23;
+    }
+
+    public void setTimelineElementV23(TimelineElementV23 timelineElement) {
+        this.timelineElementV23 = timelineElement;
+    }
+
+    public ProgressResponseElementV23 getProgressResponseElementV23() {
+        return progressResponseElementV23;
+    }
+
+    public void setProgressResponseElementV23(ProgressResponseElementV23 progressResponseElement) {
+        this.progressResponseElementV23 = progressResponseElement;
+    }
 }

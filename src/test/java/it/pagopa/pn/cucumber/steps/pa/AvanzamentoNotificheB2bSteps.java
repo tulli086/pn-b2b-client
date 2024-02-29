@@ -460,6 +460,9 @@ public class AvanzamentoNotificheB2bSteps {
             case "NOTIFICATION_CANCELLED":
                 timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLED, 5, waiting * 3);
                 break;
+            case "NOTIFICATION_RADD_RETRIEVED":
+                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_RADD_RETRIEVED, 5, waiting * 3);
+                break;
             default:
                 throw new IllegalArgumentException();
         }
@@ -1003,6 +1006,7 @@ public class AvanzamentoNotificheB2bSteps {
         }
         try {
             Assertions.assertNotNull(timelineElement);
+            sharedSteps.setTimelineElementV23(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -2405,16 +2409,14 @@ public class AvanzamentoNotificheB2bSteps {
     private void priceVerificationProcessCost(String price, String date, Integer destinatario) {
         NotificationProcessCostResponse notificationProcessCost = null;
         if (sharedSteps.getSentNotification().getNotificationFeePolicy().equals(NotificationFeePolicy.DELIVERY_MODE)) {
-            notificationProcessCost = this.b2bClient.getNotificationProcessCost(sharedSteps.getSentNotification().getIun(), destinatario, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy.DELIVERY_MODE, sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(0).getF24().getApplyCost(), sharedSteps.getSentNotification().getPaFee());
+            notificationProcessCost = this.b2bClient.getNotificationProcessCost(sharedSteps.getSentNotification().getIun(), destinatario, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy.DELIVERY_MODE, sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(0).getF24().getApplyCost(), sharedSteps.getSentNotification().getPaFee(), sharedSteps.getSentNotification().getVat());
         }else {
-            notificationProcessCost = this.b2bClient.getNotificationProcessCost(sharedSteps.getSentNotification().getIun(), destinatario, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy.FLAT_RATE, sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(0).getF24().getApplyCost(), sharedSteps.getSentNotification().getPaFee());
+            notificationProcessCost = this.b2bClient.getNotificationProcessCost(sharedSteps.getSentNotification().getIun(), destinatario, it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationFeePolicy.FLAT_RATE, sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(0).getF24().getApplyCost(), sharedSteps.getSentNotification().getPaFee(), sharedSteps.getSentNotification().getVat());
         }
         try {
             if (price != null) {
-                //TODO Modificare l'assertion
-
-                //logger.info("Costo notifica: {} destinatario: {}", notificationProcessCost.getAmount(), destinatario);
-                //Assertions.assertEquals(notificationProcessCost.getAmount(), Integer.parseInt(price));
+                logger.info("Costo notifica: {} destinatario: {}", notificationProcessCost.getAnalogCost(), destinatario);
+                Assertions.assertEquals(notificationProcessCost.getAnalogCost(), Integer.parseInt(price));
             }
             if (date != null) {
                 Assertions.assertNotNull(notificationProcessCost.getRefinementDate());
