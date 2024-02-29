@@ -630,20 +630,28 @@ public class RaddAltSteps {
             case "dopo 120gg" -> {
                 if(ambiente.equalsIgnoreCase("dev")){
                     if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
-                        vieneRichiestoIlCodiceQRPerLoIUN("KMNG-VHZH-QEMZ-202310-M-1",0);
+                        vieneRichiestoIlCodiceQRPerLoIUN("KMNG-VHZH-QEMZ-202310-M-1",destinatario);
                     } else {
-                        vieneRichiestoIlCodiceQRPerLoIUN("PYRW-NMEZ-TGPZ-202310-Z-1",0);
+                        vieneRichiestoIlCodiceQRPerLoIUN("PYRW-NMEZ-TGPZ-202310-Z-1",destinatario);
                     }
                 }else if(ambiente.equalsIgnoreCase("test")){
                     if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
-                        vieneRichiestoIlCodiceQRPerLoIUN("JEKU-RVGP-RZVJ-202402-A-1",0);
+                        vieneRichiestoIlCodiceQRPerLoIUN("JEKU-RVGP-RZVJ-202402-A-1",destinatario);
                     } else {
-                        vieneRichiestoIlCodiceQRPerLoIUN("ZHDG-DYJZ-HLGL-202402-T-1",0);
+                        vieneRichiestoIlCodiceQRPerLoIUN("ZHDG-DYJZ-HLGL-202402-T-1",destinatario);
                     }
                 }else if(ambiente.equalsIgnoreCase("uat")){
-                    vieneRichiestoIlCodiceQRPerLoIUN("",destinatario);
+                    if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
+                        vieneRichiestoIlCodiceQRPerLoIUN("QWRJ-AQWJ-AYXQ-202310-E-1",destinatario);
+                    } else {
+                        vieneRichiestoIlCodiceQRPerLoIUN("EUYX-VKYV-JTEY-202310-G-1",destinatario);
+                    }
                 }else if(ambiente.equalsIgnoreCase("hotfix")){
-                    vieneRichiestoIlCodiceQRPerLoIUN("",destinatario);
+                    if (this.currentUserCf.equalsIgnoreCase(sharedSteps.getMarioCucumberTaxID())) {
+                        vieneRichiestoIlCodiceQRPerLoIUN("ALRA-XJDQ-TGKY-202311-U-1",destinatario);
+                    } else {
+                        vieneRichiestoIlCodiceQRPerLoIUN("RNAR-LXTN-AVZU-202310-L-1",destinatario);
+                    }
                 }else{
                     throw new IllegalArgumentException();
                 }
