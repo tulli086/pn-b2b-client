@@ -463,3 +463,24 @@ Feature: avanzamento notifiche webhook b2b V23
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     Then vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "REFINEMENT" con versione V23 e apiKey aggiornata con position 0
     And Si verifica che l'elemento di timeline REFINEMENT abbia il timestamp uguale a quella presente nel webhook con la versione V23
+
+
+  @webhookV23 @cleanWebhook
+  Scenario: [B2B-STREAM_ES1.3_125_1] Consumo di uno stream notifica disabilitato senza gruppo, con eventType "STATUS"  utilizzando un apikey master (caso errato).
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Mario Gherkin
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "STATUS" con versione "V23"
+    And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
+    And viene impostata l'apikey appena generata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si crea il nuovo stream per il "Comune_1" con versione "V23"
+    And si disabilita lo stream V23 creato per il comune "Comune_1"
+    And l'operazione non ha prodotto errori
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+    When vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED" con versione V23 e apiKey aggiornata con position 1
+    Then non ci sono nuovi eventi nello stream
+    And viene modificato lo stato dell'apiKey in "BLOCK"
+    And l'apiKey viene cancellata
