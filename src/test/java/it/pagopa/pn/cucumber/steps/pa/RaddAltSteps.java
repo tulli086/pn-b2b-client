@@ -114,13 +114,17 @@ public class RaddAltSteps {
     public void lOperatoreUsoIUNPerRecuperariGliAttiDaIssuer(String tipologiaIun, String cf, String issuer) {
         changeRaddista(issuer);
         selectUserRaddAlternative(cf);
-        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(uid,
-                this.currentUserCf,
-                this.recipientType,
-                null,
-                tipologiaIun.equalsIgnoreCase("corretto") ? this.iun= sharedSteps.getIunVersionamento() :
-                        tipologiaIun.equalsIgnoreCase("errato") ? this.iun= "GLDZ-MGZD-AGAR-202402-Y-1" : null);
-
+        ActInquiryResponse actInquiryResponse = null;
+        try {
+            actInquiryResponse = raddAltClient.actInquiry(uid,
+                    this.currentUserCf,
+                    this.recipientType,
+                    null,
+                    tipologiaIun.equalsIgnoreCase("corretto") ? this.iun = sharedSteps.getIunVersionamento() :
+                            tipologiaIun.equalsIgnoreCase("errato") ? this.iun = "GLDZ-MGZD-AGAR-202402-Y-1" : null);
+        } catch (HttpStatusCodeException exception) {
+            sharedSteps.setNotificationError(exception);
+        }
         log.info("actInquiryResponse: {}", actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
     }
