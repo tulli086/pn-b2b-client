@@ -44,7 +44,8 @@ import java.util.List;
         PnServiceDeskClientImplWrongApiKey.class,
         PnGPDClientImpl.class,
         PnPaymentInfoClientImpl.class,
-        PnRaddFsuClientImpl.class
+        PnRaddFsuClientImpl.class,
+        PnRaddAlternativeClientImpl.class
 })
 @TestPropertySource(properties = {"spring.profiles.active=dev"})
 public class NewNotificationTest {
