@@ -898,28 +898,26 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Then("verifica non presenza di eventi nello stream del {string}")
     public void readStreamTimelineElementNotPresent(String pa) {
-        setPaWebhook(pa);
-        updateApiKeyForStream();
-        ResponseEntity<List<ProgressResponseElement>> listResponseEntity = webhookB2bClient.consumeEventStreamHttp(this.eventStreamList.get(0).getStreamId(), null);
-        List<ProgressResponseElement> progressResponseElements = listResponseEntity.getBody();
-        Assertions.assertNotNull(progressResponseElements);
-        Assertions.assertTrue(progressResponseElements.isEmpty());
-
+        verifyNotEventInStream(pa, V10);
     }
 
+    @Then("si verifica che non siano presenti eventi nello stream v23 del {string}")
+    public void readStreamTimelineElementNotPresentV23(String pa) {
+        verifyNotEventInStream(pa, V23);
+    }
 
-    @Then("non ci sono nuovi eventi nello stream  del {string} di timeline {string} con versione V23 e apiKey aggiornata con position {int}")
-    public void noyReadStreamTimelineElementNotFoundV23(String pa,String timelineEventCategory,Integer position)  {
-        readStreamTimelineElementV23(pa,timelineEventCategory, position,false);
+    private void verifyNotEventInStream(String pa, StreamVersion streamVersion){
+        setPaWebhook(pa);
+        updateApiKeyForStream();
+                switch (streamVersion){
+                    case V10 -> Assertions.assertTrue(webhookB2bClient.consumeEventStream(this.eventStreamList.get(0).getStreamId(), null).isEmpty());
+                    case V23,V10_V23 -> Assertions.assertTrue(webhookB2bClient.consumeEventStreamV23(this.eventStreamListV23.get(0).getStreamId(),null).isEmpty());
+
+                }
     }
 
     @Then("vengono letti gli eventi dello stream del {string} fino all'elemento di timeline {string} con versione V23 e apiKey aggiornata con position {int}")
-    public void readStreamTimelineElementFoundV23(String pa,String timelineEventCategory,Integer position) {
-        readStreamTimelineElementV23(pa,timelineEventCategory, position,true);
-    }
-
-
-    private void readStreamTimelineElementV23(String pa,String timelineEventCategory,Integer position, boolean found) {
+    public void readStreamTimelineElementV23(String pa,String timelineEventCategory,Integer position) {
         updateApiKeyForStream();
         setPaWebhook(pa);
 
@@ -940,9 +938,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
             }
             sleepTest();
         }
-        try {
-            if (found){
-                Assertions.assertNotNull(progressResponseElement);
+        try{
+            Assertions.assertNotNull(progressResponseElement);
             progressResponseElementResultV23 = progressResponseElement;
             //TODO Verificare...
             Assertions.assertEquals(progressResponseElement.getElement().getTimestamp().truncatedTo(ChronoUnit.SECONDS),
@@ -950,9 +947,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                             .filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny().get().getTimestamp().truncatedTo(ChronoUnit.SECONDS));
             log.info("EventProgress: " + progressResponseElement);
             sharedSteps.setProgressResponseElementV23(progressResponseElement);
-            }else {
-                Assertions.assertNull(progressResponseElement);
-            }
             //sharedSteps.getTimelineElementV23().getDetails();
         }catch(AssertionFailedError assertionFailedError){
             String message = assertionFailedError.getMessage()+
@@ -961,6 +955,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+    @Then("non ci sono nuovi eventi nello stream")
+    public void noyReadStreamTimelineElementV23() {
+        Assertions.assertNull(progressResponseElementResultV23);
+    }
 
 
 
@@ -1273,7 +1271,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 (this.notificationError.getStatusCode().toString().substring(0,3).equals(statusCode)) && (eventStreamList.size() == (requestNumber-1)));
     }
 
-    @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string} - ONLY FOR DEBUG")
+    @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string}")
     public void deleteAll(String pa,String versione) {
         setPaWebhook(pa);
         switch (versione) {
@@ -1307,10 +1305,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
 
     }
-    @Then("viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati V23 maggiore {int}")
-    public void vieneVerificatoCheIlProgressResponseElementIdDelWebhookSiaIncrementaleESenzaDuplicatiMaggioreMilleV23(int counterStart) {
-        vieneVerificatoCheIlProgressResponseElementIdDelWebhookSiaIncrementaleESenzaDuplicatiV23(counterStart);
-    }
+
     @Then("viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati V23")
     public void vieneVerificatoCheIlProgressResponseElementIdDelWebhookSiaIncrementaleESenzaDuplicatiV23() {
         vieneVerificatoCheIlProgressResponseElementIdDelWebhookSiaIncrementaleESenzaDuplicatiV23(0);
