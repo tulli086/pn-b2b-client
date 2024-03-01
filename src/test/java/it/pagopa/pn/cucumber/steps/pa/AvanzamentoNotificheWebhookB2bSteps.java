@@ -44,8 +44,7 @@ import java.util.*;
 
 
 import static it.pagopa.pn.client.b2b.pa.utils.WebhookSynchronizer.WEBHOOKSYNCHRONIZER;
-import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.V10;
-import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.V23;
+import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.*;
 
 @Slf4j
 public class AvanzamentoNotificheWebhookB2bSteps {
@@ -898,14 +897,24 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Then("verifica non presenza di eventi nello stream del {string}")
     public void readStreamTimelineElementNotPresent(String pa) {
+        verifyNotEventInStream(pa, V10);
+    }
+
+    @Then("si verifica che non siano presenti eventi nello stream v23 del {string}")
+    public void readStreamTimelineElementNotPresentV23(String pa) {
+        verifyNotEventInStream(pa, V23);
+    }
+
+    private void verifyNotEventInStream(String pa, StreamVersion streamVersion){
         setPaWebhook(pa);
         updateApiKeyForStream();
-        ResponseEntity<List<ProgressResponseElement>> listResponseEntity = webhookB2bClient.consumeEventStreamHttp(this.eventStreamList.get(0).getStreamId(), null);
-        List<ProgressResponseElement> progressResponseElements = listResponseEntity.getBody();
-        Assertions.assertNotNull(progressResponseElements);
-        Assertions.assertTrue(progressResponseElements.isEmpty());
+        switch (streamVersion){
+            case V10 -> Assertions.assertTrue(webhookB2bClient.consumeEventStream(this.eventStreamList.get(0).getStreamId(), null).isEmpty());
+            case V23,V10_V23 -> Assertions.assertTrue(webhookB2bClient.consumeEventStreamV23(this.eventStreamListV23.get(0).getStreamId(),null).isEmpty());
 
+        }
     }
+
 
 
     @Then("non ci sono nuovi eventi nello stream  del {string} di timeline {string} con versione V23 e apiKey aggiornata con position {int}")
@@ -961,6 +970,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
+    @Then("non ci sono nuovi eventi nello stream")
+    public void noyReadStreamTimelineElementV23() {
+        Assertions.assertNull(progressResponseElementResultV23);
+    }
 
 
 
@@ -1273,7 +1286,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 (this.notificationError.getStatusCode().toString().substring(0,3).equals(statusCode)) && (eventStreamList.size() == (requestNumber-1)));
     }
 
-    @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string} - ONLY FOR DEBUG")
+    @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string}")
     public void deleteAll(String pa,String versione) {
         setPaWebhook(pa);
         switch (versione) {
@@ -1653,7 +1666,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
                 }
                 case V23 -> {
-                    if(!forced)acquireStreamCreationSlotInternal(pa,streamCreationRequestListV23.size());
+                    //if(!forced)acquireStreamCreationSlotInternal(pa,streamCreationRequestListV23.size());
                     for(StreamCreationRequestV23 request: streamCreationRequestListV23) {
                         createStreamInternalV23(request,filteredValues, listGroups, replaceId, pa, streamVersion, forced);
                     }
@@ -1712,7 +1725,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         } catch (HttpStatusCodeException e) {
             this.notificationError = e;
             sharedSteps.setNotificationError(e);
+            if(!forced)throw e;
         }
+        if(!webhookTestLaunch)webhookTestLaunch = true;
+
     }
 
 
