@@ -1259,7 +1259,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 (this.notificationError.getStatusCode().toString().substring(0,3).equals(statusCode)) && (eventStreamList.size() == (requestNumber-1)));
     }
 
-    @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string} - ONLY FOR DEBUG")
+    @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string}")
     public void deleteAll(String pa,String versione) {
         setPaWebhook(pa);
         switch (versione) {
