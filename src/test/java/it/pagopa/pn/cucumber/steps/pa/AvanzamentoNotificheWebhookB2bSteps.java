@@ -1653,74 +1653,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
                 }
                 case V23 -> {
-
-                    if(this.eventStreamListV23 == null)this.eventStreamListV23 = new LinkedList<>();
                     if(!forced)acquireStreamCreationSlotInternal(pa,streamCreationRequestListV23.size());
-
-                    for(StreamCreationRequestV23 request: streamCreationRequestListV23){
-                        if (filteredValues!= null && !filteredValues.isEmpty()){
-                            request.setFilterValues(filteredValues);
-                        }
-                        if(listGroups != null){
-                            request.setGroups(listGroups);
-                        }
-                        if (replaceId){
-                            request.setReplacedStreamId(sharedSteps.getEventStreamV23().getStreamId());
-                        }
-                        try {
-                            StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
-                            if (replaceId) {
-                                StreamMetadataResponseV23 eventStreamV23 =
-                                        webhookB2bClient.getEventStreamV23(this.eventStreamListV23.get(0).getStreamId());
-                                sharedSteps.setEventStreamV23(eventStreamV23);
-                                Assertions.assertNotNull(eventStreamV23);
-                                Assertions.assertNotNull(eventStreamV23.getStreamId());
-                                Assertions.assertNotNull(eventStreamV23.getDisabledDate());
-                                log.info("EVENTSTREAM REPLACED: {}", eventStreamV23);
-
-                                this.eventStreamListV23 = new LinkedList<>();
-                            }
-                            this.eventStreamListV23.add(eventStream);
-                            addStreamId(pa, eventStream.getStreamId(), streamVersion);
-
-                        } catch (HttpStatusCodeException e) {
-                            this.notificationError = e;
-                            sharedSteps.setNotificationError(e);
-                        }
+                    for(StreamCreationRequestV23 request: streamCreationRequestListV23) {
+                        createStreamInternalV23(request,filteredValues, listGroups, replaceId, pa, streamVersion, forced);
                     }
                 }
                 case V10_V23 -> {
-                    if (this.eventStreamListV23 == null) this.eventStreamListV23 = new LinkedList<>();
-
-                    StreamCreationRequestV23 request = new StreamCreationRequestV23();
-                    if (filteredValues != null && !filteredValues.isEmpty()) {
-                        request.setFilterValues(filteredValues);
-                    }
-                    if (listGroups != null) {
-                        request.setGroups(listGroups);
-                    }
-
-                    if (replaceId) {
-                        request.setReplacedStreamId(sharedSteps.getEventStream().getStreamId());
-                    }
-                    try {
-                        StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
-
-                        if (replaceId) {
-                            StreamMetadataResponseV23 eventStreamV23 = Assertions.assertDoesNotThrow(() ->
-                                    webhookB2bClient.getEventStreamV23(this.eventStreamList.get(0).getStreamId()));
-                            sharedSteps.setEventStreamV23(eventStreamV23);
-                            Assertions.assertNotNull(eventStreamV23);
-                            Assertions.assertNotNull(eventStreamV23.getStreamId());
-                            Assertions.assertNotNull(eventStreamV23.getDisabledDate());
-                            log.info("EVENTSTREAM REPLACED: {}", eventStreamV23);
-                        }
-                        this.eventStreamListV23.add(eventStream);
-                        addStreamId(pa, eventStream.getStreamId(), streamVersion);
-                    } catch (HttpStatusCodeException e) {
-                        this.notificationError = e;
-                        sharedSteps.setNotificationError(e);
-                    }
+                        createStreamInternalV23(null,filteredValues, listGroups, replaceId, pa, streamVersion, forced);
                 }
             }
         }catch (HttpStatusCodeException e) {
@@ -1732,6 +1671,48 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         if(!webhookTestLaunch)webhookTestLaunch = true;
 
+    }
+
+    private void createStreamInternalV23(StreamCreationRequestV23 request ,List<String> filteredValues,List<String> listGroups, boolean replaceId, String pa, StreamVersion streamVersion, boolean forced){
+
+        if(this.eventStreamListV23 == null)this.eventStreamListV23 = new LinkedList<>();
+
+
+        if (request==null)  request = new StreamCreationRequestV23();
+
+        if (filteredValues != null && !filteredValues.isEmpty()) {
+            request.setFilterValues(filteredValues);
+        }
+        if (listGroups != null) {
+            request.setGroups(listGroups);
+        }
+
+        if (replaceId) {
+            request.setReplacedStreamId(sharedSteps.getEventStream().getStreamId());
+        }
+        try {
+            StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
+
+            if (replaceId) {
+                UUID streamId = null;
+                switch (streamVersion) {
+                    case V23 -> {
+                        streamId = this.eventStreamListV23.get(0).getStreamId();
+                    }
+                    case V10_V23 -> {
+                        streamId = this.eventStreamList.get(0).getStreamId();
+                    }
+                }
+                auditLogCreateStreamReplaced(streamId);
+            }
+
+            this.eventStreamListV23.add(eventStream);
+            addStreamId(pa, eventStream.getStreamId(), streamVersion);
+
+        } catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
+        }
     }
 
 
