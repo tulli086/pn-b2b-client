@@ -894,15 +894,23 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Then("verifica non presenza di eventi nello stream del {string}")
     public void readStreamTimelineElementNotPresent(String pa) {
-        setPaWebhook(pa);
-        updateApiKeyForStream();
-        ResponseEntity<List<ProgressResponseElement>> listResponseEntity = webhookB2bClient.consumeEventStreamHttp(this.eventStreamList.get(0).getStreamId(), null);
-        List<ProgressResponseElement> progressResponseElements = listResponseEntity.getBody();
-        Assertions.assertNotNull(progressResponseElements);
-        Assertions.assertTrue(progressResponseElements.isEmpty());
-
+        verifyNotEventInStream(pa, V10);
     }
 
+    @Then("si verifica che non siano presenti eventi nello stream v23 del {string}")
+    public void readStreamTimelineElementNotPresentV23(String pa) {
+        verifyNotEventInStream(pa, V23);
+    }
+
+    private void verifyNotEventInStream(String pa, StreamVersion streamVersion){
+        setPaWebhook(pa);
+        updateApiKeyForStream();
+                switch (streamVersion){
+                    case V10 -> Assertions.assertTrue(webhookB2bClient.consumeEventStream(this.eventStreamList.get(0).getStreamId(), null).isEmpty());
+                    case V23,V10_V23 -> Assertions.assertTrue(webhookB2bClient.consumeEventStreamV23(this.eventStreamListV23.get(0).getStreamId(),null).isEmpty());
+
+                }
+    }
 
     @Then("vengono letti gli eventi dello stream del {string} fino all'elemento di timeline {string} con versione V23 e apiKey aggiornata con position {int}")
     public void readStreamTimelineElementV23(String pa,String timelineEventCategory,Integer position) {
@@ -1259,7 +1267,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 (this.notificationError.getStatusCode().toString().substring(0,3).equals(statusCode)) && (eventStreamList.size() == (requestNumber-1)));
     }
 
-    @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string} - ONLY FOR DEBUG")
+    @Given("vengono cancellati tutti gli stream presenti del {string} con versione {string}")
     public void deleteAll(String pa,String versione) {
         setPaWebhook(pa);
         switch (versione) {

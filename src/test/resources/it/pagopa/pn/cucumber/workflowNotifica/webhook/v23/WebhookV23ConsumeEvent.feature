@@ -7,7 +7,9 @@ Feature: avanzamento notifiche webhook b2b V23
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
-    And destinatario Mario Gherkin
+    And destinatario
+      | denomination  | Galileo galileo   |
+      | taxId         | GLLGLL64B15G702I  |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_1" senza gruppo
     And viene impostata l'apikey appena generata
@@ -83,9 +85,11 @@ Feature: avanzamento notifiche webhook b2b V23
   Scenario: [B2B-STREAM_ES1.3_128] Consumo di uno stream notifica con gruppo, con eventType "TIMELINE"  utilizzando un apikey master.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Verono            |
-    And destinatario Mario Gherkin e:
-      | payment | NULL |
+      | senderDenomination | Comune di Verona            |
+    And destinatario
+      | denomination  | Galileo galileo   |
+      | taxId         | GLLGLL64B15G702I  |
+      | payment       | NULL              |
     And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V23"
     And Viene creata una nuova apiKey per il comune "Comune_2" con il primo gruppo disponibile
     And viene impostata l'apikey appena generata
@@ -126,7 +130,7 @@ Feature: avanzamento notifiche webhook b2b V23
     And si disabilita lo stream V23 creato per il comune "Comune_2"
     And l'operazione non ha prodotto errori
     When la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
-    When vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "REQUEST_ACCEPTED" con la versione V23
+    When si verifica che non siano presenti eventi nello stream v23 del "Comune_2"
     Then non ci sono nuovi eventi nello stream
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
