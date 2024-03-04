@@ -319,30 +319,6 @@ Feature: avanzamento notifiche webhook b2b V23
      #And l'apiKey viene cancellata
 
 
- #SERVE INTEGRAZIONE CON RADD
-  @webhookV23 @cleanWebhook @ignore
-  Scenario: [B2B-STREAM_ES3.1_145] Creazione di uno stream senza gruppo con la V10 e  lettura di nuovi eventi di timeline con un apikey abilitata.
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo            |
-    And destinatario Mario Cucumber
-    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
-    And si crea il nuovo stream per il "Comune_1" con versione "V10" e filtro di timeline "NOTIFICATION_RADD_RETRIEVED"
-    And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V10"
-    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-    And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    And la scansione si conclude correttamente su radd alternative
-    And vengono caricati i documento di identità del cittadino su radd alternative
-    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
-    And l'operazione di download degli atti si conclude correttamente su radd alternative
-    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
-    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
-    Then verifica non presenza di eventi nello stream del "Comune_1"
-     #And viene modificato lo stato dell'apiKey in "BLOCK" per il "Comune_1"
-     #And l'apiKey viene cancellata
-
 
 
 
