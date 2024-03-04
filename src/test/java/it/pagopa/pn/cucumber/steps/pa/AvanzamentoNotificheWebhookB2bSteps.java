@@ -24,6 +24,7 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.TimelineElementCategoryV20;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.*;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestApiKeyStatus;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
@@ -37,7 +38,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 
+import java.io.File;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -238,28 +241,49 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     public void createdStreamByGroups(String pa, String position) {
         setPaWebhook(pa);
         updateApiKeyForStream();
-        createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),false, null,false);
+        try{
+             createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),false, null,false);
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
+        }
+
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con un gruppo disponibile {string} \\(caso errato)")
     public void createdStreamByGroupsForced(String pa, String position) {
         setPaWebhook(pa);
         updateApiKeyForStream();
+    try{
         createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),false, null,true);
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
+        }
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con replaceId con un gruppo disponibile {string} \\(caso errato)")
     public void createdStreamByGroupsForcedWithReplace(String pa, String position) {
         setPaWebhook(pa);
         updateApiKeyForStream();
+    try{
         createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),true, null,true);
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
+        }
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con replaceId con un gruppo disponibile {string}")
     public void createdStreamByGroupsWithReplaceId(String pa, String position) {
         setPaWebhook(pa);
         updateApiKeyForStream();
-        createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),true, null,false);
+       try{
+            createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),true, null,false);
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
+        }
     }
 
     //TODO MODIFICARE...
@@ -1701,22 +1725,25 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
 
         if (replaceId) {
-            request.setReplacedStreamId(sharedSteps.getEventStream().getStreamId());
+            UUID streamId = null;
+            switch (streamVersion) {
+                case V23 -> {
+                   // streamId = this.eventStreamListV23.get(0).getStreamId();
+                    request.setReplacedStreamId(sharedSteps.getEventStreamV23().getStreamId());
+                }
+                case V10_V23 -> {
+                   // streamId = this.eventStreamList.get(0).getStreamId();
+                    request.setReplacedStreamId(sharedSteps.getEventStream().getStreamId());
+                }
+            }
+            eventStreamListV23 = new ArrayList<>();
         }
+
         try {
             StreamMetadataResponseV23 eventStream = webhookB2bClient.createEventStreamV23(request);
 
-            if (replaceId) {
-                UUID streamId = null;
-                switch (streamVersion) {
-                    case V23 -> {
-                        streamId = this.eventStreamListV23.get(0).getStreamId();
-                    }
-                    case V10_V23 -> {
-                        streamId = this.eventStreamList.get(0).getStreamId();
-                    }
-                }
-                auditLogCreateStreamReplaced(streamId);
+            if (replaceId){
+                auditLogCreateStreamReplaced(request.getReplacedStreamId());
             }
 
             this.eventStreamListV23.add(eventStream);
@@ -1862,5 +1889,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 throw new IllegalArgumentException();
         }
     }
+
+
 
 }

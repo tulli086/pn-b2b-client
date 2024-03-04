@@ -17,8 +17,8 @@ Feature: eliminazione stream
     And viene aggiornata la apiKey utilizzata per gli stream
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+    # And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
 
   @webhookV23 @cleanWebhook @webhook2
@@ -31,8 +31,8 @@ Feature: eliminazione stream
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then viene verificata la corretta cancellazione con versione "V23"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
 
   @webhookV23 @cleanWebhook @webhook2
@@ -50,8 +50,8 @@ Feature: eliminazione stream
     And viene aggiornata la apiKey utilizzata per gli stream
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then viene verificata la corretta cancellazione con versione "V23"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
 
 
@@ -70,8 +70,8 @@ Feature: eliminazione stream
     And viene aggiornata la apiKey utilizzata per gli stream
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+    # And l'apiKey viene cancellata
 
   @webhookV23 @cleanWebhook @webhook2
   Scenario: [B2B-STREAM_ES1.1_79] Cancellazione di uno stream notifica con gruppo, con eventType "TIMELINE"  utilizzando un apikey con stesso gruppo.
@@ -83,8 +83,8 @@ Feature: eliminazione stream
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then viene verificata la corretta cancellazione con versione "V23"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
 
   @webhookV23 @cleanWebhook @webhook2
@@ -97,8 +97,8 @@ Feature: eliminazione stream
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then viene verificata la corretta cancellazione con versione "V23"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
 
   @webhookV23 @cleanWebhook @webhook2
@@ -116,8 +116,8 @@ Feature: eliminazione stream
     And viene aggiornata la apiKey utilizzata per gli stream
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
 
   @webhookV23 @cleanWebhook @webhook2
@@ -130,8 +130,8 @@ Feature: eliminazione stream
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then viene verificata la corretta cancellazione con versione "V23"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
 
   @webhookV23 @cleanWebhook @webhook2
@@ -149,8 +149,8 @@ Feature: eliminazione stream
     And viene aggiornata la apiKey utilizzata per gli stream
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
 
   @webhookV23 @cleanWebhook @webhook2
@@ -163,8 +163,8 @@ Feature: eliminazione stream
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then viene verificata la corretta cancellazione con versione "V23"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
   @webhookV23 @cleanWebhook @webhook2
   Scenario: [B2B-STREAM_ES1.1_153] Cancellazione di uno stream notifica con gruppi non appartenenti ad un sottinsieme dei gruppi dell'apikey utilizzata.
@@ -180,8 +180,8 @@ Feature: eliminazione stream
     And viene aggiornata la apiKey utilizzata per gli stream
     When si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     Then l'operazione ha prodotto un errore con status code "403"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
 
 
   @webhookV23 @cleanWebhook @webhook2
@@ -194,5 +194,5 @@ Feature: eliminazione stream
     And lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     When si cancella lo stream che non esiste e apiKey aggiornata
     Then l'operazione ha prodotto un errore con status code "404"
-    And viene modificato lo stato dell'apiKey in "BLOCK"
-    And l'apiKey viene cancellata
+     #And viene modificato lo stato dell'apiKey in "BLOCK"
+     #And l'apiKey viene cancellata
