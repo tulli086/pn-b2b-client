@@ -1,5 +1,8 @@
 Feature: invio notifiche b2b
 
+  Scenario: test funzionalità
+    Given si testa il polling
+
   @B2Btest @SmokeTest @testLite
   Scenario: [B2B-PA-SEND_1] Invio notifica digitale mono destinatario e recupero tramite codice IUN (p.fisica)_scenario positivo
     Given viene generata una nuova notifica

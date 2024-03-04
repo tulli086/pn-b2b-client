@@ -2,6 +2,10 @@ package it.pagopa.pn.cucumber.steps;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
+import it.pagopa.pn.client.b2b.pa.service.PollingFactory;
+import it.pagopa.pn.client.b2b.pa.service.PollingService;
+import it.pagopa.pn.client.b2b.pa.service.PollingServiceSlow;
+import it.pagopa.pn.client.b2b.pa.service.PollingStrategyRepid;
 import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.springconfig.ApiKeysConfiguration;
@@ -39,7 +43,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnGPDClientImpl.class,
         PnPaymentInfoClientImpl.class,
         PnRaddFsuClientImpl.class,
-        PnRaddAlternativeClientImpl.class
+        PnRaddAlternativeClientImpl.class,
+        PollingFactory.class,
+        PollingServiceSlow.class,
+        PollingStrategyRepid.class
 })
 @EnableScheduling
 public class CucumberSpringIntegration {

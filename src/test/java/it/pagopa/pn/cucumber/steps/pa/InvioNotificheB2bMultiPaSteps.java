@@ -1,11 +1,14 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.FullSentNotificationV21;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.FullSentNotificationV23;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
+import it.pagopa.pn.client.b2b.pa.service.PollingFactory;
+import it.pagopa.pn.client.b2b.pa.service.PollingStrategy;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
@@ -29,14 +32,22 @@ public class InvioNotificheB2bMultiPaSteps {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private final PollingFactory pollingFactory;
     @Autowired
-    public InvioNotificheB2bMultiPaSteps(SharedSteps sharedSteps) {
+    public InvioNotificheB2bMultiPaSteps(SharedSteps sharedSteps, PollingFactory pollingFactory) {
         this.sharedSteps = sharedSteps;
         this.b2bUtils = this.sharedSteps.getB2bUtils();
         this.b2bClient = this.sharedSteps.getB2bClient();
         this.webPaClient = sharedSteps.getWebPaClient();
+
+        this.pollingFactory = pollingFactory;
     }
 
+
+    @Given("si testa il polling")
+    public void siTestaIlPolling() {
+        pollingFactory.execute(PollingStrategy.RAPID_NEW_VERSION);
+    }
 
     @Then("la notifica può essere correttamente recuperata dal sistema tramite codice IUN dalla PA {string}")
     public void notificationCanBeRetrievedWithIUNByPA(String paType) {
@@ -87,6 +98,7 @@ public class InvioNotificheB2bMultiPaSteps {
         Assertions.assertTrue((httpStatusCodeException != null) &&
                 (httpStatusCodeException.getStatusCode().toString().substring(0,3).equals(statusCode)));
     }
+
 
 
 }

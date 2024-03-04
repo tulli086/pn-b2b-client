@@ -91,7 +91,8 @@ public class TimingForTimeline {
         CANCELLED(10,0);
 
 
-        private int numCheck,waitingMultiplier;
+        private final int numCheck;
+        private final int waitingMultiplier;
 
         Element(int numCheck, int waitingMultiplier){
             this.numCheck = numCheck;
