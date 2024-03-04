@@ -67,8 +67,8 @@ Feature: avanzamento notifiche webhook b2b V23
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi dello stream del "Comune_1" fino allo stato "ACCEPTED" con la versione V23
     And vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED" con la versione V23
-    And viene modificato lo stato dell'apiKey in "BLOCK" per il "Comune_1"
-    And l'apiKey viene cancellata
+    #And viene modificato lo stato dell'apiKey in "BLOCK" per il "Comune_1"
+    #And l'apiKey viene cancellata
 
   @webhookV23 @cleanWebhook @webhook1
   Scenario: [B2B-STREAM_ES1.1_158] Consumo di uno stream notifica con gruppi appartenenti ad un sottinsieme dei gruppi dell'apikey utilizzata.
