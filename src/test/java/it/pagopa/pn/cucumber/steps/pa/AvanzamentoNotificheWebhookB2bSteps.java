@@ -221,20 +221,35 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} e filtro di timeline {string}")
     public void createdStreamByFilterValue(String pa,String version,String filter) {
         setPaWebhook(pa);
-        createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, List.of(filter),false);
+        try{
+            createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, List.of(filter),false);
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
+        }
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string}")
     public void createdStream(String pa,String version) {
         setPaWebhook(pa);
         updateApiKeyForStream();
-        createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null,false);
+        try{
+            createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null,false);
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
+        }
     }
 
     @And("si crea il nuovo stream per il {string} con versione {string} \\(caso errato)")
     public void siCreaIlNuovoStreamPerIlConVersioneFORZATOSoloPerCasoErrato(String pa, String version) {
         setPaWebhook(pa);
-        createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null,true);
+        try{
+            createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null,true);
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
+        }
     }
 
     @When("si crea(no) i(l) nuov(o)(i) stream V23 per il {string} con un gruppo disponibile {string}")
@@ -255,7 +270,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         setPaWebhook(pa);
         updateApiKeyForStream();
     try{
-        createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),false, null,true);
+            createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),false, null,true);
         }catch (HttpStatusCodeException e) {
             this.notificationError = e;
             sharedSteps.setNotificationError(e);
@@ -267,7 +282,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         setPaWebhook(pa);
         updateApiKeyForStream();
     try{
-        createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),true, null,true);
+            createStream(pa,StreamVersion.V23,getGruopForStream(position,pa),true, null,true);
         }catch (HttpStatusCodeException e) {
             this.notificationError = e;
             sharedSteps.setNotificationError(e);
@@ -291,7 +306,12 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     public void createdStreamByGroupsWithReplaceIdV10V23(String pa, String position) {
         setPaWebhook(pa);
         updateApiKeyForStream();
-        createStream(pa, StreamVersion.V10_V23, getGruopForStream(position, pa), true, null, false);
+        try{
+            createStream(pa, StreamVersion.V10_V23, getGruopForStream(position, pa), true, null, false);
+        }catch (HttpStatusCodeException e) {
+            this.notificationError = e;
+            sharedSteps.setNotificationError(e);
+        }
     }
 
     @When("viene aggiornata la apiKey utilizzata per gli stream")
