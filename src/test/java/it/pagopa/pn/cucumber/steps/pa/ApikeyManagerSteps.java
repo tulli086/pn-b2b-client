@@ -252,7 +252,7 @@ public class ApikeyManagerSteps {
     public void viene_creata_una_nuova_api_key_per_il_comune_senza_gruppo(String settedPa) {
         setBearerToken(settedPa);
 
-        requestNewApiKey = new RequestNewApiKey().name("CUCUMBER NO GROUP TEST TA");
+        requestNewApiKey = new RequestNewApiKey().name("CUCUMBER GROUP TEST TA");
         responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
         Assertions.assertDoesNotThrow(() -> responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey));
         Assertions.assertNotNull(responseNewApiKey);
