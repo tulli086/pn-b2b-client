@@ -3,6 +3,7 @@ package it.pagopa.pn.cucumber.steps;
 import io.cucumber.spring.CucumberContextConfiguration;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
+import it.pagopa.pn.client.b2b.pa.polling.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.ApiKeysConfiguration;
@@ -44,6 +45,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnRaddAlternativeClientImpl.class,
         TimingForTimeline.class,
         PnB2bClientTimingConfigs.class,
+        PnPollingFactory.class,
+        PnPollingServiceTimelineSlowOldVersion.class,
+        PnPollingServiceTimelineRapidNewVersion.class
 })
 @EnableScheduling
 @EnableConfigurationProperties

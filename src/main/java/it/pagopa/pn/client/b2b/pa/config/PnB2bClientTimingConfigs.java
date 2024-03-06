@@ -1,14 +1,16 @@
 package it.pagopa.pn.client.b2b.pa.config;
 
-
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 
 import java.time.Duration;
 
-@ConfigurationProperties( prefix = "pn.configuration", ignoreUnknownFields = false)
+
 @Data
+@Configuration
+@ConfigurationProperties( prefix = "pn.configuration", ignoreUnknownFields = false)
 public class PnB2bClientTimingConfigs {
 
     private Integer workflowWaitAcceptedMillis;
@@ -22,8 +24,4 @@ public class PnB2bClientTimingConfigs {
     private Duration secondNotificationWorkflowWaitingTime;
     private Duration waitingForReadCourtesyMessage;
     private Integer schedulingDeltaMillis;
-
-
-
-
 }
