@@ -11,7 +11,6 @@ Feature: invio notifiche e2e web PA
     And la notifica può essere correttamente recuperata dal sistema tramite codice IUN web PA
 
 
-
   @WebPAtest  @ignore
   Scenario: [WEB_PA-SEND_2] Invio notifica digitale senza pagamento e recupero tramite codice IUN web PA_scenario positivo
     Given viene generata una nuova notifica

@@ -24,6 +24,4 @@ public class PnB2bClientTimingConfigs {
     private Integer schedulingDeltaMillis;
 
 
-
-
 }
