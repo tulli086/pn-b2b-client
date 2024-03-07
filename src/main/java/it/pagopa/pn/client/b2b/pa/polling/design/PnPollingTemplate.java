@@ -8,13 +8,13 @@ import static org.awaitility.Awaitility.await;
 
 
 @Getter
-public abstract class PnPollingTemplate<T> implements IPnPollingService<T> {
+public abstract class PnPollingTemplate<PnPollingResponse> implements IPnPollingService<PnPollingResponse> {
     protected Integer atMost;
     protected Integer pollInterval;
     protected Integer pollDelay;
 
-    public abstract T waitForEvent(String iun, String value);
-    protected T initialize(String iun, String value) {
+    public abstract PnPollingResponse waitForEvent(String iun, String value);
+    protected PnPollingResponse initialize(String iun, String value) {
         return await()
         .atMost(getAtMost(), MILLISECONDS)
         .with()
@@ -24,6 +24,6 @@ public abstract class PnPollingTemplate<T> implements IPnPollingService<T> {
         .until(() -> getPollingResponse(iun, value), checkCondition(iun, value));
     }
 
-    protected abstract Predicate<T> checkCondition(String iun, String value);
-    protected abstract T getPollingResponse(String iun, String value);
+    protected abstract Predicate<PnPollingResponse> checkCondition(String iun, String value);
+    protected abstract PnPollingResponse getPollingResponse(String iun, String value);
 }
