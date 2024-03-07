@@ -1,4 +1,4 @@
-package it.pagopa.pn.client.b2b.pa.polling.config;
+package it.pagopa.pn.client.b2b.pa.polling.design;
 
 import it.pagopa.pn.client.b2b.pa.service.IPnPollingService;
 import lombok.Getter;
@@ -8,22 +8,22 @@ import static org.awaitility.Awaitility.await;
 
 
 @Getter
-public abstract class PnPnPollingTemplate<T> implements IPnPollingService<T> {
+public abstract class PnPollingTemplate<T> implements IPnPollingService<T> {
     protected Integer atMost;
     protected Integer pollInterval;
     protected Integer pollDelay;
 
-    public abstract T waitForEvent(String iun, String checkValue);
-    protected T initialize(String iun, String checkValue) {
+    public abstract T waitForEvent(String iun, String value);
+    protected T initialize(String iun, String value) {
         return await()
         .atMost(getAtMost(), MILLISECONDS)
         .with()
         .pollInterval(getPollInterval(), MILLISECONDS)
         .pollDelay(getPollDelay(), MILLISECONDS)
         .ignoreExceptions()
-        .until(() -> mapper(iun, checkValue), checkCondition(iun, checkValue));
+        .until(() -> getPollingResponse(iun, value), checkCondition(iun, value));
     }
 
-    protected abstract Predicate<T> checkCondition(String iun, String state);
-    protected abstract T mapper(String iun, String state);
+    protected abstract Predicate<T> checkCondition(String iun, String value);
+    protected abstract T getPollingResponse(String iun, String value);
 }

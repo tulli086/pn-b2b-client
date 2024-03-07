@@ -1,4 +1,4 @@
-package it.pagopa.pn.client.b2b.pa.polling.strategy;
+package it.pagopa.pn.client.b2b.pa.polling.design;
 
 
 public class PnPollingStrategy {
