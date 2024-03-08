@@ -5,6 +5,7 @@ import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponse;
 import org.springframework.stereotype.Service;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
@@ -23,7 +24,7 @@ public class PnPollingServiceTimelineSlowOldVersion extends PnPollingTemplate<Pn
     }
 
     @Override
-    protected PnPollingResponse<FullSentNotification> getPollingResponse(String iun, String value) {
+    protected Callable<PnPollingResponse<FullSentNotification>> getPollingResponse(String iun, String value) {
         return null;
     }
 }
