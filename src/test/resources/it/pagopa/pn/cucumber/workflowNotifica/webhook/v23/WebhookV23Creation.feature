@@ -20,8 +20,7 @@ Feature: verifica creazione stream
     Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V23"
     And si cancella lo stream creato per il "Comune_Multi" con versione "V23"
     And viene verificata la corretta cancellazione con versione "V23"
-    #And viene modificato lo stato dell'apiKey in "BLOCK" per il "Comune_Multi"
-    #And l'apiKey viene cancellata
+
 
   @webhookV23 @cleanWebhook @webhook2
   Scenario: [B2B-STREAM_ES1.1_2] Creazione per una PA di 11 nuovi stream notifica con eventType TIMELINE e senza gruppo.
