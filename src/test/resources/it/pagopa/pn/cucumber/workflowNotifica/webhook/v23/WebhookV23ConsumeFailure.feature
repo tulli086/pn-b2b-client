@@ -117,7 +117,7 @@ Feature: tentativo consumo stream
 #TODO RipoRtare i TEST NEL FILE FEATURE CORRETTO
   #DELETE
   @webhookV23 @cleanWebhook @webhook2
-  Scenario: [B2B-STREAM_ES1.1_123] Creazione di uno stream senza gruppo con la V10 e  cancellazione dello stesso utilzzando un apikey con gruppi.-PN-10218
+  Scenario: [B2B-STREAM_ES1.1_160] Creazione di uno stream senza gruppo con la V10 e  cancellazione dello stesso utilizzando un apikey con gruppi.-PN-10218
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
     And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
@@ -128,7 +128,7 @@ Feature: tentativo consumo stream
 
   #UPDATE
   @webhookV23 @cleanWebhook @webhook2
-  Scenario: [B2B-STREAM_ES1.5.141] Creazione di uno stream senza gruppo con la V10 e  aggiornamento dello stesso utilzzando un apikey con gruppi.-PN-10218
+  Scenario: [B2B-STREAM_ES1.5.161] Creazione di uno stream senza gruppo con la V10 e  aggiornamento dello stesso utilizzando un apikey con gruppi.-PN-10218
     Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
     And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
@@ -139,7 +139,7 @@ Feature: tentativo consumo stream
 
   #CONSUME
   @webhookV23 @cleanWebhook @webhook1
-  Scenario: [B2B-STREAM_ES1.3_129] Creazione di uno stream senza gruppo con la V10 e  lettura Eventi di timeline o di cambio di stato con la versione V10 utilzzando un apikey con gruppi. -PN-10218.
+  Scenario: [B2B-STREAM_ES1.3_162] Creazione di uno stream senza gruppo con la V10 e  lettura Eventi di timeline o di cambio di stato con la versione V10 utilizzando un apikey con gruppi. -PN-10218.
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -154,7 +154,7 @@ Feature: tentativo consumo stream
 
   #SEARCH
   @webhookV23 @cleanWebhook @webhook2
-  Scenario: [B2B-STREAM_ES1.1_160] Creazione di uno stream senza gruppo con la V10 e recupero metadati utilzzando un apikey con gruppi. -PN-10218.
+  Scenario: [B2B-STREAM_ES1.1_163] Creazione di uno stream senza gruppo con la V10 e recupero metadati utilizzando un apikey con gruppi. -PN-10218.
     Given vengono cancellati tutti gli stream presenti del "Comune_Multi" con versione "V10"
     And si predispongono 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
     And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
