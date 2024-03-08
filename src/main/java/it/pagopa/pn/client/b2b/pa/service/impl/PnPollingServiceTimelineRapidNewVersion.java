@@ -8,7 +8,6 @@ import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponse;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionTimeoutException;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.Callable;
@@ -19,8 +18,7 @@ import java.util.function.Predicate;
 @Service(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION)
 public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<PnPollingResponse<FullSentNotificationV23>> {
     private final TimingForTimeline timingForTimeline;
-    private final PnPaB2bUtils pnPaB2bUtils;
-
+    private final PnPaB2bExternalClientImpl pnPaB2bExternalClient;
 
     @Override
     protected Predicate<PnPollingResponse<FullSentNotificationV23>> checkCondition(String iun, String value) {
@@ -50,32 +48,38 @@ public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<P
     }
 
     @Override
-    public Callable<PnPollingResponse<FullSentNotificationV23>> getPollingResponse(String iun, String value) {
+    public Callable<PnPollingResponse<FullSentNotificationV23>> getPollingResponse(String iun, String value, String apiKey) {
         return () -> {
             //Example use v2.3 for check
             PnPollingResponse<FullSentNotificationV23> pnPollingResponse = new PnPollingResponse<>();
-            FullSentNotificationV23 fullSentNotificationV23 = pnPaB2bUtils.getNotificationByIun(iun);
+            pnPaB2bExternalClient.setApiKey(apiKey);
+            FullSentNotificationV23 fullSentNotificationV23 = pnPaB2bExternalClient.getSentNotification(iun);
             pnPollingResponse.setPnGenericFullSentNotification(fullSentNotificationV23);
             return pnPollingResponse;
         };
     }
 
     @Override
-    public PnPollingResponse<FullSentNotificationV23> waitForEvent(String iun, String value) {
+    public PnPollingResponse<FullSentNotificationV23> waitForEvent(String iun, String value, String apiKey) {
         try{
-            return this.initialize(iun, value);
+            return super.waitForEvent(iun, value, apiKey);
         } catch (ConditionTimeoutException conditionTimeoutException) {
+            //Eseguo il catch nel caso in cui checkCondition() non ritornerà mai true
             PnPollingResponse<FullSentNotificationV23> pollingResponse = new PnPollingResponse<>();
             pollingResponse.setResult(false);
             return pollingResponse;
         }
     }
 
-    protected PnPollingResponse<FullSentNotificationV23> initialize(String iun, String value) {
+    @Override
+    protected Integer getAtMost(String value) {
         TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
-        super.pollDelay = 0;
-        super.atMost = timingResult.waiting() * timingResult.numCheck();
-        super.pollInterval = timingResult.waiting();
-        return super.initialize(iun, value);
+        return timingResult.waiting() * timingResult.numCheck();
+    }
+
+    @Override
+    protected Integer getPollInterval(String value) {
+        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
+        return timingResult.waiting();
     }
 }
