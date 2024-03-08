@@ -431,8 +431,16 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     public void updateStream (String versione) {
         switch (versione) {
             case "V10":
-                for(StreamMetadataResponse eventStream: eventStreamList){
-                    webhookB2bClient.updateEventStream(eventStream.getStreamId(),null);
+                try{
+                    for(StreamMetadataResponse eventStream: eventStreamList){
+                        StreamCreationRequest streamCreationRequest = new StreamCreationRequest();
+                        streamCreationRequest.setTitle("Stream Update V10");
+                        streamCreationRequest.setEventType(StreamCreationRequest.EventTypeEnum.TIMELINE);
+                        webhookB2bClient.updateEventStream(eventStream.getStreamId(),streamCreationRequest);
+                    }
+                }catch (HttpStatusCodeException e) {
+                    this.notificationError = e;
+                    sharedSteps.setNotificationError(e);
                 }
                 break;
             case "V23":

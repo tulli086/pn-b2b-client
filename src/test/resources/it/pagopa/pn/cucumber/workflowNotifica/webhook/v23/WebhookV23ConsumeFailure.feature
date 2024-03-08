@@ -112,3 +112,59 @@ Feature: tentativo consumo stream
     And viene impostata l'apikey appena generata
     When vengono letti gli eventi dello stream versione V23
     Then l'operazione ha prodotto un errore con status code "403"
+
+#-----------------------------------------------------------------------------------------------------------------
+#TODO RipoRtare i TEST NEL FILE FEATURE CORRETTO
+  #DELETE
+  @webhookV23 @cleanWebhook @webhook2
+  Scenario: [B2B-STREAM_ES1.1_123] Creazione di uno stream senza gruppo con la V10 e  cancellazione dello stesso utilzzando un apikey con gruppi.-PN-10218
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
+    And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
+    And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
+    And viene impostata l'apikey appena generata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si cancella lo stream creato per il "Comune_Multi" con versione "V10"
+    Then l'operazione non ha prodotto errori
+
+  #UPDATE
+  @webhookV23 @cleanWebhook @webhook2
+  Scenario: [B2B-STREAM_ES1.5.141] Creazione di uno stream senza gruppo con la V10 e  aggiornamento dello stesso utilzzando un apikey con gruppi.-PN-10218
+    Given si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
+    And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
+    And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
+    And viene impostata l'apikey appena generata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    And si aggiorna lo stream creato con versione "V10"
+    Then l'operazione non ha prodotto errori
+
+  #CONSUME
+  @webhookV23 @cleanWebhook @webhook1
+  Scenario: [B2B-STREAM_ES1.3_129] Creazione di uno stream senza gruppo con la V10 e  lettura Eventi di timeline o di cambio di stato con la versione V10 utilzzando un apikey con gruppi. -PN-10218.
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Mario Gherkin
+    And si predispone 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
+    And si crea il nuovo stream per il "Comune_1" con versione "V10"
+    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    And Viene creata una nuova apiKey per il comune "Comune_1" con il primo gruppo disponibile
+    And viene impostata l'apikey appena generata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    Then vengono letti gli eventi dello stream del "Comune_1" fino all'elemento di timeline "REQUEST_ACCEPTED"
+
+  #SEARCH
+  @webhookV23 @cleanWebhook @webhook2
+  Scenario: [B2B-STREAM_ES1.1_160] Creazione di uno stream senza gruppo con la V10 e recupero metadati utilzzando un apikey con gruppi. -PN-10218.
+    Given vengono cancellati tutti gli stream presenti del "Comune_Multi" con versione "V10"
+    And si predispongono 1 nuovo stream denominato "stream-test" con eventType "TIMELINE" con versione "V10"
+    And si crea il nuovo stream per il "Comune_Multi" con versione "V10"
+    And Viene creata una nuova apiKey per il comune "Comune_Multi" con il primo gruppo disponibile
+    And viene impostata l'apikey appena generata
+    And viene aggiornata la apiKey utilizzata per gli stream
+    Then lo stream è stato creato e viene correttamente recuperato dal sistema tramite stream id con versione "V10"
+
+
+
+
+
+
