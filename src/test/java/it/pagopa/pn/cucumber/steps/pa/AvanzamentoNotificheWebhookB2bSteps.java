@@ -403,9 +403,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         switch (versione) {
             case "V10":
                 try {
-                    streamCreationRequest = new StreamCreationRequest();
-                    streamCreationRequest.setTitle("Update Stream V10");
-                    streamCreationRequest.setEventType(StreamCreationRequest.EventTypeEnum.TIMELINE);
                     webhookB2bClient.updateEventStream(idStream, streamCreationRequest);
                 } catch (HttpStatusCodeException e) {
                     this.notificationError = e;
