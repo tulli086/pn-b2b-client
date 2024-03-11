@@ -8,17 +8,17 @@ import static org.awaitility.Awaitility.await;
 
 
 public abstract class PnPollingTemplate<PnPollingResponse> implements IPnPollingService<PnPollingResponse> {
-    public PnPollingResponse waitForEvent(String iun, String value, String apiKey) {
+    public PnPollingResponse waitForEvent(String iun, String value) {
         return await()
         .atMost(getAtMost(value), MILLISECONDS)
         .with()
         .pollInterval(getPollInterval(value), MILLISECONDS)
         .ignoreExceptions()
-        .until(getPollingResponse(iun, value, apiKey), checkCondition(iun, value));
+        .until(getPollingResponse(iun, value), checkCondition(iun, value));
     }
 
     protected abstract Predicate<PnPollingResponse> checkCondition(String iun, String value);
-    protected abstract Callable<PnPollingResponse> getPollingResponse(String iun, String value, String apiKey);
+    protected abstract Callable<PnPollingResponse> getPollingResponse(String iun, String value);
     protected abstract Integer getPollInterval(String value);
     protected abstract Integer getAtMost(String value);
 }

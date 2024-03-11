@@ -25,6 +25,6 @@ public class PnPollingFactory {
 
     public void execute(String pollingType, String iun, String checkValue, String apiKey) {
         IPnPollingService<?> iPnPollingService = pollingServiceMap.get(pollingType);
-        PnPollingResponse<?> pnPollingResponse = (PnPollingResponse<?>) iPnPollingService.waitForEvent(iun, checkValue, apiKey);
+        PnPollingResponse<?> pnPollingResponse = (PnPollingResponse<?>) iPnPollingService.waitForEvent(iun, checkValue);
     }
 }

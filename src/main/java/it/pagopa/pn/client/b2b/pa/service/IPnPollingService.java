@@ -1,6 +1,8 @@
 package it.pagopa.pn.client.b2b.pa.service;
 
 
-public interface IPnPollingService<PnPollingResponse> {
-    PnPollingResponse waitForEvent(String iun, String checkValue, String apiKey);
+import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
+
+public interface IPnPollingService<PnPollingResponse> extends SettableApiKey {
+    PnPollingResponse waitForEvent(String iun, String checkValue);
 }

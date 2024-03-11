@@ -48,11 +48,10 @@ public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<P
     }
 
     @Override
-    public Callable<PnPollingResponse<FullSentNotificationV23>> getPollingResponse(String iun, String value, String apiKey) {
+    public Callable<PnPollingResponse<FullSentNotificationV23>> getPollingResponse(String iun, String value) {
         return () -> {
             //Example use v2.3 for check
             PnPollingResponse<FullSentNotificationV23> pnPollingResponse = new PnPollingResponse<>();
-            pnPaB2bExternalClient.setApiKey(apiKey);
             FullSentNotificationV23 fullSentNotificationV23 = pnPaB2bExternalClient.getSentNotification(iun);
             pnPollingResponse.setPnGenericFullSentNotification(fullSentNotificationV23);
             return pnPollingResponse;
@@ -60,9 +59,9 @@ public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<P
     }
 
     @Override
-    public PnPollingResponse<FullSentNotificationV23> waitForEvent(String iun, String value, String apiKey) {
+    public PnPollingResponse<FullSentNotificationV23> waitForEvent(String iun, String value) {
         try{
-            return super.waitForEvent(iun, value, apiKey);
+            return super.waitForEvent(iun, value);
         } catch (ConditionTimeoutException conditionTimeoutException) {
             //Eseguo il catch nel caso in cui checkCondition() non ritornerà mai true
             PnPollingResponse<FullSentNotificationV23> pollingResponse = new PnPollingResponse<>();
@@ -81,5 +80,20 @@ public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<P
     protected Integer getPollInterval(String value) {
         TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
         return timingResult.waiting();
+    }
+
+    @Override
+    public boolean setApiKeys(ApiKeyType apiKey) {
+        return this.pnPaB2bExternalClient.setApiKeys(apiKey);
+    }
+
+    @Override
+    public void setApiKey(String apiKeyString) {
+        this.pnPaB2bExternalClient.setApiKey(apiKeyString);
+    }
+
+    @Override
+    public ApiKeyType getApiKeySetted() {
+        return this.pnPaB2bExternalClient.getApiKeySetted();
     }
 }

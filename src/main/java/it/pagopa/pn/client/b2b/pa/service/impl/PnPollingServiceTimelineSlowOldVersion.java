@@ -17,8 +17,8 @@ public class PnPollingServiceTimelineSlowOldVersion extends PnPollingTemplate<Pn
     private final TimingForTimeline timingForTimeline;
 
     @Override
-    public PnPollingResponse<FullSentNotification> waitForEvent(String iun, String value, String apiKey) {
-        return super.waitForEvent(iun, value, apiKey);
+    public PnPollingResponse<FullSentNotification> waitForEvent(String iun, String value) {
+        return super.waitForEvent(iun, value);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class PnPollingServiceTimelineSlowOldVersion extends PnPollingTemplate<Pn
     }
 
     @Override
-    protected Callable<PnPollingResponse<FullSentNotification>> getPollingResponse(String iun, String value, String apiKey) {
+    protected Callable<PnPollingResponse<FullSentNotification>> getPollingResponse(String iun, String value) {
         return null;
     }
 
@@ -42,5 +42,20 @@ public class PnPollingServiceTimelineSlowOldVersion extends PnPollingTemplate<Pn
     protected Integer getPollInterval(String value) {
         TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
         return timingResult.waiting();
+    }
+
+    @Override
+    public boolean setApiKeys(ApiKeyType apiKey) {
+        return false;
+    }
+
+    @Override
+    public void setApiKey(String apiKey) {
+
+    }
+
+    @Override
+    public ApiKeyType getApiKeySetted() {
+        return null;
     }
 }
