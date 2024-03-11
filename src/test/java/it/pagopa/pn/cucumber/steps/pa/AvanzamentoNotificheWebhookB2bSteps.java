@@ -403,6 +403,9 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         switch (versione) {
             case "V10":
                 try {
+                    streamCreationRequest = new StreamCreationRequest();
+                    streamCreationRequest.setTitle("Update Stream V10");
+                    streamCreationRequest.setEventType(StreamCreationRequest.EventTypeEnum.TIMELINE);
                     webhookB2bClient.updateEventStream(idStream, streamCreationRequest);
                 } catch (HttpStatusCodeException e) {
                     this.notificationError = e;
@@ -1378,8 +1381,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         Assertions.assertNotNull(progressResponseElements);
         boolean counterIncrement = true ;
         int lastEventID = SharedSteps.lastEventID;
-
-
         //logger.info("ELEMENTI NEL WEBHOOK LAST EVENT ID1: "+lastEventID);
         for(ProgressResponseElementV23 elem: progressResponseElements){
             if (lastEventID==0){
