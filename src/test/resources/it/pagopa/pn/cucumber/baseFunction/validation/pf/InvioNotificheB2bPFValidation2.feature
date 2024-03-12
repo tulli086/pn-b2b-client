@@ -647,3 +647,59 @@ Feature: Validazione campi invio notifiche b2b
       | Milano       | 90121    | MI       |
       | Milano       | 90121    | RM       |
 
+
+  @validation @realNormalizzatore
+  Scenario Outline: [B2B-PA-SEND_VALID_50] Controllo physicalAddress con caratteri del ISOLatin1
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Mario Gherkin e:
+      | physicalAddress_address | <address> |
+      | at | <at> |
+      | physicalAddress_addressDetails | <addressDetails> |
+      | physicalAddress_zip | <zip> |
+      | physicalAddress_municipality | <municipality> |
+      | physicalAddress_municipalityDetails | <municipalityDetails> |
+      | physicalAddress_province | <province> |
+      | physicalAddress_State | <foreignState> |
+    When la notifica viene inviata dal "Comune_1"
+    Then l'operazione ha prodotto un errore con status code "400"
+    Examples:
+      | at                                 | address                            | addressDetails                     | zip                                | municipality                       | municipalityDetails                | province                           | foreignState                       |
+      | ¤ß§¨°´¸ÁÂÄÇÍÎÓÔÖ×ÚÜÝáâäçéíîóôö÷úüý | FIUME                              | NULL                               | 97013                              | COMISO                             | NULL                               | RG                                 | FRANCIA                            |
+      | VIA                                | ¤ß§¨°´¸ÁÂÄÇÍÎÓÔÖ×ÚÜÝáâäçéíîóôö÷úüý | NULL                               | 97013                              | COMISO                             | NULL                               | RG                                 | FRANCIA                            |
+      | VIA                                | FIUME                              | ¤ß§¨°´¸ÁÂÄÇÍÎÓÔÖ×ÚÜÝáâäçéíîóôö÷úüý | 97013                              | COMISO                             | NULL                               | RG                                 | FRANCIA                            |
+      | VIA                                | FIUME                              | NULL                               | ¤ß§¨°´¸ÁÂÄÇÍÎÓÔÖ×ÚÜÝáâäçéíîóôö÷úüý | COMISO                             | NULL                               | RG                                 | FRANCIA                            |
+      | VIA                                | FIUME                              | NULL                               | 97013                              | ¤ß§¨°´¸ÁÂÄÇÍÎÓÔÖ×ÚÜÝáâäçéíîóôö÷úüý | NULL                               | RG                                 | FRANCIA                            |
+      | VIA                                | FIUME                              | NULL                               | 97013                              | COMISO                             | ¤ß§¨°´¸ÁÂÄÇÍÎÓÔÖ×ÚÜÝáâäçéíîóôö÷úüý | RG                                 | FRANCIA                            |
+      | VIA                                | FIUME                              | NULL                               | 97013                              | COMISO                             | NULL                               | ¤ß§¨°´¸ÁÂÄÇÍÎÓÔÖ×ÚÜÝáâäçéíîóôö÷úüý | FRANCIA                            |
+      | VIA                                | FIUME                              | NULL                               | 97013                              | COMISO                             | NULL                               | RG                                 | ¤ß§¨°´¸ÁÂÄÇÍÎÓÔÖ×ÚÜÝáâäçéíîóôö÷úüý |
+
+
+
+  @validation @realNormalizzatore
+  Scenario Outline: [B2B-PA-SEND_VALID_51] Controllo sul physicalAddress limite caratteri
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Mario Gherkin e:
+      | physicalAddress_address | <address> |
+      | at | <at> |
+      | physicalAddress_addressDetails | <addressDetails> |
+      | physicalAddress_zip | <zip> |
+      | physicalAddress_municipality | <municipality> |
+      | physicalAddress_municipalityDetails | <municipalityDetails> |
+      | physicalAddress_province | <province> |
+      | physicalAddress_State | <foreignState> |
+    When la notifica viene inviata dal "Comune_1"
+    Then l'operazione ha prodotto un errore con status code "400"
+    Examples:
+      | at                                                  | address                                             | addressDetails                                      | zip                                                 | municipality                                        | municipalityDetails                                 | province                                            | foreignState                                        |
+      | testo con una lunghezza piu del limite prestabilito | FIUME                                               | NULL                                                | 97013                                               | COMISO                                              | NULL                                                | RG                                                  | FRANCIA                                             |
+      | VIA                                                 | testo con una lunghezza piu del limite prestabilito | NULL                                                | 97013                                               | COMISO                                              | NULL                                                | RG                                                  | FRANCIA                                             |
+      | VIA                                                 | FIUME                                               | testo con una lunghezza piu del limite prestabilito | 97013                                               | COMISO                                              | NULL                                                | RG                                                  | FRANCIA                                             |
+      | VIA                                                 | FIUME                                               | NULL                                                | testo con una lunghezza piu del limite prestabilito | COMISO                                              | NULL                                                | RG                                                  | FRANCIA                                             |
+      | VIA                                                 | FIUME                                               | NULL                                                | 97013                                               | testo con una lunghezza piu del limite prestabilito | NULL                                                | RG                                                  | FRANCIA                                             |
+      | VIA                                                 | FIUME                                               | NULL                                                | 97013                                               | COMISO                                              | testo con una lunghezza piu del limite prestabilito | RG                                                  | FRANCIA                                             |
+      | VIA                                                 | FIUME                                               | NULL                                                | 97013                                               | COMISO                                              | NULL                                                | testo con una lunghezza piu del limite prestabilito | FRANCIA                                             |
+      | VIA                                                 | FIUME                                               | NULL                                                | 97013                                               | COMISO                                              | NULL                                                | RG                                                  | testo con una lunghezza piu del limite prestabilito |
