@@ -47,7 +47,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnB2bClientTimingConfigs.class,
         PnPollingFactory.class,
         PnPollingServiceTimelineSlowOldVersion.class,
-        PnPollingServiceTimelineRapidNewVersion.class
+        PnPollingServiceTimelineRapidNewVersion.class,
+        PnPollingServiceStateRapidNewVersion.class
 })
 @EnableScheduling
 @EnableConfigurationProperties
