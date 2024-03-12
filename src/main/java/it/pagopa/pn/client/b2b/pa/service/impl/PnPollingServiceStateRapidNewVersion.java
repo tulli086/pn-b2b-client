@@ -69,15 +69,13 @@ public class PnPollingServiceStateRapidNewVersion extends PnPollingTemplate<PnPo
     @Override
     protected Integer getPollInterval(String value) {
         TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
-//        return timingResult.waiting();
-        return 5000;
+        return timingResult.waiting();
     }
 
     @Override
     protected Integer getAtMost(String value) {
         TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
-//        return timingResult.waiting() * timingResult.numCheck();
-        return 15000;
+        return timingResult.waiting() * timingResult.numCheck();
     }
 
     @Override
