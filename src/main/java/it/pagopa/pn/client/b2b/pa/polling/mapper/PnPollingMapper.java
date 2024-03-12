@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class PnGenericFullSentNotificationMapper {
+public class PnPollingMapper {
     private final ModelMapper modelMapper;
 
-    public PnGenericFullSentNotificationMapper(ModelMapper modelMapper) {
+    public PnPollingMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 }

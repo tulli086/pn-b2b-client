@@ -23,8 +23,8 @@ public class PnPollingFactory {
         return IPnPollingService;
     }
 
-    public void execute(String pollingType, String iun, String checkValue, String apiKey) {
+    public void execute(String pollingType, String iun, String checkValue) {
         IPnPollingService<?> iPnPollingService = pollingServiceMap.get(pollingType);
-        PnPollingResponse<?> pnPollingResponse = (PnPollingResponse<?>) iPnPollingService.waitForEvent(iun, checkValue);
+        PnPollingResponse pnPollingResponse = iPnPollingService.waitForEvent(iun, checkValue);
     }
 }

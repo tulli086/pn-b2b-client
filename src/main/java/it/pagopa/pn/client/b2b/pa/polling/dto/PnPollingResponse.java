@@ -6,7 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PnPollingResponse<T> {
-    private T pnGenericFullSentNotification;
+public class PnPollingResponse {
     private Boolean result;
 }
