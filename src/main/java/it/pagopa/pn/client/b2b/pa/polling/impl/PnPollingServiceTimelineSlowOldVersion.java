@@ -1,47 +1,45 @@
-package it.pagopa.pn.client.b2b.pa.service.impl;
+package it.pagopa.pn.client.b2b.pa.polling.impl;
 
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.FullSentNotificationV23;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV23;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
-import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnPaB2bExternalClientImpl;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
-@Service(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION)
-public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<PnPollingResponseV23> {
+@Service(PnPollingStrategy.TIMELINE_SLOW_OLD_VERSION)
+public class PnPollingServiceTimelineSlowOldVersion extends PnPollingTemplate<PnPollingResponseV1> {
     private final TimingForTimeline timingForTimeline;
     private final PnPaB2bExternalClientImpl pnPaB2bExternalClient;
-    private FullSentNotificationV23 notificationV23;
+    private FullSentNotification notificationV1;
 
 
-    public PnPollingServiceTimelineRapidNewVersion(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
+    public PnPollingServiceTimelineSlowOldVersion(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
         this.timingForTimeline = timingForTimeline;
         this.pnPaB2bExternalClient = pnPaB2bExternalClient;
     }
 
-    @Override
-    public PnPollingResponseV23 waitForEvent(String iun, String value) {
-        return super.waitForEvent(iun, value);
-    }
 
     @Override
-    public Callable<PnPollingResponseV23> getPollingResponse(String iun, String value) {
+    protected Callable<PnPollingResponseV1> getPollingResponse(String iun, String value) {
         return () -> {
             //Example use v2.3 for check
-            PnPollingResponseV23 pnPollingResponse = new PnPollingResponseV23();
-            FullSentNotificationV23 fullSentNotificationV23 = pnPaB2bExternalClient.getSentNotification(iun);
-            pnPollingResponse.setNotification(fullSentNotificationV23);
-            this.notificationV23 = fullSentNotificationV23;
+            PnPollingResponseV1 pnPollingResponse = new PnPollingResponseV1();
+            FullSentNotification fullSentNotification = pnPaB2bExternalClient.getSentNotificationV1(iun);
+            pnPollingResponse.setNotification(fullSentNotification);
+            this.notificationV1 = fullSentNotification;
             return pnPollingResponse;
         };
     }
 
     @Override
-    protected Predicate<PnPollingResponseV23> checkCondition(String iun, String value) {
+    protected Predicate<PnPollingResponseV1> checkCondition(String iun, String value) {
+        //Example use v1 for check
         return (pnPollingResponse) -> {
             if(pnPollingResponse.getNotification() == null) {
                 pnPollingResponse.setResult(false);
@@ -59,9 +57,9 @@ public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<P
     }
 
     @Override
-    protected PnPollingResponseV23 getException(Exception exception) {
-        PnPollingResponseV23 pollingResponse = new PnPollingResponseV23();
-        pollingResponse.setNotification(this.notificationV23);
+    protected PnPollingResponseV1 getException(Exception exception) {
+        PnPollingResponseV1 pollingResponse = new PnPollingResponseV1();
+        pollingResponse.setNotification(this.notificationV1);
         pollingResponse.setResult(false);
         return pollingResponse;
     }
@@ -93,18 +91,18 @@ public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<P
         return this.pnPaB2bExternalClient.getApiKeySetted();
     }
 
-    private boolean isPresentCategory(PnPollingResponseV23 pnPollingResponse, String value) {
-        TimelineElementV23 timelineElementV23 = pnPollingResponse
+    private boolean isPresentCategory(PnPollingResponseV1 pnPollingResponse, String value) {
+        TimelineElement timelineElementV1 = pnPollingResponse
                 .getNotification()
                 .getTimeline()
                 .stream()
                 .filter(timelineElement -> timelineElement
-                                .getCategory()
-                                .getValue().equals(value))
+                        .getCategory()
+                        .getValue().equals(value))
                 .findAny()
                 .orElse(null);
 
-        if(timelineElementV23 == null) {
+        if(timelineElementV1 == null) {
             return false;
         }
 
