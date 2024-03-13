@@ -7,13 +7,11 @@ import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnPaB2bExternalClientImpl;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
-@Slf4j
 @Service(PnPollingStrategy.STATE_RAPID_NEW_VERSION)
 public class PnPollingServiceStateRapidNewVersion extends PnPollingTemplate<PnPollingResponseV23> {
     private final TimingForTimeline timingForTimeline;
@@ -29,7 +27,6 @@ public class PnPollingServiceStateRapidNewVersion extends PnPollingTemplate<PnPo
     @Override
     protected Callable<PnPollingResponseV23> getPollingResponse(String iun, String value) {
         return () -> {
-            //Example use v2.3 for check
             PnPollingResponseV23 pnPollingResponse = new PnPollingResponseV23();
             FullSentNotificationV23 fullSentNotificationV23 = pnPaB2bExternalClient.getSentNotification(iun);
             pnPollingResponse.setNotification(fullSentNotificationV23);
