@@ -102,10 +102,6 @@ public class PnPollingServiceTimelineSlowOldVersion extends PnPollingTemplate<Pn
                 .findAny()
                 .orElse(null);
 
-        if(timelineElementV1 == null) {
-            return false;
-        }
-
-        return true;
+        return timelineElementV1 != null;
     }
 }

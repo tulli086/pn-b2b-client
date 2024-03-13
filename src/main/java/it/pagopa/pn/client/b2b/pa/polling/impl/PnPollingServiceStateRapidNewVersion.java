@@ -1,6 +1,7 @@
 package it.pagopa.pn.client.b2b.pa.polling.impl;
 
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.FullSentNotificationV23;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatusHistoryElement;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
@@ -90,8 +91,14 @@ public class PnPollingServiceStateRapidNewVersion extends PnPollingTemplate<PnPo
     }
 
     private boolean isEqualState(PnPollingResponseV23 pnPollingResponse, String value) {
-        return pnPollingResponse.getNotification()
-                .getNotificationStatus()
-                .getValue().equals(value);
+         NotificationStatusHistoryElement notificationStatusHistoryElement = pnPollingResponse.getNotification()
+                .getNotificationStatusHistory()
+                .stream()
+                .filter(notification -> notification
+                        .getStatus()
+                        .getValue().equals(value))
+                .findAny()
+                .orElse(null);
+        return notificationStatusHistoryElement != null;
     }
 }
