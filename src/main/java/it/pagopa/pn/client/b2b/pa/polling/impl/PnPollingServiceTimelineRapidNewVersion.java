@@ -100,10 +100,6 @@ public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<P
                 .findAny()
                 .orElse(null);
 
-        if(timelineElementV23 == null) {
-            return false;
-        }
-
-        return true;
+        return timelineElementV23 != null;
     }
 }
