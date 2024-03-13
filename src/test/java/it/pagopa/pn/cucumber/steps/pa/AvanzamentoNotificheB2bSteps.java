@@ -53,11 +53,11 @@ public class AvanzamentoNotificheB2bSteps {
     private HttpStatusCodeException notificationError;
     @Value("${pn.external.costo_base_notifica}")
     private Integer costoBaseNotifica;
-    private final PnTimelineAndLegalFactV23 pnTimelineAndLegalFactV23;
+    private PnTimelineAndLegalFactV23 pnTimelineAndLegalFactV23;
 
     @Autowired
     public AvanzamentoNotificheB2bSteps(SharedSteps sharedSteps, IPnAppIOB2bClient appIOB2bClient,
-                                        IPnWebUserAttributesClient webUserAttributesClient, IPnIoUserAttributerExternaClient ioUserAttributerExternaClient, IPnPrivateDeliveryPushExternalClient pnPrivateDeliveryPushExternalClient, PnTimelineAndLegalFactV23 pnTimelineAndLegalFactV23) {
+                                        IPnWebUserAttributesClient webUserAttributesClient, IPnIoUserAttributerExternaClient ioUserAttributerExternaClient, IPnPrivateDeliveryPushExternalClient pnPrivateDeliveryPushExternalClient) {
         this.sharedSteps = sharedSteps;
         this.appIOB2bClient = appIOB2bClient;
         this.b2bClient = sharedSteps.getB2bClient();
@@ -66,7 +66,7 @@ public class AvanzamentoNotificheB2bSteps {
         this.ioUserAttributerExternaClient = ioUserAttributerExternaClient;
         this.pnPrivateDeliveryPushExternalClient = pnPrivateDeliveryPushExternalClient;
         this.externalClient = sharedSteps.getPnExternalServiceClient();
-        this.pnTimelineAndLegalFactV23 = pnTimelineAndLegalFactV23;
+        this.pnTimelineAndLegalFactV23 = new PnTimelineAndLegalFactV23();
     }
 
 
@@ -1918,7 +1918,7 @@ public class AvanzamentoNotificheB2bSteps {
                 if (deliveryDetailCode == null) {
                     timelineElement = element;
                     break;
-                } else if (deliveryDetailCode != null && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+                } else if (element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
                     timelineElement = element;
                     break;
                 }
@@ -2059,7 +2059,7 @@ public class AvanzamentoNotificheB2bSteps {
                 if (deliveryDetailCode == null) {
                     timelineElement = element;
                     break;
-                } else if (deliveryDetailCode != null && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+                } else if (element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
                     timelineElement = element;
                     break;
                 }
@@ -4115,7 +4115,7 @@ public class AvanzamentoNotificheB2bSteps {
                 if (deliveryDetailCode == null) {
                     timelineElement = element;
                     break;
-                } else if (deliveryDetailCode != null && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+                } else if (element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
                     timelineElement = element;
                     break;
                 }

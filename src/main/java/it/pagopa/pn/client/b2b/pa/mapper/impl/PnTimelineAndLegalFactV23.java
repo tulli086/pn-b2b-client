@@ -8,12 +8,6 @@ import it.pagopa.pn.client.b2b.pa.mapper.model.PnTimelineLegalFactV23;
 
 public class PnTimelineAndLegalFactV23 extends PnTimelineAndLegalfactTemplate<PnTimelineLegalFactV23> {
 
-    private final PnTimelineLegalFactV23 pnTimelineLegalFactV23;
-
-    public PnTimelineAndLegalFactV23(PnTimelineLegalFactV23 pnTimelineLegalFactV23) {
-        this.pnTimelineLegalFactV23 = pnTimelineLegalFactV23;
-    }
-
     public PnTimelineLegalFactV23 getCategory(String legalFactCategory) {
         TimelineElementCategoryV23 timelineElementInternalCategory;
         LegalFactCategory category;
@@ -48,7 +42,7 @@ public class PnTimelineAndLegalFactV23 extends PnTimelineAndLegalfactTemplate<Pn
             }
             default -> throw new IllegalArgumentException();
         }
-
+        PnTimelineLegalFactV23 pnTimelineLegalFactV23 = new PnTimelineLegalFactV23();
         pnTimelineLegalFactV23.setTimelineElementInternalCategory(timelineElementInternalCategory);
         pnTimelineLegalFactV23.setLegalFactCategory(category);
 
