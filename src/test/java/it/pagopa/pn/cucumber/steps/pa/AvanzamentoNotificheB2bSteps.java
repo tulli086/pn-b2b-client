@@ -10,7 +10,7 @@ import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidNewVersion;
-import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateSlowOldVersion;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidOldVersion;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.*;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
@@ -268,7 +268,7 @@ public class AvanzamentoNotificheB2bSteps {
     @Then("vengono letti gli eventi fino allo stato della notifica {string} V1")
     public void readingEventUpToTheStatusOfNotificationV1(String status) {
         if (sharedSteps.getSentNotificationV1() !=  null) {
-            PnPollingServiceStateSlowOldVersion slowOldVersion = (PnPollingServiceStateSlowOldVersion) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_SLOW_OLD_VERSION);
+            PnPollingServiceStateRapidOldVersion slowOldVersion = (PnPollingServiceStateRapidOldVersion) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_OLD_VERSION);
             PnPollingResponseV1 pnPollingResponseV1 = slowOldVersion.waitForEvent(sharedSteps.getSentNotificationV1().getIun(), status);
 
             Assertions.assertNotNull(pnPollingResponseV1);
@@ -283,7 +283,7 @@ public class AvanzamentoNotificheB2bSteps {
             }
         }
         else if (sharedSteps.getSentNotification() !=  null) {
-            PnPollingServiceStateSlowOldVersion slowOldVersion = (PnPollingServiceStateSlowOldVersion) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_SLOW_OLD_VERSION);
+            PnPollingServiceStateRapidOldVersion slowOldVersion = (PnPollingServiceStateRapidOldVersion) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_OLD_VERSION);
             PnPollingResponseV1 pnPollingResponseV1 = slowOldVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), status);
 
             Assertions.assertNotNull(pnPollingResponseV1);
