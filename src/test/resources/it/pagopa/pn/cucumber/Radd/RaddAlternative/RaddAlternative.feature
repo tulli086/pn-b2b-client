@@ -1403,7 +1403,8 @@ Feature: Radd Alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And L'operatore esegue il download del frontespizio del operazione "aor"
-    Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
+    And viene chiusa la transazione per il recupero degli aar su radd alternative
+    And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 
   @raddAlt @zip
@@ -1467,7 +1468,7 @@ Feature: Radd Alternative
       | details_deliveryDetailCode | RECAG001B |
 
 
-  @raddAlt
+  @raddAlt @uatEnvCondition
   Scenario: [RADD-ALT_ACT-82] Inserimento notifica indirizzata a PG con sequence OK_890_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1528,7 +1529,7 @@ Feature: Radd Alternative
       | details_deliveryDetailCode | RECRN001B |
 
 
-  @raddAlt @zip
+  @raddAlt @zip @uatEnvCondition
   Scenario: [RADD-ALT_ACT-85] Inserimento notifica indirizzata a PG con sequence OK_AR_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |

@@ -5,8 +5,9 @@ import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidNewVersion;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidOldVersion;
 import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceTimelineRapidNewVersion;
-import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceTimelineSlowOldVersion;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceTimelineRapidOldVersion;
 import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.ApiKeysConfiguration;
@@ -49,9 +50,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         TimingForTimeline.class,
         PnB2bClientTimingConfigs.class,
         PnPollingFactory.class,
-        PnPollingServiceTimelineSlowOldVersion.class,
+        PnPollingServiceTimelineRapidOldVersion.class,
         PnPollingServiceTimelineRapidNewVersion.class,
-        PnPollingServiceStateRapidNewVersion.class
+        PnPollingServiceStateRapidNewVersion.class,
+        PnPollingServiceStateRapidOldVersion.class
 })
 @EnableScheduling
 @EnableConfigurationProperties

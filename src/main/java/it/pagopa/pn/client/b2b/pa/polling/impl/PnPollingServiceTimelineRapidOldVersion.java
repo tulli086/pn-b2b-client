@@ -12,23 +12,21 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
-@Service(PnPollingStrategy.TIMELINE_SLOW_OLD_VERSION)
-public class PnPollingServiceTimelineSlowOldVersion extends PnPollingTemplate<PnPollingResponseV1> {
+@Service(PnPollingStrategy.TIMELINE_RAPID_OLD_VERSION)
+public class PnPollingServiceTimelineRapidOldVersion extends PnPollingTemplate<PnPollingResponseV1> {
     private final TimingForTimeline timingForTimeline;
     private final PnPaB2bExternalClientImpl pnPaB2bExternalClient;
     private FullSentNotification notificationV1;
 
 
-    public PnPollingServiceTimelineSlowOldVersion(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
+    public PnPollingServiceTimelineRapidOldVersion(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
         this.timingForTimeline = timingForTimeline;
         this.pnPaB2bExternalClient = pnPaB2bExternalClient;
     }
 
-
     @Override
     protected Callable<PnPollingResponseV1> getPollingResponse(String iun, String value) {
         return () -> {
-            //Example use v2.3 for check
             PnPollingResponseV1 pnPollingResponse = new PnPollingResponseV1();
             FullSentNotification fullSentNotification = pnPaB2bExternalClient.getSentNotificationV1(iun);
             pnPollingResponse.setNotification(fullSentNotification);
