@@ -11,6 +11,7 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidNewVersion;
 import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidOldVersion;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceTimelineRapidNewVersion;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.*;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
@@ -25,7 +26,6 @@ import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Base64Utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -37,7 +37,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static java.time.OffsetDateTime.now;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -160,7 +159,7 @@ public class AvanzamentoNotificheB2bSteps {
         try {
             PnPollingServiceStateRapidNewVersion rapidNewVersion = (PnPollingServiceStateRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_NEW_VERSION);
             PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), status);
-
+            System.out.println(pnPollingResponseV23);
             Assertions.assertNotNull(pnPollingResponseV23);
             Assertions.assertNotNull(pnPollingResponseV23.getNotification());
             Assertions.assertTrue(pnPollingResponseV23.getResult());
@@ -416,24 +415,24 @@ public class AvanzamentoNotificheB2bSteps {
         }
     }
 
-    private TimelineElementWait getTimelineElementCategoryShortAnnullamento(String timelineEventCategory) {
-        Integer waiting = sharedSteps.getWorkFlowWait();
-        TimelineElementWait timelineElementWait;
-        switch (timelineEventCategory) {
-            case "REQUEST_ACCEPTED":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.REQUEST_ACCEPTED, 2, waiting);
-                break;
-            case "NOTIFICATION_CANCELLATION_REQUEST":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLATION_REQUEST, 2, 11000);
-                break;
-            case "NOTIFICATION_CANCELLED":
-                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLED, 5, 11000 * 3);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-        return timelineElementWait;
-    }
+//    private TimelineElementWait getTimelineElementCategoryShortAnnullamento(String timelineEventCategory) {
+//        Integer waiting = sharedSteps.getWorkFlowWait();
+//        TimelineElementWait timelineElementWait;
+//        switch (timelineEventCategory) {
+//            case "REQUEST_ACCEPTED":
+//                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.REQUEST_ACCEPTED, 2, waiting);
+//                break;
+//            case "NOTIFICATION_CANCELLATION_REQUEST":
+//                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLATION_REQUEST, 2, 11000);
+//                break;
+//            case "NOTIFICATION_CANCELLED":
+//                timelineElementWait = new TimelineElementWait(TimelineElementCategoryV23.NOTIFICATION_CANCELLED, 5, 11000 * 3);
+//                break;
+//            default:
+//                throw new IllegalArgumentException();
+//        }
+//        return timelineElementWait;
+//    }
 
 
     private TimelineElementWait getTimelineElementCategory(String timelineEventCategory) {
@@ -950,21 +949,21 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica annullata {string}")
     public void readingEventUpToTheTimelineElementOfNotificationDelete(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategoryShortAnnullamento(timelineEventCategory);
-        readingEventUpToTheTimelineElementOfNotificationForCategory(timelineElementWait);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategoryShortAnnullamento(timelineEventCategory);
+        readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
     }
 
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string}")
     public void readingEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        readingEventUpToTheTimelineElementOfNotificationForCategory(timelineElementWait);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+        readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
     }
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} abbia notificationCost ugauale a {string}")
     public void TimelineElementOfNotification(String timelineEventCategory, String cost) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 event = readingEventUpToTheTimelineElementOfNotificationForCategory(timelineElementWait);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+        TimelineElementV23 event = readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
 
         Long notificationCost = event.getDetails().getNotificationCost();
 
@@ -1073,26 +1072,28 @@ public class AvanzamentoNotificheB2bSteps {
     }
 
 
-    public TimelineElementV23 readingEventUpToTheTimelineElementOfNotificationForCategory(TimelineElementWait timelineElementWait) {
+    public TimelineElementV23 readingEventUpToTheTimelineElementOfNotificationForCategory(String timelineEventCategory) {
 
-        TimelineElementV23 timelineElement = null;
-        String iun = null;
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+//        TimelineElementV23 timelineElement = null;
+//        String iun = null;
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getIunVersionamento()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+            TimelineElementV23 timelineElement = pnPollingResponseV23.getNotification()
+                    .getTimeline()
+                    .stream()
+                    .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                    .findAny()
+                    .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             sharedSteps.setTimelineElementV23(timelineElement);
@@ -1223,26 +1224,29 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene controllato che l'elemento di timeline della notifica {string} non esiste dopo il rifiuto della notifica stessa")
     public void readingNotEventUpToTheTimelineElementOfNotificationRefused(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(new String(Base64Utils.decodeFromString(this.sharedSteps.getNewNotificationResponse().getNotificationRequestId()))));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
 
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23.getNotification().getTimeline().stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
         try {
             Assertions.assertNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1252,26 +1256,30 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene controllato che l'elemento di timeline della notifica {string} non esiste")
     public void readingNotEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
 
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+            TimelineElementV23 timelineElement = pnPollingResponseV23.getNotification().getTimeline().stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).findAny().orElse(null);
+
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
         try {
             Assertions.assertNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1284,26 +1292,29 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} e successivamente annullata")
     public void readingEventUpToTheTimelineElementOfNotificationAndCancel(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
-
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
 
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23.getNotification().getTimeline().stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).findAny().orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertDoesNotThrow(() ->
@@ -1319,30 +1330,40 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con deliveryDetailCode {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCode(String timelineEventCategory, String deliveryDetailCode) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
 
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1352,31 +1373,42 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con deliveryDetailCode {string} tentativo {string}" )
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCode(String timelineEventCategory, String deliveryDetailCode, String attempt) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getElementId().contains(attempt) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getElementId().contains(attempt) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getElementId().contains(attempt)
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1387,30 +1419,41 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con deliveryDetailCode {string} e verifica data delay più {int}")
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCode(String timelineEventCategory, String deliveryDetailCode, int delay) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+//
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             //Assertions.assertNotNull(timelineElement.getDetails().getAttachments());
@@ -1430,42 +1473,55 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} e verifica data schedulingDate più {int}{string} per il destinatario {int}")
     public void readingEventUpToTheTimelineElementOfNotificationWithVerifySchedulingDate(String timelineEventCategory,  int delay, String tipoIncremento, int destinatario) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
-        OffsetDateTime digitalDeliveryCreationRequestDate = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
+//        OffsetDateTime digitalDeliveryCreationRequestDate = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-
-
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(destinatario)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+//
+//
+//
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(destinatario)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
         try {
 
             //RECUPERO Data DeliveryCreationRequest
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-                if (element.getCategory().getValue().equals("DIGITAL_DELIVERY_CREATION_REQUEST") && element.getDetails().getRecIndex().equals(destinatario)) {
-                    digitalDeliveryCreationRequestDate = element.getTimestamp();
-                    break;
-                }
-            }
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//                if (element.getCategory().getValue().equals("DIGITAL_DELIVERY_CREATION_REQUEST") && element.getDetails().getRecIndex().equals(destinatario)) {
+//                    digitalDeliveryCreationRequestDate = element.getTimestamp();
+//                    break;
+//                }
+//            }
+            TimelineElementV23 timelineElement = pnPollingResponseV23
+                    .getNotification()
+                    .getTimeline()
+                    .stream()
+                    .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                            && elem.getDetails().getRecIndex().equals(destinatario))
+                    .findAny()
+                    .orElse(null);
+
+            OffsetDateTime digitalDeliveryCreationRequestDate = timelineElement.getTimestamp();
 
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getSchedulingDate());
@@ -1486,30 +1542,41 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con deliveryDetailCode {string} e verifica tipo DOC {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCodeVerifyTypeDoc(String timelineEventCategory, String deliveryDetailCode, String tipoDoc) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode))
+                .findAny()
+                .orElse(null);
 
-            if (timelineElement != null) {
-                break;
-            }
-        }
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getAttachments());
@@ -1526,30 +1593,42 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con deliveryDetailCode {string} e verifica tipo DOC {string} tentativo {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCodeVerifyTypeDoc(String timelineEventCategory, String deliveryDetailCode, String tipoDoc,String attempt) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getElementId().contains(attempt) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode) && element.getDetails().getAttachments().get(0).getDocumentType().equals(tipoDoc)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getElementId().contains(attempt) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode) && element.getDetails().getAttachments().get(0).getDocumentType().equals(tipoDoc)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getElementId().contains(attempt)
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)
+                        && elem.getDetails().getAttachments().get(0).getDocumentType().equals(tipoDoc))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getAttachments());
@@ -1567,33 +1646,43 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con deliveryDetailCode {string} e deliveryFailureCause {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCodeDeliveryFailureCause(String timelineEventCategory, String deliveryDetailCode, String deliveryCause) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
-            Assertions.assertTrue(timelineElement.getDetails().getDeliveryFailureCause().equals(deliveryCause));
+            Assertions.assertEquals(timelineElement.getDetails().getDeliveryFailureCause(), deliveryCause);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -1602,35 +1691,46 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con deliveryDetailCode {string} e deliveryFailureCause {string} tentativo {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCodeDeliveryFailureCause(String timelineEventCategory, String deliveryDetailCode, String deliveryCause,String attempt) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
-
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory())  && element.getElementId().contains(attempt) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory())  && element.getElementId().contains(attempt) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getElementId().contains(attempt)
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
-            Assertions.assertTrue(timelineElement.getDetails().getDeliveryFailureCause().equals(deliveryCause));
+            Assertions.assertEquals(timelineElement.getDetails().getDeliveryFailureCause(), deliveryCause);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -1638,11 +1738,22 @@ public class AvanzamentoNotificheB2bSteps {
 
     @And("viene verificato il campo sendRequestId dell' evento di timeline {string}")
     public void vieneVerificatoCampoSendRequestIdEventoTimeline(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
 
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+
+//        TimelineElementV23 timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
 
         Assertions.assertNotNull(timelineElement);
         Assertions.assertNotNull(timelineElement.getDetails());
@@ -1656,7 +1767,10 @@ public class AvanzamentoNotificheB2bSteps {
 
     @And("viene verificato il campo serviceLevel dell' evento di timeline {string} sia valorizzato con {string}")
     public void vieneVerificatoCampoServiceLevelEventoTimeline(String timelineEventCategory, String value) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         ServiceLevel level;
         switch (value) {
@@ -1670,9 +1784,17 @@ public class AvanzamentoNotificheB2bSteps {
                 throw new IllegalArgumentException();
 
         }
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
 
-        TimelineElementV23 timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//        TimelineElementV23 timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
 
         System.out.println("TIMELINE_ELEMENT: " + timelineElement);
         Assertions.assertNotNull(timelineElement);
@@ -1682,26 +1804,37 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} per l'utente {int}")
     public void readingEventUpToTheTimelineElementOfNotificationPerUtente(String timelineEventCategory, Integer destinatario) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
-
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
 
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
-                break;
-            }
-        }
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(destinatario))
+                .findAny()
+                .orElse(null);
+
         try {
             Assertions.assertNotNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1712,21 +1845,31 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("esiste l'elemento di timeline della notifica {string} per l'utente {int}")
     public void verifyEventUpToTheTimelineElementOfNotificationPerUtente(String timelineEventCategory, Integer destinatario) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
-
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(destinatario))
+                .findAny()
+                .orElse(null);
 
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
-                break;
-            }
-        }
         try {
             Assertions.assertNotNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1737,33 +1880,44 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("non vengono letti gli eventi fino all'elemento di timeline della notifica {string} per l'utente {int}")
     public void notReadingEventUpToTheTimelineElementOfNotificationPerUtente(String timelineEventCategory, Integer destinatario) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-
-        TimelineElementV23 timelineElement = null;
-
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
         boolean pagamentoTrovato = false;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
 
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
-                pagamentoTrovato = true;
-                break;
-            }
+//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
+//                pagamentoTrovato = true;
+//                break;
+//            }
 
-        }
-        if (!pagamentoTrovato){
-            timelineElement = null;
-        }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(destinatario))
+                .findAny()
+                .orElse(null);
+
+//        if (!pagamentoTrovato){
+//            timelineElement = null;
+//        }
         try {
             Assertions.assertNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1773,26 +1927,36 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} verifica numero pagine AAR {int}")
     public void readingEventUpToTheTimelineElementOfNotificationPerVerificaNumPagine(String timelineEventCategory, Integer numPagine) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
-
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
 
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
+
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertEquals(timelineElement.getDetails().getNumberOfPages(), numPagine);
@@ -1803,17 +1967,28 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi e verificho che l'utente {int} non abbia associato un evento {string}")
     public void vengonoLettiGliEventiVerifichoCheUtenteNonAbbiaAssociatoEvento(Integer destinatario, String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//
+//        TimelineElementV23 timelineElement = null;
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-
-        TimelineElementV23 timelineElement = null;
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-        for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-
-            if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(destinatario)) {
-                timelineElement = element;
-            }
-        }
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+//        for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//            if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(destinatario)) {
+//                timelineElement = element;
+//            }
+//        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(destinatario))
+                .findAny()
+                .orElse(null);
 
         try {
             Assertions.assertNull(timelineElement);
@@ -1824,7 +1999,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi e verificho che l'utente {int} non abbia associato un evento {string} V1")
     public void vengonoLettiGliEventiVerifichoCheUtenteNonAbbiaAssociatoEventoV1(Integer destinatario, String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+        TimelineElementWait timelineElementWait = getTimelineElementCategoryV1(timelineEventCategory);
 
         if (sharedSteps.getSentNotificationV1()!= null){
             it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement = null;
@@ -1880,18 +2055,32 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi e verificho che l'utente {int} non abbia associato un evento {string} con responseStatus {string}")
     public void vengonoLettiGliEventiVerifichoCheUtenteNonAbbiaAssociatoEventoWithResponseStatus(Integer destinatario, String timelineEventCategory, String responseStatus) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//        for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//            if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory())
+//                    && element.getDetails().getRecIndex().equals(destinatario)
+//                    && element.getDetails().getResponseStatus().getValue().equals(responseStatus)) {
+//                timelineElement = element;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-        for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
 
-            if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory())
-                    && element.getDetails().getRecIndex().equals(destinatario)
-                    && element.getDetails().getResponseStatus().getValue().equals(responseStatus)) {
-                timelineElement = element;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(destinatario)
+                        && elem.getDetails().getResponseStatus().getValue().equals(responseStatus))
+                .findAny()
+                .orElse(null);
 
         try {
             Assertions.assertNull(timelineElement);
@@ -2499,7 +2688,7 @@ public class AvanzamentoNotificheB2bSteps {
     }
 
     @Then("viene verificato che la chiave dell'attestazione opponibile {string} è {string}")
-    public void verifiedThatTheKeyOfTheLegalFactIs(String legalFactCategory, String key) {
+    public void  verifiedThatTheKeyOfTheLegalFactIs(String legalFactCategory, String key) {
         try {
             Thread.sleep(sharedSteps.getWait());
         } catch (InterruptedException exc) {
@@ -2861,26 +3050,40 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con responseStatus {string} per l'utente {int}")
     public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConResponseStatusPerUtente(String timelineEventCategory, String code, Integer destinatario) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(destinatario))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getResponseStatus());
@@ -2892,25 +3095,38 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con responseStatus {string}")
     public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConResponseStatus(String timelineEventCategory, String code) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getResponseStatus());
@@ -2922,26 +3138,39 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con responseStatus {string} e digitalAddressSource {string}")
     public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConResponseStatusAndDigitalAddressSource(String timelineEventCategory, String code, String digitalAddressSource) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getResponseStatus());
@@ -2954,12 +3183,26 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} siano configurati i campi municipalityDetails e foreignState")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratiCampiMunicipalityDetailsForeignState(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
 
-        TimelineElementV23 timelineElement = null;
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
         try {
             logger.info("TIMELINE_ELEMENT: " + timelineElement);
             Assertions.assertNotNull(timelineElement);
@@ -2972,12 +3215,26 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} con responseStatus {string} sia presente il campo deliveryDetailCode")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoDeliveryDetailCode(String timelineEventCategory, String code) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
 
-        TimelineElementV23 timelineElement = null;
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
         try {
             logger.info("TIMELINE_ELEMENT: " + timelineElement);
             Assertions.assertNotNull(timelineElement);
@@ -2991,12 +3248,26 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} con responseStatus {string} sia presente i campi deliveryDetailCode e deliveryFailureCause")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoDeliveryDetailCodeDeliveryFailureCause(String timelineEventCategory, String code) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
 
-        TimelineElementV23 timelineElement = null;
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
         try {
             logger.info("TIMELINE_ELEMENT: " + timelineElement);
             Assertions.assertNotNull(timelineElement);
@@ -3011,27 +3282,40 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende la corretta sospensione dell'invio cartaceo")
     public void siAttendeLaCorrettaSopsensioneDellInvioCartaceo() {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory("ANALOG_SUCCESS_WORKFLOW");
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory("ANALOG_SUCCESS_WORKFLOW");
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//
+//        for (int i = 0; i < 5; i++) {
+//            try {
+//                Thread.sleep(6000);
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceStateRapidNewVersion rapidNewVersion = (PnPollingServiceStateRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "ANALOG_SUCCESS_WORKFLOW");
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-
-        for (int i = 0; i < 5; i++) {
-            try {
-                Thread.sleep(6000);
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals("ANALOG_SUCCESS_WORKFLOW"))
+                .findAny()
+                .orElse(null);
         Assertions.assertNull(timelineElement);
 
     }
@@ -3040,48 +3324,75 @@ public class AvanzamentoNotificheB2bSteps {
     public void siAttendeIlCorrettoPagamentoDellaNotifica() {
 
         if (sharedSteps.getSentNotification()!= null){
-            TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//            TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//
+//            TimelineElementV23 timelineElement = null;
+//
+//            for (int i = 0; i < 5; i++) {
+//                try {
+//                    Thread.sleep(60000);
+//                } catch (InterruptedException exc) {
+//                    throw new RuntimeException(exc);
+//                }
+//
+//                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//                timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//                if (timelineElement != null) {
+//                    break;
+//                }
+//            }
+            PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+            PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
-            TimelineElementV23 timelineElement = null;
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            for (int i = 0; i < 5; i++) {
-                try {
-                    Thread.sleep(60000);
-                } catch (InterruptedException exc) {
-                    throw new RuntimeException(exc);
-                }
-
-                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-                timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-                if (timelineElement != null) {
-                    break;
-                }
-            }
+            TimelineElementV23 timelineElement = pnPollingResponseV23
+                    .getNotification()
+                    .getTimeline()
+                    .stream()
+                    .filter(elem -> elem.getCategory().getValue().equals("PAYMENT"))
+                    .findAny()
+                    .orElse(null);
+            Assertions.assertNull(timelineElement);
             Assertions.assertNotNull(timelineElement);
         } else {
-            TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//            TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//
+//            TimelineElementV23 timelineElement = null;
+//
+//            for (int i = 0; i < 5; i++) {
+//                try {
+//                    Thread.sleep(60000);
+//                } catch (InterruptedException exc) {
+//                    throw new RuntimeException(exc);
+//                }
+//
+//                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotificationV1().getIun()));
+//
+//                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotificationV1().getTimeline());
+//
+//                timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//                if (timelineElement != null) {
+//                    break;
+//                }
+//            }
+            PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+            PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
-            TimelineElementV23 timelineElement = null;
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            for (int i = 0; i < 5; i++) {
-                try {
-                    Thread.sleep(60000);
-                } catch (InterruptedException exc) {
-                    throw new RuntimeException(exc);
-                }
-
-                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotificationV1().getIun()));
-
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotificationV1().getTimeline());
-
-                timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-                if (timelineElement != null) {
-                    break;
-                }
-            }
+            TimelineElementV23 timelineElement = pnPollingResponseV23
+                    .getNotification()
+                    .getTimeline()
+                    .stream()
+                    .filter(elem -> elem.getCategory().getValue().equals("PAYMENT"))
+                    .findAny()
+                    .orElse(null);
             Assertions.assertNotNull(timelineElement);
         }
 
@@ -3147,39 +3458,56 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende il corretto pagamento della notifica con l' avviso {int} dal destinatario {int}")
     public void siAttendeIlCorrettoPagamentoDellaNotificaConAvvisoDalDestinatario(Integer avviso, Integer destinatario) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < 5; i++) {
+//            try {
+//                Thread.sleep(60000);
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < 5; i++) {
-            try {
-                Thread.sleep(60000);
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals("PAYMENT"))
+                .findAny()
+                .orElse(null);
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
         Assertions.assertNotNull(timelineElement);
 
 
-        if (timelineElement.getDetails().getRecIndex()==destinatario) {
+        if (timelineElement.getDetails().getRecIndex().equals(destinatario)) {
             boolean esiste = false;
-            if (sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments()!= null){
-                for (NotificationPaymentItem notificationPaymentItem: sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments()) {
-                    if (notificationPaymentItem.getPagoPa().getCreditorTaxId().equals(timelineElement.getDetails().getCreditorTaxId()) && notificationPaymentItem.getPagoPa().getNoticeCode().equals(timelineElement.getDetails().getNoticeCode())){
-                        esiste = true;
-                        break;
-                    }
+            if (pnPollingResponseV23.getNotification().getRecipients().get(destinatario).getPayments()!= null){
+                NotificationPaymentItem notificationPaymentItem = pnPollingResponseV23
+                        .getNotification()
+                        .getRecipients()
+                        .get(destinatario)
+                        .getPayments()
+                        .stream()
+                        .filter(pay -> pay.getPagoPa().getCreditorTaxId().equals(timelineElement.getDetails().getCreditorTaxId())
+                                && pay.getPagoPa().getNoticeCode().equals(timelineElement.getDetails().getNoticeCode())).findAny().orElse(null);
+                esiste = notificationPaymentItem != null;
 
-                }
             }
             Assertions.assertTrue(esiste);
             //Assertions.assertTrue(sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(avviso).getPagoPa().getCreditorTaxId().equals(timelineElement.getDetails().getCreditorTaxId()));
@@ -3190,26 +3518,40 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende il non corretto pagamento della notifica con l' avviso {int} dal destinatario {int}")
     public void siAttendeIlNonCorrettoPagamentoDellaNotificaConAvvisoDalDestinatario(Integer avviso, Integer destinatario) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < 5; i++) {
+//            try {
+//                Thread.sleep(60000);
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//          }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < 5; i++) {
-            try {
-                Thread.sleep(60000);
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals("PAYMENT"))
+                .findAny()
+                .orElse(null);
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
         Assertions.assertNull(timelineElement);
 
         //Assertions.assertTrue(sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments().get(avviso).getPagoPa().getCreditorTaxId().equals(timelineElement.getDetails().getCreditorTaxId()));
@@ -3222,83 +3564,134 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende il corretto pagamento della notifica dell'utente {int}")
     public void siAttendeIlCorrettoPagamentoDellaNotifica(Integer utente) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < 5; i++) {
+//            try {
+//                Thread.sleep(60000);
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(utente)) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < 5; i++) {
-            try {
-                Thread.sleep(60000);
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals("PAYMENT")
+                        && elem.getDetails().getRecIndex().equals(utente))
+                .findAny()
+                .orElse(null);
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+        Assertions.assertNull(timelineElement);
 
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(utente)) {
-                break;
-            }
-        }
         Assertions.assertNotNull(timelineElement);
 
     }
 
     @Then("verifica presenza in Timeline dei solo pagamenti di avvisi PagoPA del destinatario {int}")
     public void verificaPresenzaPagamentiSoloPagopa(Integer utente) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < 5; i++) {
+//            try {
+//                Thread.sleep(60000);
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(utente)) {
+//                Assertions.assertNull(timelineElement.getDetails().getIdF24());
+//            }else {
+//                timelineElement = null;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < 5; i++) {
-            try {
-                Thread.sleep(60000);
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals("PAYMENT")
+                        && elem.getDetails().getRecIndex().equals(utente))
+                .findAny()
+                .orElse(null);
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(utente)) {
-                Assertions.assertNull(timelineElement.getDetails().getIdF24());
-            }else {
-                timelineElement = null;
-            }
-        }
         Assertions.assertNotNull(timelineElement);
+        Assertions.assertNull(timelineElement.getDetails().getIdF24());
 
     }
 
     @Then("verifica non presenza in Timeline di pagamenti con avvisi F24 del destinatario {int}")
     public void verificaNonPresenzaPagamentiF24(Integer utente) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < 5; i++) {
+//            try {
+//                Thread.sleep(60000);
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(utente)) {
+//
+//                if (timelineElement.getDetails().getIdF24()!= null){
+//                    Assertions.assertNull(timelineElement);
+//                }
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < 5; i++) {
-            try {
-                Thread.sleep(60000);
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals("PAYMENT")
+                        && elem.getDetails().getRecIndex().equals(utente)
+                        && elem.getDetails().getIdF24() != null)
+                .findAny()
+                .orElse(null);
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+        Assertions.assertNull(timelineElement);
 
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(utente)) {
-
-                if (timelineElement.getDetails().getIdF24()!= null){
-                    Assertions.assertNull(timelineElement);
-                }
-            }
-        }
     }
 
 
@@ -3306,26 +3699,40 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende il non corretto pagamento della notifica dell'utente {int}")
     public void siAttendeIlNonCorrettoPagamentoDellaNotifica(Integer utente) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < 5; i++) {
+//            try {
+//                Thread.sleep(60000);
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(utente)) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < 5; i++) {
-            try {
-                Thread.sleep(60000);
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(utente)) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals("PAYMENT")
+                        && elem.getDetails().getRecIndex().equals(utente))
+                .findAny()
+                .orElse(null);
         Assertions.assertNull(timelineElement);
 
     }
@@ -3333,13 +3740,28 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} e' presente il campo Digital Address di piattaforma")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoDigitalAddressPiattaforma(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//
+//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && elem.getElementId().contains("SOURCE_PLATFORM")).findAny().orElse(null);
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getElementId().contains("SOURCE_PLATFORM"))
+                .findAny()
+                .orElse(null);
 
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && elem.getElementId().contains("SOURCE_PLATFORM")).findAny().orElse(null);
         try {
             logger.info("TIMELINE_ELEMENT: " + timelineElement);
             Assertions.assertNotNull(timelineElement);
@@ -3353,12 +3775,26 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} sia presente il campo Digital Address")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoDigitalAddress(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && elem.getElementId().contains("SOURCE_PLATFORM")).findAny().orElse(null);
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && elem.getElementId().contains("SOURCE_PLATFORM")).findAny().orElse(null);
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getElementId().contains("SOURCE_PLATFORM"))
+                .findAny()
+                .orElse(null);
         try {
             logger.info("TIMELINE_ELEMENT: " + timelineElement);
             Assertions.assertNotNull(timelineElement);
@@ -3543,39 +3979,58 @@ public class AvanzamentoNotificheB2bSteps {
 
     @And("vengono letti gli eventi fino all'elemento di timeline {string} della notifica per il destinatario {int}, con deliveryDetailCode {string}, legalFactId con category {string} e documentType {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCodeAndLegalFactIdCategoryAndDocumentType(String timelineEventCategory, Integer recIndex, String deliveryDetailCode, String legalFactIdCategory, String documentType) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory())
+//                        && element.getDetails().getRecIndex().equals(recIndex)
+//                        && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)
+//                        && Objects.nonNull(element.getLegalFactsIds()) && element.getLegalFactsIds().size() > 0
+//                        && element.getLegalFactsIds().get(0).getCategory().getValue().equals(legalFactIdCategory)
+//                        && Objects.nonNull(element.getDetails().getAttachments()) && element.getDetails().getAttachments().size() > 0
+//                        && element.getDetails().getAttachments().get(0).getDocumentType().equals(documentType)
+//                ) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory())
-                        && element.getDetails().getRecIndex().equals(recIndex)
-                        && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)
-                        && Objects.nonNull(element.getLegalFactsIds()) && element.getLegalFactsIds().size() > 0
-                        && element.getLegalFactsIds().get(0).getCategory().getValue().equals(legalFactIdCategory)
-                        && Objects.nonNull(element.getDetails().getAttachments()) && element.getDetails().getAttachments().size() > 0
-                        && element.getDetails().getAttachments().get(0).getDocumentType().equals(documentType)
-                ) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(recIndex)
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)
+                        && Objects.nonNull(elem.getLegalFactsIds()) && elem.getLegalFactsIds().size() > 0
+                        && elem.getLegalFactsIds().get(0).getCategory().getValue().equals(legalFactIdCategory)
+                        && Objects.nonNull(elem.getDetails().getAttachments()) && elem.getDetails().getAttachments().size() > 0
+                        && elem.getDetails().getAttachments().get(0).getDocumentType().equals(documentType))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getPhysicalAddress());
@@ -3587,38 +4042,55 @@ public class AvanzamentoNotificheB2bSteps {
 
     @And("vengono letti gli eventi fino all'elemento di timeline {string} della notifica per il destinatario {int}, con deliveryDetailCode {string} e con deliveryFailureCause {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCodeAndDeliveryFailureCause(String timelineEventCategory, Integer recIndex, String deliveryDetailCode, String deliveryFailureCause) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-
-        TimelineElementV23 timelineElement = null;
-
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        List<String> failureCauses = Arrays.asList(deliveryFailureCause.split(" "));
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory())
+//                        && element.getDetails().getRecIndex().equals(recIndex)
+//                        && failureCauses.contains(element.getDetails().getDeliveryFailureCause())
+//                        && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)
+//                ) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
         List<String> failureCauses = Arrays.asList(deliveryFailureCause.split(" "));
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory())
-                        && element.getDetails().getRecIndex().equals(recIndex)
-                        && failureCauses.contains(element.getDetails().getDeliveryFailureCause())
-                        && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)
-                ) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(recIndex)
+                        && failureCauses.contains(elem.getDetails().getDeliveryFailureCause())
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -3628,32 +4100,47 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline {string} della notifica per il destinatario {int} con deliveryDetailCode {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithRecIndexAndDeliveryDetailCode(String timelineEventCategory, Integer recIndex, String deliveryDetailCode) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(recIndex) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(recIndex) && element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(recIndex)
+                        && elem.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -3723,31 +4210,45 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} e verifica indirizzo secondo tentativo {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithVerifyPhysicalAddress(String timelineEventCategory, String attempt) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getElementId().contains(attempt)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getElementId().contains(attempt)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getElementId().contains(attempt))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getPhysicalAddress());
@@ -3760,31 +4261,45 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} al tentativo {string}")
     public void readingEventUpToTheTimelineElementOfNotificationAtAttempt(String timelineEventCategory, String attempt) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getElementId().contains(attempt)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getElementId().contains(attempt)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getElementId().contains(attempt))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
 
@@ -3796,25 +4311,38 @@ public class AvanzamentoNotificheB2bSteps {
     @Then("viene verificato che nell'elemento di timeline della notifica {string} sia presente il campo Digital Address da National Registry")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoDigitalAddressNationalRegistry(String timelineEventCategory) {
 
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
         try {
             logger.info("TIMELINE_ELEMENT: " + timelineElement);
             Assertions.assertNotNull(timelineElement);
@@ -3860,26 +4388,39 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con failureCause {string}")
     public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConfailureCause(String timelineEventCategory, String failureCause) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertEquals(timelineElement.getDetails().getFailureCause(), failureCause);
@@ -3892,26 +4433,40 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con failureCause {string} per l'utente {int}")
     public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConfailureCausePerUtente(String timelineEventCategory, String failureCause, Integer destinatario) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(destinatario))
+                .findAny()
+                .orElse(null);
         try {
             Assertions.assertNotNull(timelineElement);
             Assertions.assertEquals(timelineElement.getDetails().getFailureCause(), failureCause);
@@ -3951,31 +4506,45 @@ public class AvanzamentoNotificheB2bSteps {
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} e verifica data schedulingDate per il destinatario {int} rispetto ell'evento in timeline {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithVerifySchedulingDate(String timelineEventCategory, int destinatario, String evento) {
         long delayMillis = 0;
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-        TimelineElementV23 timelineElement = null;
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementV23 timelineElement = null;
         OffsetDateTime digitalDeliveryCreationRequestDate = null;
+//
+//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+//            try {
+//                Thread.sleep(timelineElementWait.getWaiting());
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException(exc);
+//            }
+//
+//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+//
+//            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+//                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(destinatario)) {
+//                    timelineElement = element;
+//                    break;
+//                }
+//            }
+//
+//            if (timelineElement != null) {
+//                break;
+//            }
+//        }
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-            try {
-                Thread.sleep(timelineElementWait.getWaiting());
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-                if (element.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && element.getDetails().getRecIndex().equals(destinatario)) {
-                    timelineElement = element;
-                    break;
-                }
-            }
-
-            if (timelineElement != null) {
-                break;
-            }
-        }
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)
+                        && elem.getDetails().getRecIndex().equals(destinatario))
+                .findAny()
+                .orElse(null);
         try {
             //RECUPERO Data DeliveryCreationRequest
             for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
@@ -4017,12 +4586,25 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} sia presente il campo notRefinedRecipientIndex")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoNotRefinedRecipientIndex(String timelineEventCategory) {
-        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+//
+//        TimelineElementV23 timelineElement = null;
+//
+//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+//        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
-        TimelineElementV23 timelineElement = null;
+        sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+        logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
-        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+        TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                .findAny()
+                .orElse(null);
         try {
             logger.info("TIMELINE_ELEMENT: " + timelineElement);
             Assertions.assertNotNull(timelineElement);
