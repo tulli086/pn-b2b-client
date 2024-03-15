@@ -4235,12 +4235,6 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} sia presente il campo notRefinedRecipientIndex")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoNotRefinedRecipientIndex(String timelineEventCategory) {
-//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-//
-//        TimelineElementV23 timelineElement = null;
-//
-//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-//        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
         PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
@@ -4258,7 +4252,7 @@ public class AvanzamentoNotificheB2bSteps {
             logger.info("TIMELINE_ELEMENT: " + timelineElement);
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getNotRefinedRecipientIndexes());
-            Assertions.assertTrue(timelineElement.getDetails().getNotRefinedRecipientIndexes().size()>0);
+            Assertions.assertFalse(timelineElement.getDetails().getNotRefinedRecipientIndexes().isEmpty());
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
