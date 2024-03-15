@@ -12,14 +12,14 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
-@Service(PnPollingStrategy.STATE_RAPID_OLD_VERSION)
-public class PnPollingServiceStateRapidOldVersion extends PnPollingTemplate<PnPollingResponseV1> {
+@Service(PnPollingStrategy.STATE_RAPID_V1)
+public class PnPollingServiceStateRapidV1 extends PnPollingTemplate<PnPollingResponseV1> {
     private final TimingForTimeline timingForTimeline;
     private final PnPaB2bExternalClientImpl pnPaB2bExternalClient;
     private FullSentNotification notificationV1;
 
 
-    public PnPollingServiceStateRapidOldVersion(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
+    public PnPollingServiceStateRapidV1(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
         this.timingForTimeline = timingForTimeline;
         this.pnPaB2bExternalClient = pnPaB2bExternalClient;
     }
@@ -49,7 +49,8 @@ public class PnPollingServiceStateRapidOldVersion extends PnPollingTemplate<PnPo
             }
             pnPollingResponse.setResult(true);
             return true;
-        };    }
+        };
+    }
 
     @Override
     protected PnPollingResponseV1 getException(Exception exception) {

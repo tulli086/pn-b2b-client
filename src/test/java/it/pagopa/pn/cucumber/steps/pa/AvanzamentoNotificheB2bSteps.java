@@ -9,11 +9,9 @@ import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
-import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidNewVersion;
-import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidOldVersion;
-import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceTimelineRapidNewVersion;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.*;
+import it.pagopa.pn.client.b2b.pa.polling.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationHistoryResponse;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush.model.NotificationProcessCostResponse;
@@ -157,8 +155,8 @@ public class AvanzamentoNotificheB2bSteps {
     @Then("vengono letti gli eventi fino allo stato della notifica {string}")
     public void readingEventUpToTheStatusOfNotification(String status) {
         try {
-            PnPollingServiceStateRapidNewVersion rapidNewVersion = (PnPollingServiceStateRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_NEW_VERSION);
-            PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), status);
+            PnPollingServiceStateRapidV23 stateRapidV23 = (PnPollingServiceStateRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_V23);
+            PnPollingResponseV23 pnPollingResponseV23 = stateRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), status);
             System.out.println(pnPollingResponseV23);
             Assertions.assertNotNull(pnPollingResponseV23);
             Assertions.assertNotNull(pnPollingResponseV23.getNotification());
@@ -267,7 +265,7 @@ public class AvanzamentoNotificheB2bSteps {
     @Then("vengono letti gli eventi fino allo stato della notifica {string} V1")
     public void readingEventUpToTheStatusOfNotificationV1(String status) {
         if (sharedSteps.getSentNotificationV1() !=  null) {
-            PnPollingServiceStateRapidOldVersion slowOldVersion = (PnPollingServiceStateRapidOldVersion) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_OLD_VERSION);
+            PnPollingServiceStateRapidV1 slowOldVersion = (PnPollingServiceStateRapidV1) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_V1);
             PnPollingResponseV1 pnPollingResponseV1 = slowOldVersion.waitForEvent(sharedSteps.getSentNotificationV1().getIun(), status);
 
             Assertions.assertNotNull(pnPollingResponseV1);
@@ -282,7 +280,7 @@ public class AvanzamentoNotificheB2bSteps {
             }
         }
         else if (sharedSteps.getSentNotification() !=  null) {
-            PnPollingServiceStateRapidOldVersion slowOldVersion = (PnPollingServiceStateRapidOldVersion) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_OLD_VERSION);
+            PnPollingServiceStateRapidV1 slowOldVersion = (PnPollingServiceStateRapidV1) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_V1);
             PnPollingResponseV1 pnPollingResponseV1 = slowOldVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), status);
 
             Assertions.assertNotNull(pnPollingResponseV1);
@@ -379,7 +377,7 @@ public class AvanzamentoNotificheB2bSteps {
 //    }
     @Then("vengono letti gli eventi fino allo stato della notifica {string} per il destinatario {int} e presente l'evento {string}")
     public void readingEventUpToTheStatusOfNotification(String status, int destinatario, String evento) {
-        PnPollingServiceStateRapidNewVersion rapidNewVersion = (PnPollingServiceStateRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_NEW_VERSION);
+        PnPollingServiceStateRapidV23 rapidNewVersion = (PnPollingServiceStateRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.STATE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), status);
 
         Assertions.assertNotNull(pnPollingResponseV23);
@@ -1082,7 +1080,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1235,7 +1233,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                throw new RuntimeException(exc);
 //            }
 
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1266,7 +1264,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1302,7 +1300,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1339,7 +1337,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1382,7 +1380,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1429,7 +1427,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                throw new RuntimeException(exc);
 //            }
 //
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1484,7 +1482,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                throw new RuntimeException(exc);
 //            }
 
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1551,7 +1549,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1602,7 +1600,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1655,7 +1653,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1701,7 +1699,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1740,7 +1738,7 @@ public class AvanzamentoNotificheB2bSteps {
     public void vieneVerificatoCampoSendRequestIdEventoTimeline(String timelineEventCategory) {
 //        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
 
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1769,7 +1767,7 @@ public class AvanzamentoNotificheB2bSteps {
     public void vieneVerificatoCampoServiceLevelEventoTimeline(String timelineEventCategory, String value) {
 //        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
 
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         ServiceLevel level;
@@ -1814,7 +1812,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1850,7 +1848,7 @@ public class AvanzamentoNotificheB2bSteps {
 //        TimelineElementV23 timelineElement = null;
 //
 //        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1892,7 +1890,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1937,7 +1935,7 @@ public class AvanzamentoNotificheB2bSteps {
 //            } catch (InterruptedException exc) {
 //                throw new RuntimeException(exc);
 //            }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -1971,7 +1969,7 @@ public class AvanzamentoNotificheB2bSteps {
 //
 //
 //        TimelineElementV23 timelineElement = null;
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -2067,7 +2065,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                timelineElement = element;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3070,7 +3068,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3114,7 +3112,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3158,7 +3156,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3190,7 +3188,7 @@ public class AvanzamentoNotificheB2bSteps {
 //        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
 //        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
 
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3222,7 +3220,7 @@ public class AvanzamentoNotificheB2bSteps {
 //        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
 //        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
 
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3255,7 +3253,7 @@ public class AvanzamentoNotificheB2bSteps {
 //        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
 //        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
 
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3303,7 +3301,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceStateRapidNewVersion rapidNewVersion = (PnPollingServiceStateRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceStateRapidV23 rapidNewVersion = (PnPollingServiceStateRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "ANALOG_SUCCESS_WORKFLOW");
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3344,7 +3342,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                    break;
 //                }
 //            }
-            PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+            PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
             PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3380,7 +3378,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                    break;
 //                }
 //            }
-            PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+            PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
             PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3478,7 +3476,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3538,7 +3536,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //          }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3584,7 +3582,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3629,7 +3627,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                timelineElement = null;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3674,7 +3672,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                }
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3719,7 +3717,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3747,7 +3745,7 @@ public class AvanzamentoNotificheB2bSteps {
 //
 //        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
 //        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && elem.getElementId().contains("SOURCE_PLATFORM")).findAny().orElse(null);
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -3781,7 +3779,7 @@ public class AvanzamentoNotificheB2bSteps {
 //
 //        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
 //        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory()) && elem.getElementId().contains("SOURCE_PLATFORM")).findAny().orElse(null);
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -4012,7 +4010,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -4074,7 +4072,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
         List<String> failureCauses = Arrays.asList(deliveryFailureCause.split(" "));
 
@@ -4126,7 +4124,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -4235,7 +4233,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -4286,7 +4284,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -4330,7 +4328,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -4408,7 +4406,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -4453,7 +4451,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -4531,7 +4529,7 @@ public class AvanzamentoNotificheB2bSteps {
 //                break;
 //            }
 //        }
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
@@ -4592,7 +4590,7 @@ public class AvanzamentoNotificheB2bSteps {
 //
 //        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
 //        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-        PnPollingServiceTimelineRapidNewVersion rapidNewVersion = (PnPollingServiceTimelineRapidNewVersion) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION);
+        PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
         sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());

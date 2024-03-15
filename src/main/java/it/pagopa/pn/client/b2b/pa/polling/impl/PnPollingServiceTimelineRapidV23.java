@@ -12,14 +12,14 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
-@Service(PnPollingStrategy.TIMELINE_RAPID_NEW_VERSION)
-public class PnPollingServiceTimelineRapidNewVersion extends PnPollingTemplate<PnPollingResponseV23> {
+@Service(PnPollingStrategy.TIMELINE_RAPID_V23)
+public class PnPollingServiceTimelineRapidV23 extends PnPollingTemplate<PnPollingResponseV23> {
     private final TimingForTimeline timingForTimeline;
     private final PnPaB2bExternalClientImpl pnPaB2bExternalClient;
     private FullSentNotificationV23 notificationV23;
 
 
-    public PnPollingServiceTimelineRapidNewVersion(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
+    public PnPollingServiceTimelineRapidV23(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
         this.timingForTimeline = timingForTimeline;
         this.pnPaB2bExternalClient = pnPaB2bExternalClient;
     }
