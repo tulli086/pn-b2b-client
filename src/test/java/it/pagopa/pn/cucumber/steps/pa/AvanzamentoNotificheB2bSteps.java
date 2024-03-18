@@ -1359,23 +1359,14 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("esiste l'elemento di timeline della notifica {string} per l'utente {int}")
     public void verifyEventUpToTheTimelineElementOfNotificationPerUtente(String timelineEventCategory, Integer destinatario) {
-//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-//
-//        TimelineElementV23 timelineElement = null;
-//
-//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+
         PnPollingServiceTimelineRapidV23 rapidNewVersion = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         rapidNewVersion.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV23 pnPollingResponseV23 = rapidNewVersion.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-//
-//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-//            if (timelineElement != null && timelineElement.getDetails().getRecIndex().equals(destinatario)) {
-//                break;
-//            }
-//        }
+
         TimelineElementV23 timelineElement = pnPollingResponseV23
                 .getNotification()
                 .getTimeline()
