@@ -3,9 +3,6 @@ package it.pagopa.pn.client.b2b.pa.utils;
 import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 //TODO: Usare ovunque è necessario il timing e verificare se parametrizzare da propertiesFile
@@ -14,9 +11,6 @@ import org.springframework.stereotype.Component;
 public class TimingForTimeline {
     private final PnB2bClientTimingConfigs timingConfigs;
     public record TimingResult(int numCheck, int waiting) { }
-
-    @Value("${pn.config.timing.timeline.tuning-value}")
-    private Integer tuningValue;
 
     @Autowired
     public TimingForTimeline(PnB2bClientTimingConfigs timingConfigs){
@@ -36,7 +30,7 @@ public class TimingForTimeline {
         //CASO WAITING MULTIPLIER NEGATIVO DA GESTIRE IN FUTURO
 
         if(isSlow) {
-            return new TimingResult(findedElement.getNumCheck(), waiting * tuningValue);
+            return new TimingResult(findedElement.getNumCheck(), waiting * timingConfigs.getWaitingTimingSlowMultiplier());
         }
         return new TimingResult(findedElement.getNumCheck(), waiting);
     }
