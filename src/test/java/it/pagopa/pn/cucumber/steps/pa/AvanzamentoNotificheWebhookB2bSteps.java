@@ -58,6 +58,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private final TimingForTimeline timingForTimeline;
 
+    @And("viene verificato che il campo legalfactIds sia valorizzato nel EventStream")
+    public void vieneVerificatoCheIlCampoLegalfactIdsSiaValorizzato() {
+        Assertions.assertNotNull(sharedSteps.getProgressResponseElement());
+        Assertions.assertNotNull(sharedSteps.getProgressResponseElement().getLegalfactIds());
+        Assertions.assertTrue(!sharedSteps.getProgressResponseElement().getLegalfactIds().isEmpty());
+    }
+
     //private final WebhookSynchronizer webhookSynchronizer;
 
 
@@ -384,7 +391,10 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         switch (versione) {
             case "V10":
                 for(StreamMetadataResponse eventStream: eventStreamList){
-                    webhookB2bClient.updateEventStream(eventStream.getStreamId(),null);
+                    StreamCreationRequest streamCreationRequest = new StreamCreationRequest();
+                    streamCreationRequest.setTitle("Stream Update V10");
+                    streamCreationRequest.setEventType(StreamCreationRequest.EventTypeEnum.TIMELINE);
+                    webhookB2bClient.updateEventStream(eventStream.getStreamId(),streamCreationRequest);
                 }
                 break;
             case "V23":
@@ -837,6 +847,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                             .filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny()
                             .get().getTimestamp().truncatedTo(ChronoUnit.SECONDS));
             log.info("EventProgress: " + progressResponseElement);
+            sharedSteps.setProgressResponseElement(progressResponseElement);
 
         }catch(AssertionFailedError assertionFailedError){
             String message = assertionFailedError.getMessage()+
