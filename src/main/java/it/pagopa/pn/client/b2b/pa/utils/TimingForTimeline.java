@@ -3,6 +3,7 @@ package it.pagopa.pn.client.b2b.pa.utils;
 import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -11,15 +12,36 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TimingForTimeline {
-
     private final PnB2bClientTimingConfigs timingConfigs;
-    public record TimingResult(int numCheck,int waiting) { }
+    public record TimingResult(int numCheck, int waiting) { }
+
+    @Value("${pn.config.timing.timeline.tuning-value}")
+    private Integer tuningValue;
 
     @Autowired
     public TimingForTimeline(PnB2bClientTimingConfigs timingConfigs){
         this.timingConfigs = timingConfigs;
     }
 
+
+    public TimingResult getTimingForElement(String element, boolean isSlow){
+        element = element.trim().toUpperCase();
+        Element findedElement = Element.valueOf(element);
+        int waiting = timingConfigs.getWorkflowWaitMillis();
+        int waitingMultiplier = findedElement.getWaitingMultiplier();
+
+        if( waitingMultiplier > 0){
+            waiting = waiting * waitingMultiplier;
+        }else if(waitingMultiplier < 0){
+            //CASO MULTIPLIER NEGATIVO ?
+            waiting = waiting / waitingMultiplier;
+        }
+
+        if(isSlow) {
+            return new TimingResult(findedElement.getNumCheck(), waiting * tuningValue);
+        }
+        return new TimingResult(findedElement.getNumCheck(), waiting);
+    }
 
     public TimingResult getTimingForElement(String element){
         element = element.trim().toUpperCase();
@@ -31,7 +53,7 @@ public class TimingForTimeline {
         }else if(waitingMultiplier < 0){
             waiting = waiting / waitingMultiplier;
         }
-        return new TimingResult(findedElement.getNumCheck(),waiting);
+        return new TimingResult(findedElement.getNumCheck(), waiting);
     }
 
     @Getter
@@ -100,6 +122,4 @@ public class TimingForTimeline {
             this.waitingMultiplier = waitingMultiplier;
         }
     }
-
-
 }
