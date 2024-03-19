@@ -30,12 +30,10 @@ public class TimingForTimeline {
         int waiting = timingConfigs.getWorkflowWaitMillis();
         int waitingMultiplier = findedElement.getWaitingMultiplier();
 
-        if( waitingMultiplier > 0){
+        if(waitingMultiplier > 0){
             waiting = waiting * waitingMultiplier;
-        }else if(waitingMultiplier < 0){
-            //CASO MULTIPLIER NEGATIVO ?
-            waiting = waiting / waitingMultiplier;
         }
+        //CASO WAITING MULTIPLIER NEGATIVO DA GESTIRE IN FUTURO
 
         if(isSlow) {
             return new TimingResult(findedElement.getNumCheck(), waiting * tuningValue);
@@ -44,16 +42,7 @@ public class TimingForTimeline {
     }
 
     public TimingResult getTimingForElement(String element){
-        element = element.trim().toUpperCase();
-        Element findedElement = Element.valueOf(element);
-        int waiting = timingConfigs.getWorkflowWaitMillis();
-        int waitingMultiplier = findedElement.getWaitingMultiplier();
-        if( waitingMultiplier > 0){
-            waiting = waiting * waitingMultiplier;
-        }else if(waitingMultiplier < 0){
-            waiting = waiting / waitingMultiplier;
-        }
-        return new TimingResult(findedElement.getNumCheck(), waiting);
+        return getTimingForElement(element, false);
     }
 
     @Getter
