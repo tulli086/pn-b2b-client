@@ -5,7 +5,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
-import it.pagopa.pn.client.b2b.pa.service.impl.PnPaB2bExternalClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.Callable;
@@ -14,21 +14,21 @@ import java.util.function.Predicate;
 
 @Service(PnPollingStrategy.TIMELINE_RAPID_V1)
 public class PnPollingServiceTimelineRapidV1 extends PnPollingTemplate<PnPollingResponseV1> {
-    private final TimingForTimeline timingForTimeline;
-    private final PnPaB2bExternalClientImpl pnPaB2bExternalClient;
+    protected final TimingForTimeline timingForTimeline;
+    private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotification notificationV1;
 
 
-    public PnPollingServiceTimelineRapidV1(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
+    public PnPollingServiceTimelineRapidV1(TimingForTimeline timingForTimeline, IPnPaB2bClient pnPaB2bClient) {
         this.timingForTimeline = timingForTimeline;
-        this.pnPaB2bExternalClient = pnPaB2bExternalClient;
+        this.pnPaB2bClient = pnPaB2bClient;
     }
 
     @Override
     protected Callable<PnPollingResponseV1> getPollingResponse(String iun, String value) {
         return () -> {
             PnPollingResponseV1 pnPollingResponse = new PnPollingResponseV1();
-            FullSentNotification fullSentNotification = pnPaB2bExternalClient.getSentNotificationV1(iun);
+            FullSentNotification fullSentNotification = pnPaB2bClient.getSentNotificationV1(iun);
             pnPollingResponse.setNotification(fullSentNotification);
             this.notificationV1 = fullSentNotification;
             return pnPollingResponse;
@@ -75,17 +75,17 @@ public class PnPollingServiceTimelineRapidV1 extends PnPollingTemplate<PnPolling
 
     @Override
     public boolean setApiKeys(ApiKeyType apiKey) {
-        return this.pnPaB2bExternalClient.setApiKeys(apiKey);
+        return this.pnPaB2bClient.setApiKeys(apiKey);
     }
 
     @Override
     public void setApiKey(String apiKeyString) {
-        this.pnPaB2bExternalClient.setApiKey(apiKeyString);
+        this.pnPaB2bClient.setApiKey(apiKeyString);
     }
 
     @Override
     public ApiKeyType getApiKeySetted() {
-        return this.pnPaB2bExternalClient.getApiKeySetted();
+        return this.pnPaB2bClient.getApiKeySetted();
     }
 
     private boolean isPresentCategory(PnPollingResponseV1 pnPollingResponse, String value) {
@@ -93,9 +93,9 @@ public class PnPollingServiceTimelineRapidV1 extends PnPollingTemplate<PnPolling
                 .getNotification()
                 .getTimeline()
                 .stream()
-                .filter(timelineElement -> timelineElement
-                        .getCategory()
-                        .getValue().equals(value))
+                .filter(timelineElement ->
+                        timelineElement.getCategory() != null
+                        && timelineElement.getCategory().getValue().equals(value))
                 .findAny()
                 .orElse(null);
 

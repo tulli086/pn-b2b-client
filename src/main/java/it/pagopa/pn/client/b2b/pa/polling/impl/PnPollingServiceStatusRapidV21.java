@@ -5,30 +5,30 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV21;
-import it.pagopa.pn.client.b2b.pa.service.impl.PnPaB2bExternalClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
-@Service(PnPollingStrategy.STATE_RAPID_V21)
-public class PnPollingServiceStateRapidV21 extends PnPollingTemplate<PnPollingResponseV21> {
-    private final TimingForTimeline timingForTimeline;
-    private final PnPaB2bExternalClientImpl pnPaB2bExternalClient;
+@Service(PnPollingStrategy.STATUS_RAPID_V21)
+public class PnPollingServiceStatusRapidV21 extends PnPollingTemplate<PnPollingResponseV21> {
+    protected final TimingForTimeline timingForTimeline;
+    private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotificationV21 notificationV21;
 
 
-    public PnPollingServiceStateRapidV21(TimingForTimeline timingForTimeline, PnPaB2bExternalClientImpl pnPaB2bExternalClient) {
+    public PnPollingServiceStatusRapidV21(TimingForTimeline timingForTimeline, IPnPaB2bClient pnPaB2bClient) {
         this.timingForTimeline = timingForTimeline;
-        this.pnPaB2bExternalClient = pnPaB2bExternalClient;
+        this.pnPaB2bClient = pnPaB2bClient;
     }
 
     @Override
     protected Callable<PnPollingResponseV21> getPollingResponse(String iun, String value) {
         return () -> {
             PnPollingResponseV21 pnPollingResponse = new PnPollingResponseV21();
-            FullSentNotificationV21 fullSentNotification = pnPaB2bExternalClient.getSentNotificationV21(iun);
+            FullSentNotificationV21 fullSentNotification = pnPaB2bClient.getSentNotificationV21(iun);
             pnPollingResponse.setNotification(fullSentNotification);
             this.notificationV21 = fullSentNotification;
             return pnPollingResponse;
@@ -74,17 +74,17 @@ public class PnPollingServiceStateRapidV21 extends PnPollingTemplate<PnPollingRe
 
     @Override
     public boolean setApiKeys(ApiKeyType apiKey) {
-        return this.pnPaB2bExternalClient.setApiKeys(apiKey);
+        return this.pnPaB2bClient.setApiKeys(apiKey);
     }
 
     @Override
     public void setApiKey(String apiKeyString) {
-        this.pnPaB2bExternalClient.setApiKey(apiKeyString);
+        this.pnPaB2bClient.setApiKey(apiKeyString);
     }
 
     @Override
     public ApiKeyType getApiKeySetted() {
-        return this.pnPaB2bExternalClient.getApiKeySetted();
+        return this.pnPaB2bClient.getApiKeySetted();
     }
 
     private boolean isEqualState(PnPollingResponseV21 pnPollingResponse, String value) {
