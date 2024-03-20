@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-@Service(PnPollingStrategy.VALIDATION_STATUS)
+@Service(PnPollingStrategy.VALIDATION_STATUS_V23)
 public class PnPollingServiceValidationStatusV23 extends PnPollingTemplate<PnPollingResponseV23> {
     private final IPnPaB2bClient b2bClient;
     private NewNotificationRequestStatusResponseV23 requestStatusResponseV23;

@@ -1,14 +1,16 @@
 package it.pagopa.pn.client.b2b.pa.polling.impl;
 
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationRequestStatusResponse;
+import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV20;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-
+@Service(PnPollingStrategy.VALIDATION_STATUS_V20)
 public class PnPollingServiceValidationStatusV20 extends PnPollingTemplate<PnPollingResponseV20> {
 
     private final IPnPaB2bClient b2bClient;
