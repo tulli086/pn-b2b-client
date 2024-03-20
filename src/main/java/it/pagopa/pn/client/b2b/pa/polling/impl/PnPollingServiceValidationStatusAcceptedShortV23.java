@@ -6,10 +6,10 @@ import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
 import org.springframework.stereotype.Service;
 
 @Service(PnPollingStrategy.VALIDATION_STATUS_ACCEPTATION_SHORT)
-public class PnPollingServiceValidationStatusAcceptedShort extends PnPollingServiceValidationStatus {
+public class PnPollingServiceValidationStatusAcceptedShortV23 extends PnPollingServiceValidationStatusV23 {
 
 
-    public PnPollingServiceValidationStatusAcceptedShort(IPnPaB2bClient b2bClient, TimingForTimeline timingForTimeline) {
+    public PnPollingServiceValidationStatusAcceptedShortV23(IPnPaB2bClient b2bClient, TimingForTimeline timingForTimeline) {
         super(b2bClient, timingForTimeline);
     }
 

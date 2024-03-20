@@ -1,41 +1,38 @@
 package it.pagopa.pn.client.b2b.pa.polling.impl;
 
-
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NewNotificationRequestStatusResponseV23;
-import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NewNotificationRequestStatusResponseV21;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
-import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV21;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-@Service(PnPollingStrategy.VALIDATION_STATUS)
-public class PnPollingServiceValidationStatus extends PnPollingTemplate<PnPollingResponseV23> {
+
+public class PnPollingServiceValidationStatusV21 extends PnPollingTemplate<PnPollingResponseV21> {
+
     private final IPnPaB2bClient b2bClient;
-    private NewNotificationRequestStatusResponseV23 requestStatusResponseV23;
+    private NewNotificationRequestStatusResponseV21 requestStatusResponseV21;
     private final TimingForTimeline timingForTimeline;
 
-    public PnPollingServiceValidationStatus(IPnPaB2bClient b2bClient, TimingForTimeline timingForTimeline) {
+    public PnPollingServiceValidationStatusV21(IPnPaB2bClient b2bClient, TimingForTimeline timingForTimeline) {
         this.b2bClient = b2bClient;
         this.timingForTimeline = timingForTimeline;
-
     }
 
     @Override
-    protected Callable<PnPollingResponseV23> getPollingResponse(String id, String value) {
+    protected Callable<PnPollingResponseV21> getPollingResponse(String id, String value) {
         return () -> {
-            PnPollingResponseV23 pnPollingResponse = new PnPollingResponseV23();
-            NewNotificationRequestStatusResponseV23 statusResponseV23 = b2bClient.getNotificationRequestStatus(id);
-            pnPollingResponse.setStatusResponse(statusResponseV23);
-            this.requestStatusResponseV23 = statusResponseV23;
+            PnPollingResponseV21 pnPollingResponse = new PnPollingResponseV21();
+            NewNotificationRequestStatusResponseV21 statusResponseV21 = b2bClient.getNotificationRequestStatusV21(id);
+            pnPollingResponse.setStatusResponse(statusResponseV21);
+            this.requestStatusResponseV21 = statusResponseV21;
             return pnPollingResponse;
         };
     }
 
     @Override
-    protected Predicate<PnPollingResponseV23> checkCondition(String id, String value) {
+    protected Predicate<PnPollingResponseV21> checkCondition(String id, String value) {
         return (pnPollingResponse) -> {
             if(pnPollingResponse.getStatusResponse() == null) {
                 pnPollingResponse.setResult(false);
@@ -52,9 +49,9 @@ public class PnPollingServiceValidationStatus extends PnPollingTemplate<PnPollin
     }
 
     @Override
-    protected PnPollingResponseV23 getException(Exception exception) {
-        PnPollingResponseV23 pollingResponse = new PnPollingResponseV23();
-        pollingResponse.setStatusResponse(this.requestStatusResponseV23);
+    protected PnPollingResponseV21 getException(Exception exception) {
+        PnPollingResponseV21 pollingResponse = new PnPollingResponseV21();
+        pollingResponse.setStatusResponse(this.requestStatusResponseV21);
         pollingResponse.setResult(false);
         return pollingResponse;
     }
@@ -85,9 +82,5 @@ public class PnPollingServiceValidationStatus extends PnPollingTemplate<PnPollin
 
     @Override
     public ApiKeyType getApiKeySetted() {return this.b2bClient.getApiKeySetted(); }
-
-    protected TimingForTimeline getTimingForTimeline(){
-        return this.timingForTimeline;
-    }
 
 }
