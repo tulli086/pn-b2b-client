@@ -2,6 +2,12 @@ package it.pagopa.pn.client.b2b.pa;
 
 import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
+import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceValidationStatusAcceptedShortV23;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceValidationStatusNoAcceptedV23;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceValidationStatusV23;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddFsuClient;
@@ -14,7 +20,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -23,7 +28,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.*;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
@@ -49,17 +53,20 @@ public class PnPaB2bUtils {
 
     private final IPnRaddFsuClient raddFsuClient;
     private final IPnRaddAlternativeClient raddAltClient;
+    private final PnPollingFactory pollingFactory;
+    private final static String ACCEPTED = "ACCEPTED";
 
 
     @Autowired
-    public PnPaB2bUtils(ApplicationContext ctx, IPnPaB2bClient client,RestTemplate restTemplate, IPnRaddFsuClient raddFsuClient,
-                        IPnRaddAlternativeClient raddAltClient, PnB2bClientTimingConfigs timingConfigs) {
+    public PnPaB2bUtils(ApplicationContext ctx, IPnPaB2bClient client, RestTemplate restTemplate, IPnRaddFsuClient raddFsuClient,
+                        IPnRaddAlternativeClient raddAltClient, PnB2bClientTimingConfigs timingConfigs, PnPollingFactory pollingFactory) {
         this.restTemplate = restTemplate;
         this.ctx = ctx;
         this.client = client;
         this.raddFsuClient = raddFsuClient;
         this.raddAltClient = raddAltClient;
         this.timingConfigs = timingConfigs;
+        this.pollingFactory = pollingFactory;
     }
 
 
@@ -633,45 +640,60 @@ public class PnPaB2bUtils {
     }
 
 
-    public FullSentNotificationV23 waitForRequestAcceptation( NewNotificationResponse response) {
-        return waitForRequestAcceptation(response,16,getAcceptedWait());
+    public FullSentNotificationV23 waitForRequestAcceptation(NewNotificationResponse response,
+                                                             String apiKey) {
+        PnPollingServiceValidationStatusV23 validationStatusV23 = (PnPollingServiceValidationStatusV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V23);
+        validationStatusV23.setApiKey(apiKey);
+        PnPollingResponseV23 pollingResponseV23 = validationStatusV23.waitForEvent(response.getNotificationRequestId(), ACCEPTED);
+
+        return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification();
     }
 
-    public FullSentNotificationV23 waitForRequestNoAcceptation( NewNotificationResponse response) {
-        return waitForRequestAcceptation(response,8,getAcceptedWait());
+    public FullSentNotificationV23 waitForRequestNoAcceptation( NewNotificationResponse response, String apiKey) {
+
+        PnPollingServiceValidationStatusNoAcceptedV23 validationStatusNoAcceptedV23 = (PnPollingServiceValidationStatusNoAcceptedV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_NO_ACCEPTATION_V23);
+        validationStatusNoAcceptedV23.setApiKey(apiKey);
+        PnPollingResponseV23 pollingResponseV23 = validationStatusNoAcceptedV23.waitForEvent(response.getNotificationRequestId(), ACCEPTED);
+
+        return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification() ;
     }
 
 
-    public FullSentNotificationV23 waitForRequestAcceptationShort( NewNotificationResponse response) {
-        return waitForRequestAcceptation(response,230,5000);
+    public FullSentNotificationV23 waitForRequestAcceptationShort( NewNotificationResponse response, String apiKey) {
+
+        PnPollingServiceValidationStatusAcceptedShortV23 validationStatusAcceptedShortV23 = (PnPollingServiceValidationStatusAcceptedShortV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_ACCEPTATION_SHORT_V23);
+        validationStatusAcceptedShortV23.setApiKey(apiKey);
+        PnPollingResponseV23 pollingResponseV23 = validationStatusAcceptedShortV23.waitForEvent(response.getNotificationRequestId(), ACCEPTED);
+
+        return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification() ;
     }
 
 
-    private FullSentNotificationV23 waitForRequestAcceptation( NewNotificationResponse response, int numCheck, int waiting ) {
-        log.info("Request status for " + response.getNotificationRequestId() );
-        NewNotificationRequestStatusResponseV23 status = null;
-        long startTime = System.currentTimeMillis();
-        for( int i = 0; i < numCheck; i++ ) {
-
-            try {
-                Thread.sleep( waiting);
-            } catch (InterruptedException exc) {
-                throw new RuntimeException( exc );
-            }
-
-            status = client.getNotificationRequestStatus( response.getNotificationRequestId() );
-
-            log.info("New Notification Request status {}", status.getNotificationRequestStatus());
-            if ( "ACCEPTED".equals( status.getNotificationRequestStatus() )) {
-                break;
-            }
-        }
-        long endTime = System.currentTimeMillis();
-        log.info("Execution time {}ms",(endTime - startTime));
-        String iun = status.getIun();
-
-        return iun == null? null : client.getSentNotification( iun );
-    }
+//    private FullSentNotificationV23 waitForRequestAcceptation( NewNotificationResponse response, int numCheck, int waiting ) {
+//        log.info("Request status for " + response.getNotificationRequestId() );
+//        NewNotificationRequestStatusResponseV23 status = null;
+//        long startTime = System.currentTimeMillis();
+//        for( int i = 0; i < numCheck; i++ ) {
+//
+//            try {
+//                Thread.sleep( waiting);
+//            } catch (InterruptedException exc) {
+//                throw new RuntimeException( exc );
+//            }
+//
+//            status = client.getNotificationRequestStatus( response.getNotificationRequestId() );
+//
+//            log.info("New Notification Request status {}", status.getNotificationRequestStatus());
+//            if ( "ACCEPTED".equals( status.getNotificationRequestStatus() )) {
+//                break;
+//            }
+//        }
+//        long endTime = System.currentTimeMillis();
+//        log.info("Execution time {}ms",(endTime - startTime));
+//        String iun = status.getIun();
+//
+//        return iun == null? null : client.getSentNotification( iun );
+//    }
 
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification searchForRequestV1( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse response) {
 
