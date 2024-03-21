@@ -1,6 +1,7 @@
 package it.pagopa.pn.client.b2b.pa.polling.impl;
 
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NewNotificationRequestStatusResponseV21;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.FullSentNotificationV21;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV21;
@@ -15,6 +16,7 @@ public class PnPollingServiceValidationStatusV21 extends PnPollingTemplate<PnPol
 
     private final IPnPaB2bClient b2bClient;
     private NewNotificationRequestStatusResponseV21 requestStatusResponseV21;
+    private FullSentNotificationV21 notificationV21;
     private final TimingForTimeline timingForTimeline;
 
     public PnPollingServiceValidationStatusV21(IPnPaB2bClient b2bClient, TimingForTimeline timingForTimeline) {
@@ -29,6 +31,13 @@ public class PnPollingServiceValidationStatusV21 extends PnPollingTemplate<PnPol
             NewNotificationRequestStatusResponseV21 statusResponseV21 = b2bClient.getNotificationRequestStatusV21(id);
             pnPollingResponse.setStatusResponse(statusResponseV21);
             this.requestStatusResponseV21 = statusResponseV21;
+
+            if (pnPollingResponse.getStatusResponse().getIun() != null){
+                FullSentNotificationV21 sentNotificationV21 = b2bClient.getSentNotificationV21(pnPollingResponse.getStatusResponse().getIun());
+                pnPollingResponse.setNotification(sentNotificationV21);
+                this.notificationV21 = sentNotificationV21;
+
+            }
             return pnPollingResponse;
         };
     }
@@ -45,6 +54,12 @@ public class PnPollingServiceValidationStatusV21 extends PnPollingTemplate<PnPol
                 pnPollingResponse.setResult(false);
                 return false;
             }
+
+            if (pnPollingResponse.getNotification() == null){
+                pnPollingResponse.setResult(false);
+                return false;
+            }
+
             pnPollingResponse.setResult(true);
             return true;
         };
@@ -54,6 +69,7 @@ public class PnPollingServiceValidationStatusV21 extends PnPollingTemplate<PnPol
     protected PnPollingResponseV21 getException(Exception exception) {
         PnPollingResponseV21 pollingResponse = new PnPollingResponseV21();
         pollingResponse.setStatusResponse(this.requestStatusResponseV21);
+        pollingResponse.setNotification(this.notificationV21);
         pollingResponse.setResult(false);
         return pollingResponse;
     }
