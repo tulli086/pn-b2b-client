@@ -54,7 +54,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceStatusRapidV23.class,
         PnPollingServiceStatusRapidV21.class,
         PnPollingServiceStatusRapidV20.class,
-        PnPollingServiceStatusRapidV1.class
+        PnPollingServiceStatusRapidV1.class,
+        PnPollingServiceTimelineSlowV23.class,
+        PnPollingServiceTimelineSlowV21.class,
+        PnPollingServiceTimelineSlowV20.class,
+        PnPollingServiceTimelineSlowV1.class,
+        PnPollingServiceStatusSlowV23.class,
+        PnPollingServiceStatusSlowV21.class,
+        PnPollingServiceStatusSlowV20.class,
+        PnPollingServiceStatusSlowV1.class
 })
 @EnableScheduling
 @EnableConfigurationProperties
