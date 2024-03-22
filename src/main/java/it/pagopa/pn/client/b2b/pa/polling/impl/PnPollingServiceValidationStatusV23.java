@@ -87,7 +87,7 @@ public class PnPollingServiceValidationStatusV23 extends PnPollingTemplate<PnPol
     protected Integer getAtMost(String value) {
         value = value.concat("_VALIDATION");
         TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForStatusValidation(value);
-        return timingResult.numCheck();
+        return timingResult.numCheck() * timingResult.waiting();
     }
 
     @Override

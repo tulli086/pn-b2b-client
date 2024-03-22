@@ -24,7 +24,7 @@ public class PnPollingServiceValidationStatusAcceptedShortV23 extends PnPollingS
     protected Integer getAtMost(String value) {
         value = value.concat("_SHORT_VALIDATION");
         TimingForTimeline.TimingResult timingResult = this.getTimingForTimeline().getTimingForStatusValidation(value);
-        return timingResult.numCheck();
+        return timingResult.numCheck() * timingResult.waiting();
     }
 
 }
