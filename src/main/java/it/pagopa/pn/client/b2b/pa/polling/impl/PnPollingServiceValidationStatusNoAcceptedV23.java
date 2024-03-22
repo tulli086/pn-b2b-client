@@ -17,6 +17,6 @@ public class PnPollingServiceValidationStatusNoAcceptedV23 extends PnPollingServ
     protected Integer getAtMost(String value) {
         value = value.replace(value, "NO_ACCEPTED_VALIDATION");
         TimingForTimeline.TimingResult timingResult = this.getTimingForTimeline().getTimingForStatusValidation(value);
-        return timingResult.numCheck();
+        return timingResult.numCheck() * timingResult.waiting();
     }
 }
