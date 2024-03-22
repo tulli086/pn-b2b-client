@@ -283,152 +283,6 @@ public class AvanzamentoNotificheB2bSteps {
     }
 
 
-    private TimelineElementWait getTimelineElementCategoryV1(String timelineEventCategory) {
-        Integer waiting = sharedSteps.getWorkFlowWait();
-        TimelineElementWait timelineElementWait;
-        switch (timelineEventCategory) {
-            case "REQUEST_ACCEPTED":
-
-                timelineElementWait = new TimelineElementWait( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.REQUEST_ACCEPTED, 2, waiting);
-                break;
-            case "AAR_GENERATION":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.AAR_GENERATION, 2, waiting * 2);
-                break;
-            case "GET_ADDRESS":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.GET_ADDRESS, 2, waiting * 2);
-                break;
-            case "SEND_DIGITAL_DOMICILE":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_DIGITAL_DOMICILE, 2, waiting * 2);
-                break;
-            case "NOTIFICATION_VIEWED":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.NOTIFICATION_VIEWED, 2, waiting * 2);
-                break;
-            case "SEND_COURTESY_MESSAGE":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_COURTESY_MESSAGE, 10, sharedSteps.getWorkFlowWait());
-                break;
-            case "DIGITAL_SUCCESS_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.DIGITAL_SUCCESS_WORKFLOW, 3, waiting * 3);
-                break;
-            case "DIGITAL_FAILURE_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.DIGITAL_FAILURE_WORKFLOW, 8, waiting * 3);
-                break;
-            case "NOT_HANDLED":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.NOT_HANDLED, 8, sharedSteps.getWorkFlowWait());
-                break;
-            case "SEND_DIGITAL_FEEDBACK":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_DIGITAL_FEEDBACK, 4, waiting * 3);
-                break;
-            case "SEND_DIGITAL_PROGRESS":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_DIGITAL_PROGRESS, 5, waiting * 4);
-                break;
-            case "PUBLIC_REGISTRY_CALL":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.PUBLIC_REGISTRY_CALL, 2, waiting * 4);
-                break;
-            case "PUBLIC_REGISTRY_RESPONSE":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.PUBLIC_REGISTRY_RESPONSE, 4, waiting * 4);
-                break;
-            case "SCHEDULE_ANALOG_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SCHEDULE_ANALOG_WORKFLOW, 2, waiting * 3);
-                break;
-            case "ANALOG_SUCCESS_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.ANALOG_SUCCESS_WORKFLOW, 8, waiting * 4);
-                break;
-            case "ANALOG_FAILURE_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.ANALOG_FAILURE_WORKFLOW, 8, sharedSteps.getWorkFlowWait());
-                break;
-            case "SEND_ANALOG_DOMICILE":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_ANALOG_DOMICILE, 4, waiting * 3);
-                break;
-            case "SEND_ANALOG_PROGRESS":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_ANALOG_PROGRESS, 6, waiting * 3);
-                break;
-            case "SEND_ANALOG_FEEDBACK":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_ANALOG_FEEDBACK, 6, waiting * 3);
-                break;
-            case "PREPARE_SIMPLE_REGISTERED_LETTER":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.PREPARE_SIMPLE_REGISTERED_LETTER, 10, waiting * 3);
-                break;
-            case "SEND_SIMPLE_REGISTERED_LETTER":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER, 10, waiting * 3);
-                break;
-            case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS, 9, waiting * 3);
-                break;
-            case "PAYMENT":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.PAYMENT, 8, sharedSteps.getWorkFlowWait());
-                break;
-            case "PREPARE_ANALOG_DOMICILE":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.PREPARE_ANALOG_DOMICILE, 4, waiting * 5);
-                break;
-            case "COMPLETELY_UNREACHABLE":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.COMPLETELY_UNREACHABLE, 10, sharedSteps.getWorkFlowWait());
-                break;
-            case "COMPLETELY_UNREACHABLE_CREATION_REQUEST":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.COMPLETELY_UNREACHABLE_CREATION_REQUEST, 8, sharedSteps.getWorkFlowWait());
-                break;
-            case "PREPARE_DIGITAL_DOMICILE":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.PREPARE_DIGITAL_DOMICILE, 2, waiting * 3);
-                break;
-            case "SCHEDULE_DIGITAL_WORKFLOW":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SCHEDULE_DIGITAL_WORKFLOW, 2,waiting * 3);
-                break;
-            case "SCHEDULE_REFINEMENT":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.SCHEDULE_REFINEMENT, 8, waiting);
-                break;
-            case "REFINEMENT":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.REFINEMENT, 15, waiting);
-                break;
-            case "REQUEST_REFUSED":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.REQUEST_REFUSED, 2, waiting);
-                break;
-            case "DIGITAL_DELIVERY_CREATION_REQUEST":
-                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElementCategory.DIGITAL_DELIVERY_CREATION_REQUEST, 5, waiting * 3);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-        return timelineElementWait;
-    }
-
-
-//    private TimelineElementWait getTimelineElementCategoryV2(String timelineEventCategory) {
-//        Integer waiting = sharedSteps.getWorkFlowWait();
-//        TimelineElementWait timelineElementWait;
-//        switch (timelineEventCategory) {
-//            case "DIGITAL_SUCCESS_WORKFLOW":
-//                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementCategoryV20.DIGITAL_SUCCESS_WORKFLOW, 3, waiting * 3);
-//                break;
-//            case "NOTIFICATION_CANCELLED":
-//                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementCategoryV20.NOTIFICATION_CANCELLED, 5, waiting * 3);
-//                break;
-//            case "PAYMENT":
-//                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementCategoryV20.PAYMENT, 8, sharedSteps.getWorkFlowWait());
-//                break;
-//            default:
-//                throw new IllegalArgumentException();
-//        }
-//        return timelineElementWait;
-//    }
-
-//    private TimelineElementWait getTimelineElementCategoryV21(String timelineEventCategory) {
-//        Integer waiting = sharedSteps.getWorkFlowWait();
-//        TimelineElementWait timelineElementWait;
-//        switch (timelineEventCategory) {
-//            case "SEND_ANALOG_DOMICILE":
-//                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.TimelineElementCategoryV20.SEND_ANALOG_DOMICILE, 4, waiting * 3);
-//                break;
-//            case "SEND_ANALOG_PROGRESS":
-//                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.TimelineElementCategoryV20.SEND_ANALOG_PROGRESS, 6, waiting * 3);
-//                break;
-//            case "PAYMENT":
-//                timelineElementWait = new TimelineElementWait(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.TimelineElementCategoryV20.PAYMENT, 8, sharedSteps.getWorkFlowWait());
-//                break;
-//            default:
-//                throw new IllegalArgumentException();
-//        }
-//        return timelineElementWait;
-//    }
-
     private void checkTimelineElementEquality(String timelineEventCategory, TimelineElementV23 elementFromNotification, DataTest dataFromTest) {
         TimelineElementV23 elementFromTest = dataFromTest.getTimelineElement();
         TimelineElementDetailsV23 detailsFromNotification = elementFromNotification.getDetails();
@@ -1077,7 +931,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con deliveryDetailCode {string} tentativo {string}" )
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCode(String timelineEventCategory, String deliveryDetailCode, String attempt) {
-        PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
+        PnPollingServiceTimelineSlowV23 timelineRapidV23 = (PnPollingServiceTimelineSlowV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_SLOW_V23);
         timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
@@ -2528,29 +2382,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("sono presenti {int} attestazioni opponibili RECIPIENT_ACCESS")
     public void sonoPresentiAttestazioniOpponibili(int number) {
-//        boolean findElement = false;
-//        for (int i = 0; i < 16; i++) {
-//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-//            List<TimelineElementV23> timeline = sharedSteps.getSentNotification().getTimeline();
-//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-//
-//            int count = 0;
-//            for (TimelineElementV23 element : timeline) {
-//
-//                if (element.getCategory().equals(timelineElementInternalCategory)) count++;
-//            }
-//
-//            if (count == number) {
-//                findElement = true;
-//                break;
-//            }
-//
-//            try {
-//                Thread.sleep(sharedSteps.getWorkFlowWait());
-//            } catch (InterruptedException exc) {
-//                throw new RuntimeException(exc);
-//            }
-//        }
+
         String timelineEventCategory = TimelineElementCategoryV23.NOTIFICATION_VIEWED.getValue();
         PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
@@ -2633,26 +2465,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con responseStatus {string} e digitalAddressSource {string}")
     public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConResponseStatusAndDigitalAddressSource(String timelineEventCategory, String code, String digitalAddressSource) {
-//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-//
-//        TimelineElementV23 timelineElement = null;
-//
-//        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
-//            try {
-//                Thread.sleep(timelineElementWait.getWaiting());
-//            } catch (InterruptedException exc) {
-//                throw new RuntimeException(exc);
-//            }
-//
-//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-//
-//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-//
-//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-//            if (timelineElement != null) {
-//                break;
-//            }
-//        }
+
         PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
@@ -2682,12 +2495,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} siano configurati i campi municipalityDetails e foreignState")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratiCampiMunicipalityDetailsForeignState(String timelineEventCategory) {
-//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-//
-//        TimelineElementV23 timelineElement = null;
-//
-//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-//        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+
         PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
@@ -2747,12 +2555,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} con responseStatus {string} sia presente i campi deliveryDetailCode e deliveryFailureCause")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoDeliveryDetailCodeDeliveryFailureCause(String timelineEventCategory, String code) {
-//        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-//
-//        TimelineElementV23 timelineElement = null;
-//
-//        sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-//        timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+
         PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
@@ -2783,27 +2586,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende la corretta sospensione dell'invio cartaceo")
     public void siAttendeLaCorrettaSopsensioneDellInvioCartaceo() {
-//        TimelineElementWait timelineElementWait = getTimelineElementCategory("ANALOG_SUCCESS_WORKFLOW");
-//
-//        TimelineElementV23 timelineElement = null;
-//
-//
-//        for (int i = 0; i < 5; i++) {
-//            try {
-//                Thread.sleep(6000);
-//            } catch (InterruptedException exc) {
-//                throw new RuntimeException(exc);
-//            }
-//
-//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-//
-//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-//
-//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-//            if (timelineElement != null) {
-//                break;
-//            }
-//        }
+
         PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), "ANALOG_SUCCESS_WORKFLOW");
@@ -2831,26 +2614,7 @@ public class AvanzamentoNotificheB2bSteps {
     @Then("si attende il corretto pagamento della notifica")
     public void siAttendeIlCorrettoPagamentoDellaNotifica() {
         if (sharedSteps.getSentNotification()!= null){
-//            TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
-//
-//            TimelineElementV23 timelineElement = null;
-//
-//            for (int i = 0; i < 5; i++) {
-//                try {
-//                    Thread.sleep(60000);
-//                } catch (InterruptedException exc) {
-//                    throw new RuntimeException(exc);
-//                }
-//
-//                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-//
-//                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-//
-//                timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-//                if (timelineElement != null) {
-//                    break;
-//                }
-//            }
+
             PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
             timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
             PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
@@ -2874,26 +2638,7 @@ public class AvanzamentoNotificheB2bSteps {
                 sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
             }
         } else {
-//            TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
-//
-//            TimelineElementV23 timelineElement = null;
-//
-//            for (int i = 0; i < 5; i++) {
-//                try {
-//                    Thread.sleep(60000);
-//                } catch (InterruptedException exc) {
-//                    throw new RuntimeException(exc);
-//                }
-//
-//                sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotificationV1().getIun()));
-//
-//                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotificationV1().getTimeline());
-//
-//                timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-//                if (timelineElement != null) {
-//                    break;
-//                }
-//            }
+
             PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
             timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
             PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
@@ -2921,26 +2666,6 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende il corretto pagamento della notifica V1")
     public void siAttendeIlCorrettoPagamentoDellaNotificaV1() {
-        //            TimelineElementWait timelineElementWait = getTimelineElementCategoryV1("PAYMENT");
-//            it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement = null;
-
-//            for (int i = 0; i < 5; i++) {
-//                try {
-//                    Thread.sleep(60000);
-//                } catch (InterruptedException exc) {
-//                    throw new RuntimeException(exc);
-//                }
-
-//                sharedSteps.setSentNotificationV1(b2bClient.getSentNotificationV1(iun));
-
-//                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotificationV1().getTimeline());
-
-//                timelineElement = sharedSteps.getSentNotificationV1().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategoryV1())).findAny().orElse(null);
-//                if (timelineElement != null) {
-//                    break;
-//                }
-//            }
-//            Assertions.assertNotNull(timelineElement);
 
         PnPollingServiceTimelineRapidV1 timelineRapidV1 = (PnPollingServiceTimelineRapidV1) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V1);
         timelineRapidV1.setApiKeys(sharedSteps.getApiKeyTypeSetted());
@@ -2969,29 +2694,6 @@ public class AvanzamentoNotificheB2bSteps {
     @Then("si attende il corretto pagamento della notifica V2")
     public void siAttendeIlCorrettoPagamentoDellaNotificaV2() {
 
-//        String iun =sharedSteps.getIunVersionamento();
-
-//        TimelineElementWait timelineElementWait = getTimelineElementCategoryV2("PAYMENT");
-//        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementV20 timelineElement = null;
-
-//        for (int i = 0; i < 5; i++) {
-//            try {
-//                Thread.sleep(60000);
-//            } catch (InterruptedException exc) {
-//                throw new RuntimeException(exc);
-//            }
-//
-//            sharedSteps.setSentNotificationV2(b2bClient.getSentNotificationV2(iun));
-//
-//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotificationV2().getTimeline());
-//
-//            timelineElement = sharedSteps.getSentNotificationV2().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategoryV2())).findAny().orElse(null);
-//            if (timelineElement != null) {
-//                break;
-//            }
-//        }
-//        Assertions.assertNotNull(timelineElement);
-
         PnPollingServiceTimelineRapidV20 timelineRapidV2 = (PnPollingServiceTimelineRapidV20) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V20);
         timelineRapidV2.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV20 pnPollingResponseV20 = timelineRapidV2.waitForEvent(sharedSteps.getIunVersionamento(), "PAYMENT");
@@ -3018,26 +2720,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende il corretto pagamento della notifica con l' avviso {int} dal destinatario {int}")
     public void siAttendeIlCorrettoPagamentoDellaNotificaConAvvisoDalDestinatario(Integer avviso, Integer destinatario) {
-//        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
-//
-//        TimelineElementV23 timelineElement = null;
-//
-//        for (int i = 0; i < 5; i++) {
-//            try {
-//                Thread.sleep(60000);
-//            } catch (InterruptedException exc) {
-//                throw new RuntimeException(exc);
-//            }
-//
-//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-//
-//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-//
-//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-//            if (timelineElement != null) {
-//                break;
-//            }
-//        }
+
         PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
@@ -3083,26 +2766,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende il non corretto pagamento della notifica con l' avviso {int} dal destinatario {int}")
     public void siAttendeIlNonCorrettoPagamentoDellaNotificaConAvvisoDalDestinatario(Integer avviso, Integer destinatario) {
-//        TimelineElementWait timelineElementWait = getTimelineElementCategory("PAYMENT");
-//
-//        TimelineElementV23 timelineElement = null;
-//
-//        for (int i = 0; i < 5; i++) {
-//            try {
-//                Thread.sleep(60000);
-//            } catch (InterruptedException exc) {
-//                throw new RuntimeException(exc);
-//            }
-//
-//            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
-//
-//            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-//
-//            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
-//            if (timelineElement != null) {
-//                break;
-//            }
-//          }
+
         PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
         timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), "PAYMENT");
@@ -3756,30 +3420,34 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("viene verificato che nell'elemento di timeline della notifica {string} sia presente il campo Digital Address da National Registry")
     public void vieneVerificatoCheElementoTimelineSianoConfiguratoCampoDigitalAddressNationalRegistry(String timelineEventCategory) {
-        PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
-        timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
-        PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), timelineEventCategory);
 
+        TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
+
+        TimelineElementV23 timelineElement = null;
+
+
+        for (int i = 0; i < timelineElementWait.getNumCheck(); i++) {
+            try {
+                Thread.sleep(timelineElementWait.getWaiting());
+            } catch (InterruptedException exc) {
+                throw new RuntimeException(exc);
+            }
+
+            sharedSteps.setSentNotification(b2bClient.getSentNotification(sharedSteps.getSentNotification().getIun()));
+
+            timelineElement = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(timelineElementWait.getTimelineElementCategory())).findAny().orElse(null);
+            if (timelineElement != null) {
+                break;
+            }
+        }
         try {
-            Assertions.assertTrue(pnPollingResponseV23.getResult());
-
-            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-
-            TimelineElementV23 timelineElement = pnPollingResponseV23
-                .getNotification()
-                .getTimeline()
-                .stream()
-                .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
-                .findAny()
-                .orElse(null);
-
             logger.info("TIMELINE_ELEMENT: " + timelineElement);
             Assertions.assertNotNull(timelineElement);
             Assertions.assertNotNull(timelineElement.getDetails().getDigitalAddress());
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
+
     }
 
     //Notifica Annullata
