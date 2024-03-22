@@ -333,7 +333,7 @@ public class SharedSteps {
                     logger.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
-                FullSentNotificationV23 fullSentNotificationV23 = b2bUtils.waitForRequestAcceptation(internalNotificationResponse, getApiKeyTypeSetted().toString());
+                FullSentNotificationV23 fullSentNotificationV23 = b2bUtils.waitForRequestAcceptation(internalNotificationResponse);
                 Assertions.assertNotNull(fullSentNotificationV23);
 
                 //ATTESA ELEMENTO DI TIMELINE
@@ -1185,8 +1185,8 @@ public class SharedSteps {
                     logger.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
-
-                notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse, getApiKeyTypeSetted().toString());
+                b2bUtils.setClient(b2bClient);
+                notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
             });
 
             try {
@@ -1217,7 +1217,7 @@ public class SharedSteps {
                     throw new RuntimeException(e);
                 }
 
-                notificationResponseComplete = b2bUtils.waitForRequestNoAcceptation(newNotificationResponse, getApiKeyTypeSetted().toString());
+                notificationResponseComplete = b2bUtils.waitForRequestNoAcceptation(newNotificationResponse);
             });
 
             try {
@@ -1248,8 +1248,8 @@ public class SharedSteps {
                     logger.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
-
-                notificationResponseComplete = b2bUtils.waitForRequestAcceptationShort(newNotificationResponse, getApiKeyTypeSetted().toString());
+                b2bUtils.setClient(b2bClient);
+                notificationResponseComplete = b2bUtils.waitForRequestAcceptationShort(newNotificationResponse);
             });
 
             try {
