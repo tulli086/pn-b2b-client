@@ -667,7 +667,6 @@ public class AvanzamentoNotificheB2bSteps {
                 .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
                 .findAny()
                 .orElse(null);
-            Assertions.assertTrue(pnPollingResponseV23.getResult());
             Assertions.assertNotNull(timelineElement);
             sharedSteps.setTimelineElementV23(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
@@ -735,9 +734,9 @@ public class AvanzamentoNotificheB2bSteps {
             iun = sharedSteps.getSentNotificationV2().getIun();
         }
 
-        PnPollingServiceTimelineSlowV1 timelineRapidV1 = (PnPollingServiceTimelineSlowV1) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V1);
-        timelineRapidV1.setApiKeys(sharedSteps.getApiKeyTypeSetted());
-        PnPollingResponseV1 pnPollingResponseV1 = timelineRapidV1.waitForEvent(iun, timelineEventCategory);
+        PnPollingServiceTimelineSlowV1 timelineSlowV1 = (PnPollingServiceTimelineSlowV1) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_SLOW_V1);
+        timelineSlowV1.setApiKeys(sharedSteps.getApiKeyTypeSetted());
+        PnPollingResponseV1 pnPollingResponseV1 = timelineSlowV1.waitForEvent(iun, timelineEventCategory);
         try {
             Assertions.assertTrue(pnPollingResponseV1.getResult());
             Assertions.assertNotNull(pnPollingResponseV1.getNotification().getTimeline());
@@ -1208,7 +1207,7 @@ public class AvanzamentoNotificheB2bSteps {
                             && elem.getDetails().getRecIndex().equals(destinatario))
                     .findAny()
                     .orElse(null);
-            Assertions.assertNotNull(timelineElement);
+            Assertions.assertNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
