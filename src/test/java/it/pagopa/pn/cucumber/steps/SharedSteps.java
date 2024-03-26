@@ -208,6 +208,8 @@ public class SharedSteps {
     private String defaultDigitalAddress = "testpagopa3@pec.pagopa.it";
 
     private SettableApiKey.ApiKeyType apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
+
+
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
@@ -1729,6 +1731,7 @@ public class SharedSteps {
     public void setNotificationError(HttpStatusCodeException notificationError) {
         this.notificationError = notificationError;
     }
+
 
     public SettableApiKey.ApiKeyType getApiKeyTypeSetted() {
         return apiKeyTypeSetted;

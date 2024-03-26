@@ -47,18 +47,28 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         TimingForTimeline.class,
         PnB2bClientTimingConfigs.class,
         PnPollingFactory.class,
-        PnPollingServiceTimelineRapidOldVersion.class,
-        PnPollingServiceTimelineRapidNewVersion.class,
-        PnPollingServiceStateRapidNewVersion.class,
-        PnPollingServiceStateRapidOldVersion.class,
+        PnPollingServiceTimelineRapidV23.class,
+        PnPollingServiceTimelineRapidV21.class,
+        PnPollingServiceTimelineRapidV20.class,
+        PnPollingServiceTimelineRapidV1.class,
+        PnPollingServiceStatusRapidV23.class,
+        PnPollingServiceStatusRapidV21.class,
+        PnPollingServiceStatusRapidV20.class,
+        PnPollingServiceStatusRapidV1.class,
+        PnPollingServiceTimelineSlowV23.class,
+        PnPollingServiceTimelineSlowV21.class,
+        PnPollingServiceTimelineSlowV20.class,
+        PnPollingServiceTimelineSlowV1.class,
+        PnPollingServiceStatusSlowV23.class,
+        PnPollingServiceStatusSlowV21.class,
+        PnPollingServiceStatusSlowV20.class,
+        PnPollingServiceStatusSlowV1.class,
         PnPollingServiceValidationStatusV10.class,
         PnPollingServiceValidationStatusV20.class,
         PnPollingServiceValidationStatusV21.class,
         PnPollingServiceValidationStatusV23.class,
         PnPollingServiceValidationStatusNoAcceptedV23.class,
         PnPollingServiceValidationStatusAcceptedShortV23.class
-
-
 })
 @EnableScheduling
 @EnableConfigurationProperties
