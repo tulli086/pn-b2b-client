@@ -1,5 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.polling.design;
 
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponse;
 import it.pagopa.pn.client.b2b.pa.polling.IPnPollingService;
 import org.springframework.stereotype.Component;
@@ -23,8 +24,8 @@ public class PnPollingFactory {
         return IPnPollingService;
     }
 
-    public void execute(String pollingType, String iun, String checkValue) {
+    public void execute(String pollingType, String iun, PnPollingParameter pnPollingParameter) {
         IPnPollingService<?> iPnPollingService = pollingServiceMap.get(pollingType);
-        PnPollingResponse pnPollingResponse = iPnPollingService.waitForEvent(iun, checkValue);
+        PnPollingResponse pnPollingResponse = iPnPollingService.waitForEvent(iun, pnPollingParameter);
     }
 }

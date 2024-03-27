@@ -5,6 +5,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NewNotificationRequestStatusResponseV23;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
@@ -26,7 +27,7 @@ public class PnPollingServiceValidationStatusV23 extends PnPollingTemplate<PnPol
     }
 
     @Override
-    protected Callable<PnPollingResponseV23> getPollingResponse(String id, String value) {
+    protected Callable<PnPollingResponseV23> getPollingResponse(String id, PnPollingParameter pnPollingParameter) {
         return () -> {
             PnPollingResponseV23 pnPollingResponse = new PnPollingResponseV23();
             NewNotificationRequestStatusResponseV23 statusResponseV23 = b2bClient.getNotificationRequestStatus(id);
@@ -45,14 +46,14 @@ public class PnPollingServiceValidationStatusV23 extends PnPollingTemplate<PnPol
     }
 
     @Override
-    protected Predicate<PnPollingResponseV23> checkCondition(String id, String value) {
+    protected Predicate<PnPollingResponseV23> checkCondition(String id, PnPollingParameter pnPollingParameter) {
         return (pnPollingResponse) -> {
             if(pnPollingResponse.getStatusResponse() == null) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
 
-            if(!pnPollingResponse.getStatusResponse().getNotificationRequestStatus().equalsIgnoreCase(value.trim())) {
+            if(!pnPollingResponse.getStatusResponse().getNotificationRequestStatus().equalsIgnoreCase(pnPollingParameter.getValue().trim())) {
                 pnPollingResponse.setResult(false);
                 return false;
             }

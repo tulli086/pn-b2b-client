@@ -4,6 +4,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
@@ -25,7 +26,7 @@ public class PnPollingServiceTimelineRapidV1 extends PnPollingTemplate<PnPolling
     }
 
     @Override
-    protected Callable<PnPollingResponseV1> getPollingResponse(String iun, String value) {
+    protected Callable<PnPollingResponseV1> getPollingResponse(String iun, PnPollingParameter pnPollingParameter) {
         return () -> {
             PnPollingResponseV1 pnPollingResponse = new PnPollingResponseV1();
             FullSentNotification fullSentNotification = pnPaB2bClient.getSentNotificationV1(iun);
@@ -36,7 +37,7 @@ public class PnPollingServiceTimelineRapidV1 extends PnPollingTemplate<PnPolling
     }
 
     @Override
-    protected Predicate<PnPollingResponseV1> checkCondition(String iun, String value) {
+    protected Predicate<PnPollingResponseV1> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
         return (pnPollingResponse) -> {
             if(pnPollingResponse.getNotification() == null) {
                 pnPollingResponse.setResult(false);
@@ -44,7 +45,7 @@ public class PnPollingServiceTimelineRapidV1 extends PnPollingTemplate<PnPolling
             }
 
             if(pnPollingResponse.getNotification().getTimeline().isEmpty() ||
-                    !isPresentCategory(pnPollingResponse, value)) {
+                    !isPresentCategory(pnPollingResponse, pnPollingParameter.getValue())) {
                 pnPollingResponse.setResult(false);
                 return false;
             }

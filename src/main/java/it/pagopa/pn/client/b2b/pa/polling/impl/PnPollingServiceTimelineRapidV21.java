@@ -4,6 +4,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.TimelineElementV20;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV21;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
@@ -25,7 +26,7 @@ public class PnPollingServiceTimelineRapidV21 extends PnPollingTemplate<PnPollin
     }
 
     @Override
-    protected Callable<PnPollingResponseV21> getPollingResponse(String iun, String value) {
+    protected Callable<PnPollingResponseV21> getPollingResponse(String iun, PnPollingParameter pnPollingParameter) {
         return () -> {
             PnPollingResponseV21 pnPollingResponse = new PnPollingResponseV21();
             FullSentNotificationV21 fullSentNotification = pnPaB2bClient.getSentNotificationV21(iun);
@@ -36,7 +37,7 @@ public class PnPollingServiceTimelineRapidV21 extends PnPollingTemplate<PnPollin
     }
 
     @Override
-    protected Predicate<PnPollingResponseV21> checkCondition(String iun, String value) {
+    protected Predicate<PnPollingResponseV21> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
         return (pnPollingResponse) -> {
             if(pnPollingResponse.getNotification() == null) {
                 pnPollingResponse.setResult(false);
@@ -44,7 +45,7 @@ public class PnPollingServiceTimelineRapidV21 extends PnPollingTemplate<PnPollin
             }
 
             if(pnPollingResponse.getNotification().getTimeline().isEmpty() ||
-                    !isPresentCategory(pnPollingResponse, value)) {
+                    !isPresentCategory(pnPollingResponse, pnPollingParameter.getValue())) {
                 pnPollingResponse.setResult(false);
                 return false;
             }

@@ -4,6 +4,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV23;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
@@ -25,7 +26,7 @@ public class PnPollingServiceTimelineRapidV23 extends PnPollingTemplate<PnPollin
     }
 
     @Override
-    public Callable<PnPollingResponseV23> getPollingResponse(String iun, String value) {
+    public Callable<PnPollingResponseV23> getPollingResponse(String iun, PnPollingParameter pnPollingParameter) {
         return () -> {
             PnPollingResponseV23 pnPollingResponse = new PnPollingResponseV23();
             FullSentNotificationV23 fullSentNotificationV23 = pnPaB2bClient.getSentNotification(iun);
@@ -36,7 +37,7 @@ public class PnPollingServiceTimelineRapidV23 extends PnPollingTemplate<PnPollin
     }
 
     @Override
-    protected Predicate<PnPollingResponseV23> checkCondition(String iun, String value) {
+    protected Predicate<PnPollingResponseV23> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
         return (pnPollingResponse) -> {
             if(pnPollingResponse.getNotification() == null) {
                 pnPollingResponse.setResult(false);
@@ -44,7 +45,7 @@ public class PnPollingServiceTimelineRapidV23 extends PnPollingTemplate<PnPollin
             }
 
             if(pnPollingResponse.getNotification().getTimeline().isEmpty() ||
-                    !isPresentCategory(pnPollingResponse, value)) {
+                    !isPresentCategory(pnPollingResponse, pnPollingParameter.getValue())) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
