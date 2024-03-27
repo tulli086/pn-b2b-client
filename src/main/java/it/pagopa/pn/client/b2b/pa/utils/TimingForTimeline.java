@@ -101,7 +101,7 @@ public class TimingForTimeline {
         IN_VALIDATION(2,0),
         ACCEPTED(2,0),
         REFUSED(10,0),
-        ACCEPTED_VALIDATION(16,0),
+        ACCEPTED_VALIDATION(15,0),
         NO_ACCEPTED_VALIDATION(8,0),
         ACCEPTED_SHORT_VALIDATION(230,0),
         REFUSED_VALIDATION(10,0),
