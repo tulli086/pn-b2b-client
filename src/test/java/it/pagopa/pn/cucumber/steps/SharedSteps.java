@@ -1187,7 +1187,7 @@ public class SharedSteps {
                     logger.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
-                b2bUtils.setClient(b2bClient);
+
                 notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
             });
 
@@ -1250,7 +1250,7 @@ public class SharedSteps {
                     logger.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
-                b2bUtils.setClient(b2bClient);
+
                 notificationResponseComplete = b2bUtils.waitForRequestAcceptationShort(newNotificationResponse);
             });
 
