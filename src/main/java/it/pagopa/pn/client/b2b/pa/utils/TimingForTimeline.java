@@ -82,7 +82,7 @@ public class TimingForTimeline {
         NOTIFICATION_VIEWED(2,2),
         PREPARE_ANALOG_DOMICILE(9,0),
         SEND_ANALOG_DOMICILE(9,0),
-        SEND_ANALOG_PROGRESS(8,0),
+        SEND_ANALOG_PROGRESS(8,2),
         SEND_ANALOG_FEEDBACK(10,0),
         PAYMENT(9,0),
         COMPLETELY_UNREACHABLE(10,0),

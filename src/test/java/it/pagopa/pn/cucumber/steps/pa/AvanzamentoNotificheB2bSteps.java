@@ -125,6 +125,7 @@ public class AvanzamentoNotificheB2bSteps {
                         .getValue().equals(status))
                 .findAny()
                 .orElse(null);
+
         Assertions.assertNotNull(notificationStatusHistoryElement);
         sharedSteps.setSentNotificationV1(pnPollingResponseV1.getNotification());
         logger.info("NOTIFICATION_STATUS_HISTORY v1: " + sharedSteps.getSentNotificationV1().getNotificationStatusHistory());
@@ -661,7 +662,7 @@ public class AvanzamentoNotificheB2bSteps {
         TimelineElementV23 timelineElement = null;
         PnPollingServiceTimelineSlowV23 timelineSlowV23 = (PnPollingServiceTimelineSlowV23)  pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_SLOW_V23);
         timelineSlowV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
-        PnPollingResponseV23 pnPollingResponseV23 = timelineSlowV23.waitForEvent(sharedSteps.getSentNotification().getIun(), PnPollingParameter.builder().value(timelineEventCategory).build());
+        PnPollingResponseV23 pnPollingResponseV23 = timelineSlowV23.waitForEvent(sharedSteps.getIunVersionamento(), PnPollingParameter.builder().value(timelineEventCategory).build());
 
         try {
             Assertions.assertTrue(pnPollingResponseV23.getResult());
@@ -683,9 +684,9 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} V1")
     public void readingEventUpToTheTimelineElementOfNotificationV1(String timelineEventCategory) {
-        PnPollingServiceTimelineRapidV1 timelineRapidV1 = (PnPollingServiceTimelineRapidV1) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V1);
-        timelineRapidV1.setApiKeys(sharedSteps.getApiKeyTypeSetted());
-        PnPollingResponseV1 pnPollingResponseV1 = timelineRapidV1.waitForEvent(sharedSteps.getIunVersionamento(), PnPollingParameter.builder().value(timelineEventCategory).build());
+        PnPollingServiceTimelineSlowV1 timelineSlowV1 = (PnPollingServiceTimelineSlowV1) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_SLOW_V1);
+        timelineSlowV1.setApiKeys(sharedSteps.getApiKeyTypeSetted());
+        PnPollingResponseV1 pnPollingResponseV1 = timelineSlowV1.waitForEvent(sharedSteps.getIunVersionamento(), PnPollingParameter.builder().value(timelineEventCategory).build());
 
         Assertions.assertTrue(pnPollingResponseV1.getResult());
         Assertions.assertNotNull(pnPollingResponseV1.getNotification().getTimeline());
@@ -733,10 +734,21 @@ public class AvanzamentoNotificheB2bSteps {
         timelineSlowV1.setApiKeys(sharedSteps.getApiKeyTypeSetted());
         PnPollingResponseV1 pnPollingResponseV1 = timelineSlowV1.waitForEvent(iun, PnPollingParameter.builder().value(timelineEventCategory).build());
 
-        Assertions.assertTrue(pnPollingResponseV1.getResult());
-        Assertions.assertNotNull(pnPollingResponseV1.getNotification().getTimeline());
         sharedSteps.setSentNotificationV1(pnPollingResponseV1.getNotification());
         logger.info("NOTIFICATION_TIMELINE V1 : " + sharedSteps.getSentNotificationV1().getTimeline());
+
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement timelineElement =
+                pnPollingResponseV1.getNotification()
+                        .getTimeline()
+                        .stream()
+                        .filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory))
+                        .findAny()
+                        .orElse(null);
+
+
+        Assertions.assertFalse(pnPollingResponseV1.getResult());
+        Assertions.assertNull(timelineElement);
+
     }
 
     @Then("viene controllato che l'elemento di timeline della notifica {string} non esiste dopo il rifiuto della notifica stessa")
@@ -938,9 +950,9 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con deliveryDetailCode {string} e verifica tipo DOC {string} tentativo {string}")
     public void readingEventUpToTheTimelineElementOfNotificationWithDeliveryDetailCodeVerifyTypeDoc(String timelineEventCategory, String deliveryDetailCode, String tipoDoc,String attempt) {
-        PnPollingServiceTimelineSlowV23 timelineSlowV23 = (PnPollingServiceTimelineSlowV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_SLOW_V23);
-        timelineSlowV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
-        PnPollingResponseV23 pnPollingResponseV23 = timelineSlowV23.waitForEvent(sharedSteps.getSentNotification().getIun(), PnPollingParameter.builder().value(timelineEventCategory).build());
+        PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
+        timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
+        PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), PnPollingParameter.builder().value(timelineEventCategory).build());
 
         try {
             Assertions.assertTrue(pnPollingResponseV23.getResult());
@@ -2383,12 +2395,12 @@ public class AvanzamentoNotificheB2bSteps {
         } else {
             PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
             timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
-            PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), PnPollingParameter.builder().value("PAYMENT").build());
+            PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotificationV1().getIun(), PnPollingParameter.builder().value("PAYMENT").build());
 
             try {
                 Assertions.assertTrue(pnPollingResponseV23.getResult());
                 sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotificationV1().getTimeline());
                 TimelineElementV23 timelineElement = pnPollingResponseV23
                     .getNotification()
                     .getTimeline()
