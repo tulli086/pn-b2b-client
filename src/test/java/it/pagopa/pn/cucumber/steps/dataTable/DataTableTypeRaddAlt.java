@@ -6,6 +6,8 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.Address;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryRequestGeoLocation;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.UpdateRegistryRequest;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -48,6 +50,20 @@ public class DataTableTypeRaddAlt {
         return sportelloRadd;
     }
 
+    @DataTableType
+    public synchronized UpdateRegistryRequest convertUpdateRegistryRequest(Map<String, String> data){
+        UpdateRegistryRequest sportelloAggiornatoRadd= new UpdateRegistryRequest()
+                .description(getValue(data,RADD_DESCRIPTION.key)==null? null: getValue(data,RADD_DESCRIPTION.key))
+                .phoneNumber(getValue(data,RADD_PHONE_NUMBER.key)==null? null:getValue(data,RADD_PHONE_NUMBER.key))
+                .openingTime(getValue(data,RADD_PHONE_NUMBER.key)==null? null:getValue(data,RADD_PHONE_NUMBER.key));
+
+        try {
+            Thread.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return sportelloAggiornatoRadd;
+    }
 
 public OffsetDateTime setData(String data){
         OffsetDateTime date= OffsetDateTime.now();
