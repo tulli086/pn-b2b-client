@@ -37,15 +37,15 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
     protected Callable<PnPollingResponseV20> getPollingResponse(String iun, PnPollingParameter pnPollingParameter) {
         return () -> {
             PnPollingResponseV20 pnPollingResponse = new PnPollingResponseV20();
-            FullSentNotificationV20 fullSentNotification;
+            FullSentNotificationV20 fullSentNotificationV20;
             try {
-                fullSentNotification = pnPaB2bClient.getSentNotificationV2(iun);
+                fullSentNotificationV20 = pnPaB2bClient.getSentNotificationV2(iun);
             } catch (Exception exception) {
                 logger.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", iun, pnPaB2bClient.getApiKeySetted().name(), exception.getMessage());
                 throw new PnPollingException(exception.getMessage());
             }
-            pnPollingResponse.setNotification(fullSentNotification);
-            this.notificationV20 = fullSentNotification;
+            pnPollingResponse.setNotification(fullSentNotificationV20);
+            this.notificationV20 = fullSentNotificationV20;
             return pnPollingResponse;
         };
     }

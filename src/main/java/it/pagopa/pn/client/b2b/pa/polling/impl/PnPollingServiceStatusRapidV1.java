@@ -9,7 +9,6 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,7 +19,6 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
-@Slf4j
 @Service(PnPollingStrategy.STATUS_RAPID_V1)
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnPollingServiceStatusRapidV1 extends PnPollingTemplate<PnPollingResponseV1> {
