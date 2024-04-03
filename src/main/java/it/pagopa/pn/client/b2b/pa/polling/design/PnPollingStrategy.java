@@ -18,7 +18,7 @@ public class PnPollingStrategy {
     public static final String STATUS_SLOW_V21 = "STATUS_SLOW_V21";
     public static final String STATUS_SLOW_V20 = "STATUS_SLOW_V20";
     public static final String STATUS_SLOW_V1 = "STATUS_SLOW_V1";
-    public static final String VALIDATION_STATUS_V10 = "VALIDATION_STATUS_V10";
+    public static final String VALIDATION_STATUS_V1 = "VALIDATION_STATUS_V1";
     public static final String VALIDATION_STATUS_V20 = "VALIDATION_STATUS_V20";
     public static final String VALIDATION_STATUS_V21 = "VALIDATION_STATUS_V21";
     public static final String VALIDATION_STATUS_V23 = "VALIDATION_STATUS_V23";

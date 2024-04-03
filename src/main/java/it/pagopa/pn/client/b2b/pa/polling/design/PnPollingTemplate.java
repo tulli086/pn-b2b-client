@@ -17,7 +17,6 @@ public abstract class PnPollingTemplate<T extends PnPollingResponse> implements 
                     .atMost(getAtMost(pnPollingParameter.getValue()), MILLISECONDS)
                     .with()
                     .pollInterval(getPollInterval(pnPollingParameter.getValue()), MILLISECONDS)
-                    .ignoreExceptions()
                     .until(getPollingResponse(id, pnPollingParameter), checkCondition(id, pnPollingParameter));
         } catch (ConditionTimeoutException conditionTimeoutException) {
             //Eseguo il catch nel caso in cui checkCondition() non ritornerà mai true

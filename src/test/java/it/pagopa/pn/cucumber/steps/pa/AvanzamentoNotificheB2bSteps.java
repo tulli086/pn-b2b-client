@@ -2372,46 +2372,31 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si attende il corretto pagamento della notifica")
     public void siAttendeIlCorrettoPagamentoDellaNotifica() {
-        if (sharedSteps.getSentNotification()!= null){
-            PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
-            timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
-            PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), PnPollingParameter.builder().value("PAYMENT").build());
-
-            try {
-                Assertions.assertTrue(pnPollingResponseV23.getResult());
-                sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
-                TimelineElementV23 timelineElement = pnPollingResponseV23
-                    .getNotification()
-                    .getTimeline()
-                    .stream()
-                    .filter(elem -> elem.getCategory().getValue().equals("PAYMENT"))
-                    .findAny()
-                    .orElse(null);
-                Assertions.assertNotNull(timelineElement);
-            } catch (AssertionFailedError assertionFailedError) {
-                sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
-            }
+        String iun;
+        if (sharedSteps.getSentNotification() != null) {
+            iun = sharedSteps.getSentNotification().getIun();
         } else {
-            PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
-            timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
-            PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotificationV1().getIun(), PnPollingParameter.builder().value("PAYMENT").build());
+            iun = sharedSteps.getSentNotificationV1().getIun();
+        }
 
-            try {
-                Assertions.assertTrue(pnPollingResponseV23.getResult());
-                sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
-                logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotificationV1().getTimeline());
-                TimelineElementV23 timelineElement = pnPollingResponseV23
-                    .getNotification()
-                    .getTimeline()
-                    .stream()
-                    .filter(elem -> elem.getCategory().getValue().equals("PAYMENT"))
-                    .findAny()
-                    .orElse(null);
-                Assertions.assertNotNull(timelineElement);
-            } catch (AssertionFailedError assertionFailedError) {
-                sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
-            }
+        PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
+        timelineRapidV23.setApiKeys(sharedSteps.getApiKeyTypeSetted());
+        PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(iun, PnPollingParameter.builder().value("PAYMENT").build());
+
+        try {
+            Assertions.assertTrue(pnPollingResponseV23.getResult());
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+            TimelineElementV23 timelineElement = pnPollingResponseV23
+                .getNotification()
+                .getTimeline()
+                .stream()
+                .filter(elem -> elem.getCategory().getValue().equals("PAYMENT"))
+                .findAny()
+                .orElse(null);
+            Assertions.assertNotNull(timelineElement);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
 

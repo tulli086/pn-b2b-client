@@ -712,9 +712,9 @@ public class PnPaB2bUtils {
 
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification waitForRequestAcceptationV1( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse response) {
 
-        PnPollingServiceValidationStatusV10 validationStatusV10 = (PnPollingServiceValidationStatusV10) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V10);
-        validationStatusV10.setApiKeys(client.getApiKeySetted());
-        PnPollingResponseV1 pollingResponseV1 = validationStatusV10.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
+        PnPollingServiceValidationStatusV1 validationStatusV1 = (PnPollingServiceValidationStatusV1) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V1);
+        validationStatusV1.setApiKeys(client.getApiKeySetted());
+        PnPollingResponseV1 pollingResponseV1 = validationStatusV1.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
 
         return pollingResponseV1.getNotification() == null ? null : pollingResponseV1.getNotification();
     }

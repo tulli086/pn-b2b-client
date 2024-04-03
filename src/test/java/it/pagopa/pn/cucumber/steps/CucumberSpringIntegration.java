@@ -63,7 +63,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceStatusSlowV21.class,
         PnPollingServiceStatusSlowV20.class,
         PnPollingServiceStatusSlowV1.class,
-        PnPollingServiceValidationStatusV10.class,
+        PnPollingServiceValidationStatusV1.class,
         PnPollingServiceValidationStatusV20.class,
         PnPollingServiceValidationStatusV21.class,
         PnPollingServiceValidationStatusV23.class,

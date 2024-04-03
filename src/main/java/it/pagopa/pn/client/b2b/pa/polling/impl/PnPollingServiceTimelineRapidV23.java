@@ -6,18 +6,25 @@ import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
+import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
+@Slf4j
 @Service(PnPollingStrategy.TIMELINE_RAPID_V23)
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnPollingServiceTimelineRapidV23 extends PnPollingTemplate<PnPollingResponseV23> {
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     protected final TimingForTimeline timingForTimeline;
     private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotificationV23 notificationV23;
@@ -32,7 +39,13 @@ public class PnPollingServiceTimelineRapidV23 extends PnPollingTemplate<PnPollin
     public Callable<PnPollingResponseV23> getPollingResponse(String iun, PnPollingParameter pnPollingParameter) {
         return () -> {
             PnPollingResponseV23 pnPollingResponse = new PnPollingResponseV23();
-            FullSentNotificationV23 fullSentNotificationV23 = pnPaB2bClient.getSentNotification(iun);
+            FullSentNotificationV23 fullSentNotificationV23;
+            try {
+                fullSentNotificationV23 = pnPaB2bClient.getSentNotification(iun);
+            } catch (Exception exception) {
+                logger.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", iun, pnPaB2bClient.getApiKeySetted().name(), exception.getMessage());
+                throw new PnPollingException(exception.getMessage());
+            }
             pnPollingResponse.setNotification(fullSentNotificationV23);
             this.notificationV23 = fullSentNotificationV23;
             return pnPollingResponse;

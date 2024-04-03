@@ -6,22 +6,28 @@ import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV21;
+import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+
+
 @Service(PnPollingStrategy.VALIDATION_STATUS_V21)
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnPollingServiceValidationStatusV21 extends PnPollingTemplate<PnPollingResponseV21> {
-
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final IPnPaB2bClient b2bClient;
     private NewNotificationRequestStatusResponseV21 requestStatusResponseV21;
     private FullSentNotificationV21 notificationV21;
     private final TimingForTimeline timingForTimeline;
+
 
     public PnPollingServiceValidationStatusV21(IPnPaB2bClient b2bClient, TimingForTimeline timingForTimeline) {
         this.b2bClient = b2bClient;
@@ -37,9 +43,15 @@ public class PnPollingServiceValidationStatusV21 extends PnPollingTemplate<PnPol
             this.requestStatusResponseV21 = statusResponseV21;
 
             if (pnPollingResponse.getStatusResponse().getIun() != null){
-                FullSentNotificationV21 sentNotificationV21 = b2bClient.getSentNotificationV21(pnPollingResponse.getStatusResponse().getIun());
-                pnPollingResponse.setNotification(sentNotificationV21);
-                this.notificationV21 = sentNotificationV21;
+                FullSentNotificationV21 fullSentNotificationV21;
+                try {
+                    fullSentNotificationV21 = b2bClient.getSentNotificationV21(pnPollingResponse.getStatusResponse().getIun());
+                } catch (Exception exception) {
+                    logger.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", pnPollingResponse.getStatusResponse().getIun(), b2bClient.getApiKeySetted().name(), exception.getMessage());
+                    throw new PnPollingException(exception.getMessage());
+                }
+                pnPollingResponse.setNotification(fullSentNotificationV21);
+                this.notificationV21 = fullSentNotificationV21;
 
             }
             return pnPollingResponse;
