@@ -37,15 +37,15 @@ public class PnPollingServiceStatusRapidV1 extends PnPollingTemplate<PnPollingRe
     protected Callable<PnPollingResponseV1> getPollingResponse(String iun, PnPollingParameter pnPollingParameter) {
         return () -> {
             PnPollingResponseV1 pnPollingResponse = new PnPollingResponseV1();
-            FullSentNotification fullSentNotification;
+            FullSentNotification fullSentNotificationV1;
             try {
-                fullSentNotification = pnPaB2bClient.getSentNotificationV1(iun);
+                fullSentNotificationV1 = pnPaB2bClient.getSentNotificationV1(iun);
             } catch (Exception exception) {
                 logger.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", iun, pnPaB2bClient.getApiKeySetted().name(), exception.getMessage());
                 throw new PnPollingException(exception.getMessage());
             }
-            pnPollingResponse.setNotification(fullSentNotification);
-            this.notificationV1 = fullSentNotification;
+            pnPollingResponse.setNotification(fullSentNotificationV1);
+            this.notificationV1 = fullSentNotificationV1;
             return pnPollingResponse;
         };
     }
