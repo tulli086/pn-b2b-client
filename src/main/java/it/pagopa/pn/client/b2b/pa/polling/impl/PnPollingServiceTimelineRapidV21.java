@@ -8,12 +8,15 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV21;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
 @Service(PnPollingStrategy.TIMELINE_RAPID_V21)
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnPollingServiceTimelineRapidV21 extends PnPollingTemplate<PnPollingResponseV21> {
     protected final TimingForTimeline timingForTimeline;
     private final IPnPaB2bClient pnPaB2bClient;
