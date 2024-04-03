@@ -1,48 +1,32 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.After;
-import io.cucumber.java.DataTableType;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
+import com.opencsv.CSVWriter;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnRaddAlternativeClientImpl;
-import it.pagopa.pn.client.b2b.pa.service.utils.SettableAuthTokenRadd;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.UpdateRegistryRequest;
-import it.pagopa.pn.cucumber.steps.DataTableTypeUtil;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadRequest;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.steps.dataTable.DataTableTypeRaddAlt;
-import it.pagopa.pn.cucumber.utils.Compress;
+
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.web.client.HttpStatusCodeException;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.net.URI;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.generateRandomNumber;
-
-
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.*;
 @Slf4j
 public class AnagraficaRaddAltSteps {
 
@@ -53,7 +37,8 @@ public class AnagraficaRaddAltSteps {
     private final RaddAltSteps raddAltSteps;
     private final DataTableTypeRaddAlt dataTableTypeRaddAlt;
 
-    private String fileCsv;
+    private String filePathCsv;
+    private String shaCSV;
     private String requestid;
     private CreateRegistryRequest sportelloRaddCrud;
 
@@ -73,10 +58,25 @@ public class AnagraficaRaddAltSteps {
     }
 
 @When("viene generato il csv con dati:")
-    public void vieneGeneratoIlCsv(Map<String, String> dataCsv){
+    public void vieneGeneratoIlCsv(Map<String, String> dataCsv) throws IOException {
 
+    creazioneCsv(dataTableTypeRaddAlt.convertToListRegistryRequestData(dataCsv));
+    RegistryUploadRequest registryUploadRequest=new RegistryUploadRequest().checksum(this.shaCSV);
 
+    RegistryUploadResponse responseUploadCsv= null;
+    responseUploadCsv= raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest );
 
+    try {
+        Assertions.assertNotNull(responseUploadCsv);
+        Assertions.assertNotNull(responseUploadCsv.getRequestId());
+        Assertions.assertNotNull(responseUploadCsv.getUrl());
+        Assertions.assertNotNull(responseUploadCsv.getFileKey());
+        Assertions.assertNotNull(responseUploadCsv.getSecret());
+    }catch (AssertionFailedError assertionFailedError){
+        String message = assertionFailedError.getMessage() +
+                "{Response Upload CSV: " + (responseUploadCsv == null ? "NULL" : responseUploadCsv) + " }";
+        throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+    }
 
 }
 
@@ -135,21 +135,52 @@ public class AnagraficaRaddAltSteps {
     }
 
 
-    @When("viene richiesta la lista degli sportelli Radd con limit {string}, con lastKey{} e con externalCode {string}")
-    public void vieneRichiestolaListaDeiSportelliRadd(String limit, String lastKey, String externalCode) {
+    @When("viene richiesta la lista degli sportelli con dati:")
+    public void vieneRichiestolaListaDeiSportelliRadd(Map<String, String> dataSportello) {
 
         try {
             raddAltClient.retrieveRegistries(
                     uid
-                    ,limit.toLowerCase().contains("vuoto")?null: Integer.parseInt(limit)
-                    ,lastKey.toLowerCase().contains("vuoto")?null: lastKey
-                    ,null);
+                    , getValue(dataSportello,RADD_FILTER_LIMIT.key)==null ? null : Integer.parseInt(getValue(dataSportello,RADD_FILTER_FILEKEY.key))
+                    , getValue(dataSportello,RADD_FILTER_FILEKEY.key)==null ? null : getValue(dataSportello,RADD_FILTER_FILEKEY.key)
+                    , getValue(dataSportello,ADDRESS_RADD_CAP.key)==null ? null : getValue(dataSportello,ADDRESS_RADD_CAP.key)
+                    , getValue(dataSportello,ADDRESS_RADD_CITY.key)==null ? null : getValue(dataSportello,ADDRESS_RADD_CITY.key)
+                    , getValue(dataSportello,ADDRESS_RADD_PROVINCE.key)==null ? null : getValue(dataSportello,ADDRESS_RADD_PROVINCE.key)
+                    , getValue(dataSportello,RADD_EXTERNAL_CODE.key)==null ? null : getValue(dataSportello,RADD_EXTERNAL_CODE.key)); //TODO vedere meglio la gestione del externalCode
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (this.requestid == null ? "NULL" : this.requestid) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
+    }
+
+
+
+    public void creazioneCsv(List<CreateRegistryRequest> csvData) throws IOException {
+
+        String csvFile="target/classes/file"+generateRandomNumber()+".csv";
+        this.filePathCsv=csvFile;
+
+        List<String[]> data = new ArrayList<>();
+        data.add(new String[]{"addressRow", "cap", "city"});
+
+        for(int i=0;i<csvData.size();i++) {
+            data.add(new String[]{csvData.get(i).getAddress().getAddressRow(),
+                    csvData.get(i).getAddress().getCap(),
+                    csvData.get(i).getAddress().getCity()});
+
+
+        }
+
+        try (CSVWriter writer = new CSVWriter(new FileWriter(csvFile), ';',
+                CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+            writer.writeAll(data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.shaCSV = pnPaB2bUtils.computeSha256(this.filePathCsv);
     }
 
 }
