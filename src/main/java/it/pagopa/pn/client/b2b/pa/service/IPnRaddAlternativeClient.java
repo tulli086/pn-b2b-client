@@ -32,7 +32,7 @@ public interface IPnRaddAlternativeClient extends SettableAuthTokenRadd {
     VerifyRequestResponse verifyRequest(String uid, String requestId) throws RestClientException;
     CreateRegistryResponse addRegistry(String uid, CreateRegistryRequest createRegistryRequest) throws RestClientException;
     void deleteRegistry(String uid, String registryId, String endDate) throws RestClientException;
-    RegistriesResponse retrieveRegistries(String uid, Integer limit, String lastKey, String externalCode) throws RestClientException;
+    RegistriesResponse retrieveRegistries(String uid, Integer limit, String lastKey, String cap, String city, String pr, String externalCode) throws RestClientException;
     void updateRegistry(String uid, String registryId, UpdateRegistryRequest updateRegistryRequest) throws RestClientException;
 
 }

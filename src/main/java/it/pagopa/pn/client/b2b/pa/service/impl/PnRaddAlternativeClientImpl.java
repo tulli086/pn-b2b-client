@@ -202,8 +202,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     }
 
     @Override
-    public RegistriesResponse retrieveRegistries(String uid, Integer limit, String lastKey, String externalCode) throws RestClientException {
-        return this.apiAnagraficaCRUD.retrieveRegistries(uid, limit, lastKey, externalCode);
+    public RegistriesResponse retrieveRegistries(String uid, Integer limit, String lastKey, String cap, String city, String pr, String externalCode) throws RestClientException {
+        return this.apiAnagraficaCRUD.retrieveRegistries(uid, limit, lastKey, cap, city, pr, externalCode);
     }
 
     @Override
