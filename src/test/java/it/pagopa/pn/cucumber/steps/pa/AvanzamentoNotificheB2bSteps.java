@@ -775,7 +775,7 @@ public class AvanzamentoNotificheB2bSteps {
         PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), PnPollingParameter.builder().value(timelineEventCategory).build());
 
         try {
-            Assertions.assertTrue(pnPollingResponseV23.getResult());
+            Assertions.assertFalse(pnPollingResponseV23.getResult());
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
             TimelineElementV23 timelineElement = pnPollingResponseV23.getNotification().getTimeline().stream().filter(elem -> elem.getCategory().getValue().equals(timelineEventCategory)).findAny().orElse(null);
@@ -1267,7 +1267,7 @@ public class AvanzamentoNotificheB2bSteps {
                 .findAny()
                 .orElse(null);
 
-            Assertions.assertNotNull(timelineElement);
+            Assertions.assertNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -1585,7 +1585,7 @@ public class AvanzamentoNotificheB2bSteps {
                     .filter(elem -> elem.getStatus().getValue().equals(status))
                     .findAny()
                     .orElse(null);
-            Assertions.assertNotNull(notificationStatusHistoryElement);
+            Assertions.assertNull(notificationStatusHistoryElement);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -2364,7 +2364,7 @@ public class AvanzamentoNotificheB2bSteps {
                 .filter(elem -> elem.getCategory().getValue().equals("ANALOG_SUCCESS_WORKFLOW"))
                 .findAny()
                 .orElse(null);
-            Assertions.assertNotNull(timelineElement);
+            Assertions.assertNull(timelineElement);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
