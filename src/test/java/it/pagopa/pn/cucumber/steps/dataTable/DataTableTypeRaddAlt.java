@@ -41,8 +41,8 @@ public class DataTableTypeRaddAlt {
                         .latitude(getValue(data,RADD_GEO_LOCATION_LATITUDINE.key)==null? null:getValue(data,RADD_GEO_LOCATION_LATITUDINE.key))
                         .longitude(getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)==null? null:getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)))
                 .openingTime(getValue(data,RADD_OPENING_TIME.key)==null? null:getValue(data,RADD_OPENING_TIME.key))
-                .startValidity(getValue(data,RADD_PHONE_NUMBER.key)==null? null:setData(getValue(data,RADD_START_VALIDITY.key)))
-                .endValidity(getValue(data,RADD_PHONE_NUMBER.key)==null? null:setData(getValue(data,RADD_START_VALIDITY.key)));
+                .startValidity(getValue(data,RADD_START_VALIDITY.key)==null? null:setData(getValue(data,RADD_START_VALIDITY.key)))
+                .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:setData(getValue(data,RADD_END_VALIDITY.key)));
 
 
         try {
@@ -75,8 +75,8 @@ public class DataTableTypeRaddAlt {
                         .latitude(getValue(data,RADD_GEO_LOCATION_LATITUDINE.key)==null? null:getValue(data,RADD_GEO_LOCATION_LATITUDINE.key))
                         .longitude(getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)==null? null:getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)))
                 .openingTime(getValue(data,RADD_OPENING_TIME.key)==null? null:getValue(data,RADD_OPENING_TIME.key))
-                .startValidity(getValue(data,RADD_PHONE_NUMBER.key)==null? null:setData(getValue(data,RADD_START_VALIDITY.key)))
-                .endValidity(getValue(data,RADD_PHONE_NUMBER.key)==null? null:setData(getValue(data,RADD_START_VALIDITY.key)));
+                .startValidity(getValue(data,RADD_START_VALIDITY.key)==null? null:setData(getValue(data,RADD_START_VALIDITY.key)))
+                .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:setData(getValue(data,RADD_END_VALIDITY.key)));
 
         listaSportelli.add(sportelloRadd);
 
@@ -88,7 +88,7 @@ public class DataTableTypeRaddAlt {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
+
         return listaSportelli;
     }
     
@@ -109,11 +109,11 @@ public class DataTableTypeRaddAlt {
 
 public OffsetDateTime setData(String data){
         OffsetDateTime date= OffsetDateTime.now();
-
+String dataNumber=data.replaceAll("[\\\\+|g|\\\\-]","");
         if(data.toLowerCase().contains("+")){
-            date.plusDays(Long.parseLong(data.replace("\\\\+|g","")));
+            date = date.plusDays(Long.parseLong(dataNumber));
         }else if(data.toLowerCase().contains("-")){
-            date.minusDays(Long.parseLong(data.replace("\\\\+|g","")));
+            date =date.minusDays(Long.parseLong(dataNumber));
         }
 
         return date;
