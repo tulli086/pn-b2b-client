@@ -9,7 +9,6 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV20;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
-import lombok.Synchronized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -90,13 +89,11 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
     }
 
     @Override
-    @Synchronized
     public boolean setApiKeys(ApiKeyType apiKey) {
         return this.pnPaB2bClient.setApiKeys(apiKey);
     }
 
     @Override
-    @Synchronized
     public void setApiKey(String apiKeyString) {
         this.pnPaB2bClient.setApiKey(apiKeyString);
     }
