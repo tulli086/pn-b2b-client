@@ -11,21 +11,21 @@ import java.util.Random;
 
 public enum RaddAltValue {
 //physicalAddress sportello radd
-    ADDRESS_RADD("address_radd","SI",true),
+    ADDRESS_RADD("address_radd","SI",false),
     ADDRESS_RADD_ROW("address_radd_row","SI",false),
     ADDRESS_RADD_CAP("address_radd_cap","SI",false),
-    ADDRESS_RADD_CITY("address_radd","SI",false),
-    ADDRESS_RADD_PROVINCE("address_radd","",false),
-    ADDRESS_RADD_COUNTRY("address_radd","ITALIA",false),
+    ADDRESS_RADD_CITY("address_radd_city","SI",false),
+    ADDRESS_RADD_PROVINCE("address_radd_province","",false),
+    ADDRESS_RADD_COUNTRY("address_radd_country","ITALIA",false),
 
-    RADD_DESCRIPTION("radd_description","ITALIA",false),
-    RADD_PHONE_NUMBER("radd_phoneNumber","ITALIA",false),
-    RADD_GEO_LOCATION("radd_geoLocation","ITALIA",false),
-    RADD_GEO_LOCATION_LATITUDINE("radd_geoLocation_latitudine","ITALIA",false),
-    RADD_GEO_LOCATION_LONGITUDINE("radd_geoLocation_longitudine","ITALIA",false),
-    RADD_OPENING_TIME("radd_description","ITALIA",false),
-    RADD_START_VALIDITY("radd_start_validity","ITALIA",true),
-    RADD_END_VALIDITY("radd_end_validity","ITALIA",true),
+    RADD_DESCRIPTION("radd_description",null,false),
+    RADD_PHONE_NUMBER("radd_phoneNumber",null,false),
+    RADD_GEO_LOCATION("radd_geoLocation","SI",false),
+    RADD_GEO_LOCATION_LATITUDINE("radd_geoLocation_latitudine",null,false),
+    RADD_GEO_LOCATION_LONGITUDINE("radd_geoLocation_longitudine",null,false),
+    RADD_OPENING_TIME("radd_openingTime",null,false),
+    RADD_START_VALIDITY("radd_start_validity",null,false),
+    RADD_END_VALIDITY("radd_end_validity",null,false),
 
     //valori filtro per ricerca sportello
     RADD_FILTER_LIMIT("radd_filter_limit","ITALIA",false),
