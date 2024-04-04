@@ -88,9 +88,7 @@ public class DataTableTypeRaddAlt {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        System.out.println("datacsv: "+ listaSportelli);
-
+        
         return listaSportelli;
     }
     
