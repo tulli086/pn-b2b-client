@@ -25,10 +25,12 @@ public enum RaddAltValue {
     RADD_GEO_LOCATION_LONGITUDINE("radd_geoLocation_longitudine","ITALIA",false),
     RADD_OPENING_TIME("radd_description","ITALIA",false),
     RADD_START_VALIDITY("radd_start_validity","ITALIA",true),
-    RADD_END_VALIDITY("radd_end_validity","ITALIA",true);
+    RADD_END_VALIDITY("radd_end_validity","ITALIA",true),
 
-
-
+    //valori filtro per ricerca sportello
+    RADD_FILTER_LIMIT("radd_filter_limit","ITALIA",false),
+    RADD_FILTER_FILEKEY("radd_filter_filekey","ITALIA",false),
+    RADD_EXTERNAL_CODE("radd_externalCode",null,false);
 
     private static final String NULL_VALUE = "NULL";
     public static final String EXCLUDE_VALUE = "NO";
