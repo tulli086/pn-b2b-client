@@ -6,11 +6,11 @@ Feature: Radd Alternative Atto Intero
 
   Scenario: [RADD_FILTRO_ATTO-INTERO_1] invio notifica 890 coperto da RADD e controllo diminuzione costi filtro base
     Given viene generata una nuova notifica
-      | subject               | notifica analogica filtro base             |
-      | senderDenomination    | Comune di palermo     |
-      | physicalCommunication | REGISTERED_LETTER_890 |
-      | feePolicy             | DELIVERY_MODE         |
-      | document              | DOC_4_PG;             |
+      | subject               | notifica analogica filtro base |
+      | senderDenomination    | Comune di palermo              |
+      | physicalCommunication | REGISTERED_LETTER_890          |
+      | feePolicy             | DELIVERY_MODE                  |
+      | document              | DOC_4_PG;                      |
     And destinatario Mario Gherkin e:
       | digitalDomicile              | NULL           |
       | physicalAddress_address      | Via@ok_890     |
@@ -18,8 +18,8 @@ Feature: Radd Alternative Atto Intero
       | physicalAddress_province     | <PROVINCE>     |
       | physicalAddress_zip          | <CAP>          |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo = "<COSTO>" della notifica
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    And viene verificato il costo di 120 e il peso di 15 nei details del'elemento di timeline letto
 
 
   Scenario: [RADD_FILTRO_ATTO-INTERO_2] invio notifica AR coperto da RADD e controllo diminuzione costi filtro base
@@ -37,8 +37,8 @@ Feature: Radd Alternative Atto Intero
       | physicalAddress_zip          | <CAP>          |
       | payment_pagoPaForm           | NOALLEGATO     |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo = "<COSTO>" della notifica
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    And viene verificato il costo di 120 e il peso di 15 nei details del'elemento di timeline letto
 
 
   Scenario: [RADD_FILTRO_ATTO-INTERO_3] invio notifica RS coperto da RADD e controllo diminuzione costi filtro base
@@ -55,8 +55,8 @@ Feature: Radd Alternative Atto Intero
       | physicalAddress_zip          | <CAP>          |
       | payment_pagoPaForm           | NOALLEGATO     |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
-    And viene verificato il costo = "<COSTO>" della notifica
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
+    And viene verificato il costo di 120 e il peso di 15 nei details del'elemento di timeline letto
 
 
   Scenario Outline: [RADD_FILTRO_ATTO-INTERO_4] invio notifica 890 coperto da RADD e controllo diminuzione costi filtro con discardAttachment
@@ -73,8 +73,8 @@ Feature: Radd Alternative Atto Intero
       | physicalAddress_province     | <PROVINCE>     |
       | physicalAddress_zip          | <CAP>          |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo = "<COSTO>" della notifica
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    And viene verificato il costo di <COSTO> e il peso di 15 nei details del'elemento di timeline letto
     Examples:
       | CAP   | COSTO | MUNICIPALITY   | PROVINCE | SUBJECT                                                     |
       | 05010 | 1103  | COLLELUNGO     | TR       | notifica filtro scarto ATTACHMENT_PAGOPA e LEGAL_FACT       |
@@ -96,8 +96,8 @@ Feature: Radd Alternative Atto Intero
       | physicalAddress_zip          | <CAP>          |
       | payment_pagoPaForm           | NOALLEGATO     |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
-    And viene verificato il costo = "111" della notifica
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
+    And viene verificato il costo di 120 e il peso di 15 nei details del'elemento di timeline letto
 
 
   Scenario Outline: [RADD_FILTRO_ATTO-INTERO_6] invio notifica AR coperto da RADD e controllo diminuzione costi in base al filtro acceptAttachment
@@ -115,8 +115,8 @@ Feature: Radd Alternative Atto Intero
       | physicalAddress_zip          | <CAP>          |
       | payment_pagoPaForm           | NOALLEGATO     |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo = "<COSTO>" della notifica
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    And viene verificato il costo di <COSTO> e il peso di 15 nei details del'elemento di timeline letto
     Examples:
       | CAP   | COSTO | MUNICIPALITY   | PROVINCE | SUBJECT                                                          |
       | 05010 | 1103  | COLLELUNGO     | TR       | notifica filtro accetazione ATTACHMENT_PAGOPA e LEGAL_FACT       |
@@ -139,5 +139,5 @@ Feature: Radd Alternative Atto Intero
       | physicalAddress_zip          | <CAP>          |
       | payment_pagoPaForm           | NOALLEGATO     |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo = "<COSTO>" della notifica
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    And viene verificato il costo di 120 e il peso di 15 nei details del'elemento di timeline letto

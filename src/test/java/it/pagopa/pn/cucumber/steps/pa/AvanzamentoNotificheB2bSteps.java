@@ -4139,5 +4139,16 @@ public class AvanzamentoNotificheB2bSteps {
 
         return legalFactDownloadMetadataResponse;
     }
-    
+
+
+    @And ("viene verificato il costo di {int} e il peso di {int} nei details del'elemento di timeline letto")
+    public void verificaCostoePesoInvioCartaceo(Integer costo, Integer peso){
+        TimelineElementV23 timeline= sharedSteps.getTimelineElementV23();
+        try {
+            Assertions.assertEquals(timeline.getDetails().getAnalogCost(),costo);
+            Assertions.assertEquals(timeline.getDetails().getEnvelopeWeight(),peso);
+        }catch(AssertionFailedError assertionFailedError){
+        sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+    }
+    }
 }
