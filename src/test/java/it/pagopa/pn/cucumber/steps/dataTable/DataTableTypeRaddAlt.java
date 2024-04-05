@@ -97,7 +97,7 @@ public class DataTableTypeRaddAlt {
         UpdateRegistryRequest sportelloAggiornatoRadd= new UpdateRegistryRequest()
                 .description(getValue(data,RADD_DESCRIPTION.key)==null? null: getValue(data,RADD_DESCRIPTION.key))
                 .phoneNumber(getValue(data,RADD_PHONE_NUMBER.key)==null? null:getValue(data,RADD_PHONE_NUMBER.key))
-                .openingTime(getValue(data,RADD_PHONE_NUMBER.key)==null? null:getValue(data,RADD_PHONE_NUMBER.key));
+                .openingTime(getValue(data,RADD_OPENING_TIME.key)==null? null:getValue(data,RADD_OPENING_TIME.key));
 
         try {
             Thread.sleep(2);
@@ -110,6 +110,7 @@ public class DataTableTypeRaddAlt {
 public OffsetDateTime setData(String data){
         OffsetDateTime date= OffsetDateTime.now();
 String dataNumber=data.replaceAll("[\\\\+|g|\\\\-]","");
+
         if(data.toLowerCase().contains("+")){
             date = date.plusDays(Long.parseLong(dataNumber));
         }else if(data.toLowerCase().contains("-")){
