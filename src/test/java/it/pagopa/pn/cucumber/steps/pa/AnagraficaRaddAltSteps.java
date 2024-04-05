@@ -3,12 +3,14 @@ package it.pagopa.pn.cucumber.steps.pa;
 import com.opencsv.CSVWriter;
 import io.cucumber.java.After;
 import io.cucumber.java.Transpose;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnRaddAlternativeClientImpl;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.RegistriesResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.UpdateRegistryRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadResponse;
@@ -47,6 +49,7 @@ public class AnagraficaRaddAltSteps {
     private String filePathCsv;
     private String shaCSV;
     private String requestid;
+    private String registryId;
     private CreateRegistryRequest sportelloRaddCrud;
 
     private String uid = "1234556";
@@ -184,17 +187,39 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
+    @When("viene generato uno sportello Radd con restituzione errore con dati:")
+    public void vieneGeneratoConErroreSportelloRadd(@Transpose CreateRegistryRequest dataSportello) {
+
+        log.info("Request inserimento: {}", dataSportello);
+        try {
+            raddAltClient.addRegistry(this.uid, sportelloRaddCrud);
+        } catch (HttpStatusCodeException e) {
+        this.sharedSteps.setNotificationError(e);
+    }
+
+    }
+
 
     @When("viene modificato uno sportello Radd con dati:")
-    public void vieneModificatoSportelloRadd(Map<String, String> dataSportello) {
-
-        UpdateRegistryRequest aggiornamentoSportelloRadd = dataTableTypeRaddAlt.convertUpdateRegistryRequest(dataSportello);
-
+    public void vieneModificatoSportelloRadd(@Transpose UpdateRegistryRequest dataSportello) {
+        log.info("Upload Request: {}", dataSportello);
         try {
-            Assertions.assertDoesNotThrow(() -> raddAltClient.updateRegistry(uid, this.requestid, aggiornamentoSportelloRadd));
+            Assertions.assertDoesNotThrow(() -> raddAltClient.updateRegistry(this.uid, this.registryId, dataSportello));
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
+        }
+    }
+
+
+    @When("viene modificato uno sportello Radd con dati errati:")
+    public void vieneModificatoSportelloRadd(Map<String,String> dataSportello) {
+        log.info("Upload Request: {}", dataSportello);
+        UpdateRegistryRequest aggiornamentoSportelloRadd = dataTableTypeRaddAlt.convertUpdateRegistryRequest(dataSportello);
+        try {
+            Assertions.assertDoesNotThrow(() -> raddAltClient.updateRegistry(this.uid, this.registryId, aggiornamentoSportelloRadd));
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
-                    "{Update Request: " + (aggiornamentoSportelloRadd == null ? "NULL" : aggiornamentoSportelloRadd) + " }";
+                    "{Update Request: " + (dataSportello == null ? "NULL" : dataSportello) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }
@@ -212,7 +237,7 @@ public class AnagraficaRaddAltSteps {
         }
 
         try {
-            raddAltClient.deleteRegistry(uid, this.requestid, endDate);
+            raddAltClient.deleteRegistry(uid, this.registryId, endDate);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (endDate == null ? "NULL" : endDate) + " }";
@@ -224,16 +249,17 @@ public class AnagraficaRaddAltSteps {
     @When("viene richiesta la lista degli sportelli con dati:")
     public void vieneRichiestolaListaDeiSportelliRadd(Map<String, String> dataSportello) {
 
-        try {
-            raddAltClient.retrieveRegistries(
-                    uid
-                    , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_FILEKEY.key))
-                    , getValue(dataSportello, RADD_FILTER_FILEKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_FILEKEY.key)
-                    , getValue(dataSportello, ADDRESS_RADD_CAP.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_CAP.key)
-                    , getValue(dataSportello, ADDRESS_RADD_CITY.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_CITY.key)
-                    , getValue(dataSportello, ADDRESS_RADD_PROVINCE.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_PROVINCE.key)
-                    , getValue(dataSportello, RADD_EXTERNAL_CODE.key) == null ? null : getValue(dataSportello, RADD_EXTERNAL_CODE.key)); //TODO vedere meglio la gestione del externalCode
+        RegistriesResponse sportello= raddAltClient.retrieveRegistries(
+                this.uid
+                , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_FILEKEY.key))
+                , getValue(dataSportello, RADD_FILTER_FILEKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_FILEKEY.key)
+                , getValue(dataSportello, ADDRESS_RADD_CAP.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_CAP.key)
+                , getValue(dataSportello, ADDRESS_RADD_CITY.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_CITY.key)
+                , getValue(dataSportello, ADDRESS_RADD_PROVINCE.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_PROVINCE.key)
+                , getValue(dataSportello, RADD_EXTERNAL_CODE.key) == null ? null : getValue(dataSportello, RADD_EXTERNAL_CODE.key)); //TODO vedere meglio la gestione del externalCode
 
+        try {
+            Assertions.assertNotNull(sportello);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (this.requestid == null ? "NULL" : this.requestid) + " }";
@@ -249,7 +275,7 @@ public class AnagraficaRaddAltSteps {
 
 //TODO inserire tutti campi da mettere nel csv
         List<String[]> data = new ArrayList<>();
-        data.add(new String[]{"addressRow", "cap", "city"});
+        data.add(new String[]{"addressRow", "cap", "city","pr","country","startValidity","endValidity","openingTime","description",});
 
         for (int i = 0; i < csvData.size(); i++) {
             data.add(new String[]{csvData.get(i).getAddress().getAddressRow(),
