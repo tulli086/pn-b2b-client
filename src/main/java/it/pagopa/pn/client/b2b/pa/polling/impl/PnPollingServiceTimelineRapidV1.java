@@ -1,11 +1,13 @@
 package it.pagopa.pn.client.b2b.pa.polling.impl;
 
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV23;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.TimelineElement;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
@@ -59,7 +62,7 @@ public class PnPollingServiceTimelineRapidV1 extends PnPollingTemplate<PnPolling
             }
 
             if(pnPollingResponse.getNotification().getTimeline().isEmpty() ||
-                    !isPresentCategory(pnPollingResponse, pnPollingParameter.getValue())) {
+                    !isPresentCategory(pnPollingResponse, pnPollingParameter)) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
@@ -103,17 +106,21 @@ public class PnPollingServiceTimelineRapidV1 extends PnPollingTemplate<PnPolling
         return this.pnPaB2bClient.getApiKeySetted();
     }
 
-    private boolean isPresentCategory(PnPollingResponseV1 pnPollingResponse, String value) {
-        TimelineElement timelineElementV1 = pnPollingResponse
-                .getNotification()
-                .getTimeline()
-                .stream()
-                .filter(timelineElement ->
-                        timelineElement.getCategory() != null
-                        && timelineElement.getCategory().getValue().equals(value))
-                .findAny()
-                .orElse(null);
 
+    private boolean isPresentCategory(PnPollingResponseV1 pnPollingResponse, PnPollingParameter pnPollingParameter) {
+        TimelineElement timelineElementV1 = pnPollingResponse
+                    .getNotification()
+                    .getTimeline()
+                    .stream()
+                    .filter(pnPollingParameter.getPnPollingPredicate() == null
+                        ?
+                            timelineElement->
+                                timelineElement.getCategory() != null
+                                        && Objects.requireNonNull(timelineElement.getCategory().getValue()).equals(pnPollingParameter.getValue())
+                        :
+                            pnPollingParameter.getPnPollingPredicate().getTimelineElementPredicateV1())
+                    .findAny()
+                    .orElse(null);
         return timelineElementV1 != null;
     }
 }

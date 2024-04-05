@@ -15,6 +15,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
@@ -58,7 +60,7 @@ public class PnPollingServiceStatusRapidV1 extends PnPollingTemplate<PnPollingRe
                 return false;
             }
 
-            if(!isEqualState(pnPollingResponse, pnPollingParameter.getValue())) {
+            if(!isEqualStatus(pnPollingResponse, pnPollingParameter)) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
@@ -102,13 +104,17 @@ public class PnPollingServiceStatusRapidV1 extends PnPollingTemplate<PnPollingRe
         return this.pnPaB2bClient.getApiKeySetted();
     }
 
-    private boolean isEqualState(PnPollingResponseV1 pnPollingResponse, String value) {
+    private boolean isEqualStatus(PnPollingResponseV1 pnPollingResponse, PnPollingParameter pnPollingParameter) {
         NotificationStatusHistoryElement notificationStatusHistoryElement = pnPollingResponse.getNotification()
                 .getNotificationStatusHistory()
                 .stream()
-                .filter(notification -> notification
-                        .getStatus()
-                        .getValue().equals(value))
+                .filter(pnPollingParameter.getPnPollingPredicate() == null
+                    ?
+                        statusHistory -> statusHistory
+                            .getStatus()
+                            .getValue().equals(pnPollingParameter.getValue())
+                    :
+                        pnPollingParameter.getPnPollingPredicate().getNotificationStatusHistoryElementPredicateV1())
                 .findAny()
                 .orElse(null);
         return notificationStatusHistoryElement != null;

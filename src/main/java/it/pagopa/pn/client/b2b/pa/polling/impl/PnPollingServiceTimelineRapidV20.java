@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
@@ -59,7 +60,7 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
             }
 
             if(pnPollingResponse.getNotification().getTimeline().isEmpty() ||
-                    !isPresentCategory(pnPollingResponse, pnPollingParameter.getValue())) {
+                    !isPresentCategory(pnPollingResponse, pnPollingParameter)) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
@@ -103,14 +104,18 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
         return this.pnPaB2bClient.getApiKeySetted();
     }
 
-    private boolean isPresentCategory(PnPollingResponseV20 pnPollingResponse, String value) {
+    private boolean isPresentCategory(PnPollingResponseV20 pnPollingResponse, PnPollingParameter pnPollingParameter) {
         TimelineElementV20 timelineElementV20 = pnPollingResponse
                 .getNotification()
                 .getTimeline()
                 .stream()
-                .filter(timelineElement ->
-                        timelineElement.getCategory() != null
-                        && timelineElement.getCategory().getValue().equals(value))
+                .filter(pnPollingParameter.getPnPollingPredicate() == null
+                    ?
+                        timelineElement->
+                                timelineElement.getCategory() != null
+                                        && Objects.requireNonNull(timelineElement.getCategory().getValue()).equals(pnPollingParameter.getValue())
+                    :
+                        pnPollingParameter.getPnPollingPredicate().getTimelineElementPredicateV20())
                 .findAny()
                 .orElse(null);
 
