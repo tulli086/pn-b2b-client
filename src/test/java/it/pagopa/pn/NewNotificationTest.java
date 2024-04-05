@@ -1,7 +1,13 @@
 package it.pagopa.pn;
 
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
+import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidNewVersion;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceStateRapidOldVersion;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceTimelineRapidNewVersion;
+import it.pagopa.pn.client.b2b.pa.polling.impl.PnPollingServiceTimelineRapidOldVersion;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnPaB2bExternalClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.ApiKeysConfiguration;
@@ -9,11 +15,14 @@ import it.pagopa.pn.client.b2b.pa.config.springconfig.BearerTokenConfiguration;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.RestTemplateConfiguration;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.TimingConfiguration;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
+import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.test.context.TestPropertySource;
 
 import java.text.SimpleDateFormat;
@@ -45,13 +54,29 @@ import java.util.List;
         PnGPDClientImpl.class,
         PnPaymentInfoClientImpl.class,
         PnRaddFsuClientImpl.class,
-        PnRaddAlternativeClientImpl.class
+        PnRaddAlternativeClientImpl.class,
+        TimingForTimeline.class,
+        PnB2bClientTimingConfigs.class,
+        PnPollingFactory.class,
+        PnPollingServiceTimelineRapidOldVersion.class,
+        PnPollingServiceTimelineRapidNewVersion.class,
+        PnPollingServiceStateRapidNewVersion.class,
+        PnPollingServiceStateRapidOldVersion.class
 })
-@TestPropertySource(properties = {"spring.profiles.active=dev"})
+
+
+
+
+
+
+
+@TestPropertySource(properties = {"spring.profiles.active=test"})
+@EnableConfigurationProperties
 public class NewNotificationTest {
 
     @Autowired
     private PnPaB2bUtils utils;
+
 
 
     @Test
@@ -181,13 +206,13 @@ public class NewNotificationTest {
                                 .municipality("ROMA")
                                 .province("RM")
                                 .foreignState("ITALIA")
-                                .zip("00028"):
+                                .zip("00173"):
                         new NotificationPhysicalAddress()
                                 .address("via @FAIL-Irreperibile_AR 16")
                                 .municipality("ROMA")
                                 .province("RM")
                                 .foreignState("ITALIA")
-                                .zip("00028")
+                                .zip("00173")
                 )
                 .recipientType( NotificationRecipientV23.RecipientTypeEnum.PF )
                 .payments(List.of( new NotificationPaymentItem()
