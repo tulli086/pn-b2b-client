@@ -728,6 +728,9 @@ public class RaddAltSteps {
     }
 
 
+
+
+@And ("viene cambiato raddista con {string}")
     public void changeRaddista(String raddista) {
         switch (raddista.toLowerCase()) {
             case "issuer_1" -> raddAltClient.setAuthTokenRadd(SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_1);

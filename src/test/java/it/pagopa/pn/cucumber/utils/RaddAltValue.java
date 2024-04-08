@@ -27,7 +27,10 @@ public enum RaddAltValue {
     //valori filtro per ricerca sportello
     RADD_FILTER_LIMIT("radd_filter_limit","ITALIA"),
     RADD_FILTER_FILEKEY("radd_filter_filekey","1"),
-    RADD_EXTERNAL_CODE("radd_externalCode",null);
+    RADD_EXTERNAL_CODE("radd_externalCode",null),
+
+    RADD_REQUESTID("radd_requestId","corretto"),
+    RADD_UID("radd_uid","1234556");
 
 
 
