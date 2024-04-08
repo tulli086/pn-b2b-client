@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
@@ -51,6 +52,7 @@ import java.util.List;
         PnRaddAlternativeClientImpl.class,
         PnB2bClientTimingConfigs.class
 })
+@EnableConfigurationProperties
 @TestPropertySource(properties = {"spring.profiles.active=dev"})
 public class NewNotificationTest {
 
