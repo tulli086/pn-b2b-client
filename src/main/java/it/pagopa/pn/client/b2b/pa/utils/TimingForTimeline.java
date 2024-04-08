@@ -106,7 +106,7 @@ public class TimingForTimeline {
         ACCEPTED_SHORT_VALIDATION(231,1),
         REFUSED_VALIDATION(11,1),
         DELIVERING(2,4),
-        DELIVERED(3,8),
+        DELIVERED(6,4),
         VIEWED(5,1),
         EFFECTIVE_DATE(11,1),
         PAID(5,1),
