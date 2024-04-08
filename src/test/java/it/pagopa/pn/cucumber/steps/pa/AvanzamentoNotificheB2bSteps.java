@@ -1174,7 +1174,7 @@ public class AvanzamentoNotificheB2bSteps {
         PnPollingResponseV23 pnPollingResponseV23 = timelineRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(), 
                 PnPollingParameter.builder()
                         .value(timelineEventCategory)
-                        .pnPollingPredicate(getPnPollingPredicateWithTimelineV23(timelineEventCategory, destinatario, null, null, responseStatus, null, false, false, null, false, null))
+                        .pnPollingPredicate(getPnPollingPredicateWithTimelineV23(timelineEventCategory, destinatario, null, null, null, responseStatus, false, false, null, false, null))
                         .build());
         try {
             Assertions.assertTrue(pnPollingResponseV23.getResult());
