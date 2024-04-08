@@ -26,6 +26,7 @@ public class PnPollingServiceStatusRapidV23 extends PnPollingTemplate<PnPollingR
     protected final TimingForTimeline timingForTimeline;
     private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotificationV23 notificationV23;
+    private NotificationStatusHistoryElement notificationStatusHistoryElement;
 
 
     public PnPollingServiceStatusRapidV23(TimingForTimeline timingForTimeline, IPnPaB2bClient pnPaB2bClient) {
@@ -62,7 +63,9 @@ public class PnPollingServiceStatusRapidV23 extends PnPollingTemplate<PnPollingR
                 pnPollingResponse.setResult(false);
                 return false;
             }
+
             pnPollingResponse.setResult(true);
+            pnPollingResponse.setNotificationStatusHistoryElement(notificationStatusHistoryElement);
             return true;
         };
     }
@@ -115,6 +118,10 @@ public class PnPollingServiceStatusRapidV23 extends PnPollingTemplate<PnPollingR
                         pnPollingParameter.getPnPollingPredicate().getNotificationStatusHistoryElementPredicateV23())
                 .findAny()
                 .orElse(null);
-        return notificationStatusHistoryElement != null;
+        if(notificationStatusHistoryElement != null) {
+            this.notificationStatusHistoryElement = notificationStatusHistoryElement;
+            return true;
+        }
+        return false;
     }
 }

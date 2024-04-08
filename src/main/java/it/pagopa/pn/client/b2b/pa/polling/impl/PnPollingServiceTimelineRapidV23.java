@@ -27,6 +27,7 @@ public class PnPollingServiceTimelineRapidV23 extends PnPollingTemplate<PnPollin
     protected final TimingForTimeline timingForTimeline;
     private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotificationV23 notificationV23;
+    private TimelineElementV23 timelineElementV23;
 
 
     public PnPollingServiceTimelineRapidV23(TimingForTimeline timingForTimeline, IPnPaB2bClient pnPaB2bClient) {
@@ -64,7 +65,9 @@ public class PnPollingServiceTimelineRapidV23 extends PnPollingTemplate<PnPollin
                 pnPollingResponse.setResult(false);
                 return false;
             }
+
             pnPollingResponse.setResult(true);
+            pnPollingResponse.setTimelineElement(timelineElementV23);
             return true;
         };
     }
@@ -118,6 +121,11 @@ public class PnPollingServiceTimelineRapidV23 extends PnPollingTemplate<PnPollin
                         pnPollingParameter.getPnPollingPredicate().getTimelineElementPredicateV23())
                 .findAny()
                 .orElse(null);
-        return timelineElementV23 != null;
+
+        if(timelineElementV23 != null) {
+            this.timelineElementV23 = timelineElementV23;
+            return true;
+        }
+        return false;
     }
 }
