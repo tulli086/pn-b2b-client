@@ -30,6 +30,7 @@ public enum RaddAltValue {
     RADD_EXTERNAL_CODE("radd_externalCode",null),
 
     RADD_REQUESTID("radd_requestId","corretto"),
+    RADD_REGISTRYID("radd_registryId","corretto"),
     RADD_UID("radd_uid","1234556");
 
 
