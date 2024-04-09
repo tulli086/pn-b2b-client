@@ -156,3 +156,24 @@ Feature: Radd Alternative Atto Intero
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo di 354 e il peso di 15 nei details del'elemento di timeline letto
+
+
+  Scenario: [RADD_FILTRO_ATTO-INTERO_8] invio notifica 890 coperto da RADD con cap con 2 configurazione
+    Given viene generata una nuova notifica
+      | subject               | notifica analogica filtro base |
+      | senderDenomination    | Comune di palermo              |
+      | physicalCommunication | REGISTERED_LETTER_890          |
+      | feePolicy             | DELIVERY_MODE                  |
+      | document              | DOC_3_PG;                      |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile              | NULL                 |
+      | physicalAddress_address      | Via@ok_890           |
+      | physicalAddress_municipality | VENEZIA              |
+      | physicalAddress_province     | VE                   |
+      | physicalAddress_zip          | 30124                |
+      | payment_f24                  | PAYMENT_F24_STANDARD |
+      | title_payment                | F24_STANDARD_GHERKIN |
+      | apply_cost_f24               | SI                   |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
