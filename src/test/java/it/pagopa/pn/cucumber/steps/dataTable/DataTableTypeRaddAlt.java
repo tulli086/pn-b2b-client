@@ -42,7 +42,8 @@ public class DataTableTypeRaddAlt {
                         .longitude(getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)==null? null:getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)))
                 .openingTime(getValue(data,RADD_OPENING_TIME.key)==null? null:getValue(data,RADD_OPENING_TIME.key))
                 .startValidity(getValue(data,RADD_START_VALIDITY.key)==null? null:String.valueOf(setData(getValue(data,RADD_START_VALIDITY.key))))
-                .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:String.valueOf(setData(getValue(data,RADD_END_VALIDITY.key))));
+                .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:String.valueOf(setData(getValue(data,RADD_END_VALIDITY.key))))
+                .externalCode(getValue(data, RADD_EXTERNAL_CODE.key)==null?null:getValue(data, RADD_EXTERNAL_CODE.key));
 
 
         try {
@@ -76,7 +77,8 @@ public class DataTableTypeRaddAlt {
                         .longitude(getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)==null? null:getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)))
                 .openingTime(getValue(data,RADD_OPENING_TIME.key)==null? null:getValue(data,RADD_OPENING_TIME.key))
                 .startValidity(getValue(data,RADD_START_VALIDITY.key)==null? null: String.valueOf(setData(getValue(data,RADD_START_VALIDITY.key))))
-                .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:String.valueOf(setData(getValue(data,RADD_END_VALIDITY.key))));
+                .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:String.valueOf(setData(getValue(data,RADD_END_VALIDITY.key))))
+                .externalCode(getValue(data, RADD_EXTERNAL_CODE.key)==null?null:getValue(data, RADD_EXTERNAL_CODE.key));
 
         listaSportelli.add(sportelloRadd);
 
