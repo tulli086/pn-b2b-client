@@ -8,21 +8,21 @@ import java.util.Map;
 
 public enum RaddAltValue {
 //physicalAddress sportello radd
-    ADDRESS_RADD("address_radd","SI"),
-    ADDRESS_RADD_ROW("address_radd_row","SI"),
-    ADDRESS_RADD_CAP("address_radd_cap","SI"),
-    ADDRESS_RADD_CITY("address_radd_city","SI"),
-    ADDRESS_RADD_PROVINCE("address_radd_province",""),
+    ADDRESS_RADD("address_radd",null),
+    ADDRESS_RADD_ROW("address_radd_row",null),
+    ADDRESS_RADD_CAP("address_radd_cap",null),
+    ADDRESS_RADD_CITY("address_radd_city",null),
+    ADDRESS_RADD_PROVINCE("address_radd_province",null),
     ADDRESS_RADD_COUNTRY("address_radd_country","ITALIA"),
 
-    RADD_DESCRIPTION("radd_description",null),
+    RADD_DESCRIPTION("radd_description","sportello RADD"),
     RADD_PHONE_NUMBER("radd_phoneNumber",null),
     RADD_GEO_LOCATION("radd_geoLocation","SI"),
-    RADD_GEO_LOCATION_LATITUDINE("radd_geoLocation_latitudine",null),
-    RADD_GEO_LOCATION_LONGITUDINE("radd_geoLocation_longitudine",null),
-    RADD_OPENING_TIME("radd_openingTime",null),
+    RADD_GEO_LOCATION_LATITUDINE("radd_geoLocation_latitudine","40.0000"),
+    RADD_GEO_LOCATION_LONGITUDINE("radd_geoLocation_longitudine","20.0221"),
+    RADD_OPENING_TIME("radd_openingTime","tue=8:00-13:00_14:00-18:00;"),
     RADD_START_VALIDITY("radd_start_validity",""),
-    RADD_END_VALIDITY("radd_end_validity",""),
+    RADD_END_VALIDITY("radd_end_validity",null),
 
     //valori filtro per ricerca sportello
     RADD_FILTER_LIMIT("radd_filter_limit","ITALIA"),
