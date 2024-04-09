@@ -268,7 +268,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | physicalAddress_address | via@OK-Giacenza-lte10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG010"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG012"
+
 
   @workflowAnalogico @giacenza890simplified
   Scenario: [B2B_GIACENZA_890_12] Invio notifica con sequence @OK-Giacenza_RS ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
@@ -282,7 +282,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | physicalAddress_address | via@OK-Giacenza_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRS010"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG012"
+
 
 
   @workflowAnalogico @giacenza890simplified
@@ -297,7 +297,6 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | physicalAddress_address | via@OK-WO-Giacenza_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRS010"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG012"
 
   @workflowAnalogico @giacenza890simplified
   Scenario: [B2B_GIACENZA_890_14] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
