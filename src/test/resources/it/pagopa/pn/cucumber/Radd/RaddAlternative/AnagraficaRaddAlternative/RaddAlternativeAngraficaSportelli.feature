@@ -136,9 +136,45 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore ""
 
   @raddAnagrafica @raddCsv
-  Scenario: [RADD_ANAGRAFICA_CSV_STATO_6] caricamento CSV con formato campi errato verifica stato a REJECTED e messaggio di errore
+  Scenario Outline: [RADD_ANAGRAFICA_CSV_STATO_6] caricamento CSV verifica stato con requestId non esistente
     When viene eseguita la richiesta per controllo dello stato di caricamento del csv con restituzione errore
-    Then l'operazione ha prodotto un errore con status code "400"
+      | radd_requestId | <requestId> |
+    Then l'operazione ha prodotto un errore con status code "<errore>"
+    Examples:
+      | requestId  | errore |
+      | non esiste | 404    |
+      | NULL       | 400    |
+
+
+
+  @raddAnagrafica @raddCsv
+  Scenario: [RADD_ANAGRAFICA_CSV_LISTA_1] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
+    When viene caricato il csv con dati:
+      | address_radd_row             | via posto   | address_radd |
+      | address_radd_cap             | 000050      | NULL         |
+      | address_radd_province        | MI          | 12342634     |
+      | address_radd_country         | ITALY       |              |
+      | radd_description             | descrizione |              |
+      | radd_geoLocation_longitudine | %&/(        |              |
+      | radd_openingTime             | minier      |              |
+      | radd_start_validity          | now         | now          |
+      | radd_end_validity            | +10g        | +10g         |
+    Then viene richiesta la lista degli sportelli caricati dal csv:
+      | radd_requestId      | corretto |
+      | radd_filter_limit   | 10       |
+      | radd_filter_filekey | NULL     |
+
+  @raddAnagrafica @raddCsv
+  Scenario Outline: [RADD_ANAGRAFICA_CSV_LISTA_2] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
+    When viene richiesta la lista degli sportelli caricati dal csv con dati errati:
+      | radd_requestId      | <requestId> |
+      | radd_filter_limit   | 10         |
+      | radd_filter_filekey | NULL       |
+    Then l'operazione ha prodotto un errore con status code "<errore>"
+Examples:
+  | requestId   | errore |
+  | saffasfasfa | 404    |
+  | NULL        | 400    |
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_1] inserimento sportello RADD con dati corretti
@@ -313,48 +349,36 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_openingTime             | minier      |
       | radd_start_validity          | now         |
       | radd_end_validity            | NULL        |
-    Then viene modificato uno sportello Radd con dati:
-      | radd_description | NULL |
-      | radd_openingTime | NULL |
-      | radd_phoneNumber | NULL |
+    Then viene modificato uno sportello Radd con dati errati:
+      | radd_description | !!"£$%&/( |
+      | radd_openingTime | !!"£$%&/( |
+      | radd_phoneNumber | !!"£$%&/( |
     And l'operazione ha prodotto un errore con status code "400"
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_10] modifica sportello RADD con registryId non presente controllo restituzione errore
-   Then viene modificato uno sportello Radd con dati:
-     | radd_requestId | errato |
-    And l'operazione ha prodotto un errore con status code "404"
+    When viene modificato uno sportello Radd con dati errati:
+      | radd_requestId | errato |
+    Then l'operazione ha prodotto un errore con status code "404"
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_11] modifica sportello RADD con registryId vuoto controllo restituzione errore
-    When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | 02000       |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | NULL        |
-    Then viene modificato uno sportello Radd con dati:
+    When viene modificato uno sportello Radd con dati errati:
       | radd_requestId | NULL |
-    And l'operazione ha prodotto un errore con status code "400"
+    Then l'operazione ha prodotto un errore con status code "400"
 
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_12] modifica sportello RADD con uid non presente controllo restituzione errore
-    Then viene modificato uno sportello Radd con dati:
+    Then viene modificato uno sportello Radd con dati errati:
       | radd_uid | AJFSAJFOSIJFO |
     And l'operazione ha prodotto un errore con status code "404"
 
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_13] modifica sportello RADD con uid vuoto controllo restituzione errore
-    Then viene modificato uno sportello Radd con dati:
-      | radd_uid | NULL |
+    Then viene modificato uno sportello Radd con dati errati:
+      | radd_uid       | NULL |
     And l'operazione ha prodotto un errore con status code "400"
 
   @raddAnagrafica
@@ -371,15 +395,16 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_openingTime             | minier      |
       | radd_start_validity          | now         |
       | radd_end_validity            | NULL        |
+    And viene cambiato raddista con "issuer_2"
     Then viene modificato uno sportello Radd con dati:
       | radd_description | descrizione |
       | radd_openingTime | minier      |
       | radd_phoneNumber | minier      |
-    And viene cambiato raddista con "issuer_2"
+    And l'operazione ha prodotto un errore con status code "404"
 
 
   @raddAnagrafica
-  Scenario: [RADD_ANAGRAFICA_CRUD_15] modifica sportello RADD con formato campi errato controllo restituzione errore
+  Scenario: [RADD_ANAGRAFICA_CRUD_15] cancellazione sportello RADD con dati corretti
     When viene generato uno sportello Radd con dati:
       | address_radd_row             | NULL        |
       | address_radd_cap             | 02000       |
@@ -392,4 +417,85 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_openingTime             | minier      |
       | radd_start_validity          | now         |
       | radd_end_validity            | NULL        |
-   And viene richiesta la lista degli sportelli con dati:
+    Then viene cancellato uno sportello Radd con dati corretti
+
+
+  @raddAnagrafica
+  Scenario: [RADD_ANAGRAFICA_CRUD_16] cancellazione sportello RADD con endDate < endValidity dello sportello
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row             | NULL        |
+      | address_radd_cap             | 02000       |
+      | address_radd_province        | NULL        |
+      | address_radd_country         | NULL        |
+      | radd_description             | descrizione |
+      | radd_phoneNumber             | minier      |
+      | radd_geoLocation_latitudine  | non so      |
+      | radd_geoLocation_longitudine | %&/(        |
+      | radd_openingTime             | minier      |
+      | radd_start_validity          | now         |
+      | radd_end_validity            | NULL        |
+    Then viene cancellato uno sportello Radd con dati errati:
+      | radd_end_validity | -10g |
+
+
+  @raddAnagrafica
+  Scenario: [RADD_ANAGRAFICA_CRUD_17] cancellazione sportello RADD con endDate > endValidity dello sportello controllo errore
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row             | NULL        |
+      | address_radd_cap             | 02000       |
+      | address_radd_province        | NULL        |
+      | address_radd_country         | NULL        |
+      | radd_description             | descrizione |
+      | radd_phoneNumber             | minier      |
+      | radd_geoLocation_latitudine  | non so      |
+      | radd_geoLocation_longitudine | %&/(        |
+      | radd_openingTime             | minier      |
+      | radd_start_validity          | now         |
+      | radd_end_validity            | NULL        |
+    Then viene cancellato uno sportello Radd con dati errati:
+      | radd_end_validity | +10g |
+
+
+  @raddAnagrafica
+  Scenario: [RADD_ANAGRAFICA_CRUD_18] cancellazione sportello RADD con requestId non presente nella lista degli sportelli
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row             | NULL        |
+      | address_radd_cap             | 02000       |
+      | address_radd_province        | NULL        |
+      | address_radd_country         | NULL        |
+      | radd_description             | descrizione |
+      | radd_phoneNumber             | minier      |
+      | radd_geoLocation_latitudine  | non so      |
+      | radd_geoLocation_longitudine | %&/(        |
+      | radd_openingTime             | minier      |
+      | radd_start_validity          | now         |
+      | radd_end_validity            | NULL        |
+    Then viene cancellato uno sportello Radd con dati errati:
+      | radd_end_validity | corretto     |
+      | radd_registryId   | non presente |
+
+
+  @raddAnagrafica
+  Scenario Outline: [RADD_ANAGRAFICA_CRUD_19] cancellazione sportello RADD con controllo campi obbligatori vuoti
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row             | NULL        |
+      | address_radd_cap             | 02000       |
+      | address_radd_province        | NULL        |
+      | address_radd_country         | NULL        |
+      | radd_description             | descrizione |
+      | radd_phoneNumber             | minier      |
+      | radd_geoLocation_latitudine  | non so      |
+      | radd_geoLocation_longitudine | %&/(        |
+      | radd_openingTime             | minier      |
+      | radd_start_validity          | now         |
+      | radd_end_validity            | NULL        |
+    Then viene cancellato uno sportello Radd con dati errati:
+      | radd_end_validity | <endValidity> |
+      | radd_registryId   | <registryId>  |
+      | radd_uid          | <uid>         |
+    And l'operazione ha prodotto un errore con status code "400"
+    Examples:
+      | endValidity | registryId | uid      |
+      | corretto    | corretto   | NULL     |
+      | corretto    | NULL       | corretto |
+      | NULL        | corretto   | corretto |
