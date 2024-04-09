@@ -98,7 +98,7 @@ public class AvanzamentoNotificheB2bSteps {
             Assertions.assertTrue(pnPollingResponseV23.getResult());
             Assertions.assertNotNull(pnPollingResponseV23.getNotificationStatusHistoryElement());
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
-            logger.info("NOTIFICATION_STATUS_HISTORY_ELEMENT v1: " + pnPollingResponseV23.getNotificationStatusHistoryElement());
+            logger.info("NOTIFICATION_STATUS_HISTORY_ELEMENT: " + pnPollingResponseV23.getNotificationStatusHistoryElement());
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -134,13 +134,13 @@ public class AvanzamentoNotificheB2bSteps {
                 PnPollingParameter.builder()
                         .value(status)
                         .build());
-        logger.info("NOTIFICATION_STATUS_HISTORY v1: " + pnPollingResponseV23.getNotification().getNotificationStatusHistory());
+        logger.info("NOTIFICATION_STATUS_HISTORY: " + pnPollingResponseV23.getNotification().getNotificationStatusHistory());
         try {
             Assertions.assertTrue(pnPollingResponseV23.getResult());
             Assertions.assertNotNull(pnPollingResponseV23.getNotificationStatusHistoryElement());
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             NotificationStatusHistoryElement notificationStatusHistoryElement = pnPollingResponseV23.getNotificationStatusHistoryElement();
-            logger.info("NOTIFICATION_STATUS_HISTORY_ELEMENT v1: " + notificationStatusHistoryElement);
+            logger.info("NOTIFICATION_STATUS_HISTORY_ELEMENT: " + notificationStatusHistoryElement);
 
             List<String> timelineElements = notificationStatusHistoryElement.getRelatedTimelineElements();
             boolean esiste = false;
