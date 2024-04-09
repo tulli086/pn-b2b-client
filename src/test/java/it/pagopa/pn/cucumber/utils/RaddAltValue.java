@@ -23,14 +23,16 @@ public enum RaddAltValue {
     RADD_OPENING_TIME("radd_openingTime","tue=8:00-13:00_14:00-18:00;"),
     RADD_START_VALIDITY("radd_start_validity",""),
     RADD_END_VALIDITY("radd_end_validity",null),
+    RADD_CAPACITY("radd_capacity",null),
 
     //valori filtro per ricerca sportello
-    RADD_FILTER_LIMIT("radd_filter_limit","ITALIA"),
-    RADD_FILTER_FILEKEY("radd_filter_filekey","1"),
-    RADD_EXTERNAL_CODE("radd_externalCode",null),
+    RADD_FILTER_LIMIT("radd_filter_limit","5"),
+    RADD_FILTER_LASTKEY("radd_filter_lastKey",null),
+    RADD_EXTERNAL_CODE("radd_externalCode","test RADD"),
 
     RADD_REQUESTID("radd_requestId","corretto"),
     RADD_REGISTRYID("radd_registryId","corretto"),
+
     RADD_UID("radd_uid","1234556");
 
 

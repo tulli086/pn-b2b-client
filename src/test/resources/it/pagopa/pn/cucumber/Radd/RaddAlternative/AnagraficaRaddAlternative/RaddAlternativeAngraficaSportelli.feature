@@ -4,8 +4,9 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CSV_1] caricamento CSV con 2 sportelli
     Given viene caricato il csv con dati:
       | address_radd_row             | via posto   | minier |
-      | address_radd_cap             | 000050      | casa   |
+      | address_radd_cap             | NULL      | casa   |
       | address_radd_province        | MI          | cose   |
+      | address_radd_city            | MILANO      |        |
       | address_radd_country         | ITALY       | ewrw   |
       | radd_description             | descrizione | ere    |
       | radd_phoneNumber             | minier      | erw    |
@@ -14,118 +15,95 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_openingTime             | minier      | rer    |
       | radd_start_validity          | now         | now    |
       | radd_end_validity            | +10g        | +10g   |
+      | radd_capacity                | 10          | 22     |
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_2] caricamento 2 volte stesso checksum del CSV
     When viene caricato il csv con dati:
-      | address_radd_row             | via posto   | minier |
-      | address_radd_cap             | 000050      | casa   |
-      | address_radd_province        | MI          | cose   |
-      | address_radd_country         | ITALY       | ewrw   |
-      | radd_description             | descrizione | ere    |
-      | radd_phoneNumber             | minier      | erw    |
-      | radd_geoLocation_latitudine  | non so      | rer    |
-      | radd_geoLocation_longitudine | %&/(        | rer    |
-      | radd_openingTime             | minier      | rer    |
-      | radd_start_validity          | now         | now    |
-      | radd_end_validity            | +10g        | +10g   |
+      | address_radd_row      | via posto | minier |
+      | address_radd_cap      | NULL    | NULL |
+      | address_radd_province | MI        | MI     |
+      | address_radd_city     | MILANO    | MILANO |
+      | address_radd_country  | ITALY     | ITALY  |
     Then viene caricato il csv con stesso checksum
     And l'operazione ha prodotto un errore con status code "409"
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_3] caricamento 2 CSV con il primo CSV con un record in stato PENDING
     When viene caricato il csv con dati:
-      | address_radd_row             | via posto   | minier |
-      | address_radd_cap             | 000050      | casa   |
-      | address_radd_province        | MI          | cose   |
-      | address_radd_country         | ITALY       | ewrw   |
-      | radd_description             | descrizione | ere    |
-      | radd_phoneNumber             | minier      | erw    |
-      | radd_geoLocation_latitudine  | non so      | rer    |
-      | radd_geoLocation_longitudine | %&/(        | rer    |
-      | radd_openingTime             | minier      | rer    |
-      | radd_start_validity          | now         | now    |
-      | radd_end_validity            | +10g        | +10g   |
+      | address_radd_row      | via posto | minier |
+      | address_radd_cap      | NULL      | NULL   |
+      | address_radd_province | MI        | MI     |
+      | address_radd_city     | MILANO    | MILANO |
+      | address_radd_country  | ITALY     | ITALY  |
     Then viene caricato il csv con restituzione errore con dati:
-      | address_radd_row             | via posto   | minier |
-      | address_radd_cap             | 000050      | casa   |
-      | address_radd_province        | MI          | cose   |
-      | address_radd_country         | ITALY       | ewrw   |
-      | radd_description             | descrizione | ere    |
-      | radd_phoneNumber             | minier      | erw    |
-      | radd_geoLocation_latitudine  | non so      | rer    |
-      | radd_geoLocation_longitudine | %&/(        | rer    |
-      | radd_openingTime             | minier      | rer    |
-      | radd_start_validity          | now         | now    |
-      | radd_end_validity            | +10g        | +10g   |
+      | address_radd_row      | via posto | minier |
+      | address_radd_cap      | NULL      | NULL   |
+      | address_radd_province | MI        | MI     |
+      | address_radd_city     | MILANO    | MILANO |
+      | address_radd_country  | ITALY     | ITALY  |
+    And l'operazione ha prodotto un errore con status code "400"
 
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_1] caricamento CSV verifica stato PENDING
     When viene caricato il csv con dati:
-      | address_radd_row             | via posto   | minier |
-      | address_radd_cap             | 000050      | casa   |
-      | address_radd_province        | MI          | cose   |
-      | address_radd_country         | ITALY       | ewrw   |
-      | radd_description             | descrizione | ere    |
-      | radd_phoneNumber             | minier      | erw    |
-      | radd_geoLocation_latitudine  | non so      | rer    |
-      | radd_geoLocation_longitudine | %&/(        | rer    |
-      | radd_openingTime             | minier      | rer    |
-      | radd_start_validity          | now         | now    |
-      | radd_end_validity            | +10g        | +10g   |
+      | address_radd_row      | via posto | minier |
+      | address_radd_cap      | NULL      | NULL   |
+      | address_radd_province | MI        | MI     |
+      | address_radd_city     | MILANO    | MILANO |
+      | address_radd_country  | ITALY     | ITALY  |
     Then viene controllato lo stato di caricamento del csv a "PENDING"
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato ACCEPTED
     When viene caricato il csv con dati:
-      | address_radd_row             | via posto   | minier |
-      | address_radd_cap             | 000050      | casa   |
-      | address_radd_province        | MI          | cose   |
-      | address_radd_country         | ITALY       | ewrw   |
-      | radd_description             | descrizione | ere    |
-      | radd_phoneNumber             | minier      | erw    |
-      | radd_geoLocation_latitudine  | non so      | rer    |
-      | radd_geoLocation_longitudine | %&/(        | rer    |
-      | radd_openingTime             | minier      | rer    |
-      | radd_start_validity          | now         | now    |
-      | radd_end_validity            | +10g        | +10g   |
+      | address_radd_row      | via posto | via posto |
+      | address_radd_cap      | NULL      | NULL      |
+      | address_radd_province | MI        | MI        |
+      | address_radd_city     | MILANO    | MILANO    |
+      | address_radd_country  | ITALY     | ITALY     |
     Then viene controllato lo stato di caricamento del csv a "ACCEPTED"
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_3] caricamento CSV con righa malformata verifica stato a REJECTED
     When viene caricato il csv con dati:
-      | address_radd_row             | via posto   | address_radd |
-      | address_radd_cap             | 000050      | NULL         |
-      | address_radd_province        | MI          | 12342634     |
-      | address_radd_country         | ITALY       |              |
-      | radd_description             | descrizione |              |
-      | radd_geoLocation_longitudine | %&/(        |              |
-      | radd_openingTime             | minier      |              |
-      | radd_start_validity          | now         | now          |
-      | radd_end_validity            | +10g        | +10g         |
-    Then viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore ""
+      | address_radd_row             | via posto   | via posto |
+      | address_radd_cap             | NULL        | NULL      |
+      | address_radd_province        | MI          | MI        |
+      | address_radd_city            | MILANO      | MILANO    |
+      | address_radd_country         | ITALY       | ITALY     |
+      | radd_description             | descrizione |           |
+      | radd_geoLocation_longitudine | %&/(        |           |
+      | radd_openingTime             | minier      |           |
+      | radd_start_validity          | now         | now       |
+      | radd_end_validity            | +10g        | +10g      |
+    Then viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "csv malformato"
 
 
   @raddAnagrafica @raddCsv
-  Scenario: [RADD_ANAGRAFICA_CSV_STATO_4] caricamento CSV con campi a null dove c'è obbligatorietà verifica stato a REJECTED
+  Scenario Outline: [RADD_ANAGRAFICA_CSV_STATO_4] caricamento CSV con campi a null dove c'è obbligatorietà verifica stato a REJECTED
     When viene caricato il csv con dati:
-      | address_radd_row             | via posto   | address_radd |
-      | address_radd_cap             | 000050      | NULL         |
-      | address_radd_province        | MI          | 12342634     |
-      | address_radd_country         | ITALY       |              |
-      | radd_description             | descrizione |              |
-      | radd_geoLocation_longitudine | %&/(        |              |
-      | radd_openingTime             | minier      |              |
-      | radd_start_validity          | now         | now          |
-      | radd_end_validity            | +10g        | +10g         |
+      | address_radd_row      | <via>       | via posto |
+      | address_radd_cap      | <cap>       | NULL      |
+      | address_radd_province | <provincia> | 12342634  |
+      | address_radd_city     | <citta>     |           |
+      | address_radd_country  | <stato>     |           |
     Then viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore ""
+    Examples:
+      | via        | cap   | provincia | citta  | stato |
+      | via ceggia | 30022 | VE        | CEGGIA | NULL  |
+      | via ceggia | 30022 | VE        | NULL   | ITALY |
+      | via ceggia | 30022 | NULL      | CEGGIA | ITALY |
+      | via ceggia | NULL  | VE        | CEGGIA | ITALY |
+      | NULL       | 30022 | VE        | CEGGIA | ITALY |
+
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_5] caricamento CSV con formato campi errato verifica stato a REJECTED e messaggio di errore
     When viene caricato il csv con dati:
       | address_radd_row             | via posto   | address_radd |
-      | address_radd_cap             | 000050      | NULL         |
+      | address_radd_cap             | NULL      | NULL         |
       | address_radd_province        | MI          | 12342634     |
       | address_radd_country         | ITALY       |              |
       | radd_description             | descrizione |              |
@@ -135,7 +113,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_end_validity            | +10g        | +10g         |
     Then viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore ""
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CSV_STATO_6] caricamento CSV verifica stato con requestId non esistente
     When viene eseguita la richiesta per controllo dello stato di caricamento del csv con restituzione errore
       | radd_requestId | <requestId> |
@@ -146,41 +124,36 @@ Feature: Radd Alternative Anagrafica Sportelli
       | NULL       | 400    |
 
 
-
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_LISTA_1] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
     When viene caricato il csv con dati:
-      | address_radd_row             | via posto   | address_radd |
-      | address_radd_cap             | 000050      | NULL         |
-      | address_radd_province        | MI          | 12342634     |
-      | address_radd_country         | ITALY       |              |
-      | radd_description             | descrizione |              |
-      | radd_geoLocation_longitudine | %&/(        |              |
-      | radd_openingTime             | minier      |              |
-      | radd_start_validity          | now         | now          |
-      | radd_end_validity            | +10g        | +10g         |
+      | address_radd_row      | via posto | address_radd |
+      | address_radd_cap      | NULL    | NULL         |
+      | address_radd_province | MI        | 12342634     |
+      | address_radd_city     | MILANO    |              |
+      | address_radd_country  | ITALY     |              |
     Then viene richiesta la lista degli sportelli caricati dal csv:
-      | radd_requestId      | corretto |
-      | radd_filter_limit   | 10       |
-      | radd_filter_filekey | NULL     |
+      | radd_requestId    | corretto |
+      | radd_filter_limit | 10       |
 
-  @raddAnagrafica @raddCsv
+
+  @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CSV_LISTA_2] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
     When viene richiesta la lista degli sportelli caricati dal csv con dati errati:
-      | radd_requestId      | <requestId> |
-      | radd_filter_limit   | 10         |
-      | radd_filter_filekey | NULL       |
+      | radd_requestId    | <requestId> |
+      | radd_filter_limit | 10          |
     Then l'operazione ha prodotto un errore con status code "<errore>"
-Examples:
-  | requestId   | errore |
-  | saffasfasfa | 404    |
-  | NULL        | 400    |
+    Examples:
+      | requestId   | errore |
+      | saffasfasfa | 404    |
+      | NULL        | 400    |
+
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_1] inserimento sportello RADD con dati corretti
     When viene generato uno sportello Radd con dati:
       | address_radd_row             | via posto   |
-      | address_radd_cap             | 000050      |
+      | address_radd_cap             | NULL      |
       | address_radd_province        | MI          |
       | address_radd_country         | ITALY       |
       | radd_description             | descrizione |
@@ -192,31 +165,29 @@ Examples:
       | radd_end_validity            | +10g        |
 
   @raddAnagrafica
-  Scenario: [RADD_ANAGRAFICA_CRUD_2] inserimento sportello RADD senza campi obbligatori
-    When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | NULL        |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | +10g        |
+  Scenario Outline: [RADD_ANAGRAFICA_CRUD_2] inserimento sportello RADD senza campi obbligatori
+    When viene generato uno sportello Radd con restituzione errore con dati:
+      | address_radd_row      | <via>       |
+      | address_radd_cap      | <cap>       |
+      | address_radd_province | <provincia> |
+      | address_radd_city     | <citta>     |
+      | address_radd_country  | <stato>     |
     Then l'operazione ha prodotto un errore con status code "400"
+    Examples:
+      | via | cap | provincia | citta | stato |
+
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_3] inserimento sportello RADD con formato campi errato
-    When viene generato uno sportello Radd con dati:
+    When viene generato uno sportello Radd con restituzione errore con dati:
       | address_radd_row             | NULL        |
       | address_radd_cap             | NULL        |
       | address_radd_province        | NULL        |
+      | address_radd_city            |             |
       | address_radd_country         | NULL        |
       | radd_description             | descrizione |
       | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
+      | radd_geoLocation_latitudine  | 40,000      |
       | radd_geoLocation_longitudine | %&/(        |
       | radd_openingTime             | minier      |
       | radd_start_validity          | now         |
@@ -350,9 +321,9 @@ Examples:
       | radd_start_validity          | now         |
       | radd_end_validity            | NULL        |
     Then viene modificato uno sportello Radd con dati errati:
-      | radd_description | !!"£$%&/( |
-      | radd_openingTime | !!"£$%&/( |
-      | radd_phoneNumber | !!"£$%&/( |
+      | radd_description | !!"$%&/( |
+      | radd_openingTime | !!"$%&/( |
+      | radd_phoneNumber | !!"$%&/( |
     And l'operazione ha prodotto un errore con status code "400"
 
   @raddAnagrafica
@@ -378,7 +349,7 @@ Examples:
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_13] modifica sportello RADD con uid vuoto controllo restituzione errore
     Then viene modificato uno sportello Radd con dati errati:
-      | radd_uid       | NULL |
+      | radd_uid | NULL |
     And l'operazione ha prodotto un errore con status code "400"
 
   @raddAnagrafica
@@ -423,17 +394,12 @@ Examples:
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_16] cancellazione sportello RADD con endDate < endValidity dello sportello
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | 02000       |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | NULL        |
+      | address_radd_row      | NULL  |
+      | address_radd_cap      | 02000 |
+      | address_radd_province | NULL  |
+      | address_radd_country  | NULL  |
+      | radd_start_validity   | now   |
+      | radd_end_validity     | +10g  |
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | -10g |
 
@@ -441,17 +407,12 @@ Examples:
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_17] cancellazione sportello RADD con endDate > endValidity dello sportello controllo errore
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | 02000       |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | NULL        |
+      | address_radd_row      | NULL  |
+      | address_radd_cap      | 02000 |
+      | address_radd_province | NULL  |
+      | address_radd_country  | NULL  |
+      | radd_start_validity   | now   |
+      | radd_end_validity     | +10g  |
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | +10g |
 
@@ -478,17 +439,10 @@ Examples:
   @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CRUD_19] cancellazione sportello RADD con controllo campi obbligatori vuoti
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | 02000       |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | NULL        |
+      | address_radd_row      | NULL  |
+      | address_radd_cap      | 02000 |
+      | address_radd_province | NULL  |
+      | address_radd_country  | ITALY |
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | <endValidity> |
       | radd_registryId   | <registryId>  |
@@ -499,3 +453,87 @@ Examples:
       | corretto    | corretto   | NULL     |
       | corretto    | NULL       | corretto |
       | NULL        | corretto   | corretto |
+
+
+  @raddAnagrafica
+  Scenario: [RADD_ANAGRAFICA_CRUD_20] cancellazione sportello RADD con dati corretti da diverso operatore RADD
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row      | NULL             |
+      | address_radd_cap      | 02000            |
+      | address_radd_province | NULL             |
+      | address_radd_city     | NOVENTA DI PIAVE |
+      | address_radd_country  | ITALY            |
+    Then viene cambiato raddista con "issuer_2"
+    Then viene cancellato uno sportello Radd con dati corretti
+    And l'operazione ha prodotto un errore con status code "404"
+
+
+  @raddAnagrafica
+  Scenario: [RADD_ANAGRAFICA_CRUD_21] ricevimento lista sportelli del operatore con dati corretti
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row      | NOVENTA DI PIAVE |
+      | address_radd_cap      | 30020            |
+      | address_radd_province | VE               |
+      | address_radd_city     | NOVENTA DI PIAVE |
+      | address_radd_country  | ITALY            |
+      | radd_externalCode     | test radd        |
+    Then viene richiesta la lista degli sportelli con dati:
+      | radd_filter_limit     | 10        |
+      | radd_filter_lastKey   | NULL      |
+      | address_radd_cap      | 30020     |
+      | address_radd_province | VE        |
+      | address_radd_country  | ITALY     |
+      | radd_externalCode     | test radd |
+
+
+  @raddAnagrafica
+  Scenario: [RADD_ANAGRAFICA_CRUD_22] ricevimento lista sportelli del operatore con limit a null controllo default
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row      | NOVENTA DI PIAVE |
+      | address_radd_cap      | 30020            |
+      | address_radd_province | VE               |
+      | address_radd_city     | NOVENTA DI PIAVE |
+      | address_radd_country  | ITALY            |
+      | radd_externalCode     | test radd        |
+    Then viene richiesta la lista degli sportelli con dati:
+      | radd_filter_limit     | NULL      |
+      | radd_filter_lastKey   | NULL      |
+      | address_radd_cap      | 30020     |
+      | address_radd_province | VE        |
+      | address_radd_country  | ITALY     |
+      | radd_externalCode     | test radd |
+
+
+  @raddAnagrafica
+  Scenario Outline: [RADD_ANAGRAFICA_CRUD_23] ricevimento lista sportelli del operatore tramite filtro
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row      | NOVENTA DI PIAVE |
+      | address_radd_cap      | 30020            |
+      | address_radd_province | VE               |
+      | address_radd_city     | NOVENTA DI PIAVE |
+      | address_radd_country  | ITALY            |
+      | radd_externalCode     | test radd        |
+    Then viene richiesta la lista degli sportelli con dati:
+      | radd_filter_limit     | 10             |
+      | radd_filter_lastKey   | NULL           |
+      | address_radd_cap      | <cap>          |
+      | address_radd_province | <provincia>    |
+      | address_radd_country  | <stato>        |
+      | radd_externalCode     | <externalCode> |
+    Examples:
+      | cap   | provincia | stato | externalCode |
+      | 30020 | NULL      | NULL  | NULL         |
+      | NULL  | VE        | NULL  | NULL         |
+      | NULL  | NULL      | ITALY | NULL         |
+      | NULL  | NULL      | NULL  | test radd    |
+
+
+  @raddAnagrafica
+  Scenario: [RADD_ANAGRAFICA_CRUD_24] ricevimento lista vuota dei sportelli del operatore con filtro con valore non presente
+    When viene richiesta la lista degli sportelli con dati:
+      | radd_filter_limit     | 10             |
+      | radd_filter_lastKey   | NULL           |
+      | address_radd_cap      | <cap>          |
+      | address_radd_province | <provincia>    |
+      | address_radd_country  | <stato>        |
+      | radd_externalCode     | <externalCode> |

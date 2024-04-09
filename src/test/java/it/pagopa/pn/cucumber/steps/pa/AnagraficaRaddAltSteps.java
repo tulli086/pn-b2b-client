@@ -41,10 +41,8 @@ import static it.pagopa.pn.cucumber.utils.RaddAltValue.*;
 public class AnagraficaRaddAltSteps {
 
     private final PnRaddAlternativeClientImpl raddAltClient;
-    private final PnExternalServiceClientImpl externalServiceClient;
     private final SharedSteps sharedSteps;
     private final PnPaB2bUtils pnPaB2bUtils;
-    private final RaddAltSteps raddAltSteps;
     private final DataTableTypeRaddAlt dataTableTypeRaddAlt;
 
     private String filePathCsv;
@@ -57,30 +55,26 @@ public class AnagraficaRaddAltSteps {
 
 
     private String uid = "1234556";
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     private static final Integer NUM_CHECK_STATE_CSV = 10;
     private static final Integer WAITING_STATE_CSV = 1000;
 
     @Autowired
-    public AnagraficaRaddAltSteps(PnRaddAlternativeClientImpl raddAltClient, PnExternalServiceClientImpl externalServiceClient,
-                                  PnPaB2bUtils pnPaB2bUtils, SharedSteps sharedSteps, RaddAltSteps raddAltSteps, DataTableTypeRaddAlt dataTableTypeRaddAlt) {
+    public AnagraficaRaddAltSteps(PnRaddAlternativeClientImpl raddAltClient, PnPaB2bUtils pnPaB2bUtils,
+                                  SharedSteps sharedSteps, DataTableTypeRaddAlt dataTableTypeRaddAlt) {
         this.raddAltClient = raddAltClient;
-        this.externalServiceClient = externalServiceClient;
         this.sharedSteps = sharedSteps;
         this.pnPaB2bUtils = pnPaB2bUtils;
-        this.raddAltSteps = raddAltSteps;
         this.dataTableTypeRaddAlt = dataTableTypeRaddAlt;
     }
 
     @When("viene caricato il csv con dati:")
-    public void vieneGeneratoIlCsv(@Transpose List<CreateRegistryRequest> dataCsv) throws IOException {
+    public void vieneGeneratoIlCsv(List<Map<String, String>> dataCsv) throws IOException {
         log.info("dataCsv: {}", dataCsv);
         creazioneCsv(dataCsv);
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
 
-        RegistryUploadResponse responseUploadCsv = null;
-        responseUploadCsv = raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
+        RegistryUploadResponse responseUploadCsv = raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
         try {
             Assertions.assertNotNull(responseUploadCsv);
             Assertions.assertNotNull(responseUploadCsv.getRequestId());
@@ -99,8 +93,7 @@ public class AnagraficaRaddAltSteps {
 
     @When("viene caricato il csv con restituzione errore con dati:")
     public void vieneGeneratoIlCsvConResituzioneErrore(List<Map<String, String>> dataCsv) throws IOException {
-
-        creazioneCsv(dataTableTypeRaddAlt.convertToListRegistryRequestData(dataCsv));
+        creazioneCsv(dataCsv);
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
 
         try {
@@ -189,12 +182,15 @@ public class AnagraficaRaddAltSteps {
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello= raddAltClient.retrieveRequestItems(
                 getValue(dataSportello, RADD_UID.key)
                 , getValue(dataSportello, RADD_REQUESTID.key) == null ? null : this.requestid
-                , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_FILEKEY.key))
-                , getValue(dataSportello, RADD_FILTER_FILEKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_FILEKEY.key));
+                , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
+                , getValue(dataSportello, RADD_FILTER_LASTKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_LASTKEY.key));
 
         try {
             Assertions.assertNotNull(sportello);
             Assertions.assertNotNull(sportello.getItems());
+
+            log.info("lista sportelli: {}",sportello);
+
             for (int i=0;i<sportello.getItems().size();i++) {
                 Assertions.assertNotNull(sportello.getItems().get(i));
                 Assertions.assertNotNull(sportello.getItems().get(i).getRequestId());
@@ -219,8 +215,8 @@ public class AnagraficaRaddAltSteps {
             it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello = raddAltClient.retrieveRequestItems(
                     getValue(dataSportello, RADD_UID.key)
                     , getValue(dataSportello, RADD_REQUESTID.key) == null ? null : getValue(dataSportello, RADD_REQUESTID.key)
-                    , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_FILEKEY.key))
-                    , getValue(dataSportello, RADD_FILTER_FILEKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_FILEKEY.key));
+                    , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
+                    , getValue(dataSportello, RADD_FILTER_LASTKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_LASTKEY.key));
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
@@ -249,10 +245,8 @@ public class AnagraficaRaddAltSteps {
 
     @When("viene generato uno sportello Radd con restituzione errore con dati:")
     public void vieneGeneratoConErroreSportelloRadd(@Transpose CreateRegistryRequest dataSportello) {
-
-        log.info("Request inserimento: {}", dataSportello);
         try {
-            raddAltClient.addRegistry(this.uid, sportelloRaddCrud);
+            raddAltClient.addRegistry(this.uid, dataSportello);
         } catch (HttpStatusCodeException e) {
         this.sharedSteps.setNotificationError(e);
     }
@@ -307,7 +301,12 @@ public class AnagraficaRaddAltSteps {
     public void vieneCancellatoSportelloRadd(Map<String,String> richiestaCancellazione) {
 
         String endDate = getValue(richiestaCancellazione,RADD_END_VALIDITY.key);
-        OffsetDateTime endValidity= OffsetDateTime.parse(this.sportelloRaddCrud.getEndValidity());
+        OffsetDateTime endValidity=null;
+        if(this.sportelloRaddCrud.getEndValidity()!=null) {
+            endValidity = OffsetDateTime.parse(this.sportelloRaddCrud.getEndValidity());
+        }else{
+                endValidity=OffsetDateTime.now();
+        }
 
         if (endDate!=null) {
             if (endDate.toLowerCase().contains("+")) {
@@ -336,19 +335,20 @@ public class AnagraficaRaddAltSteps {
     @When("viene richiesta la lista degli sportelli con dati:")
     public void vieneRichiestolaListaDeiSportelliRadd(Map<String, String> dataSportello) {
 
+        Integer limiteFiltro=getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? 10 : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key));
+
         RegistriesResponse sportello= raddAltClient.retrieveRegistries(
                 this.uid
-                , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_FILEKEY.key))
-                , getValue(dataSportello, RADD_FILTER_FILEKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_FILEKEY.key)
+                , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
+                , getValue(dataSportello, RADD_FILTER_LASTKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_LASTKEY.key)
                 , getValue(dataSportello, ADDRESS_RADD_CAP.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_CAP.key)
                 , getValue(dataSportello, ADDRESS_RADD_CITY.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_CITY.key)
                 , getValue(dataSportello, ADDRESS_RADD_PROVINCE.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_PROVINCE.key)
-                , getValue(dataSportello, RADD_EXTERNAL_CODE.key) == null ? null : getValue(dataSportello, RADD_EXTERNAL_CODE.key)); //TODO vedere meglio la gestione del externalCode
-
+                , getValue(dataSportello, RADD_EXTERNAL_CODE.key) == null ? null : getValue(dataSportello, RADD_EXTERNAL_CODE.key));
         try {
             Assertions.assertNotNull(sportello);
             Assertions.assertNotNull(sportello.getRegistries());
-            Assertions.assertEquals(1,sportello.getRegistries().size());
+            Assertions.assertEquals(limiteFiltro,sportello.getRegistries().size());
             this.registryId=sportello.getRegistries().get(0).getRegistryId();
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -358,33 +358,35 @@ public class AnagraficaRaddAltSteps {
     }
 
 
-    public void creazioneCsv(List<CreateRegistryRequest> csvData) throws IOException {
+    public void creazioneCsv(List<Map<String, String>> dataCsv) throws IOException {
         String fileName = "file" + generateRandomNumber() + ".csv";
-
         this.filePathCsv = "target/classes/" + fileName;
 
-//TODO inserire tutti campi da mettere nel csv
+
+        List<CreateRegistryRequest> csvData = dataTableTypeRaddAlt.convertToListRegistryRequestData(dataCsv);
+
         List<String[]> data = new ArrayList<>();
-        data.add(new String[]{"addressRow", "cap", "city","pr","country","startValidity","endValidity","openingTime","description","phoneNumber","latitude","longitude"});
+        data.add(new String[]{"paese", "città", "provincia","cap","via","dataInizioValidità","dataFineValidità","descrizione","orariApertura","coordinateGeoReferenziali","telefono","capacità","externalCode"});
 
         for (int i = 0; i < csvData.size(); i++) {
             data.add(new String[]{
-                    csvData.get(i).getAddress().getAddressRow(),
-                    csvData.get(i).getAddress().getCap(),
+                    csvData.get(i).getAddress().getCountry(),
                     csvData.get(i).getAddress().getCity(),
                     csvData.get(i).getAddress().getPr(),
-                    csvData.get(i).getAddress().getCountry(),
+                    csvData.get(i).getAddress().getCap(),
+                    csvData.get(i).getAddress().getAddressRow(),
                     csvData.get(i).getStartValidity(),
                     csvData.get(i).getEndValidity(),
-                    csvData.get(i).getOpeningTime(),
                     csvData.get(i).getDescription(),
+                    csvData.get(i).getOpeningTime(),
+                    csvData.get(i).getGeoLocation().getLatitude()+","+
+                    csvData.get(i).getGeoLocation().getLongitude(),
                     csvData.get(i).getPhoneNumber(),
-                    csvData.get(i).getGeoLocation().getLatitude(),
-                    csvData.get(i).getGeoLocation().getLongitude()
+                    getValue(dataCsv.get(i), RADD_CAPACITY.key),
+                    csvData.get(i).getExternalCode(),
             });
-
-
         }
+
 
         try (CSVWriter writer = new CSVWriter(new FileWriter(filePathCsv), ';',
                 CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
@@ -407,10 +409,5 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-    @After("@radd")
-    public void cleanSportelli(){
-        if(this.sportelloRaddCrud!=null){
 
-        }
-    }
 }
