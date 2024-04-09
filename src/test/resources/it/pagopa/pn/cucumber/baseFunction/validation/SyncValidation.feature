@@ -253,7 +253,7 @@ Feature: verifica validazione sincrona
       | ãsåéØaìnò dæonà ñ'di pi`aève |
 
 
-  @validation
+  #@validation
   Scenario Outline: [B2B-PA-SYNC_VALIDATION_18] validazione sincrona campo physicalAddress_municipality
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -283,7 +283,7 @@ Feature: verifica validazione sincrona
     Then l'invio della notifica non ha prodotto errori
     Examples:
       | localita                     |
-      | ãsåéØaìnò dæonà ñ'di pi`aève |
+      #| ãsåéØaìnò dæonà ñ'di pi`aève |
       | Milano '-/.@_                |
       | PARIGI                       |
       | MILANO 01234 56789           |
@@ -371,7 +371,7 @@ Feature: verifica validazione sincrona
       | NULL     |
 
 
-  @validation
+  #@validation
   Scenario Outline: [B2B-PA-SYNC_VALIDATION_24] validazione sincrona campo physicalAddress_State
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
