@@ -15,6 +15,7 @@ import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebRecipientClient;
@@ -209,6 +210,7 @@ public class SharedSteps {
 
     private SettableApiKey.ApiKeyType apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
 
+    private final PnPollingFactory pollingFactory;
 
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
@@ -217,7 +219,8 @@ public class SharedSteps {
                        IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient,
                        PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey,
                        PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey, PnGPDClientImpl pnGPDClientImpl,
-                       PnPaymentInfoClientImpl pnPaymentInfoClientImpl, PnB2bClientTimingConfigs timingConfigs) {
+                       PnPaymentInfoClientImpl pnPaymentInfoClientImpl, PnB2bClientTimingConfigs timingConfigs,
+                       PnPollingFactory pollingFactory) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.webClient = webClient;
@@ -233,6 +236,7 @@ public class SharedSteps {
         this.iuvGPD = new ArrayList<String>();
 
         this.timingConfigs = timingConfigs;
+        this.pollingFactory = pollingFactory;
     }
 
     @BeforeAll
@@ -1941,23 +1945,29 @@ public class SharedSteps {
         switch (apiKey) {
             case "Comune_1":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_1);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_1);
                 break;
             case "Comune_2":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_2);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_2);
                 break;
             case "Comune_Multi":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.GA);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.GA);
                 break;
             case "Comune_Son":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.SON);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.SON);
                 break;
             case "Comune_Root":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.ROOT);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.ROOT);
                 break;
             default:
                 throw new IllegalArgumentException();
         }
-        this.b2bUtils.setClient(b2bClient);
+
+        this.b2bUtils.setClient(b2bClient, pollingFactory);
         this.settedPa = apiKey;
     }
 
@@ -1998,6 +2008,10 @@ public class SharedSteps {
 
     public IPnPaB2bClient getB2bClient() {
         return b2bClient;
+    }
+
+    public PnPollingFactory getPollingFactory(){
+        return pollingFactory;
     }
 
 

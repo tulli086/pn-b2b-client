@@ -48,10 +48,10 @@ public class PnPaB2bUtils {
     private final PnB2bClientTimingConfigs timingConfigs;
 
     private IPnPaB2bClient client;
+    private PnPollingFactory pollingFactory;
 
     private final IPnRaddFsuClient raddFsuClient;
     private final IPnRaddAlternativeClient raddAltClient;
-    private final PnPollingFactory pollingFactory;
     private final static String ACCEPTED = "ACCEPTED";
     private final static String REFUSED = "REFUSED";
 
@@ -71,6 +71,11 @@ public class PnPaB2bUtils {
 
     public void setClient(IPnPaB2bClient client) {
         this.client = client;
+    }
+
+    public void setClient(IPnPaB2bClient client, PnPollingFactory pollingFactory){
+        this.client = client;
+        this.pollingFactory = pollingFactory;
     }
 
 
@@ -642,7 +647,6 @@ public class PnPaB2bUtils {
     public FullSentNotificationV23 waitForRequestAcceptation(NewNotificationResponse response) {
 
         PnPollingServiceValidationStatusV23 validationStatusV23 = (PnPollingServiceValidationStatusV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V23);
-        validationStatusV23.setApiKeys(client.getApiKeySetted());
         PnPollingResponseV23 pollingResponseV23 = validationStatusV23.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
 
         return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification();
@@ -651,7 +655,6 @@ public class PnPaB2bUtils {
     public FullSentNotificationV23 waitForRequestNoAcceptation( NewNotificationResponse response) {
 
         PnPollingServiceValidationStatusNoAcceptedV23 validationStatusNoAcceptedV23 = (PnPollingServiceValidationStatusNoAcceptedV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_NO_ACCEPTATION_V23);
-        validationStatusNoAcceptedV23.setApiKeys(client.getApiKeySetted());
         PnPollingResponseV23 pollingResponseV23 = validationStatusNoAcceptedV23.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
 
         return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification() ;
@@ -661,7 +664,6 @@ public class PnPaB2bUtils {
     public FullSentNotificationV23 waitForRequestAcceptationShort( NewNotificationResponse response) {
 
         PnPollingServiceValidationStatusAcceptedShortV23 validationStatusAcceptedShortV23 = (PnPollingServiceValidationStatusAcceptedShortV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_ACCEPTATION_SHORT_V23);
-        validationStatusAcceptedShortV23.setApiKeys(client.getApiKeySetted());
         PnPollingResponseV23 pollingResponseV23 = validationStatusAcceptedShortV23.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
 
         return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification() ;
@@ -713,7 +715,6 @@ public class PnPaB2bUtils {
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification waitForRequestAcceptationV1( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse response) {
 
         PnPollingServiceValidationStatusV1 validationStatusV1 = (PnPollingServiceValidationStatusV1) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V1);
-        validationStatusV1.setApiKeys(client.getApiKeySetted());
         PnPollingResponseV1 pollingResponseV1 = validationStatusV1.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
 
         return pollingResponseV1.getNotification() == null ? null : pollingResponseV1.getNotification();
@@ -723,7 +724,6 @@ public class PnPaB2bUtils {
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20 waitForRequestAcceptationV2( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationResponse response) {
 
         PnPollingServiceValidationStatusV20 validationStatusV20 = (PnPollingServiceValidationStatusV20) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V20);
-        validationStatusV20.setApiKeys(client.getApiKeySetted());
         PnPollingResponseV20 pollingResponseV20 = validationStatusV20.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
 
         return pollingResponseV20.getNotification() == null ? null : pollingResponseV20.getNotification();
@@ -732,7 +732,6 @@ public class PnPaB2bUtils {
     public boolean waitForRequestNotRefused( NewNotificationResponse response) {
 
         PnPollingServiceValidationStatusV23 validationStatusV23 = (PnPollingServiceValidationStatusV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V23);
-        validationStatusV23.setApiKeys(client.getApiKeySetted());
         PnPollingResponseV23 pollingResponseV23 = validationStatusV23.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(REFUSED).build());
 
         return pollingResponseV23.getResult();
@@ -741,7 +740,6 @@ public class PnPaB2bUtils {
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.FullSentNotificationV21 waitForRequestAcceptationV21( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NewNotificationResponse response) {
 
         PnPollingServiceValidationStatusV21 validationStatusV21 = (PnPollingServiceValidationStatusV21) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V21);
-        validationStatusV21.setApiKeys(client.getApiKeySetted());
         PnPollingResponseV21 pollingResponseV21 = validationStatusV21.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
 
         return pollingResponseV21.getNotification() == null ? null : pollingResponseV21.getNotification();
@@ -754,7 +752,6 @@ public class PnPaB2bUtils {
         long startTime = System.currentTimeMillis();
 
         PnPollingServiceValidationStatusV23 validationStatusV23 = (PnPollingServiceValidationStatusV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V23);
-        validationStatusV23.setApiKeys(client.getApiKeySetted());
         PnPollingResponseV23 pollingResponseV23 = validationStatusV23.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(REFUSED).build());
 
         long endTime = System.currentTimeMillis();
