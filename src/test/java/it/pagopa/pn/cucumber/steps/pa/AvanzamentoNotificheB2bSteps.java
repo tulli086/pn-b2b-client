@@ -911,6 +911,25 @@ public class AvanzamentoNotificheB2bSteps {
     }
     }
 
+
+    @Then("si verifica che il timestamp dell'elemento di timeline della notifica SEND_ANALOG_FEEDBACK con deliveryDetailCode RECAG012 sia uguale al timestamp di REFINEMENT")
+    public void verificationDateDeliveryDetailCodeRECAG012WithRefinement(Integer destinatario) {
+
+        try {
+            OffsetDateTime ricezioneRECAG012 = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK) && elem.getDetails().getDeliveryDetailCode().equals("RECAG012")).findAny().get().getDetails().getEventTimestamp();
+            OffsetDateTime refinementDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+
+            logger.info("DESTINATARIO : {}", destinatario);
+            logger.info("ricezioneRaccomandata : {}", ricezioneRECAG012);
+            logger.info("refinementDate : {}", refinementDate);
+
+            Assertions.assertEquals(ricezioneRECAG012,refinementDate);
+
+        }catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
+
     @Then("verifica date business in timeline COMPLETELY_UNREACHABLE per l'utente {int}")
     public void verificationDateComplettelyUnreachableWithRefinement(Integer destinatario) {
 
