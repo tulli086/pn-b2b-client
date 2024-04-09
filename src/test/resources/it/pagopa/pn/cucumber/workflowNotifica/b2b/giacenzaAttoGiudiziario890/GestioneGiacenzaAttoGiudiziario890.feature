@@ -1,8 +1,5 @@
 Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto giudiziario 890
 
-  Background:
-    Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
-
   @workflowAnalogico @giacenza890Simplified
   Scenario: [B2B_GIACENZA_890_1] Consegnata atto in Giacenza prima dei 10 giorni.
     Given viene generata una nuova notifica
