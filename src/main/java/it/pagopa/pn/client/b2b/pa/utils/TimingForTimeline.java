@@ -52,7 +52,7 @@ public class TimingForTimeline {
     }
 
     @Getter
-    private enum Element{
+    private enum Element {
         //TIMELINE ELEMENT UPDATE TO V2.3
         SENDER_ACK_CREATION_REQUEST(2,1),
         VALIDATE_NORMALIZE_ADDRESSES_REQUEST(2,1),
@@ -111,8 +111,10 @@ public class TimingForTimeline {
         EFFECTIVE_DATE(11,1),
         PAID(5,1),
         UNREACHABLE(11,1),
-        CANCELLED(11,1);
+        CANCELLED(11,1),
 
+        //TIMING FOR WEBHOOK
+        WEBHOOK(125000, 500);
 
         private int numCheck,waitingMultiplier;
 
