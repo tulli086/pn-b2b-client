@@ -6,7 +6,7 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV20;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebhookB2bClient;
-import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +26,14 @@ import java.util.function.Predicate;
 public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingResponseV20> {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final IPnWebhookB2bClient webhookB2bClient;
-    private final TimingForTimeline timingForTimeline;
+    private final TimingForPolling timingForPolling;
     private List<ProgressResponseElement> progressResponseElementListV20;
     private int retryAfter;
     private String iun;
 
 
-    public PnPollingServiceWebhookV20(TimingForTimeline timingForTimeline, IPnWebhookB2bClient webhookB2bClient) {
-        this.timingForTimeline = timingForTimeline;
+    public PnPollingServiceWebhookV20(TimingForPolling timingForPolling, IPnWebhookB2bClient webhookB2bClient) {
+        this.timingForPolling = timingForPolling;
         this.webhookB2bClient = webhookB2bClient;
     }
 
@@ -100,13 +100,13 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
 
     @Override
     protected Integer getPollInterval(String value) {
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value, true);
         return timingResult.waiting();
     }
 
     @Override
     protected Integer getAtMost(String value)  {
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value, true);
         return timingResult.numCheck();
     }
 

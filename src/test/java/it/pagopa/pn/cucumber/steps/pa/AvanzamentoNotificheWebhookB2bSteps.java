@@ -21,6 +21,7 @@ import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebRecipientClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebhookB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
+import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamCreationRequest;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse;
@@ -28,7 +29,6 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.GroupPosition;
-import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -66,7 +66,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private HttpStatusCodeException notificationError;
     private StreamRequestV23 streamRequest;
 
-    private final TimingForTimeline timingForTimeline;
+    private final TimingForPolling timingForPolling;
 
     @And("viene verificato che il campo legalfactIds sia valorizzato nel EventStream")
     public void vieneVerificatoCheIlCampoLegalfactIdsSiaValorizzato() {
@@ -101,11 +101,11 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Autowired
     public AvanzamentoNotificheWebhookB2bSteps(IPnWebhookB2bClient webhookB2bClient, SharedSteps sharedSteps,
-                                               TimingForTimeline timingForTimeline) {
+                                               TimingForPolling timingForPolling) {
         this.sharedSteps = sharedSteps;
         this.webhookB2bClient = webhookB2bClient;
         this.webRecipientClient = sharedSteps.getWebRecipientClient();
-        this.timingForTimeline = timingForTimeline;
+        this.timingForPolling = timingForPolling;
         this.b2bClient = sharedSteps.getB2bClient();
         webhookTestLaunch = true;
         AvanzamentoNotificheWebhookB2bSteps.webhookClientForClean = webhookB2bClient;
@@ -1552,7 +1552,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @SuppressWarnings("unchecked")
     private <T> TimelineElementSearchResult<T> getTimelineEventForStream(StreamVersion streamVersion,String timelineEventCategory){
         timelineEventCategory = timelineEventCategory.trim().toUpperCase();
-        TimingForTimeline.TimingResult timingForElement = timingForTimeline.getTimingForElement(timelineEventCategory);
+        TimingForPolling.TimingResult timingForElement = timingForPolling.getTimingForElement(timelineEventCategory);
         try{
             switch (streamVersion){
                 case V10 -> {
@@ -1582,7 +1582,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     @SuppressWarnings("unchecked")
     private  <T> StatusElementSearchResult<T> getStatusEventForStream(StreamVersion streamVersion,String notificationStatusName){
         notificationStatusName = notificationStatusName.trim().toUpperCase();
-        TimingForTimeline.TimingResult timingForElement = timingForTimeline.getTimingForElement(notificationStatusName);
+        TimingForPolling.TimingResult timingForElement = timingForPolling.getTimingForElement(notificationStatusName);
         try{
             switch (streamVersion){
                 case V10 -> {

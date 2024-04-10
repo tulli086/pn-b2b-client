@@ -5,28 +5,30 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 //TODO: Usare ovunque è necessario il timing e verificare se parametrizzare da propertiesFile
 
 @Component
-public class TimingForTimeline {
+public class TimingForPolling {
     private final PnB2bClientTimingConfigs timingConfigs;
     public record TimingResult(int numCheck, int waiting) { }
 
+
     @Autowired
-    public TimingForTimeline(PnB2bClientTimingConfigs timingConfigs){
+    public TimingForPolling(PnB2bClientTimingConfigs timingConfigs){
         this.timingConfigs = timingConfigs;
     }
 
-
-    public TimingResult getTimingForElement(String element, boolean isSlow){
+    public TimingResult getTimingForElement(String element, boolean isSlow, boolean isWebhook){
         element = element.trim().toUpperCase();
         Element findedElement = Element.valueOf(element);
         int waiting = timingConfigs.getWorkflowWaitMillis();
         int waitingMultiplier = findedElement.getWaitingMultiplier();
 
-        if(waitingMultiplier > 1){
+        if(!isWebhook && waitingMultiplier > 1) {
             waiting = waiting * waitingMultiplier;
         }
+
         //CASO WAITING MULTIPLIER NEGATIVO DA GESTIRE IN FUTURO
 
         if(isSlow) {
@@ -36,7 +38,11 @@ public class TimingForTimeline {
     }
 
     public TimingResult getTimingForElement(String element){
-        return getTimingForElement(element, false);
+        return getTimingForElement(element, false, false);
+    }
+
+    public TimingResult getTimingForElement(String element, boolean isWebhook){
+        return getTimingForElement(element, false, isWebhook);
     }
 
     public TimingResult getTimingForStatusValidation(String element){

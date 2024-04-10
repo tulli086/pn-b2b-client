@@ -8,7 +8,7 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV20;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
-import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -26,12 +26,12 @@ public class PnPollingServiceValidationStatusV20 extends PnPollingTemplate<PnPol
     private final IPnPaB2bClient b2bClient;
     private NewNotificationRequestStatusResponse requestStatusResponseV20;
     private FullSentNotificationV20 notificationV20;
-    private final TimingForTimeline timingForTimeline;
+    private final TimingForPolling timingForPolling;
 
 
-    public PnPollingServiceValidationStatusV20(IPnPaB2bClient b2bClient, TimingForTimeline timingForTimeline) {
+    public PnPollingServiceValidationStatusV20(IPnPaB2bClient b2bClient, TimingForPolling timingForPolling) {
         this.b2bClient = b2bClient;
-        this.timingForTimeline = timingForTimeline;
+        this.timingForPolling = timingForPolling;
     }
 
     @Override
@@ -92,14 +92,14 @@ public class PnPollingServiceValidationStatusV20 extends PnPollingTemplate<PnPol
     @Override
     protected Integer getPollInterval(String value) {
         value = value.concat("_VALIDATION");
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForStatusValidation(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForStatusValidation(value);
         return timingResult.waiting();
     }
 
     @Override
     protected Integer getAtMost(String value) {
         value = value.concat("_VALIDATION");
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForStatusValidation(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForStatusValidation(value);
         return timingResult.numCheck() * timingResult.waiting();
     }
 

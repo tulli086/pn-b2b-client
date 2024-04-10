@@ -8,7 +8,7 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
-import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -26,11 +26,11 @@ public class PnPollingServiceValidationStatusV23 extends PnPollingTemplate<PnPol
     private final IPnPaB2bClient b2bClient;
     private NewNotificationRequestStatusResponseV23 requestStatusResponseV23;
     private FullSentNotificationV23 notificationV23;
-    private final TimingForTimeline timingForTimeline;
+    private final TimingForPolling timingForPolling;
 
-    public PnPollingServiceValidationStatusV23(IPnPaB2bClient b2bClient, TimingForTimeline timingForTimeline) {
+    public PnPollingServiceValidationStatusV23(IPnPaB2bClient b2bClient, TimingForPolling timingForPolling) {
         this.b2bClient = b2bClient;
-        this.timingForTimeline = timingForTimeline;
+        this.timingForPolling = timingForPolling;
 
     }
 
@@ -92,14 +92,14 @@ public class PnPollingServiceValidationStatusV23 extends PnPollingTemplate<PnPol
     @Override
     protected Integer getPollInterval(String value) {
         value = value.concat("_VALIDATION");
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForStatusValidation(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForStatusValidation(value);
         return timingResult.waiting();
     }
 
     @Override
     protected Integer getAtMost(String value) {
         value = value.concat("_VALIDATION");
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForStatusValidation(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForStatusValidation(value);
         return timingResult.numCheck() * timingResult.waiting();
     }
 
@@ -116,8 +116,8 @@ public class PnPollingServiceValidationStatusV23 extends PnPollingTemplate<PnPol
     @Override
     public ApiKeyType getApiKeySetted() {return this.b2bClient.getApiKeySetted(); }
 
-    protected TimingForTimeline getTimingForTimeline(){
-        return this.timingForTimeline;
+    protected TimingForPolling getTimingForTimeline(){
+        return this.timingForPolling;
     }
 
 }

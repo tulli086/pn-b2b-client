@@ -8,7 +8,7 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV20;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
-import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -23,14 +23,14 @@ import java.util.function.Predicate;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnPollingServiceStatusRapidV20 extends PnPollingTemplate<PnPollingResponseV20> {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    protected final TimingForTimeline timingForTimeline;
+    protected final TimingForPolling timingForPolling;
     private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotificationV20 notificationV20;
     private NotificationStatusHistoryElement notificationStatusHistoryElement;
 
 
-    public PnPollingServiceStatusRapidV20(TimingForTimeline timingForTimeline, IPnPaB2bClient pnPaB2bClient) {
-        this.timingForTimeline = timingForTimeline;
+    public PnPollingServiceStatusRapidV20(TimingForPolling timingForPolling, IPnPaB2bClient pnPaB2bClient) {
+        this.timingForPolling = timingForPolling;
         this.pnPaB2bClient = pnPaB2bClient;
     }
 
@@ -80,13 +80,13 @@ public class PnPollingServiceStatusRapidV20 extends PnPollingTemplate<PnPollingR
 
     @Override
     protected Integer getPollInterval(String value) {
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value);
         return timingResult.waiting();
     }
 
     @Override
     protected Integer getAtMost(String value) {
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value);
         return timingResult.waiting() * timingResult.numCheck();
     }
 
