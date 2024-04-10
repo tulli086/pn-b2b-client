@@ -8,7 +8,7 @@ import java.util.Map;
 
 public enum RaddAltValue {
 //physicalAddress sportello radd
-    ADDRESS_RADD("address_radd",null),
+    ADDRESS_RADD("address_radd","SI"),
     ADDRESS_RADD_ROW("address_radd_row",null),
     ADDRESS_RADD_CAP("address_radd_cap",null),
     ADDRESS_RADD_CITY("address_radd_city",null),

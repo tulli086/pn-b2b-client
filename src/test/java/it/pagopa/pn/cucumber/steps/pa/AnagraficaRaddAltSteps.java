@@ -50,8 +50,7 @@ public class AnagraficaRaddAltSteps {
     private String requestid;
     private String registryId;
     private CreateRegistryRequest sportelloRaddCrud;
-
-    private List<RegistryRequestResponse> sportelliTrovatiCSV;
+    private RegistriesResponse sportelliRaddista;
 
 
     private String uid = "1234556";
@@ -199,7 +198,6 @@ public class AnagraficaRaddAltSteps {
                 Assertions.assertNotNull(sportello.getItems().get(i).getOriginalRequest().getOriginalAddress());
             }
 
-            this.sportelliTrovatiCSV=sportello.getItems();
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (this.requestid == null ? "NULL" : this.requestid) + " }";
@@ -275,7 +273,7 @@ public class AnagraficaRaddAltSteps {
         try {
             raddAltClient.updateRegistry(
                     getValue(dataSportello, RADD_UID.key),
-                    getValue(dataSportello, RADD_REQUESTID.key),
+                    getValue(dataSportello, RADD_REGISTRYID.key),
                     aggiornamentoSportelloRadd);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             if (e instanceof HttpStatusCodeException) {
@@ -335,8 +333,6 @@ public class AnagraficaRaddAltSteps {
     @When("viene richiesta la lista degli sportelli con dati:")
     public void vieneRichiestolaListaDeiSportelliRadd(Map<String, String> dataSportello) {
 
-        Integer limiteFiltro=getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? 10 : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key));
-
         RegistriesResponse sportello= raddAltClient.retrieveRegistries(
                 this.uid
                 , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
@@ -348,8 +344,23 @@ public class AnagraficaRaddAltSteps {
         try {
             Assertions.assertNotNull(sportello);
             Assertions.assertNotNull(sportello.getRegistries());
-            Assertions.assertEquals(limiteFiltro,sportello.getRegistries().size());
-            this.registryId=sportello.getRegistries().get(0).getRegistryId();
+            if(sportello.getRegistries().isEmpty() || sportello.getRegistries().size()==0) {
+            }else {
+                this.registryId = sportello.getRegistries().get(0).getRegistryId();
+                this.sportelliRaddista =sportello;
+            }
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{endDate: " + (this.requestid == null ? "NULL" : this.requestid) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+
+    @When("viene contrallato il numero di valori tornati sia uguale a {int}")
+    public void vieneControllatoCheVenganoRitornatiTotValori(Integer numValori) {
+        try {
+        Assertions.assertEquals(numValori,this.sportelliRaddista.getRegistries().size());
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (this.requestid == null ? "NULL" : this.requestid) + " }";

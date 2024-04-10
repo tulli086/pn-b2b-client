@@ -3,25 +3,27 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_1] caricamento CSV con 2 sportelli
     Given viene caricato il csv con dati:
-      | address_radd_row             | via posto   | minier |
-      | address_radd_cap             | NULL      | casa   |
-      | address_radd_province        | MI          | cose   |
-      | address_radd_city            | MILANO      |        |
-      | address_radd_country         | ITALY       | ewrw   |
-      | radd_description             | descrizione | ere    |
-      | radd_phoneNumber             | minier      | erw    |
-      | radd_geoLocation_latitudine  | non so      | rer    |
-      | radd_geoLocation_longitudine | %&/(        | rer    |
-      | radd_openingTime             | minier      | rer    |
-      | radd_start_validity          | now         | now    |
-      | radd_end_validity            | +10g        | +10g   |
-      | radd_capacity                | 10          | 22     |
+      | address_radd_row             | V. XX SETTEMBRE               | VIA SAFFI, 5              |
+      | address_radd_cap             | 47030                         | 47034                     |
+      | address_radd_province        | FC                            | FC                        |
+      | address_radd_city            | SAN MAURO PASCOLI             | FORLIMPOPOLI              |
+      | address_radd_country         | ITALIA                        | ITALIA                    |
+      | radd_description             | SEDE CAF UIL S. MAURO PASCOLI | SEDE CAF UIL FORLIMPOPOLI |
+      | radd_phoneNumber             | 01/5410951                    | 01/5245951                |
+      | radd_geoLocation_latitudine  | 45,0000                       | 11,0000                   |
+      | radd_geoLocation_longitudine | 42,2412                       | 32,1245                   |
+      | radd_openingTime             | lun=9.00-10.00                | lun=9.00-10.00            |
+      | radd_start_validity          | now                           | now                       |
+      | radd_end_validity            | +10g                          | +10g                      |
+      | radd_externalCode            | 99833                         | 99852                     |
+      | radd_capacity                | 10                            | 22                        |
+
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_2] caricamento 2 volte stesso checksum del CSV
     When viene caricato il csv con dati:
       | address_radd_row      | via posto | minier |
-      | address_radd_cap      | NULL    | NULL |
+      | address_radd_cap      | NULL      | NULL   |
       | address_radd_province | MI        | MI     |
       | address_radd_city     | MILANO    | MILANO |
       | address_radd_country  | ITALY     | ITALY  |
@@ -151,18 +153,21 @@ Feature: Radd Alternative Anagrafica Sportelli
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_1] inserimento sportello RADD con dati corretti
+    When viene cambiato raddista con "issuer_2"
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | via posto   |
-      | address_radd_cap             | NULL      |
-      | address_radd_province        | MI          |
-      | address_radd_country         | ITALY       |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | +10g        |
+      | address_radd_row             | via posto       |
+      | address_radd_cap             | 20161           |
+      | address_radd_province        | MI              |
+      | address_radd_city            | MILANO          |
+      | address_radd_country         | ITALY           |
+      | radd_description             | descrizione     |
+      | radd_phoneNumber             | 01/5245951      |
+      | radd_geoLocation_latitudine  | 12,0000         |
+      | radd_geoLocation_longitudine | 95,0001         |
+      | radd_openingTime             | wen=10.00-11.00 |
+      | radd_start_validity          | now             |
+      | radd_end_validity            | +10g            |
+
 
   @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CRUD_2] inserimento sportello RADD senza campi obbligatori
@@ -174,7 +179,12 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | <stato>     |
     Then l'operazione ha prodotto un errore con status code "400"
     Examples:
-      | via | cap | provincia | citta | stato |
+      | via  | cap  | provincia | citta | stato |
+      | NULL | NULL | NULL      | NULL  | NULL  |
+      | NULL | NULL | NULL      | NULL  | NULL  |
+      | NULL | NULL | NULL      | NULL  | NULL  |
+      | NULL | NULL | NULL      | NULL  | NULL  |
+      | NULL | NULL | NULL      | NULL  | NULL  |
 
 
   @raddAnagrafica
@@ -204,11 +214,11 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country         | NULL        |
       | radd_description             | descrizione |
       | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
+      | radd_geoLocation_latitudine  | 15,0000     |
+      | radd_geoLocation_longitudine | 67,0000     |
+      | radd_openingTime             | NULL        |
       | radd_start_validity          | now         |
-      | radd_end_validity            | -10g        |
+      | radd_end_validity            | -20g        |
     Then l'operazione ha prodotto un errore con status code "400"
 
 
@@ -329,13 +339,13 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_10] modifica sportello RADD con registryId non presente controllo restituzione errore
     When viene modificato uno sportello Radd con dati errati:
-      | radd_requestId | errato |
+      | radd_registryId | errato |
     Then l'operazione ha prodotto un errore con status code "404"
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_11] modifica sportello RADD con registryId vuoto controllo restituzione errore
     When viene modificato uno sportello Radd con dati errati:
-      | radd_requestId | NULL |
+      | radd_registryId | NULL |
     Then l'operazione ha prodotto un errore con status code "400"
 
 
@@ -531,9 +541,9 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_24] ricevimento lista vuota dei sportelli del operatore con filtro con valore non presente
     When viene richiesta la lista degli sportelli con dati:
-      | radd_filter_limit     | 10             |
-      | radd_filter_lastKey   | NULL           |
-      | address_radd_cap      | <cap>          |
-      | address_radd_province | <provincia>    |
-      | address_radd_country  | <stato>        |
-      | radd_externalCode     | <externalCode> |
+      | radd_filter_limit     | 10                  |
+      | radd_filter_lastKey   | NULL                |
+      | address_radd_cap      | NULL                |
+      | address_radd_province | NULL                |
+      | address_radd_country  | NULL                |
+      | radd_externalCode     | valore non presente |
