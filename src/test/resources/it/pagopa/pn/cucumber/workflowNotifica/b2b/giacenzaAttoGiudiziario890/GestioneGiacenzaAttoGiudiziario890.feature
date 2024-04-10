@@ -1,7 +1,7 @@
 Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto giudiziario 890
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_1] Consegnata atto in Giacenza prima dei 10 giorni.
+  Scenario: [B2B_GIACENZA_890_WI1.1_1] Consegnata atto in Giacenza prima dei 10 giorni.
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -54,7 +54,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
 
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_2] Consegnato in Giacenza dopo i 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno.
+  Scenario: [B2B_GIACENZA_890_WI1.1_2] Consegnato in Giacenza dopo i 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno.
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -77,7 +77,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
 
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_3] Consegnato in Giacenza dopo i 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno
+  Scenario: [B2B_GIACENZA_890_WI1.1_3] Consegnato in Giacenza dopo i 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -99,7 +99,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
   #"@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.60s-RECAG012.5s-RECAG011B[DOC:ARCAD].5s-RECAG005A.5s-RECAG005B[DOC:23L].5s-RECAG005C"
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_4] Consegnato a persona delegata in Giacenza prima dei 10 giorni.
+  Scenario: [B2B_GIACENZA_890_WI1.1_4] Consegnato a persona delegata in Giacenza prima dei 10 giorni.
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -122,7 +122,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
 
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_5] Consegnato a persona delegata in Giacenza dopo dei 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno
+  Scenario: [B2B_GIACENZA_890_WI1.1_5] Consegnato a persona delegata in Giacenza dopo dei 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -145,7 +145,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
 
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_6] Consegnato a persona delegata in Giacenza dopo dei 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno
+  Scenario: [B2B_GIACENZA_890_WI1.1_6] Consegnato a persona delegata in Giacenza dopo dei 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -168,7 +168,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
 
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_7] Mancata Consegna in Giacenza prima dei 10 giorni.
+  Scenario: [B2B_GIACENZA_890_WI1.1_7] Mancata Consegna in Giacenza prima dei 10 giorni.
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -189,7 +189,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
   #"@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.30s-RECAG012.5s-RECAG007A.5s-RECAG007B[DOC:ARCAD;DOC:Plico].5s-RECAG007C"
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_8] Mancata Consegna in Giacenza dopo i 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno.
+  Scenario: [B2B_GIACENZA_890_WI1.1_8] Mancata Consegna in Giacenza dopo i 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno.
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -210,7 +210,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     #"@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.60s-RECAG012.5s-RECAG011B[DOC:ARCAD;DOC:23L].60s-RECAG007A.5s-RECAG007B[DOC:Plico].5s-RECAG007C"
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_9] Mancata Consegna in Giacenza dopo i 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno.
+  Scenario: [B2B_GIACENZA_890_WI1.1_9] Mancata Consegna in Giacenza dopo i 10 giorni. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno.
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -232,7 +232,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
 
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_10] Compiuta Giacenza. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno
+  Scenario: [B2B_GIACENZA_890_WI1.1_10] Compiuta Giacenza. In questo scenario viene simulato il perfezionamento dell’atto al 10° giorno
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -254,7 +254,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
 
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_11] Invio notifica con sequence @OK-Giacenza-lte10_890 ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECAG010
+  Scenario: [B2B_GIACENZA_890_WI2.2_11] Invio notifica con sequence @OK-Giacenza-lte10_890 ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECAG010
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -268,7 +268,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
 
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_12] Invio notifica con sequence @OK-Giacenza_RS ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
+  Scenario: [B2B_GIACENZA_890_WI2.2_12] Invio notifica con sequence @OK-Giacenza_RS ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -282,7 +282,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
   #"sequence": "@sequence.5s-CON080.5s-RECRS010.5s-RECRS011.5s-RECRN003A.5s-RECRN003B[DOC:AR].5s-RECRN003C"
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_13] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRN010
+  Scenario: [B2B_GIACENZA_890_WI2.2_13] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRN010
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -295,7 +295,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRN010"
 
   @workflowAnalogico @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_14] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
+  Scenario: [B2B_GIACENZA_890_WI2.2_14] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
