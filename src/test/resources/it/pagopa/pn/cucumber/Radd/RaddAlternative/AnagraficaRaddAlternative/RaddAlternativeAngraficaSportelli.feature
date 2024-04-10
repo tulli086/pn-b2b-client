@@ -153,7 +153,6 @@ Feature: Radd Alternative Anagrafica Sportelli
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_1] inserimento sportello RADD con dati corretti
-    When viene cambiato raddista con "issuer_2"
     When viene generato uno sportello Radd con dati:
       | address_radd_row             | via posto       |
       | address_radd_cap             | 20161           |
