@@ -72,7 +72,8 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
     @Override
     protected Predicate<PnPollingResponseV20> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
         return (pnPollingResponse) -> {
-            if(pnPollingResponse.getProgressResponseElementListV20() == null) {
+            if(pnPollingResponse.getProgressResponseElementListV20() == null
+                    || pnPollingResponse.getProgressResponseElementListV20().isEmpty()) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
@@ -145,12 +146,7 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
                 .filter(progressResponseElement -> lastProgress.getEventId().compareTo(progressResponseElement.getEventId()) < 0)
                 .findAny()
                 .orElse(null);
-
-        if(curProgress != null) {
-            pnPollingParameter.setLastEventId(curProgress.getEventId());
-        } else {
-            pnPollingParameter.setLastEventId(lastProgress.getEventId());
-        }
+        pnPollingParameter.setLastEventId(Objects.requireNonNullElse(curProgress, lastProgress).getEventId());
     }
 
     private Predicate<ProgressResponseElement> toCheckCondition(PnPollingParameter pnPollingParameter) {
@@ -160,6 +156,5 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
                 ||
                 progressResponseElementV20.getIun() != null && progressResponseElementV20.getIun().equals(iun)
                         && (progressResponseElementV20.getNewStatus() != null && (progressResponseElementV20.getNewStatus().equals(pnPollingParameter.getPnPollingWebhook().getNotificationStatusV20())));
-
     }
 }

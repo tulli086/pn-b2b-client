@@ -29,6 +29,7 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
     private final TimingForPolling timingForPolling;
     private List<ProgressResponseElementV23> progressResponseElementListV23;
     private int retryAfter;
+    private String iun;
 
 
     public PnPollingServiceWebhookV23(TimingForPolling timingForPolling, IPnWebhookB2bClient webhookB2bClient) {
@@ -38,6 +39,7 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
 
     @Override
     protected Callable<PnPollingResponseV23> getPollingResponse(String iun, PnPollingParameter pnPollingParameter) {
+        this.iun = iun;
         return () -> {
             PnPollingResponseV23 pnPollingResponse = new PnPollingResponseV23();
             ResponseEntity<List<ProgressResponseElementV23>> listResponseEntity;
@@ -53,12 +55,12 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
                 logger.info("ELEMENTI NEL WEBHOOK: " + Objects.requireNonNull(progressResponseElementListV23));
                 if(deepCount >= 250) {
                     throw new PnPollingException("LOP: PROGRESS-ELEMENTS: "+ progressResponseElementListV23
-                            +" WEBHOOK: "+ pnPollingParameter.getStreamId() +" IUN: "+ pnPollingParameter.getValue() +" DEEP: "+deepCount);
+                            +" WEBHOOK: "+ pnPollingParameter.getStreamId() +" IUN: "+ iun +" DEEP: "+deepCount);
                 }
             } catch (IllegalStateException illegalStateException) {
                 if (deepCount == 249 || deepCount == 248 || deepCount == 247) {
                     throw new PnPollingException((illegalStateException.getMessage() + ("LOP: PROGRESS-ELEMENTS: " + progressResponseElementListV23
-                            + " WEBHOOK: " + pnPollingParameter.getStreamId() + " IUN: " + pnPollingParameter.getValue() + " DEEP: " + deepCount)));
+                            + " WEBHOOK: " + pnPollingParameter.getStreamId() + " IUN: " + iun + " DEEP: " + deepCount)));
                 } else {
                     throw illegalStateException;
                 }
@@ -70,7 +72,8 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
     @Override
     protected Predicate<PnPollingResponseV23> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
         return (pnPollingResponse) -> {
-            if(pnPollingResponse.getProgressResponseElementListV23() == null) {
+            if(pnPollingResponse.getProgressResponseElementListV23() == null
+                   || pnPollingResponse.getProgressResponseElementListV23().isEmpty()) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
@@ -143,21 +146,15 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
                 .filter(progressResponseElement -> lastProgress.getEventId().compareTo(progressResponseElement.getEventId()) < 0)
                 .findAny()
                 .orElse(null);
-
-        if(curProgress != null) {
-            pnPollingParameter.setLastEventId(curProgress.getEventId());
-        } else {
-            pnPollingParameter.setLastEventId(lastProgress.getEventId());
-        }
+        pnPollingParameter.setLastEventId(Objects.requireNonNullElse(curProgress, lastProgress).getEventId());
     }
 
     private Predicate<ProgressResponseElementV23> toCheckCondition(PnPollingParameter pnPollingParameter) {
         return progressResponseElementV23 ->
-            progressResponseElementV23.getIun() != null && progressResponseElementV23.getIun().equals(pnPollingParameter.getValue())
+            progressResponseElementV23.getIun() != null && progressResponseElementV23.getIun().equals(iun)
                     && progressResponseElementV23.getElement().getCategory() != null && progressResponseElementV23.getElement().getCategory().equals(pnPollingParameter.getPnPollingWebhook().getTimelineElementCategoryV23())
             ||
-            progressResponseElementV23.getIun() != null && progressResponseElementV23.getIun().equals(pnPollingParameter.getValue())
+            progressResponseElementV23.getIun() != null && progressResponseElementV23.getIun().equals(iun)
                     && (progressResponseElementV23.getNewStatus() != null && (progressResponseElementV23.getNewStatus().equals(pnPollingParameter.getPnPollingWebhook().getNotificationStatusV23())));
-
     }
 }
