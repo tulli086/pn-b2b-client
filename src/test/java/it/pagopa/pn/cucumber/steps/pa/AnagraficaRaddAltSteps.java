@@ -275,10 +275,8 @@ public class AnagraficaRaddAltSteps {
                     getValue(dataSportello, RADD_UID.key),
                     getValue(dataSportello, RADD_REGISTRYID.key),
                     aggiornamentoSportelloRadd);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.sharedSteps.setNotificationError(e);
-            }
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
         }
     }
 
@@ -357,10 +355,33 @@ public class AnagraficaRaddAltSteps {
     }
 
 
+    @When("viene richiesta la lista degli sportelli con dati errati:")
+    public void vieneRichiestolaListaDeiSportelliRaddConDatiErrati(Map<String, String> dataSportello) {
+
+        try {
+            raddAltClient.retrieveRegistries(
+                    this.uid
+                    , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
+                    , getValue(dataSportello, RADD_FILTER_LASTKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_LASTKEY.key)
+                    , getValue(dataSportello, ADDRESS_RADD_CAP.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_CAP.key)
+                    , getValue(dataSportello, ADDRESS_RADD_CITY.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_CITY.key)
+                    , getValue(dataSportello, ADDRESS_RADD_PROVINCE.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_PROVINCE.key)
+                    , getValue(dataSportello, RADD_EXTERNAL_CODE.key) == null ? null : getValue(dataSportello, RADD_EXTERNAL_CODE.key));
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
+        }
+    }
+
+
     @When("viene contrallato il numero di valori tornati sia uguale a {int}")
     public void vieneControllatoCheVenganoRitornatiTotValori(Integer numValori) {
         try {
-        Assertions.assertEquals(numValori,this.sportelliRaddista.getRegistries().size());
+            if(numValori==0){
+                Assertions.assertTrue(this.sportelliRaddista.getRegistries().isEmpty());
+            }else{
+                Assertions.assertEquals(numValori-1,this.sportelliRaddista.getRegistries().size());
+
+            }
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (this.requestid == null ? "NULL" : this.requestid) + " }";

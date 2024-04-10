@@ -41,8 +41,8 @@ public class DataTableTypeRaddAlt {
                         .latitude(getValue(data,RADD_GEO_LOCATION_LATITUDINE.key)==null? null:getValue(data,RADD_GEO_LOCATION_LATITUDINE.key))
                         .longitude(getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)==null? null:getValue(data,RADD_GEO_LOCATION_LONGITUDINE.key)))
                 .openingTime(getValue(data,RADD_OPENING_TIME.key)==null? null:getValue(data,RADD_OPENING_TIME.key))
-                .startValidity(getValue(data,RADD_START_VALIDITY.key)==null? null:String.valueOf(setData(getValue(data,RADD_START_VALIDITY.key))))
-                .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:String.valueOf(setData(getValue(data,RADD_END_VALIDITY.key))))
+                .startValidity(getValue(data,RADD_START_VALIDITY.key)==null? null:setData(getValue(data,RADD_START_VALIDITY.key)))
+                .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:setData(getValue(data,RADD_END_VALIDITY.key)))
                 .externalCode(getValue(data, RADD_EXTERNAL_CODE.key)==null?null:getValue(data, RADD_EXTERNAL_CODE.key));
 
 
@@ -109,16 +109,20 @@ public class DataTableTypeRaddAlt {
         return sportelloAggiornatoRadd;
     }
 
-public OffsetDateTime setData(String data){
-        OffsetDateTime date= OffsetDateTime.now();
-String dataNumber=data.replaceAll("[\\\\+|g|\\\\-]","");
+    public String setData(String data) {
+        OffsetDateTime dateNow = OffsetDateTime.now();
 
-        if(data.toLowerCase().contains("+")){
-            date = date.plusDays(Long.parseLong(dataNumber));
-        }else if(data.toLowerCase().contains("-")){
-            date =date.minusDays(Long.parseLong(dataNumber));
+        String dataNumber = data.replaceAll("[\\\\+|g|\\\\-]", "");
+
+        String dataString = data;
+
+        if (data.toLowerCase().contains("+")) {
+            dataString = String.valueOf(dateNow.plusDays(Long.parseLong(dataNumber)));
+        } else if (data.toLowerCase().contains("-")) {
+            dataString = String.valueOf(dateNow.minusDays(Long.parseLong(dataNumber)));
         }
 
-        return date;
-}
+
+        return dataString;
+    }
 }
