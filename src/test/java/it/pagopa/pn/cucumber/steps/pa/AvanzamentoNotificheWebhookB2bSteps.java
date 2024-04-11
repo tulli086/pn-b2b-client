@@ -10,6 +10,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatusHistoryElement;
+import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV20;
@@ -65,7 +66,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private Integer requestNumber;
     private HttpStatusCodeException notificationError;
     private StreamRequestV23 streamRequest;
-
+    private final PnPollingFactory pollingFactory;
     private final TimingForPolling timingForPolling;
 
     @And("viene verificato che il campo legalfactIds sia valorizzato nel EventStream")
@@ -87,9 +88,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     //TODO: rimuovere
     private LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
     private LinkedList<ProgressResponseElementV23> progressResponseElementListV23 = new LinkedList<>();
-
     private ProgressResponseElementV23 progressResponseElementResultV23;
-
     private static IPnWebhookB2bClient webhookClientForClean;
     private static boolean webhookTestLaunch;
     private static final Map<String,SettableApiKey.ApiKeyType> paForStream =
@@ -101,12 +100,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     @Autowired
     public AvanzamentoNotificheWebhookB2bSteps(IPnWebhookB2bClient webhookB2bClient, SharedSteps sharedSteps,
-                                               TimingForPolling timingForPolling) {
+                                               TimingForPolling timingForPolling, PnPollingFactory pollingFactory) {
         this.sharedSteps = sharedSteps;
         this.webhookB2bClient = webhookB2bClient;
         this.webRecipientClient = sharedSteps.getWebRecipientClient();
         this.timingForPolling = timingForPolling;
         this.b2bClient = sharedSteps.getB2bClient();
+        this.pollingFactory = pollingFactory;
         webhookTestLaunch = true;
         AvanzamentoNotificheWebhookB2bSteps.webhookClientForClean = webhookB2bClient;
     }
@@ -1767,14 +1767,17 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         switch (pa){
             case "Comune_1":
                 webhookB2bClient.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
+                pollingFactory.setApiKeys(SettableApiKey.ApiKeyType.MVP_1);
                 sharedSteps.selectPA(pa);
                 break;
             case "Comune_2":
                 webhookB2bClient.setApiKeys(SettableApiKey.ApiKeyType.MVP_2);
+                pollingFactory.setApiKeys(SettableApiKey.ApiKeyType.MVP_2);
                 sharedSteps.selectPA(pa);
                 break;
             case "Comune_Multi":
                 webhookB2bClient.setApiKeys(SettableApiKey.ApiKeyType.GA);
+                pollingFactory.setApiKeys(SettableApiKey.ApiKeyType.GA);
                 sharedSteps.selectPA(pa);
                 break;
             default:
