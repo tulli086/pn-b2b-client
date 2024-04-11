@@ -28,7 +28,6 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
     private final IPnWebhookB2bClient webhookB2bClient;
     private final TimingForPolling timingForPolling;
     private List<ProgressResponseElementV23> progressResponseElementListV23;
-    private int retryAfter;
     private String iun;
 
 
@@ -49,7 +48,6 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
                 ++deepCount;
                 pnPollingParameter.setDeepCount(deepCount);
                 listResponseEntity = webhookB2bClient.consumeEventStreamHttpV23(pnPollingParameter.getStreamId(), pnPollingParameter.getLastEventId());
-                retryAfter = Integer.parseInt(Objects.requireNonNull(listResponseEntity.getHeaders().get("retry-after")).get(0));
                 progressResponseElementListV23 = listResponseEntity.getBody();
                 pnPollingResponse.setProgressResponseElementListV23(listResponseEntity.getBody());
                 logger.info("ELEMENTI NEL WEBHOOK: " + Objects.requireNonNull(progressResponseElementListV23));
