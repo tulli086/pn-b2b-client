@@ -203,18 +203,18 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_externalCode            | <externalCode>       |
     Then l'operazione ha prodotto un errore con status code "400"
     Examples:
-      | via                     | cap     | provincia               | citta                   | stato          | descrizione    | telefono | latitudine | longitudine | apperturaSportello | externalCode |
-      | ĄŁĽŚŠŞŤŹŽŻą˛łľśˇšşťź˝žż | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | LETTERE | ĄŁĽŚŠŞŤŹŽŻą˛łľśˇšşťź˝žż | MILANO                  | ITALIA         | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | 20161   | MI                      | ĄŁĽŚŠŞŤŹŽŻą˛łľśˇšşťź˝žż | ITALIA         | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | 20161   | MI                      | MILANO                  | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL     | NULL       | NULL        | NULL               | NULL         |
+      | via                     | cap     | provincia               | citta                   | stato          | descrizione    | telefono       | latitudine     | longitudine    | apperturaSportello | externalCode   |
+      | ĄŁĽŚŠŞŤŹŽŻą˛łľśˇšşťź˝žż | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           |
+      | via posto               | LETTERE | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           |
+      | via posto               | 20161   | ĄŁĽŚŠŞŤŹŽŻą˛łľśˇšşťź˝žż | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           |
+      | via posto               | 20161   | MI                      | ĄŁĽŚŠŞŤŹŽŻą˛łľśˇšşťź˝žż | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           |
+      | via posto               | 20161   | MI                      | MILANO                  | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           |
+      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL           | NULL               | NULL           |
+      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL               | NULL           |
+      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL               | NULL           |
+      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL               | NULL           |
+      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ     | NULL           |
+      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | ĄŁĽŚŠŞŤŹŽŻą˛łľ |
 
 
   @raddAnagrafica
@@ -255,6 +255,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | physicalAddress_province     | MI         |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
 
 
   @raddAnagrafica
