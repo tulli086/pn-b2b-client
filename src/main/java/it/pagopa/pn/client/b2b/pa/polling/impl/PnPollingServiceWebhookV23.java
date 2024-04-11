@@ -82,9 +82,6 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
             if(!isWaitTerminated(pnPollingResponse, pnPollingParameter)) {
                 pnPollingResponse.setResult(false);
                 return false;
-            } else if(retryAfter == 0) {
-                pnPollingResponse.setResult(false);
-                return false;
             }
 
             pnPollingResponse.setResult(true);
