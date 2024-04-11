@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -398,7 +399,7 @@ public class AnagraficaRaddAltSteps {
         List<CreateRegistryRequest> csvData = dataTableTypeRaddAlt.convertToListRegistryRequestData(dataCsv);
 
         List<String[]> data = new ArrayList<>();
-        data.add(new String[]{"paese", "città", "provincia","cap","via","dataInizioValidità","dataFineValidità","descrizione","orariApertura","coordinateGeoReferenziali","telefono","capacità","externalCode"});
+        data.add(new String[]{"paese", "citta", "provincia","cap","via","dataInizioValidità","dataFineValidità","descrizione","orariApertura","coordinateGeoReferenziali","telefono","capacita","exsternalCode"});
 
         for (int i = 0; i < csvData.size(); i++) {
             data.add(new String[]{
