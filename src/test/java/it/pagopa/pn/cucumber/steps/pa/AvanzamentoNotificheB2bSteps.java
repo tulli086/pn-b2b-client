@@ -583,7 +583,7 @@ public class AvanzamentoNotificheB2bSteps {
     public void verificationDateDeliveryDetailCodeRECAG012WithRefinement() {
         try {
             OffsetDateTime ricezioneRECAG012 = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK) && elem.getDetails().getDeliveryDetailCode().equals("RECAG012")).findAny().get().getDetails().getEventTimestamp();
-            OffsetDateTime refinementDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.REFINEMENT) && elem.getDetails().getRecIndex().equals(destinatario)).findAny().get().getTimestamp();
+            OffsetDateTime refinementDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.REFINEMENT) && elem.getDetails().getRecIndex().equals(0)).findAny().get().getTimestamp();
 
             logger.info("ricezioneRaccomandata : {}", ricezioneRECAG012);
             logger.info("refinementDate : {}", refinementDate);
