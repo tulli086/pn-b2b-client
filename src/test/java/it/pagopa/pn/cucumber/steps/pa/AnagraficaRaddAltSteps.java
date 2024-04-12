@@ -230,6 +230,12 @@ public class AnagraficaRaddAltSteps {
 
         for (int i = 0; i < NUM_CHECK_STATE_CSV; i++) {
 
+            try {
+                Thread.sleep(WAITING_STATE_CSV);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
             it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello= raddAltClient.retrieveRequestItems(
                     this.uid
                     ,  this.requestid
@@ -242,11 +248,7 @@ public class AnagraficaRaddAltSteps {
                 break;
             }
 
-            try {
-                Thread.sleep(WAITING_STATE_CSV);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+
         }
 
         try {

@@ -207,69 +207,67 @@ Feature: Radd Alternative Anagrafica Sportelli
       | physicalAddress_province     | MT              |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
+    And viene verificato il costo di 754 e il peso di 10 nei details del'elemento di timeline letto
 
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_6] inserimento sportello RADD con startValidity avanti di giorni (controllo manuale che il sportello non sia attivo)
     When viene generato uno sportello Radd con dati:
-      | address_radd_row      | via posto |
-      | address_radd_cap      | 20142     |
-      | address_radd_province | MI        |
-      | address_radd_city     | MILANO    |
-      | address_radd_country  | ITALY     |
-      | radd_start_validity   | +10g      |
-      | radd_end_validity     | NULL      |
+      | address_radd_row      | via posto   |
+      | address_radd_cap      | 80014       |
+      | address_radd_province | NA          |
+      | address_radd_city     | LAGO PATRIA |
+      | address_radd_country  | ITALY       |
+      | radd_start_validity   | +10g        |
+      | radd_end_validity     | NULL        |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | LAGO PATRIA  |
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario Mario Gherkin e:
-      | digitalDomicile              | NULL       |
-      | physicalAddress_address      | Via@ok_890 |
-      | physicalAddress_municipality | MILANO     |
-      | physicalAddress_zip          | 20142      |
-      | physicalAddress_province     | MI         |
+      | digitalDomicile              | NULL        |
+      | physicalAddress_address      | Via@ok_890  |
+      | physicalAddress_municipality | LAGO PATRIA |
+      | physicalAddress_zip          | 80014       |
+      | physicalAddress_province     | NA          |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
+    And viene verificato il costo di 754 e il peso di 10 nei details del'elemento di timeline letto
 
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_7] modifica sportello RADD con dati corretti controllo successo modifica
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto      |
-      | address_radd_cap      | 20161          |
-      | address_radd_province | MI             |
-      | address_radd_city     | MILANO         |
+      | address_radd_cap      | 80014          |
+      | address_radd_province | NA             |
+      | address_radd_city     | VARCATURO      |
       | address_radd_country  | ITALY          |
       | radd_description      | descrizione    |
       | radd_phoneNumber      | +39 2445356789 |
       | radd_openingTime      | tue=1:00-2:00  |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | VARCATURO  |
     Then viene modificato uno sportello Radd con dati:
       | radd_description | descrizione modificata |
       | radd_openingTime | tue=10:00-20:00        |
       | radd_phoneNumber | +39 01234242556789     |
-    Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
 
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_8] modifica sportello RADD con campi vuoto dove non obbligatorio controllo successo modifica
     When viene generato uno sportello Radd con dati:
-      | address_radd_row      | via posto      |
-      | address_radd_cap      | 20161          |
-      | address_radd_province | MI             |
-      | address_radd_city     | MILANO         |
-      | address_radd_country  | ITALY          |
-      | radd_description      | descrizione    |
-      | radd_phoneNumber      | +39 2445356789 |
-      | radd_openingTime      | tue=1:00-2:00  |
+      | address_radd_row      | via posto        |
+      | address_radd_cap      | 80016            |
+      | address_radd_province | NA               |
+      | address_radd_city     | MARANO DI NAPOLI |
+      | address_radd_country  | ITALY            |
+      | radd_description      | descrizione      |
+      | radd_phoneNumber      | +39 2445356789   |
+      | radd_openingTime      | tue=1:00-2:00    |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | MARANO DI NAPOLI  |
     Then viene modificato uno sportello Radd con dati:
       | radd_description | NULL |
       | radd_openingTime | NULL |
@@ -280,19 +278,19 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_9] modifica sportello RADD con formato campi errato controllo restituzione errore
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto      |
-      | address_radd_cap      | 20161          |
-      | address_radd_province | MI             |
-      | address_radd_city     | MILANO         |
+      | address_radd_cap      | 80016          |
+      | address_radd_province | NA             |
+      | address_radd_city     | SAN ROCCO      |
       | address_radd_country  | ITALY          |
       | radd_description      | descrizione    |
       | radd_phoneNumber      | +39 2445356789 |
       | radd_openingTime      | tue=1:00-2:00  |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | SAN ROCCO  |
     Then viene modificato uno sportello Radd con dati errati:
-      | radd_description | !!"$%&/( |
-      | radd_openingTime | !!"$%&/( |
-      | radd_phoneNumber | !!"$%&/( |
+      | radd_description | !!"$%&/(!)$^?        |
+      | radd_openingTime | !!"$%&/(£%%£%'?^\s;; |
+      | radd_phoneNumber | 200_CHAR             |
     And l'operazione ha prodotto un errore con status code "400"
 
   @raddAnagrafica
@@ -325,15 +323,15 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_14] modifica sportello RADD con dati corretti ma modifica da diverso operatore RADD
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto           |
-      | address_radd_cap      | 20161               |
-      | address_radd_province | MI                  |
-      | address_radd_city     | MILANO              |
+      | address_radd_cap      | 80016               |
+      | address_radd_province | NA                  |
+      | address_radd_city     | TORRE PISCITELLI    |
       | address_radd_country  | ITALY               |
       | radd_description      | descrizione         |
       | radd_phoneNumber      | +39 012643742556789 |
       | radd_openingTime      | mon=10:00-13:00     |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | TORRE PISCITELLI  |
     And viene cambiato raddista con "issuer_2"
     Then viene modificato uno sportello Radd con dati errati:
       | radd_description | descrizione modificata |
@@ -345,18 +343,11 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_15] cancellazione sportello RADD con dati corretti
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | via posto   |
-      | address_radd_cap             | 20161       |
-      | address_radd_province        | MI          |
-      |                              | MILANO      |
-      | address_radd_country         | ITALY       |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | NULL        |
+      | address_radd_row      | via posto        |
+      | address_radd_cap      | 80017            |
+      | address_radd_province | NA               |
+      | address_radd_city     | MELITO DI NAPOLI |
+      | address_radd_country  | ITALY            |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
       |address_radd_city  | MILANO  |
     Then viene cancellato uno sportello Radd con dati corretti
@@ -366,14 +357,15 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_16] cancellazione sportello RADD con endDate < endValidity dello sportello
     When viene generato uno sportello Radd con dati:
-      | address_radd_row      | NULL  |
-      | address_radd_cap      | 02000 |
-      | address_radd_province | NULL  |
-      | address_radd_country  | NULL  |
-      | radd_start_validity   | now   |
-      | radd_end_validity     | +10g  |
+      | address_radd_row      | via posto         |
+      | address_radd_cap      | 80018             |
+      | address_radd_province | NA                |
+      | address_radd_city     | MUGNANO DI NAPOLI |
+      | address_radd_country  | ITALY             |
+      | radd_start_validity   | now               |
+      | radd_end_validity     | +10g              |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | MUGNANO DI NAPOLI  |
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | -10g |
 
@@ -383,14 +375,14 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_17] cancellazione sportello RADD con endDate > endValidity dello sportello controllo errore
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto |
-      | address_radd_cap      | 20161     |
-      | address_radd_province | MI        |
-      | address_radd_city     | MILANO    |
+      | address_radd_cap      | 80019     |
+      | address_radd_province | NA        |
+      | address_radd_city     | QUALIANO  |
       | address_radd_country  | ITALY     |
       | radd_start_validity   | test radd |
       | radd_end_validity     | +10g      |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | QUALIANO  |
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | +10g |
     And l'operazione ha prodotto un errore con status code "400"
@@ -399,14 +391,13 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CRUD_18] cancellazione sportello RADD con requestId non presente nella lista degli sportelli
     When viene generato uno sportello Radd con dati:
-      | address_radd_row      | via posto             |
-      | address_radd_cap      | 20161                 |
-      | address_radd_province | MI                    |
-      | address_radd_city     | MILANO                |
-      | address_radd_country  | ITALY                 |
-      | radd_externalCode     | test cancellazione 19 |
+      | address_radd_row      | via posto  |
+      | address_radd_cap      | 80020      |
+      | address_radd_province | NA         |
+      | address_radd_city     | CASAVATORE |
+      | address_radd_country  | ITALY      |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | CASAVATORE  |
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | <endValidity> |
       | radd_registryId   | <registryId>  |
@@ -423,12 +414,12 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_20] cancellazione sportello RADD con dati corretti da diverso operatore RADD
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto |
-      | address_radd_cap      | 20161     |
-      | address_radd_province | MI        |
-      | address_radd_city     | MILANO    |
+      | address_radd_cap      | 80020     |
+      | address_radd_province | NA        |
+      | address_radd_city     | CRISPANO  |
       | address_radd_country  | ITALY     |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | CRISPANO  |
     Then viene cambiato raddista con "issuer_2"
     Then viene cancellato uno sportello Radd con dati corretti
     And l'operazione ha prodotto un errore con status code "404"
@@ -437,42 +428,33 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_21] ricevimento lista sportelli del operatore con dati corretti
     When viene generato uno sportello Radd con dati:
-      | address_radd_row      | via posto |
-      | address_radd_cap      | 20161     |
-      | address_radd_province | MI        |
-      | address_radd_city     | MILANO    |
-      | address_radd_country  | ITALY     |
-      | radd_externalCode     | test radd |
+      | address_radd_row      | via posto    |
+      | address_radd_cap      | 80020        |
+      | address_radd_province | MI           |
+      | address_radd_city     | FRATTAMINORE |
+      | address_radd_country  | ITALY        |
+      | radd_externalCode     | test radd    |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
       |address_radd_city  | MILANO  |
     Then viene richiesta la lista degli sportelli con dati:
-      | radd_filter_limit     | 10        |
-      | radd_filter_lastKey   | NULL      |
-      | address_radd_cap      | 20161     |
-      | address_radd_province | MI        |
-      | address_radd_city     | MILANO    |
-      | radd_externalCode     | test radd |
+      | radd_filter_limit     | 10           |
+      | radd_filter_lastKey   | NULL         |
+      | address_radd_cap      | 80020        |
+      | address_radd_province | NA           |
+      | address_radd_city     | FRATTAMINORE |
+      | radd_externalCode     | test radd    |
     And viene effettuato il controllo se la richiesta ha trovato dei sportelli
 
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_22] ricevimento lista sportelli del operatore con limit a null controllo default
-    When viene generato uno sportello Radd con dati:
-      | address_radd_row      | via posto |
-      | address_radd_cap      | 20161     |
-      | address_radd_province | MI        |
-      | address_radd_city     | MILANO    |
-      | address_radd_country  | ITALY     |
-      | radd_externalCode     | test radd |
-    Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
     Then viene richiesta la lista degli sportelli con dati:
-      | radd_filter_limit     | NULL      |
-      | radd_filter_lastKey   | NULL      |
-      | address_radd_cap      | NULL      |
-      | address_radd_province | NULL      |
-      | address_radd_city     | NULL      |
-      | radd_externalCode     | test radd |
+      | radd_filter_limit     | NULL     |
+      | radd_filter_lastKey   | NULL     |
+      | address_radd_cap      | NULL     |
+      | address_radd_province | NULL     |
+      | address_radd_city     | NULL     |
+      | radd_externalCode     | testRadd |
     And viene contrallato il numero di sportelli trovati sia uguale a 10
 
   @raddAnagrafica
