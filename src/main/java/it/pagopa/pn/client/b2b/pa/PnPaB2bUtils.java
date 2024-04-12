@@ -1047,14 +1047,11 @@ public class PnPaB2bUtils {
         String secret = responseUploadCsv.getSecret();
         String url = responseUploadCsv.getUrl();
 
-        log.info(String.format("Attachment resourceKey=%s sha256=%s secret=%s presignedUrl=%s\n",
-                resourcePath, sha256, secret, url));
-
         if(usePresignedUrl){
             loadToPresignedCsv( url, secret, sha256, resourcePath );
-            log.info("UPLOAD RADD COMPLETE");
+            log.info("UPLOAD RADD CSV COMPLETE");
         }else{
-            log.info("UPLOAD RADD COMPLETE WITHOUT UPLOAD");
+            log.info("UPLOAD RADD CSV COMPLETE WITHOUT UPLOAD");
         }
 
     }

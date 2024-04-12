@@ -110,7 +110,7 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CSV_LISTA_1] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
     When viene caricato il csv con dati:
       | address_radd_row      | via posto | via ceggia |
-      | address_radd_cap      | NULL      | 30022      |
+      | address_radd_cap      | 20135     | 30022      |
       | address_radd_province | MI        | VE         |
       | address_radd_city     | MILANO    | CEGGIA     |
       | address_radd_country  | ITALY     | ITALY      |
@@ -262,6 +262,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | physicalAddress_province     | MI         |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
 
 
   @raddAnagrafica
@@ -363,10 +364,11 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_15] cancellazione sportello RADD con dati corretti
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | 02000       |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
+      | address_radd_row             | via posto   |
+      | address_radd_cap             | 20161       |
+      | address_radd_province        | MI          |
+      |                              | MILANO      |
+      | address_radd_country         | ITALY       |
       | radd_description             | descrizione |
       | radd_phoneNumber             | minier      |
       | radd_geoLocation_latitudine  | non so      |
