@@ -3,7 +3,7 @@ Feature: Radd Alternative Atto Intero
   #TODO aggiungere integrazione per prendere i dati dal DynamoDb di aws per il controllo del campo del filtro
 
 
-  Scenario: [RADD_FILTRO_ATTO-INTERO_1] invio notifica 890 coperto da RADD e controllo diminuzione costi filtro base
+  Scenario: [RADD_FILTRO_ATTO-INTERO_1] invio notifica 890 coperto da RADD e controllo diminuzione costi filtro base (eseguire controllo manuale costi del F24)
     Given viene generata una nuova notifica
       | subject               | notifica analogica filtro base |
       | senderDenomination    | Comune di palermo              |
@@ -24,7 +24,7 @@ Feature: Radd Alternative Atto Intero
     And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
 
 
-  Scenario: [RADD_FILTRO_ATTO-INTERO_2] invio notifica AR coperto da RADD e controllo diminuzione costi filtro base
+  Scenario: [RADD_FILTRO_ATTO-INTERO_2] invio notifica AR coperto da RADD e controllo diminuzione costi filtro base (eseguire controllo manuale costi del F24)
     Given viene generata una nuova notifica
       | subject               | notifica analogica filtro base |
       | senderDenomination    | Comune di palermo              |
@@ -45,7 +45,7 @@ Feature: Radd Alternative Atto Intero
     And viene verificato il costo di 351 e il peso di 10 nei details del'elemento di timeline letto
 
 
-  Scenario: [RADD_FILTRO_ATTO-INTERO_3] invio notifica RS coperto da RADD e controllo diminuzione costi filtro base
+  Scenario: [RADD_FILTRO_ATTO-INTERO_3] invio notifica RS coperto da RADD e controllo diminuzione costi filtro base (eseguire controllo manuale costi del F24)
     Given viene generata una nuova notifica
       | subject            | notifica analogica filtro base |
       | senderDenomination | Comune di palermo              |
