@@ -345,11 +345,22 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-    @When("viene cancellato uno sportello Radd con dati corretti")
-    public void vieneCancellatoSportelloRadd() {
+    @When("viene cancellato uno sportello Radd con dati:")
+    public void vieneCancellatoSportelloRadd(Map<String,String> richiestaCancellazione) {
+        String endDate = getValue(richiestaCancellazione,RADD_END_VALIDITY.key);
+
+        if (endDate!=null) {
+            if (endDate.toLowerCase().contains("corretto")) {
+                endDate = this.sportelloRaddCrud.getStartValidity();
+            }else{
+                endDate = dataTableTypeRaddAlt.setData(endDate);
+            }
+        }
+
+        log.info("dati cancellazione sportello: {}",endDate);
 
         try {
-            raddAltClient.deleteRegistry(this.uid, this.registryId, this.sportelloRaddCrud.getEndValidity());
+            raddAltClient.deleteRegistry(this.uid, this.registryId, endDate);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (this.sportelloRaddCrud.getEndValidity() == null ? "NULL" : this.sportelloRaddCrud.getEndValidity()) + " }";
@@ -359,26 +370,14 @@ public class AnagraficaRaddAltSteps {
 
 
     @When("viene cancellato uno sportello Radd con dati errati:")
-    public void vieneCancellatoSportelloRadd(Map<String,String> richiestaCancellazione) {
-
-        String endDate = getValue(richiestaCancellazione,RADD_END_VALIDITY.key);
-        log.info("dati cancellazione sportello: {}",richiestaCancellazione);
-
-
-        if (endDate!=null) {
-            if (endDate.toLowerCase().contains("corretto")) {
-                endDate = this.sportelloRaddCrud.getEndValidity();
-            }else{
-                endDate = dataTableTypeRaddAlt.setData(endDate);
-            }
-        }
+    public void vieneCancellatoSportelloRaddDatiErrati(Map<String,String> richiestaCancellazione) {
 
         try {
             raddAltClient.deleteRegistry(
                     getValue(richiestaCancellazione, RADD_UID.key),
                     getValue(richiestaCancellazione, RADD_REGISTRYID.key)==null ? null:
                             getValue(richiestaCancellazione, RADD_REGISTRYID.key).equalsIgnoreCase("corretto")? this.registryId: getValue(richiestaCancellazione, RADD_REGISTRYID.key),
-                    endDate);
+                    getValue(richiestaCancellazione,RADD_END_VALIDITY.key));
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
             log.info("errore: {}",e.getStatusText());

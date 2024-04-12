@@ -28,7 +28,7 @@ public enum RaddAltValue {
     //valori filtro per ricerca sportello
     RADD_FILTER_LIMIT("radd_filter_limit","5"),
     RADD_FILTER_LASTKEY("radd_filter_lastKey",null),
-    RADD_EXTERNAL_CODE("radd_externalCode","test RADD"),
+    RADD_EXTERNAL_CODE("radd_externalCode","testRadd"),
 
     RADD_REQUESTID("radd_requestId","corretto"),
     RADD_REGISTRYID("radd_registryId","corretto"),

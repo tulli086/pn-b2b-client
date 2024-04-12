@@ -128,7 +128,9 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_openingTime             | wen=10.00-11.00 |
       | radd_start_validity          | now             |
       | radd_end_validity            | +10g            |
-    Then viene controllato lo stato di caricamento del csv a "ACCEPTED"
+    Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
+      | address_radd_city | OLIVETO LUCANO |
+
 
   @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CRUD_2] inserimento sportello RADD senza campi obbligatori
@@ -308,8 +310,20 @@ Feature: Radd Alternative Anagrafica Sportelli
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_12] modifica sportello RADD con uid non presente controllo restituzione errore
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row      | via posto      |
+      | address_radd_cap      | 80024          |
+      | address_radd_province | NA             |
+      | address_radd_city     | CARDITELLO     |
+      | address_radd_country  | ITALY          |
+      | radd_description      | descrizione    |
+      | radd_phoneNumber      | +39 2445356789 |
+      | radd_openingTime      | tue=1:00-2:00  |
+    Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
+      | address_radd_city | CARDITELLO |
     Then viene modificato uno sportello Radd con dati errati:
-      | radd_uid | AJFSAJFOSIJFO |
+      | radd_registryId | corretto      |
+      | radd_uid        | AJFSAJFOSIJFO |
     And l'operazione ha prodotto un errore con status code "404"
 
 
@@ -348,11 +362,13 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NA               |
       | address_radd_city     | MELITO DI NAPOLI |
       | address_radd_country  | ITALY            |
+      | radd_start_validity   | now              |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
-    Then viene cancellato uno sportello Radd con dati corretti
+      |address_radd_city  | MELITO DI NAPOLI  |
+    Then viene cancellato uno sportello Radd con dati:
+      | radd_end_validity | corretto |
     Then si controlla che il sporetello sia in stato "DELETED" con dati:
-      |address_radd_city  | MILANO  |
+      | address_radd_city | MELITO DI NAPOLI |
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_16] cancellazione sportello RADD con endDate < endValidity dello sportello
@@ -379,17 +395,32 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NA        |
       | address_radd_city     | QUALIANO  |
       | address_radd_country  | ITALY     |
-      | radd_start_validity   | test radd |
-      | radd_end_validity     | +10g      |
+      | radd_start_validity   | now       |
+      | radd_end_validity     | +1g       |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
       |address_radd_city  | QUALIANO  |
-    Then viene cancellato uno sportello Radd con dati errati:
+    And viene cancellato uno sportello Radd con dati:
       | radd_end_validity | +10g |
-    And l'operazione ha prodotto un errore con status code "400"
+    Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
+      |address_radd_city  | QUALIANO  |
 
 
   @raddAnagrafica
-  Scenario Outline: [RADD_ANAGRAFICA_CRUD_18] cancellazione sportello RADD con requestId non presente nella lista degli sportelli
+  Scenario: [RADD_ANAGRAFICA_CRUD_18] cancellazione sportello RADD con requestId non presente nella lista degli sportelli
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row      | via posto  |
+      | address_radd_cap      | 80020      |
+      | address_radd_province | NA         |
+      | address_radd_city     | CASAVATORE |
+      | address_radd_country  | ITALY      |
+    Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
+      |address_radd_city  | CASAVATORE  |
+    Then viene cancellato uno sportello Radd con dati errati:
+      | radd_registryId | 0_CHAR |
+    And l'operazione ha prodotto un errore con status code "400"
+
+  @raddAnagrafica
+  Scenario Outline: [RADD_ANAGRAFICA_CRUD_19] cancellazione sportello RADD con requestId non presente nella lista degli sportelli
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto  |
       | address_radd_cap      | 80020      |
@@ -421,7 +452,8 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
       |address_radd_city  | CRISPANO  |
     Then viene cambiato raddista con "issuer_2"
-    Then viene cancellato uno sportello Radd con dati corretti
+    Then viene cancellato uno sportello Radd con dati errati:
+      | radd_end_validity | now |
     And l'operazione ha prodotto un errore con status code "404"
 
 
@@ -435,7 +467,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY        |
       | radd_externalCode     | test radd    |
     Then si controlla che il sporetello sia in stato "ACCEPTED" con dati:
-      |address_radd_city  | MILANO  |
+      |address_radd_city  | FRATTAMINORE  |
     Then viene richiesta la lista degli sportelli con dati:
       | radd_filter_limit     | 10           |
       | radd_filter_lastKey   | NULL         |
