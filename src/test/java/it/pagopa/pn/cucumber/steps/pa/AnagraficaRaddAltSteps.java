@@ -52,7 +52,7 @@ public class AnagraficaRaddAltSteps {
     private String registryId;
     private CreateRegistryRequest sportelloRaddCrud;
     private RegistriesResponse sportelliRaddista;
-
+    private it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportelliCsvRaddista;
 
     private String uid = "1234556";
 
@@ -182,7 +182,8 @@ public class AnagraficaRaddAltSteps {
 
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello= raddAltClient.retrieveRequestItems(
                 getValue(dataSportello, RADD_UID.key)
-                , this.requestid
+                ,  getValue(dataSportello, RADD_REQUESTID.key) == null ? null :
+                        getValue(dataSportello, RADD_REQUESTID.key).equalsIgnoreCase("corretto")? this.requestid : getValue(dataSportello, RADD_REQUESTID.key)
                 , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
                 , getValue(dataSportello, RADD_FILTER_LASTKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_LASTKEY.key));
 
@@ -199,7 +200,7 @@ public class AnagraficaRaddAltSteps {
                 Assertions.assertNotNull(sportello.getItems().get(i).getOriginalRequest());
                 Assertions.assertNotNull(sportello.getItems().get(i).getOriginalRequest().getOriginalAddress());
             }
-
+            this.sportelliCsvRaddista= sportello;
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (this.requestid == null ? "NULL" : this.requestid) + " }";
@@ -217,9 +218,28 @@ public class AnagraficaRaddAltSteps {
                     , getValue(dataSportello, RADD_REQUESTID.key) == null ? null : getValue(dataSportello, RADD_REQUESTID.key)
                     , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
                     , getValue(dataSportello, RADD_FILTER_LASTKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_LASTKEY.key));
+
+            this.sportelliCsvRaddista= sportello;
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
+    }
+
+    @When("si cercano nei log che il sporetello sia in stato {string} con errore {string} con dati:")
+    public void vieneCercatoloSportelloEControlloStato(String stato, String errore, @Transpose CreateRegistryRequest dataSportello) {
+
+        RegistryRequestResponse dato= this.sportelliCsvRaddista.getItems().stream().filter(elem->elem.getOriginalRequest().getOriginalAddress().getCity().equalsIgnoreCase(dataSportello.getAddress().getCity())).findAny().orElse(null);
+
+        try {
+
+        Assertions.assertTrue(dato.getStatus().equalsIgnoreCase(stato));
+        Assertions.assertTrue(dato.getError().contains(errore));
+
+        } catch (AssertionFailedError assertionFailedError) {
+        String message = assertionFailedError.getMessage() +
+                "{endDate: " + (dato == null ? "NULL" : dato) + " }";
+        throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+    }
     }
 
 

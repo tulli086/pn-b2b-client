@@ -50,17 +50,12 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_3] caricamento CSV con righa malformata verifica stato a REJECTED
     When viene caricato il csv con dati:
-      | address_radd_row             | via posto   | via posto |
-      | address_radd_cap             | ERRATO      | ERRATO    |
-      | address_radd_province        | MI          | MI        |
-      | address_radd_city            | MILANO      | MILANO    |
-      | address_radd_country         | ITALY       | ITALY     |
-      | radd_description             | descrizione |           |
-      | radd_geoLocation_longitudine | %&/(        |           |
-      | radd_openingTime             | %&/(        |           |
-      | radd_start_validity          | now         | now       |
-      | radd_end_validity            | +10g        | +10g      |
-    Then viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "csv malformato"
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
+      | Verona           | ERRATO           | VE                    | Milano            | ITALIA               |
+      | Roma             | ERRATO           | VE                    | Milano            | ITALIA               |
+    Then viene controllato lo stato di caricamento del csv a "DONE"
+    Then si cercano nei log che il sporetello sia in stato "REJECTED" con errore "Address not mailable" con dati:
+
 
 
   @raddAnagrafica @raddCsv
@@ -68,14 +63,15 @@ Feature: Radd Alternative Anagrafica Sportelli
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city |
       | <via>            | <cap>            | <provincia>           | <citta>           |
-      | via ceggia       | 30020            | VE                    | PORTEGRANDI       |
-    Then viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore ""
+    Then viene controllato lo stato di caricamento del csv a "REJECTED"
+    Then si cercano nei log che il sporetello sia in stato "REJECTED" con errore "Address not mailable" con dati:
+      | address_radd_city | <citta> |
     Examples:
       | via        | cap   | provincia | citta  |
-      | via ceggia | 30022 | VE        | NULL   |
-      | via ceggia | 30022 | NULL      | CEGGIA |
-      | via ceggia | NULL  | VE        | CEGGIA |
-      | NULL       | 30022 | VE        | CEGGIA |
+      | via ceggia | 30022 | MI        | NULL   |
+      | via ceggia | 30022 | NULL      | MILANO |
+      | via ceggia | NULL  | MI        | CEGGIA |
+      | NULL       | 30022 | MI        | CEGGIA |
 
 
   @raddAnagrafica @raddCsv
@@ -93,7 +89,8 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_start_validity          | ĄŁĽŚŠŞŤŹŽż  | łľśˇšşťź˝žż  |
       | radd_end_validity            | ĄŁĽŚŠŞŤŹŽż  | łľśˇšşťź˝žż  |
       | radd_externalCode            | ĄŁĽŚŠŞŤŹŽż  | -łľśˇšşťź˝žż |
-    Then viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "formato errato"
+    Then viene controllato lo stato di caricamento del csv a "REJECTED"
+    And viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "Malformed CSV"
 
   @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CSV_STATO_6] caricamento CSV verifica stato con requestId non esistente
@@ -101,9 +98,9 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_requestId | <requestId> |
     Then l'operazione ha prodotto un errore con status code "<errore>"
     Examples:
-      | requestId  | errore |
-      | non esiste | 404    |
-      | NULL       | 400    |
+      | requestId | errore |
+      | nonEsiste | 404    |
+      | NULL      | 400    |
 
 
   @raddAnagrafica @raddCsv
