@@ -9,6 +9,7 @@ import it.pagopa.pn.client.b2b.pa.polling.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddFsuClient;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadResponse;
 import lombok.AllArgsConstructor;
@@ -1040,6 +1041,23 @@ public class PnPaB2bUtils {
         return new Pair<>(key, sha256);
     }
 
+
+    public void preloadRadCSVDocument(String resourcePath, String sha256, RegistryUploadResponse responseUploadCsv, boolean usePresignedUrl) {
+
+        String secret = responseUploadCsv.getSecret();
+        String url = responseUploadCsv.getUrl();
+
+        log.info(String.format("Attachment resourceKey=%s sha256=%s secret=%s presignedUrl=%s\n",
+                resourcePath, sha256, secret, url));
+
+        if(usePresignedUrl){
+            loadToPresignedCsv( url, secret, sha256, resourcePath );
+            log.info("UPLOAD RADD COMPLETE");
+        }else{
+            log.info("UPLOAD RADD COMPLETE WITHOUT UPLOAD");
+        }
+
+    }
     public Pair<String,String> preloadRaddAlternativeDocument( String resourcePath, boolean usePresignedUrl,String operationId) throws IOException {
 
         String sha256 = computeSha256( resourcePath );
@@ -1395,6 +1413,10 @@ public class PnPaB2bUtils {
 
     private void loadToPresignedZip( String url, String secret, String sha256, String resource ) {
         loadToPresigned(url,secret,sha256,resource,"application/zip",0);
+    }
+
+    private void loadToPresignedCsv( String url, String secret, String sha256, String resource ) {
+        loadToPresigned(url,secret,sha256,resource,"text/csv",0);
     }
 
     private void loadToPresigned( String url, String secret, String sha256, String resource,String resourceType, int depth ) {

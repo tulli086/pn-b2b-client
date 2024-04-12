@@ -1,12 +1,12 @@
 Feature: Radd Alternative Anagrafica Sportelli
 
-  @raddAnagrafica
+  @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_1] caricamento CSV con 2 sportelli
     When viene caricato il csv con dati:
       | address_radd_row         | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
       | via ceggia               | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | 01/5410951       | 45,0000                     | 42,2412                      | lun=9.00-10.00   | now                 | +10g              | 10            | test radd         |
       | via CONCORDIA SAGITTARIA | 30023            | VE                    | CONCORDIA SAGITTARIA | ITALIA               | test sportelli   | 01/5245951       | 11,0000                     | 32,1245                      | lun=9.00-15.00   | now                 | +10g              | 22            | test radd         |
-
+    Then viene controllato lo stato di caricamento del csv a "DONE"
 
 
   @raddAnagrafica @raddCsv
@@ -40,12 +40,12 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene controllato lo stato di caricamento del csv a "PENDING"
 
   @raddAnagrafica @raddCsv
-  Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato ACCEPTED
+  Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato DONE
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
       | via posto        | 30020            | VE                    | PONTE CREPALDO    | ITALIA               |
       | via ceggia       | 30020            | VE                    | PORTEGRANDI       | ITALIA               |
-    Then viene controllato lo stato di caricamento del csv a "ACCEPTED"
+    Then viene controllato lo stato di caricamento del csv a "DONE"
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_3] caricamento CSV con righa malformata verifica stato a REJECTED
@@ -57,7 +57,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country         | ITALY       | ITALY     |
       | radd_description             | descrizione |           |
       | radd_geoLocation_longitudine | %&/(        |           |
-      | radd_openingTime             | minier      |           |
+      | radd_openingTime             | %&/(        |           |
       | radd_start_validity          | now         | now       |
       | radd_end_validity            | +10g        | +10g      |
     Then viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "csv malformato"
@@ -146,7 +146,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_openingTime             | wen=10.00-11.00 |
       | radd_start_validity          | now             |
       | radd_end_validity            | +10g            |
-
+    Then viene controllato lo stato di caricamento del csv a "ACCEPTED"
 
   @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CRUD_2] inserimento sportello RADD senza campi obbligatori
@@ -267,37 +267,31 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_7] modifica sportello RADD con dati corretti controllo successo modifica
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | 02000       |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | NULL        |
+      | address_radd_row      | via posto      |
+      | address_radd_cap      | 20161          |
+      | address_radd_province | MI             |
+      | address_radd_city     | MILANO         |
+      | address_radd_country  | ITALY          |
+      | radd_description      | descrizione    |
+      | radd_phoneNumber      | +39 2445356789 |
+      | radd_openingTime      | tue=1:00-2:00  |
     Then viene modificato uno sportello Radd con dati:
-      | radd_description | descrizione |
-      | radd_openingTime | minier      |
-      | radd_phoneNumber | minier      |
+      | radd_description | descrizione modificata |
+      | radd_openingTime | tue=10:00-20:00        |
+      | radd_phoneNumber | +39 01234242556789     |
 
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_8] modifica sportello RADD con campi vuoto dove non obbligatorio controllo successo modifica
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | 02000       |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | NULL        |
+      | address_radd_row      | via posto      |
+      | address_radd_cap      | 20161          |
+      | address_radd_province | MI             |
+      | address_radd_city     | MILANO         |
+      | address_radd_country  | ITALY          |
+      | radd_description      | descrizione    |
+      | radd_phoneNumber      | +39 2445356789 |
+      | radd_openingTime      | tue=1:00-2:00  |
     Then viene modificato uno sportello Radd con dati:
       | radd_description | NULL |
       | radd_openingTime | NULL |
@@ -307,17 +301,14 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_9] modifica sportello RADD con formato campi errato controllo restituzione errore
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | 02000       |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | NULL        |
+      | address_radd_row      | via posto      |
+      | address_radd_cap      | 20161          |
+      | address_radd_province | MI             |
+      | address_radd_city     | MILANO         |
+      | address_radd_country  | ITALY          |
+      | radd_description      | descrizione    |
+      | radd_phoneNumber      | +39 2445356789 |
+      | radd_openingTime      | tue=1:00-2:00  |
     Then viene modificato uno sportello Radd con dati errati:
       | radd_description | !!"$%&/( |
       | radd_openingTime | !!"$%&/( |
@@ -353,22 +344,19 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_14] modifica sportello RADD con dati corretti ma modifica da diverso operatore RADD
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | NULL        |
-      | address_radd_cap             | 02000       |
-      | address_radd_province        | NULL        |
-      | address_radd_country         | NULL        |
-      | radd_description             | descrizione |
-      | radd_phoneNumber             | minier      |
-      | radd_geoLocation_latitudine  | non so      |
-      | radd_geoLocation_longitudine | %&/(        |
-      | radd_openingTime             | minier      |
-      | radd_start_validity          | now         |
-      | radd_end_validity            | NULL        |
+      | address_radd_row      | via posto           |
+      | address_radd_cap      | 20161               |
+      | address_radd_province | MI                  |
+      | address_radd_city     | MILANO              |
+      | address_radd_country  | ITALY               |
+      | radd_description      | descrizione         |
+      | radd_phoneNumber      | +39 012643742556789 |
+      | radd_openingTime      | mon=10:00-13:00     |
     And viene cambiato raddista con "issuer_2"
-    Then viene modificato uno sportello Radd con dati:
-      | radd_description | descrizione |
-      | radd_openingTime | minier      |
-      | radd_phoneNumber | minier      |
+    Then viene modificato uno sportello Radd con dati errati:
+      | radd_description | descrizione modificata |
+      | radd_openingTime | tue=10:00-20:00        |
+      | radd_phoneNumber | +39 01234242556789     |
     And l'operazione ha prodotto un errore con status code "404"
 
 
@@ -400,6 +388,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_end_validity     | +10g  |
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | -10g |
+    And l'operazione ha prodotto un errore con status code "400"
 
 
   @raddAnagrafica
@@ -414,29 +403,20 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_end_validity     | +10g      |
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | +10g |
+    And l'operazione ha prodotto un errore con status code "400"
 
 
   @raddAnagrafica
-  Scenario: [RADD_ANAGRAFICA_CRUD_18] cancellazione sportello RADD con requestId non presente nella lista degli sportelli
+  Scenario Outline: [RADD_ANAGRAFICA_CRUD_18] cancellazione sportello RADD con requestId non presente nella lista degli sportelli
     When viene generato uno sportello Radd con dati:
-      | address_radd_row      | via posto |
-      | address_radd_cap      | 20161     |
-      | address_radd_province | MI        |
-      | address_radd_city     | MILANO    |
-      | address_radd_country  | ITALY     |
-      | radd_end_validity     | NULL      |
-    Then viene cancellato uno sportello Radd con dati errati:
-      | radd_end_validity | corretto     |
-      | radd_registryId   | non presente |
-
-
-  @raddAnagrafica
-  Scenario Outline: [RADD_ANAGRAFICA_CRUD_19] cancellazione sportello RADD con controllo campi obbligatori vuoti
-    When viene generato uno sportello Radd con dati:
-      | address_radd_row      | NULL  |
-      | address_radd_cap      | 02000 |
-      | address_radd_province | NULL  |
-      | address_radd_country  | ITALY |
+      | address_radd_row      | via posto             |
+      | address_radd_cap      | 20161                 |
+      | address_radd_province | MI                    |
+      | address_radd_city     | MILANO                |
+      | address_radd_country  | ITALY                 |
+      | radd_externalCode     | test cancellazione 19 |
+    Then viene richiesta la lista degli sportelli con dati:
+      | radd_externalCode | test cancellazione 19 |
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | <endValidity> |
       | radd_registryId   | <registryId>  |
@@ -478,6 +458,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | MI        |
       | address_radd_city     | MILANO    |
       | radd_externalCode     | test radd |
+    And viene effettuato il controllo se la richiesta ha trovato dei sportelli
 
 
   @raddAnagrafica
@@ -496,7 +477,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NULL      |
       | address_radd_city     | NULL      |
       | radd_externalCode     | test radd |
-    And viene contrallato il numero di valori tornati sia uguale a 10
+    And viene contrallato il numero di sportelli trovati sia uguale a 10
 
   @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CRUD_23] ricevimento lista sportelli del operatore tramite filtro
@@ -507,13 +488,13 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | <provincia>    |
       | address_radd_city     | <citta>        |
       | radd_externalCode     | <externalCode> |
+    Then viene effettuato il controllo se la richiesta ha trovato dei sportelli
     Examples:
       | cap   | provincia | citta  | externalCode |
       | 20161 | NULL      | NULL   | NULL         |
       | NULL  | MI        | NULL   | NULL         |
       | NULL  | NULL      | MILANO | NULL         |
       | NULL  | NULL      | NULL   | test radd    |
-
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_24] ricevimento lista vuota dei sportelli del operatore con filtro con valore non presente
@@ -524,4 +505,4 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NULL                |
       | address_radd_city     | NULL                |
       | radd_externalCode     | valore non presente |
-    Then viene contrallato il numero di valori tornati sia uguale a 0
+    Then viene effettuato il controllo se la richiesta abbia dato lista vuota

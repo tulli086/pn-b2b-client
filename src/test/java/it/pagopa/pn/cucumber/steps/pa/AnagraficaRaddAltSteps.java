@@ -46,7 +46,7 @@ public class AnagraficaRaddAltSteps {
     private final PnPaB2bUtils pnPaB2bUtils;
     private final DataTableTypeRaddAlt dataTableTypeRaddAlt;
 
-    private String filePathCsv;
+    private String fileCsvName;
     private String shaCSV;
     private String requestid;
     private String registryId;
@@ -56,8 +56,8 @@ public class AnagraficaRaddAltSteps {
 
     private String uid = "1234556";
 
-    private static final Integer NUM_CHECK_STATE_CSV = 10;
-    private static final Integer WAITING_STATE_CSV = 1000;
+    private static final Integer NUM_CHECK_STATE_CSV = 14;
+    private static final Integer WAITING_STATE_CSV = 10000;
 
     @Autowired
     public AnagraficaRaddAltSteps(PnRaddAlternativeClientImpl raddAltClient, PnPaB2bUtils pnPaB2bUtils,
@@ -82,6 +82,7 @@ public class AnagraficaRaddAltSteps {
             Assertions.assertNotNull(responseUploadCsv.getUrl());
             Assertions.assertNotNull(responseUploadCsv.getFileKey());
             this.requestid = responseUploadCsv.getRequestId();
+           pnPaB2bUtils.preloadRadCSVDocument("classpath:/" + this.fileCsvName,this.shaCSV,responseUploadCsv,true);
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -181,7 +182,7 @@ public class AnagraficaRaddAltSteps {
 
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello= raddAltClient.retrieveRequestItems(
                 getValue(dataSportello, RADD_UID.key)
-                , getValue(dataSportello, RADD_REQUESTID.key) == null ? null : this.requestid
+                , this.requestid
                 , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
                 , getValue(dataSportello, RADD_FILTER_LASTKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_LASTKEY.key));
 
@@ -267,17 +268,19 @@ public class AnagraficaRaddAltSteps {
 
 
     @When("viene modificato uno sportello Radd con dati errati:")
-    public void vieneModificatoSportelloRadd(Map<String,String> dataSportello) {
+    public void vieneModificatoSportelloRadd(Map<String,String> datiAggiornamento) {
 
-        UpdateRegistryRequest aggiornamentoSportelloRadd = dataTableTypeRaddAlt.convertUpdateRegistryRequest(dataSportello);
+        UpdateRegistryRequest aggiornamentoSportelloRadd = dataTableTypeRaddAlt.convertUpdateRegistryRequest(datiAggiornamento);
 
         try {
             raddAltClient.updateRegistry(
-                    getValue(dataSportello, RADD_UID.key),
-                    getValue(dataSportello, RADD_REGISTRYID.key),
+                    getValue(datiAggiornamento, RADD_UID.key),
+                    getValue(datiAggiornamento, RADD_REGISTRYID.key)==null?null:
+                            getValue(datiAggiornamento, RADD_REGISTRYID.key).equalsIgnoreCase("corretto")? this.registryId: getValue(datiAggiornamento, RADD_REGISTRYID.key),
                     aggiornamentoSportelloRadd);
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
+            log.info("errore: {}",e.getStatusText());
         }
     }
 
@@ -298,20 +301,14 @@ public class AnagraficaRaddAltSteps {
     public void vieneCancellatoSportelloRadd(Map<String,String> richiestaCancellazione) {
 
         String endDate = getValue(richiestaCancellazione,RADD_END_VALIDITY.key);
-        OffsetDateTime endValidity=null;
-        if(this.sportelloRaddCrud.getEndValidity()!=null) {
-            endValidity = OffsetDateTime.parse(this.sportelloRaddCrud.getEndValidity());
-        }else{
-                endValidity=OffsetDateTime.now();
-        }
+        log.info("dati cancellazione sportello: {}",richiestaCancellazione);
+
 
         if (endDate!=null) {
-            if (endDate.toLowerCase().contains("+")) {
-                endDate = endValidity.plusDays(Long.parseLong(endDate.replace("\\+|g", ""))).toString();
-            } else if (endDate.toLowerCase().contains("-")) {
-                endDate = endValidity.minusDays(Long.parseLong(endDate.replace("\\+|g", ""))).toString();
-            } else if (endDate.toLowerCase().contains("corretto")) {
+            if (endDate.toLowerCase().contains("corretto")) {
                 endDate = this.sportelloRaddCrud.getEndValidity();
+            }else{
+                endDate = dataTableTypeRaddAlt.setData(endDate);
             }
         }
 
@@ -321,10 +318,9 @@ public class AnagraficaRaddAltSteps {
                     getValue(richiestaCancellazione, RADD_REGISTRYID.key)==null ? null:
                             getValue(richiestaCancellazione, RADD_REGISTRYID.key).equalsIgnoreCase("corretto")? this.registryId: getValue(richiestaCancellazione, RADD_REGISTRYID.key),
                     endDate);
-        } catch (AssertionFailedError assertionFailedError) {
-            String message = assertionFailedError.getMessage() +
-                    "{endDate: " + (endDate == null ? "NULL" : endDate) + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
+            log.info("errore: {}",e.getStatusText());
         }
     }
 
@@ -341,13 +337,16 @@ public class AnagraficaRaddAltSteps {
                 , getValue(dataSportello, ADDRESS_RADD_PROVINCE.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_PROVINCE.key)
                 , getValue(dataSportello, RADD_EXTERNAL_CODE.key) == null ? null : getValue(dataSportello, RADD_EXTERNAL_CODE.key));
         try {
-            Assertions.assertNotNull(sportello);
-            Assertions.assertNotNull(sportello.getRegistries());
+
             if(sportello.getRegistries().isEmpty() || sportello.getRegistries().size()==0) {
+                this.sportelliRaddista =sportello;
             }else {
                 this.registryId = sportello.getRegistries().get(0).getRegistryId();
                 this.sportelliRaddista =sportello;
             }
+
+            log.info("lista sportelli: {}", sportello);
+
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (this.requestid == null ? "NULL" : this.requestid) + " }";
@@ -355,8 +354,37 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
+    @Then("viene effettuato il controllo se la richiesta ha trovato dei sportelli")
+    public void vieneControlaltoLaRichiestaDellaListaDeiSportelliRadd() {
 
-    @When("viene richiesta la lista degli sportelli con dati errati:")
+        try {
+            Assertions.assertNotNull(this.sportelliRaddista);
+            Assertions.assertNotNull(this.sportelliRaddista.getRegistries());
+            Assertions.assertFalse(this.sportelliRaddista.getRegistries().isEmpty());
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{Lista sportelli: " + (this.requestid == null ? "NULL" : this.requestid) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+
+    }
+
+
+    @Then("viene effettuato il controllo se la richiesta abbia dato lista vuota")
+    public void vieneControllatoRichiestolaListaVuotaDeiSportelliRadd() {
+
+        try {
+            Assertions.assertNotNull(this.sportelliRaddista);
+            Assertions.assertNotNull(this.sportelliRaddista.getRegistries());
+            Assertions.assertTrue(this.sportelliRaddista.getRegistries().isEmpty());
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{Lista sportelli: " + (this.sportelliRaddista == null ? "NULL" : this.sportelliRaddista) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+
+    }
+        @When("viene richiesta la lista degli sportelli con dati")
     public void vieneRichiestolaListaDeiSportelliRaddConDatiErrati(Map<String, String> dataSportello) {
 
         try {
@@ -368,32 +396,29 @@ public class AnagraficaRaddAltSteps {
                     , getValue(dataSportello, ADDRESS_RADD_CITY.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_CITY.key)
                     , getValue(dataSportello, ADDRESS_RADD_PROVINCE.key) == null ? null : getValue(dataSportello, ADDRESS_RADD_PROVINCE.key)
                     , getValue(dataSportello, RADD_EXTERNAL_CODE.key) == null ? null : getValue(dataSportello, RADD_EXTERNAL_CODE.key));
+
+
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
     }
 
 
-    @When("viene contrallato il numero di valori tornati sia uguale a {int}")
+    @When("viene contrallato il numero di sportelli trovati sia uguale a {int}")
     public void vieneControllatoCheVenganoRitornatiTotValori(Integer numValori) {
         try {
-            if(numValori==0){
-                Assertions.assertTrue(this.sportelliRaddista.getRegistries().isEmpty());
-            }else{
-                Assertions.assertEquals(numValori-1,this.sportelliRaddista.getRegistries().size());
-
-            }
+                Assertions.assertEquals(numValori,this.sportelliRaddista.getRegistries().size());
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
-                    "{endDate: " + (this.requestid == null ? "NULL" : this.requestid) + " }";
+                    "{Lista sportelli: " + (this.sportelliRaddista == null ? "NULL" : this.sportelliRaddista) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }
 
 
     public void creazioneCsv(List<Map<String, String>> dataCsv) throws IOException {
-        String fileName = "file" + generateRandomNumber() + ".csv";
-        this.filePathCsv = "target/classes/" + fileName;
+       this.fileCsvName = "file" + generateRandomNumber() + ".csv";
+        String fileCaricamento = "target/classes/" + this.fileCsvName;
 
 
         List<CreateRegistryRequest> csvData = dataTableTypeRaddAlt.convertToListRegistryRequestData(dataCsv);
@@ -421,21 +446,21 @@ public class AnagraficaRaddAltSteps {
         }
 
 
-        try (CSVWriter writer = new CSVWriter(new FileWriter(filePathCsv), ';',
-                CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(fileCaricamento, StandardCharsets.UTF_8), ';',
+                CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
             writer.writeAll(data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        this.shaCSV = pnPaB2bUtils.computeSha256("classpath:/" + fileName);
+        this.shaCSV = pnPaB2bUtils.computeSha256("classpath:/" + this.fileCsvName);
     }
 
 
     @After("@raddCsv")
     public void deleteCSV() {
-        if (this.filePathCsv != null) {
-            URI zip_disk = URI.create(this.filePathCsv);
+        if (this.fileCsvName != null) {
+            URI zip_disk = URI.create("classpath:/" + this.fileCsvName);
             File file = new File(zip_disk.getPath());
             boolean deleted = file.delete();
             System.out.println("delete " + deleted);

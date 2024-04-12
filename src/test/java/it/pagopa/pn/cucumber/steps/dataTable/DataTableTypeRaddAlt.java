@@ -48,8 +48,8 @@ public class DataTableTypeRaddAlt {
                 .openingTime(getValue(data,RADD_OPENING_TIME.key)==null? null:getValue(data,RADD_OPENING_TIME.key))
                 .startValidity(getValue(data,RADD_START_VALIDITY.key)==null? null:setData(getValue(data,RADD_START_VALIDITY.key)))
                 .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:setData(getValue(data,RADD_END_VALIDITY.key)))
-                .externalCode(getValue(data, RADD_EXTERNAL_CODE.key)==null?null:getValue(data, RADD_EXTERNAL_CODE.key));
-
+                .externalCode(getValue(data, RADD_EXTERNAL_CODE.key)==null?null:getValue(data, RADD_EXTERNAL_CODE.key))
+                .capacity(getValue(data, RADD_CAPACITY.key)==null?null:getValue(data, RADD_CAPACITY.key));
 
         try {
             Thread.sleep(2);
@@ -83,7 +83,8 @@ public class DataTableTypeRaddAlt {
                 .openingTime(getValue(data,RADD_OPENING_TIME.key)==null? null:getValue(data,RADD_OPENING_TIME.key))
                 .startValidity(getValue(data,RADD_START_VALIDITY.key)==null? null: setData(getValue(data,RADD_START_VALIDITY.key)))
                 .endValidity(getValue(data,RADD_END_VALIDITY.key)==null? null:setData(getValue(data,RADD_END_VALIDITY.key)))
-                .externalCode(getValue(data, RADD_EXTERNAL_CODE.key)==null?null:getValue(data, RADD_EXTERNAL_CODE.key));
+                .externalCode(getValue(data, RADD_EXTERNAL_CODE.key)==null?null:getValue(data, RADD_EXTERNAL_CODE.key))
+                .capacity(getValue(data, RADD_CAPACITY.key)==null?null:getValue(data, RADD_CAPACITY.key));
 
         listaSportelli.add(sportelloRadd);
 
@@ -126,8 +127,11 @@ public class DataTableTypeRaddAlt {
             dataString = dateTimeFormatter.format(OffsetDateTime.now().plusDays(Long.parseLong(dataNumber)));
         } else if (data.toLowerCase().contains("-")) {
             dataString = dateTimeFormatter.format(OffsetDateTime.now().minusDays(Long.parseLong(dataNumber)));
-        }else if(data.equalsIgnoreCase("now")){
-            dataString=dateTimeFormatter.format(OffsetDateTime.now());
+        } else if (data.equalsIgnoreCase("now")) {
+            dataString = dateTimeFormatter.format(OffsetDateTime.now());
+        } else if (data.equalsIgnoreCase("formato errato")) {
+            dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            dataString = dateTimeFormatter.format(OffsetDateTime.now());
         }
 
 
