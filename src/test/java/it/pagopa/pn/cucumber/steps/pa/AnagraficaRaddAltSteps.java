@@ -9,9 +9,7 @@ import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnRaddAlternativeClientImpl;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.*;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryRequestResponse;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadRequest;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.VerifyRequestResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.steps.dataTable.DataTableTypeRaddAlt;
@@ -71,7 +69,7 @@ public class AnagraficaRaddAltSteps {
     @When("viene caricato il csv con dati:")
     public void vieneGeneratoIlCsv(List<Map<String, String>> dataCsv) throws IOException {
         log.info("dataCsv: {}", dataCsv);
-        creazioneCsv(dataCsv);
+        creazioneCsv(dataCsv,true);
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
 
         RegistryUploadResponse responseUploadCsv = raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
@@ -92,9 +90,9 @@ public class AnagraficaRaddAltSteps {
     }
 
 
-    @When("viene caricato il csv con restituzione errore con dati:")
-    public void vieneGeneratoIlCsvConResituzioneErrore(List<Map<String, String>> dataCsv) throws IOException {
-        creazioneCsv(dataCsv);
+    @When("viene caricato il csv con formatto {string} con restituzione errore con dati:")
+    public void vieneGeneratoIlCsvConResituzioneErrore(String formatoCsv, List<Map<String, String>> dataCsv) throws IOException {
+        creazioneCsv(dataCsv, formatoCsv.equalsIgnoreCase("corretto"));
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
 
         try {
@@ -225,19 +223,59 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-    @When("si cercano nei log che il sporetello sia in stato {string} con errore {string} con dati:")
-    public void vieneCercatoloSportelloEControlloStato(String stato, String errore, @Transpose CreateRegistryRequest dataSportello) {
+
+    @When("si controlla che il sporetello sia in stato {string} con dati:")
+    public void vieneCercatoloSportelloEControlloStato( String stato, Map<String,String> dataSportello) {
+        RegistryRequestResponse dato= null;
+
+        for (int i = 0; i < NUM_CHECK_STATE_CSV; i++) {
+
+            it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello= raddAltClient.retrieveRequestItems(
+                    this.uid
+                    ,  this.requestid
+                    , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
+                    , getValue(dataSportello, RADD_FILTER_LASTKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_LASTKEY.key));
+
+            dato= sportello.getItems().stream().filter(elem->elem.getOriginalRequest().getOriginalAddress().getCity().equalsIgnoreCase(getValue(dataSportello, ADDRESS_RADD_CITY.key))).findAny().orElse(null);
+
+            if (dato!=null && dato.getStatus().equalsIgnoreCase(stato)) {
+                break;
+            }
+
+            try {
+                Thread.sleep(WAITING_STATE_CSV);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        try {
+
+            Assertions.assertEquals(dato.getStatus(),stato);
+            this.requestid=dato.getRequestId();
+            this.registryId=dato.getRegistryId();
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{sporettllo: " + (dato == null ? "NULL" : dato) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+
+    @When("si controlla che il sporetello sia in stato REJECTED con errore {string} con dati:")
+    public void vieneCercatoloSportelloEControlloStatoAReject( String errore, @Transpose CreateRegistryRequest dataSportello) {
 
         RegistryRequestResponse dato= this.sportelliCsvRaddista.getItems().stream().filter(elem->elem.getOriginalRequest().getOriginalAddress().getCity().equalsIgnoreCase(dataSportello.getAddress().getCity())).findAny().orElse(null);
 
         try {
 
-        Assertions.assertTrue(dato.getStatus().equalsIgnoreCase(stato));
+            Assertions.assertEquals(dato.getStatus(),"REJECTED");
         Assertions.assertTrue(dato.getError().contains(errore));
 
         } catch (AssertionFailedError assertionFailedError) {
         String message = assertionFailedError.getMessage() +
-                "{endDate: " + (dato == null ? "NULL" : dato) + " }";
+                "{sporettllo: " + (dato == null ? "NULL" : dato) + " }";
         throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
     }
     }
@@ -436,7 +474,7 @@ public class AnagraficaRaddAltSteps {
     }
 
 
-    public void creazioneCsv(List<Map<String, String>> dataCsv) throws IOException {
+    public void creazioneCsv(List<Map<String, String>> dataCsv, boolean formatoCsv) throws IOException {
        this.fileCsvName = "file" + generateRandomNumber() + ".csv";
         String fileCaricamento = "target/classes/" + this.fileCsvName;
 
@@ -465,13 +503,22 @@ public class AnagraficaRaddAltSteps {
             });
         }
 
-
-        try (CSVWriter writer = new CSVWriter(new FileWriter(fileCaricamento, StandardCharsets.UTF_8), ';',
-                CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
-            writer.writeAll(data);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (formatoCsv) {
+            try (CSVWriter writer = new CSVWriter(new FileWriter(fileCaricamento, StandardCharsets.UTF_8), ';',
+                    CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+                writer.writeAll(data);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try (CSVWriter writer = new CSVWriter(new FileWriter(fileCaricamento, StandardCharsets.UTF_8), ',',
+                    CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+                writer.writeAll(data);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+
 
         this.shaCSV = pnPaB2bUtils.computeSha256("classpath:/" + this.fileCsvName);
     }
