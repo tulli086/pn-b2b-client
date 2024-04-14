@@ -97,7 +97,11 @@ public class AnagraficaRaddAltSteps {
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
 
         try {
-            raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
+            RegistryUploadResponse responseUploadCsv = raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
+            if(responseUploadCsv!=null) {
+                this.requestid = responseUploadCsv.getRequestId();
+                pnPaB2bUtils.preloadRadCSVDocument("classpath:/" + this.fileCsvName,this.shaCSV,responseUploadCsv,true);
+            }
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
@@ -108,7 +112,10 @@ public class AnagraficaRaddAltSteps {
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
 
         try {
-            raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
+            RegistryUploadResponse responseUploadCsv = raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
+            Assertions.assertNotNull(responseUploadCsv);
+            pnPaB2bUtils.preloadRadCSVDocument("classpath:/" + this.fileCsvName,this.shaCSV,responseUploadCsv,true);
+
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
@@ -225,8 +232,8 @@ public class AnagraficaRaddAltSteps {
     }
 
 
-    @When("si controlla che il sporetello sia in stato {string} con dati:")
-    public void vieneCercatoloSportelloEControlloStato( String stato, Map<String,String> dataSportello) {
+    @When("si controlla che il sporetello sia in stato {string}")
+    public void vieneCercatoloSportelloEControlloStato( String stato) {
         RegistryRequestResponse dato= null;
 
         for (int i = 0; i < NUM_CHECK_STATE_CSV; i++) {
@@ -240,10 +247,10 @@ public class AnagraficaRaddAltSteps {
             it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello= raddAltClient.retrieveRequestItems(
                     this.uid
                     ,  this.requestid
-                    , getValue(dataSportello, RADD_FILTER_LIMIT.key) == null ? null : Integer.parseInt(getValue(dataSportello, RADD_FILTER_LIMIT.key))
-                    , getValue(dataSportello, RADD_FILTER_LASTKEY.key) == null ? null : getValue(dataSportello, RADD_FILTER_LASTKEY.key));
+                    , 10
+                    , null);
 
-            dato= sportello.getItems().stream().filter(elem->elem.getOriginalRequest().getOriginalAddress().getCity().equalsIgnoreCase(getValue(dataSportello, ADDRESS_RADD_CITY.key))).findAny().orElse(null);
+            dato= sportello.getItems().stream().filter(elem->elem.getRequestId().equalsIgnoreCase(this.requestid)).findAny().orElse(null);
 
             if (dato!=null && dato.getStatus().equalsIgnoreCase(stato)) {
                 break;
@@ -363,7 +370,7 @@ public class AnagraficaRaddAltSteps {
             raddAltClient.deleteRegistry(this.uid, this.registryId, endDate);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
-                    "{endDate: " + (this.sportelloRaddCrud.getEndValidity() == null ? "NULL" : this.sportelloRaddCrud.getEndValidity()) + " }";
+                    "{endDate: " + (endDate== null ? "NULL" : endDate) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }
@@ -377,7 +384,8 @@ public class AnagraficaRaddAltSteps {
                     getValue(richiestaCancellazione, RADD_UID.key),
                     getValue(richiestaCancellazione, RADD_REGISTRYID.key)==null ? null:
                             getValue(richiestaCancellazione, RADD_REGISTRYID.key).equalsIgnoreCase("corretto")? this.registryId: getValue(richiestaCancellazione, RADD_REGISTRYID.key),
-                    getValue(richiestaCancellazione,RADD_END_VALIDITY.key));
+                    getValue(richiestaCancellazione,RADD_END_VALIDITY.key)==null? null :
+                            dataTableTypeRaddAlt.setData(getValue(richiestaCancellazione,RADD_END_VALIDITY.key)));
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
             log.info("errore: {}",e.getStatusText());

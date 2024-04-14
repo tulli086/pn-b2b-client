@@ -117,18 +117,18 @@ public class DataTableTypeRaddAlt {
 
     public String setData(String data) {
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
         String dataNumber = data.replaceAll("[\\\\+|g|\\\\-]", "");
 
         String dataString = data;
 
         if (data.toLowerCase().contains("+")) {
-            dataString = dateTimeFormatter.format(OffsetDateTime.now().plusDays(Long.parseLong(dataNumber)));
+            dataString = dateTimeFormatter.format(OffsetDateTime.now().atZoneSameInstant(ZoneId.of("UTC")).plusDays(Long.parseLong(dataNumber)));
         } else if (data.toLowerCase().contains("-")) {
-            dataString = dateTimeFormatter.format(OffsetDateTime.now().minusDays(Long.parseLong(dataNumber)));
+            dataString = dateTimeFormatter.format(OffsetDateTime.now().atZoneSameInstant(ZoneId.of("UTC")).minusDays(Long.parseLong(dataNumber)));
         } else if (data.equalsIgnoreCase("now")) {
-            dataString = dateTimeFormatter.format(OffsetDateTime.now());
+            dataString = dateTimeFormatter.format(OffsetDateTime.now().atZoneSameInstant(ZoneId.of("UTC")));
         } else if (data.equalsIgnoreCase("formato errato")) {
             dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             dataString = dateTimeFormatter.format(OffsetDateTime.now());
