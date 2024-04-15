@@ -463,7 +463,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto    |
       | address_radd_cap      | 80020        |
-      | address_radd_province | MI           |
+      | address_radd_province | NA           |
       | address_radd_city     | FRATTAMINORE |
       | address_radd_country  | ITALY        |
       | radd_externalCode     | test radd    |
