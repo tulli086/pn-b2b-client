@@ -553,4 +553,15 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
+    @After("@puliziaSportelli")
+    public void cancellazioneSportello() {
+
+        if(this.sportelliCsvRaddista!=null){
+            for (RegistryRequestResponse sportelli:this.sportelliCsvRaddista.getItems()) {
+                raddAltClient.deleteRegistry(this.uid, sportelli.getRegistryId(), dataTableTypeRaddAlt.setData("now"));
+            }
+        }
+        raddAltClient.deleteRegistry(this.uid, this.registryId, dataTableTypeRaddAlt.setData("now"));
+    }
+
 }

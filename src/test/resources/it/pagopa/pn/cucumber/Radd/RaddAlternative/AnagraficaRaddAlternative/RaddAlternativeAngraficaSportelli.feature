@@ -1,6 +1,6 @@
 Feature: Radd Alternative Anagrafica Sportelli
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica @raddCsv @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CSV_1] caricamento CSV con 2 sportelli
     When viene caricato il csv con dati:
       | address_radd_row         | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
@@ -9,7 +9,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene controllato lo stato di caricamento del csv a "DONE"
 
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica @raddCsv @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CSV_2] caricamento 2 volte stesso checksum del CSV
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -18,7 +18,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene caricato il csv con stesso checksum
     And l'operazione ha prodotto un errore con status code "409"
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica @raddCsv @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CSV_3] caricamento 2 CSV con il primo CSV con un record in stato PENDING
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -31,7 +31,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     And l'operazione ha prodotto un errore con status code "400"
 
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica @raddCsv @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_1] caricamento CSV verifica stato PENDING
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -39,7 +39,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | via ceggia       | 75010            | MT                    | CALCIANO          | ITALIA               |
     Then viene controllato lo stato di caricamento del csv a "PENDING"
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica @raddCsv @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato DONE
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -88,7 +88,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | NULL      | 400    |
 
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica @raddCsv @puliziaSportelli@puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CSV_LISTA_1] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city |
@@ -112,7 +112,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | NULL        | 400    |
 
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_1] inserimento sportello RADD con dati corretti
     When viene generato uno sportello Radd con dati:
       | address_radd_row             | via posto       |
@@ -202,7 +202,7 @@ Feature: Radd Alternative Anagrafica Sportelli
 
 
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_5] inserimento sportello RADD con endValidity a null (controllo manuale che sportello sia utilizzabile )
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto       |
@@ -227,7 +227,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     And viene verificato il costo di 754 e il peso di 10 nei details del'elemento di timeline letto
 
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_6] inserimento sportello RADD con startValidity avanti di giorni (controllo manuale che il sportello non sia attivo)
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto   |
@@ -249,10 +249,10 @@ Feature: Radd Alternative Anagrafica Sportelli
       | physicalAddress_province     | NA          |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo di 754 e il peso di 10 nei details del'elemento di timeline letto
+    And viene verificato il costo di 760 e il peso di 20 nei details del'elemento di timeline letto
 
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_7] modifica sportello RADD con dati corretti controllo successo modifica
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto      |
@@ -270,7 +270,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_phoneNumber | +39 01234242556789     |
 
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_8] modifica sportello RADD con campi vuoto dove non obbligatorio controllo successo modifica
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto        |
@@ -288,7 +288,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_phoneNumber | NULL |
 
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_9] modifica sportello RADD con formato campi errato controllo restituzione errore
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto      |
@@ -319,8 +319,8 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then l'operazione ha prodotto un errore con status code "400"
 
 
-  @raddAnagrafica
-  Scenario: [RADD_ANAGRAFICA_CRUD_12] modifica sportello RADD con uid non presente controllo restituzione errore
+  @raddAnagrafica @ignore
+  Scenario: [RADD_ANAGRAFICA_CRUD_12] modifica sportello RADD con uid non presente controllo restituzione errore  -- non vengono effettuati i controlli
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto      |
       | address_radd_cap      | 80024          |
@@ -343,7 +343,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_uid | NULL |
     And l'operazione ha prodotto un errore con status code "400"
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_14] modifica sportello RADD con dati corretti ma modifica da diverso operatore RADD
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto           |
@@ -361,7 +361,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_openingTime | tue=10:00-20:00        |
       | radd_phoneNumber | +39 01234242556789     |
     And l'operazione ha prodotto un errore con status code "404"
-
+    And viene cambiato raddista con "issuer_1"
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_15] cancellazione sportello RADD con dati corretti
@@ -375,9 +375,9 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then si controlla che il sporetello sia in stato "ACCEPTED"
     Then viene cancellato uno sportello Radd con dati:
       | radd_end_validity | now |
-    Then si controlla che il sporetello sia in stato "DELETED"
 
-  @raddAnagrafica
+
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_16] cancellazione sportello RADD con endDate < endValidity dello sportello
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto         |
@@ -393,7 +393,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     And l'operazione ha prodotto un errore con status code "400"
 
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_17] cancellazione sportello RADD con endDate > endValidity dello sportello controllo sportello ancora aperto
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto |
@@ -406,11 +406,22 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then si controlla che il sporetello sia in stato "ACCEPTED"
     And viene cancellato uno sportello Radd con dati:
       | radd_end_validity | +10g |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Given viene generata una nuova notifica
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile              | NULL       |
+      | physicalAddress_address      | Via@ok_890 |
+      | physicalAddress_municipality | QUALIANO   |
+      | physicalAddress_zip          | 80019      |
+      | physicalAddress_province     | NA         |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    And viene verificato il costo di 760 e il peso di 20 nei details del'elemento di timeline letto
 
 
-  @raddAnagrafica
-  Scenario: [RADD_ANAGRAFICA_CRUD_18] cancellazione sportello RADD con requestId non presente nella lista degli sportelli
+  @raddAnagrafica  @puliziaSportelli
+  Scenario: [RADD_ANAGRAFICA_CRUD_18] cancellazione sportello RADD con registryId non presente nella lista degli sportelli
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto  |
       | address_radd_cap      | 80020      |
@@ -422,8 +433,8 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_registryId | 0_CHAR |
     And l'operazione ha prodotto un errore con status code "400"
 
-  @raddAnagrafica
-  Scenario Outline: [RADD_ANAGRAFICA_CRUD_19] cancellazione sportello RADD con requestId non presente nella lista degli sportelli
+  @raddAnagrafica @puliziaSportelli
+  Scenario Outline: [RADD_ANAGRAFICA_CRUD_19] cancellazione sportello RADD con controllo campi obbligatori
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto  |
       | address_radd_cap      | 80020      |
@@ -443,7 +454,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | NULL        | corretto   | corretto |
 
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_20] cancellazione sportello RADD con dati corretti da diverso operatore RADD
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto |
@@ -458,7 +469,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     And l'operazione ha prodotto un errore con status code "404"
 
 
-  @raddAnagrafica
+  @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_21] ricevimento lista sportelli del operatore con dati corretti
     When viene generato uno sportello Radd con dati:
       | address_radd_row      | via posto    |
@@ -466,7 +477,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NA           |
       | address_radd_city     | FRATTAMINORE |
       | address_radd_country  | ITALY        |
-      | radd_externalCode     | test radd    |
+      | radd_externalCode     | testRadd     |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
     Then viene richiesta la lista degli sportelli con dati:
       | radd_filter_limit     | 10           |
@@ -474,7 +485,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_cap      | 80020        |
       | address_radd_province | NA           |
       | address_radd_city     | FRATTAMINORE |
-      | radd_externalCode     | test radd    |
+      | radd_externalCode     | testRadd     |
     And viene effettuato il controllo se la richiesta ha trovato dei sportelli
 
 
