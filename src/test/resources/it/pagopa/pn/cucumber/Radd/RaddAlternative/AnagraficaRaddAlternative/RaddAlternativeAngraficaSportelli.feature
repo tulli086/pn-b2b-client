@@ -18,7 +18,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene caricato il csv con stesso checksum
     And l'operazione ha prodotto un errore con status code "409"
 
-  @raddAnagrafica @raddCsv @puliziaSportelli
+  @raddAnagrafica @raddCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_3] caricamento 2 CSV con il primo CSV con un record in stato PENDING
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -31,7 +31,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     And l'operazione ha prodotto un errore con status code "400"
 
 
-  @raddAnagrafica @raddCsv @puliziaSportelli
+  @raddAnagrafica @raddCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_1] caricamento CSV verifica stato PENDING
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -39,7 +39,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | via ceggia       | 75010            | MT                    | CALCIANO          | ITALIA               |
     Then viene controllato lo stato di caricamento del csv a "PENDING"
 
-  @raddAnagrafica @raddCsv @puliziaSportelli
+  @raddAnagrafica @raddCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato DONE
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -88,7 +88,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | NULL      | 400    |
 
 
-  @raddAnagrafica @raddCsv @puliziaSportelli@puliziaSportelli
+  @raddAnagrafica @raddCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_LISTA_1] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city |

@@ -553,15 +553,29 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-    @After("@puliziaSportelli")
+    @After("@puliziaSportelliCsv")
     public void cancellazioneSportello() {
+
+        raddAltClient.deleteRegistry(this.uid, this.registryId, dataTableTypeRaddAlt.setData("now"));
+    }
+
+    @After("@puliziaSportelliCsv")
+    public void cancellazioneSportelliCSv() {
 
         if(this.sportelliCsvRaddista!=null){
             for (RegistryRequestResponse sportelli:this.sportelliCsvRaddista.getItems()) {
                 raddAltClient.deleteRegistry(this.uid, sportelli.getRegistryId(), dataTableTypeRaddAlt.setData("now"));
             }
+        }else{
+            it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello= raddAltClient.retrieveRequestItems(
+                    this.uid
+                    , this.requestid
+                    , null
+                    , null);
+            for (RegistryRequestResponse sportelli:sportello.getItems()) {
+                raddAltClient.deleteRegistry(this.uid, sportelli.getRegistryId(), dataTableTypeRaddAlt.setData("now"));
+            }
         }
-        raddAltClient.deleteRegistry(this.uid, this.registryId, dataTableTypeRaddAlt.setData("now"));
     }
 
 }
