@@ -20,7 +20,7 @@ public enum RaddAltValue {
     RADD_GEO_LOCATION("radd_geoLocation","SI"),
     RADD_GEO_LOCATION_LATITUDINE("radd_geoLocation_latitudine","40.0000"),
     RADD_GEO_LOCATION_LONGITUDINE("radd_geoLocation_longitudine","20.0221"),
-    RADD_OPENING_TIME("radd_openingTime","tue=8:00-13:00_14:00-18:00"),
+    RADD_OPENING_TIME("radd_openingTime","tue=8:00-13:00;"),
     RADD_START_VALIDITY("radd_start_validity",null),
     RADD_END_VALIDITY("radd_end_validity",null),
     RADD_CAPACITY("radd_capacity",null),

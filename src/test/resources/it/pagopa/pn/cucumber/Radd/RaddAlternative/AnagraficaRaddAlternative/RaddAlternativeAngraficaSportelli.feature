@@ -4,8 +4,8 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CSV_1] caricamento CSV con 2 sportelli
     When viene caricato il csv con dati:
       | address_radd_row         | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
-      | via ceggia               | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | 01/5410951       | 45,0000                     | 42,2412                      | lun=9.00-10.00   | now                 | +10g              | 10            | test radd         |
-      | via CONCORDIA SAGITTARIA | 30023            | VE                    | CONCORDIA SAGITTARIA | ITALIA               | test sportelli   | 01/5245951       | 11,0000                     | 32,1245                      | lun=9.00-15.00   | now                 | +10g              | 22            | test radd         |
+      | via ceggia               | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | 01/5410951       | 45.0000                     | 42.2412                      | lun=9:00-10:00;  | now                 | +10g              | 10            | test radd         |
+      | via CONCORDIA SAGITTARIA | 30023            | VE                    | CONCORDIA SAGITTARIA | ITALIA               | test sportelli   | 01/5245951       | 11.0000                     | 32.1245                      | lun=9:00-10:00;  | now                 | +10g              | 22            | test radd         |
     Then viene controllato lo stato di caricamento del csv a "DONE"
 
 
@@ -115,20 +115,20 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_1] inserimento sportello RADD con dati corretti
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | via posto         |
-      | address_radd_cap             | 75010             |
-      | address_radd_province        | MT                |
-      | address_radd_city            | OLIVETO LUCANO    |
-      | address_radd_country         | ITALY             |
-      | radd_description             | descrizione       |
-      | radd_phoneNumber             | +39 0123235236789 |
-      | radd_geoLocation_latitudine  | 12,0000           |
-      | radd_geoLocation_longitudine | 95,0001           |
-      | radd_openingTime             | wen=10.00-11.00   |
-      | radd_start_validity          | now               |
-      | radd_end_validity            | +10g              |
-      | radd_externalCode            | testRadd          |
-      | radd_capacity                | 100               |
+      | address_radd_row             | via posto       |
+      | address_radd_cap             | 75010           |
+      | address_radd_province        | MT              |
+      | address_radd_city            | OLIVETO LUCANO  |
+      | address_radd_country         | ITALY           |
+      | radd_description             | descrizione     |
+      | radd_phoneNumber             | +39 9858425136  |
+      | radd_geoLocation_latitudine  | 12.0000         |
+      | radd_geoLocation_longitudine | 95.0001         |
+      | radd_openingTime             | mon=9:00-10:00; |
+      | radd_start_validity          | now             |
+      | radd_end_validity            | +10g            |
+      | radd_externalCode            | testRadd        |
+      | radd_capacity                | 100             |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
 
 
@@ -168,13 +168,13 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then l'operazione ha prodotto un errore con status code "400"
     Examples:
       | via       | cap   | provincia | citta  | stato  | descrizione | telefono       | latitudine     | longitudine    | apperturaSportello | startValidity  | endValidity    | capacity       | externalCode |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL               | NULL           | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL               | NULL           | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ     | NULL           | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | NULL           | NULL               | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | NULL           | NULL               | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | ĄŁĽŚŠŞŤŹŽŻą˛łľ | 45.0000        | 45.0000        | NULL               | NULL           | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | 45.0000        | NULL               | NULL           | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL               | NULL           | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | 45.0000        | ĄŁĽŚŠŞŤŹŽŻą˛łľ     | NULL           | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | 45.0000        | NULL               | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | 45.0000        | NULL               | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | 45.0000        | NULL               | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL         |
 
 
   @raddAnagrafica
@@ -186,8 +186,8 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_city            | PESCHIERA   |
       | address_radd_country         | ITALY       |
       | radd_description             | descrizione |
-      | radd_geoLocation_latitudine  | 15,0000     |
-      | radd_geoLocation_longitudine | 67,0000     |
+      | radd_geoLocation_latitudine  | 15.0000     |
+      | radd_geoLocation_longitudine | 67.0000     |
       | radd_openingTime             | NULL        |
       | radd_start_validity          | now         |
       | radd_end_validity            | -20g        |
@@ -255,12 +255,12 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY          |
       | radd_description      | descrizione    |
       | radd_phoneNumber      | +39 2445356789 |
-      | radd_openingTime      | tue=1:00-2:00  |
+      | radd_openingTime      | tue=1:00-2:00; |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
     Then viene modificato uno sportello Radd con dati:
       | radd_description | descrizione modificata |
-      | radd_openingTime | tue=10:00-20:00        |
-      | radd_phoneNumber | +39 01234242556789     |
+      | radd_openingTime | tue=10:00-20:00;       |
+      | radd_phoneNumber | +39 9858425136         |
 
 
   @raddAnagrafica @puliziaSportelli
@@ -273,7 +273,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY            |
       | radd_description      | descrizione      |
       | radd_phoneNumber      | +39 2445356789   |
-      | radd_openingTime      | tue=1:00-2:00    |
+      | radd_openingTime      | tue=1:00-2:00;   |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
     Then viene modificato uno sportello Radd con dati:
       | radd_description | NULL |
@@ -291,11 +291,11 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY          |
       | radd_description      | descrizione    |
       | radd_phoneNumber      | +39 2445356789 |
-      | radd_openingTime      | tue=1:00-2:00  |
+      | radd_openingTime      | tue=1:00-2:00; |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
     Then viene modificato uno sportello Radd con dati errati:
-      | radd_openingTime | !!"$%&/(£%%£%'?^\s;; |
-      | radd_phoneNumber | !!"$%&/(£%%£%'?^\s;; |
+      | radd_openingTime | !!"$%&/ASgSG(£%%£%'?^\s;; |
+      | radd_phoneNumber | !!"$%&/(AGSS£%%£%'?^\s;;  |
     And l'operazione ha prodotto un errore con status code "400"
 
   @raddAnagrafica
@@ -321,7 +321,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY          |
       | radd_description      | descrizione    |
       | radd_phoneNumber      | +39 2445356789 |
-      | radd_openingTime      | tue=1:00-2:00  |
+      | radd_openingTime      | tue=1:00-2:00; |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
     Then viene modificato uno sportello Radd con dati errati:
       | radd_registryId | corretto      |
@@ -345,12 +345,12 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY               |
       | radd_description      | descrizione         |
       | radd_phoneNumber      | +39 012643742556789 |
-      | radd_openingTime      | mon=10:00-13:00     |
+      | radd_openingTime      | mon=10:00-13:00;    |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
     And viene cambiato raddista con "issuer_2"
     Then viene modificato uno sportello Radd con dati errati:
       | radd_description | descrizione modificata |
-      | radd_openingTime | tue=10:00-20:00        |
+      | radd_openingTime | tue=10:00-20:00;       |
       | radd_phoneNumber | +39 01234242556789     |
     And l'operazione ha prodotto un errore con status code "404"
     And viene cambiato raddista con "issuer_1"
