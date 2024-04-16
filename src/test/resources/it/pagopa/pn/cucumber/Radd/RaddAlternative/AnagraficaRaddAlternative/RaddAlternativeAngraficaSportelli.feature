@@ -71,8 +71,8 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_5] caricamento CSV con formato campi errato verifica stato a REJECTED e messaggio di errore
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
-      | ĄŁĽgagsŤŹŽż      | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż            | ĄŁĽŚŠŞŤŹŽż        | ĄŁĽŚŠŞŤŹŽż           | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż                  | ĄŁĽŚŠŞŤŹŽż                   | ĄŁĽŚŠŞŤŹŽż       | formato errato      | formato errato    | ĄŁĽŚŠŞŤŹŽż    | ĄŁĽŚŠŞŤŹŽż        |
-      | 1412ŠŞŤŹŽż       | ĄŁ43ŞŤŹŽż        | ĄŁĽŚWERŹŽż            | 53teŞŤŹŽż         | ĄŁĽŚŠŞŤŹŽż           | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż                  | ĄŁĽŚŠŞŤŹŽż                   | ĄŁĽŚŠŞŤŹŽż       | formato errato      | formato errato    | ĄŁĽŚŠŞŤŹŽż    | ĄŁĽŚŠŞŤŹŽż        |
+      | ĄŁĽgagsŤŹŽż      | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż            | ĄŁĽŚŠŞŤŹŽż        | ĄŁĽŚAFŠŞŤŹŽż         | ĄŁĽŚFAŠŞŤŹŽż     | ĄŁĽŚŠŞAFŤŹŽż     | ĄŁĽŚŠŞAFSŤŹŽż               | ĄŁĽŚŠŞŤŹŽż                   | ĄŁĽŚŠŞŤŹŽż       | formato errato      | formato errato    | ĄŁĽŚŠŞŤŹŽż    | ĄŁĽŚŠŞŤŹŽż        |
+      | 1412ŠŞŤŹŽż       | ĄŁ43ŞŤŹŽż        | ĄŁĽŚWERŹŽż            | 53teŞŤŹŽż         | ĄŁĽFAŚŠŞŤŹŽż         | ĄŁĽŚŠŞŤFŹŽż      | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠAŞŤŹŽż                 | ĄŁĽŚŠŞŤŹŽż                   | ĄŁĽŚŠŞŤŹŽż       | formato errato      | formato errato    | ĄŁĽŚŠŞŤŹŽż    | ĄŁĽŚŠŞŤŹŽż        |
     Then viene controllato lo stato di caricamento del csv a "REJECTED"
     And viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "Malformed CSV"
 
@@ -167,14 +167,14 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_externalCode            | <externalCode>       |
     Then l'operazione ha prodotto un errore con status code "400"
     Examples:
-      | via       | cap   | provincia | citta  | stato  | descrizione | telefono       | latitudine     | longitudine    | apperturaSportello | startValidity  | endValidity    | capacity       | externalCode |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | ĄŁĽŚŠŞŤŹŽŻą˛łľ | 45.0000        | 45.0000        | NULL               | NULL           | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | 45.0000        | NULL               | NULL           | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL               | NULL           | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | 45.0000        | ĄŁĽŚŠŞŤŹŽŻą˛łľ     | NULL           | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | 45.0000        | NULL               | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | 45.0000        | NULL               | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL         |
-      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | 45.0000        | 45.0000        | NULL               | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL         |
+      | via       | cap   | provincia | citta  | stato  | descrizione | telefono          | latitudine       | longitudine       | apperturaSportello | startValidity     | endValidity       | capacity         | externalCode |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | ĄŁĽŚŠŞŤŹŽŻASFą˛łľ | 45.0000          | 45.0000           | NULL               | NULL              | NULL              | NULL             | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL              | ĄŁĽŚŠŞAFŤŹŽŻą˛łľ | 45.0000           | NULL               | NULL              | NULL              | NULL             | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL              | 45.0000          | ĄŁĽŚŠŞŤASFŹŽŻą˛łľ | NULL               | NULL              | NULL              | NULL             | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL              | 45.0000          | 45.0000           | ĄŁĽŚŠŞSAFŤŹŽŻą˛łľ  | NULL              | NULL              | NULL             | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL              | 45.0000          | 45.0000           | NULL               | ĄŁĽŚŠŞŤŹASFŽŻą˛łľ | NULL              | NULL             | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL              | 45.0000          | 45.0000           | NULL               | NULL              | ĄŁĽŚŠGAfŞŤŹŽŻą˛łľ | NULL             | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL              | 45.0000          | 45.0000           | NULL               | NULL              | NULL              | ĄŁĽŚAFŠŞŤŹŽŻą˛łľ | NULL         |
 
 
   @raddAnagrafica
