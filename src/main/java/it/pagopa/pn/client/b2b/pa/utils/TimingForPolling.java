@@ -120,7 +120,7 @@ public class TimingForPolling {
         CANCELLED(11,1),
 
         //TIMING FOR WEBHOOK
-        WEBHOOK(125000, 500);
+        WEBHOOK(150000, 500);
 
         private int numCheck,waitingMultiplier;
 

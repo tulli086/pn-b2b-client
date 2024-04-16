@@ -76,7 +76,7 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
                 return false;
             }
 
-            selectLastEventId(pnPollingParameter);
+            selectLastEventId(pnPollingResponse, pnPollingParameter);
             if(!isWaitTerminated(pnPollingResponse, pnPollingParameter)) {
                 pnPollingResponse.setResult(false);
                 return false;
@@ -122,8 +122,13 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
     }
 
     private boolean isWaitTerminated(PnPollingResponseV20 pnPollingResponse, PnPollingParameter pnPollingParameter) {
-        ProgressResponseElement progressResponseElementV20 = progressResponseElementListV20
+        ProgressResponseElement progressResponseElementV20 = pnPollingResponse.getProgressResponseElementListV20()
                 .stream()
+                .peek(progressResponseElement -> {
+                    if(!pnPollingParameter.getPnPollingWebhook().getProgressResponseElementListV20().contains(progressResponseElement)) {
+                        pnPollingParameter.getPnPollingWebhook().getProgressResponseElementListV20().addLast(progressResponseElement);
+                    }
+                })
                 .filter(toCheckCondition(pnPollingParameter))
                 .findAny()
                 .orElse(null);
@@ -134,14 +139,13 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
         return false;
     }
 
-    private void selectLastEventId(PnPollingParameter pnPollingParameter) {
-        ProgressResponseElement lastProgress = progressResponseElementListV20.get(0);
-        ProgressResponseElement curProgress = progressResponseElementListV20
+    private void selectLastEventId(PnPollingResponseV20 pnPollingResponse, PnPollingParameter pnPollingParameter) {
+        ProgressResponseElement lastProgress = pnPollingResponse
+                .getProgressResponseElementListV20()
                 .stream()
-                .filter(progressResponseElement -> lastProgress.getEventId().compareTo(progressResponseElement.getEventId()) < 0)
-                .findAny()
+                .reduce((prev, curr) -> prev.getEventId().compareTo(curr.getEventId()) < 0 ? curr : prev)
                 .orElse(null);
-        pnPollingParameter.setLastEventId(Objects.requireNonNullElse(curProgress, lastProgress).getEventId());
+        pnPollingParameter.setLastEventId(Objects.requireNonNull(lastProgress).getEventId());
     }
 
     private Predicate<ProgressResponseElement> toCheckCondition(PnPollingParameter pnPollingParameter) {

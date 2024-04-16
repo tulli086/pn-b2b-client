@@ -853,13 +853,16 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
         try{
             Assertions.assertNotNull(progressResponseElement);
-            Assertions.assertEquals(progressResponseElement.getTimestamp().truncatedTo(ChronoUnit.SECONDS)
-                    , sharedSteps.getSentNotification().getTimeline().stream()
-                            .filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)).findAny()
-                            .get().getTimestamp().truncatedTo(ChronoUnit.SECONDS));
+            ProgressResponseElement finalProgressResponseElement = progressResponseElement;
+            Assertions.assertFalse(sharedSteps.getSentNotification()
+                    .getTimeline()
+                    .stream()
+                    .filter(elem -> elem.getCategory().equals(timelineElementInternalCategory)
+                            && elem.getTimestamp().truncatedTo(ChronoUnit.SECONDS).equals(finalProgressResponseElement.getTimestamp().truncatedTo(ChronoUnit.SECONDS)))
+                    .findAny()
+                    .isEmpty());
             log.info("EventProgress: " + progressResponseElement);
             sharedSteps.setProgressResponseElement(progressResponseElement);
-
         }catch(AssertionFailedError assertionFailedError){
             String message = assertionFailedError.getMessage()+
                     "{IUN: "+sharedSteps.getSentNotification().getIun()+" -WEBHOOK: "+this.eventStreamList.get(0).getStreamId()+" }";
@@ -1033,12 +1036,20 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         PnPollingWebhook pnPollingWebhook = new PnPollingWebhook();
         if(timeLineOrStatus instanceof TimelineElementCategoryV20) {
             pnPollingWebhook.setTimelineElementCategoryV20((TimelineElementCategoryV20) timeLineOrStatus);
+            progressResponseElementList.clear();
+            pnPollingWebhook.setProgressResponseElementListV20(progressResponseElementList);
         }else if(timeLineOrStatus instanceof it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.NotificationStatus) {
             pnPollingWebhook.setNotificationStatusV20((it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.NotificationStatus) timeLineOrStatus);
+            progressResponseElementList.clear();
+            pnPollingWebhook.setProgressResponseElementListV20(progressResponseElementList);
         } else if(timeLineOrStatus instanceof TimelineElementCategoryV23) {
             pnPollingWebhook.setTimelineElementCategoryV23((TimelineElementCategoryV23) timeLineOrStatus);
+            progressResponseElementListV23.clear();
+            pnPollingWebhook.setProgressResponseElementListV23(progressResponseElementListV23);
         }else if(timeLineOrStatus instanceof it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.NotificationStatus){
             pnPollingWebhook.setNotificationStatusV23((it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.NotificationStatus) timeLineOrStatus);
+            progressResponseElementListV23.clear();
+            pnPollingWebhook.setProgressResponseElementListV23(progressResponseElementListV23);
         } else{
             throw new IllegalArgumentException();
         }
@@ -1047,15 +1058,15 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private <T> ProgressResponseElement searchInWebhookV20(T timeLineOrStatus, String lastEventId, int deepCount) {
         PnPollingWebhook pnPollingWebhook = getPnPollingWebhook(timeLineOrStatus);
-        PnPollingServiceWebhookV20 webhookRapidV20 = (PnPollingServiceWebhookV20) sharedSteps.getPollingFactory().getPollingService(PnPollingStrategy.WEBHOOK_V20);
-        PnPollingResponseV20 pnPollingResponseV20 = webhookRapidV20.waitForEvent(sharedSteps.getSentNotification().getIun(),
-                PnPollingParameter.builder()
-                        .value("WEBHOOK")
-                        .pnPollingWebhook(pnPollingWebhook)
-                        .deepCount(deepCount)
-                        .lastEventId(lastEventId)
-                        .streamId(eventStreamList.get(0).getStreamId())
-                        .build());
+        PnPollingParameter pnPollingParameter = PnPollingParameter.builder()
+                .value("WEBHOOK")
+                .pnPollingWebhook(pnPollingWebhook)
+                .deepCount(deepCount)
+                .lastEventId(lastEventId)
+                .streamId(eventStreamList.get(0).getStreamId())
+                .build();
+        PnPollingServiceWebhookV20 webhookV20 = (PnPollingServiceWebhookV20) sharedSteps.getPollingFactory().getPollingService(PnPollingStrategy.WEBHOOK_V20);
+        PnPollingResponseV20 pnPollingResponseV20 = webhookV20.waitForEvent(sharedSteps.getSentNotification().getIun(), pnPollingParameter);
 
         logger.info("WEBHOOK_PROGRESS_RESPONSE_ELEMENT_V20: " + pnPollingResponseV20.getProgressResponseElementV20());
         if(pnPollingResponseV20.getProgressResponseElementV20() != null) {
@@ -1067,8 +1078,8 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     private <T> ProgressResponseElementV23 searchInWebhookV23(T timeLineOrStatus,String lastEventId, int deepCount, int position) {
         PnPollingWebhook pnPollingWebhook = getPnPollingWebhook(timeLineOrStatus);
-        PnPollingServiceWebhookV23 webhookRapidV23 = (PnPollingServiceWebhookV23) sharedSteps.getPollingFactory().getPollingService(PnPollingStrategy.WEBHOOK_V23);
-        PnPollingResponseV23 pnPollingResponseV23 = webhookRapidV23.waitForEvent(sharedSteps.getSentNotification().getIun(),
+        PnPollingServiceWebhookV23 webhookV23 = (PnPollingServiceWebhookV23) sharedSteps.getPollingFactory().getPollingService(PnPollingStrategy.WEBHOOK_V23);
+        PnPollingResponseV23 pnPollingResponseV23 = webhookV23.waitForEvent(sharedSteps.getSentNotification().getIun(),
                 PnPollingParameter.builder()
                         .value("WEBHOOK")
                         .pnPollingWebhook(pnPollingWebhook)
