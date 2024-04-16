@@ -553,7 +553,7 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-    @After("@puliziaSportelliCsv")
+    @After("@puliziaSportelli")
     public void cancellazioneSportello() {
 
         raddAltClient.deleteRegistry(this.uid, this.registryId, dataTableTypeRaddAlt.setData("now"));

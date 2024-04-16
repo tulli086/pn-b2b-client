@@ -1,6 +1,6 @@
 Feature: Radd Alternative Anagrafica Sportelli
 
-  @raddAnagrafica @raddCsv @puliziaSportelli
+  @raddAnagrafica @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_1] caricamento CSV con 2 sportelli
     When viene caricato il csv con dati:
       | address_radd_row         | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
@@ -9,7 +9,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene controllato lo stato di caricamento del csv a "DONE"
 
 
-  @raddAnagrafica @raddCsv @puliziaSportelli
+  @raddAnagrafica @raddCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_2] caricamento 2 volte stesso checksum del CSV
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -115,20 +115,20 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_1] inserimento sportello RADD con dati corretti
     When viene generato uno sportello Radd con dati:
-      | address_radd_row             | via posto       |
-      | address_radd_cap             | 75010           |
-      | address_radd_province        | MT              |
-      | address_radd_city            | OLIVETO LUCANO  |
-      | address_radd_country         | ITALY           |
-      | radd_description             | descrizione     |
-      | radd_phoneNumber             | 01/5245951      |
-      | radd_geoLocation_latitudine  | 12,0000         |
-      | radd_geoLocation_longitudine | 95,0001         |
-      | radd_openingTime             | wen=10.00-11.00 |
-      | radd_start_validity          | now             |
-      | radd_end_validity            | +10g            |
-      | radd_externalCode            | testRadd        |
-      | radd_capacity                | 100             |
+      | address_radd_row             | via posto         |
+      | address_radd_cap             | 75010             |
+      | address_radd_province        | MT                |
+      | address_radd_city            | OLIVETO LUCANO    |
+      | address_radd_country         | ITALY             |
+      | radd_description             | descrizione       |
+      | radd_phoneNumber             | +39 0123235236789 |
+      | radd_geoLocation_latitudine  | 12,0000           |
+      | radd_geoLocation_longitudine | 95,0001           |
+      | radd_openingTime             | wen=10.00-11.00   |
+      | radd_start_validity          | now               |
+      | radd_end_validity            | +10g              |
+      | radd_externalCode            | testRadd          |
+      | radd_capacity                | 100               |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
 
 
