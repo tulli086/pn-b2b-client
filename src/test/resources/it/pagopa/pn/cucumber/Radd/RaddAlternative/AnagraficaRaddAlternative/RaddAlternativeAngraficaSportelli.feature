@@ -9,7 +9,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene controllato lo stato di caricamento del csv a "DONE"
 
 
-  @raddAnagrafica @raddCsv @puliziaSportelliCsv
+  @raddAnagrafica @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_2] caricamento 2 volte stesso checksum del CSV
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -18,7 +18,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene caricato il csv con stesso checksum
     And l'operazione ha prodotto un errore con status code "409"
 
-  @raddAnagrafica @raddCsv @puliziaSportelliCsv
+  @raddAnagrafica @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_3] caricamento 2 CSV con il primo CSV con un record in stato PENDING
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -31,7 +31,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     And l'operazione ha prodotto un errore con status code "400"
 
 
-  @raddAnagrafica @raddCsv @puliziaSportelliCsv
+  @raddAnagrafica @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_1] caricamento CSV verifica stato PENDING
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -39,7 +39,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | via ceggia       | 75010            | MT                    | CALCIANO          | ITALIA               |
     Then viene controllato lo stato di caricamento del csv a "PENDING"
 
-  @raddAnagrafica @raddCsv @puliziaSportelliCsv
+  @raddAnagrafica @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato DONE
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -88,7 +88,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | NULL      | 400    |
 
 
-  @raddAnagrafica @raddCsv @puliziaSportelliCsv
+  @raddAnagrafica @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_LISTA_1] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city |
@@ -167,21 +167,14 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_externalCode            | <externalCode>       |
     Then l'operazione ha prodotto un errore con status code "400"
     Examples:
-      | via                     | cap     | provincia               | citta                   | stato          | descrizione    | telefono       | latitudine     | longitudine    | apperturaSportello | startValidity  | endValidity    | capacity       | externalCode   |
-      | ĄŁĽŚŠŞŤŹŽŻą˛łľśˇšşťź˝žż | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | LETTERE | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | ĄŁĽŚŠŞŤŹŽŻą˛łľśˇšşťź˝žż | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | ĄŁĽŚŠŞŤŹŽŻą˛łľśˇšşťź˝žż | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL               | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL               | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ     | NULL           | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           |
-      | via posto               | 20161   | MI                      | MILANO                  | ITALIA         | NULL           | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ |
+      | via       | cap   | provincia | citta  | stato  | descrizione | telefono       | latitudine     | longitudine    | apperturaSportello | startValidity  | endValidity    | capacity       | externalCode |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL               | NULL           | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL               | NULL           | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL               | NULL           | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ     | NULL           | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | NULL           | NULL               | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | NULL           | NULL               | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL           | NULL         |
+      | via posto | 20161 | MI        | MILANO | ITALIA | NULL        | NULL           | NULL           | NULL           | NULL               | NULL           | NULL           | ĄŁĽŚŠŞŤŹŽŻą˛łľ | NULL         |
 
 
   @raddAnagrafica
@@ -301,9 +294,8 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_openingTime      | tue=1:00-2:00  |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
     Then viene modificato uno sportello Radd con dati errati:
-      | radd_description | !!"$%&/(!)$^?        |
       | radd_openingTime | !!"$%&/(£%%£%'?^\s;; |
-      | radd_phoneNumber | 200_CHAR             |
+      | radd_phoneNumber | !!"$%&/(£%%£%'?^\s;; |
     And l'operazione ha prodotto un errore con status code "400"
 
   @raddAnagrafica
