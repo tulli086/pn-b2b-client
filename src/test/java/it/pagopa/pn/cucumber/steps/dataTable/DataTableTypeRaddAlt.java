@@ -1,23 +1,16 @@
 package it.pagopa.pn.cucumber.steps.dataTable;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.DataTableType;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.Address;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryRequestGeoLocation;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.UpdateRegistryRequest;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +28,8 @@ public class DataTableTypeRaddAlt {
         CreateRegistryRequest sportelloRadd= new CreateRegistryRequest()
                 .address(getValue(data,ADDRESS_RADD.key)==null?null:
                         new Address()
-                                .addressRow(getValue(data,ADDRESS_RADD_ROW.key)==null? null: getValue(data,ADDRESS_RADD_ROW.key))
+                                .addressRow(getValue(data,ADDRESS_RADD_ROW.key)==null? null:
+                                        getValue(data,ADDRESS_RADD_ROW.key).equalsIgnoreCase("random")? generateRandomNumber() : getValue(data,ADDRESS_RADD_ROW.key))
                                 .cap(getValue(data,ADDRESS_RADD_CAP.key)==null? null: getValue(data,ADDRESS_RADD_CAP.key))
                                 .city(getValue(data,ADDRESS_RADD_CITY.key)==null? null: getValue(data,ADDRESS_RADD_CITY.key))
                                 .pr(getValue(data,ADDRESS_RADD_PROVINCE.key)==null? null: getValue(data,ADDRESS_RADD_PROVINCE.key))
@@ -70,7 +64,8 @@ public class DataTableTypeRaddAlt {
         CreateRegistryRequest sportelloRadd= new CreateRegistryRequest()
                 .address(getValue(data,ADDRESS_RADD.key)==null?null:
                         new Address()
-                                .addressRow(getValue(data,ADDRESS_RADD_ROW.key)==null? null: getValue(data,ADDRESS_RADD_ROW.key))
+                                .addressRow(getValue(data,ADDRESS_RADD_ROW.key)==null? null:
+                                        getValue(data,ADDRESS_RADD_ROW.key).equalsIgnoreCase("random")? generateRandomNumber() : getValue(data,ADDRESS_RADD_ROW.key))
                                 .cap(getValue(data,ADDRESS_RADD_CAP.key)==null? null: getValue(data,ADDRESS_RADD_CAP.key))
                                 .city(getValue(data,ADDRESS_RADD_CITY.key)==null? null: getValue(data,ADDRESS_RADD_CITY.key))
                                 .pr(getValue(data,ADDRESS_RADD_PROVINCE.key)==null? null: getValue(data,ADDRESS_RADD_PROVINCE.key))

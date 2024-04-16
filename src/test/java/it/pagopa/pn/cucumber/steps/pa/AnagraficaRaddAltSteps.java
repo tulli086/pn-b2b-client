@@ -55,7 +55,7 @@ public class AnagraficaRaddAltSteps {
 
     private String uid = "1234556";
 
-    private static final Integer NUM_CHECK_STATE_CSV = 14;
+    private static final Integer NUM_CHECK_STATE_CSV = 18;
     private static final Integer WAITING_STATE_CSV = 10000;
 
     @Autowired
@@ -251,6 +251,14 @@ public class AnagraficaRaddAltSteps {
                     , null);
 
             dato= sportello.getItems().stream().filter(elem->elem.getRequestId().equalsIgnoreCase(this.requestid)).findAny().orElse(null);
+
+            if(stato.equalsIgnoreCase("accepted")){
+                try {
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
             if (dato!=null && dato.getStatus().equalsIgnoreCase(stato)) {
                 break;

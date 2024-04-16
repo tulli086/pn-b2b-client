@@ -3,9 +3,9 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_1] caricamento CSV con 2 sportelli
     When viene caricato il csv con dati:
-      | address_radd_row         | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
-      | via ceggia               | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | 01/5410951       | 45.0000                     | 42.2412                      | lun=9:00-10:00;  | now                 | +10g              | 10            | test radd         |
-      | via CONCORDIA SAGITTARIA | 30023            | VE                    | CONCORDIA SAGITTARIA | ITALIA               | test sportelli   | 01/5245951       | 11.0000                     | 32.1245                      | lun=9:00-10:00;  | now                 | +10g              | 22            | test radd         |
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
+      | random           | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | 01/5410951       | 45.0000                     | 42.2412                      | lun=9:00-10:00;  | now                 | +10g              | 10            | test radd         |
+      | vrandom          | 30023            | VE                    | CONCORDIA SAGITTARIA | ITALIA               | test sportelli   | 01/5245951       | 11.0000                     | 32.1245                      | lun=9:00-10:00;  | now                 | +10g              | 22            | test radd         |
     Then viene controllato lo stato di caricamento del csv a "DONE"
 
 
@@ -13,8 +13,8 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CSV_2] caricamento 2 volte stesso checksum del CSV
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
-      | via posto        | 30020            | VE                    | PONTE CREPALDO    | ITALIA               |
-      | via ceggia       | 30020            | VE                    | PORTEGRANDI       | ITALIA               |
+      | random           | 30020            | VE                    | PONTE CREPALDO    | ITALIA               |
+      | random           | 30020            | VE                    | PORTEGRANDI       | ITALIA               |
     Then viene caricato il csv con stesso checksum
     And l'operazione ha prodotto un errore con status code "409"
 
@@ -24,6 +24,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
       | via posto        | 74022            | TA                    | FRAGAGNANO        | ITALIA               |
       | via ceggia       | 74025            | TA                    | MARINA DI GINOSA  | ITALIA               |
+    Then viene controllato lo stato di caricamento del csv a "PENDING"
     Then viene caricato il csv con formatto "corretto" con restituzione errore con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
       | via posto        | 74022            | TA                    | FRAGAGNANO        | ITALIA               |
@@ -35,16 +36,16 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_1] caricamento CSV verifica stato PENDING
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
-      | via posto        | 75010            | MT                    | ALIANO            | ITALIA               |
-      | via ceggia       | 75010            | MT                    | CALCIANO          | ITALIA               |
+      | random           | 75010            | MT                    | ALIANO            | ITALIA               |
+      | random           | 75010            | MT                    | CALCIANO          | ITALIA               |
     Then viene controllato lo stato di caricamento del csv a "PENDING"
 
   @raddAnagrafica @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato DONE
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
-      | via posto        | 75010            | MT                    | CIRIGLIANO        | ITALIA               |
-      | via ceggia       | 75010            | MT                    | CRACO             | ITALIA               |
+      | random           | 75010            | MT                    | CIRIGLIANO        | ITALIA               |
+      | random           | 75010            | MT                    | CRACO             | ITALIA               |
     Then viene controllato lo stato di caricamento del csv a "DONE"
 
   @raddAnagrafica @raddCsv
@@ -60,9 +61,9 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_4] caricamento CSV con campi a null dove c'è obbligatorietà verifica stato a REJECTED
     When viene caricato il csv con dati:
-      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city |
-      | NULL             | NULL             | NULL                  | NULL              |
-      | NULL             | NULL             | NULL                  | NULL              |
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | radd_geoLocation_latitudine | radd_geoLocation_longitudine |
+      | NULL             | NULL             | NULL                  | NULL              | NULL                        | 45.0000                      |
+      | NULL             | NULL             | NULL                  | NULL              | 42.0000                     | NULL                         |
     Then viene controllato lo stato di caricamento del csv a "REJECTED"
     And viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "Malformed CSV"
 
@@ -107,9 +108,9 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_filter_limit | 10          |
     Then l'operazione ha prodotto un errore con status code "<errore>"
     Examples:
-      | requestId   | errore |
-      | saffasfasfa | 404    |
-      | NULL        | 400    |
+      | requestId                            | errore |
+      | 077bdd84-0000-0e0a-8200-ed7124ea8338 | 404    |
+      | NULL                                 | 400    |
 
 
   @raddAnagrafica @puliziaSportelli
@@ -253,6 +254,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NA             |
       | address_radd_city     | VARCATURO      |
       | address_radd_country  | ITALY          |
+      | radd_start_validity   | +1g            |
       | radd_description      | descrizione    |
       | radd_phoneNumber      | +39 2445356789 |
       | radd_openingTime      | tue=1:00-2:00; |
@@ -483,6 +485,13 @@ Feature: Radd Alternative Anagrafica Sportelli
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_22] ricevimento lista sportelli del operatore con limit a null controllo default
+    When viene generato uno sportello Radd con dati:
+      | address_radd_row      | via posto |
+      | address_radd_cap      | 80020     |
+      | address_radd_province | NA        |
+      | address_radd_city     | CRISPANO  |
+      | address_radd_country  | ITALY     |
+    Then si controlla che il sporetello sia in stato "ACCEPTED"
     Then viene richiesta la lista degli sportelli con dati:
       | radd_filter_limit     | NULL     |
       | radd_filter_lastKey   | NULL     |
@@ -503,11 +512,11 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_externalCode     | <externalCode> |
     Then viene effettuato il controllo se la richiesta ha trovato dei sportelli
     Examples:
-      | cap   | provincia | citta  | externalCode |
-      | 20161 | NULL      | NULL   | NULL         |
-      | NULL  | MI        | NULL   | NULL         |
-      | NULL  | NULL      | MILANO | NULL         |
-      | NULL  | NULL      | NULL   | testRadd     |
+      | cap   | provincia | citta          | externalCode |
+      | 75010 | NULL      | NULL           | NULL         |
+      | NULL  | MT        | NULL           | NULL         |
+      | NULL  | NULL      | OLIVETO LUCANO | NULL         |
+      | NULL  | NULL      | NULL           | testRadd     |
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CRUD_24] ricevimento lista vuota dei sportelli del operatore con filtro con valore non presente
