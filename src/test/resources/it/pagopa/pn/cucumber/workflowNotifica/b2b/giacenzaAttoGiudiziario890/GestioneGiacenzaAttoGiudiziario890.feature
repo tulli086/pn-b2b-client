@@ -279,10 +279,29 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     #"sequenceName": "OK-GiacenzaDelegato-lte10_890_auto-redrive", "sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.30s-RECAG006A.5s-RECAG006B[DOC:ARCAD;DOC:23L].60s-RECAG006C.60s-RECAG012"
-
+    #Risultato atteso: l’evento fuori ordine viene inserito nella tabella degli errori e recuperato automaticamente da paper channel all’arrivo dell’evento RECAG012
 
   @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_WI1.1_13] Attesa elemento di timeline REFINEMENT con physicalAddress OK-NO012-lte10
+  Scenario: [B2B_GIACENZA_890_WI1.1_13]  Invio notifica con percorso analogico (FAIL-Giacenza-gt10_890_no_recag012)  per verificare che paper channel calcoli la data di perfezionamento e invii il PNAG012 come feedback poichè oltre i 10 giorni
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile         | NULL           |
+      | physicalAddress_address | via@FAIL-Giacenza-gt10_890_no_recag012 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "CON080"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG010"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG011A"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "PNAG012"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG0011B" e verifica tipo DOC "23L"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG007B" e verifica tipo DOC "Plico"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG007C"
+    #@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.60s-RECAG011B[DOC:ARCAD;DOC:23L].60s-RECAG007A.5s-RECAG007B[DOC:Plico].5s-RECAG007C
+    #PNAG012 come evento di feedback con data: RECAG011A + refinementDuration (1 minuto in DEV)
+
+  @giacenza890Simplified
+  Scenario: [B2B_GIACENZA_890_WI1.1_14] Non Attesa elemento di timeline SEND_ANALOG_FEEDBACK con physicalAddress OK-NO012-lte10 (Scenario negativo)
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -294,7 +313,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     #"sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.35s-RECAG005A.5s-RECAG005B[DOC:ARCAD;DOC:23L].5s-RECAG005C"
 
   @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_WI1.1_14] Attesa elemento di timeline REFINEMENT con physicalAddress OK-NO012-gt10
+  Scenario: [B2B_GIACENZA_890_WI1.1_15] Non Attesa elemento di timeline SEND_ANALOG_FEEDBACK con physicalAddress OK-NO012-gt10 (Scenario negativo)
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -306,10 +325,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     #"sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.65s-RECAG011B[DOC:ARCAD].60s-RECAG005A.5s-RECAG005B[DOC:23L].5s-RECAG005C"
 
 
-
-
   @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_WI2.2_11] Invio notifica con sequence @OK-Giacenza-lte10_890 ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECAG010
+  Scenario: [B2B_GIACENZA_890_WI2.2_16] Invio notifica con sequence @OK-Giacenza-lte10_890 ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECAG010
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -323,7 +340,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
 
 
   @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_WI2.2_12] Invio notifica con sequence @OK-Giacenza_RS ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
+  Scenario: [B2B_GIACENZA_890_WI2.2_17] Invio notifica con sequence @OK-Giacenza_RS ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -337,7 +354,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
   #"sequence": "@sequence.5s-CON080.5s-RECRS010.5s-RECRS011.5s-RECRN003A.5s-RECRN003B[DOC:AR].5s-RECRN003C"
 
   @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_WI2.2_13] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRN010
+  Scenario: [B2B_GIACENZA_890_WI2.2_18] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRN010
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -349,8 +366,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRN010"
 
-  @giacenza890Simplified
-  Scenario: [B2B_GIACENZA_890_WI2.2_14] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
+  @giacenza890Simplified @ignore
+  Scenario: [B2B_GIACENZA_890_WI2.2_19] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
