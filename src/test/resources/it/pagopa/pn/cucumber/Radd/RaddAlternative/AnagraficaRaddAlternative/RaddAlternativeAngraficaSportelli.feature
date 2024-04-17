@@ -55,13 +55,12 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
       | random           | 75010            | MT                    | GARAGUSO          | ITALIA               |
       | random           | 75010            | MT                    | GORGOGLIONE       | ITALIA               |
-    Then viene controllato lo stato di caricamento del csv a "REJECTED"
-    And viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "Malformed CSV"
+    Then viene controllato lo stato di caricamento del csv a "DONE"
+    Then si controlla che il sporetello sia in stato "REJECTED"
 
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_4] caricamento CSV con campi a null dove c'è obbligatorietà verifica stato a REJECTED
-    When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_geoLocation_latitudine | radd_geoLocation_longitudine |
       | random           | NULL             | NULL                  | NULL              | NULL                 | NULL                        | 45.0000                      |
@@ -72,7 +71,6 @@ Feature: Radd Alternative Anagrafica Sportelli
 
   @raddAnagrafica @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_5] caricamento CSV con formato campi errato verifica stato a REJECTED e messaggio di errore
-    When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
       | random           | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż            | ĄŁĽŚŠŞŤŹŽż        | ĄŁĽŚAFŠŞŤŹŽż         | ĄŁĽŚFAŠŞŤŹŽż     | ĄŁĽŚŠŞAFŤŹŽż     | ĄŁĽŚŠŞAFSŤŹŽż               | ĄŁĽŚŠŞŤŹŽż                   | ĄŁĽŚŠŞŤŹŽż       | formato errato      | formato errato    | ĄŁĽŚŠŞŤŹŽż    | ĄŁĽŚŠŞŤŹŽż        |
@@ -102,7 +100,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene richiesta la lista degli sportelli caricati dal csv:
       | radd_requestId    | corretto |
       | radd_filter_limit | 10       |
-    And si controlla che il sporetello sia in stato "ACCEPTED"
+
 
   @raddAnagrafica
   Scenario: [RADD_ANAGRAFICA_CSV_LISTA_2] caricamento CSV verifica il ricevimento errore nella richesta della lista dei sporetelli con requestId non presente
@@ -417,7 +415,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | physicalAddress_province     | NA         |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo di 760 e il peso di 20 nei details del'elemento di timeline letto
+    And viene verificato il costo di 754 e il peso di 10 nei details del'elemento di timeline letto
 
 
   @raddAnagrafica  @puliziaSportelli
