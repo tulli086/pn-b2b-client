@@ -107,19 +107,21 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-    @When("viene caricato il csv con stesso checksum")
-    public void vieneLoStessoCsvPrecedente() {
+    @When("viene caricato il csv 2 volte con dati:")
+    public void vieneGeneratoIlCsvConResituzioneErrore(List<Map<String, String>> dataCsv) throws IOException {
+        creazioneCsv(dataCsv, true);
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
+        RegistryUploadResponse responseUploadCsv = null;
 
         try {
-            RegistryUploadResponse responseUploadCsv = raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
-            Assertions.assertNotNull(responseUploadCsv);
-            pnPaB2bUtils.preloadRadCSVDocument("classpath:/" + this.fileCsvName,this.shaCSV,responseUploadCsv,true);
+            responseUploadCsv = raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
+            this.requestid = responseUploadCsv.getRequestId();
+            raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
 
-        } catch (HttpStatusCodeException e) {
+            } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
+            pnPaB2bUtils.preloadRadCSVDocument("classpath:/" + this.fileCsvName,this.shaCSV,responseUploadCsv,true);
         }
-
     }
 
     @When("viene controllato lo stato di caricamento del csv a {string}")
@@ -181,6 +183,17 @@ public class AnagraficaRaddAltSteps {
             this.sharedSteps.setNotificationError(e);
         }
 
+    }
+
+
+    @When("controllo che venga restituito vuoto perchè non presente")
+    public void controlloNonPresenza() {
+
+        try {
+          Assertions.assertTrue(this.sportelliCsvRaddista.getItems().isEmpty());
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
+        }
     }
 
     @When("viene richiesta la lista degli sportelli caricati dal csv:")
@@ -504,8 +517,8 @@ public class AnagraficaRaddAltSteps {
 
         for (int i = 0; i < csvData.size(); i++) {
             data.add(new String[]{
-                    csvData.get(i).getAddress().getCountry(),
                     csvData.get(i).getAddress().getCity(),
+                    csvData.get(i).getAddress().getCountry(),
                     csvData.get(i).getAddress().getPr(),
                     csvData.get(i).getAddress().getCap(),
                     csvData.get(i).getAddress().getAddressRow(),
