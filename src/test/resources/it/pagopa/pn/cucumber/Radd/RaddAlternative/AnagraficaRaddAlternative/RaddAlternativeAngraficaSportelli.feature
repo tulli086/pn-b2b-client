@@ -1,6 +1,6 @@
 Feature: Radd Alternative Anagrafica Sportelli
 
-  @raddAnagrafica @puliziaSportelliCsv
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_1] caricamento CSV con 2 sportelli
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
@@ -10,7 +10,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then si controlla che il sporetello sia in stato "ACCEPTED"
 
 
-  @raddAnagrafica @puliziaSportelliCsv
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_2] caricamento 2 volte stesso checksum del CSV
     When viene cambiato raddista con "issuer_2"
     Then viene caricato il csv 2 volte con dati:
@@ -20,7 +20,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     And l'operazione ha prodotto un errore con status code "409"
 
 
-  @raddAnagrafica @puliziaSportelliCsv
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_3] caricamento 2 CSV con il primo CSV con un record in stato PENDING
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -33,7 +33,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     And l'operazione ha prodotto un errore con status code "400"
 
 
-  @raddAnagrafica @puliziaSportelliCsv
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_1] caricamento CSV verifica stato PENDING
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -41,7 +41,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | random           | 75010            | MT                    | CALCIANO          | ITALIA               |
     Then viene controllato lo stato di caricamento del csv a "PENDING"
 
-  @raddAnagrafica @puliziaSportelliCsv
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato DONE
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -49,7 +49,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | random           | 75010            | MT                    | CRACO             | ITALIA               |
     Then viene controllato lo stato di caricamento del csv a "DONE"
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica @raddAlternativeCsv @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_3] caricamento CSV con righa malformata verifica stato a REJECTED
     When viene caricato il csv con formatto "errato" con restituzione errore con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
@@ -59,7 +59,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then si controlla che il sporetello sia in stato "REJECTED"
 
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica @raddAlternativeCsv @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_4] caricamento CSV con campi a null dove c'è obbligatorietà verifica stato a REJECTED
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_geoLocation_latitudine | radd_geoLocation_longitudine |
@@ -69,7 +69,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then si controlla che il sporetello sia in stato "REJECTED"
 
 
-  @raddAnagrafica @raddCsv
+  @raddAnagrafica @raddAlternativeCsv @raddCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_5] caricamento CSV con formato campi errato verifica stato a REJECTED e messaggio di errore
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
@@ -90,7 +90,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | NULL      | 400    |
 
 
-  @raddAnagrafica @puliziaSportelliCsv
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_LISTA_1] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city |
