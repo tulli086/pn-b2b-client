@@ -393,7 +393,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRN010"
 
   @giacenza890Simplified @ignore
-  Scenario: [B2B_GIACENZA_890_WI2.2_19] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
+  Scenario: [B2B_GIACENZA_890_WIX.X_19] Invio notifica con sequence @OK-WO-Giacenza_AR ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS010
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -405,5 +405,32 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRS011"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG012"
+
+
+  @giacenza890Simplified @ignore
+  Scenario: [B2B_GIACENZA_890_WIX.X_20] Invio notifica con sequence @OK-Giacenza_890_refine_before_switch ed attesa elemento di timeline REFINEMENT
+    Given viene generata una nuova notifica
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario
+      | denomination            | FAIL-Giacenza-Missing_11A_890     |
+      | taxId                   | CLMCST42R12D969Z      |
+      | digitalDomicile         | NULL                  |
+      | physicalAddress_address | @OK-Giacenza_890_refine_before_switch |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
+
+  @giacenza890Simplified @ignore
+  Scenario: [B2B_GIACENZA_890_WIX.X_21] Invio notifica con sequence @OK-Giacenza_890_refine_after_switch ed attesa elemento di timeline REFINEMENT
+    Given viene generata una nuova notifica
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario
+      | denomination            | FAIL-Giacenza-Missing_11A_890     |
+      | taxId                   | CLMCST42R12D969Z      |
+      | digitalDomicile         | NULL                  |
+      | physicalAddress_address | @OK-Giacenza_890_refine_after_switch |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
 
