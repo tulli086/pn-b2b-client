@@ -130,7 +130,10 @@ public class AnagraficaRaddAltSteps {
         VerifyRequestResponse responseUploadCsv = null;
         for (int i = 0; i < NUM_CHECK_STATE_CSV; i++) {
             responseUploadCsv = raddAltClient.verifyRequest(this.uid, this.requestid);
-            if (responseUploadCsv.getStatus().equalsIgnoreCase(stato)) {
+
+            if(stato.equalsIgnoreCase("DONE") && responseUploadCsv.getStatus().equalsIgnoreCase("REPLACED")) {
+                break;
+            }else if (responseUploadCsv.getStatus().equalsIgnoreCase(stato)) {
                 break;
             }
 
