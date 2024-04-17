@@ -9,6 +9,7 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -21,8 +22,8 @@ import java.util.function.Predicate;
 
 @Service(PnPollingStrategy.VALIDATION_STATUS_V23)
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class PnPollingServiceValidationStatusV23 extends PnPollingTemplate<PnPollingResponseV23> {
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final IPnPaB2bClient b2bClient;
     private NewNotificationRequestStatusResponseV23 requestStatusResponseV23;
     private FullSentNotificationV23 notificationV23;
@@ -47,7 +48,7 @@ public class PnPollingServiceValidationStatusV23 extends PnPollingTemplate<PnPol
                 try {
                     fullSentNotificationV23 = b2bClient.getSentNotification(pnPollingResponse.getStatusResponse().getIun());
                 } catch (Exception exception) {
-                    logger.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", pnPollingResponse.getStatusResponse().getIun(), b2bClient.getApiKeySetted().name(), exception.getMessage());
+                    log.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", pnPollingResponse.getStatusResponse().getIun(), b2bClient.getApiKeySetted().name(), exception.getMessage());
                     throw new PnPollingException(exception.getMessage());
                 }
                 pnPollingResponse.setNotification(fullSentNotificationV23);

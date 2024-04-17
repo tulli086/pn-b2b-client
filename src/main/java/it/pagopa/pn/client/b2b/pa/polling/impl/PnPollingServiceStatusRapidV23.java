@@ -9,6 +9,7 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -21,8 +22,9 @@ import java.util.function.Predicate;
 
 @Service(PnPollingStrategy.STATUS_RAPID_V23)
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class PnPollingServiceStatusRapidV23 extends PnPollingTemplate<PnPollingResponseV23> {
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     protected final TimingForPolling timingForPolling;
     private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotificationV23 notificationV23;
@@ -42,7 +44,7 @@ public class PnPollingServiceStatusRapidV23 extends PnPollingTemplate<PnPollingR
             try {
                 fullSentNotificationV23 = pnPaB2bClient.getSentNotification(iun);
             } catch (Exception exception) {
-                logger.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", iun, pnPaB2bClient.getApiKeySetted().name(), exception.getMessage());
+                log.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", iun, pnPaB2bClient.getApiKeySetted().name(), exception.getMessage());
                 throw new PnPollingException(exception.getMessage());
             }
             pnPollingResponse.setNotification(fullSentNotificationV23);

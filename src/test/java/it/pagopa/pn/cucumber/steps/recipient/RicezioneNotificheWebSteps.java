@@ -19,16 +19,13 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.
 import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.DataTest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.HttpStatusCodeException;
-
 import java.io.ByteArrayInputStream;
-import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -38,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-
+@Slf4j
 public class RicezioneNotificheWebSteps {
 
 
@@ -50,7 +47,6 @@ public class RicezioneNotificheWebSteps {
     private final SharedSteps sharedSteps;
     private final IPnWebPaClient webPaClient;
     private HttpStatusCodeException notificationError;
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Value("${pn.external.senderId}")
     private String senderId;
     @Value("${pn.external.senderId-2}")
@@ -59,7 +55,6 @@ public class RicezioneNotificheWebSteps {
     private String senderIdGA;
     @Value("${pn.external.senderId-SON}")
     private String senderIdSON;
-
     @Value("${pn.external.senderId-ROOT}")
     private String senderIdROOT;
 
@@ -131,8 +126,8 @@ public class RicezioneNotificheWebSteps {
         try {
             OffsetDateTime scheduleDate = webRecipientClient.getReceivedNotification(iun, null).getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SCHEDULE_REFINEMENT)).findAny().get().getDetails().getSchedulingDate();
             OffsetDateTime refinementDate = webRecipientClient.getReceivedNotification(iun, null).getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.REFINEMENT)).findAny().get().getTimestamp();
-            logger.info("scheduleDate : {}", scheduleDate);
-            logger.info("refinementDate : {}", refinementDate);
+            log.info("scheduleDate : {}", scheduleDate);
+            log.info("refinementDate : {}", refinementDate);
 
             Assertions.assertEquals(scheduleDate,refinementDate);
 

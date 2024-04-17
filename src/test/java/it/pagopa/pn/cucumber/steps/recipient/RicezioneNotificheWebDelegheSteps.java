@@ -4,13 +4,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV20;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV20;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV20;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV23;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebMandateClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebRecipientClient;
@@ -19,27 +13,20 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalMandate.model.*
 import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
-import it.pagopa.pn.cucumber.utils.TimelineElementWait;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.jupiter.api.Assertions;
-
 import org.opentest4j.AssertionFailedError;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
-
 import java.io.ByteArrayInputStream;
-
-import java.lang.invoke.MethodHandles;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-
+@Slf4j
 public class RicezioneNotificheWebDelegheSteps {
 
     private final IPnWebMandateClient webMandateClient;
@@ -67,7 +54,6 @@ public class RicezioneNotificheWebDelegheSteps {
     private String senderIdSON;
     @Value("${pn.external.senderId-ROOT}")
     private String senderIdROOT;
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     public RicezioneNotificheWebDelegheSteps(IPnWebMandateClient webMandateClient, SharedSteps sharedSteps) {
@@ -264,7 +250,7 @@ public class RicezioneNotificheWebDelegheSteps {
         //List<MandateDto> mandateList = webMandateClient.listMandatesByDelegate1(null);
         MandateDto mandateDto = null;
         for (MandateDto mandate : mandateList) {
-            logger.debug("MANDATE-LIST: {}", mandateList);
+            log.debug("MANDATE-LIST: {}", mandateList);
             if (mandate.getDelegator().getFiscalCode() != null && mandate.getDelegator().getFiscalCode().equalsIgnoreCase(delegatorTaxId)) {
                 mandateDto = mandate;
                 break;
@@ -563,7 +549,7 @@ public class RicezioneNotificheWebDelegheSteps {
 
         try {
             FullReceivedNotificationV23 result = webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+            log.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
             it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.TimelineElementV23 timelineElement = result.getTimeline().stream().filter(elem -> elem.getCategory().equals(it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.TimelineElementCategoryV23.NOTIFICATION_RADD_RETRIEVED)).findAny().orElse(null);
 
@@ -581,7 +567,7 @@ public class RicezioneNotificheWebDelegheSteps {
 
         try {
             FullReceivedNotificationV23 result = webRecipientClient.getReceivedNotification(sharedSteps.getSentNotification().getIun(), null);
-            logger.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
+            log.info("NOTIFICATION_TIMELINE: " + sharedSteps.getSentNotification().getTimeline());
 
             it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.TimelineElementV23 timelineElement = result.getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.NOTIFICATION_VIEWED.name())).findAny().orElse(null);
 

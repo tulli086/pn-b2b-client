@@ -34,13 +34,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-
-import java.lang.invoke.MethodHandles;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -52,7 +48,7 @@ import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps
 
 @Slf4j
 public class AvanzamentoNotificheWebhookB2bSteps {
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final IPnWebhookB2bClient webhookB2bClient;
     private final IPnPaB2bClient b2bClient;
     private final IPnWebRecipientClient webRecipientClient;
@@ -1068,7 +1064,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         PnPollingServiceWebhookV20 webhookV20 = (PnPollingServiceWebhookV20) sharedSteps.getPollingFactory().getPollingService(PnPollingStrategy.WEBHOOK_V20);
         PnPollingResponseV20 pnPollingResponseV20 = webhookV20.waitForEvent(sharedSteps.getSentNotification().getIun(), pnPollingParameter);
 
-        logger.info("WEBHOOK_PROGRESS_RESPONSE_ELEMENT_V20: " + pnPollingResponseV20.getProgressResponseElementV20());
+        log.info("WEBHOOK_PROGRESS_RESPONSE_ELEMENT_V20: " + pnPollingResponseV20.getProgressResponseElementV20());
         if(pnPollingResponseV20.getProgressResponseElementV20() != null) {
             sharedSteps.setProgressResponseElements(pnPollingResponseV20.getProgressResponseElementListV20());
             return pnPollingResponseV20.getProgressResponseElementV20();
@@ -1088,7 +1084,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                         .streamId(eventStreamListV23.get(position).getStreamId())
                         .build());
 
-        logger.info("WEBHOOK_PROGRESS_RESPONSE_ELEMENT_V23: " + pnPollingResponseV23.getProgressResponseElementV23());
+        log.info("WEBHOOK_PROGRESS_RESPONSE_ELEMENT_V23: " + pnPollingResponseV23.getProgressResponseElementV23());
         if(pnPollingResponseV23.getProgressResponseElementListV23() != null) {
             sharedSteps.setProgressResponseElementsV23(pnPollingResponseV23.getProgressResponseElementListV23());
             return pnPollingResponseV23.getProgressResponseElementV23();

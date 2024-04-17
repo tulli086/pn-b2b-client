@@ -8,20 +8,18 @@ import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationDocument;
 import it.pagopa.pn.client.b2b.pa.service.IPnAppIOB2bClient;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
-
 import java.io.ByteArrayInputStream;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Slf4j
 public class AppIOB2bSteps {
 
 
@@ -33,7 +31,6 @@ public class AppIOB2bSteps {
     private String sha256DocumentDownload;
     private final String marioCucumberTaxID;
     private final String marioGherkinTaxID;
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     public AppIOB2bSteps(IPnAppIOB2bClient iPnAppIOB2bClient, SharedSteps sharedSteps) {

@@ -8,6 +8,7 @@ import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegrat
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegration.model.TimelineElement;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationAttachmentDigests;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import io.cucumber.java.en.Given;
@@ -16,14 +17,11 @@ import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationAttachmentBodyRef;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationDocument;
-import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPServiceDeskClientImpl;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -32,9 +30,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -44,7 +40,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-
+@Slf4j
 public class ApiServiceDeskSteps {
 
 
@@ -52,7 +48,6 @@ public class ApiServiceDeskSteps {
 
     private final PnPaB2bUtils b2bUtils;
 
-    private final IPnPaB2bClient b2bClient;
 
     private final PnExternalServiceClientImpl safeStorageClient;
 
@@ -79,33 +74,27 @@ public class ApiServiceDeskSteps {
 
     private SearchResponse searchResponse;
 
-    private static final String CF_vuoto = null;
+    private final String CF_vuoto = null;
 
-    private static final String CF_corretto = "CLMCST42R12D969Z";
+    private final String CF_corretto = "CLMCST42R12D969Z";
 
-    private static final String CF_errato = "CPNTMS85T15H703WCPNTMS85T15H703W|";
+    private final String CF_errato = "CPNTMS85T15H703WCPNTMS85T15H703W|";
 
-    private static final String CF_errato2 = "CPNTM@85T15H703W";
+    private final String CF_errato2 = "CPNTM@85T15H703W";
 
-    private static final String ticketid_vuoto = null;
+    private final String ticketid_vuoto = null;
 
-    private static final String ticketid_errato = "XXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxX";
+    private final String ticketid_errato = "XXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxX";
 
-    private static final String ticketoperationid_vuoto = null;
+    private final String ticketoperationid_vuoto = null;
 
-    private static final String ticketoperationid_errato = "abcdfeghilm";
-
+    private final String ticketoperationid_errato = "abcdfeghilm";
     private final Integer workFlowWaitDefault = 31000;
-
     private final Integer delay = 420000;
-
-
     private Integer workFlowWait;
 
     @Value("${pn.retention.videotime.preload}")
     private Integer retentionTimePreLoad;
-
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private HttpStatusCodeException notificationError;
 
@@ -129,16 +118,14 @@ public class ApiServiceDeskSteps {
     private ResponseApiKeys responseApiKeys;
 
     @Autowired
-    public ApiServiceDeskSteps(SharedSteps sharedSteps, RestTemplate restTemplate, IPServiceDeskClientImpl ipServiceDeskClient, ApplicationContext ctx,
+    public ApiServiceDeskSteps(SharedSteps sharedSteps, RestTemplate restTemplate, ApplicationContext ctx,
                                PnExternalServiceClientImpl safeStorageClient, PnB2bClientTimingConfigs timingConfigs) {
         this.sharedSteps = sharedSteps;
         this.b2bUtils = sharedSteps.getB2bUtils();
-        this.b2bClient = sharedSteps.getB2bClient();
         this.safeStorageClient = safeStorageClient;
         this.ipServiceDeskClient = sharedSteps.getServiceDeskClient();
         this.restTemplate = restTemplate;
         this.notificationRequest = new NotificationRequest();
-        this.notificationsUnreachableResponse = notificationsUnreachableResponse;
         this.analogAddress = new AnalogAddress();
         this.createOperationRequest = new CreateOperationRequest();
         this.videoUploadRequest = new VideoUploadRequest();
@@ -162,7 +149,7 @@ public class ApiServiceDeskSteps {
                 break;
             default:
                 notificationRequest.setTaxId(cf);
-                logger.info("Inserito CF:" + cf);
+                log.info("Inserito CF:" + cf);
         }
     }
 
@@ -182,7 +169,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationsUnreachableResponse);
@@ -201,7 +188,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationsUnreachableResponse);
@@ -217,14 +204,14 @@ public class ApiServiceDeskSteps {
     public void verifyNotificationsUnreachableResponse(Long count) {
         Long notificationsCount = notificationsUnreachableResponse.getNotificationsCount();
         Assertions.assertEquals(notificationsCount, count);
-        logger.info("Presenza notifiche per il CF" + this.notificationRequest.getTaxId() + ":" + notificationsCount);
+        log.info("Presenza notifiche per il CF" + this.notificationRequest.getTaxId() + ":" + notificationsCount);
     }
 
     @Then("il servizio risponde con errore {string}")
     public void operationProducedAnError(String statusCode) {
         Assertions.assertTrue((notificationError.getStatusCode() != null) &&
                 (notificationError.getStatusCode().toString().substring(0, 3).equals(statusCode)));
-        logger.info("Errore: " + notificationError.getStatusCode() + " " + notificationError.getMessage() + " " + notificationError.getCause());
+        log.info("Errore: " + notificationError.getStatusCode() + " " + notificationError.getMessage() + " " + notificationError.getCause());
     }
 
     @Given("viene comunicato il nuovo indirizzo con {string} {string} {string} {string} {string} {string} {string} {string} {string}")
@@ -256,14 +243,14 @@ public class ApiServiceDeskSteps {
     @Given("viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con {string}")
     public void createOperationReq(String cf) {
         createOperationRequest.setTaxId(cf);
-        logger.info("CF:" + cf);
+        log.info("CF:" + cf);
         String ticketid = null;
         try {
             ticketid = "AUT" + randomAlphaNumeric(12);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        logger.info("ticketid:" + ticketid);
+        log.info("ticketid:" + ticketid);
         createOperationRequest.setTicketId(ticketid);
         String ticketOperationid = null;
         try {
@@ -271,7 +258,7 @@ public class ApiServiceDeskSteps {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        logger.info("ticketOperationid:" + ticketOperationid);
+        log.info("ticketOperationid:" + ticketOperationid);
         createOperationRequest.setTicketOperationId(ticketOperationid);
         createOperationRequest.setAddress(analogAddress);
 
@@ -322,7 +309,7 @@ public class ApiServiceDeskSteps {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        logger.info("ticketid:" + ticketid);
+        log.info("ticketid:" + ticketid);
         createOperationRequest.setTicketId(ticketid);
         String ticketOperationid = null;
         try {
@@ -330,7 +317,7 @@ public class ApiServiceDeskSteps {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        logger.info("ticketOperationid:" + ticketOperationid);
+        log.info("ticketOperationid:" + ticketOperationid);
         createOperationRequest.setTicketOperationId(ticketOperationid);
         createOperationRequest.setAddress(analogAddress);
 
@@ -344,7 +331,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationsUnreachableResponse);
@@ -366,7 +353,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(operationsResponse);
@@ -382,16 +369,16 @@ public class ApiServiceDeskSteps {
     public void verifyCreateOperationResponse() {
         String idoperation = operationsResponse.getOperationId();
         Assertions.assertNotNull(idoperation);
-        logger.info("L'operation di creato per il CF:" + createOperationRequest.getTaxId() + " " + idoperation);
+        log.info("L'operation di creato per il CF:" + createOperationRequest.getTaxId() + " " + idoperation);
     }
 
     @Given("viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO")
     public void createPreUploadVideoRequest() throws Exception {
         notificationDocument = newDocument("classpath:/video.mp4");
         String resourceName = notificationDocument.getRef().getKey();
-        logger.info("Resource name:" + resourceName);
+        log.info("Resource name:" + resourceName);
         String sha256 = computeSha256(resourceName);
-        logger.info("sha:" + sha256);
+        log.info("sha:" + sha256);
         videoUploadRequest.setPreloadIdx("AUT" + randomAlphaNumeric(5));
         videoUploadRequest.setSha256(sha256);
         videoUploadRequest.setContentType("application/octet-stream");
@@ -402,9 +389,9 @@ public class ApiServiceDeskSteps {
     public void createPreUploadVideoRequestFormatVideoNotValid() throws Exception {
         notificationDocument = newDocument("classpath:/video.avi");
         String resourceName = notificationDocument.getRef().getKey();
-        logger.info("Resource name:" + resourceName);
+        log.info("Resource name:" + resourceName);
         String sha256 = computeSha256(resourceName);
-        logger.info("sha:" + sha256);
+        log.info("sha:" + sha256);
         videoUploadRequest.setPreloadIdx("AUT" + randomAlphaNumeric(5));
         videoUploadRequest.setSha256(sha256);
         videoUploadRequest.setContentType("application/octet-stream");
@@ -421,7 +408,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(videoUploadResponse);
@@ -440,7 +427,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(videoUploadResponse);
@@ -458,7 +445,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(videoUploadResponse);
@@ -473,12 +460,12 @@ public class ApiServiceDeskSteps {
     @When("viene invocato il servizio UPLOAD VIDEO con errore")
     public void preUploadVideoResponseWithError() {
         try {
-            logger.error("Operation id:" + operationsResponse.getOperationId());
+            log.error("Operation id:" + operationsResponse.getOperationId());
             videoUploadResponse = ipServiceDeskClient.presignedUrlVideoUpload(operationsResponse.getOperationId(), videoUploadRequest);
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(videoUploadResponse);
@@ -547,13 +534,13 @@ public class ApiServiceDeskSteps {
     public void verifyUploadVideoResponse() {
         String url = videoUploadResponse.getUrl();
         Assertions.assertNotNull(url);
-        logger.info("generata la url:" + url);
+        log.info("generata la url:" + url);
         String secretkey = videoUploadResponse.getSecret();
         Assertions.assertNotNull(secretkey);
-        logger.info("generata la secret key:" + secretkey);
+        log.info("generata la secret key:" + secretkey);
         String filekey = videoUploadResponse.getFileKey();
         Assertions.assertNotNull(filekey);
-        logger.info("generata la file key:" + filekey);
+        log.info("generata la file key:" + filekey);
     }
 
     @Given("viene creata una nuova richiesta per invocare il servizio SEARCH per il {string}")
@@ -580,7 +567,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(searchResponse);
@@ -603,7 +590,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(searchResponse);
@@ -620,7 +607,7 @@ public class ApiServiceDeskSteps {
         try {
             Thread.sleep(delay);
         } catch (InterruptedException e) {
-            logger.error("Thread.sleep error retry");
+            log.error("Thread.sleep error retry");
             throw new RuntimeException(e);
         }
         try {
@@ -633,7 +620,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(searchResponse);
@@ -649,18 +636,18 @@ public class ApiServiceDeskSteps {
     public void verifySearchResponse() {
         List<OperationResponse> lista = searchResponse.getOperations();
         Assertions.assertNotNull(lista);
-        logger.info("SEARCH " + searchResponse.getOperations().toString());
+        log.info("SEARCH " + searchResponse.getOperations().toString());
         //Analalisi output
         for (OperationResponse element : lista) {
-            logger.info("STAMPA ELEMENTO LISTA " + element.toString());
+            log.info("STAMPA ELEMENTO LISTA " + element.toString());
             Assertions.assertNotNull(element.getOperationId());
-            logger.info("CF attuale" + element.getTaxId());
-            logger.info("CF da cercare" + searchNotificationRequest.getTaxId());
+            log.info("CF attuale" + element.getTaxId());
+            log.info("CF da cercare" + searchNotificationRequest.getTaxId());
             Assertions.assertEquals(element.getTaxId(), searchNotificationRequest.getTaxId());
             Assertions.assertNotNull(element.getIuns());
             Assertions.assertNotNull(element.getUncompletedIuns());
             Assertions.assertNotNull(element.getNotificationStatus());
-            logger.info("STATO NOTIFICA " + lista.get(0).getNotificationStatus().getStatus().getValue());
+            log.info("STATO NOTIFICA " + lista.get(0).getNotificationStatus().getStatus().getValue());
             Assertions.assertNotNull(element.getOperationCreateTimestamp());
             Assertions.assertNotNull(element.getOperationUpdateTimestamp());
 
@@ -672,13 +659,13 @@ public class ApiServiceDeskSteps {
     public void verifySearchResponseWithStatus(String status) {
         boolean findOperationId = false;
         String operationIdToSearch = operationsResponse.getOperationId();
-        logger.info("OPERATION ID TO SEARCH: " + operationIdToSearch);
+        log.info("OPERATION ID TO SEARCH: " + operationIdToSearch);
         List<OperationResponse> lista = searchResponse.getOperations();
         Assertions.assertNotNull(lista);
-        logger.info("SEARCH " + searchResponse.getOperations().toString());
+        log.info("SEARCH " + searchResponse.getOperations().toString());
         //Analisi output
         for (OperationResponse element : lista) {
-            logger.info("STAMPA ELEMENTO LISTA " + element.toString());
+            log.info("STAMPA ELEMENTO LISTA " + element.toString());
             String actualOperationId = element.getOperationId();
             Assertions.assertNotNull(actualOperationId);
             if (actualOperationId.compareTo(operationIdToSearch) == 0 && findOperationId == false) {
@@ -693,7 +680,7 @@ public class ApiServiceDeskSteps {
             Assertions.assertNotNull(element.getNotificationStatus());
             //controllo sullo status
             if (operationIdToSearch.compareTo(actualOperationId) == 0) {
-                logger.info("STATO NOTIFICA " + element.getNotificationStatus().getStatus().getValue());
+                log.info("STATO NOTIFICA " + element.getNotificationStatus().getStatus().getValue());
                 Assertions.assertEquals(element.getNotificationStatus().getStatus().getValue(), status);
             }
             Assertions.assertNotNull(element.getOperationCreateTimestamp());
@@ -716,10 +703,10 @@ public class ApiServiceDeskSteps {
         boolean findOperationId = false;
         boolean multiOperation = false;
         String operationIdToSearch = operationsResponse.getOperationId();
-        logger.info("OPERATION ID TO SEARCH: " + operationIdToSearch);
+        log.info("OPERATION ID TO SEARCH: " + operationIdToSearch);
         List<OperationResponse> lista = searchResponse.getOperations();
         Assertions.assertNotNull(lista);
-        logger.info("SEARCH " + searchResponse.getOperations().toString());
+        log.info("SEARCH " + searchResponse.getOperations().toString());
         //Viene controllato che lo stato delle operation è superiore a 1
 
 
@@ -728,23 +715,23 @@ public class ApiServiceDeskSteps {
         //Analisi output
         for (OperationResponse element : lista) {
             String actualOperationId = element.getOperationId();
-            logger.info("ACTUAL OPERATION ID: " + actualOperationId);
+            log.info("ACTUAL OPERATION ID: " + actualOperationId);
             if (actualOperationId.compareTo(operationIdToSearch) == 0) {
                 listaSplit.add(element);
-                logger.info("AGGIUNTO ELEMENTO: " + actualOperationId);
+                log.info("AGGIUNTO ELEMENTO: " + actualOperationId);
             }
             Assertions.assertNotNull(listaSplit);
         }
         int numberOperation = listaSplit.size();
 
-        logger.info("Numero di response che contengono l'operation id " + numberOperation);
+        log.info("Numero di response che contengono l'operation id " + numberOperation);
         if (numberOperation > 1) {
             multiOperation = true;
         }
         Assertions.assertTrue(multiOperation);
         //Analisi output
         for (OperationResponse element : listaSplit) {
-            logger.info("STAMPA ELEMENTO LISTA " + element.toString());
+            log.info("STAMPA ELEMENTO LISTA " + element.toString());
             String actualOperationId = element.getOperationId();
             Assertions.assertNotNull(actualOperationId);
             if (actualOperationId.compareTo(operationIdToSearch) == 0 && findOperationId == false) {
@@ -759,7 +746,7 @@ public class ApiServiceDeskSteps {
             Assertions.assertNotNull(element.getNotificationStatus());
             //controllo sullo status
             if (operationIdToSearch.compareTo(actualOperationId) == 0) {
-                logger.info("STATO NOTIFICA " + element.getNotificationStatus().getStatus().getValue());
+                log.info("STATO NOTIFICA " + element.getNotificationStatus().getStatus().getValue());
                 Assertions.assertEquals(element.getNotificationStatus().getStatus().getValue(), status);
             }
             Assertions.assertNotNull(element.getOperationCreateTimestamp());
@@ -782,13 +769,13 @@ public class ApiServiceDeskSteps {
         boolean findOperationId = false;
         boolean findIun = false;
         String operationIdToSearch = operationsResponse.getOperationId();
-        logger.info("OPERATION ID TO SEARCH: " + operationIdToSearch);
+        log.info("OPERATION ID TO SEARCH: " + operationIdToSearch);
         List<OperationResponse> lista = searchResponse.getOperations();
         Assertions.assertNotNull(lista);
-        logger.info("SEARCH " + searchResponse.getOperations().toString());
+        log.info("SEARCH " + searchResponse.getOperations().toString());
         //Analisi output
         for (OperationResponse element : lista) {
-            logger.info("STAMPA ELEMENTO LISTA " + element.toString());
+            log.info("STAMPA ELEMENTO LISTA " + element.toString());
             String actualOperationId = element.getOperationId();
             Assertions.assertNotNull(actualOperationId);
             if (actualOperationId.compareTo(operationIdToSearch) == 0 && findOperationId == false) {
@@ -802,7 +789,7 @@ public class ApiServiceDeskSteps {
             if (findOperationId) {
                 for (SDNotificationSummary acutalIun : listaiuns) {
                     //Verifica se lo iun è presente nella lista
-                    logger.info("IUN ATTUALE " + acutalIun.getIun());
+                    log.info("IUN ATTUALE " + acutalIun.getIun());
                     if (acutalIun.getIun().compareTo(iun) == 0 && findIun == false) {
                         findIun = true;
                     }
@@ -811,7 +798,7 @@ public class ApiServiceDeskSteps {
                 Assertions.assertNotNull(element.getNotificationStatus());
                 //controllo sullo status
                 if (operationIdToSearch.compareTo(actualOperationId) == 0) {
-                    logger.info("STATO NOTIFICA " + element.getNotificationStatus().getStatus().getValue());
+                    log.info("STATO NOTIFICA " + element.getNotificationStatus().getStatus().getValue());
                     Assertions.assertEquals(element.getNotificationStatus().getStatus().getValue(), status);
                 }
                 Assertions.assertNotNull(element.getOperationCreateTimestamp());
@@ -839,13 +826,13 @@ public class ApiServiceDeskSteps {
         boolean findOperationId = false;
         boolean findIun = false;
         String operationIdToSearch = operationsResponse.getOperationId();
-        logger.info("OPERATION ID TO SEARCH: " + operationIdToSearch);
+        log.info("OPERATION ID TO SEARCH: " + operationIdToSearch);
         List<OperationResponse> lista = searchResponse.getOperations();
         Assertions.assertNotNull(lista);
-        logger.info("SEARCH " + searchResponse.getOperations().toString());
+        log.info("SEARCH " + searchResponse.getOperations().toString());
         //Analisi output
         for (OperationResponse element : lista) {
-            logger.info("STAMPA ELEMENTO LISTA " + element.toString());
+            log.info("STAMPA ELEMENTO LISTA " + element.toString());
             String actualOperationId = element.getOperationId();
             Assertions.assertNotNull(actualOperationId);
             if (actualOperationId.compareTo(operationIdToSearch) == 0 && findOperationId == false) {
@@ -860,7 +847,7 @@ public class ApiServiceDeskSteps {
             Assertions.assertNotNull(element.getNotificationStatus());
             //controllo sullo status
             if (operationIdToSearch.compareTo(actualOperationId) == 0) {
-                logger.info("STATO NOTIFICA " + element.getNotificationStatus().getStatus().getValue());
+                log.info("STATO NOTIFICA " + element.getNotificationStatus().getStatus().getValue());
                 Assertions.assertEquals(element.getNotificationStatus().getStatus().getValue(), status);
             }
             Assertions.assertNotNull(element.getOperationCreateTimestamp());
@@ -871,7 +858,7 @@ public class ApiServiceDeskSteps {
     @Then("Il servizio SEARCH risponde con lista vuota")
     public void verifySearchResponseEmpty() {
         List<OperationResponse> lista = searchResponse.getOperations();
-        logger.info("STAMPA LISTA " + lista.toString());
+        log.info("STAMPA LISTA " + lista.toString());
         //   Assertions.assertNull(lista);
         Assertions.assertEquals(lista.toString(), "[]");
 
@@ -879,10 +866,10 @@ public class ApiServiceDeskSteps {
 
     @Then("il video viene caricato su SafeStorage")
     public void loadFileSafeStorage() {
-        logger.info("PROVAA");
+        log.info("PROVAA");
         // notificationDocument = newDocument("classpath:/video.mp4");
         String resourceName = notificationDocument.getRef().getKey();
-        logger.info("Resouce name" + resourceName);
+        log.info("Resouce name" + resourceName);
         AtomicReference<NotificationDocument> notificationDocumentAtomic = new AtomicReference<>();
         loadToPresigned(videoUploadResponse.getUrl(), videoUploadResponse.getSecret(), videoUploadRequest.getSha256(), resourceName);
         notificationDocument.getRef().setKey(videoUploadResponse.getFileKey());
@@ -895,17 +882,17 @@ public class ApiServiceDeskSteps {
     public void loadFileSafeStorageUrlExpired() {
         try {
             try {
-                logger.info("PROVAA");
+                log.info("PROVAA");
                 Thread.sleep(3720000);//aspetta 62 minuti
                 // notificationDocument = newDocument("classpath:/video.mp4");
                 String resourceName = notificationDocument.getRef().getKey();
-                logger.info("Resouce name" + resourceName);
+                log.info("Resouce name" + resourceName);
                 AtomicReference<NotificationDocument> notificationDocumentAtomic = new AtomicReference<>();
                 loadToPresigned(videoUploadResponse.getUrl(), videoUploadResponse.getSecret(), videoUploadRequest.getSha256(), resourceName);
                 notificationDocument.getRef().setKey(videoUploadResponse.getFileKey());
                 notificationDocument.getRef().setVersionToken("v1");
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
         } catch (HttpStatusCodeException e) {
@@ -919,10 +906,10 @@ public class ApiServiceDeskSteps {
     @Then("il video viene caricato su SafeStorage con errore")
     public void loadFileSafeStorageWithError() {
         try {
-            logger.info("PROVAA");
+            log.info("PROVAA");
             // notificationDocument = newDocument("classpath:/video.mp4");
             String resourceName = notificationDocument.getRef().getKey();
-            logger.info("Resouce name" + resourceName);
+            log.info("Resouce name" + resourceName);
             AtomicReference<NotificationDocument> notificationDocumentAtomic = new AtomicReference<>();
             loadToPresigned(videoUploadResponse.getUrl(), videoUploadResponse.getSecret(), videoUploadRequest.getSha256(), resourceName);
             notificationDocument.getRef().setKey(videoUploadResponse.getFileKey());
@@ -938,14 +925,14 @@ public class ApiServiceDeskSteps {
     @Then("viene effettuato un controllo sulla durata della retention")
     public void retentionCheckPreload() {
         String key = notificationDocument.getRef().getKey();
-        logger.info("Resouce name" + key);
+        log.info("Resouce name" + key);
         try {
             Thread.sleep(900000);
         } catch (InterruptedException e) {
-            logger.error("Thread.sleep error retry");
+            log.error("Thread.sleep error retry");
             throw new RuntimeException(e);
         }
-        logger.info("Fine delay");
+        log.info("Fine delay");
         Assertions.assertTrue(checkRetetion(key, retentionTimePreLoad));
     }
 
@@ -1001,14 +988,14 @@ public class ApiServiceDeskSteps {
 
     private boolean checkRetetion(String fileKey, Integer retentionTime) {
         PnExternalServiceClientImpl.SafeStorageResponse safeStorageResponse = safeStorageClient.safeStorageInfoPnServiceDesk(fileKey);
-        logger.info("safestorage response: " + safeStorageResponse);
+        log.info("safestorage response: " + safeStorageResponse);
         LocalDateTime localDateTimeNow = LocalDate.now().atStartOfDay();
         OffsetDateTime now = OffsetDateTime.of(localDateTimeNow, ZoneOffset.of("Z"));
         OffsetDateTime retentionUntil = OffsetDateTime.parse(safeStorageResponse.getRetentionUntil());
-        logger.info("now: " + now);
-        logger.info("retentionUntil: " + retentionUntil);
+        log.info("now: " + now);
+        log.info("retentionUntil: " + retentionUntil);
         long between = ChronoUnit.DAYS.between(now, retentionUntil);
-        logger.info("Difference: " + between);
+        log.info("Difference: " + between);
         return retentionTime == between;
     }
 
@@ -1045,7 +1032,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(searchNotificationsResponse);
@@ -1067,7 +1054,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(searchNotificationsResponse);
@@ -1089,7 +1076,7 @@ public class ApiServiceDeskSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(searchNotificationsResponse);

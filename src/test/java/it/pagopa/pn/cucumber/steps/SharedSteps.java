@@ -32,10 +32,9 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.m
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.cucumber.utils.*;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,9 +43,7 @@ import org.springframework.boot.convert.DurationStyle;
 import org.springframework.context.annotation.Scope;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
-
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -57,6 +54,7 @@ import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class SharedSteps {
 
 
@@ -98,38 +96,28 @@ public class SharedSteps {
     private HttpStatusCodeException notificationError;
     private OffsetDateTime notificationCreationDate;
 
-
-
     private ProgressResponseElement progressResponseElement;
 
-
-
-    public static final String DEFAULT_PA = "Comune_1";
     private String settedPa = "Comune_1";
     private final ObjectMapper objMapper = JsonMapper.builder()
             .addModule(new JavaTimeModule())
             .build();
 
     private boolean groupToSet = true;
-
     private String errorCode = null;
-
-    private static final Integer WAITING_GPD = 2000;
 
     private RequestNewApiKey requestNewApiKey;
     private ResponseNewApiKey responseNewApiKey;
 
-
-
-
     private TimelineElementV23 timelineElementV23;
     private ProgressResponseElementV23 progressResponseElementV23;
-
 
     private it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse eventStream;
     private StreamMetadataResponseV23 eventStreamV23;
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Integer WAITING_GPD = 2000;
+
+    public static final String DEFAULT_PA = "Comune_1";
 
     @Value("${pn.external.api-key-taxID}")
     private String senderTaxId;
@@ -170,10 +158,7 @@ public class SharedSteps {
     private final Duration secondNotificationWorkflowWaitingTimeDefault = DurationStyle.detectAndParse("6m");
     private final Duration waitingForReadCourtesyMessageDefault = DurationStyle.detectAndParse("5m");
 
-
     private List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement> progressResponseElements = null;
-
-
 
     private List<ProgressResponseElementV23> progressResponseElementsV23 = null;
     public static Integer lastEventID = 0;
@@ -241,7 +226,7 @@ public class SharedSteps {
 
     @BeforeAll
     public static void before_all() {
-        logger.debug("SHARED_GLUE START");
+        log.debug("SHARED_GLUE START");
         //only for class activation
     }
 
@@ -336,7 +321,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(getWait());
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
                 FullSentNotificationV23 fullSentNotificationV23 = b2bUtils.waitForRequestAcceptation(internalNotificationResponse);
@@ -351,7 +336,7 @@ public class SharedSteps {
                         throw new RuntimeException(exc);
                     }
                     fullSentNotificationV23 = b2bClient.getSentNotification(fullSentNotificationV23.getIun());
-                    logger.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV23.getTimeline());
+                    log.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV23.getTimeline());
                     timelineElementV23 = fullSentNotificationV23.getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE)).findAny().orElse(null);
                     if (timelineElementV23 != null) {
                         break;
@@ -387,15 +372,15 @@ public class SharedSteps {
 
         Assertions.assertTrue(completed);
         Assertions.assertEquals(sentNotifications.size(), numberOfNotification);
-        logger.debug("NOTIFICATION LIST: {}", sentNotifications);
-        logger.debug("IUN: ");
+        log.debug("NOTIFICATION LIST: {}", sentNotifications);
+        log.debug("IUN: ");
         for (FullSentNotificationV23 notificationV23 : sentNotifications) {
-            logger.info(notificationV23.getIun());
+            log.info(notificationV23.getIun());
         }
-        logger.debug("End IUN list");
+        log.debug("End IUN list");
         //la prima notifica viene inserita
         this.notificationResponseComplete = sentNotifications.poll();
-        logger.debug("notificationResponseComplete: {}", this.notificationResponseComplete);
+        log.debug("notificationResponseComplete: {}", this.notificationResponseComplete);
     }
 
     @And("destinatario Mario Cucumber")
@@ -1188,7 +1173,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1198,7 +1183,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseComplete);
@@ -1219,7 +1204,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1229,7 +1214,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNull(notificationResponseComplete);
@@ -1251,7 +1236,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1261,7 +1246,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseComplete);
@@ -1294,7 +1279,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertFalse(rifiutata);
@@ -1332,7 +1317,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(getWorkFlowWait());
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1342,7 +1327,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseCompleteV1);
@@ -1364,7 +1349,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(getWorkFlowWait());
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1374,7 +1359,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseCompleteV2);
@@ -1395,7 +1380,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(getWorkFlowWait());
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1405,7 +1390,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseCompleteV21);
@@ -1492,7 +1477,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
@@ -1518,7 +1503,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
@@ -1544,7 +1529,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
@@ -1569,7 +1554,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
@@ -1594,7 +1579,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
@@ -1618,7 +1603,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(errorCode);
@@ -1640,7 +1625,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(errorCode);
@@ -1663,7 +1648,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(errorCode);
@@ -1685,7 +1670,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(errorCode);
@@ -2220,11 +2205,11 @@ public class SharedSteps {
             List<LegalAndUnverifiedDigitalAddress> legalAddressByRecipient = this.iPnWebUserAttributesClient.getLegalAddressByRecipient();
             if (legalAddressByRecipient != null && !legalAddressByRecipient.isEmpty()) {
                 this.iPnWebUserAttributesClient.deleteRecipientLegalAddress("default", LegalChannelType.PEC);
-                logger.info("PEC FOUND AND DELETED");
+                log.info("PEC FOUND AND DELETED");
             }
         } catch (HttpStatusCodeException httpStatusCodeException) {
             if (httpStatusCodeException.getStatusCode().is4xxClientError()) {
-                logger.info("PEC NOT FOUND");
+                log.info("PEC NOT FOUND");
             } else {
                 throw httpStatusCodeException;
             }

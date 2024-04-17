@@ -8,35 +8,27 @@ import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationAttachmentBodyRef;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationDocument;
-import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
-import it.pagopa.pn.client.b2b.pa.service.IPServiceDeskClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.IPServiceDeskClientImplNoApiKey;
-import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.web.client.HttpStatusCodeException;
-
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 
 
+@Slf4j
 public class ApiServiceDeskStepsNoApiKey {
 
 
-    private final SharedSteps sharedSteps;
+
 
     private final PnPaB2bUtils b2bUtils;
 
-    private final IPnPaB2bClient b2bClient;
-
-    private final PnExternalServiceClientImpl safeStorageClient;
 
     private final IPServiceDeskClientImplNoApiKey ipServiceDeskClientImplNoApiKey;
 
@@ -60,23 +52,15 @@ public class ApiServiceDeskStepsNoApiKey {
 
     private SearchResponse searchResponse;
 
-    private static final String CF_vuoto =null;
+    private final String CF_vuoto =null;
 
-    private static final String CF_errato ="CPNTMS85T15H703WCPNTMS85T15H703W|";
+    private final String CF_errato ="CPNTMS85T15H703WCPNTMS85T15H703W|";
 
-    private static final String CF_errato2 ="CPNTM@85T15H703W";
-
-    private static final String ticketid_vuoto =null;
-
-    private static final String ticketid_errato ="XXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxX";
-
-    private static final String ticketoperationid_vuoto =null;
-
-    private static final String ticketoperationid_errato ="abcdfeghilm";
+    private final String CF_errato2 ="CPNTM@85T15H703W";
 
     private final Integer workFlowWaitDefault = 31000;
 
-    private final Integer delay=420000;
+
 
 
     private Integer workFlowWait;
@@ -84,24 +68,18 @@ public class ApiServiceDeskStepsNoApiKey {
     @Value("${pn.retention.videotime.preload}")
     private Integer retentionTimePreLoad;
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private HttpStatusCodeException notificationError;
 
     private final ApplicationContext ctx;
 
 
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234556789";
-    private static final String NUMERIC_STRING = "0123456789";
 
 
     @Autowired
-    public ApiServiceDeskStepsNoApiKey(SharedSteps sharedSteps, ApplicationContext ctx, IPServiceDeskClientImpl ipServiceDeskClient,
-                                       PnExternalServiceClientImpl safeStorageClient, PnB2bClientTimingConfigs timingConfigs) {
-        this.sharedSteps = sharedSteps;
+    public ApiServiceDeskStepsNoApiKey(SharedSteps sharedSteps, ApplicationContext ctx, PnB2bClientTimingConfigs timingConfigs) {
+
         this.b2bUtils = sharedSteps.getB2bUtils();
-        this.b2bClient = sharedSteps.getB2bClient();
-        this.safeStorageClient=safeStorageClient;
         this.ipServiceDeskClientImplNoApiKey= sharedSteps.getServiceDeskClientNoApiKey();
         this.notificationRequest=new NotificationRequest();
         this.analogAddress=new AnalogAddress();
@@ -127,7 +105,7 @@ public class ApiServiceDeskStepsNoApiKey {
                 break;
             default:
                 notificationRequest.setTaxId(cf);
-                logger.info("Inserito CF:"+cf);
+                log.info("Inserito CF:"+cf);
         }
     }
 
@@ -139,7 +117,7 @@ public class ApiServiceDeskStepsNoApiKey {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationsUnreachableResponse);
@@ -167,14 +145,14 @@ public class ApiServiceDeskStepsNoApiKey {
     @Given("viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con {string} senza API Key")
     public void createOperationReqNoApiKey(String cf) {
         createOperationRequest.setTaxId(cf);
-        logger.info("CF:"+cf);
+        log.info("CF:"+cf);
         String ticketid= null;
         try {
             ticketid = "AUT"+randomAlphaNumeric(12);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        logger.info("ticketid:"+ticketid);
+        log.info("ticketid:"+ticketid);
         createOperationRequest.setTicketId(ticketid);
         String ticketOperationid= null;
         try {
@@ -182,7 +160,7 @@ public class ApiServiceDeskStepsNoApiKey {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        logger.info("ticketOperationid:"+ticketOperationid);
+        log.info("ticketOperationid:"+ticketOperationid);
         createOperationRequest.setTicketOperationId(ticketOperationid);
         createOperationRequest.setAddress(analogAddress);
 
@@ -195,7 +173,7 @@ public class ApiServiceDeskStepsNoApiKey {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationsUnreachableResponse);
@@ -212,9 +190,9 @@ public class ApiServiceDeskStepsNoApiKey {
     public void createPreUploadVideoRequestNoApiKey() throws Exception {
         notificationDocument = newDocument("classpath:/video.mp4");
         String resourceName = notificationDocument.getRef().getKey();
-        logger.info("Resource name:"+resourceName);
+        log.info("Resource name:"+resourceName);
         String sha256 = computeSha256( resourceName );
-        logger.info("sha:"+sha256);
+        log.info("sha:"+sha256);
         videoUploadRequest.setPreloadIdx("AUT"+randomAlphaNumeric(5));
         videoUploadRequest.setSha256(sha256);
         videoUploadRequest.setContentType("application/octet-stream");
@@ -229,7 +207,7 @@ public class ApiServiceDeskStepsNoApiKey {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(videoUploadResponse);
@@ -264,7 +242,7 @@ public class ApiServiceDeskStepsNoApiKey {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(searchResponse);

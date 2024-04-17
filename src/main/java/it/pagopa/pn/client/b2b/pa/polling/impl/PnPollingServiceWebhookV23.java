@@ -8,6 +8,7 @@ import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebhookB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.ProgressResponseElementV23;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -23,8 +24,8 @@ import java.util.function.Predicate;
 
 @Service(PnPollingStrategy.WEBHOOK_V23)
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingResponseV23> {
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final IPnWebhookB2bClient webhookB2bClient;
     private final TimingForPolling timingForPolling;
     private List<ProgressResponseElementV23> progressResponseElementListV23;
@@ -50,7 +51,7 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
                 listResponseEntity = webhookB2bClient.consumeEventStreamHttpV23(pnPollingParameter.getStreamId(), pnPollingParameter.getLastEventId());
                 progressResponseElementListV23 = listResponseEntity.getBody();
                 pnPollingResponse.setProgressResponseElementListV23(listResponseEntity.getBody());
-                logger.info("ELEMENTI NEL WEBHOOK: " + Objects.requireNonNull(progressResponseElementListV23));
+                log.info("ELEMENTI NEL WEBHOOK: " + Objects.requireNonNull(progressResponseElementListV23));
                 if(deepCount >= 250) {
                     throw new PnPollingException("LOP: PROGRESS-ELEMENTS: "+ progressResponseElementListV23
                             +" WEBHOOK: "+ pnPollingParameter.getStreamId() +" IUN: "+ iun +" DEEP: "+deepCount);
