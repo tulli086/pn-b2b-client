@@ -291,6 +291,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | physicalAddress_address | via@OK-NO012-lte10 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene controllato che l'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" non esiste
+    #"sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.35s-RECAG005A.5s-RECAG005B[DOC:ARCAD;DOC:23L].5s-RECAG005C"
 
   @giacenza890Simplified
   Scenario: [B2B_GIACENZA_890_WI1.1_14] Attesa elemento di timeline REFINEMENT con physicalAddress OK-NO012-gt10
@@ -302,6 +303,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | physicalAddress_address | via@OK-NO012-gt10 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene controllato che l'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" non esiste
+    #"sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.65s-RECAG011B[DOC:ARCAD].60s-RECAG005A.5s-RECAG005B[DOC:23L].5s-RECAG005C"
 
 
 
