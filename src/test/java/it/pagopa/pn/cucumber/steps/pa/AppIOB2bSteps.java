@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 public class AppIOB2bSteps {
 
-
     private final IPnAppIOB2bClient iPnAppIOB2bClient;
     private final SharedSteps sharedSteps;
     private final PnPaB2bUtils b2bUtils;

@@ -14,11 +14,9 @@ import java.time.temporal.ChronoUnit;
 public class OpenSearchSteps {
 
     private final PnExternalServiceClientImpl pnExternalServiceClient;
-    private final SharedSteps sharedSteps;
 
     @Autowired
-    public OpenSearchSteps(PnExternalServiceClientImpl pnExternalServiceClient, SharedSteps sharedSteps) {
-        this.sharedSteps = sharedSteps;
+    public OpenSearchSteps(PnExternalServiceClientImpl pnExternalServiceClient) {
         this.pnExternalServiceClient = pnExternalServiceClient;
     }
 

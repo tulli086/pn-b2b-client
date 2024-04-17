@@ -20,7 +20,6 @@ import java.util.List;
 @Slf4j
 public class DowntimeLogsSteps {
 
-    private final SharedSteps sharedSteps;
     private final PnPaB2bUtils b2bUtils;
     private final IPnDowntimeLogsClient downtimeLogsClient;
 
@@ -30,10 +29,9 @@ public class DowntimeLogsSteps {
     private LegalFactDownloadMetadataResponse legalFact;
 
     @Autowired
-    public DowntimeLogsSteps(IPnDowntimeLogsClient downtimeLogsClient, SharedSteps sharedSteps) {
+    public DowntimeLogsSteps(IPnDowntimeLogsClient downtimeLogsClient, PnPaB2bUtils b2bUtils) {
         this.downtimeLogsClient = downtimeLogsClient;
-        this.sharedSteps = sharedSteps;
-        this.b2bUtils = sharedSteps.getB2bUtils();
+        this.b2bUtils = b2bUtils;
     }
 
 

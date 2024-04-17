@@ -20,14 +20,12 @@ public class InvioNotificheB2bMultiPaSteps {
 
     private final SharedSteps sharedSteps;
     private final PnPaB2bUtils b2bUtils;
-    private final IPnPaB2bClient b2bClient;
     private final IPnWebPaClient webPaClient;
 
     @Autowired
     public InvioNotificheB2bMultiPaSteps(SharedSteps sharedSteps) {
         this.sharedSteps = sharedSteps;
         this.b2bUtils = this.sharedSteps.getB2bUtils();
-        this.b2bClient = this.sharedSteps.getB2bClient();
         this.webPaClient = sharedSteps.getWebPaClient();
     }
 

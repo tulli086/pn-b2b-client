@@ -32,19 +32,16 @@ public class AsyncSteps {
     @Value("${pn.external.costo_base_notifica}")
     private Integer costoBaseNotifica;
 
-    private final IPnPaB2bClient b2bClient;
     private final SharedSteps sharedSteps;
     private final PnGPDClientImpl pnGPDClientImpl;
     private final AvanzamentoNotificheB2bSteps avanzamentoNotificheB2bSteps;
     private final PnPaymentInfoClientImpl pnPaymentInfoClientImpl;
     private List<PaymentPositionModel> paymentPositionModel;
 
-    private PaymentResponse paymentResponse;
     private List<PaymentInfoV21> paymentInfoResponse;
     private String DeleteGDPresponse;
     private Integer amountGPD;
     private List<Integer> amountNotifica;
-
 
     private static final Integer NUM_CHECK_PAYMENT_INFO = 32;
     private static final Integer WAITING_PAYMENT_INFO = 1000;
@@ -52,11 +49,10 @@ public class AsyncSteps {
     public AsyncSteps(AvanzamentoNotificheB2bSteps avanzamentoNotificheB2bSteps, SharedSteps sharedSteps) {
         this.avanzamentoNotificheB2bSteps = avanzamentoNotificheB2bSteps;
         this.sharedSteps = sharedSteps;
-        this.b2bClient = sharedSteps.getB2bClient();
         this.pnGPDClientImpl = sharedSteps.getPnGPDClientImpl();
         this.pnPaymentInfoClientImpl =sharedSteps.getPnPaymentInfoClientImpl();
-        this.paymentPositionModel=new ArrayList<PaymentPositionModel>();
-        this.amountNotifica=new ArrayList<Integer>();
+        this.paymentPositionModel= new ArrayList<>();
+        this.amountNotifica= new ArrayList<>();
     }
 
 

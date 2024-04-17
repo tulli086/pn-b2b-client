@@ -8,7 +8,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatusHistoryElement;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
@@ -40,9 +39,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-
-
-import static it.pagopa.pn.client.b2b.pa.utils.WebhookSynchronizer.WEBHOOKSYNCHRONIZER;
 import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.V10;
 import static it.pagopa.pn.cucumber.steps.pa.AvanzamentoNotificheWebhookB2bSteps.StreamVersion.V23;
 
@@ -61,7 +57,6 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     private StreamCreationRequest streamCreationRequest;
     private Integer requestNumber;
     private HttpStatusCodeException notificationError;
-    private StreamRequestV23 streamRequest;
     private final PnPollingFactory pollingFactory;
     private final TimingForPolling timingForPolling;
 
@@ -74,10 +69,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 
     //private final WebhookSynchronizer webhookSynchronizer;
 
-
     public enum StreamVersion {V23,V10,V10_V23}
-    private Map<String, PnPaB2bUtils.Pair<Boolean,Integer>> numberOfStreamSlotAcquiredForPa = new HashMap<>(); //forPermissionCheck
-    private Map<UUID,PnPaB2bUtils.Pair<String,StreamVersion>> streamIdForPaAndVersion = new HashMap<>(); //for streamId check
 
     private Set<String> paStreamOwner = new HashSet<>();
 
@@ -1669,7 +1661,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
     private void addStreamId(String pa, UUID streamId, StreamVersion version) {
-        streamIdForPaAndVersion.put(streamId,new PnPaB2bUtils.Pair<>(pa,version));
+        //streamIdForPaAndVersion.put(streamId,new PnPaB2bUtils.Pair<>(pa,version));
         paStreamOwner.add(pa);
     }
 
@@ -1680,7 +1672,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
                 StreamMetadataResponseV23 result = webhookB2bClient.disableEventStreamV23(eventStream.getStreamId());
                 Assertions.assertNotNull(result);
                 Assertions.assertNotNull(result.getDisabledDate());
-                streamIdForPaAndVersion.remove(eventStream.getStreamId());
+                //streamIdForPaAndVersion.remove(eventStream.getStreamId());
                 //releaseStreamCreationSlotInternal(pa);
             }
         }catch (HttpStatusCodeException e) {
@@ -1691,10 +1683,11 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
     private void deleteStreamWrapper(StreamVersion streamVersion, String pa, UUID streamID){
-        if(deleteStreamWrapperWithoutReleaseStreamCreationSlot(streamVersion,pa,streamID)){
-            //releaseStreamCreationSlotInternal(pa);
-            streamIdForPaAndVersion.remove(streamID);
-        }
+        deleteStreamWrapperWithoutReleaseStreamCreationSlot(streamVersion,pa,streamID);
+//        if(deleteStreamWrapperWithoutReleaseStreamCreationSlot(streamVersion,pa,streamID)){
+//            //releaseStreamCreationSlotInternal(pa);
+//            //streamIdForPaAndVersion.remove(streamID);
+//        }
     }
 
     private boolean deleteStreamWrapperWithoutReleaseStreamCreationSlot(StreamVersion streamVersion, String pa, UUID streamID){
@@ -1712,34 +1705,34 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }
     }
 
-    private void releaseStreamCreationSlotInternal(String pa){ //(String pa,int numberOfStream)
-        if(numberOfStreamSlotAcquiredForPa.containsKey(pa)){
-            if(numberOfStreamSlotAcquiredForPa.get(pa).getValue2() > 0){
-                WEBHOOKSYNCHRONIZER.releaseStreamCreationSlot(1,pa);
-            }
-            Integer numberOfStreamSlot = this.numberOfStreamSlotAcquiredForPa.get(pa).getValue2();
-            this.numberOfStreamSlotAcquiredForPa.get(pa).setValue2(numberOfStreamSlot-1);
-        }
-    }
+//    private void releaseStreamCreationSlotInternal(String pa){ //(String pa,int numberOfStream)
+//        if(numberOfStreamSlotAcquiredForPa.containsKey(pa)){
+//            if(numberOfStreamSlotAcquiredForPa.get(pa).getValue2() > 0){
+//                WEBHOOKSYNCHRONIZER.releaseStreamCreationSlot(1,pa);
+//            }
+//            Integer numberOfStreamSlot = this.numberOfStreamSlotAcquiredForPa.get(pa).getValue2();
+//            this.numberOfStreamSlotAcquiredForPa.get(pa).setValue2(numberOfStreamSlot-1);
+//        }
+//    }
 
-    private void acquireStreamCreationSlotInternal(String pa,int numberOfStream){
-        try{
-            if(!numberOfStreamSlotAcquiredForPa.containsKey(pa)){
-                this.numberOfStreamSlotAcquiredForPa.put(pa,new PnPaB2bUtils.Pair<>(
-                        WEBHOOKSYNCHRONIZER.acquireStreamCreationSlot(numberOfStream, pa),numberOfStream));
-            }else{
-                if(WEBHOOKSYNCHRONIZER.acquireStreamCreationSlot(numberOfStream, pa)){
-                    PnPaB2bUtils.Pair<Boolean, Integer> numberOfStreamPa = numberOfStreamSlotAcquiredForPa.get(pa);
-                    numberOfStreamPa.setValue2(numberOfStreamPa.getValue2()+numberOfStream);
-                    numberOfStreamSlotAcquiredForPa.put(pa,numberOfStreamPa);
-                }
-            }
-            sleepTest(800);
-        }catch (InterruptedException e) {
-            log.error("Error in acquire stream slot!!");
-            throw new RuntimeException(e);
-        }
-    }
+//    private void acquireStreamCreationSlotInternal(String pa,int numberOfStream){
+//        try{
+//            if(!numberOfStreamSlotAcquiredForPa.containsKey(pa)){
+//                this.numberOfStreamSlotAcquiredForPa.put(pa,new PnPaB2bUtils.Pair<>(
+//                        WEBHOOKSYNCHRONIZER.acquireStreamCreationSlot(numberOfStream, pa),numberOfStream));
+//            }else{
+//                if(WEBHOOKSYNCHRONIZER.acquireStreamCreationSlot(numberOfStream, pa)){
+//                    PnPaB2bUtils.Pair<Boolean, Integer> numberOfStreamPa = numberOfStreamSlotAcquiredForPa.get(pa);
+//                    numberOfStreamPa.setValue2(numberOfStreamPa.getValue2()+numberOfStream);
+//                    numberOfStreamSlotAcquiredForPa.put(pa,numberOfStreamPa);
+//                }
+//            }
+//            sleepTest(800);
+//        }catch (InterruptedException e) {
+//            log.error("Error in acquire stream slot!!");
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     private List<String> getGruopForStream(String position, String pa){
         List<String> groupList = null;

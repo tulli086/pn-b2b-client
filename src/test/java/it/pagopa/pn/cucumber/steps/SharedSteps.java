@@ -148,8 +148,6 @@ public class SharedSteps {
     private final Integer WORKFLOW_WAIT_UPPER_BOUND = 2900;
     private final Integer WAIT_UPPER_BOUND = 950;
 
-    private final String schedulingDaysSuccessDigitalRefinementDefaultString = "6m";
-    private final String schedulingDaysFailureDigitalRefinementDefaultString = "6m";
     private final Duration schedulingDaysSuccessDigitalRefinementDefault = DurationStyle.detectAndParse("6m");
     private final Duration schedulingDaysFailureDigitalRefinementDefault = DurationStyle.detectAndParse("6m");
     private final Duration schedulingDaysSuccessAnalogRefinementDefault = DurationStyle.detectAndParse("2m");
@@ -176,12 +174,6 @@ public class SharedSteps {
     private String gherkinSrltaxId = "12666810299";
     private String cucumberSpataxId = "20517490320"; //
 
-    @Value("${pn.interop.base-url}")
-    private String interopBaseUrl;
-    @Value("${pn.interop.token-oauth2.path}")
-    private String tokenOauth2Path;
-    @Value("${pn.interop.token-oauth2.client-assertion}")
-    private String clientAssertion;
 
     @Value("${pn.external.bearer-token-pg1.id}")
     private String idOrganizationGherkinSrl;
