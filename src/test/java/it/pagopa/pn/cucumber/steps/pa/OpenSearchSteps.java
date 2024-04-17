@@ -4,15 +4,13 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
-import it.pagopa.pn.cucumber.steps.SharedSteps;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class OpenSearchSteps {
 
+public class OpenSearchSteps {
     private final PnExternalServiceClientImpl pnExternalServiceClient;
 
     @Autowired
@@ -49,7 +47,6 @@ public class OpenSearchSteps {
             System.out.println("DIFF: "+ ChronoUnit.DAYS.between(ageTimeStamp,OffsetDateTime.now()));
         }
     }
-
 
     @And("viene verificato che non esiste un audit log {string} in {string}")
     public void vieneVerificatoCheNonEsisteUnAuditLogIn(String auditLogType, String auditLogRetention) {

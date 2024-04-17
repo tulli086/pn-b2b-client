@@ -2,12 +2,10 @@ package it.pagopa.pn.client.b2b.pa.service.impl;
 
 import it.pagopa.pn.client.b2b.pa.service.IPServiceDeskClientImplNoApiKey;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.ApiClient;
-import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.api.HealthCheckApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.api.NotificationApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.api.OperationApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.model.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -15,42 +13,17 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class PnServiceDeskClientImplNoApiKey implements IPServiceDeskClientImplNoApiKey {
-
-    private final ApplicationContext ctx;
-    private final RestTemplate restTemplate;
-
-
-    private final String basePath;
-
-    private final HealthCheckApi healthCheckApi;
-
     private final NotificationApi notification;
-
     private final OperationApi operation;
-
-    private final String paId;
     private final String operatorId;
 
-    public PnServiceDeskClientImplNoApiKey(
-            ApplicationContext ctx,
-            RestTemplate restTemplate,
-            @Value("${pn.externalChannels.base-url}") String deliveryBasePath ,
-            @Value("${pn.internal.pa-id}") String paId
-    ) {
-
-        this.paId = paId;
+    public PnServiceDeskClientImplNoApiKey(RestTemplate restTemplate, @Value("${pn.externalChannels.base-url}") String deliveryBasePath) {
         this.operatorId = "AutomationMv";
-        this.ctx = ctx;
-        this.restTemplate = restTemplate;
-        this.basePath = deliveryBasePath;
-        this.healthCheckApi = new HealthCheckApi(newApiClient( restTemplate, basePath));
-        this.notification = new NotificationApi(newApiClient( restTemplate, basePath));
-        this.operation = new OperationApi(newApiClient( restTemplate, basePath));
-
-
+        this.notification = new NotificationApi(newApiClient( restTemplate, deliveryBasePath));
+        this.operation = new OperationApi(newApiClient( restTemplate, deliveryBasePath));
     }
 
- private static ApiClient newApiClient(RestTemplate restTemplate, String basePath) {
+    private static ApiClient newApiClient(RestTemplate restTemplate, String basePath) {
         ApiClient newApiClient = new ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
         return newApiClient;
@@ -78,10 +51,9 @@ public class PnServiceDeskClientImplNoApiKey implements IPServiceDeskClientImplN
 
     public NotificationsUnreachableResponse notification(NotificationRequest notificationRequest) throws RestClientException {
         return notification.numberOfUnreachableNotifications(operatorId, notificationRequest);
-
     }
 
-    /*
+/*
     public OperationsResponse createOperation(String cf, String ticketId, String operationTickerId, AnalogAddress address)throws RestClientException {
         creaOp.setTaxId(cf);
         creaOp.setTicketId(ticketId);
@@ -91,7 +63,7 @@ public class PnServiceDeskClientImplNoApiKey implements IPServiceDeskClientImplN
         creaOp.setAddress(address);
         return operation.createOperation(operatorId,creaOp);
     }
-    */
+*/
     public OperationsResponse createOperation(CreateOperationRequest createOperationRequest)throws RestClientException {
         return operation.createOperation(operatorId,createOperationRequest);
     }
@@ -118,10 +90,6 @@ public class PnServiceDeskClientImplNoApiKey implements IPServiceDeskClientImplN
     }
 */
     public SearchResponse searchOperationsFromTaxId(SearchNotificationRequest searchNotificationRequest){
-    return operation.searchOperationsFromTaxId(operatorId, searchNotificationRequest);
-
-}
-
-
-
+        return operation.searchOperationsFromTaxId(operatorId, searchNotificationRequest);
+    }
 }

@@ -1,6 +1,5 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
-
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.ApiClient;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api.*;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
@@ -12,28 +11,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
-
 import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENEBLED_INTEROP;
 
+
+@Slf4j
 @Component()
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ConditionalOnProperty( name = IPnPaB2bClient.IMPLEMENTATION_TYPE_PROPERTY, havingValue = "external", matchIfMissing = true)
-@Slf4j
 public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
-
-    private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
     private final NewNotificationApi newNotificationApi;
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v1.NewNotificationApi newNotificationApiV1;
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v2.NewNotificationApi newNotificationApiV2;
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v21.NewNotificationApi newNotificationApiV21;
-
     private final SenderReadB2BApi senderReadB2BApi;
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v1.SenderReadB2BApi senderReadB2BApiV1;
     private final it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v2.SenderReadB2BApi senderReadB2BApiV2;
@@ -54,17 +49,12 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
     private final String apiKeySon;
     private final String apiKeyRoot;
     private ApiKeyType apiKeySetted = ApiKeyType.MVP_1;
-
     private String bearerTokenInterop;
-
     private final String enableInterop;
-
-
     private final InteropTokenSingleton interopTokenSingleton;
 
-    public PnPaB2bExternalClientImpl(
-            ApplicationContext ctx,
-            RestTemplate restTemplate,
+
+    public PnPaB2bExternalClientImpl(RestTemplate restTemplate,
             InteropTokenSingleton interopTokenSingleton,
             @Value("${pn.external.base-url}") String basePath,
             @Value("${pn.external.api-key}") String apiKeyMvp1,
@@ -74,7 +64,6 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
             @Value("${pn.external.api-key-ROOT}") String apiKeyRoot,
             @Value("${pn.interop.enable}") String enableInterop
     ) {
-        this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.basePath = basePath;
         this.apiKeyMvp1 = apiKeyMvp1;
@@ -103,11 +92,8 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
         this.paymentEventsApiV2 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v2.PaymentEventsApi(newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop));
         this.paymentEventsApiV21 = new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.api_v21.PaymentEventsApi(newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop));
         this.notificationCancellationApi = new NotificationCancellationApi(newApiClient( restTemplate, basePath, apiKeyMvp1, bearerTokenInterop,enableInterop));
-
         this.interopTokenSingleton = interopTokenSingleton;
     }
-
-
 
     //@Scheduled(cron = "* * * * * ?")
     private void refreshAndSetTokenInteropClient(){
@@ -136,8 +122,6 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
             }
         }
     }
-
-
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apikey, String bearerToken, String enableInterop ) {
         ApiClient newApiClient = new ApiClient( restTemplate );
@@ -241,6 +225,7 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
         refreshAndSetTokenInteropClient();
         return senderReadB2BApiV2.retrieveSentNotificationDocument(iun, docidx);
     }
+
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationAttachmentDownloadMetadataResponse getSentNotificationDocumentV21(String iun, Integer docidx) {
         refreshAndSetTokenInteropClient();
         return senderReadB2BApiV21.retrieveSentNotificationDocument(iun, docidx);
@@ -315,6 +300,7 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
         refreshAndSetTokenInteropClient();
         return newNotificationApiV2.sendNewNotification( newNotificationRequest );
     }
+
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NewNotificationResponse sendNewNotificationV21(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NewNotificationRequestV21 newNotificationRequest) {
         refreshAndSetTokenInteropClient();
         return newNotificationApiV21.sendNewNotificationV21( newNotificationRequest );
@@ -325,13 +311,11 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
         return senderReadB2BApi.retrieveSentNotificationV23( iun );
     }
 
-
     @Override
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification getSentNotificationV1(String iun) {
         refreshAndSetTokenInteropClient();
         return senderReadB2BApiV1.retrieveSentNotification( iun );
     }
-
 
     @Override
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20 getSentNotificationV2(String iun) {
@@ -404,6 +388,4 @@ public class PnPaB2bExternalClientImpl implements IPnPaB2bClient {
         refreshAndSetTokenInteropClient();
         return this.notificationCancellationApi.notificationCancellation(iun);
     }
-
-
 }

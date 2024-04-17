@@ -1,35 +1,30 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
-import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.service.IPnApiKeyManagerClient;
-import it.pagopa.pn.client.b2b.pa.service.impl.PnApiKeyManagerExternalClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.*;
-import it.pagopa.pn.cucumber.utils.GroupPosition;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
+import it.pagopa.pn.cucumber.utils.GroupPosition;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.HttpStatusCodeException;
-
 import java.util.List;
 
-public class ApikeyManagerSteps {
 
+public class ApikeyManagerSteps {
     private final IPnApiKeyManagerClient apiKeyManagerClient;
     private final SharedSteps sharedSteps;
     private ApiKeysResponse apiKeys;
     private RequestNewApiKey requestNewApiKey;
     private ResponseNewApiKey responseNewApiKey;
     private HttpStatusCodeException httpStatusCodeException;
-
     private String firstGroupUsed;
     private String responseNewApiKeyTaxId;
+
 
     @Autowired
     public ApikeyManagerSteps(IPnApiKeyManagerClient apiKeyManagerClient, SharedSteps sharedSteps) {

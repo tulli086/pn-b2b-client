@@ -19,28 +19,26 @@ import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+
 @Slf4j
 public class AppIOB2bSteps {
-
     private final IPnAppIOB2bClient iPnAppIOB2bClient;
     private final SharedSteps sharedSteps;
     private final PnPaB2bUtils b2bUtils;
-
     private HttpStatusCodeException notficationServerError;
     private String sha256DocumentDownload;
     private final String marioCucumberTaxID;
     private final String marioGherkinTaxID;
+
 
     @Autowired
     public AppIOB2bSteps(IPnAppIOB2bClient iPnAppIOB2bClient, SharedSteps sharedSteps) {
         this.iPnAppIOB2bClient = iPnAppIOB2bClient;
         this.sharedSteps = sharedSteps;
         this.b2bUtils = sharedSteps.getB2bUtils();
-
         this.marioCucumberTaxID = sharedSteps.getMarioCucumberTaxID();
         this.marioGherkinTaxID = sharedSteps.getMarioGherkinTaxID();
     }
-
 
     @Then("la notifica può essere recuperata tramite AppIO")
     public void notificationCanBeRetrievedAppIO() {
@@ -54,7 +52,6 @@ public class AppIOB2bSteps {
         }catch(AssertionFailedError assertionFailedError){
                 sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
-
     }
 
     @Then("il documento notificato può essere recuperata tramite AppIO")
