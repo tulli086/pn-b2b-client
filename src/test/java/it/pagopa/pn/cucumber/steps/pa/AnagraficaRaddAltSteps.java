@@ -385,10 +385,11 @@ public class AnagraficaRaddAltSteps {
             }
         }
 
-        log.info("dati cancellazione sportello: {}",endDate);
+        log.info("data cancellazione sportello: {}",endDate);
 
         try {
-            raddAltClient.deleteRegistry(this.uid, this.registryId, endDate);
+            String finalEndDate = endDate;
+            Assertions.assertDoesNotThrow(()-> raddAltClient.deleteRegistry(this.uid, this.registryId, finalEndDate));
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{endDate: " + (endDate== null ? "NULL" : endDate) + " }";

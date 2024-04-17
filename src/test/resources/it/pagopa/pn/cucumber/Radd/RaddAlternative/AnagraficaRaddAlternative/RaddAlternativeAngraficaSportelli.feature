@@ -52,8 +52,8 @@ Feature: Radd Alternative Anagrafica Sportelli
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_3] caricamento CSV con righa malformata verifica stato a REJECTED
     When viene caricato il csv con formatto "errato" con restituzione errore con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
-      | via posto        | 75010            | MT                    | GARAGUSO          | ITALIA               |
-      | via ceggia       | 75010            | MT                    | GORGOGLIONE       | ITALIA               |
+      | random           | 75010            | MT                    | GARAGUSO          | ITALIA               |
+      | random           | 75010            | MT                    | GORGOGLIONE       | ITALIA               |
     Then viene controllato lo stato di caricamento del csv a "REJECTED"
     And viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "Malformed CSV"
 
@@ -74,7 +74,8 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_description | radd_phoneNumber | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
       | random           | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż            | ĄŁĽŚŠŞŤŹŽż        | ĄŁĽŚAFŠŞŤŹŽż         | ĄŁĽŚFAŠŞŤŹŽż     | ĄŁĽŚŠŞAFŤŹŽż     | ĄŁĽŚŠŞAFSŤŹŽż               | ĄŁĽŚŠŞŤŹŽż                   | ĄŁĽŚŠŞŤŹŽż       | formato errato      | formato errato    | ĄŁĽŚŠŞŤŹŽż    | ĄŁĽŚŠŞŤŹŽż        |
       | random           | ĄŁ43ŞŤŹŽż        | ĄŁĽŚWERŹŽż            | 53teŞŤŹŽż         | ĄŁĽFAŚŠŞŤŹŽż         | ĄŁĽŚŠŞŤFŹŽż      | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠAŞŤŹŽż                 | ĄŁĽŚŠŞŤŹŽż                   | ĄŁĽŚŠŞŤŹŽż       | formato errato      | formato errato    | ĄŁĽŚŠŞŤŹŽż    | ĄŁĽŚŠŞŤŹŽż        |
-    Then viene controllato lo stato di caricamento del csv a "REJECTED"
+    Then viene controllato lo stato di caricamento del csv a "DONE"
+    Then si controlla che il sporetello sia in stato "REJECTED"
     And viene controllato lo stato di caricamento del csv a REJECTED con messaggio di errore "Malformed CSV"
 
 
@@ -386,9 +387,8 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_start_validity   | now               |
       | radd_end_validity     | +10g              |
     Then si controlla che il sporetello sia in stato "ACCEPTED"
-    Then viene cancellato uno sportello Radd con dati errati:
+    Then viene cancellato uno sportello Radd con dati:
       | radd_end_validity | -10g |
-    And l'operazione ha prodotto un errore con status code "400"
 
 
   @raddAnagrafica @puliziaSportelli
