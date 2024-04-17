@@ -2,7 +2,6 @@ package it.pagopa.pn.client.b2b.pa.service.impl;
 
 import it.pagopa.pn.client.b2b.pa.service.IPServiceDeskClientImpl;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.ApiClient;
-import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.api.HealthCheckApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.api.NotificationApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.api.OperationApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.model.*;
@@ -12,7 +11,6 @@ import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegrat
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegration.api.ProfileApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegration.model.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -24,17 +22,7 @@ import java.util.List;
 @Component
 public class PnServiceDeskClientImpl implements IPServiceDeskClientImpl {
 
-    private final ApplicationContext ctx;
-    private final RestTemplate restTemplate;
-
-
-
-    private final String basePath;
-
-    private final String apiKey;
-
     //Call Center Evoluto....
-    private final HealthCheckApi healthCheckApi;
     private final NotificationApi notification;
     private final OperationApi operation;
 
@@ -55,34 +43,25 @@ public class PnServiceDeskClientImpl implements IPServiceDeskClientImpl {
 
  */
 
-    private final String paId;
     private final String operatorId;
 
     public PnServiceDeskClientImpl(
-            ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.delivery.base-url}") String deliveryBasePath ,
-            @Value("${pn.external.api-keys.service-desk}") String apiKeyBase ,
-            @Value("${pn.internal.pa-id}") String paId
+            @Value("${pn.external.api-keys.service-desk}") String apiKeyBase
     ) {
 
-        this.paId = paId;
         this.operatorId = "AutomationMv";
-        this.ctx = ctx;
-        this.restTemplate = restTemplate;
-        this.basePath = deliveryBasePath;
-        this.apiKey=apiKeyBase;
 
         //Call Center Evoluto....
-        this.healthCheckApi = new HealthCheckApi(newApiClient( restTemplate, basePath,apiKey));
-        this.notification = new NotificationApi(newApiClient( restTemplate, basePath,apiKey));
-        this.operation = new OperationApi(newApiClient( restTemplate, basePath,apiKey));
+        this.notification = new NotificationApi(newApiClient( restTemplate, deliveryBasePath,apiKeyBase));
+        this.operation = new OperationApi(newApiClient( restTemplate, deliveryBasePath,apiKeyBase));
 
         //Integration Cruscotto Assistenza....
-        this.apiKeysApi = new ApiKeysApi(newApiClientIntegration( restTemplate, basePath,apiKey));
-        this.notificationAndMessageApi = new NotificationAndMessageApi(newApiClientIntegration( restTemplate, basePath,apiKey));
-        this.paApi = new PaApi(newApiClientIntegration( restTemplate, basePath,apiKey));
-        this.profileApi = new ProfileApi(newApiClientIntegration( restTemplate, basePath,apiKey));
+        this.apiKeysApi = new ApiKeysApi(newApiClientIntegration( restTemplate, deliveryBasePath, apiKeyBase));
+        this.notificationAndMessageApi = new NotificationAndMessageApi(newApiClientIntegration( restTemplate, deliveryBasePath, apiKeyBase));
+        this.paApi = new PaApi(newApiClientIntegration( restTemplate, deliveryBasePath, apiKeyBase));
+        this.profileApi = new ProfileApi(newApiClientIntegration( restTemplate, deliveryBasePath, apiKeyBase));
 
     }
 

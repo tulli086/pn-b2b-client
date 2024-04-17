@@ -11,7 +11,6 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.m
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -20,8 +19,6 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnApiKeyManagerExternalClientImpl implements IPnApiKeyManagerClient {
-
-    private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
     private final ApiKeysApi apiKeysApi;
     private final String basePath;
@@ -36,7 +33,6 @@ public class PnApiKeyManagerExternalClientImpl implements IPnApiKeyManagerClient
     private ApiKeyType apiKeySetted = SettableApiKey.ApiKeyType.MVP_1;
 
     public PnApiKeyManagerExternalClientImpl(
-            ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.webapi.external.base-url}") String basePath,
             @Value("${pn.external.bearer-token-pa-1}") String bearerTokenCom1,
@@ -46,7 +42,6 @@ public class PnApiKeyManagerExternalClientImpl implements IPnApiKeyManagerClient
             @Value("${pn.external.bearer-token-pa-GA}") String bearerTokenGA,
             @Value("${pn.webapi.external.user-agent}")String userAgent
     ) {
-        this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.basePath = basePath;
 

@@ -2,7 +2,6 @@ package it.pagopa.pn.client.b2b.pa.service.impl;
 
 import it.pagopa.pn.client.b2b.pa.service.IPServiceDeskClientImplWrongApiKey;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.ApiClient;
-import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.api.HealthCheckApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.api.NotificationApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.api.OperationApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDesk.model.*;
@@ -15,42 +14,19 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class PnServiceDeskClientImplWrongApiKey implements IPServiceDeskClientImplWrongApiKey {
-
-    private final ApplicationContext ctx;
-    private final RestTemplate restTemplate;
-
-
-
-    private final String basePath;
-
-    private final String apiKey;
-
-    private final HealthCheckApi healthCheckApi;
-
     private final NotificationApi notification;
-
     private final OperationApi operation;
-
-    private final String paId;
     private final String operatorId;
 
     public PnServiceDeskClientImplWrongApiKey(
-            ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.externalChannels.base-url}") String deliveryBasePath ,
-            @Value("${pn.external.api-keys.service-desk}") String apiKeyBase ,
-            @Value("${pn.internal.pa-id}") String paId
+            @Value("${pn.external.api-keys.service-desk}") String apiKeyBase
     ) {
 
-        this.paId = paId;
         this.operatorId = "AutomationMv";
-        this.ctx = ctx;
-        this.restTemplate = restTemplate;
-        this.basePath = deliveryBasePath;
-        this.apiKey=apiKeyBase+"ERR";
-        this.healthCheckApi = new HealthCheckApi(newApiClient( restTemplate, basePath,apiKey));
-        this.notification = new NotificationApi(newApiClient( restTemplate, basePath,apiKey));
-        this.operation = new OperationApi(newApiClient( restTemplate, basePath,apiKey));
+        this.notification = new NotificationApi(newApiClient( restTemplate, deliveryBasePath,apiKeyBase+"ERR"));
+        this.operation = new OperationApi(newApiClient( restTemplate, deliveryBasePath,apiKeyBase+"ERR"));
 
 
     }

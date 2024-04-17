@@ -7,8 +7,6 @@ import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.PaymentPo
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.PaymentPositionModelBaseResponse;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.PaymentPositionsInfo;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -18,15 +16,6 @@ import java.time.LocalDate;
 
 @Component
 public class PnGPDClientImpl implements IPnGPDClient {
-
-    private final ApplicationContext ctx;
-    private final RestTemplate restTemplate;
-
-
-    private final String basePath;
-
-    private final String key;
-
     private final DebtPositionsApiApi debtPositionsApiApi;
 
 /*
@@ -41,23 +30,14 @@ public class PnGPDClientImpl implements IPnGPDClient {
 
  */
 
-    // private final String paId;
-    private final String operatorId;
 
     public PnGPDClientImpl(
-            ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.internal.gpd-base-url}") String deliveryBasePath,
             @Value("${pn.external.api-subscription-key}") String key
     ) {
 
-        // this.paId = paId;
-        this.operatorId = "AutomationMv";
-        this.ctx = ctx;
-        this.restTemplate = restTemplate;
-        this.basePath = deliveryBasePath;
-        this.key = key;
-        this.debtPositionsApiApi = new DebtPositionsApiApi(newApiClient(restTemplate, basePath, key));
+        this.debtPositionsApiApi = new DebtPositionsApiApi(newApiClient(restTemplate, deliveryBasePath, key));
 
 
     }

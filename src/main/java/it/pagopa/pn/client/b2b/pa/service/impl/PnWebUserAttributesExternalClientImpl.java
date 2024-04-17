@@ -1,9 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebUserAttributesClient;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.api.AllApi;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.api.CourtesyApi;
@@ -15,7 +12,6 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.consents.model.ConsentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -27,37 +23,24 @@ import java.util.List;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttributesClient {
 
-
-    private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
-    private final ObjectMapper objMapper = JsonMapper.builder()
-            .addModule(new JavaTimeModule())
-            .build();
-
-
     private final ConsentsApi ConsentsApi;
-
     private final LegalApi legalApi;
     private final AllApi allApi;
     private final CourtesyApi courtesyApiAddressBook;
-
     private BearerTokenType bearerTokenSetted = BearerTokenType.USER_1;
-
     private final String marioCucumberBearerToken;
     private final String marioGherkinBearerToken;
     private final String leonardoBearerToken;
     private final String galileoBearerToken;
     private final String dinoBearerToken;
     private final String userBearerTokenScaduto;
-
     private final String gherkinSrlBearerToken;
     private final String cucumberSpaBearerToken;
-
     private final String userAgent;
     private final String basePath;
 
     public PnWebUserAttributesExternalClientImpl(
-            ApplicationContext ctx,
             RestTemplate restTemplate,
             @Value("${pn.webapi.external.base-url}") String basePath,
             @Value("${pn.bearer-token.user1}") String marioCucumberBearerToken,
@@ -70,7 +53,6 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
             @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
             @Value("${pn.webapi.external.user-agent}") String userAgent
     ) {
-        this.ctx = ctx;
         this.restTemplate = restTemplate;
 
         this.marioCucumberBearerToken = marioCucumberBearerToken;

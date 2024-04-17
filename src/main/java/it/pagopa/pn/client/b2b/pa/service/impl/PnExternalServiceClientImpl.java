@@ -6,9 +6,6 @@ import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -43,7 +40,6 @@ import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENE
 @Component
 public class PnExternalServiceClientImpl {
 
-    private final ApplicationContext ctx;
     private final RestTemplate restTemplate;
 
     private final String apiKeyMvp1;
@@ -73,7 +69,6 @@ public class PnExternalServiceClientImpl {
     private final InteropTokenSingleton interopTokenSingleton;
 
     public PnExternalServiceClientImpl(
-            ApplicationContext ctx,
             RestTemplate restTemplate,
             InteropTokenSingleton interopTokenSingleton,
             @Value("${pn.safeStorage.base-url}") String safeStorageBasePath,
@@ -94,7 +89,6 @@ public class PnExternalServiceClientImpl {
             @Value("${pn.OpenSearch.username}") String openSearchUsername,
             @Value("${pn.OpenSearch.password}") String openSearchPassword
     ) {
-        this.ctx = ctx;
         this.restTemplate = restTemplate;
         this.safeStorageBasePath = safeStorageBasePath;
         this.extChannelsBasePath = extChannelsBasePath;
@@ -162,9 +156,7 @@ public class PnExternalServiceClientImpl {
 
         try {
             restTemplateAvoidSSlCertificate();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
         }
 

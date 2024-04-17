@@ -29,26 +29,25 @@ public class ApiServiceDeskStepsNoApiKey {
 
     private final PnPaB2bUtils b2bUtils;
 
-
     private final IPServiceDeskClientImplNoApiKey ipServiceDeskClientImplNoApiKey;
 
-    private NotificationRequest notificationRequest;
+    private final NotificationRequest notificationRequest;
 
-    private AnalogAddress analogAddress;
+    private final AnalogAddress analogAddress;
 
     private NotificationsUnreachableResponse notificationsUnreachableResponse;
 
-    private CreateOperationRequest createOperationRequest;
+    private final CreateOperationRequest createOperationRequest;
 
     private OperationsResponse operationsResponse;
 
-    private VideoUploadRequest videoUploadRequest;
+    private final VideoUploadRequest videoUploadRequest;
 
     private VideoUploadResponse videoUploadResponse;
 
     private NotificationDocument notificationDocument;
 
-    private SearchNotificationRequest searchNotificationRequest;
+    private final SearchNotificationRequest searchNotificationRequest;
 
     private SearchResponse searchResponse;
 
@@ -63,7 +62,7 @@ public class ApiServiceDeskStepsNoApiKey {
 
 
 
-    private Integer workFlowWait;
+    private final Integer workFlowWait;
 
     @Value("${pn.retention.videotime.preload}")
     private Integer retentionTimePreLoad;
@@ -178,9 +177,7 @@ public class ApiServiceDeskStepsNoApiKey {
             }
             Assertions.assertNotNull(notificationsUnreachableResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
@@ -212,9 +209,7 @@ public class ApiServiceDeskStepsNoApiKey {
             }
             Assertions.assertNotNull(videoUploadResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -247,17 +242,15 @@ public class ApiServiceDeskStepsNoApiKey {
             }
             Assertions.assertNotNull(searchResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
 
     @Then("il servizio risponde con errore {string} senza API Key")
     public void operationProducedAnErrorNoApiKey(String statusCode) {
-        Assertions.assertTrue((notificationError.getStatusCode() != null) &&
-                (notificationError.getStatusCode().toString().substring(0, 3).equals(statusCode)));
+        notificationError.getStatusCode();
+        Assertions.assertEquals(notificationError.getStatusCode().toString().substring(0, 3), statusCode);
     }
 
     public Integer getWorkFlowWait() {

@@ -53,24 +53,24 @@ public class ApiServiceDeskSteps {
 
     private final IPServiceDeskClientImpl ipServiceDeskClient;
 
-    private NotificationRequest notificationRequest;
+    private final NotificationRequest notificationRequest;
 
-    private AnalogAddress analogAddress;
+    private final AnalogAddress analogAddress;
 
     private NotificationsUnreachableResponse notificationsUnreachableResponse;
 
 
-    private CreateOperationRequest createOperationRequest;
+    private final CreateOperationRequest createOperationRequest;
 
     private OperationsResponse operationsResponse;
 
-    private VideoUploadRequest videoUploadRequest;
+    private final VideoUploadRequest videoUploadRequest;
 
     private VideoUploadResponse videoUploadResponse;
 
     private NotificationDocument notificationDocument;
 
-    private SearchNotificationRequest searchNotificationRequest;
+    private final SearchNotificationRequest searchNotificationRequest;
 
     private SearchResponse searchResponse;
 
@@ -91,7 +91,7 @@ public class ApiServiceDeskSteps {
     private final String ticketoperationid_errato = "abcdfeghilm";
     private final Integer workFlowWaitDefault = 31000;
     private final Integer delay = 420000;
-    private Integer workFlowWait;
+    private final Integer workFlowWait;
 
     @Value("${pn.retention.videotime.preload}")
     private Integer retentionTimePreLoad;
@@ -193,9 +193,7 @@ public class ApiServiceDeskSteps {
             }
             Assertions.assertNotNull(notificationsUnreachableResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -209,8 +207,8 @@ public class ApiServiceDeskSteps {
 
     @Then("il servizio risponde con errore {string}")
     public void operationProducedAnError(String statusCode) {
-        Assertions.assertTrue((notificationError.getStatusCode() != null) &&
-                (notificationError.getStatusCode().toString().substring(0, 3).equals(statusCode)));
+        notificationError.getStatusCode();
+        Assertions.assertEquals(notificationError.getStatusCode().toString().substring(0, 3), statusCode);
         log.info("Errore: " + notificationError.getStatusCode() + " " + notificationError.getMessage() + " " + notificationError.getCause());
     }
 
@@ -336,9 +334,7 @@ public class ApiServiceDeskSteps {
             }
             Assertions.assertNotNull(notificationsUnreachableResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
@@ -432,9 +428,7 @@ public class ApiServiceDeskSteps {
             }
             Assertions.assertNotNull(videoUploadResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -450,9 +444,7 @@ public class ApiServiceDeskSteps {
             }
             Assertions.assertNotNull(videoUploadResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -470,9 +462,7 @@ public class ApiServiceDeskSteps {
             }
             Assertions.assertNotNull(videoUploadResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -571,9 +561,7 @@ public class ApiServiceDeskSteps {
             }
             Assertions.assertNotNull(searchResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -667,7 +655,8 @@ public class ApiServiceDeskSteps {
             log.info("STAMPA ELEMENTO LISTA " + element.toString());
             String actualOperationId = element.getOperationId();
             Assertions.assertNotNull(actualOperationId);
-            if (actualOperationId.compareTo(operationIdToSearch) == 0 && findOperationId == false) {
+            Assertions.assertNotNull(operationIdToSearch);
+            if (actualOperationId.compareTo(operationIdToSearch) == 0 && !findOperationId) {
                 findOperationId = true;
             }
             // Assertions.assertEquals(element.getTaxId(),notificationRequest.getTaxId());
@@ -715,6 +704,7 @@ public class ApiServiceDeskSteps {
         for (OperationResponse element : lista) {
             String actualOperationId = element.getOperationId();
             log.info("ACTUAL OPERATION ID: " + actualOperationId);
+            Assertions.assertNotNull(operationIdToSearch);
             if (actualOperationId.compareTo(operationIdToSearch) == 0) {
                 listaSplit.add(element);
                 log.info("AGGIUNTO ELEMENTO: " + actualOperationId);
@@ -733,7 +723,7 @@ public class ApiServiceDeskSteps {
             log.info("STAMPA ELEMENTO LISTA " + element.toString());
             String actualOperationId = element.getOperationId();
             Assertions.assertNotNull(actualOperationId);
-            if (actualOperationId.compareTo(operationIdToSearch) == 0 && findOperationId == false) {
+            if (actualOperationId.compareTo(operationIdToSearch) == 0 && !findOperationId) {
                 findOperationId = true;
             }
             // Assertions.assertEquals(element.getTaxId(),notificationRequest.getTaxId());
@@ -777,7 +767,8 @@ public class ApiServiceDeskSteps {
             log.info("STAMPA ELEMENTO LISTA " + element.toString());
             String actualOperationId = element.getOperationId();
             Assertions.assertNotNull(actualOperationId);
-            if (actualOperationId.compareTo(operationIdToSearch) == 0 && findOperationId == false) {
+            Assertions.assertNotNull(operationIdToSearch);
+            if (actualOperationId.compareTo(operationIdToSearch) == 0 && !findOperationId) {
                 findOperationId = true;
             }
             Assertions.assertEquals(element.getTaxId(), searchNotificationRequest.getTaxId());
@@ -789,7 +780,7 @@ public class ApiServiceDeskSteps {
                 for (SDNotificationSummary acutalIun : listaiuns) {
                     //Verifica se lo iun è presente nella lista
                     log.info("IUN ATTUALE " + acutalIun.getIun());
-                    if (acutalIun.getIun().compareTo(iun) == 0 && findIun == false) {
+                    if (acutalIun.getIun().compareTo(iun) == 0 && !findIun) {
                         findIun = true;
                     }
                 }
@@ -834,7 +825,8 @@ public class ApiServiceDeskSteps {
             log.info("STAMPA ELEMENTO LISTA " + element.toString());
             String actualOperationId = element.getOperationId();
             Assertions.assertNotNull(actualOperationId);
-            if (actualOperationId.compareTo(operationIdToSearch) == 0 && findOperationId == false) {
+            Assertions.assertNotNull(operationIdToSearch);
+            if (actualOperationId.compareTo(operationIdToSearch) == 0 && !findOperationId) {
                 findOperationId = true;
             }
             Assertions.assertEquals(element.getTaxId(), searchNotificationRequest.getTaxId());
@@ -895,9 +887,7 @@ public class ApiServiceDeskSteps {
                 throw new RuntimeException(e);
             }
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
@@ -914,9 +904,7 @@ public class ApiServiceDeskSteps {
             notificationDocument.getRef().setKey(videoUploadResponse.getFileKey());
             notificationDocument.getRef().setVersionToken("v1");
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
@@ -1035,9 +1023,7 @@ public class ApiServiceDeskSteps {
             }
             Assertions.assertNotNull(searchNotificationsResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1057,9 +1043,7 @@ public class ApiServiceDeskSteps {
             }
             Assertions.assertNotNull(searchNotificationsResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1079,9 +1063,7 @@ public class ApiServiceDeskSteps {
             }
             Assertions.assertNotNull(searchNotificationsResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1110,13 +1092,14 @@ public class ApiServiceDeskSteps {
             searchNotificationsResponse = ipServiceDeskClient.searchNotificationsFromTaxId(size, nextPagesKey, sDate, eDate, searchNotificationsRequest);
 
             Assertions.assertNotNull(searchNotificationsResponse);
+            Assertions.assertNotNull(searchNotificationsResponse.getResults());
             Assertions.assertTrue(searchNotificationsResponse.getResults().size() > 0);
 
             if(size==1 && nextPagesKey==null){
-                Assertions.assertTrue(searchNotificationsResponse.getResults().size()==1);
+                Assertions.assertEquals(1, searchNotificationsResponse.getResults().size());
             }
             if(size==50 && nextPagesKey==null){
-                Assertions.assertTrue(searchNotificationsResponse.getResults().size()==50);
+                Assertions.assertEquals(50, searchNotificationsResponse.getResults().size());
             }
 
 
@@ -1127,15 +1110,11 @@ public class ApiServiceDeskSteps {
                     listCourtesyMessage.add(notificationResponseTmp.getCourtesyMessages().get(0));
                 }
             }
-            //TODO Gestire Meglio...........
-            if (listCourtesyMessage.size()>0){
-                Assertions.assertTrue(listCourtesyMessage.size()>0);
-            }
+
+            Assertions.assertTrue(listCourtesyMessage.size()>0);
 
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1265,9 +1244,7 @@ public class ApiServiceDeskSteps {
             profileResponse = ipServiceDeskClient.getProfileFromTaxId(profileRequest);
             Assertions.assertNotNull(profileResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
@@ -1303,12 +1280,10 @@ public class ApiServiceDeskSteps {
             if (size==1 && nextPagesKey==null ){
                 Assertions.assertNotNull(searchNotificationsResponse.getResults());
                 Assertions.assertTrue(searchNotificationsResponse.getResults().size()>0);
-                Assertions.assertTrue(searchNotificationsResponse.getResults().size()==1);
+                Assertions.assertEquals(1, searchNotificationsResponse.getResults().size());
             }
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1325,9 +1300,7 @@ public class ApiServiceDeskSteps {
                 notificationDetailResponse = ipServiceDeskClient.getNotificationFromIUN(iun);
             }
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
@@ -1341,9 +1314,7 @@ public class ApiServiceDeskSteps {
             notificationDetailResponse = ipServiceDeskClient.getNotificationFromIUN(searchNotificationsResponse.getResults().get(0).getIun());
 
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1352,11 +1323,9 @@ public class ApiServiceDeskSteps {
         try {
             notificationDetailResponse = ipServiceDeskClient.getNotificationFromIUN(sharedSteps.getSentNotification().getIun());
             Assertions.assertNotNull(notificationDetailResponse);
-            Assertions.assertFalse(notificationDetailResponse.getIsMultiRecipients());
+            Assertions.assertNotEquals(Boolean.TRUE, notificationDetailResponse.getIsMultiRecipients());
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1406,9 +1375,7 @@ public class ApiServiceDeskSteps {
             }
 
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1434,7 +1401,7 @@ public class ApiServiceDeskSteps {
 
             TimelineElement timelineElement = null;
             for (TimelineElement element : timelineResponse.getTimeline()) {
-                if (element.getDetail() != null && element.getDetail().getRecIndex() != null && !destinatario.equals(element.getDetail().getRecIndex())) {
+                if (!destinatario.equals(element.getDetail().getRecIndex())) {
                     timelineElement = element;
                     break;
                 }
@@ -1443,9 +1410,7 @@ public class ApiServiceDeskSteps {
             Assertions.assertNull(timelineElement);
 
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
@@ -1478,9 +1443,7 @@ public class ApiServiceDeskSteps {
             Assertions.assertNotNull(documentsResponse);
 
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
@@ -1542,11 +1505,10 @@ public class ApiServiceDeskSteps {
             }
 
             String mandateIdSearch = null;
-            if ("NULL".equalsIgnoreCase(searchMandateId)) {
-                mandateIdSearch = null;
-            } else if ("NO_SET".equalsIgnoreCase(searchMandateId)) {
+            if ("NO_SET".equalsIgnoreCase(searchMandateId)) {
                 if ("delegato".equalsIgnoreCase(type)) {
                     String taxIdDelegator = setTaxID(taxId);
+                    Assertions.assertNotNull(profileResponse.getDelegateMandates());
                     for (Mandate mandate: profileResponse.getDelegateMandates()) {
                         if (taxIdDelegator.equalsIgnoreCase(mandate.getTaxId())){
                             mandateIdSearch = mandate.getMandateId();
@@ -1554,6 +1516,7 @@ public class ApiServiceDeskSteps {
                         }
                     }
                 }else if ("delegante".equalsIgnoreCase(type)) {
+                    Assertions.assertNotNull(profileResponse.getDelegatorMandates());
                     for (Mandate mandate: profileResponse.getDelegatorMandates()) {
                         String taxIdDelegate = setTaxID(taxId);
                         if (taxIdDelegate.equalsIgnoreCase(mandate.getTaxId())){
@@ -1567,12 +1530,12 @@ public class ApiServiceDeskSteps {
             }
 
             String delegateInternalIdSearch = null;
-            if ("NULL".equalsIgnoreCase(searchInternalId)) {
-                delegateInternalIdSearch = null;
-            } else if ("NO_SET".equalsIgnoreCase(searchInternalId)) {
+
+            if ("NO_SET".equalsIgnoreCase(searchInternalId)) {
                 if ("delegato".equalsIgnoreCase(type)) {
 
                     String taxIdDelegator = setTaxID(taxId);
+                    Assertions.assertNotNull(profileResponse.getDelegateMandates());
                     for (Mandate mandate: profileResponse.getDelegateMandates()) {
                         if (taxIdDelegator.equalsIgnoreCase(mandate.getTaxId())){
                             delegateInternalIdSearch = mandate.getDelegateInternalId();
@@ -1581,6 +1544,7 @@ public class ApiServiceDeskSteps {
                     }
 
                 } else if ("delegante".equalsIgnoreCase(type)) {
+                    Assertions.assertNotNull(profileResponse.getDelegatorMandates());
                     for (Mandate mandate: profileResponse.getDelegatorMandates()) {
                         String taxIdDelegate = setTaxID(taxId);
                         if (taxIdDelegate.equalsIgnoreCase(mandate.getTaxId())){
@@ -1603,9 +1567,7 @@ public class ApiServiceDeskSteps {
             //  Assertions.assertTrue(searchNotificationsResponse.getResults().get(0).getIun().equalsIgnoreCase(sharedSteps.getSentNotification().getIun()));
 
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
 
     }
@@ -1630,9 +1592,7 @@ public class ApiServiceDeskSteps {
 
             Assertions.assertNotNull(searchNotificationsResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1643,8 +1603,6 @@ public class ApiServiceDeskSteps {
         try {
             if ("VUOTO".equalsIgnoreCase(iun)) {
                 iunSearch = "";
-            }else if ("NULL".equalsIgnoreCase(iun)) {
-                    iunSearch = null;
             } else if ("".equalsIgnoreCase(iun)) {
                 Assertions.assertNotNull(searchNotificationsResponse);
                 Assertions.assertNotNull(searchNotificationsResponse.getResults());
@@ -1658,9 +1616,7 @@ public class ApiServiceDeskSteps {
 
             Assertions.assertNotNull(notificationDetailResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1678,8 +1634,6 @@ public class ApiServiceDeskSteps {
                 Assertions.assertTrue(searchNotificationsResponse.getResults().size() > 0);
                 iunSearch = searchNotificationsResponse.getResults().get(0).getIun();
 
-            } else if ("NULL".equalsIgnoreCase(iun)) {
-                iunSearch = null;
             } else {
                 iunSearch = iun;
             }
@@ -1688,9 +1642,7 @@ public class ApiServiceDeskSteps {
 
             Assertions.assertNotNull(timelineResponse);
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1704,9 +1656,7 @@ public class ApiServiceDeskSteps {
             Assertions.assertNotNull(responseApiKeys);
 
         } catch (HttpStatusCodeException e) {
-            if (e instanceof HttpStatusCodeException) {
-                this.notificationError = (HttpStatusCodeException) e;
-            }
+            this.notificationError = e;
         }
     }
 
@@ -1715,8 +1665,6 @@ public class ApiServiceDeskSteps {
 
         if ("VUOTO".equalsIgnoreCase(iun)) {
             iunSearch = "";
-        }else if ("NULL".equalsIgnoreCase(iun)) {
-            iunSearch = null;
         } else if("NO_SET".equalsIgnoreCase(iun)) {
             if (searchNotificationsResponse!= null && searchNotificationsResponse.getResults()!= null && searchNotificationsResponse.getResults().size()>0){
                 iunSearch = searchNotificationsResponse.getResults().get(0).getIun();
@@ -1731,9 +1679,7 @@ public class ApiServiceDeskSteps {
 
     public String  setPaID(String paId){
         String paIDSearch = null;
-        if ("NULL".equalsIgnoreCase(paId)) {
-            paIDSearch = null;
-        } else if ("VUOTO".equalsIgnoreCase(paId)) {
+        if ("VUOTO".equalsIgnoreCase(paId)) {
             paIDSearch = "";
         } else if ("NO_SET".equalsIgnoreCase(paId)) {
             for (PaSummary paSummary: listPa) {
@@ -1752,7 +1698,7 @@ public class ApiServiceDeskSteps {
 
 
     public Integer setSearchPageSize(String searchPageSize){
-        Integer size = 10;
+        int size = 10;
         if (!"NULL".equalsIgnoreCase(searchPageSize)) {
             size = Integer.parseInt(searchPageSize);
         }

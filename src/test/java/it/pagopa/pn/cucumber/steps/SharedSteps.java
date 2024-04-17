@@ -66,7 +66,7 @@ public class SharedSteps {
 
     //private  String iuvGPD;
 
-    private List<String> iuvGPD;
+    private final List<String> iuvGPD;
 
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebRecipientClient webRecipientClient;
@@ -139,7 +139,7 @@ public class SharedSteps {
     @Value("${pn.bearer-token.user2.taxID}")
     private String marioGherkinTaxID;
     private final PnB2bClientTimingConfigs timingConfigs;
-    private String schedulingDeltaDefault = "500";
+    private final String schedulingDeltaDefault = "500";
 
     private final Integer workFlowWaitDefault = 31000;
     private final Integer waitDefault = 10000;
@@ -161,18 +161,18 @@ public class SharedSteps {
     private List<ProgressResponseElementV23> progressResponseElementsV23 = null;
     public static Integer lastEventID = 0;
 
-    private String gherkinSpaTaxID = "12666810299";
+    private final String gherkinSpaTaxID = "12666810299";
     //  private String cucumberSrlTaxID = "SCTPTR04A01C352E";
 
-    private String cucumberSrlTaxID = "20517490320";
+    private final String cucumberSrlTaxID = "20517490320";
 
-    private String cucumberSocietyTaxID = "20517490320";// "DNNGRL83A01C352D";
-    private String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
+    private final String cucumberSocietyTaxID = "20517490320";// "DNNGRL83A01C352D";
+    private final String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
     // private String gherkinSrltaxId = "CCRMCT06A03A433H";
-    private String gherkinAnalogicTaxID = "05722930657";
-    private String gherkinIrreperibileTaxID = "00749900049";
-    private String gherkinSrltaxId = "12666810299";
-    private String cucumberSpataxId = "20517490320"; //
+    private final String gherkinAnalogicTaxID = "05722930657";
+    private final String gherkinIrreperibileTaxID = "00749900049";
+    private final String gherkinSrltaxId = "12666810299";
+    private final String cucumberSpataxId = "20517490320"; //
 
 
     @Value("${pn.external.bearer-token-pg1.id}")
@@ -183,7 +183,7 @@ public class SharedSteps {
     @Value("${pn.external.utilized.pec:testpagopa3@pec.pagopa.it}")
     private String digitalAddress;
 
-    private String defaultDigitalAddress = "testpagopa3@pec.pagopa.it";
+    private final String defaultDigitalAddress = "testpagopa3@pec.pagopa.it";
 
     private SettableApiKey.ApiKeyType apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
 
