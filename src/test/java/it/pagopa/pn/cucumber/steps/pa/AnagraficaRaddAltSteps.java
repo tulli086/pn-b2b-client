@@ -521,8 +521,8 @@ public class AnagraficaRaddAltSteps {
 
         for (int i = 0; i < csvData.size(); i++) {
             data.add(new String[]{
-                    csvData.get(i).getAddress().getCity(),
                     csvData.get(i).getAddress().getCountry(),
+                    csvData.get(i).getAddress().getCity(),
                     csvData.get(i).getAddress().getPr(),
                     csvData.get(i).getAddress().getCap(),
                     csvData.get(i).getAddress().getAddressRow(),

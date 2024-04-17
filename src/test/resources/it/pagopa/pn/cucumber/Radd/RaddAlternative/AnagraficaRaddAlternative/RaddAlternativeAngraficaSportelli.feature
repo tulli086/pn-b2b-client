@@ -7,6 +7,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | random           | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | 01/5410951       | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | test radd         |
       | random           | 30023            | VE                    | CONCORDIA SAGITTARIA | ITALIA               | test sportelli   | 01/5245951       | 11.0000                     | 32.1245                      | lun=9:00-10:00#  | now                 | +10g              | 22            | test radd         |
     Then viene controllato lo stato di caricamento del csv a "DONE"
+    Then si controlla che il sporetello sia in stato "ACCEPTED"
 
 
   @raddAnagrafica @puliziaSportelliCsv
