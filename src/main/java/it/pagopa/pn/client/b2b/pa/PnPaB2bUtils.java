@@ -14,6 +14,7 @@ import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.mo
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +40,8 @@ import java.util.*;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class PnPaB2bUtils {
-
-    private static Logger log = LoggerFactory.getLogger(PnPaB2bUtils.class);
 
     private final RestTemplate restTemplate;
     private final ApplicationContext ctx;

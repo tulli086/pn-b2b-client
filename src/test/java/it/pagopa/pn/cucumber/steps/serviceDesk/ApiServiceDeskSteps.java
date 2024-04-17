@@ -537,7 +537,6 @@ public class ApiServiceDeskSteps {
         log.info("generata la url:" + url);
         String secretkey = videoUploadResponse.getSecret();
         Assertions.assertNotNull(secretkey);
-        log.info("generata la secret key:" + secretkey);
         String filekey = videoUploadResponse.getFileKey();
         Assertions.assertNotNull(filekey);
         log.info("generata la file key:" + filekey);
@@ -988,7 +987,6 @@ public class ApiServiceDeskSteps {
 
     private boolean checkRetetion(String fileKey, Integer retentionTime) {
         PnExternalServiceClientImpl.SafeStorageResponse safeStorageResponse = safeStorageClient.safeStorageInfoPnServiceDesk(fileKey);
-        log.info("safestorage response: " + safeStorageResponse);
         LocalDateTime localDateTimeNow = LocalDate.now().atStartOfDay();
         OffsetDateTime now = OffsetDateTime.of(localDateTimeNow, ZoneOffset.of("Z"));
         OffsetDateTime retentionUntil = OffsetDateTime.parse(safeStorageResponse.getRetentionUntil());
