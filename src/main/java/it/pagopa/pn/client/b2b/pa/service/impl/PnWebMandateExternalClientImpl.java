@@ -10,35 +10,32 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
+
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnWebMandateExternalClientImpl implements IPnWebMandateClient {
-
     private final RestTemplate restTemplate;
     private final MandateServiceApi mandateServiceApi;
-
     private final String marioCucumberBearerToken;
     private final String marioGherkinBearerToken;
     private final String leonardoBearerToken;
     private final String gherkinSrlBearerToken;
     private final String cucumberSpaBearerToken;
-    private BearerTokenType bearerTokenSetted = BearerTokenType.USER_1;
+    private BearerTokenType bearerTokenSetted;
     private final String userAgent;
     private final String basePath;
 
-    public PnWebMandateExternalClientImpl(
-            RestTemplate restTemplate,
-            @Value("${pn.webapi.external.base-url}") String basePath,
-            @Value("${pn.bearer-token.user1}") String marioCucumberBearerToken,
-            @Value("${pn.bearer-token.user2}") String marioGherkinBearerToken,
-            @Value("${pn.bearer-token.user3}") String leonardoBearerToken,
-            @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
-            @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
-            @Value("${pn.webapi.external.user-agent}")String userAgent
-    ) {
+
+    public PnWebMandateExternalClientImpl(RestTemplate restTemplate,
+                                          @Value("${pn.webapi.external.base-url}") String basePath,
+                                          @Value("${pn.bearer-token.user1}") String marioCucumberBearerToken,
+                                          @Value("${pn.bearer-token.user2}") String marioGherkinBearerToken,
+                                          @Value("${pn.bearer-token.user3}") String leonardoBearerToken,
+                                          @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
+                                          @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
+                                          @Value("${pn.webapi.external.user-agent}")String userAgent) {
         this.restTemplate = restTemplate;
         this.marioCucumberBearerToken = marioCucumberBearerToken;
         this.marioGherkinBearerToken = marioGherkinBearerToken;
@@ -48,6 +45,7 @@ public class PnWebMandateExternalClientImpl implements IPnWebMandateClient {
         this.basePath = basePath;
         this.userAgent = userAgent;
         this.mandateServiceApi = new MandateServiceApi( newApiClient( restTemplate, basePath, marioCucumberBearerToken,userAgent) );
+        this.bearerTokenSetted = BearerTokenType.USER_1;
     }
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String bearerToken, String userAgent ) {

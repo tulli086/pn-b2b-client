@@ -20,7 +20,8 @@ public class PnRaddFsuClientImpl implements IPnRaddFsuClient {
     private final NotificationInquiryApi notificationInquiryApi;
 
 
-    public PnRaddFsuClientImpl(RestTemplate restTemplate, @Value("${pn.radd.base-url}") String basePath) {
+    public PnRaddFsuClientImpl(RestTemplate restTemplate,
+                               @Value("${pn.radd.base-url}") String basePath) {
         this.actDocumentInquiryApi = new ActDocumentInquiryApi(newApiClient(restTemplate,basePath));
         this.actTransactionManagementApi = new ActTransactionManagementApi(newApiClient(restTemplate,basePath));
         this.aorDocumentInquiryApi = new AorDocumentInquiryApi(newApiClient(restTemplate,basePath));

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
 import java.time.LocalDate;
 
 
@@ -18,39 +17,19 @@ import java.time.LocalDate;
 public class PnGPDClientImpl implements IPnGPDClient {
     private final DebtPositionsApiApi debtPositionsApiApi;
 
-/*
-    private final NotificationRequest req;
-    private final CreateOperationRequest creaOp;
-
-    private final VideoUploadRequest videoreq;
-
-    private final SearchNotificationRequest searchreq;
-
-    private final AnalogAddress address;
-
- */
-
-
-    public PnGPDClientImpl(
-            RestTemplate restTemplate,
-            @Value("${pn.internal.gpd-base-url}") String deliveryBasePath,
-            @Value("${pn.external.api-subscription-key}") String key
-    ) {
-
+    public PnGPDClientImpl(RestTemplate restTemplate,
+                           @Value("${pn.internal.gpd-base-url}") String deliveryBasePath,
+                           @Value("${pn.external.api-subscription-key}") String key) {
         this.debtPositionsApiApi = new DebtPositionsApiApi(newApiClient(restTemplate, deliveryBasePath, key));
-
-
     }
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String key) {
-        //private static ApiClient newApiClient(RestTemplate restTemplate, String basePath) {
         ApiClient newApiClient = new ApiClient(restTemplate);
         newApiClient.setBasePath(basePath);
         newApiClient.addDefaultHeader("Ocp-Apim-Subscription-Key", key);
         newApiClient.addDefaultHeader("Content-Type", "application/json");
         return newApiClient;
     }
-
 
     @Override
     public PaymentPositionModel createPosition(String organizationfiscalcode, PaymentPositionModel paymentPositionModel, String xRequestId, Boolean toPublish) throws RestClientException {
@@ -76,5 +55,4 @@ public class PnGPDClientImpl implements IPnGPDClient {
     public PaymentPositionModel updatePosition(String organizationfiscalcode, String iupd, PaymentPositionModel paymentPositionModel, String xRequestId) throws RestClientException {
         return debtPositionsApiApi.updatePositionWithHttpInfo(organizationfiscalcode, iupd, paymentPositionModel, xRequestId,false).getBody();
     }
-
 }

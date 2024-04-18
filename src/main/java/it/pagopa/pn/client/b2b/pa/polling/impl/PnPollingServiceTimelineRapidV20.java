@@ -28,7 +28,6 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
     protected final TimingForPolling timingForPolling;
     private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotificationV20 notificationV20;
-    private TimelineElementV20 timelineElementV20;
 
 
     public PnPollingServiceTimelineRapidV20(TimingForPolling timingForPolling, IPnPaB2bClient pnPaB2bClient) {
@@ -55,7 +54,7 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
 
     @Override
     protected Predicate<PnPollingResponseV20> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
-        return (pnPollingResponse) -> {
+        return pnPollingResponse -> {
             if(pnPollingResponse.getNotification() == null) {
                 pnPollingResponse.setResult(false);
                 return false;
@@ -67,8 +66,6 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
                 return false;
             }
 
-            pnPollingResponse.setResult(true);
-            pnPollingResponse.setTimelineElement(timelineElementV20);
             return true;
         };
     }
@@ -124,7 +121,8 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
                 .orElse(null);
 
         if(timelineElementV20 != null) {
-            this.timelineElementV20 = timelineElementV20;
+            pnPollingResponse.setTimelineElement(timelineElementV20);
+            pnPollingResponse.setResult(true);
             return true;
         }
         return false;

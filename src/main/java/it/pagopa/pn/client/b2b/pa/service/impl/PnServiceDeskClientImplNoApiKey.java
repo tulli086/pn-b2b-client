@@ -17,15 +17,16 @@ public class PnServiceDeskClientImplNoApiKey implements IPServiceDeskClientImplN
     private final OperationApi operation;
     private final String operatorId;
 
+
     public PnServiceDeskClientImplNoApiKey(RestTemplate restTemplate, @Value("${pn.externalChannels.base-url}") String deliveryBasePath) {
         this.operatorId = "AutomationMv";
-        this.notification = new NotificationApi(newApiClient(restTemplate, deliveryBasePath));
-        this.operation = new OperationApi(newApiClient(restTemplate, deliveryBasePath));
+        this.notification = new NotificationApi(newApiClient( restTemplate, deliveryBasePath));
+        this.operation = new OperationApi(newApiClient( restTemplate, deliveryBasePath));
     }
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath) {
-        ApiClient newApiClient = new ApiClient(restTemplate);
-        newApiClient.setBasePath(basePath);
+        ApiClient newApiClient = new ApiClient( restTemplate );
+        newApiClient.setBasePath( basePath );
         return newApiClient;
     }
 
@@ -33,15 +34,15 @@ public class PnServiceDeskClientImplNoApiKey implements IPServiceDeskClientImplN
         return notification.numberOfUnreachableNotifications(operatorId, notificationRequest);
     }
 
-    public OperationsResponse createOperation(CreateOperationRequest createOperationRequest) throws RestClientException {
-        return operation.createOperation(operatorId, createOperationRequest);
+    public OperationsResponse createOperation(CreateOperationRequest createOperationRequest)throws RestClientException {
+        return operation.createOperation(operatorId,createOperationRequest);
     }
 
-    public VideoUploadResponse presignedUrlVideoUpload(String operationid, VideoUploadRequest videoUploadRequest) {
+    public VideoUploadResponse presignedUrlVideoUpload(String operationid, VideoUploadRequest videoUploadRequest){
         return operation.presignedUrlVideoUpload(operatorId, operationid, videoUploadRequest);
     }
 
-    public SearchResponse searchOperationsFromTaxId(SearchNotificationRequest searchNotificationRequest) {
+    public SearchResponse searchOperationsFromTaxId(SearchNotificationRequest searchNotificationRequest){
         return operation.searchOperationsFromTaxId(operatorId, searchNotificationRequest);
     }
 }

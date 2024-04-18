@@ -17,43 +17,35 @@ public class PnServiceDeskClientImplWrongApiKey implements IPServiceDeskClientIm
     private final OperationApi operation;
     private final String operatorId;
 
-    public PnServiceDeskClientImplWrongApiKey(
-            RestTemplate restTemplate,
-            @Value("${pn.externalChannels.base-url}") String deliveryBasePath,
-            @Value("${pn.external.api-keys.service-desk}") String apiKeyBase
-    ) {
 
+    public PnServiceDeskClientImplWrongApiKey(RestTemplate restTemplate,
+                                              @Value("${pn.externalChannels.base-url}") String deliveryBasePath ,
+                                              @Value("${pn.external.api-keys.service-desk}") String apiKeyBase) {
         this.operatorId = "AutomationMv";
-        this.notification = new NotificationApi(newApiClient(restTemplate, deliveryBasePath, apiKeyBase + "ERR"));
-        this.operation = new OperationApi(newApiClient(restTemplate, deliveryBasePath, apiKeyBase + "ERR"));
-
-
+        this.notification = new NotificationApi(newApiClient( restTemplate, deliveryBasePath,apiKeyBase+"ERR"));
+        this.operation = new OperationApi(newApiClient( restTemplate, deliveryBasePath,apiKeyBase+"ERR"));
     }
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apiKey) {
-        ApiClient newApiClient = new ApiClient(restTemplate);
-        newApiClient.setBasePath(basePath);
-        newApiClient.addDefaultHeader("x-api-key", apiKey);
+        ApiClient newApiClient = new ApiClient( restTemplate );
+        newApiClient.setBasePath( basePath );
+        newApiClient.addDefaultHeader("x-api-key", apiKey );
         return newApiClient;
     }
 
     public NotificationsUnreachableResponse notification(NotificationRequest notificationRequest) throws RestClientException {
         return notification.numberOfUnreachableNotifications(operatorId, notificationRequest);
-
     }
 
-    public OperationsResponse createOperation(CreateOperationRequest createOperationRequest) throws RestClientException {
-        return operation.createOperation(operatorId, createOperationRequest);
+    public OperationsResponse createOperation(CreateOperationRequest createOperationRequest)throws RestClientException {
+        return operation.createOperation(operatorId,createOperationRequest);
     }
 
-    public VideoUploadResponse presignedUrlVideoUpload(String operationid, VideoUploadRequest videoUploadRequest) {
+    public VideoUploadResponse presignedUrlVideoUpload(String operationid, VideoUploadRequest videoUploadRequest){
         return operation.presignedUrlVideoUpload(operatorId, operationid, videoUploadRequest);
     }
 
-    public SearchResponse searchOperationsFromTaxId(SearchNotificationRequest searchNotificationRequest) {
+    public SearchResponse searchOperationsFromTaxId(SearchNotificationRequest searchNotificationRequest){
         return operation.searchOperationsFromTaxId(operatorId, searchNotificationRequest);
-
     }
-
-
 }

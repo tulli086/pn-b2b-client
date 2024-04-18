@@ -19,9 +19,8 @@ public class PnIoUserAttributerExternaClient implements IPnIoUserAttributerExter
 
 
     public PnIoUserAttributerExternaClient(RestTemplate restTemplate,
-            @Value("${pn.appio.externa.base-url}") String devBasePath,
-            @Value("${pn.external.appio.api-key}") String devApiKey
-    ) {
+                                           @Value("${pn.appio.externa.base-url}") String devBasePath,
+                                           @Value("${pn.external.appio.api-key}") String devApiKey) {
         this.courtesyApiIo = new CourtesyApi( newApiClient( restTemplate, devBasePath, devApiKey) );
     }
 

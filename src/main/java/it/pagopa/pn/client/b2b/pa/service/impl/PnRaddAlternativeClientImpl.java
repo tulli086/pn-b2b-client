@@ -17,9 +17,6 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
-
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String BEARER = "Bearer ";
     private final String raddista1;
     private final String raddista2;
     private final String raddistaNonCensito;
@@ -33,6 +30,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final AorOperationsApi aorOperationsApi;
     private final DocumentOperationsApi documentOperationsApi;
     private final NotificationInquiryApi notificationInquiryApi;
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
 
 
     public PnRaddAlternativeClientImpl(RestTemplate restTemplate,
@@ -98,7 +97,6 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     public AORInquiryResponse aorInquiry( String uid, String recipientTaxId, String recipientType) throws RestClientException {
         return this.aorOperationsApi.aorInquiryWithHttpInfo( uid, recipientTaxId, recipientType).getBody();
     }
-
 
     public AbortTransactionResponse abortAorTransaction(String uid, AbortTransactionRequest abortTransactionRequest) throws RestClientException {
         return this.aorOperationsApi.abortAorTransactionWithHttpInfo(uid, abortTransactionRequest).getBody();

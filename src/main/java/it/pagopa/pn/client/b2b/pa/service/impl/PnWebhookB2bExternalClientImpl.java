@@ -29,9 +29,6 @@ import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENE
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
-    
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String BEARER = "Bearer ";
     private final RestTemplate restTemplate;
     private final EventsApi eventsApi;
     private final StreamsApi streamsApi;
@@ -47,14 +44,12 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
     private final InteropTokenSingleton interopTokenSingleton;
 
 
-    public PnWebhookB2bExternalClientImpl(RestTemplate restTemplate,
-            InteropTokenSingleton interopTokenSingleton,
-            @Value("${pn.external.base-url}") String devBasePath,
-            @Value("${pn.external.api-key}") String apiKeyMvp1,
-            @Value("${pn.external.api-key-2}") String apiKeyMvp2,
-            @Value("${pn.external.api-key-GA}") String apiKeyGa,
-            @Value("${pn.interop.enable}") String enableInterop
-    ) {
+    public PnWebhookB2bExternalClientImpl(RestTemplate restTemplate, InteropTokenSingleton interopTokenSingleton,
+                                          @Value("${pn.external.base-url}") String devBasePath,
+                                          @Value("${pn.external.api-key}") String apiKeyMvp1,
+                                          @Value("${pn.external.api-key-2}") String apiKeyMvp2,
+                                          @Value("${pn.external.api-key-GA}") String apiKeyGa,
+                                          @Value("${pn.interop.enable}") String enableInterop) {
         this.restTemplate = restTemplate;
         this.apiKeyMvp1 = apiKeyMvp1;
         this.apiKeyMvp2 = apiKeyMvp2;
@@ -79,10 +74,10 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
             if(!tokenInterop.equals(this.bearerTokenInterop)){
                 log.info("webhookClient call interopTokenSingleton");
                 this.bearerTokenInterop = tokenInterop;
-                this.eventsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + bearerTokenInterop);
-                this.streamsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + bearerTokenInterop);
-                this.eventsApiV23.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + bearerTokenInterop);
-                this.streamsApiV23.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + bearerTokenInterop);
+                this.eventsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.streamsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.eventsApiV23.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.streamsApiV23.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
             }
         }
     }
@@ -92,7 +87,7 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
         newApiClient.setBasePath( basePath );
         newApiClient.addDefaultHeader("x-api-key", apikey );
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
-            newApiClient.addDefaultHeader(AUTHORIZATION, BEARER + bearerToken);
+            newApiClient.addDefaultHeader("Authorization", "Bearer " + bearerToken);
         }
         return newApiClient;
     }
@@ -134,7 +129,6 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
     }
 
     //Versione 2_3
-
     public StreamMetadataResponseV23 createEventStreamV23(StreamCreationRequestV23 streamCreationRequest){
         refreshAndSetTokenInteropClient();
         return this.streamsApiV23.createEventStreamV23(streamCreationRequest);
@@ -176,33 +170,31 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
         return this.eventsApiV23.consumeEventStreamV23WithHttpInfo(streamId,lastEventId);
     }
 
-
     @Override
     public boolean setApiKeys(ApiKeyType apiKey) {
         boolean beenSet = false;
-        switch (apiKey) {
-            case MVP_1 -> {
-                if (this.apiKeySetted != ApiKeyType.MVP_1) {
+        switch(apiKey){
+            case MVP_1:
+                if(this.apiKeySetted != ApiKeyType.MVP_1){
                     setApiKey(apiKeyMvp1);
                     this.apiKeySetted = ApiKeyType.MVP_1;
                 }
                 beenSet = true;
-            }
-            case MVP_2 -> {
-                if (this.apiKeySetted != ApiKeyType.MVP_2) {
+                break;
+            case MVP_2:
+                if(this.apiKeySetted != ApiKeyType.MVP_2) {
                     setApiKey(apiKeyMvp2);
                     this.apiKeySetted = ApiKeyType.MVP_2;
                 }
                 beenSet = true;
-            }
-            case GA -> {
-                if (this.apiKeySetted != ApiKeyType.GA) {
+                break;
+            case GA:
+                if(this.apiKeySetted != ApiKeyType.GA) {
                     setApiKey(apiKeyGa);
                     this.apiKeySetted = ApiKeyType.GA;
                 }
                 beenSet = true;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + apiKey);
+                break;
         }
         return beenSet;
     }

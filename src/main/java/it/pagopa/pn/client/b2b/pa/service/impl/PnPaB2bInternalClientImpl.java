@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import it.pagopa.pn.client.b2b.pa.exception.PnB2bException;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.ApiClient;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.internalb2bpa.api.*;
@@ -300,8 +301,8 @@ public class PnPaB2bInternalClientImpl implements IPnPaB2bClient {
         try {
             String json = objMapper.writeValueAsString( obj );
             return objMapper.readValue( json, toClass );
-        } catch (JsonProcessingException exc ) {
-            throw new RuntimeException( exc );
+        } catch (JsonProcessingException exc) {
+            throw new PnB2bException(exc.getMessage());
         }
     }
 
