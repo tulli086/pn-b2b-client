@@ -81,7 +81,7 @@ public class AnagraficaRaddAltSteps {
             Assertions.assertNotNull(responseUploadCsv.getUrl());
             Assertions.assertNotNull(responseUploadCsv.getFileKey());
             this.requestid = responseUploadCsv.getRequestId();
-           pnPaB2bUtils.preloadRadCSVDocument("classpath:/" + this.fileCsvName,this.shaCSV,responseUploadCsv,true);
+            pnPaB2bUtils.preloadRadCSVDocument("classpath:/" + this.fileCsvName,this.shaCSV,responseUploadCsv,true);
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -265,14 +265,14 @@ public class AnagraficaRaddAltSteps {
             it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello= raddAltClient.retrieveRequestItems(
                     this.uid
                     ,  this.requestid
-                    , 10
+                    , 100
                     , null);
 
-            dato= sportello.getItems().stream().filter(elem->elem.getRequestId().equalsIgnoreCase(this.requestid)).findAny().orElse(null);
+            dato= sportello.getItems().stream().filter(elem->elem.getRequestId().equalsIgnoreCase(this.requestid) && elem.getStatus().equalsIgnoreCase(stato)).findAny().orElse(null);
 
             if(stato.equalsIgnoreCase("accepted")){
                 try {
-                    Thread.sleep(15000);
+                    Thread.sleep(20000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
