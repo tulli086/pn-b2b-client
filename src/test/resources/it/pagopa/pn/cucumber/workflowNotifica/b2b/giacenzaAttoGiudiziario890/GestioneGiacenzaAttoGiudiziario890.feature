@@ -283,7 +283,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | senderDenomination | Comune di palermo |
     And destinatario Mario Gherkin e:
       | digitalDomicile         | NULL           |
-      | physicalAddress_address | @OK-GiacenzaDelegato-lte10_890_auto-redrive |
+      | physicalAddress_address | @OK-GiacenzaDelegato-lte10_890_redrive |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "CON080"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG010"
