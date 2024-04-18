@@ -555,7 +555,6 @@ public class AnagraficaRaddAltSteps {
                 throw new RuntimeException(e);
             }
         }
-    }
 
 
         this.shaCSV = pnPaB2bUtils.computeSha256("classpath:/" + this.fileCsvName);
