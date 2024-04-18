@@ -519,11 +519,8 @@ public class AnagraficaRaddAltSteps {
         List<CreateRegistryRequest> csvData = dataTableTypeRaddAlt.convertToListRegistryRequestData(dataCsv);
 
         List<String[]> data = new ArrayList<>();
-        if (formatoCsv) {
+
             data.add(new String[]{"paese", "citta", "provincia", "cap", "via", "dataInizioValidità", "dataFineValidità", "descrizione", "orariApertura", "coordinateGeoReferenziali", "telefono", "capacita", "exsternalCode"});
-        }else {
-            data.add(new String[]{""});
-        }
         for (int i = 0; i < csvData.size(); i++) {
             data.add(new String[]{
                     csvData.get(i).getAddress().getCountry(),
@@ -543,14 +540,22 @@ public class AnagraficaRaddAltSteps {
             });
         }
 
-
+        if (formatoCsv) {
             try (CSVWriter writer = new CSVWriter(new FileWriter(fileCaricamento, StandardCharsets.UTF_8), ';',
                     CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
                 writer.writeAll(data);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
+        } else {
+            try (CSVWriter writer = new CSVWriter(new FileWriter(fileCaricamento, StandardCharsets.UTF_8), ',',
+                    CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+                writer.writeAll(data);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
 
         this.shaCSV = pnPaB2bUtils.computeSha256("classpath:/" + this.fileCsvName);
