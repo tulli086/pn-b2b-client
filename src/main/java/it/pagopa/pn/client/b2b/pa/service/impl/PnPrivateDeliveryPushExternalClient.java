@@ -30,7 +30,6 @@ public class PnPrivateDeliveryPushExternalClient implements IPnPrivateDeliveryPu
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath ) {
         ApiClient newApiClient = new ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
-        // newApiClient.addDefaultHeader("x-api-key", apiKey );
         return newApiClient;
     }
 

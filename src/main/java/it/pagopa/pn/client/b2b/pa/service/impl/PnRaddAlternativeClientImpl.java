@@ -17,6 +17,9 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
+
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String BEARER = "Bearer ";
     private final String raddista1;
     private final String raddista2;
     private final String raddistaNonCensito;
@@ -66,14 +69,14 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private static it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClientExternal(RestTemplate restTemplate, String basePath,String token ) {
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClient = new it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
-        newApiClient.addDefaultHeader("Authorization", "Bearer " + token);
+        newApiClient.addDefaultHeader(AUTHORIZATION, BEARER + token);
         return newApiClient;
     }
 
     public void selectRaddista(String token){
-        this.actOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
-        this.aorOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
-        this.documentOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
+        this.actOperationsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + token);
+        this.aorOperationsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + token);
+        this.documentOperationsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + token);
     }
 
     public ActInquiryResponse actInquiry( String uid, String recipientTaxId, String recipientType, String qrCode, String iun) throws RestClientException {

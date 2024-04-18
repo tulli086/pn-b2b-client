@@ -9,7 +9,6 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.mo
 import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model_v1.FullReceivedNotification;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -79,70 +78,71 @@ public class PnWebRecipientExternalClientImpl implements IPnWebRecipientClient {
     @Override
     public boolean setBearerToken(BearerTokenType bearerToken) {
         boolean beenSet = false;
-        switch (bearerToken){
-            case USER_1:
-                this.recipientReadApi.setApiClient(newApiClient( restTemplate, basePath, marioCucumberBearerToken,userAgent));
-                this.recipientReadApiV1.setApiClient(newApiClient( restTemplate, basePath, marioCucumberBearerToken,userAgent));
-                this.recipientReadApiV2.setApiClient(newApiClient( restTemplate, basePath, marioCucumberBearerToken,userAgent));
-                this.legalFactsApi.setApiClient(newApiClient( restTemplate, basePath, marioCucumberBearerToken,userAgent));
-                this.documentsWebApi.setApiClient(newApiClient( restTemplate, basePath, marioCucumberBearerToken,userAgent));
+        switch (bearerToken) {
+            case USER_1 -> {
+                this.recipientReadApi.setApiClient(newApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
+                this.recipientReadApiV1.setApiClient(newApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
+                this.recipientReadApiV2.setApiClient(newApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
+                this.legalFactsApi.setApiClient(newApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
+                this.documentsWebApi.setApiClient(newApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
                 this.bearerTokenSetted = BearerTokenType.USER_1;
                 beenSet = true;
-                break;
-            case USER_2:
-                this.recipientReadApi.setApiClient(newApiClient( restTemplate, basePath, marioGherkinBearerToken,userAgent));
-                this.recipientReadApiV1.setApiClient(newApiClient( restTemplate, basePath, marioGherkinBearerToken,userAgent));
-                this.recipientReadApiV2.setApiClient(newApiClient( restTemplate, basePath, marioGherkinBearerToken,userAgent));
-                this.legalFactsApi.setApiClient(newApiClient( restTemplate, basePath, marioGherkinBearerToken,userAgent));
-                this.documentsWebApi.setApiClient(newApiClient( restTemplate, basePath, marioGherkinBearerToken,userAgent));
+            }
+            case USER_2 -> {
+                this.recipientReadApi.setApiClient(newApiClient(restTemplate, basePath, marioGherkinBearerToken, userAgent));
+                this.recipientReadApiV1.setApiClient(newApiClient(restTemplate, basePath, marioGherkinBearerToken, userAgent));
+                this.recipientReadApiV2.setApiClient(newApiClient(restTemplate, basePath, marioGherkinBearerToken, userAgent));
+                this.legalFactsApi.setApiClient(newApiClient(restTemplate, basePath, marioGherkinBearerToken, userAgent));
+                this.documentsWebApi.setApiClient(newApiClient(restTemplate, basePath, marioGherkinBearerToken, userAgent));
                 this.bearerTokenSetted = BearerTokenType.USER_2;
                 beenSet = true;
-                break;
-            case USER_3:
-                this.recipientReadApi.setApiClient(newApiClient( restTemplate, basePath, leonardoBearerToken,userAgent));
-                this.recipientReadApiV1.setApiClient(newApiClient( restTemplate, basePath, leonardoBearerToken,userAgent));
-                this.recipientReadApiV2.setApiClient(newApiClient( restTemplate, basePath, leonardoBearerToken,userAgent));
-                this.legalFactsApi.setApiClient(newApiClient( restTemplate, basePath, leonardoBearerToken,userAgent));
-                this.documentsWebApi.setApiClient(newApiClient( restTemplate, basePath, leonardoBearerToken,userAgent));
+            }
+            case USER_3 -> {
+                this.recipientReadApi.setApiClient(newApiClient(restTemplate, basePath, leonardoBearerToken, userAgent));
+                this.recipientReadApiV1.setApiClient(newApiClient(restTemplate, basePath, leonardoBearerToken, userAgent));
+                this.recipientReadApiV2.setApiClient(newApiClient(restTemplate, basePath, leonardoBearerToken, userAgent));
+                this.legalFactsApi.setApiClient(newApiClient(restTemplate, basePath, leonardoBearerToken, userAgent));
+                this.documentsWebApi.setApiClient(newApiClient(restTemplate, basePath, leonardoBearerToken, userAgent));
                 this.bearerTokenSetted = BearerTokenType.USER_3;
                 beenSet = true;
-                break;
-            case USER_5:
-                this.recipientReadApi.setApiClient(newApiClient( restTemplate, basePath, dinoBearerToken,userAgent));
-                this.recipientReadApiV1.setApiClient(newApiClient( restTemplate, basePath, dinoBearerToken,userAgent));
-                this.recipientReadApiV2.setApiClient(newApiClient( restTemplate, basePath, dinoBearerToken,userAgent));
-                this.legalFactsApi.setApiClient(newApiClient( restTemplate, basePath, dinoBearerToken,userAgent));
-                this.documentsWebApi.setApiClient(newApiClient( restTemplate, basePath, dinoBearerToken,userAgent));
+            }
+            case USER_5 -> {
+                this.recipientReadApi.setApiClient(newApiClient(restTemplate, basePath, dinoBearerToken, userAgent));
+                this.recipientReadApiV1.setApiClient(newApiClient(restTemplate, basePath, dinoBearerToken, userAgent));
+                this.recipientReadApiV2.setApiClient(newApiClient(restTemplate, basePath, dinoBearerToken, userAgent));
+                this.legalFactsApi.setApiClient(newApiClient(restTemplate, basePath, dinoBearerToken, userAgent));
+                this.documentsWebApi.setApiClient(newApiClient(restTemplate, basePath, dinoBearerToken, userAgent));
                 this.bearerTokenSetted = BearerTokenType.USER_5;
                 beenSet = true;
-                break;
-            case PG_1:
-                this.recipientReadApi.setApiClient(newApiClient( restTemplate, basePath, gherkinSrlBearerToken,userAgent));
-                this.recipientReadApiV1.setApiClient(newApiClient( restTemplate, basePath, gherkinSrlBearerToken,userAgent));
-                this.recipientReadApiV2.setApiClient(newApiClient( restTemplate, basePath, gherkinSrlBearerToken,userAgent));
-                this.legalFactsApi.setApiClient(newApiClient( restTemplate, basePath, gherkinSrlBearerToken,userAgent));
-                this.documentsWebApi.setApiClient(newApiClient( restTemplate, basePath, gherkinSrlBearerToken,userAgent));
+            }
+            case PG_1 -> {
+                this.recipientReadApi.setApiClient(newApiClient(restTemplate, basePath, gherkinSrlBearerToken, userAgent));
+                this.recipientReadApiV1.setApiClient(newApiClient(restTemplate, basePath, gherkinSrlBearerToken, userAgent));
+                this.recipientReadApiV2.setApiClient(newApiClient(restTemplate, basePath, gherkinSrlBearerToken, userAgent));
+                this.legalFactsApi.setApiClient(newApiClient(restTemplate, basePath, gherkinSrlBearerToken, userAgent));
+                this.documentsWebApi.setApiClient(newApiClient(restTemplate, basePath, gherkinSrlBearerToken, userAgent));
                 this.bearerTokenSetted = BearerTokenType.PG_1;
                 beenSet = true;
-                break;
-            case PG_2:
-                this.recipientReadApi.setApiClient(newApiClient( restTemplate, basePath, cucumberSpaBearerToken,userAgent));
-                this.recipientReadApiV1.setApiClient(newApiClient( restTemplate, basePath, cucumberSpaBearerToken,userAgent));
-                this.recipientReadApiV2.setApiClient(newApiClient( restTemplate, basePath, cucumberSpaBearerToken,userAgent));
-                this.legalFactsApi.setApiClient(newApiClient( restTemplate, basePath, cucumberSpaBearerToken,userAgent));
-                this.documentsWebApi.setApiClient(newApiClient( restTemplate, basePath, cucumberSpaBearerToken,userAgent));
+            }
+            case PG_2 -> {
+                this.recipientReadApi.setApiClient(newApiClient(restTemplate, basePath, cucumberSpaBearerToken, userAgent));
+                this.recipientReadApiV1.setApiClient(newApiClient(restTemplate, basePath, cucumberSpaBearerToken, userAgent));
+                this.recipientReadApiV2.setApiClient(newApiClient(restTemplate, basePath, cucumberSpaBearerToken, userAgent));
+                this.legalFactsApi.setApiClient(newApiClient(restTemplate, basePath, cucumberSpaBearerToken, userAgent));
+                this.documentsWebApi.setApiClient(newApiClient(restTemplate, basePath, cucumberSpaBearerToken, userAgent));
                 this.bearerTokenSetted = BearerTokenType.PG_2;
                 beenSet = true;
-                break;
-            case USER_SCADUTO:
-                this.recipientReadApi.setApiClient(newApiClient( restTemplate, basePath, userBearerTokenScaduto,userAgent));
-                this.recipientReadApiV1.setApiClient(newApiClient( restTemplate, basePath, userBearerTokenScaduto,userAgent));
-                this.recipientReadApiV2.setApiClient(newApiClient( restTemplate, basePath, userBearerTokenScaduto,userAgent));
-                this.legalFactsApi.setApiClient(newApiClient( restTemplate, basePath, userBearerTokenScaduto,userAgent));
-                this.documentsWebApi.setApiClient(newApiClient( restTemplate, basePath, userBearerTokenScaduto,userAgent));
+            }
+            case USER_SCADUTO -> {
+                this.recipientReadApi.setApiClient(newApiClient(restTemplate, basePath, userBearerTokenScaduto, userAgent));
+                this.recipientReadApiV1.setApiClient(newApiClient(restTemplate, basePath, userBearerTokenScaduto, userAgent));
+                this.recipientReadApiV2.setApiClient(newApiClient(restTemplate, basePath, userBearerTokenScaduto, userAgent));
+                this.legalFactsApi.setApiClient(newApiClient(restTemplate, basePath, userBearerTokenScaduto, userAgent));
+                this.documentsWebApi.setApiClient(newApiClient(restTemplate, basePath, userBearerTokenScaduto, userAgent));
                 this.bearerTokenSetted = BearerTokenType.USER_SCADUTO;
                 beenSet = true;
-                break;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + bearerToken);
         }
         return beenSet;
     }

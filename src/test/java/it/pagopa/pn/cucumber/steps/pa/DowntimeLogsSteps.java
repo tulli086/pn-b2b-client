@@ -7,14 +7,13 @@ import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.externalDowntimeLogs.model.*;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnDowntimeLogsClient;
-import it.pagopa.pn.cucumber.steps.SharedSteps;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -50,7 +49,7 @@ public class DowntimeLogsSteps {
                 pnFunctionality = PnFunctionality.NOTIFICATION_WORKFLOW;
                 break;
         }
-        List<PnFunctionality> pnFunctionalities = Arrays.asList(pnFunctionality);
+        List<PnFunctionality> pnFunctionalities = Collections.singletonList(pnFunctionality);
 
         this.pnDowntimeHistoryResponse = downtimeLogsClient.statusHistory(OffsetDateTime.now().minusDays(time), OffsetDateTime.now(),
                 pnFunctionalities, "0", "50");
@@ -64,7 +63,7 @@ public class DowntimeLogsSteps {
         Assertions.assertNotNull(pnDowntimeHistoryResponse);
         PnDowntimeEntry value = null;
         for(PnDowntimeEntry entry: pnDowntimeHistoryResponse.getResult()){
-            if(value == null && entry.getFileAvailable()){
+            if(value == null && Boolean.TRUE.equals(entry.getFileAvailable())){
                 value = entry;
             }
             boolean valueNotNull = value != null && value.getEndDate() != null;

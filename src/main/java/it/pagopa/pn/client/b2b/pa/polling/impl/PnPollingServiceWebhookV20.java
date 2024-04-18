@@ -9,13 +9,10 @@ import it.pagopa.pn.client.b2b.pa.service.IPnWebhookB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -70,7 +67,7 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
 
     @Override
     protected Predicate<PnPollingResponseV20> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
-        return (pnPollingResponse) -> {
+        return pnPollingResponse -> {
             if(pnPollingResponse.getProgressResponseElementListV20() == null
                     || pnPollingResponse.getProgressResponseElementListV20().isEmpty()) {
                 pnPollingResponse.setResult(false);
@@ -125,10 +122,11 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
     private boolean isWaitTerminated(PnPollingResponseV20 pnPollingResponse, PnPollingParameter pnPollingParameter) {
         ProgressResponseElement progressResponseElementV20 = pnPollingResponse.getProgressResponseElementListV20()
                 .stream()
-                .peek(progressResponseElement -> {
+                .map(progressResponseElement -> {
                     if(!pnPollingParameter.getPnPollingWebhook().getProgressResponseElementListV20().contains(progressResponseElement)) {
                         pnPollingParameter.getPnPollingWebhook().getProgressResponseElementListV20().addLast(progressResponseElement);
                     }
+                    return progressResponseElement;
                 })
                 .filter(toCheckCondition(pnPollingParameter))
                 .findAny()

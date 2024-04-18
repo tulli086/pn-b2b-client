@@ -16,12 +16,10 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENEBLED_INTEROP;
@@ -31,6 +29,9 @@ import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENE
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
+    
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String BEARER = "Bearer ";
     private final RestTemplate restTemplate;
     private final EventsApi eventsApi;
     private final StreamsApi streamsApi;
@@ -78,10 +79,10 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
             if(!tokenInterop.equals(this.bearerTokenInterop)){
                 log.info("webhookClient call interopTokenSingleton");
                 this.bearerTokenInterop = tokenInterop;
-                this.eventsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-                this.streamsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-                this.eventsApiV23.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
-                this.streamsApiV23.getApiClient().addDefaultHeader("Authorization", "Bearer " + bearerTokenInterop);
+                this.eventsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + bearerTokenInterop);
+                this.streamsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + bearerTokenInterop);
+                this.eventsApiV23.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + bearerTokenInterop);
+                this.streamsApiV23.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + bearerTokenInterop);
             }
         }
     }
@@ -91,7 +92,7 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
         newApiClient.setBasePath( basePath );
         newApiClient.addDefaultHeader("x-api-key", apikey );
         if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
-            newApiClient.addDefaultHeader("Authorization", "Bearer " + bearerToken);
+            newApiClient.addDefaultHeader(AUTHORIZATION, BEARER + bearerToken);
         }
         return newApiClient;
     }
@@ -179,28 +180,29 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
     @Override
     public boolean setApiKeys(ApiKeyType apiKey) {
         boolean beenSet = false;
-        switch(apiKey){
-            case MVP_1:
-                if(this.apiKeySetted != ApiKeyType.MVP_1){
+        switch (apiKey) {
+            case MVP_1 -> {
+                if (this.apiKeySetted != ApiKeyType.MVP_1) {
                     setApiKey(apiKeyMvp1);
                     this.apiKeySetted = ApiKeyType.MVP_1;
                 }
                 beenSet = true;
-                break;
-            case MVP_2:
-                if(this.apiKeySetted != ApiKeyType.MVP_2) {
+            }
+            case MVP_2 -> {
+                if (this.apiKeySetted != ApiKeyType.MVP_2) {
                     setApiKey(apiKeyMvp2);
                     this.apiKeySetted = ApiKeyType.MVP_2;
                 }
                 beenSet = true;
-                break;
-            case GA:
-                if(this.apiKeySetted != ApiKeyType.GA) {
+            }
+            case GA -> {
+                if (this.apiKeySetted != ApiKeyType.GA) {
                     setApiKey(apiKeyGa);
                     this.apiKeySetted = ApiKeyType.GA;
                 }
                 beenSet = true;
-                break;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + apiKey);
         }
         return beenSet;
     }

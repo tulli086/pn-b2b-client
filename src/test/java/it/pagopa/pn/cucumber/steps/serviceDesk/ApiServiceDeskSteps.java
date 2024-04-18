@@ -851,7 +851,7 @@ public class ApiServiceDeskSteps {
         List<OperationResponse> lista = searchResponse.getOperations();
         log.info("STAMPA LISTA " + lista.toString());
         //   Assertions.assertNull(lista);
-        Assertions.assertEquals(lista.toString(), "[]");
+        Assertions.assertEquals("[]", lista.toString());
 
     }
 

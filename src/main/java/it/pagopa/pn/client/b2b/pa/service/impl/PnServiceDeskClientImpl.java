@@ -31,124 +31,66 @@ public class PnServiceDeskClientImpl implements IPServiceDeskClientImpl {
     private final NotificationAndMessageApi notificationAndMessageApi;
     private final PaApi paApi;
     private final ProfileApi profileApi;
-/*
-    private final NotificationRequest req;
-    private final CreateOperationRequest creaOp;
 
-    private final VideoUploadRequest videoreq;
-
-    private final SearchNotificationRequest searchreq;
-
-    private final AnalogAddress address;
-
- */
 
     private final String operatorId;
 
     public PnServiceDeskClientImpl(
             RestTemplate restTemplate,
-            @Value("${pn.delivery.base-url}") String deliveryBasePath ,
+            @Value("${pn.delivery.base-url}") String deliveryBasePath,
             @Value("${pn.external.api-keys.service-desk}") String apiKeyBase
     ) {
 
         this.operatorId = "AutomationMv";
 
         //Call Center Evoluto....
-        this.notification = new NotificationApi(newApiClient( restTemplate, deliveryBasePath,apiKeyBase));
-        this.operation = new OperationApi(newApiClient( restTemplate, deliveryBasePath,apiKeyBase));
+        this.notification = new NotificationApi(newApiClient(restTemplate, deliveryBasePath, apiKeyBase));
+        this.operation = new OperationApi(newApiClient(restTemplate, deliveryBasePath, apiKeyBase));
 
         //Integration Cruscotto Assistenza....
-        this.apiKeysApi = new ApiKeysApi(newApiClientIntegration( restTemplate, deliveryBasePath, apiKeyBase));
-        this.notificationAndMessageApi = new NotificationAndMessageApi(newApiClientIntegration( restTemplate, deliveryBasePath, apiKeyBase));
-        this.paApi = new PaApi(newApiClientIntegration( restTemplate, deliveryBasePath, apiKeyBase));
-        this.profileApi = new ProfileApi(newApiClientIntegration( restTemplate, deliveryBasePath, apiKeyBase));
+        this.apiKeysApi = new ApiKeysApi(newApiClientIntegration(restTemplate, deliveryBasePath, apiKeyBase));
+        this.notificationAndMessageApi = new NotificationAndMessageApi(newApiClientIntegration(restTemplate, deliveryBasePath, apiKeyBase));
+        this.paApi = new PaApi(newApiClientIntegration(restTemplate, deliveryBasePath, apiKeyBase));
+        this.profileApi = new ProfileApi(newApiClientIntegration(restTemplate, deliveryBasePath, apiKeyBase));
 
     }
 
     //Call Center Evoluto....
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apiKey) {
-        ApiClient newApiClient = new ApiClient( restTemplate );
-        newApiClient.setBasePath( basePath );
-        newApiClient.addDefaultHeader("x-api-key", apiKey );
+        ApiClient newApiClient = new ApiClient(restTemplate);
+        newApiClient.setBasePath(basePath);
+        newApiClient.addDefaultHeader("x-api-key", apiKey);
         return newApiClient;
     }
 
     //Integration Cruscotto Assistenza....
     private static it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegration.ApiClient newApiClientIntegration(RestTemplate restTemplate, String basePath, String apiKey) {
-        it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegration.ApiClient newApiClient = new it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegration.ApiClient( restTemplate );
-        newApiClient.setBasePath( basePath );
-        newApiClient.addDefaultHeader("x-api-key", apiKey );
+        it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegration.ApiClient newApiClient = new it.pagopa.pn.client.b2b.web.generated.openapi.clients.serviceDeskIntegration.ApiClient(restTemplate);
+        newApiClient.setBasePath(basePath);
+        newApiClient.addDefaultHeader("x-api-key", apiKey);
         return newApiClient;
     }
-
-    /*
-     * Permette di recuperare per ogni CF il numero totale di pratiche non consegnate per irreperibilità totale con ultimo
-     * con ultimo tentativo di consegna <120 gg
-     * <p><b>200</b> - OK
-     * <p><b>400</b> - Invalid input
-     * <p><b>404</b> - Not found
-     * <p><b>500</b> - Internal Server Error
-     * @param cf tax id del cliente persona fisica
-     * @return NotificationsUnreachableResponse
-     * @throws RestClientException if an error occurs while attempting to invoke the API
-     */
-
-    /*
-    public NotificationsUnreachableResponse notification(String cf) throws RestClientException {
-        req.setTaxId(cf);
-        return notification.numberOfUnreachableNotifications(operatorId,req);
-
-    }
-    */
 
     public NotificationsUnreachableResponse notification(NotificationRequest notificationRequest) throws RestClientException {
         return notification.numberOfUnreachableNotifications(operatorId, notificationRequest);
 
     }
 
-    /*
-    public OperationsResponse createOperation(String cf, String ticketId, String operationTickerId, AnalogAddress address)throws RestClientException {
-        creaOp.setTaxId(cf);
-        creaOp.setTicketId(ticketId);
-        creaOp.setTicketOperationId(operationTickerId);
-        address.setAddress("via roma");
-        address.setAddressRow2("via nizza");
-        creaOp.setAddress(address);
-        return operation.createOperation(operatorId,creaOp);
-    }
-    */
-    public OperationsResponse createOperation(CreateOperationRequest createOperationRequest)throws RestClientException {
-        return operation.createOperation(operatorId,createOperationRequest);
+    public OperationsResponse createOperation(CreateOperationRequest createOperationRequest) throws RestClientException {
+        return operation.createOperation(operatorId, createOperationRequest);
     }
 
-/*
-    public VideoUploadResponse presignedUrlVideoUpload(String operationid, String preloadIdx, String sha256,String contentType){
-        videoreq.setPreloadIdx(preloadIdx);
-        videoreq.setSha256(sha256);
-        videoreq.setContentType(contentType);
-        return operation.presignedUrlVideoUpload(operatorId, operationid, videoreq);
-        }
- */
-
-    public VideoUploadResponse presignedUrlVideoUpload(String operationid, VideoUploadRequest videoUploadRequest){
+    public VideoUploadResponse presignedUrlVideoUpload(String operationid, VideoUploadRequest videoUploadRequest) {
         return operation.presignedUrlVideoUpload(operatorId, operationid, videoUploadRequest);
-        }
-
-
-/*
-    public SearchResponse searchOperationsFromTaxId(String cf){
-        searchreq.setTaxId(cf);
-        return operation.searchOperationsFromTaxId(operatorId, searchreq);
-
     }
-*/
-    public SearchResponse searchOperationsFromTaxId(SearchNotificationRequest searchNotificationRequest){
-         return operation.searchOperationsFromTaxId(operatorId, searchNotificationRequest);
+
+    public SearchResponse searchOperationsFromTaxId(SearchNotificationRequest searchNotificationRequest) {
+        return operation.searchOperationsFromTaxId(operatorId, searchNotificationRequest);
 
     }
 
     //Integration Cruscotto Assistenza....
-    public ResponseApiKeys getApiKeys(String paId) throws RestClientException{
+    public ResponseApiKeys getApiKeys(String paId) throws RestClientException {
         return apiKeysApi.getApiKeys(paId);
     }
 
@@ -165,14 +107,14 @@ public class PnServiceDeskClientImpl implements IPServiceDeskClientImpl {
     }
 
     public SearchNotificationsResponse searchNotificationsAsDelegateFromInternalId(String mandateId, String delegateInternalId, String recipientType, Integer size, String nextPagesKey, OffsetDateTime startDate, OffsetDateTime endDate) throws RestClientException {
-     return notificationAndMessageApi.searchNotificationsAsDelegateFromInternalId(operatorId, mandateId, delegateInternalId,recipientType, startDate, endDate, size, nextPagesKey );
+        return notificationAndMessageApi.searchNotificationsAsDelegateFromInternalId(operatorId, mandateId, delegateInternalId, recipientType, startDate, endDate, size, nextPagesKey);
     }
 
     public SearchNotificationsResponse searchNotificationsFromTaxId(Integer size, String nextPagesKey, OffsetDateTime startDate, OffsetDateTime endDate, SearchNotificationsRequest searchNotificationsRequest) throws RestClientException {
-        return notificationAndMessageApi.searchNotificationsFromTaxId(operatorId, startDate, endDate, size,nextPagesKey,  searchNotificationsRequest);
+        return notificationAndMessageApi.searchNotificationsFromTaxId(operatorId, startDate, endDate, size, nextPagesKey, searchNotificationsRequest);
     }
 
-    public TimelineResponse getTimelineOfIUNAndTaxId(String iun, SearchNotificationsRequest searchNotificationsRequest) throws RestClientException{
+    public TimelineResponse getTimelineOfIUNAndTaxId(String iun, SearchNotificationsRequest searchNotificationsRequest) throws RestClientException {
         return notificationAndMessageApi.getTimelineOfIUNAndTaxId(operatorId, iun, searchNotificationsRequest);
     }
 

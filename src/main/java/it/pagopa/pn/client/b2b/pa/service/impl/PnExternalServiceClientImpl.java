@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -36,7 +40,7 @@ import java.util.*;
 
 import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENEBLED_INTEROP;
 
-
+@Slf4j
 @Component
 public class PnExternalServiceClientImpl {
 
@@ -149,10 +153,10 @@ public class PnExternalServiceClientImpl {
         this.restTemplate.setRequestFactory(requestFactory);
     }
 
-    public openSearchResponse openSearchGetAudit(String audRetentionType,String auditLogType, int numberOfResult){
+    public OpenSearchResponse openSearchGetAudit(String audRetentionType,String auditLogType, int numberOfResult){
         return openSearchGetAuditWithHttpInfo(audRetentionType, auditLogType, numberOfResult).getBody();
     }
-    private ResponseEntity<openSearchResponse> openSearchGetAuditWithHttpInfo(String audRetentionType,String auditLogType, int numberOfResult) throws RestClientException {
+    private ResponseEntity<OpenSearchResponse> openSearchGetAuditWithHttpInfo(String audRetentionType,String auditLogType, int numberOfResult) throws RestClientException {
 
         try {
             restTemplateAvoidSSlCertificate();
@@ -162,9 +166,9 @@ public class PnExternalServiceClientImpl {
 
         String postBody = "{\"query\":{\"bool\":{\"must\":{\"match\":{\"aud_type\":\""+auditLogType+"\"}}}},\"size\":"+numberOfResult+",\"sort\":[{\"@timestamp\": \"desc\"}]}";
 
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        final Map<String, Object> uriVariables = new HashMap<>();
 
-        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         //queryParams.add("format", "json");
 
         final HttpHeaders headerParams = new HttpHeaders();
@@ -178,7 +182,7 @@ public class PnExternalServiceClientImpl {
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
 
-        ParameterizedTypeReference<openSearchResponse> returnType = new ParameterizedTypeReference<>() {};
+        ParameterizedTypeReference<OpenSearchResponse> returnType = new ParameterizedTypeReference<>() {};
         return invokeAPI(openSearchBaseUrl, "/pn-logs"+audRetentionType+"/_search", HttpMethod.POST, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
     }
 
@@ -190,10 +194,10 @@ public class PnExternalServiceClientImpl {
     private ResponseEntity<HashMap<String, String>> getQuickAccessLinkWithHttpInfo(String iun) {
         Object postBody = null;
 
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        final Map<String, Object> uriVariables = new HashMap<>();
         uriVariables.put("iun", iun);
 
-        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();
@@ -248,9 +252,9 @@ public class PnExternalServiceClientImpl {
     private ResponseEntity<List<HashMap<String, String>>> pgGroupInfoWithHttpInfo(String bearerToken) throws RestClientException {
         Object postBody = null;
 
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        final Map<String, Object> uriVariables = new HashMap<>();
 
-        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();
@@ -275,9 +279,9 @@ public class PnExternalServiceClientImpl {
         Object postBody = null;
 
 
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        final Map<String, Object> uriVariables = new HashMap<>();
 
-        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();
@@ -301,10 +305,10 @@ public class PnExternalServiceClientImpl {
     private ResponseEntity<String> getVerificationCodeWithHttpInfo(String digitalAddress) {
         Object postBody = null;
 
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        final Map<String, Object> uriVariables = new HashMap<>();
         uriVariables.put("digitalAddress", digitalAddress);
 
-        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();
@@ -323,10 +327,10 @@ public class PnExternalServiceClientImpl {
     private ResponseEntity<String> getInternalIdFromTaxIdWithHttpInfo(String recipientType, String taxId) {
         String postBody = taxId;
 
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        final Map<String, Object> uriVariables = new HashMap<>();
         uriVariables.put("recipientType", recipientType);
 
-        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();
@@ -484,10 +488,10 @@ public class PnExternalServiceClientImpl {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'fileKey' when calling consumeEventStream");
         }
 
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        final Map<String, Object> uriVariables = new HashMap<>();
         uriVariables.put("fileKey", fileKey);
 
-        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();
@@ -513,7 +517,7 @@ public class PnExternalServiceClientImpl {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'fileKey' when calling consumeEventStream");
         }
 
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        final Map<String, Object> uriVariables = new HashMap<>();
         uriVariables.put("fileKey", fileKey);
 
         final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
@@ -614,65 +618,26 @@ public class PnExternalServiceClientImpl {
                     }
                 }
             } catch (UnsupportedEncodingException e) {
-
+                log.error(e.getMessage());
             }
         });
         return queryBuilder.toString();
 
     }
-
-
     //OPEN SEARCH RESPONSE
-    public static class openSearchResponse {
+    @Getter
+    @Setter
+    @ToString
+    public static class OpenSearchResponse {
        Integer took;
-       Boolean timed_out;
-       Shards _shards;
-
+       Boolean timedOut;
+       Shards shards;
        OuterHits hits;
 
-        public Integer getTook() {
-            return took;
-        }
-
-        public void setTook(Integer took) {
-            this.took = took;
-        }
-
-        public Boolean getTimed_out() {
-            return timed_out;
-        }
-
-        public void setTimed_out(Boolean timed_out) {
-            this.timed_out = timed_out;
-        }
-
-        public Shards get_shards() {
-            return _shards;
-        }
-
-        public void set_shards(Shards _shards) {
-            this._shards = _shards;
-        }
-
-        public OuterHits getHits() {
-            return hits;
-        }
-
-        public void setHits(OuterHits hits) {
-            this.hits = hits;
-        }
-
-        @Override
-        public String toString() {
-            return "openSearchResponse{" +
-                    "took=" + took +
-                    ", timed_out=" + timed_out +
-                    ", _shards=" + _shards +
-                    ", hits=" + hits +
-                    '}';
-        }
     }
-
+    @Getter
+    @Setter
+    @ToString
     public static class Shards{
         public Shards() {}
         private Integer total;
@@ -681,162 +646,54 @@ public class PnExternalServiceClientImpl {
 
         private Integer failed;
 
-        public Integer getTotal() {
-            return total;
-        }
-
-        public void setTotal(Integer total) {
-            this.total = total;
-        }
-
-        public Integer getSuccessful() {
-            return successful;
-        }
-
-        public void setSuccessful(Integer successful) {
-            this.successful = successful;
-        }
-
-        public Integer getSkipped() {
-            return skipped;
-        }
-
-        public void setSkipped(Integer skipped) {
-            this.skipped = skipped;
-        }
-
-        public Integer getFailed() {
-            return failed;
-        }
-
-        public void setFailed(Integer failed) {
-            this.failed = failed;
-        }
-
-        @Override
-        public String toString() {
-            return "Shards{" +
-                    "total=" + total +
-                    ", successful=" + successful +
-                    ", skipped=" + skipped +
-                    ", failed=" + failed +
-                    '}';
-        }
     }
-
+    @Getter
+    @Setter
+    @ToString
     public static class OuterHits{
         public OuterHits() {
         }
 
-        private Double max_score;
+        private Double maxScore;
         private Total total;
         private LinkedList<InnerHits> hits;
 
-        public Double getMax_score() {
-            return max_score;
-        }
 
-        public void setMax_score(Double max_score) {
-            this.max_score = max_score;
-        }
-
-        public Total getTotal() {
-            return total;
-        }
-
-        public void setTotal(Total total) {
-            this.total = total;
-        }
-
-        public LinkedList<InnerHits> getHits() {
-            return hits;
-        }
-
-        public void setHits(LinkedList<InnerHits> hits) {
-            this.hits = hits;
-        }
-
-        @Override
-        public String toString() {
-            return "OuterHits{" +
-                    "max_score=" + max_score +
-                    ", total=" + total +
-                    ", hits=" + hits +
-                    '}';
-        }
     }
-
+    @Getter
+    @Setter
+    @ToString
     public static class InnerHits{
         public InnerHits() {
         }
 
-        private String _index;
-        private String _type;
-        private String _id;
-        private Double _score;
-        private Source _source;
-
-        public String get_index() {
-            return _index;
-        }
-
-        public void set_index(String _index) {
-            this._index = _index;
-        }
-
-        public String get_type() {
-            return _type;
-        }
-
-        public void set_type(String _type) {
-            this._type = _type;
-        }
-
-        public String get_id() {
-            return _id;
-        }
-
-        public void set_id(String _id) {
-            this._id = _id;
-        }
-
-        public Double get_score() {
-            return _score;
-        }
-
-        public void set_score(Double _score) {
-            this._score = _score;
-        }
-
-        public Source get_source() {
-            return _source;
-        }
-
-        public void set_source(Source _source) {
-            this._source = _source;
-        }
+        private String index;
+        private String type;
+        private String id;
+        private Double score;
+        private Source source;
 
         public class Source{
             @Override
             public String toString() {
                 return "Source{" +
                         "msg='" + msg + '\'' +
-                        ", trace_id='" + trace_id + '\'' +
+                        ", trace_id='" + traceId + '\'' +
                         ", level=" + level +
                         ", logGroup='" + logGroup + '\'' +
-                        ", aud_type='" + aud_type + '\'' +
+                        ", aud_type='" + audType + '\'' +
                         ", pid=" + pid +
                         ", message='" + message + '\'' +
-                        ", aud_orig='" + aud_orig + '\'' +
+                        ", aud_orig='" + audOrig + '\'' +
                         ", tags=" + Arrays.toString(tags) +
                         ", kinesisSeqNumber='" + kinesisSeqNumber + '\'' +
                         ", hostname='" + hostname + '\'' +
                         ", timestamp='" + timestamp + '\'' +
-                        ", level_value=" + level_value +
+                        ", level_value=" + levelValue +
                         ", v=" + v +
                         ", name='" + name + '\'' +
                         ", logStream='" + logStream + '\'' +
-                        ", logger_name='" + logger_name + '\'' +
+                        ", logger_name='" + loggerName + '\'' +
                         ", time='" + time + '\'' +
                         '}';
             }
@@ -845,13 +702,13 @@ public class PnExternalServiceClientImpl {
             }
 
             private String msg;
-            private String trace_id;
+            private String traceId;
             private String level;
             private String logGroup;
-            private String aud_type;
+            private String audType;
             private Integer pid;
             private String message;
-            private String aud_orig;
+            private String audOrig;
             private String[] tags;
             private String kinesisSeqNumber;
 
@@ -859,12 +716,12 @@ public class PnExternalServiceClientImpl {
             @JsonProperty("@timestamp")
             private OffsetDateTime timestamp;
 
-            private Long level_value;
+            private Long levelValue;
             private Long v;
 
             private String name;
             private String logStream;
-            private String logger_name;
+            private String loggerName;
             private OffsetDateTime time;
 
             public String getMsg() {
@@ -875,12 +732,12 @@ public class PnExternalServiceClientImpl {
                 this.msg = msg;
             }
 
-            public String getTrace_id() {
-                return trace_id;
+            public String getTraceId() {
+                return traceId;
             }
 
-            public void setTrace_id(String trace_id) {
-                this.trace_id = trace_id;
+            public void setTraceId(String traceId) {
+                this.traceId = traceId;
             }
 
             public String getLevel() {
@@ -899,12 +756,12 @@ public class PnExternalServiceClientImpl {
                 this.logGroup = logGroup;
             }
 
-            public String getAud_type() {
-                return aud_type;
+            public String getAudType() {
+                return audType;
             }
 
-            public void setAud_type(String aud_type) {
-                this.aud_type = aud_type;
+            public void setAudType(String audType) {
+                this.audType = audType;
             }
 
             public Integer getPid() {
@@ -923,12 +780,12 @@ public class PnExternalServiceClientImpl {
                 this.message = message;
             }
 
-            public String getAud_orig() {
-                return aud_orig;
+            public String getAudOrig() {
+                return audOrig;
             }
 
-            public void setAud_orig(String aud_orig) {
-                this.aud_orig = aud_orig;
+            public void setAudOrig(String audOrig) {
+                this.audOrig = audOrig;
             }
 
             public String[] getTags() {
@@ -963,12 +820,12 @@ public class PnExternalServiceClientImpl {
                 this.timestamp = timestamp;
             }
 
-            public Long getLevel_value() {
-                return level_value;
+            public Long getLevelValue() {
+                return levelValue;
             }
 
-            public void setLevel_value(Long level_value) {
-                this.level_value = level_value;
+            public void setLevelValue(Long levelValue) {
+                this.levelValue = levelValue;
             }
 
             public Long getV() {
@@ -995,12 +852,12 @@ public class PnExternalServiceClientImpl {
                 this.logStream = logStream;
             }
 
-            public String getLogger_name() {
-                return logger_name;
+            public String getLoggerName() {
+                return loggerName;
             }
 
-            public void setLogger_name(String logger_name) {
-                this.logger_name = logger_name;
+            public void setLoggerName(String loggerName) {
+                this.loggerName = loggerName;
             }
 
             public OffsetDateTime getTime() {
@@ -1012,47 +869,17 @@ public class PnExternalServiceClientImpl {
             }
         }
 
-        @Override
-        public String toString() {
-            return "InnerHits{" +
-                    "_index='" + _index + '\'' +
-                    ", _type='" + _type + '\'' +
-                    ", _id='" + _id + '\'' +
-                    ", _score=" + _score +
-                    ", _source=" + _source +
-                    '}';
-        }
     }
 
+    @Getter
+    @Setter
+    @ToString
     public static class Total{
         public Total() {
         }
         private Integer value;
         private String relation;
 
-        public Integer getValue() {
-            return value;
-        }
-
-        public void setValue(Integer value) {
-            this.value = value;
-        }
-
-        public String getRelation() {
-            return relation;
-        }
-
-        public void setRelation(String relation) {
-            this.relation = relation;
-        }
-
-        @Override
-        public String toString() {
-            return "Total{" +
-                    "value=" + value +
-                    ", relation='" + relation + '\'' +
-                    '}';
-        }
     }
 
 }
