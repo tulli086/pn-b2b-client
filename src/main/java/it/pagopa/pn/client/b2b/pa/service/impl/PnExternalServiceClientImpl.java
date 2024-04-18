@@ -516,7 +516,7 @@ public class PnExternalServiceClientImpl {
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("fileKey", fileKey);
 
-        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();

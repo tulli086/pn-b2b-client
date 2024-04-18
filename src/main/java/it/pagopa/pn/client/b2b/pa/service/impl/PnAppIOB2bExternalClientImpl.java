@@ -68,11 +68,11 @@ public class PnAppIOB2bExternalClientImpl implements IPnAppIOB2bClient {
         }
 
         // create path and map variables
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
-        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final Map<String, Object> uriVariables = new HashMap<>();
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         final HttpHeaders headerParams = new HttpHeaders();
-        final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
-        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<>();
         final String[] localVarAccepts = {
                 "application/json", "application/problem+json"
         };
@@ -85,7 +85,7 @@ public class PnAppIOB2bExternalClientImpl implements IPnAppIOB2bClient {
 
         String[] authNames = new String[] { "ApiKeyAuth" };
 
-        ParameterizedTypeReference<NotificationAttachmentDownloadMetadataResponse> returnType = new ParameterizedTypeReference<NotificationAttachmentDownloadMetadataResponse>() {};
+        ParameterizedTypeReference<NotificationAttachmentDownloadMetadataResponse> returnType = new ParameterizedTypeReference<>() {};
         return appIoPnPaymentsApi.getApiClient().invokeAPI(url, HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, authNames, returnType).getBody();
      }
 }
