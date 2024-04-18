@@ -449,7 +449,7 @@ Feature: Radd Alternative Anagrafica Sportelli
   @raddAnagrafica @puliziaSportelli
   Scenario Outline: [RADD_ANAGRAFICA_CRUD_19] cancellazione sportello RADD con controllo campi obbligatori
     When viene generato uno sportello Radd con dati:
-      | address_radd_row      | via posto  |
+      | address_radd_row      | random     |
       | address_radd_cap      | 80020      |
       | address_radd_province | NA         |
       | address_radd_city     | CASAVATORE |
