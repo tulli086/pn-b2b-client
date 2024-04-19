@@ -13,6 +13,7 @@ Feature: Radd Alternative Anagrafica Sportelli
 
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_2] caricamento 2 volte stesso checksum del CSV
+    When viene cambiato raddista con "issuer_2"
     Then viene caricato il csv 2 volte con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
       | vai posto        | 30020            | VE                    | PONTE CREPALDO    | ITALIA               |
@@ -59,7 +60,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then si controlla che il sporetello sia in stato "ACCEPTED"
 
 
-  @raddAnagrafica @raddAlternativeCsv @raddCsv
+  @raddAnagrafica @raddAlternativeCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_3] caricamento CSV con righa malformata verifica stato a REJECTED
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con formatto "errato" con restituzione errore con dati:
@@ -70,7 +71,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then si controlla che il sporetello sia in stato "REJECTED"
 
 
-  @raddAnagrafica @raddAlternativeCsv @raddCsv
+  @raddAnagrafica @raddAlternativeCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_4] caricamento CSV con campi a null dove c'è obbligatorietà verifica stato a REJECTED
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
@@ -81,7 +82,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then si controlla che il sporetello sia in stato "REJECTED"
 
 
-  @raddAnagrafica @raddAlternativeCsv @raddCsv
+  @raddAnagrafica @raddAlternativeCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_5] caricamento CSV con formato campi errato verifica stato a REJECTED e messaggio di errore
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:

@@ -6,7 +6,6 @@ import io.cucumber.java.Transpose;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
-import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnRaddAlternativeClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableAuthTokenRadd;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.*;
@@ -19,17 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +46,7 @@ public class AnagraficaRaddAltSteps {
     private RegistriesResponse sportelliRaddista;
     private it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportelliCsvRaddista;
 
-    private String uid = "1234556";
+    private String uid = getDefaultValue(RADD_UID.key);
 
     private static final Integer NUM_CHECK_STATE_CSV = 18;
     private static final Integer WAITING_STATE_CSV = 10000;
@@ -251,7 +244,7 @@ public class AnagraficaRaddAltSteps {
 
 
     @When("si controlla che il sporetello sia in stato {string}")
-    public void vieneCercatoloSportelloEControlloStato( String stato) {
+    public void vieneCercatoloSportelloEControlloStato( String status) {
         RegistryRequestResponse dato= null;
 
         for (int i = 0; i < NUM_CHECK_STATE_CSV; i++) {
@@ -268,9 +261,9 @@ public class AnagraficaRaddAltSteps {
                     , 100
                     , null);
 
-            dato= sportello.getItems().stream().filter(elem->elem.getRequestId().equalsIgnoreCase(this.requestid) && elem.getStatus().equalsIgnoreCase(stato)).findAny().orElse(null);
+            dato= sportello.getItems().stream().filter(elem->elem.getRequestId().equalsIgnoreCase(this.requestid) && elem.getStatus().equalsIgnoreCase(status)).findAny().orElse(null);
 
-            if(stato.equalsIgnoreCase("accepted")){
+            if(status.equalsIgnoreCase("accepted")){
                 try {
                     Thread.sleep(20000);
                 } catch (InterruptedException e) {
@@ -278,7 +271,8 @@ public class AnagraficaRaddAltSteps {
                 }
             }
 
-            if (dato!=null && dato.getStatus().equalsIgnoreCase(stato)) {
+            if (dato!=null && dato.getStatus().equalsIgnoreCase(status)) {
+                log.info("sporetllo status corretto: '{}'",dato);
                 break;
             }
 
@@ -287,7 +281,7 @@ public class AnagraficaRaddAltSteps {
 
         try {
 
-            Assertions.assertEquals(dato.getStatus(),stato);
+            Assertions.assertEquals(dato.getStatus(),status);
             this.requestid=dato.getRequestId();
             this.registryId=dato.getRegistryId();
 
@@ -560,16 +554,6 @@ public class AnagraficaRaddAltSteps {
         this.shaCSV = pnPaB2bUtils.computeSha256("classpath:/" + this.fileCsvName);
     }
 
-
-    @After("@raddCsv")
-    public void deleteCSV() {
-        if (this.fileCsvName != null) {
-            URI zip_disk = URI.create("classpath:/" + this.fileCsvName);
-            File file = new File(zip_disk.getPath());
-            boolean deleted = file.delete();
-            System.out.println("delete " + deleted);
-        }
-    }
 
     @Then("viene cambiato raddista con {string}")
     public void changeRaddista(String raddista) {

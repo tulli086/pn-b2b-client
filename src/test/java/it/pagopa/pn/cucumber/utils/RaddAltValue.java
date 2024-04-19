@@ -7,46 +7,46 @@ import java.util.Random;
 
 public enum RaddAltValue {
 //physicalAddress sportello radd
-    ADDRESS_RADD("address_radd","SI"),
-    ADDRESS_RADD_ROW("address_radd_row",null),
-    ADDRESS_RADD_CAP("address_radd_cap",null),
-    ADDRESS_RADD_CITY("address_radd_city",null),
-    ADDRESS_RADD_PROVINCE("address_radd_province",null),
-    ADDRESS_RADD_COUNTRY("address_radd_country","ITALIA"),
+    ADDRESS_RADD("address_radd","SI",false),
+    ADDRESS_RADD_ROW("address_radd_row",null,false),
+    ADDRESS_RADD_CAP("address_radd_cap",null,false),
+    ADDRESS_RADD_CITY("address_radd_city",null,false),
+    ADDRESS_RADD_PROVINCE("address_radd_province",null,false),
+    ADDRESS_RADD_COUNTRY("address_radd_country","ITALIA",false),
 
-    RADD_DESCRIPTION("radd_description","sportello RADD"),
-    RADD_PHONE_NUMBER("radd_phoneNumber",null),
-    RADD_GEO_LOCATION("radd_geoLocation","SI"),
-    RADD_GEO_LOCATION_LATITUDINE("radd_geoLocation_latitudine","40.0000"),
-    RADD_GEO_LOCATION_LONGITUDINE("radd_geoLocation_longitudine","20.0221"),
-    RADD_OPENING_TIME("radd_openingTime","tue=8:00-13:00#"),
-    RADD_START_VALIDITY("radd_start_validity",null),
-    RADD_END_VALIDITY("radd_end_validity",null),
-    RADD_CAPACITY("radd_capacity",null),
+    RADD_DESCRIPTION("radd_description","sportello RADD",false),
+    RADD_PHONE_NUMBER("radd_phoneNumber",null,false),
+    RADD_GEO_LOCATION("radd_geoLocation","SI",false),
+    RADD_GEO_LOCATION_LATITUDINE("radd_geoLocation_latitudine","40.0000",false),
+    RADD_GEO_LOCATION_LONGITUDINE("radd_geoLocation_longitudine","20.0221",false),
+    RADD_OPENING_TIME("radd_openingTime","tue=8:00-13:00#",false),
+    RADD_START_VALIDITY("radd_start_validity",null,false),
+    RADD_END_VALIDITY("radd_end_validity",null,false),
+    RADD_CAPACITY("radd_capacity",null,false),
 
     //valori filtro per ricerca sportello
-    RADD_FILTER_LIMIT("radd_filter_limit","5"),
-    RADD_FILTER_LASTKEY("radd_filter_lastKey",null),
-    RADD_EXTERNAL_CODE("radd_externalCode","testRadd"),
+    RADD_FILTER_LIMIT("radd_filter_limit","5",false),
+    RADD_FILTER_LASTKEY("radd_filter_lastKey",null,false),
+    RADD_EXTERNAL_CODE("radd_externalCode","testRadd",false),
 
-    RADD_REQUESTID("radd_requestId","corretto"),
-    RADD_REGISTRYID("radd_registryId","corretto"),
+    RADD_REQUESTID("radd_requestId","corretto",false),
+    RADD_REGISTRYID("radd_registryId","corretto",false),
 
-    RADD_UID("radd_uid","1234556");
-
+    RADD_UID("radd_uid","",true);
 
 
     private static final String NULL_VALUE = "NULL";
 
     public final String key;
     private final String defaultValue;
+    private final boolean addCurrentTime;
     private static final Integer ADDRESS_LENGTH = 20;
 
 
-
-    RaddAltValue(String key, String defaultValue){
+    RaddAltValue(String key, String defaultValue, boolean addCurrentTime){
         this.key = key;
         this.defaultValue = defaultValue;
+        this.addCurrentTime = addCurrentTime;
     }
 
 
@@ -55,7 +55,8 @@ public enum RaddAltValue {
         RaddAltValue notificationValue =
                 Arrays.stream(RaddAltValue.values()).filter(value -> value.key.equals(key)).findFirst().orElse(null);
 
-        return (notificationValue == null ? null :  notificationValue.defaultValue);
+        return (notificationValue == null ? null : (notificationValue.addCurrentTime? (notificationValue.defaultValue + generateRandomNumber() ) : notificationValue.defaultValue));
+
     }
 
 
