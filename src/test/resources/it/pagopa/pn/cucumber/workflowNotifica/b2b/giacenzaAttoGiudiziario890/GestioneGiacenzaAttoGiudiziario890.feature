@@ -6,8 +6,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049               |
+      | recipientType           | PG                        |
       | denomination            | OK-Giacenza-lte10_890     |
-      | taxId                   | CLMCST42R12D969Z          |
       | digitalDomicile         | NULL                      |
       | physicalAddress_address | via@OK-Giacenza-lte10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -60,8 +61,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049              |
+      | recipientType           | PG                       |
       | denomination            | OK-Giacenza-gt10_890     |
-      | taxId                   | CLMCST42R12D969Z         |
       | digitalDomicile         | NULL                     |
       | physicalAddress_address | via@OK-Giacenza-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -84,8 +86,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049                  |
+      | recipientType           | PG                           |
       | denomination            | OK-Giacenza-gt10-23L_890     |
-      | taxId                   | CLMCST42R12D969Z             |
       | digitalDomicile         | NULL                         |
       | physicalAddress_address | via@OK-Giacenza-gt10-23L_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -107,8 +110,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049                       |
+      | recipientType           | PG                                |
       | denomination            | OK-GiacenzaDelegato-lte10_890     |
-      | taxId                   | CLMCST42R12D969Z                  |
       | digitalDomicile         | NULL                              |
       | physicalAddress_address | via@OK-GiacenzaDelegato-lte10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -131,8 +135,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049                      |
+      | recipientType           | PG                               |
       | denomination            | OK-GiacenzaDelegato-gt10_890     |
-      | taxId                   | CLMCST42R12D969Z                 |
       | digitalDomicile         | NULL                             |
       | physicalAddress_address | via@OK-GiacenzaDelegato-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -155,8 +160,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049                          |
+      | recipientType           | PG                                   |
       | denomination            | OK-GiacenzaDelegato-gt10-23L_890     |
-      | taxId                   | CLMCST42R12D969Z                     |
       | digitalDomicile         | NULL                                 |
       | physicalAddress_address | via@OK-GiacenzaDelegato-gt10-23L_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -179,8 +185,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049                 |
+      | recipientType           | PG                          |
       | denomination            | FAIL-Giacenza-lte10_890     |
-      | taxId                   | CLMCST42R12D969Z            |
       | digitalDomicile         | NULL                        |
       | physicalAddress_address | via@FAIL-Giacenza-lte10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -200,8 +207,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049                |
+      | recipientType           | PG                         |
       | denomination            | FAIL-Giacenza-gt10_890     |
-      | taxId                   | CLMCST42R12D969Z           |
       | digitalDomicile         | NULL                       |
       | physicalAddress_address | via@FAIL-Giacenza-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -214,6 +222,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
+    # GT, allora la data è RECAG011 + refinmentDuration
     #"@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.60s-RECAG012.5s-RECAG011B[DOC:ARCAD;DOC:23L].60s-RECAG007A.5s-RECAG007B[DOC:Plico].5s-RECAG007C"
 
   @giacenza890Simplified
@@ -222,8 +231,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049                    |
+      | recipientType           | PG                             |
       | denomination            | FAIL-Giacenza-gt10-23L_890     |
-      | taxId                   | CLMCST42R12D969Z               |
       | digitalDomicile         | NULL                           |
       | physicalAddress_address | via@FAIL-Giacenza-gt10-23L_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -245,8 +255,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049                 |
+      | recipientType           | PG                          |
       | denomination            | OK-CompiutaGiacenza_890     |
-      | taxId                   | CLMCST42R12D969Z            |
       | digitalDomicile         | NULL                        |
       | physicalAddress_address | via@OK-CompiutaGiacenza_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -265,9 +276,11 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
   @giacenza890Simplified
   Scenario: [B2B_GIACENZA_890_WI1.1_11] Attesa elemento di timeline REFINEMENT con physicalAddress OK-WO-011B (TEST TECNICO)
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-    And destinatario Mario Gherkin e:
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario
+      | taxId                   | 00749900049    |
+      | recipientType           | PG             |
       | digitalDomicile         | NULL           |
       | physicalAddress_address | via@OK-WO-011B |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -279,10 +292,12 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
   @giacenza890Simplified
   Scenario: [B2B_GIACENZA_890_WI1.1_12]  Invio notifica con percorso analogico (OK-GiacenzaDelegato-lte10_890_redrive)  per verificare evento fuori sequenza che produce un redrive automatico di paper channel
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-    And destinatario Mario Gherkin e:
-      | digitalDomicile         | NULL           |
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario
+      | taxId                   | 00749900049                            |
+      | recipientType           | PG                                     |
+      | digitalDomicile         | NULL                                   |
       | physicalAddress_address | @OK-GiacenzaDelegato-lte10_890_redrive |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "CON080"
@@ -299,10 +314,12 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
   @giacenza890Simplified
   Scenario: [B2B_GIACENZA_890_WI1.1_13]  Invio notifica con percorso analogico (FAIL-Giacenza-gt10_890_no_recag012)  per verificare che paper channel calcoli la data di perfezionamento e invii il PNAG012 come feedback poichè oltre i 10 giorni
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-    And destinatario Mario Gherkin e:
-      | digitalDomicile         | NULL           |
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario
+      | taxId                   | 00749900049                         |
+      | recipientType           | PG                                  |
+      | digitalDomicile         | NULL                                |
       | physicalAddress_address | @FAIL-Giacenza-gt10_890_no_recag012 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "CON080"
@@ -323,9 +340,11 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
   @giacenza890Simplified
   Scenario: [B2B_GIACENZA_890_WI1.1_14] Non Attesa elemento di timeline SEND_ANALOG_FEEDBACK con physicalAddress OK-NO012-lte10 (Scenario negativo)
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-    And destinatario Mario Gherkin e:
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario
+      | taxId                   | 00749900049        |
+      | recipientType           | PG                 |
       | digitalDomicile         | NULL               |
       | physicalAddress_address | via@OK-NO012-lte10 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -339,9 +358,11 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
   @giacenza890Simplified
   Scenario: [B2B_GIACENZA_890_WI1.1_15] Non Attesa elemento di timeline SEND_ANALOG_FEEDBACK con physicalAddress OK-NO012-gt10 (Scenario negativo)
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-    And destinatario Mario Gherkin e:
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario
+      | taxId                   | 00749900049       |
+      | recipientType           | PG                |
       | digitalDomicile         | NULL              |
       | physicalAddress_address | via@OK-NO012-gt10 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -358,8 +379,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049               |
+      | recipientType           | PG                        |
       | denomination            | OK-Giacenza-gt10_890      |
-      | taxId                   | CLMCST42R12D969Z          |
       | digitalDomicile         | NULL                      |
       | physicalAddress_address | via@OK-Giacenza-lte10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -372,8 +394,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049        |
+      | recipientType           | PG                 |
       | denomination            | OK-Giacenza_RS     |
-      | taxId                   | CLMCST42R12D969Z   |
       | digitalDomicile         | NULL               |
       | physicalAddress_address | via@OK-Giacenza_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -386,8 +409,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
+      | taxId                   | 00749900049           |
+      | recipientType           | PG                    |
       | denomination            | OK-WO-Giacenza_AR     |
-      | taxId                   | CLMCST42R12D969Z      |
       | digitalDomicile         | NULL                  |
       | physicalAddress_address | via@OK-WO-Giacenza_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -400,8 +424,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | senderDenomination | Comune di palermo               |
     And destinatario
       | denomination            | FAIL-Giacenza-Missing_11A_890     |
-      | taxId                   | CLMCST42R12D969Z      |
-      | digitalDomicile         | NULL                  |
+      | taxId                   | CLMCST42R12D969Z                  |
+      | digitalDomicile         | NULL                              |
       | physicalAddress_address | via@FAIL-Giacenza-Missing_11A_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRS011"
@@ -414,9 +438,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
-      | denomination            | FAIL-Giacenza-Missing_11A_890     |
-      | taxId                   | CLMCST42R12D969Z      |
-      | digitalDomicile         | NULL                  |
+      | denomination            | FAIL-Giacenza-Missing_11A_890         |
+      | taxId                   | CLMCST42R12D969Z                      |
+      | digitalDomicile         | NULL                                  |
       | physicalAddress_address | @OK-Giacenza_890_refine_before_switch |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
@@ -427,9 +451,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
     And destinatario
-      | denomination            | FAIL-Giacenza-Missing_11A_890     |
-      | taxId                   | CLMCST42R12D969Z      |
-      | digitalDomicile         | NULL                  |
+      | denomination            | FAIL-Giacenza-Missing_11A_890        |
+      | taxId                   | CLMCST42R12D969Z                     |
+      | digitalDomicile         | NULL                                 |
       | physicalAddress_address | @OK-Giacenza_890_refine_after_switch |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
