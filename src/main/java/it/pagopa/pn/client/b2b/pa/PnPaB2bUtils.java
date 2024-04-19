@@ -9,6 +9,7 @@ import it.pagopa.pn.client.b2b.pa.polling.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddFsuClient;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadResponse;
 import lombok.AllArgsConstructor;
@@ -1082,6 +1083,25 @@ public class PnPaB2bUtils {
 
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.DocumentUploadResponse documentUploadResponse = raddAltClient.documentUpload("1234556", documentUploadRequest);
         return documentUploadResponse;
+    }
+
+    public NotificationDocument loadDocumentDirect(NotificationDocument document, PnExternalServiceClientImpl.FileCreationResponse fileCreation) throws IOException {
+
+        String resourceName = document.getRef().getKey();
+        String sha256 = computeSha256( resourceName );
+        String key = fileCreation.getKey();
+        String secret = fileCreation.getSecret();
+        String url = fileCreation.getUploadUrl();
+
+        log.info(String.format("Attachment resourceKey=%s sha256=%s secret=%s presignedUrl=%s\n",
+                resourceName, sha256, secret, url));
+        loadToPresigned( url, secret, sha256, resourceName );
+
+        document.getRef().setKey( key );
+        document.getRef().setVersionToken("v1");
+        document.digests( new NotificationAttachmentDigests().sha256( sha256 ));
+
+        return document;
     }
 
     public NotificationDocument preloadDocument( NotificationDocument document) throws IOException {

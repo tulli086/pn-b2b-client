@@ -11,9 +11,7 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
-import it.pagopa.pn.client.b2b.pa.service.impl.PnGPDClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnPaymentInfoClientImpl;
-import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.*;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.*;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchRow;
@@ -30,12 +28,9 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -227,7 +222,6 @@ public class InvioNotificheB2bSteps {
                     notifica120=null;
                 }
 
-
                 try {
                     Thread.sleep(sharedSteps.getWorkFlowWait());
                 } catch (InterruptedException exc) {
@@ -316,9 +310,42 @@ public class InvioNotificheB2bSteps {
         this.notificationDocumentPreload = notificationDocumentAtomic.get();
     }
 
+
+    @Given("viene effettuato il pre-caricamento di un allegato diretto")
+    public void preLoadingOfAttachmentDirect() throws IOException {
+
+        String sha256 = b2bUtils.computeSha256( "classpath:/sample.pdf" );
+
+        HashMap<String,String> body = new HashMap<>();
+        body.put("contentType","application/pdf");
+        body.put("documentType","PN_LEGAL_FACTS_ST");
+        body.put("status","PRELOADED");
+        body.put("checksumValue",sha256);
+
+        PnExternalServiceClientImpl.FileCreationResponse fileCreationResponse = new PnExternalServiceClientImpl.FileCreationResponse();
+       // Assertions.assertDoesNotThrow(() -> safeStorageResponse.set(safeStorageClient.safeStorageDirect(body)));
+        try{
+            fileCreationResponse = safeStorageClient.safeStorageDirect(body);
+
+            /**
+            NotificationDocument notificationDocument = b2bUtils.newDocument("classpath:/sample.pdf");
+
+            AtomicReference<NotificationDocument> notificationDocumentAtomic = new AtomicReference<>();
+            PnExternalServiceClientImpl.FileCreationResponse finalFileCreationResponse = fileCreationResponse;
+
+            Assertions.assertDoesNotThrow(() -> notificationDocumentAtomic.set(b2bUtils.preloadDocumentDirect(notificationDocument, finalFileCreationResponse)));
+
+
+            PnExternalServiceClientImpl.SafeStorageResponse safeStorageResponse1 = safeStorageClient.safeStorageInfo(fileCreationResponse.getKey());
+            System.out.println(safeStorageResponse1);**/
+        }catch (HttpStatusCodeException e) {
+            sharedSteps.setNotificationError(e);
+        }
+    }
+
     @Given("viene effettuato il pre-caricamento di un allegato")
     public void preLoadingOfAttachment() {
-        NotificationPaymentAttachment notificationPaymentAttachment = b2bUtils.newAttachment("classpath:/sample.pdf");
+        NotificationPaymentAttachment notificationPaymentAttachment = b2bUtils.newAttachment("classpath:/sample.p df");
         AtomicReference<NotificationPaymentAttachment> notificationDocumentAtomic = new AtomicReference<>();
         Assertions.assertDoesNotThrow(() -> notificationDocumentAtomic.set(b2bUtils.preloadAttachment(notificationPaymentAttachment)));
         /*

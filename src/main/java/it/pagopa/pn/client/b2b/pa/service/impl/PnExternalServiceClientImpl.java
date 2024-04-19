@@ -121,6 +121,10 @@ public class PnExternalServiceClientImpl {
 
     }
 
+    public FileCreationResponse safeStorageDirect(HashMap<String,String> postBodySend ) throws RestClientException {
+         return safeStorageDirectInfoWithHttpInfo(postBodySend).getBody();
+    }
+
 
     public SafeStorageResponse safeStorageInfo(String fileKey) throws RestClientException {
         return safeStorageInfoWithHttpInfo(fileKey).getBody();
@@ -351,6 +355,46 @@ public class PnExternalServiceClientImpl {
         return invokeAPI(dataVaultBasePath, "/datavault-private/v1/recipients/external/{recipientType}", HttpMethod.POST, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
     }
 
+    public static class FileCreationResponse{
+        String key;
+        String uploadMethod;
+        String uploadUrl;
+        String secret;
+        public FileCreationResponse(){}
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public String getUploadMethod() {
+            return uploadMethod;
+        }
+
+        public void setUploadMethod(String uploadMethod) {
+            this.uploadMethod = uploadMethod;
+        }
+
+        public String getUploadUrl() {
+            return uploadUrl;
+        }
+
+        public void setUploadUrl(String uploadUrl) {
+            this.uploadUrl = uploadUrl;
+        }
+
+        public String getSecret() {
+            return secret;
+        }
+
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
+    }
+
     public static class SafeStorageResponse{
 
             String key;
@@ -364,6 +408,8 @@ public class PnExternalServiceClientImpl {
            Download download;
 
            public SafeStorageResponse(){}
+
+
 
         public String getKey() {
             return key;
@@ -499,7 +545,8 @@ public class PnExternalServiceClientImpl {
         queryParams.add("metadataOnly", "true");
 
         final HttpHeaders headerParams = new HttpHeaders();
-        headerParams.add("x-pagopa-safestorage-cx-id", "pn-delivery-push");
+      // headerParams.add("x-pagopa-safestorage-cx-id", "pn-delivery-push");
+       headerParams.add("x-pagopa-safestorage-cx-id", "pn-test");
 
 
         final String[] localVarAccepts = {
@@ -542,6 +589,32 @@ public class PnExternalServiceClientImpl {
         };
         return invokeAPI(safeStorageBasePath, "/safe-storage/v1/files/{fileKey}", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
     }
+
+
+
+    private ResponseEntity<FileCreationResponse> safeStorageDirectInfoWithHttpInfo(HashMap<String,String> postBodySend) throws RestClientException {
+        HashMap<String,String> postBody = postBodySend;
+
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        queryParams.add("metadataOnly", "true");
+
+        final HttpHeaders headerParams = new HttpHeaders();
+        headerParams.add("x-pagopa-safestorage-cx-id", "pn-test");
+
+        final String[] localVarAccepts = {
+                "application/json", "application/problem+json","*/*"
+        };
+        final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
+        final MediaType localVarContentType = MediaType.APPLICATION_JSON;
+
+
+        ParameterizedTypeReference<FileCreationResponse> returnType = new ParameterizedTypeReference<>() {
+        };
+        return invokeAPI(safeStorageBasePath, "/safe-storage/v1/files", HttpMethod.POST, uriVariables, queryParams, postBody, headerParams, localVarAccept, localVarContentType, returnType);
+    }
+
 
     private <T> ResponseEntity<T> invokeAPI(String basePath, String path, HttpMethod method, Map<String, Object> pathParams, MultiValueMap<String, String> queryParams, Object body, HttpHeaders headerParams, List<MediaType> accept, MediaType contentType, ParameterizedTypeReference<T> returnType) throws RestClientException {
 

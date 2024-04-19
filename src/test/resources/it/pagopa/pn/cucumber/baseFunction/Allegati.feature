@@ -165,3 +165,12 @@ Feature: Allegati notifica
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "NOTIFICATION_VIEWED"
       | details          | NOT_NULL |
       | details_recIndex | 0        |
+
+
+  @ignore
+  Scenario: [B2B-PA-SEND_17] Chiamata diretta a safeStorage per firma
+    Given viene effettuato il pre-caricamento di un allegato diretto
+    Then l'operazione non ha prodotto errori
+
+
+
