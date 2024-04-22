@@ -1,13 +1,12 @@
 package it.pagopa.pn;
 
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
-import it.pagopa.pn.client.b2b.pa.service.impl.PnPaB2bExternalClientImpl;
-import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.ApiKeysConfiguration;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.BearerTokenConfiguration;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.RestTemplateConfiguration;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.TimingConfiguration;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -15,10 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
+
 
 @SpringBootTest(classes = {
         ApiKeysConfiguration.class,
@@ -48,14 +49,13 @@ import java.util.List;
         PnRaddAlternativeClientImpl.class
 })
 @TestPropertySource(properties = {"spring.profiles.active=dev"})
-public class NewNotificationTest {
-
+class NewNotificationTest {
     @Autowired
     private PnPaB2bUtils utils;
 
 
     @Test
-    public void insertNewNotification() {
+    void insertNewNotification() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
@@ -91,18 +91,16 @@ public class NewNotificationTest {
 
 
         Assertions.assertDoesNotThrow(() -> {
-
             NewNotificationResponse newNotificationRequest = utils.uploadNotification( request );
             FullSentNotificationV23 newNotification = utils.waitForRequestAcceptation( newNotificationRequest);
-            Thread.sleep( 10 * 1000);
+            await().atMost(10, SECONDS);
             utils.verifyNotification( newNotification );
         });
     }
 
-
     @Test
-    @Disabled
-    public void insertNewNotificationMulti() {
+    @Disabled("To reviewed")
+    void insertNewNotificationMulti() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
@@ -123,12 +121,12 @@ public class NewNotificationTest {
         Assertions.assertDoesNotThrow(() -> {
             NewNotificationResponse newNotificationRequest = utils.uploadNotification( request );
             FullSentNotificationV23 newNotification = utils.waitForRequestAcceptation( newNotificationRequest);
-            Thread.sleep( 10 * 1000);
+            await().atMost(10, SECONDS);
             utils.verifyNotification( newNotification );
         });
     }
 
-    private NotificationDocument newDocument(String resourcePath ) {
+    private NotificationDocument newDocument(String resourcePath) {
         return new NotificationDocument()
                 .contentType("application/pdf")
                 .ref( new NotificationAttachmentBodyRef().key( resourcePath ));
@@ -140,28 +138,22 @@ public class NewNotificationTest {
                 .ref( new NotificationAttachmentBodyRef().key( resourcePath ));
     }
 
-
-
     private NotificationMetadataAttachment newMatadataAttachment(String resourcePath ) {
         return new NotificationMetadataAttachment()
                 .contentType("application/json")
                 .ref( new NotificationAttachmentBodyRef().key( resourcePath ));
     }
 
-
     private enum RECIPIENT_TYPE_DIGITAL{
         NO_DIGITAL, DIGITAL_OK, DIGITAL_KO
     }
-
 
     private enum RECIPIENT_TYPE_ANALOG{
         ANALOG_OK, ANALOG_KO
     }
 
     private NotificationRecipientV23 newRecipient(boolean withapplycost, String prefix, String taxId, String resourcePath, String resourcePathf24, RECIPIENT_TYPE_DIGITAL recipientTypeDigital, RECIPIENT_TYPE_ANALOG recipientTypeAnalog ) {
-
         long epochMillis = System.currentTimeMillis();
-
         NotificationRecipientV23 recipient = new NotificationRecipientV23()
                 .denomination( prefix + " denomination")
                 .taxId( taxId )
@@ -222,10 +214,6 @@ public class NewNotificationTest {
                                         .metadataAttachment( newMatadataAttachment( "classpath:/f24_flat.json" )))
                 ));
 
-
-
-
-
         //TODO Modificare.....
         //  .payments( new NotificationPaymentInfo()
         //                 .creditorTaxId("77777777777")
@@ -236,14 +224,7 @@ public class NewNotificationTest {
         //                        .f24standard( newAttachment( resourcePath ) )
         //  );
 
-        try {
-            Thread.sleep(10);
-        }
-        catch (InterruptedException exc) {
-            throw new RuntimeException(exc);
-        }
-
+        await().atMost(10, SECONDS);
         return recipient;
     }
-
 }

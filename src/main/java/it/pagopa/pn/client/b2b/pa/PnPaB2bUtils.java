@@ -40,6 +40,9 @@ import java.util.*;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class PnPaB2bUtils {
+    public static final String PN_NOTIFICATION_ATTACHMENTS_ZBEDA_19_F_8997469_BB_75_D_28_FF_12_BDF_321_PDF = "PN_NOTIFICATION_ATTACHMENTS-zbeda19f8997469bb75d28ff12bdf321.pdf";
+    public static final String LEGAL_FACT_IS_NOT_A_PDF = "LegalFact is not a PDF ";
+    public static final String WRONG_STATUS = "WRONG STATUS: ";
     private final RestTemplate restTemplate;
     private final ApplicationContext ctx;
     private IPnPaB2bClient client;
@@ -255,14 +258,11 @@ public class PnPaB2bUtils {
             }
         }
         request.setDocuments(newdocs);
-
-
         setAttachmentV23(request);
-
         log.info(NEW_NOTIFICATION_REQUEST, request);
-        if ((request.getDocuments()!= null && !request.getDocuments().isEmpty()) && !noUpload){
+        if ((!request.getDocuments().isEmpty()) && !noUpload) {
             NotificationDocument notificationDocument = request.getDocuments().get(0);
-            notificationDocument.getRef().setKey("PN_NOTIFICATION_ATTACHMENTS-zbeda19f8997469bb75d28ff12bdf321.pdf");
+            notificationDocument.getRef().setKey(PN_NOTIFICATION_ATTACHMENTS_ZBEDA_19_F_8997469_BB_75_D_28_FF_12_BDF_321_PDF);
         }
 
         NewNotificationResponse response = client.sendNewNotification( request );
@@ -303,12 +303,12 @@ public class PnPaB2bUtils {
         log.info(NEW_NOTIFICATION_REQUEST, request);
         if ((request.getDocuments()!= null && !request.getDocuments().isEmpty()) && !noUpload){
             NotificationDocument notificationDocument = request.getDocuments().get(0);
-            notificationDocument.getRef().setKey("PN_NOTIFICATION_ATTACHMENTS-zbeda19f8997469bb75d28ff12bdf321.pdf");
+            notificationDocument.getRef().setKey(PN_NOTIFICATION_ATTACHMENTS_ZBEDA_19_F_8997469_BB_75_D_28_FF_12_BDF_321_PDF);
         }
 
         if ((request.getRecipients()!= null && !request.getRecipients().isEmpty()) && !noUpload){
             NotificationRecipientV23 notificationRecipientV23 = request.getRecipients().get(0);
-            notificationRecipientV23.getPayments().get(0).getF24().getMetadataAttachment().getRef().setKey("PN_NOTIFICATION_ATTACHMENTS-zbeda19f8997469bb75d28ff12bdf321.pdf");
+            notificationRecipientV23.getPayments().get(0).getF24().getMetadataAttachment().getRef().setKey(PN_NOTIFICATION_ATTACHMENTS_ZBEDA_19_F_8997469_BB_75_D_28_FF_12_BDF_321_PDF);
         }
 
         NewNotificationResponse response = client.sendNewNotification( request );
@@ -520,32 +520,25 @@ public class PnPaB2bUtils {
 
 
     public String waitForRequestRefused( NewNotificationResponse response) {
-
         log.info("Request status for " + response.getNotificationRequestId() );
         long startTime = System.currentTimeMillis();
-
         PnPollingServiceValidationStatusV23 validationStatusV23 = (PnPollingServiceValidationStatusV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V23);
         PnPollingResponseV23 pollingResponseV23 = validationStatusV23.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(REFUSED).build());
-
         long endTime = System.currentTimeMillis();
         log.info("Execution time {}ms",(endTime - startTime));
-
-        String error = null;
+        StringBuilder error = new StringBuilder();
         if (pollingResponseV23.getStatusResponse() != null && pollingResponseV23.getStatusResponse().getErrors()!= null && !pollingResponseV23.getStatusResponse().getErrors().isEmpty()) {
             for (ProblemError err :pollingResponseV23.getStatusResponse().getErrors()) {
-                error = error+ " "+ err.getDetail();
+                error.append(" ").append(err.getDetail());
             }
         }
         log.info("Detail status {}", error);
-        return error;
+        return error.toString();
     }
 
-
     public void verifyNotification(FullSentNotificationV23 fsn) throws IOException, IllegalStateException {
-
         for (NotificationDocument doc: fsn.getDocuments()) {
-
-            NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationDocument(fsn.getIun(), Integer.parseInt(doc.getDocIdx()));
+            NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationDocument(fsn.getIun(), Integer.parseInt(Objects.requireNonNull(doc.getDocIdx())));
             byte[] content = downloadFile(resp.getUrl());
             String sha256 = computeSha256(new ByteArrayInputStream(content));
 
@@ -555,11 +548,8 @@ public class PnPaB2bUtils {
         }
 
         getSentNotificatioAttachment(fsn);
-
-        for ( LegalFactsId legalFactsId: fsn.getTimeline().get(0).getLegalFactsIds()) {
-
+        for (LegalFactsId legalFactsId: Objects.requireNonNull(Objects.requireNonNull(fsn.getTimeline().get(0).getLegalFactsIds()))) {
             LegalFactDownloadMetadataResponse resp;
-
             resp = client.getLegalFact(
                     fsn.getIun(),
                     LegalFactCategory.SENDER_ACK,
@@ -569,53 +559,53 @@ public class PnPaB2bUtils {
             byte[] content = downloadFile(resp.getUrl());
             String  pdfPrefix = new String( Arrays.copyOfRange(content, 0, 10), StandardCharsets.UTF_8);
             if( ! pdfPrefix.contains("PDF") ) {
-                throw new IllegalStateException("LegalFact is not a PDF " + legalFactsId );
+                throw new IllegalStateException(LEGAL_FACT_IS_NOT_A_PDF + legalFactsId );
             }
         }
 
-        if(
-                fsn.getNotificationStatus() == null
-                        ||
-                        fsn.getNotificationStatus().equals( NotificationStatus.REFUSED )
-        ) {
-            throw new IllegalStateException("WRONG STATUS: " + fsn.getNotificationStatus() );
+        if(fsn.getNotificationStatus().equals(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationStatus.REFUSED)) {
+            throw new IllegalStateException(WRONG_STATUS + fsn.getNotificationStatus() );
         }
     }
 
     private void getSentNotificatioAttachment(FullSentNotificationV23 fsn) {
-
         fsn.getRecipients().stream()
-                .filter(recipient -> recipient.getPayments() != null && !recipient.getPayments().isEmpty())
-                .forEach(recipient -> {
-                    if (recipient.getPayments().get(0).getPagoPa() != null) {
-                        NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationAttachment(fsn.getIun(), fsn.getRecipients().indexOf(recipient), PAGOPA, 0);
-                        try {
-                            checkAttachment(resp);
-                        } catch (IOException e) {
-                            throw new PnB2bException(e.getMessage());
-                        }
-                    }
-                    if (recipient.getPayments().get(0).getF24() != null) {
-                        NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationAttachment(fsn.getIun(), fsn.getRecipients().indexOf(recipient), F_24, 0);
-                        if (resp != null && resp.getRetryAfter() != null && resp.getRetryAfter() > 0) {
-                            try {
-                                Thread.sleep(resp.getRetryAfter() * 3);
-                                client.getSentNotificationAttachment(fsn.getIun(), fsn.getRecipients().indexOf(recipient), "F24", 0);
-                            } catch (InterruptedException exc) {
-                                Thread.currentThread().interrupt();
-                                throw new PnB2bException(exc.getMessage());
-                            }
-                        }
-                    }
-                });
+            .filter(recipient -> recipient.getPayments() != null && !recipient.getPayments().isEmpty())
+            .forEach(recipient -> {
+                extractAndCheckAttachment(fsn, recipient);
+                extractAttachment(fsn, recipient);
+            });
     }
 
+    private void extractAttachment(FullSentNotificationV23 fsn, NotificationRecipientV23 recipient) {
+        if (Objects.requireNonNull(recipient.getPayments()).get(0).getF24() != null) {
+            NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationAttachment(fsn.getIun(), fsn.getRecipients().indexOf(recipient), F_24, 0);
+            if (resp != null && resp.getRetryAfter() != null && resp.getRetryAfter() > 0) {
+                try {
+                    Thread.sleep(resp.getRetryAfter() * 3L);
+                    client.getSentNotificationAttachment(fsn.getIun(), fsn.getRecipients().indexOf(recipient), "F24", 0);
+                } catch (InterruptedException exc) {
+                    Thread.currentThread().interrupt();
+                    throw new PnB2bException(exc.getMessage());
+                }
+            }
+        }
+    }
+
+    private void extractAndCheckAttachment(FullSentNotificationV23 fsn, NotificationRecipientV23 recipient) {
+        if (Objects.requireNonNull(recipient.getPayments()).get(0).getPagoPa() != null) {
+            NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationAttachment(fsn.getIun(), fsn.getRecipients().indexOf(recipient), PAGOPA, 0);
+            try {
+                checkAttachment(resp);
+            } catch (IOException e) {
+                throw new PnB2bException(e.getMessage());
+            }
+        }
+    }
 
     public void verifyNotificationV1(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification fsn) throws IOException, IllegalStateException {
-
         for (it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationDocument doc: fsn.getDocuments()) {
-
-            it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationDocumentV1(fsn.getIun(), Integer.parseInt(doc.getDocIdx()));
+            it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationDocumentV1(fsn.getIun(), Integer.parseInt(Objects.requireNonNull(doc.getDocIdx())));
             byte[] content = downloadFile(resp.getUrl());
             String sha256 = computeSha256(new ByteArrayInputStream(content));
 
@@ -640,29 +630,22 @@ public class PnPaB2bUtils {
                 });
 
 
-        for ( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.LegalFactsId legalFactsId: fsn.getTimeline().get(0).getLegalFactsIds()) {
-
+        for ( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.LegalFactsId legalFactsId: Objects.requireNonNull(fsn.getTimeline().get(0).getLegalFactsIds())) {
             LegalFactDownloadMetadataResponse resp;
-
             resp = client.getLegalFact(
                     fsn.getIun(),
                     LegalFactCategory.SENDER_ACK,
                     URLEncoder.encode(legalFactsId.getKey(), StandardCharsets.UTF_8)
             );
-
             byte[] content = downloadFile(resp.getUrl());
             String  pdfPrefix = new String( Arrays.copyOfRange(content, 0, 10), StandardCharsets.UTF_8);
             if( ! pdfPrefix.contains("PDF") ) {
-                throw new IllegalStateException("LegalFact is not a PDF " + legalFactsId );
+                throw new IllegalStateException(LEGAL_FACT_IS_NOT_A_PDF + legalFactsId );
             }
         }
 
-        if(
-                fsn.getNotificationStatus() == null
-                        ||
-                        fsn.getNotificationStatus().equals( NotificationStatus.REFUSED )
-        ) {
-            throw new IllegalStateException("WRONG STATUS: " + fsn.getNotificationStatus() );
+        if(fsn.getNotificationStatus().equals(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationStatus.REFUSED)) {
+            throw new IllegalStateException(WRONG_STATUS + fsn.getNotificationStatus() );
         }
     }
 
@@ -690,9 +673,7 @@ public class PnPaB2bUtils {
                 });
 
         for (it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.LegalFactsId legalFactsId: Objects.requireNonNull(fsn.getTimeline().get(0).getLegalFactsIds())) {
-
             LegalFactDownloadMetadataResponse resp;
-
             resp = client.getLegalFact(
                     fsn.getIun(),
                     LegalFactCategory.SENDER_ACK,
@@ -702,22 +683,20 @@ public class PnPaB2bUtils {
             byte[] content = downloadFile(resp.getUrl());
             String  pdfPrefix = new String( Arrays.copyOfRange(content, 0, 10), StandardCharsets.UTF_8);
             if( ! pdfPrefix.contains("PDF") ) {
-                throw new IllegalStateException("LegalFact is not a PDF " + legalFactsId );
+                throw new IllegalStateException(LEGAL_FACT_IS_NOT_A_PDF + legalFactsId );
             }
         }
 
-        if(fsn.getNotificationStatus().equals( NotificationStatus.REFUSED )) {
-            throw new IllegalStateException("WRONG STATUS: " + fsn.getNotificationStatus() );
+        if(fsn.getNotificationStatus().equals(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationStatus.REFUSED)) {
+            throw new IllegalStateException(WRONG_STATUS + fsn.getNotificationStatus() );
         }
     }
-
 
     public void verifyNotificationAndSha256AllegatiPagamento(FullSentNotificationV23 fsn, String attachname) throws IOException, IllegalStateException {
         for (NotificationDocument doc: fsn.getDocuments()) {
             NotificationAttachmentDownloadMetadataResponse resp = client.getSentNotificationDocument(fsn.getIun(), Integer.parseInt(Objects.requireNonNull(doc.getDocIdx())));
             byte[] content = downloadFile(resp.getUrl());
             String sha256 = computeSha256(new ByteArrayInputStream(content));
-
             if( ! sha256.equals(resp.getSha256()) ) {
                 throw new IllegalStateException(SHA_256_DIFFERS + doc.getDocIdx() );
             }
