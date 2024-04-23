@@ -1121,12 +1121,15 @@ public class InvioNotificheB2bSteps {
         }
     }
 
-    @Then("si verifica che il phyicalAddress sia stato normalizzato correttamente con rimozione caratteri isoLatin1 è abbia un massimo di {int} caratteri")
-    public void controlloCampiAddressNormalizzatore(Integer caratteri) {
-        String regex= "[{-~¡-ÿ]*";
-        FullSentNotificationV23 timeline= sharedSteps.getSentNotification();
-        TimelineElementV23 timelineNormalizer= timeline.getTimeline().stream().filter(elem -> Objects.requireNonNull(elem.getCategory()).equals(TimelineElementCategoryV23.NORMALIZED_ADDRESS)).findAny().orElse(null);
-        PhysicalAddress oldAddress= Objects.requireNonNull(Objects.requireNonNull(timelineNormalizer).getDetails()).getOldAddress();
+    @Then("si verifica che il phyicalAddress sia stato normalizzato correttamente con rimozione caratteri isoLatin1")
+    public void controlloCampiAddressNormalizzatore(){
+        String regex= "[{}-~¡-ÿ^]";
+        String regexCaratteriA= "[æ]";
+
+       FullSentNotificationV23 timeline= sharedSteps.getSentNotification();
+
+       TimelineElementV23 timelineNormalizer= timeline.getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.NORMALIZED_ADDRESS)).findAny().orElse(null);
+        PhysicalAddress oldAddress= timelineNormalizer.getDetails().getOldAddress();
         PhysicalAddress normalizedAddress= timelineNormalizer.getDetails().getNormalizedAddress();
 
         try {
@@ -1136,17 +1139,12 @@ public class InvioNotificheB2bSteps {
             log.info("old address: {}", oldAddress);
             log.info("normalized address: {}", normalizedAddress);
 
-            PhysicalAddress newAddress = new PhysicalAddress()
-            .address(oldAddress.getAddress().length()>caratteri?  oldAddress.getAddress().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-            oldAddress.getAddress().replaceAll(regex,"").toUpperCase())
-            .municipality(oldAddress.getMunicipality().length()>caratteri?  oldAddress.getMunicipality().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-                    oldAddress.getMunicipality().replaceAll(regex,"").toUpperCase())
-            .municipalityDetails(Objects.requireNonNull(oldAddress.getMunicipalityDetails()).length()>caratteri?  oldAddress.getMunicipalityDetails().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-                    oldAddress.getMunicipalityDetails().replaceAll(regex,"").toUpperCase())
-            .province(Objects.requireNonNull(oldAddress.getProvince()).length()>caratteri?  oldAddress.getMunicipality().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-                    oldAddress.getProvince().replaceAll(regex,"").toUpperCase())
-            .zip(Objects.requireNonNull(oldAddress.getZip()).length()>caratteri?  oldAddress.getMunicipality().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-                    oldAddress.getZip().replaceAll(regex,"").toUpperCase());
+    PhysicalAddress newAddress= new PhysicalAddress()
+            .address(oldAddress.getAddress().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase())
+            .municipality(oldAddress.getMunicipality().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase())
+            .municipalityDetails(oldAddress.getMunicipalityDetails().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase())
+            .province(oldAddress.getProvince().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase())
+            .zip(oldAddress.getZip().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase());
 
             log.info(" newAddress: {}",newAddress);
 

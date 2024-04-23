@@ -76,6 +76,13 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         this.documentOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
     }
 
+    public void selectRaddistaHeaderErrato(String token){
+        this.actOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer: " + token);
+        this.aorOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer: " + token);
+        this.documentOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer: " + token);
+    }
+
+
     public ActInquiryResponse actInquiry( String uid, String recipientTaxId, String recipientType, String qrCode, String iun) throws RestClientException {
         return this.actOperationsApi.actInquiryWithHttpInfo(uid, recipientTaxId, recipientType, qrCode, iun).getBody();
     }
@@ -176,6 +183,10 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
             }
             case PRIVATE_DIVERSO -> {
                 selectRaddista(this.raddistaJwtPrivateDiverso);
+                beenSet=true;
+            }
+            case HEADER_ERRATO -> {
+                selectRaddistaHeaderErrato(this.raddista1);
                 beenSet=true;
             }
         }
