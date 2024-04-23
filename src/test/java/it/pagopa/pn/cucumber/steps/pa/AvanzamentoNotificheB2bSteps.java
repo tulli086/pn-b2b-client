@@ -1,5 +1,6 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -694,7 +695,7 @@ public class AvanzamentoNotificheB2bSteps {
                         .value(timelineEventCategory)
                         .build());
 
-        logger.info("NOTIFICATION_TIMELINE V2 : " + sharedSteps.getSentNotificationV2().getTimeline());
+        logger.info("NOTIFICATION_TIMELINE V2 : " + pnPollingResponseV20.getNotification().getTimeline());
         Assertions.assertTrue(pnPollingResponseV20.getResult());
         Assertions.assertNotNull(pnPollingResponseV20.getTimelineElement());
         sharedSteps.setSentNotificationV2(pnPollingResponseV20.getNotification());
@@ -2925,6 +2926,44 @@ public class AvanzamentoNotificheB2bSteps {
 
     }
 
+
+    @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con indirizzo normalizzato:")
+    public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConIndirizzoNormalizzato(String timelineEventCategory, DataTable table) {
+        TimelineElementV23 timelineElementV23 = readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
+
+        System.out.println(table);
+        logger.info("indirizzo: {}", timelineElementV23.getDetails().getOldAddress());
+        //FARE CHECK RISULTATO
+        logger.info("indirizzo Normalizzato: {}", timelineElementV23.getDetails().getNormalizedAddress());
+try{
+    Assertions.assertEquals(mapValueFromTable(table,"physicalAddress_address"),timelineElementV23.getDetails().getNormalizedAddress().getAddress());
+    Assertions.assertEquals(mapValueFromTable(table,"at"),timelineElementV23.getDetails().getNormalizedAddress().getAt());
+    Assertions.assertEquals(mapValueFromTable(table,"physicalAddress_addressDetails"),timelineElementV23.getDetails().getNormalizedAddress().getAddressDetails());
+    Assertions.assertEquals(mapValueFromTable(table,"physicalAddress_zip"),timelineElementV23.getDetails().getNormalizedAddress().getZip());
+    Assertions.assertEquals(mapValueFromTable(table,"physicalAddress_municipality"),timelineElementV23.getDetails().getNormalizedAddress().getMunicipality());
+    Assertions.assertEquals(mapValueFromTable(table,"physicalAddress_municipalityDetails"),timelineElementV23.getDetails().getNormalizedAddress().getMunicipalityDetails());
+    Assertions.assertEquals(mapValueFromTable(table,"physicalAddress_province"),timelineElementV23.getDetails().getNormalizedAddress().getProvince());
+    Assertions.assertEquals(mapValueFromTable(table,"physicalAddress_State"),timelineElementV23.getDetails().getNormalizedAddress().getForeignState());
+
+} catch (AssertionFailedError assertionFailedError) {
+        sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+    }
+    }
+
+
+    private String mapValueFromTable( DataTable table,String key){
+        String value = table.asMap().get(key);
+
+        if(value.equalsIgnoreCase("null")){
+            return null;
+        }
+        if(value.equalsIgnoreCase("0_CHAR")){
+            return "";
+        }
+        return value;
+    }
+
+
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con failureCause {string}")
     public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConfailureCause(String timelineEventCategory, String failureCause) {
         PnPollingServiceTimelineRapidV23 timelineRapidV23 = (PnPollingServiceTimelineRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_RAPID_V23);
@@ -3311,4 +3350,6 @@ public class AvanzamentoNotificheB2bSteps {
         );
         return pnPollingPredicate;
     }
+
+
 }
