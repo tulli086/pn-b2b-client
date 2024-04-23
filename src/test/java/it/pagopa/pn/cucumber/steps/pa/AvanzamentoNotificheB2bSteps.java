@@ -463,8 +463,8 @@ public class AvanzamentoNotificheB2bSteps {
             OffsetDateTime ricezioneRECAG012 = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.SEND_ANALOG_FEEDBACK) && elem.getDetails().getDeliveryDetailCode().equals("RECAG012")).findAny().get().getDetails().getEventTimestamp();
             OffsetDateTime refinementDate = sharedSteps.getSentNotification().getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.REFINEMENT) && elem.getDetails().getRecIndex().equals(0)).findAny().get().getTimestamp();
 
-            logger.info("ricezioneRaccomandata : {}", ricezioneRECAG012);
-            logger.info("refinementDate : {}", refinementDate);
+            log.info("ricezioneRaccomandata : {}", ricezioneRECAG012);
+            log.info("refinementDate : {}", refinementDate);
 
             Assertions.assertTrue(checkOffsetDateTime(ricezioneRECAG012,refinementDate));
 
@@ -2830,9 +2830,9 @@ public class AvanzamentoNotificheB2bSteps {
         TimelineElementV23 timelineElementV23 = readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
 
         System.out.println(table);
-        logger.info("indirizzo: {}", timelineElementV23.getDetails().getOldAddress());
+        log.info("indirizzo: {}", timelineElementV23.getDetails().getOldAddress());
         //FARE CHECK RISULTATO
-        logger.info("indirizzo Normalizzato: {}", timelineElementV23.getDetails().getNormalizedAddress());
+        log.info("indirizzo Normalizzato: {}", timelineElementV23.getDetails().getNormalizedAddress());
 try{
     Assertions.assertEquals(mapValueFromTable(table,"physicalAddress_address"),timelineElementV23.getDetails().getNormalizedAddress().getAddress());
     Assertions.assertEquals(mapValueFromTable(table,"at"),timelineElementV23.getDetails().getNormalizedAddress().getAt());

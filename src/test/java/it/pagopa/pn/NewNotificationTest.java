@@ -13,7 +13,8 @@ import it.pagopa.pn.client.b2b.pa.config.springconfig.TimingConfiguration;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
-import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+
+import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ import static org.awaitility.Awaitility.await;
         PnPaymentInfoClientImpl.class,
         PnRaddFsuClientImpl.class,
         PnRaddAlternativeClientImpl.class,
-        TimingForTimeline.class,
+        TimingForPolling.class,
         PnB2bClientTimingConfigs.class,
         PnPollingFactory.class
 })
