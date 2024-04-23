@@ -329,7 +329,7 @@ public class SharedSteps {
                     }
                     fullSentNotificationV23 = b2bClient.getSentNotification(fullSentNotificationV23.getIun());
                     log.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV23.getTimeline());
-                    timelineElementV23 = fullSentNotificationV23.getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE)).findAny().orElse(null);
+                    timelineElementV23 = fullSentNotificationV23.getTimeline().stream().filter(elem -> Objects.requireNonNull(elem.getCategory()).equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE)).findAny().orElse(null);
                     if (timelineElementV23 != null) {
                         break;
                     }

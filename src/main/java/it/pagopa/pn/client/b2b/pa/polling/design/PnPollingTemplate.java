@@ -10,7 +10,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.awaitility.Awaitility.await;
 
 
-
 public abstract class PnPollingTemplate<T extends PnPollingResponse> implements IPnPollingService<T> {
     public T waitForEvent(String id, PnPollingParameter pnPollingParameter) {
         try {

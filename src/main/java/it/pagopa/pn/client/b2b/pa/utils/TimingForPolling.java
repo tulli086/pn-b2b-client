@@ -122,7 +122,8 @@ public class TimingForPolling {
         //TIMING FOR WEBHOOK
         WEBHOOK(150000, 500);
 
-        private int numCheck,waitingMultiplier;
+        private final int numCheck;
+        private final int waitingMultiplier;
 
         Element(int numCheck, int waitingMultiplier){
             this.numCheck = numCheck;

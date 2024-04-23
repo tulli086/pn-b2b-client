@@ -1,6 +1,5 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
-
 import it.pagopa.pn.client.b2b.pa.service.IPnWebUserAttributesClient;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.api.AllApi;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.api.CourtesyApi;
@@ -16,15 +15,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
+
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttributesClient {
-
     private final RestTemplate restTemplate;
-    private final ConsentsApi ConsentsApi;
+    private final ConsentsApi consentsApi;
     private final LegalApi legalApi;
     private final AllApi allApi;
     private final CourtesyApi courtesyApiAddressBook;
@@ -40,35 +38,30 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
     private final String userAgent;
     private final String basePath;
 
-    public PnWebUserAttributesExternalClientImpl(
-            RestTemplate restTemplate,
-            @Value("${pn.webapi.external.base-url}") String basePath,
-            @Value("${pn.bearer-token.user1}") String marioCucumberBearerToken,
-            @Value("${pn.bearer-token.user2}") String marioGherkinBearerToken,
-            @Value("${pn.bearer-token.user3}") String leonardoBearerToken,
-            @Value("${pn.bearer-token.user4}") String galileoBearerToken,
-            @Value("${pn.bearer-token.user5}") String dinoBearerToken,
-            @Value("${pn.bearer-token.scaduto}") String userBearerTokenScaduto,
-            @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
-            @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
-            @Value("${pn.webapi.external.user-agent}") String userAgent
-    ) {
-        this.restTemplate = restTemplate;
 
+    public PnWebUserAttributesExternalClientImpl(RestTemplate restTemplate,
+                                                 @Value("${pn.webapi.external.base-url}") String basePath,
+                                                 @Value("${pn.bearer-token.user1}") String marioCucumberBearerToken,
+                                                 @Value("${pn.bearer-token.user2}") String marioGherkinBearerToken,
+                                                 @Value("${pn.bearer-token.user3}") String leonardoBearerToken,
+                                                 @Value("${pn.bearer-token.user4}") String galileoBearerToken,
+                                                 @Value("${pn.bearer-token.user5}") String dinoBearerToken,
+                                                 @Value("${pn.bearer-token.scaduto}") String userBearerTokenScaduto,
+                                                 @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
+                                                 @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
+                                                 @Value("${pn.webapi.external.user-agent}") String userAgent) {
+        this.restTemplate = restTemplate;
         this.marioCucumberBearerToken = marioCucumberBearerToken;
         this.marioGherkinBearerToken = marioGherkinBearerToken;
         this.leonardoBearerToken = leonardoBearerToken;
         this.galileoBearerToken = galileoBearerToken;
         this.dinoBearerToken = dinoBearerToken;
         this.userBearerTokenScaduto= userBearerTokenScaduto;
-
         this.gherkinSrlBearerToken = gherkinSrlBearerToken;
         this.cucumberSpaBearerToken = cucumberSpaBearerToken;
-
         this.basePath = basePath;
         this.userAgent = userAgent;
-        this.ConsentsApi = new ConsentsApi(newConsentsApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
-
+        this.consentsApi = new ConsentsApi(newConsentsApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
         this.legalApi = new LegalApi(newAddressBookApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
         this.allApi = new AllApi(newAddressBookApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
         this.courtesyApiAddressBook = new CourtesyApi(newAddressBookApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
@@ -97,7 +90,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
         boolean beenSet = false;
         switch (bearerToken) {
             case USER_1:
-                this.ConsentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
+                this.consentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
 
                 this.legalApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
                 this.allApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, marioCucumberBearerToken, userAgent));
@@ -107,7 +100,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
                 beenSet = true;
                 break;
             case USER_2:
-                this.ConsentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, marioGherkinBearerToken, userAgent));
+                this.consentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, marioGherkinBearerToken, userAgent));
 
                 this.legalApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, marioGherkinBearerToken, userAgent));
                 this.allApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, marioGherkinBearerToken, userAgent));
@@ -117,7 +110,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
                 beenSet = true;
                 break;
             case USER_3:
-                this.ConsentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, leonardoBearerToken, userAgent));
+                this.consentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, leonardoBearerToken, userAgent));
 
                 this.legalApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, leonardoBearerToken, userAgent));
                 this.allApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, leonardoBearerToken, userAgent));
@@ -127,7 +120,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
                 beenSet = true;
                 break;
             case USER_4:
-                this.ConsentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, galileoBearerToken, userAgent));
+                this.consentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, galileoBearerToken, userAgent));
 
                 this.legalApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, galileoBearerToken, userAgent));
                 this.allApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, galileoBearerToken, userAgent));
@@ -137,7 +130,7 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
                 beenSet = true;
                 break;
             case USER_5:
-                this.ConsentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, dinoBearerToken, userAgent));
+                this.consentsApi.setApiClient(newConsentsApiClient(restTemplate, basePath, dinoBearerToken, userAgent));
 
                 this.legalApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, dinoBearerToken, userAgent));
                 this.allApi.setApiClient(newAddressBookApiClient(restTemplate, basePath, dinoBearerToken, userAgent));
@@ -180,7 +173,6 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
         return this.bearerTokenSetted;
     }
 
-
     public void consentAction(ConsentType consentType, ConsentAction consentAction, String version) throws RestClientException {
         //TODO: problema da verificare
         /*
@@ -188,18 +180,17 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
                           String consentAction,
                           ConsentAction version) ???
          */
-        this.ConsentsApi.consentAction(consentType, version, consentAction);
+        this.consentsApi.consentAction(consentType, version, consentAction);
     }
 
     public Consent getConsentByType(ConsentType consentType, String version) throws RestClientException {
-        return this.ConsentsApi.getConsentByType(consentType, version);
+        return this.consentsApi.getConsentByType(consentType, version);
     }
 
 
     public List<Consent> getConsents() throws RestClientException {
-        return this.ConsentsApi.getConsents();
+        return this.consentsApi.getConsents();
     }
-
 
     public UserAddresses getAddressesByRecipient() throws RestClientException {
         return allApi.getAddressesByRecipient();
@@ -230,6 +221,4 @@ public class PnWebUserAttributesExternalClientImpl implements IPnWebUserAttribut
     public void postRecipientCourtesyAddress(String senderId, CourtesyChannelType channelType, AddressVerification addressVerification) throws RestClientException {
         courtesyApiAddressBook.postRecipientCourtesyAddress(senderId, channelType, addressVerification);
     }
-
-
 }

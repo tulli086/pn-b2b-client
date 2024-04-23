@@ -20,7 +20,7 @@ public class OpenSearchSteps {
 
     @Given("viene effettuato una prova di chiamata ad openSearch")
     public void vieneEffettuatoUnaProvaDiChiamata() {
-        PnExternalServiceClientImpl.openSearchResponse stringResponseEntity = pnExternalServiceClient.openSearchGetAudit("10y","AUD_NT_PRELOAD",10);
+        PnExternalServiceClientImpl.OpenSearchResponse stringResponseEntity = pnExternalServiceClient.openSearchGetAudit("10y","AUD_NT_PRELOAD",10);
         System.out.println(stringResponseEntity);
         System.out.println("NUM. DI RISULTATI: "+stringResponseEntity.getHits().getHits().size());
     }
@@ -36,12 +36,12 @@ public class OpenSearchSteps {
     }
 
     private void checkAudit(String auditLogType, String auditLogRetention, Integer maxAge){
-        PnExternalServiceClientImpl.openSearchResponse openSearchResponse = pnExternalServiceClient.openSearchGetAudit(auditLogRetention,auditLogType,10);
+        PnExternalServiceClientImpl.OpenSearchResponse openSearchResponse = pnExternalServiceClient.openSearchGetAudit(auditLogRetention,auditLogType,10);
         Assertions.assertFalse(openSearchResponse.getHits().getHits().isEmpty());
         PnExternalServiceClientImpl.InnerHits innerHits = openSearchResponse.getHits().getHits().get(0);
-        Assertions.assertTrue(innerHits.get_source().getAud_type().equalsIgnoreCase(auditLogType));
+        Assertions.assertTrue(innerHits.getSource().getAudType().equalsIgnoreCase(auditLogType));
         if(maxAge != -1){
-            OffsetDateTime ageTimeStamp = innerHits.get_source().getTimestamp();
+            OffsetDateTime ageTimeStamp = innerHits.getSource().getTimestamp();
             System.out.println("AGE: "+ageTimeStamp);
             Assertions.assertTrue(ChronoUnit.DAYS.between(ageTimeStamp,OffsetDateTime.now()) <= maxAge);
             System.out.println("DIFF: "+ ChronoUnit.DAYS.between(ageTimeStamp,OffsetDateTime.now()));
@@ -50,7 +50,7 @@ public class OpenSearchSteps {
 
     @And("viene verificato che non esiste un audit log {string} in {string}")
     public void vieneVerificatoCheNonEsisteUnAuditLogIn(String auditLogType, String auditLogRetention) {
-        PnExternalServiceClientImpl.openSearchResponse openSearchResponse = pnExternalServiceClient.openSearchGetAudit(auditLogRetention,auditLogType,10);
+        PnExternalServiceClientImpl.OpenSearchResponse openSearchResponse = pnExternalServiceClient.openSearchGetAudit(auditLogRetention,auditLogType,10);
         Assertions.assertTrue(openSearchResponse.getHits().getHits().isEmpty());
     }
 }

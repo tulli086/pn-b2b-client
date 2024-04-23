@@ -64,18 +64,18 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     public void vieneVerificatoCheIlCampoLegalfactIdsSiaValorizzato() {
         Assertions.assertNotNull(sharedSteps.getProgressResponseElement());
         Assertions.assertNotNull(sharedSteps.getProgressResponseElement().getLegalfactIds());
-        Assertions.assertTrue(!sharedSteps.getProgressResponseElement().getLegalfactIds().isEmpty());
+        Assertions.assertFalse(sharedSteps.getProgressResponseElement().getLegalfactIds().isEmpty());
     }
 
     //private final WebhookSynchronizer webhookSynchronizer;
 
     public enum StreamVersion {V23,V10,V10_V23}
 
-    private Set<String> paStreamOwner = new HashSet<>();
+    private final Set<String> paStreamOwner = new HashSet<>();
 
     //TODO: rimuovere
-    private LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
-    private LinkedList<ProgressResponseElementV23> progressResponseElementListV23 = new LinkedList<>();
+    private final LinkedList<ProgressResponseElement> progressResponseElementList = new LinkedList<>();
+    private final LinkedList<ProgressResponseElementV23> progressResponseElementListV23 = new LinkedList<>();
     private ProgressResponseElementV23 progressResponseElementResultV23;
     private static IPnWebhookB2bClient webhookClientForClean;
     private static boolean webhookTestLaunch;

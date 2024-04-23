@@ -16,12 +16,10 @@ import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebh
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENEBLED_INTEROP;
@@ -46,14 +44,12 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
     private final InteropTokenSingleton interopTokenSingleton;
 
 
-    public PnWebhookB2bExternalClientImpl(RestTemplate restTemplate,
-            InteropTokenSingleton interopTokenSingleton,
-            @Value("${pn.external.base-url}") String devBasePath,
-            @Value("${pn.external.api-key}") String apiKeyMvp1,
-            @Value("${pn.external.api-key-2}") String apiKeyMvp2,
-            @Value("${pn.external.api-key-GA}") String apiKeyGa,
-            @Value("${pn.interop.enable}") String enableInterop
-    ) {
+    public PnWebhookB2bExternalClientImpl(RestTemplate restTemplate, InteropTokenSingleton interopTokenSingleton,
+                                          @Value("${pn.external.base-url}") String devBasePath,
+                                          @Value("${pn.external.api-key}") String apiKeyMvp1,
+                                          @Value("${pn.external.api-key-2}") String apiKeyMvp2,
+                                          @Value("${pn.external.api-key-GA}") String apiKeyGa,
+                                          @Value("${pn.interop.enable}") String enableInterop) {
         this.restTemplate = restTemplate;
         this.apiKeyMvp1 = apiKeyMvp1;
         this.apiKeyMvp2 = apiKeyMvp2;
@@ -133,7 +129,6 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
     }
 
     //Versione 2_3
-
     public StreamMetadataResponseV23 createEventStreamV23(StreamCreationRequestV23 streamCreationRequest){
         refreshAndSetTokenInteropClient();
         return this.streamsApiV23.createEventStreamV23(streamCreationRequest);
@@ -174,7 +169,6 @@ public class PnWebhookB2bExternalClientImpl implements IPnWebhookB2bClient {
         refreshAndSetTokenInteropClient();
         return this.eventsApiV23.consumeEventStreamV23WithHttpInfo(streamId,lastEventId);
     }
-
 
     @Override
     public boolean setApiKeys(ApiKeyType apiKey) {

@@ -1,25 +1,23 @@
 package it.pagopa.pn.client.b2b.pa.polling.design;
 
-import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
-import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponse;
 import it.pagopa.pn.client.b2b.pa.polling.IPnPollingService;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
+import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import java.util.Map;
 
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnPollingFactory implements SettableApiKey {
-    //private final Map<String, IPnPollingService<?>> pollingServiceMap;
-
-    private ApplicationContext context;
+    private final ApplicationContext context;
     private String apiKey;
     private ApiKeyType apiKeyType;
+
 
     public PnPollingFactory(ApplicationContext context) {
         this.context = context;
@@ -36,7 +34,7 @@ public class PnPollingFactory implements SettableApiKey {
 
             return iPnPollingService;
         }catch (NoSuchBeanDefinitionException noSuchBeanDefinitionException){
-            throw new RuntimeException("Unsupported IPnPollingService type");
+            throw new PnPollingException("Unsupported IPnPollingService type");
         }
     }
 

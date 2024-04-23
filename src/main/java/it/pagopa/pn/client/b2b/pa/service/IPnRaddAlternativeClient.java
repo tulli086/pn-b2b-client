@@ -9,8 +9,8 @@ import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.*;
 import org.springframework.web.client.RestClientException;
 
-public interface IPnRaddAlternativeClient extends SettableAuthTokenRadd {
 
+public interface IPnRaddAlternativeClient extends SettableAuthTokenRadd {
     ActInquiryResponse actInquiry( String uid, String recipientTaxId, String recipientType, String qrCode, String iun) throws RestClientException;
     AbortTransactionResponse abortActTransaction(String uid, AbortTransactionRequest abortTransactionRequest) throws RestClientException;
     CompleteTransactionResponse completeActTransaction(String uid, CompleteTransactionRequest completeTransactionRequest) throws RestClientException;

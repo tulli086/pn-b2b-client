@@ -327,7 +327,7 @@ public class AvanzamentoNotificheB2bSteps {
 
                 log.info("NOTIFICATION_TIMELINE: " + timelineElementList);
                 Assertions.assertNotNull(timelineElementList);
-                Assertions.assertNotEquals(timelineElementList.size(), 0);
+                Assertions.assertNotEquals(0, timelineElementList.size());
                 if (existCheck) {
                     Assertions.assertNotNull(timelineElement);
                 } else {
@@ -380,7 +380,7 @@ public class AvanzamentoNotificheB2bSteps {
 
             log.info("NOTIFICATION_TIMELINE: " + timelineElementList);
             Assertions.assertNotNull(timelineElementList);
-            Assertions.assertNotEquals(timelineElementList.size(), 0);
+            Assertions.assertNotEquals(0, timelineElementList.size());
             if (existCheck) {
                 Assertions.assertNotNull(timelineElement);
             } else {
@@ -1178,7 +1178,7 @@ public class AvanzamentoNotificheB2bSteps {
         } catch (AssertionFailedError assertionFailedError) {
             // System.out.println(assertionFailedError.getCause().toString());
             // System.out.println(assertionFailedError.getCause().getMessage().toString());
-            Assertions.assertTrue(assertionFailedError.getCause().getMessage().toString().substring(0, 3).equals(statusCode));
+            Assertions.assertEquals(assertionFailedError.getCause().getMessage().substring(0, 3), statusCode);
         }
     }
 
@@ -2518,8 +2518,8 @@ public class AvanzamentoNotificheB2bSteps {
         }
 
         OffsetDateTime schedulingDate = notificationDate.plus(schedulingDaysRefinement);
-        Integer hour = schedulingDate.getHour();
-        Integer minutes = schedulingDate.getMinute();
+        int hour = schedulingDate.getHour();
+        int minutes = schedulingDate.getMinute();
         if ((hour == 21 && minutes > 0) || hour > 21) {
             Duration timeToAddInNonVisibilityTimeCase = sharedSteps.getTimeToAddInNonVisibilityTimeCase();
             schedulingDate = schedulingDate.plus(timeToAddInNonVisibilityTimeCase);
@@ -2528,7 +2528,7 @@ public class AvanzamentoNotificheB2bSteps {
 
         System.out.println(timelineElement.getDetails().getSchedulingDate().format(fmt1));
         System.out.println(schedulingDate.format(fmt1));
-        Assertions.assertTrue(timelineElement.getDetails().getSchedulingDate().format(fmt1).equals(schedulingDate.format(fmt1)));
+        Assertions.assertEquals(timelineElement.getDetails().getSchedulingDate().format(fmt1), schedulingDate.format(fmt1));
         //Assertions.assertEquals(timelineElement.getDetails().getSchedulingDate(), schedulingDate);
     }
 
@@ -2540,7 +2540,7 @@ public class AvanzamentoNotificheB2bSteps {
 
             OffsetDateTime schedulingDate = timelineElement.getDetails().getSchedulingDate();
             OffsetDateTime currentDate = now().atZoneSameInstant(ZoneId.of("UTC")).toOffsetDateTime();
-            Long remainingTime = ChronoUnit.MILLIS.between(currentDate, schedulingDate);
+            long remainingTime = ChronoUnit.MILLIS.between(currentDate, schedulingDate);
             if (remainingTime > 0) {
                 Thread.sleep(remainingTime + 30 * 1000);
             }

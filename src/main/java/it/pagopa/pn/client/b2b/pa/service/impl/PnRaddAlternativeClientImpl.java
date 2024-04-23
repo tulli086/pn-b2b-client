@@ -40,6 +40,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final AorOperationsApi aorOperationsApi;
     private final DocumentOperationsApi documentOperationsApi;
     private final NotificationInquiryApi notificationInquiryApi;
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
     private final ImportApi apiCaricamentoCsv;
     private final RegistryApi apiAnagraficaCRUD;
 
@@ -80,7 +82,7 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private static it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClientExternal(RestTemplate restTemplate, String basePath,String token ) {
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient newApiClient = new it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
-        newApiClient.addDefaultHeader("Authorization", "Bearer " + token);
+        newApiClient.addDefaultHeader(AUTHORIZATION, BEARER + token);
         return newApiClient;
     }
 
@@ -90,6 +92,9 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         this.documentOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
         this.apiCaricamentoCsv.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
         this.apiAnagraficaCRUD.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
+        this.actOperationsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + token);
+        this.aorOperationsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + token);
+        this.documentOperationsApi.getApiClient().addDefaultHeader(AUTHORIZATION, BEARER + token);
     }
 
     public void selectRaddistaHeaderErrato(String token){
@@ -118,7 +123,6 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     public AORInquiryResponse aorInquiry( String uid, String recipientTaxId, String recipientType) throws RestClientException {
         return this.aorOperationsApi.aorInquiryWithHttpInfo( uid, recipientTaxId, recipientType).getBody();
     }
-
 
     public AbortTransactionResponse abortAorTransaction(String uid, AbortTransactionRequest abortTransactionRequest) throws RestClientException {
         return this.aorOperationsApi.abortAorTransactionWithHttpInfo(uid, abortTransactionRequest).getBody();

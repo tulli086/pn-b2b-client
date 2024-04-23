@@ -32,9 +32,8 @@ public class PnAppIOB2bExternalClientImpl implements IPnAppIOB2bClient {
 
 
     public PnAppIOB2bExternalClientImpl(RestTemplate restTemplate,
-            @Value("${pn.appio.externa.base-url}") String devBasePath,
-            @Value("${pn.external.appio.api-key}") String devApiKey
-    ) {
+                                        @Value("${pn.appio.externa.base-url}") String devBasePath,
+                                        @Value("${pn.external.appio.api-key}") String devApiKey) {
         this.appIoPnDocumentsApi = new AppIoPnDocumentsApi( newApiClient( restTemplate, devBasePath, devApiKey) );
         this.appIoPnNotificationApi = new AppIoPnNotificationApi( newApiClient( restTemplate, devBasePath, devApiKey) );
         this.appIoPnPaymentsApi = new AppIoPnPaymentsApi( newApiClient( restTemplate, devBasePath, devApiKey) );
