@@ -3,9 +3,19 @@ package it.pagopa.pn.client.b2b.pa.service.impl;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.api.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryRequest;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.RegistriesResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.UpdateRegistryRequest;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadRequest;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.VerifyRequestResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.ApiClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.api.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.privateb2braddalt.model.*;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.api_AnagraficaCsv.*;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.api_AnagraficaCRUD.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -30,6 +40,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final AorOperationsApi aorOperationsApi;
     private final DocumentOperationsApi documentOperationsApi;
     private final NotificationInquiryApi notificationInquiryApi;
+    private final ImportApi apiCaricamentoCsv;
+    private final RegistryApi apiAnagraficaCRUD;
 
 
     public PnRaddAlternativeClientImpl(RestTemplate restTemplate,
@@ -54,6 +66,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         this.aorOperationsApi = new AorOperationsApi(newApiClientExternal(restTemplate,basePath, raddista1));
         this.documentOperationsApi = new DocumentOperationsApi(newApiClientExternal(restTemplate,basePath, raddista1));
         this.notificationInquiryApi = new NotificationInquiryApi(newApiClient(restTemplate,basePath));
+        this.apiCaricamentoCsv = new ImportApi(newApiClientExternal(restTemplate,basePath, raddista1));
+        this.apiAnagraficaCRUD = new RegistryApi(newApiClientExternal(restTemplate,basePath, raddista1));
         this.issuerTokenSetted = AuthTokenRaddType.ISSUER_1;
     }
 
@@ -74,6 +88,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         this.actOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
         this.aorOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
         this.documentOperationsApi.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
+        this.apiCaricamentoCsv.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
+        this.apiAnagraficaCRUD.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
     }
 
     public void selectRaddistaHeaderErrato(String token){
@@ -148,6 +164,42 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     public byte[] documentDownload(String operationType, String operationId, String attchamentId) throws RestClientException {
         return this.documentOperationsApi.documentDownload(operationType,operationId, attchamentId);
     }
+
+    @Override
+    public RequestResponse retrieveRequestItems(String uid, String requestId, Integer limit, String lastKey) throws RestClientException {
+        return this.apiCaricamentoCsv.retrieveRequestItems(uid, requestId, limit, lastKey);
+    }
+
+    @Override
+    public RegistryUploadResponse uploadRegistryRequests(String uid, RegistryUploadRequest registryUploadRequest) throws RestClientException {
+        return this.apiCaricamentoCsv.uploadRegistryRequests(uid, registryUploadRequest);
+    }
+
+    @Override
+    public VerifyRequestResponse verifyRequest(String uid, String requestId) throws RestClientException {
+        return this.apiCaricamentoCsv.verifyRequest(uid, requestId);
+    }
+
+    @Override
+    public CreateRegistryResponse addRegistry(String uid, CreateRegistryRequest createRegistryRequest) throws RestClientException {
+        return this.apiAnagraficaCRUD.addRegistry(uid, createRegistryRequest);
+    }
+
+    @Override
+    public void deleteRegistry(String uid, String registryId, String endDate) throws RestClientException {
+        this.apiAnagraficaCRUD.deleteRegistry(uid, registryId, endDate);
+    }
+
+    @Override
+    public RegistriesResponse retrieveRegistries(String uid, Integer limit, String lastKey, String cap, String city, String pr, String externalCode) throws RestClientException {
+        return this.apiAnagraficaCRUD.retrieveRegistries(uid, limit, lastKey, cap, city, pr, externalCode);
+    }
+
+    @Override
+    public void updateRegistry(String uid, String registryId, UpdateRegistryRequest updateRegistryRequest) throws RestClientException {
+        this.apiAnagraficaCRUD.updateRegistry(uid, registryId, updateRegistryRequest);
+    }
+
 
     @Override
     public boolean setAuthTokenRadd(AuthTokenRaddType issuerToken) {
