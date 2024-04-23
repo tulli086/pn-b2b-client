@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
-@Service(PnPollingStrategy.TIMELINE_RAPID_V23)
+@Service(PnPollingStrategy.STATUS_RAPID_V1)
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class PnPollingServiceStatusRapidV1 extends PnPollingTemplate<PnPollingResponseV1> {
