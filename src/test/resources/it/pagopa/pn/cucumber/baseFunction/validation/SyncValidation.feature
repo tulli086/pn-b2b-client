@@ -1027,3 +1027,24 @@ Feature: verifica validazione sincrona
     When la notifica viene inviata dal "Comune_1"
     Then l'operazione ha prodotto un errore con status code "400" con messaggio di errore "instance type (null) does not match any allowed primitive type"
 
+  @validation
+  Scenario: [B2B-PA-SYNC_VALIDATION_70] validazione sincrona campo denomination contenente pipe
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | comune di milano            |
+    And destinatario
+      | denomination | Fieramosca pipe\| |
+      | taxId        | FRMTTR76M06B715E |
+    When la notifica viene inviata dal "Comune_Multi"
+    Then l'operazione ha prodotto un errore con status code "400" con messaggio di errore "Field denomination in recipient 0 contains invalid characters."
+
+  @validation
+  Scenario: [B2B-PA-SYNC_VALIDATION_71] validazione sincrona campo denomination non contenente il carattere pipe
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | comune di milano            |
+    And destinatario
+      | denomination | Ettore Fieramosca  |
+      | taxId        | FRMTTR76M06B715E |
+    When la notifica viene inviata dal "Comune_Multi"
+    Then l'invio della notifica non ha prodotto errori
