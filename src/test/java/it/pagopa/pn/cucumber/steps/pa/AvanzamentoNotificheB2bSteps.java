@@ -2888,6 +2888,8 @@ public class AvanzamentoNotificheB2bSteps {
             Assertions.assertNotNull(pnPollingResponseV23.getTimelineElement());
             sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
             logger.info("TIMELINE_ELEMENT: " + pnPollingResponseV23.getTimelineElement());
+            TimelineElementV23 timelineElementV23 = pnPollingResponseV23.getTimelineElement();
+            sharedSteps.setTimelineElementV23(timelineElementV23);
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -3377,8 +3379,8 @@ try{
     public void verificaCostoePesoInvioCartaceo(Integer costo, Integer peso){
         TimelineElementV23 timeline= sharedSteps.getTimelineElementV23();
         try {
-            Assertions.assertEquals(timeline.getDetails().getAnalogCost(),costo);
-            Assertions.assertEquals(timeline.getDetails().getEnvelopeWeight(),peso);
+            Assertions.assertEquals(costo,timeline.getDetails().getAnalogCost());
+            Assertions.assertEquals(peso,timeline.getDetails().getEnvelopeWeight());
         }catch(AssertionFailedError assertionFailedError){
         sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
     }

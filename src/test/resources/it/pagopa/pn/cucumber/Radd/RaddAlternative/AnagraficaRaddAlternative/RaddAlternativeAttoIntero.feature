@@ -184,7 +184,7 @@ Feature: Radd Alternative Atto Intero
     Given viene generata una nuova notifica
       | subject               | notifica analogica filtro base |
       | senderDenomination    | Comune di palermo              |
-      | physicalCommunication | AR_REGISTERED_LETTER           |
+      | physicalCommunication | REGISTERED_LETTER_890          |
       | feePolicy             | DELIVERY_MODE                  |
       | document              | DOC_3_PG;                      |
     And destinatario Mario Gherkin e:
@@ -197,13 +197,14 @@ Feature: Radd Alternative Atto Intero
       | title_payment                | F24_STANDARD_GHERKIN   |
       | apply_cost_f24               | SI                     |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
     And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_1"
-    And viene verificato il costo di 356 e il peso di 10 nei details del'elemento di timeline letto
+    And viene verificato il costo di 800 e il peso di 10 nei details del'elemento di timeline letto
 
+    
   @raddAttoIntero
-  Scenario: [RADD_FILTRO_ATTO-INTERO_10] invio notifica AR coperto da RADD e controllo diminuzione costi filtro base (eseguire controllo manuale costi del F24)
+  Scenario: [RADD_FILTRO_ATTO-INTERO_10] invio notifica AR con 2 tentativi coperto da RADD e controllo diminuzione costi filtro base (eseguire controllo manuale costi del F24)
     Given viene generata una nuova notifica
       | subject               | notifica analogica filtro base |
       | senderDenomination    | Comune di palermo              |
@@ -223,5 +224,6 @@ Feature: Radd Alternative Atto Intero
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
     And viene verificato il costo di 351 e il peso di 10 nei details del'elemento di timeline letto
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_1"
-    And viene verificato il costo di 356 e il peso di 40 nei details del'elemento di timeline letto
+    And viene verificato il costo di 356 e il peso di 10 nei details del'elemento di timeline letto
+
 
