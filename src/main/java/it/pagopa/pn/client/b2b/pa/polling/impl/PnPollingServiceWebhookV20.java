@@ -8,7 +8,6 @@ import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebhookB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.NotificationStatus;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.RefusedReason;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -165,13 +164,13 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
     private Predicate<ProgressResponseElement> toCheckConditionRefused(PnPollingParameter pnPollingParameter) {
         return progressResponseElementV20 ->
 //                        (progressResponseElementV20.getIun() != null && progressResponseElementV20.getIun().equals(iun)
-                        (progressResponseElementV20.getNewStatus() != null && (progressResponseElementV20.getNewStatus().equals(NotificationStatus.REFUSED))
+                        (progressResponseElementV20.getNewStatus() != null && (progressResponseElementV20.getNewStatus().equals(pnPollingParameter.getPnPollingWebhook().getNotificationStatusV20()))
                             && progressResponseElementV20.getValidationErrors() != null && !progressResponseElementV20.getValidationErrors().isEmpty()
                             && isFileNotFoundError(progressResponseElementV20.getValidationErrors()));
     }
 
-    private boolean isFileNotFoundError(List<RefusedReason> erroList) {
-        RefusedReason refusedReason = erroList
+    private boolean isFileNotFoundError(List<RefusedReason> errorList) {
+        RefusedReason refusedReason = errorList
                 .stream()
                 .filter(error -> error.getErrorCode() != null
                         && FILE_NOT_FOUND.equalsIgnoreCase(error.getErrorCode()))
