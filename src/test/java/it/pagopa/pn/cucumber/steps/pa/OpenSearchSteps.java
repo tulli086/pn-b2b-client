@@ -39,9 +39,9 @@ public class OpenSearchSteps {
         PnExternalServiceClientImpl.OpenSearchResponse openSearchResponse = pnExternalServiceClient.openSearchGetAudit(auditLogRetention,auditLogType,10);
         Assertions.assertFalse(openSearchResponse.getHits().getHits().isEmpty());
         PnExternalServiceClientImpl.InnerHits innerHits = openSearchResponse.getHits().getHits().get(0);
-        Assertions.assertTrue(innerHits.getSource().getAudType().equalsIgnoreCase(auditLogType));
+        Assertions.assertTrue(innerHits.get_source().getAud_type().equalsIgnoreCase(auditLogType));
         if(maxAge != -1){
-            OffsetDateTime ageTimeStamp = innerHits.getSource().getTimestamp();
+            OffsetDateTime ageTimeStamp = innerHits.get_source().getTimestamp();
             System.out.println("AGE: "+ageTimeStamp);
             Assertions.assertTrue(ChronoUnit.DAYS.between(ageTimeStamp,OffsetDateTime.now()) <= maxAge);
             System.out.println("DIFF: "+ ChronoUnit.DAYS.between(ageTimeStamp,OffsetDateTime.now()));

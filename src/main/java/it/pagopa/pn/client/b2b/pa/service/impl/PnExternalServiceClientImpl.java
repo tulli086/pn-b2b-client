@@ -625,19 +625,56 @@ public class PnExternalServiceClientImpl {
 
     }
     //OPEN SEARCH RESPONSE
-    @Getter
-    @Setter
-    @ToString
     public static class OpenSearchResponse {
-       Integer took;
-       Boolean timedOut;
-       Shards shards;
-       OuterHits hits;
+        Integer took;
+        Boolean timed_out;
+        Shards _shards;
 
+        OuterHits hits;
+
+        public Integer getTook() {
+            return took;
+        }
+
+        public void setTook(Integer took) {
+            this.took = took;
+        }
+
+        public Boolean getTimed_out() {
+            return timed_out;
+        }
+
+        public void setTimed_out(Boolean timed_out) {
+            this.timed_out = timed_out;
+        }
+
+        public Shards get_shards() {
+            return _shards;
+        }
+
+        public void set_shards(Shards _shards) {
+            this._shards = _shards;
+        }
+
+        public OuterHits getHits() {
+            return hits;
+        }
+
+        public void setHits(OuterHits hits) {
+            this.hits = hits;
+        }
+
+        @Override
+        public String toString() {
+            return "openSearchResponse{" +
+                    "took=" + took +
+                    ", timed_out=" + timed_out +
+                    ", _shards=" + _shards +
+                    ", hits=" + hits +
+                    '}';
+        }
     }
-    @Getter
-    @Setter
-    @ToString
+
     public static class Shards{
         public Shards() {}
         private Integer total;
@@ -646,54 +683,162 @@ public class PnExternalServiceClientImpl {
 
         private Integer failed;
 
+        public Integer getTotal() {
+            return total;
+        }
+
+        public void setTotal(Integer total) {
+            this.total = total;
+        }
+
+        public Integer getSuccessful() {
+            return successful;
+        }
+
+        public void setSuccessful(Integer successful) {
+            this.successful = successful;
+        }
+
+        public Integer getSkipped() {
+            return skipped;
+        }
+
+        public void setSkipped(Integer skipped) {
+            this.skipped = skipped;
+        }
+
+        public Integer getFailed() {
+            return failed;
+        }
+
+        public void setFailed(Integer failed) {
+            this.failed = failed;
+        }
+
+        @Override
+        public String toString() {
+            return "Shards{" +
+                    "total=" + total +
+                    ", successful=" + successful +
+                    ", skipped=" + skipped +
+                    ", failed=" + failed +
+                    '}';
+        }
     }
-    @Getter
-    @Setter
-    @ToString
+
     public static class OuterHits{
         public OuterHits() {
         }
 
-        private Double maxScore;
+        private Double max_score;
         private Total total;
         private LinkedList<InnerHits> hits;
 
+        public Double getMax_score() {
+            return max_score;
+        }
 
+        public void setMax_score(Double max_score) {
+            this.max_score = max_score;
+        }
+
+        public Total getTotal() {
+            return total;
+        }
+
+        public void setTotal(Total total) {
+            this.total = total;
+        }
+
+        public LinkedList<InnerHits> getHits() {
+            return hits;
+        }
+
+        public void setHits(LinkedList<InnerHits> hits) {
+            this.hits = hits;
+        }
+
+        @Override
+        public String toString() {
+            return "OuterHits{" +
+                    "max_score=" + max_score +
+                    ", total=" + total +
+                    ", hits=" + hits +
+                    '}';
+        }
     }
-    @Getter
-    @Setter
-    @ToString
+
     public static class InnerHits{
         public InnerHits() {
         }
 
-        private String index;
-        private String type;
-        private String id;
-        private Double score;
-        private Source source;
+        private String _index;
+        private String _type;
+        private String _id;
+        private Double _score;
+        private Source _source;
+
+        public String get_index() {
+            return _index;
+        }
+
+        public void set_index(String _index) {
+            this._index = _index;
+        }
+
+        public String get_type() {
+            return _type;
+        }
+
+        public void set_type(String _type) {
+            this._type = _type;
+        }
+
+        public String get_id() {
+            return _id;
+        }
+
+        public void set_id(String _id) {
+            this._id = _id;
+        }
+
+        public Double get_score() {
+            return _score;
+        }
+
+        public void set_score(Double _score) {
+            this._score = _score;
+        }
+
+        public Source get_source() {
+            return _source;
+        }
+
+        public void set_source(Source _source) {
+            this._source = _source;
+        }
 
         public class Source{
             @Override
             public String toString() {
                 return "Source{" +
                         "msg='" + msg + '\'' +
-                        ", trace_id='" + traceId + '\'' +
+                        ", trace_id='" + trace_id + '\'' +
                         ", level=" + level +
                         ", logGroup='" + logGroup + '\'' +
-                        ", aud_type='" + audType + '\'' +
+                        ", aud_type='" + aud_type + '\'' +
                         ", pid=" + pid +
                         ", message='" + message + '\'' +
-                        ", aud_orig='" + audOrig + '\'' +
+                        ", aud_orig='" + aud_orig + '\'' +
                         ", tags=" + Arrays.toString(tags) +
                         ", kinesisSeqNumber='" + kinesisSeqNumber + '\'' +
                         ", hostname='" + hostname + '\'' +
                         ", timestamp='" + timestamp + '\'' +
-                        ", level_value=" + levelValue +
+                        ", level_value=" + level_value +
                         ", v=" + v +
                         ", name='" + name + '\'' +
                         ", logStream='" + logStream + '\'' +
-                        ", logger_name='" + loggerName + '\'' +
+                        ", logger_name='" + logger_name + '\'' +
                         ", time='" + time + '\'' +
                         '}';
             }
@@ -702,13 +847,13 @@ public class PnExternalServiceClientImpl {
             }
 
             private String msg;
-            private String traceId;
+            private String trace_id;
             private String level;
             private String logGroup;
-            private String audType;
+            private String aud_type;
             private Integer pid;
             private String message;
-            private String audOrig;
+            private String aud_orig;
             private String[] tags;
             private String kinesisSeqNumber;
 
@@ -716,12 +861,12 @@ public class PnExternalServiceClientImpl {
             @JsonProperty("@timestamp")
             private OffsetDateTime timestamp;
 
-            private Long levelValue;
+            private Long level_value;
             private Long v;
 
             private String name;
             private String logStream;
-            private String loggerName;
+            private String logger_name;
             private OffsetDateTime time;
 
             public String getMsg() {
@@ -732,12 +877,12 @@ public class PnExternalServiceClientImpl {
                 this.msg = msg;
             }
 
-            public String getTraceId() {
-                return traceId;
+            public String getTrace_id() {
+                return trace_id;
             }
 
-            public void setTraceId(String traceId) {
-                this.traceId = traceId;
+            public void setTrace_id(String trace_id) {
+                this.trace_id = trace_id;
             }
 
             public String getLevel() {
@@ -756,12 +901,12 @@ public class PnExternalServiceClientImpl {
                 this.logGroup = logGroup;
             }
 
-            public String getAudType() {
-                return audType;
+            public String getAud_type() {
+                return aud_type;
             }
 
-            public void setAudType(String audType) {
-                this.audType = audType;
+            public void setAud_type(String aud_type) {
+                this.aud_type = aud_type;
             }
 
             public Integer getPid() {
@@ -780,12 +925,12 @@ public class PnExternalServiceClientImpl {
                 this.message = message;
             }
 
-            public String getAudOrig() {
-                return audOrig;
+            public String getAud_orig() {
+                return aud_orig;
             }
 
-            public void setAudOrig(String audOrig) {
-                this.audOrig = audOrig;
+            public void setAud_orig(String aud_orig) {
+                this.aud_orig = aud_orig;
             }
 
             public String[] getTags() {
@@ -820,12 +965,12 @@ public class PnExternalServiceClientImpl {
                 this.timestamp = timestamp;
             }
 
-            public Long getLevelValue() {
-                return levelValue;
+            public Long getLevel_value() {
+                return level_value;
             }
 
-            public void setLevelValue(Long levelValue) {
-                this.levelValue = levelValue;
+            public void setLevel_value(Long level_value) {
+                this.level_value = level_value;
             }
 
             public Long getV() {
@@ -852,12 +997,12 @@ public class PnExternalServiceClientImpl {
                 this.logStream = logStream;
             }
 
-            public String getLoggerName() {
-                return loggerName;
+            public String getLogger_name() {
+                return logger_name;
             }
 
-            public void setLoggerName(String loggerName) {
-                this.loggerName = loggerName;
+            public void setLogger_name(String logger_name) {
+                this.logger_name = logger_name;
             }
 
             public OffsetDateTime getTime() {
@@ -869,17 +1014,48 @@ public class PnExternalServiceClientImpl {
             }
         }
 
+        @Override
+        public String toString() {
+            return "InnerHits{" +
+                    "_index='" + _index + '\'' +
+                    ", _type='" + _type + '\'' +
+                    ", _id='" + _id + '\'' +
+                    ", _score=" + _score +
+                    ", _source=" + _source +
+                    '}';
+        }
     }
 
-    @Getter
-    @Setter
-    @ToString
     public static class Total{
         public Total() {
         }
         private Integer value;
         private String relation;
 
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+
+        public String getRelation() {
+            return relation;
+        }
+
+        public void setRelation(String relation) {
+            this.relation = relation;
+        }
+
+        @Override
+        public String toString() {
+            return "Total{" +
+                    "value=" + value +
+                    ", relation='" + relation + '\'' +
+                    '}';
+        }
     }
+
 
 }
