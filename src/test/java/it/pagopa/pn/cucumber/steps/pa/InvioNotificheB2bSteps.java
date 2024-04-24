@@ -1,5 +1,6 @@
 package it.pagopa.pn.cucumber.steps.pa;
 
+
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -10,34 +11,48 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnGPDClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnPaymentInfoClientImpl;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.*;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.*;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchRow;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.DataTest;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static java.time.OffsetDateTime.now;
 
-@Slf4j
+
 public class InvioNotificheB2bSteps {
+
     @Value("${pn.retention.time.preload}")
     private Integer retentionTimePreLoad;
+
     @Value("${pn.retention.time.load}")
     private Integer retentionTimeLoad;
+
+
+
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebPaClient webPaClient;
     private final IPnPaB2bClient b2bClient;
@@ -53,6 +68,10 @@ public class InvioNotificheB2bSteps {
     private NotificationAttachmentDownloadMetadataResponse downloadResponse;
 
 
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private static final Integer NUM_CHECK_PAYMENT_INFO = 32;
+    private static final Integer WAITING_PAYMENT_INFO = 1000;
     @Autowired
     public InvioNotificheB2bSteps(PnExternalServiceClientImpl safeStorageClient, SharedSteps sharedSteps) {
         this.safeStorageClient = safeStorageClient;
@@ -62,6 +81,7 @@ public class InvioNotificheB2bSteps {
         this.webPaClient = sharedSteps.getWebPaClient();
         this.pnPaymentInfoClientImpl =sharedSteps.getPnPaymentInfoClientImpl();
     }
+
 
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN")
     public void notificationCanBeRetrievedWithIUN() {
@@ -217,7 +237,7 @@ public class InvioNotificheB2bSteps {
 
             Assertions.assertNotNull(notifica120);
 
-            log.info("notifica dopo 120gg: {}", notifica120);
+            logger.info("notifica dopo 120gg: {}", notifica120);
 
             Assertions.assertNull(notifica120.getRecipients().get(0).getPayments().get(0).getPagoPa().getAttachment());
 
@@ -320,7 +340,7 @@ public class InvioNotificheB2bSteps {
         try {
             Thread.sleep( sharedSteps.getWait());
         } catch (InterruptedException e) {
-            log.error("Thread.sleep error retry");
+            logger.error("Thread.sleep error retry");
             throw new RuntimeException(e);
         }
         this.notificationMetadataAttachment = notificationDocumentAtomic.get();
@@ -745,7 +765,7 @@ public class InvioNotificheB2bSteps {
 
         } catch (AssertionFailedError | IOException assertionFailedError) {
 
-            log.info("Errore di acquisizione notifica");
+            logger.info("Errore di acquisizione notifica");
         }
 
     }
@@ -758,7 +778,7 @@ public class InvioNotificheB2bSteps {
 
         } catch (AssertionFailedError | IOException assertionFailedError) {
 
-            log.info("Errore di acquisizione notifica");
+            logger.info("Errore di acquisizione notifica");
         }
 
     }
@@ -785,8 +805,8 @@ public class InvioNotificheB2bSteps {
     @And("vengono prodotte le evidenze: metadati e requestID")
     public void evidenceProduced() {
         Assertions.assertNotNull(this.sharedSteps.getNewNotificationResponse());
-        log.info("METADATI: " + '\n' + this.sharedSteps.getNewNotificationResponse());
-        log.info("REQUEST-ID: " + '\n' + this.sharedSteps.getNewNotificationResponse().getNotificationRequestId());
+        logger.info("METADATI: " + '\n' + this.sharedSteps.getNewNotificationResponse());
+        logger.info("REQUEST-ID: " + '\n' + this.sharedSteps.getNewNotificationResponse().getNotificationRequestId());
     }
 
 
@@ -804,10 +824,10 @@ public class InvioNotificheB2bSteps {
         LocalDateTime localDateTimeNow = LocalDate.now().atStartOfDay();
         OffsetDateTime now = OffsetDateTime.of(localDateTimeNow, ZoneOffset.of("Z"));
         OffsetDateTime retentionUntil = OffsetDateTime.parse(safeStorageResponse.getRetentionUntil());
-        log.info("now: " + now);
-        log.info("retentionUntil: " + retentionUntil);
+        logger.info("now: " + now);
+        logger.info("retentionUntil: " + retentionUntil);
         long between = ChronoUnit.DAYS.between(now, retentionUntil);
-        log.info("Difference: " + between);
+        logger.info("Difference: " + between);
         return retentionTime == between;
     }
 
@@ -817,8 +837,8 @@ public class InvioNotificheB2bSteps {
         System.out.println(safeStorageResponse);
         OffsetDateTime timelineEventDate = timelineEventTimestamp.atZoneSameInstant(ZoneId.of("Z")).toOffsetDateTime();
         OffsetDateTime retentionUntil = OffsetDateTime.parse(safeStorageResponse.getRetentionUntil());
-        log.info("now: " + timelineEventDate);
-        log.info("retentionUntil: " + retentionUntil);
+        logger.info("now: " + timelineEventDate);
+        logger.info("retentionUntil: " + retentionUntil);
         OffsetDateTime timelineEventDateDays = timelineEventDate.truncatedTo(ChronoUnit.DAYS);
         OffsetDateTime retentionUntilDays = retentionUntil.truncatedTo(ChronoUnit.DAYS);
 
@@ -829,8 +849,8 @@ public class InvioNotificheB2bSteps {
         Duration diff = Duration.between(timelineEventDateLocalTime, retentionUntilLocalTime);
         long diffInMinutes = diff.toMinutes();
 
-        log.info("Difference: " + between);
-        log.info("diffInMinutes: " + diffInMinutes);
+        logger.info("Difference: " + between);
+        logger.info("diffInMinutes: " + diffInMinutes);
         return retentionTime == between && Math.abs(diffInMinutes) <= 10;
     }
 
@@ -867,7 +887,7 @@ public class InvioNotificheB2bSteps {
         NewNotificationRequestStatusResponseV23 newNotificationRequestStatusResponse = Assertions.assertDoesNotThrow(() ->
                 this.b2bClient.getNotificationRequestStatusAllParam(notificationRequestId, paProtocolNumber, idempotenceToken));
         Assertions.assertNotNull(newNotificationRequestStatusResponse.getNotificationRequestStatus());
-        log.debug(newNotificationRequestStatusResponse.getNotificationRequestStatus());
+        logger.debug(newNotificationRequestStatusResponse.getNotificationRequestStatus());
     }
 
 
@@ -889,7 +909,7 @@ public class InvioNotificheB2bSteps {
 
             Assertions.assertNotNull(resp);
             Assertions.assertNotNull(resp.getDetails());
-            Assertions.assertFalse(resp.getDetails().isEmpty());
+            Assertions.assertTrue(resp.getDetails().size()>0);
             Assertions.assertTrue("NOTIFICATION_ALREADY_CANCELLED".equalsIgnoreCase(resp.getDetails().get(0).getCode()));
 
         });
@@ -900,22 +920,27 @@ public class InvioNotificheB2bSteps {
         //Assertions.assertNull(assertionFailedError);
     }
 
+
+
     @And("l'avviso pagopa viene pagato correttamente su checkout")
     public void laNotificaVienePagatasuCheckout() {
-        NotificationPriceResponseV23 notificationPrice = this.b2bClient.getNotificationPriceV23(Objects.requireNonNull(Objects.requireNonNull(sharedSteps.getSentNotification().getRecipients().get(0).getPayments()).get(0).getPagoPa()).getCreditorTaxId(),
-                Objects.requireNonNull(Objects.requireNonNull(sharedSteps.getSentNotification().getRecipients().get(0).getPayments()).get(0).getPagoPa()).getNoticeCode());
+        NotificationPriceResponseV23 notificationPrice = this.b2bClient.getNotificationPriceV23(sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getPagoPa().getCreditorTaxId(),
+                sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode());
 
-        PaymentRequest paymentRequest = getPaymentRequest(notificationPrice,
-                Objects.requireNonNull(Objects.requireNonNull(sharedSteps.getSentNotification().getRecipients().get(0).getPayments()).get(0).getPagoPa()).getNoticeCode(),
-                Objects.requireNonNull(Objects.requireNonNull(sharedSteps.getSentNotification().getRecipients().get(0).getPayments()).get(0).getPagoPa()).getCreditorTaxId(),
-                "Test Automation",
-                null,
-                "Test Automation Desk",
-                "https://api.uat.platform.pagopa.it");
+        PaymentRequest paymentRequest= new PaymentRequest();
+        PaymentNotice paymentNotice= new PaymentNotice();
+        paymentNotice.noticeNumber( sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode());
+        paymentNotice.fiscalCode(sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getPagoPa().getCreditorTaxId());
+        paymentNotice.companyName("Test Automation");
+        paymentNotice.amount(notificationPrice.getTotalPrice());
+        paymentNotice.description("Test Automation Desk");
+        paymentRequest.paymentNotice(paymentNotice);
+        paymentRequest.returnUrl("https://api.uat.platform.pagopa.it");
+
         try {
             Assertions.assertDoesNotThrow(() -> {
                 paymentResponse= pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
-                log.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
+                logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
             });
             Assertions.assertNotNull(paymentResponse);
 
@@ -929,8 +954,11 @@ public class InvioNotificheB2bSteps {
         }
     }
 
+
     @Then("verifica stato pagamento di una notifica creditorTaxID {string} noticeCode {string} con errore {string}")
     public void verificaStatoPagamentoNotifica(String creditorTaxID , String noticeCode,String codiceErrore) {
+
+
         List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoRequest>();
 
         PaymentInfoRequest paymentInfoRequest = new PaymentInfoRequest()
@@ -939,12 +967,13 @@ public class InvioNotificheB2bSteps {
 
         paymentInfoRequestList.add(paymentInfoRequest);
 
-        log.info("Messaggio json da allegare: " + paymentInfoRequest);
+        logger.info("Messaggio json da allegare: " + paymentInfoRequest);
+
 
         try {
             Assertions.assertDoesNotThrow(() -> {
                 paymentInfoResponse= pnPaymentInfoClientImpl.getPaymentInfoV21(paymentInfoRequestList);
-                log.info("Informazioni sullo stato del Pagamento: " + paymentInfoResponse.toString());
+                logger.info("Informazioni sullo stato del Pagamento: " + paymentInfoResponse.toString());
             });
             Assertions.assertNotNull(paymentInfoResponse);
             Assertions.assertTrue(codiceErrore.equalsIgnoreCase(paymentInfoResponse.get(0).getErrorCode()));
@@ -954,11 +983,13 @@ public class InvioNotificheB2bSteps {
             String message = assertionFailedError.getMessage() +
                     "{Informazioni sullo stato del Pagamento: " + (paymentInfoResponse == null ? "NULL" : paymentInfoResponse.toString()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
         }
     }
 
     @Then("verifica stato pagamento di una notifica con status {string}")
     public void verificaStatoPagamentoNotifica(String status) {
+
         List<PaymentInfoRequest> paymentInfoRequestList= new ArrayList<PaymentInfoRequest>();
 
         PaymentInfoRequest paymentInfoRequest = new PaymentInfoRequest()
@@ -967,7 +998,7 @@ public class InvioNotificheB2bSteps {
 
         paymentInfoRequestList.add(paymentInfoRequest);
 
-        log.info("Messaggio json da allegare: " + paymentInfoRequest);
+        logger.info("Messaggio json da allegare: " + paymentInfoRequest);
 
         try {
             Assertions.assertDoesNotThrow(() -> {
@@ -975,7 +1006,7 @@ public class InvioNotificheB2bSteps {
 
             });
             Assertions.assertNotNull(paymentInfoResponse);
-            log.info("Informazioni sullo stato del Pagamento: " + paymentInfoResponse.toString());
+            logger.info("Informazioni sullo stato del Pagamento: " + paymentInfoResponse.toString());
            Assertions.assertTrue(status.equalsIgnoreCase(paymentInfoResponse.get(0).getStatus().getValue()));
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -986,15 +1017,20 @@ public class InvioNotificheB2bSteps {
         }
     }
 
+
+
     @And("l'avviso pagopa viene pagato correttamente su checkout con errore {string}")
     public void laNotificaVienePagatasuCheckoutError(String codiceErrore) {
-        PaymentRequest paymentRequest = getPaymentRequest(null,
-                Objects.requireNonNull(Objects.requireNonNull(sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments()).get(0).getPagoPa()).getNoticeCode(),
-                Objects.requireNonNull(Objects.requireNonNull(sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments()).get(0).getPagoPa()).getCreditorTaxId(),
-                "Test Automation",
-                100,
-                "Test Automation Desk",
-                "https://api.uat.platform.pagopa.it");
+
+        PaymentRequest paymentRequest= new PaymentRequest();
+        PaymentNotice paymentNotice= new PaymentNotice();
+        paymentNotice.noticeNumber( sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode());
+        paymentNotice.fiscalCode(sharedSteps.getNotificationRequest().getRecipients().get(0).getPayments().get(0).getPagoPa().getCreditorTaxId());
+        paymentNotice.companyName("Test Automation");
+        paymentNotice.amount(100);
+        paymentNotice.description("Test Automation Desk");
+        paymentRequest.paymentNotice(paymentNotice);
+        paymentRequest.returnUrl("https://api.uat.platform.pagopa.it");
 
         try {
             Assertions.assertDoesNotThrow(() -> {
@@ -1002,7 +1038,7 @@ public class InvioNotificheB2bSteps {
 
             });
             Assertions.assertNotNull(paymentResponse);
-            log.info("Risposta recupero posizione debitoria: " + paymentResponse.toString());
+            logger.info("Risposta recupero posizione debitoria: " + paymentResponse.toString());
             Assertions.assertTrue(codiceErrore.equalsIgnoreCase(paymentResponse.getCheckoutUrl()));
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1010,25 +1046,30 @@ public class InvioNotificheB2bSteps {
             String message = assertionFailedError.getMessage() +
                     "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
         }
     }
 
+
     @And("l'avviso pagopa viene pagato correttamente su checkout creditorTaxID {string} noticeCode {string} con errore {string}")
     public void laNotificaVienePagatasuCheckoutError(String creditorTaxID , String noticeCode,String codiceErrore) {
-        PaymentRequest paymentRequest = getPaymentRequest(null,
-                noticeCode,
-                creditorTaxID,
-                "Test Automation",
-                100,
-                "Test Automation Desk",
-                "https://api.uat.platform.pagopa.it");
+
+        PaymentRequest paymentRequest= new PaymentRequest();
+        PaymentNotice paymentNotice= new PaymentNotice();
+        paymentNotice.noticeNumber( noticeCode);
+        paymentNotice.fiscalCode(creditorTaxID);
+        paymentNotice.companyName("Test Automation");
+        paymentNotice.amount(100);
+        paymentNotice.description("Test Automation Desk");
+        paymentRequest.paymentNotice(paymentNotice);
+        paymentRequest.returnUrl("https://api.uat.platform.pagopa.it");
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                paymentResponse = pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
+                paymentResponse= pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
             });
             Assertions.assertNotNull(paymentResponse);
-            log.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
+            logger.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
             Assertions.assertTrue(codiceErrore.equalsIgnoreCase(paymentInfoResponse.get(0).getErrorCode()));
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1036,21 +1077,25 @@ public class InvioNotificheB2bSteps {
             String message = assertionFailedError.getMessage() +
                     "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
         }
     }
+
 
     @And("la notifica a 2 avvisi di pagamento con OpenApi V1")
     public void notificationCanBeRetrievePaymentV1() {
         AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification> notificationByIun = new AtomicReference<>();
+
         String iun =sharedSteps.getIunVersionamento();
 
         try {
             Assertions.assertDoesNotThrow(() ->
-                    notificationByIun.set(b2bUtils.getNotificationByIunV1(iun)));
+                    notificationByIun.set(b2bUtils.getNotificationByIunV1(iun))
+            );
 
             Assertions.assertNotNull(notificationByIun.get());
-            Assertions.assertNotNull(Objects.requireNonNull(notificationByIun.get().getRecipients().get(0).getPayment()).getNoticeCode());
-            Assertions.assertNotNull(Objects.requireNonNull(notificationByIun.get().getRecipients().get(0).getPayment()).getNoticeCodeAlternative());
+            Assertions.assertNotNull(notificationByIun.get().getRecipients().get(0).getPayment().getNoticeCode());
+            Assertions.assertNotNull(notificationByIun.get().getRecipients().get(0).getPayment().getNoticeCodeAlternative());
 
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
@@ -1060,20 +1105,23 @@ public class InvioNotificheB2bSteps {
     @And("la notifica a 2 avvisi di pagamento con OpenApi V2")
     public void notificationCanBeRetrievePaymentV2() {
         AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20> notificationByIun = new AtomicReference<>();
+
         String iun =sharedSteps.getIunVersionamento();
 
         try {
-            Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIunV2(iun)));
+                Assertions.assertDoesNotThrow(() ->
+                        notificationByIun.set(b2bUtils.getNotificationByIunV2(iun))
+                );
 
             Assertions.assertNotNull(notificationByIun.get());
-            Assertions.assertNotNull(Objects.requireNonNull(notificationByIun.get().getRecipients().get(0).getPayment()).getNoticeCode());
-            Assertions.assertNotNull(Objects.requireNonNull(notificationByIun.get().getRecipients().get(0).getPayment()).getNoticeCodeAlternative());
+            Assertions.assertNotNull(notificationByIun.get().getRecipients().get(0).getPayment().getNoticeCode());
+            Assertions.assertNotNull(notificationByIun.get().getRecipients().get(0).getPayment().getNoticeCodeAlternative());
 
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
+
 
     @And("la notifica a 1 avvisi di pagamento con OpenApi V1")
     public void notificationCanBeRetrievePayment1V1() {
@@ -1081,9 +1129,10 @@ public class InvioNotificheB2bSteps {
         String iun =sharedSteps.getIunVersionamento();
         try {
             Assertions.assertDoesNotThrow(() ->
-                    notificationByIun.set(b2bUtils.getNotificationByIunV1(iun)));
+                    notificationByIun.set(b2bUtils.getNotificationByIunV1(iun))
+            );
             Assertions.assertNotNull(notificationByIun.get());
-            Assertions.assertNotNull(Objects.requireNonNull(notificationByIun.get().getRecipients().get(0).getPayment()).getNoticeCode());
+            Assertions.assertNotNull(notificationByIun.get().getRecipients().get(0).getPayment().getNoticeCode());
             //  Assertions.assertNotNull(notificationByIun.get().getRecipients().get(0).getPayment().getNoticeCodeAlternative());
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
@@ -1092,25 +1141,32 @@ public class InvioNotificheB2bSteps {
 
     @And("Si effettua la chiamata su external-reg per ricevere l'url di checkout con noticeCode {string} e creditorTaxId {string}")
     public void siEffettuaLaChiamataSuExternalRegPerRicevereLUrlDiCheckoutConNoticeCodeECreditorTaxId(String noticeCode, String creditorTaxId) {
+
         PaymentInfoRequest paymentInfoRequest = new PaymentInfoRequest()
                 .creditorTaxId(creditorTaxId)
                 .noticeCode(noticeCode);
 
         List<PaymentInfoV21> getPaymentInfoV21 = Assertions.assertDoesNotThrow(() -> pnPaymentInfoClientImpl.getPaymentInfoV21(Collections.singletonList(paymentInfoRequest)));
-        PaymentRequest paymentRequest = getPaymentRequest(null,
-                noticeCode,
-                creditorTaxId,
-                "Test Automation",
-                getPaymentInfoV21.get(0).getAmount(),
-                "Test Automation Desk",
-                "https://api.uat.platform.pagopa.it");
+
+        PaymentRequest paymentRequest= new PaymentRequest();
+        PaymentNotice paymentNotice= new PaymentNotice();
+
+        paymentNotice.noticeNumber( noticeCode);
+        paymentNotice.fiscalCode(creditorTaxId);
+        paymentNotice.companyName("Test Automation");
 
         System.out.println("COSTO NOTIFICA: "+getPaymentInfoV21.get(0).getAmount());
+
+        paymentNotice.amount(getPaymentInfoV21.get(0).getAmount());
+        paymentNotice.description("Test Automation Desk");
+        paymentRequest.paymentNotice(paymentNotice);
+        paymentRequest.returnUrl("https://api.uat.platform.pagopa.it");
 
         try {
             Assertions.assertDoesNotThrow(() -> {
                 paymentResponse = pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
-                log.info("Risposta recupero posizione debitoria: " + paymentResponse.toString());});
+                logger.info("Risposta recupero posizione debitoria: " + paymentResponse.toString());
+            });
             Assertions.assertNotNull(paymentResponse);
 
             System.out.println(paymentResponse);
@@ -1118,65 +1174,50 @@ public class InvioNotificheB2bSteps {
             String message = assertionFailedError.getMessage() +
                     "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+
         }
+
     }
 
-    @Then("si verifica che il phyicalAddress sia stato normalizzato correttamente con rimozione caratteri isoLatin1 è abbia un massimo di {int} caratteri")
-    public void controlloCampiAddressNormalizzatore(Integer caratteri) {
-        String regex= "[{-~¡-ÿ]*";
-        FullSentNotificationV23 timeline= sharedSteps.getSentNotification();
-        TimelineElementV23 timelineNormalizer= timeline.getTimeline().stream().filter(elem -> Objects.requireNonNull(elem.getCategory()).equals(TimelineElementCategoryV23.NORMALIZED_ADDRESS)).findAny().orElse(null);
-        PhysicalAddress oldAddress= Objects.requireNonNull(Objects.requireNonNull(timelineNormalizer).getDetails()).getOldAddress();
+
+
+    @Then("si verifica che il phyicalAddress sia stato normalizzato correttamente con rimozione caratteri isoLatin1")
+    public void controlloCampiAddressNormalizzatore(){
+        String regex= "[{}-~¡-ÿ^]";
+        String regexCaratteriA= "[æ]";
+
+       FullSentNotificationV23 timeline= sharedSteps.getSentNotification();
+
+       TimelineElementV23 timelineNormalizer= timeline.getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.NORMALIZED_ADDRESS)).findAny().orElse(null);
+        PhysicalAddress oldAddress= timelineNormalizer.getDetails().getOldAddress();
         PhysicalAddress normalizedAddress= timelineNormalizer.getDetails().getNormalizedAddress();
+try {
+    Assertions.assertNotNull(normalizedAddress);
+    Assertions.assertNotNull(oldAddress);
 
-        try {
-            Assertions.assertNotNull(normalizedAddress);
-            Assertions.assertNotNull(oldAddress);
+    logger.info("old address: {}", oldAddress);
+    logger.info("normalized address: {}", normalizedAddress);
 
-            log.info("old address: {}", oldAddress);
-            log.info("normalized address: {}", normalizedAddress);
+    PhysicalAddress newAddress= new PhysicalAddress()
+            .address(oldAddress.getAddress().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase())
+            .municipality(oldAddress.getMunicipality().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase())
+            .municipalityDetails(oldAddress.getMunicipalityDetails().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase())
+            .province(oldAddress.getProvince().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase())
+            .zip(oldAddress.getZip().replaceAll(regexCaratteriA,"A ").replaceAll(regex," ").toUpperCase());
 
-            PhysicalAddress newAddress = new PhysicalAddress()
-            .address(oldAddress.getAddress().length()>caratteri?  oldAddress.getAddress().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-            oldAddress.getAddress().replaceAll(regex,"").toUpperCase())
-            .municipality(oldAddress.getMunicipality().length()>caratteri?  oldAddress.getMunicipality().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-                    oldAddress.getMunicipality().replaceAll(regex,"").toUpperCase())
-            .municipalityDetails(Objects.requireNonNull(oldAddress.getMunicipalityDetails()).length()>caratteri?  oldAddress.getMunicipalityDetails().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-                    oldAddress.getMunicipalityDetails().replaceAll(regex,"").toUpperCase())
-            .province(Objects.requireNonNull(oldAddress.getProvince()).length()>caratteri?  oldAddress.getMunicipality().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-                    oldAddress.getProvince().replaceAll(regex,"").toUpperCase())
-            .zip(Objects.requireNonNull(oldAddress.getZip()).length()>caratteri?  oldAddress.getMunicipality().substring(0,caratteri).replaceAll(regex,"").toUpperCase():
-                    oldAddress.getZip().replaceAll(regex,"").toUpperCase());
+    logger.info(" newAddress: {}",newAddress);
 
-            log.info(" newAddress: {}",newAddress);
-
-            Assertions.assertEquals(newAddress.getAddress().toUpperCase(),normalizedAddress.getAddress());
-            Assertions.assertEquals(newAddress.getMunicipality(),normalizedAddress.getMunicipality());
-            Assertions.assertEquals(newAddress.getMunicipalityDetails(),normalizedAddress.getMunicipalityDetails());
-            Assertions.assertEquals(newAddress.getProvince(),normalizedAddress.getProvince());
-            Assertions.assertEquals(newAddress.getZip(),normalizedAddress.getZip());
+    Assertions.assertEquals(newAddress.getAddress().toUpperCase(),normalizedAddress.getAddress());
+    Assertions.assertEquals(newAddress.getMunicipality(),normalizedAddress.getMunicipality());
+    Assertions.assertEquals(newAddress.getMunicipalityDetails(),normalizedAddress.getMunicipalityDetails());
+    Assertions.assertEquals(newAddress.getProvince(),normalizedAddress.getProvince());
+    Assertions.assertEquals(newAddress.getZip(),normalizedAddress.getZip());
 
 
-           } catch(AssertionFailedError error) {
-            sharedSteps.throwAssertFailerWithIUN(error);
-        }
+   }catch(AssertionFailedError error){
+    sharedSteps.throwAssertFailerWithIUN(error);
+}
+
     }
 
-    private PaymentRequest getPaymentRequest(NotificationPriceResponseV23 notificationPrice, String noticeNumber, String fiscalCode, String companyName, Integer amount, String description, String returnUrl) {
-        PaymentRequest paymentRequest= new PaymentRequest();
-        PaymentNotice paymentNotice= new PaymentNotice();
-        paymentNotice.noticeNumber(noticeNumber);
-        paymentNotice.fiscalCode(fiscalCode);
-        paymentNotice.companyName(companyName);
-        paymentNotice.description(description);
-        if(amount != null) {
-            paymentNotice.setAmount(amount);
-        }
-        if(notificationPrice != null) {
-            paymentNotice.amount(notificationPrice.getTotalPrice());
-        }
-        paymentRequest.paymentNotice(paymentNotice);
-        paymentRequest.returnUrl(returnUrl);
-        return paymentRequest;
-    }
 }
