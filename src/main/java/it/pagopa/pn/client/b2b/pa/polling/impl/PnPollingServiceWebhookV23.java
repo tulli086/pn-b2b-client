@@ -7,15 +7,13 @@ import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV23;
 import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebhookB2bClient;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
+import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.NotificationStatus;
 import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.ProgressResponseElementV23;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -130,7 +128,11 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
                         pnPollingParameter.getPnPollingWebhook().getProgressResponseElementListV23().addLast(progressResponseElement);
                     }
                 })
-                .filter(toCheckCondition(pnPollingParameter))
+                .filter(pnPollingParameter.getIsRefusedFileNotFound() != null && pnPollingParameter.getIsRefusedFileNotFound()
+                        ?
+                        toCheckConditionRefused(pnPollingParameter)
+                        :
+                        toCheckCondition(pnPollingParameter))
                 .findAny()
                 .orElse(null);
         if(progressResponseElementV23 != null) {
@@ -156,5 +158,11 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
             ||
             progressResponseElementV23.getIun() != null && progressResponseElementV23.getIun().equals(iun)
                     && (progressResponseElementV23.getNewStatus() != null && (progressResponseElementV23.getNewStatus().equals(pnPollingParameter.getPnPollingWebhook().getNotificationStatusV23())));
+    }
+
+    private Predicate<ProgressResponseElementV23> toCheckConditionRefused(PnPollingParameter pnPollingParameter) {
+        return progressResponseElementV23 ->
+//                        (progressResponseElementV23.getIun() != null && progressResponseElementV23.getIun().equals(iun)
+                (progressResponseElementV23.getNewStatus() != null && (progressResponseElementV23.getNewStatus().equals(NotificationStatus.REFUSED)));
     }
 }

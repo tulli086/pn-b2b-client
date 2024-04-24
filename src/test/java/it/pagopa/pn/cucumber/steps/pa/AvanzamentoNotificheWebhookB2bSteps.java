@@ -1064,7 +1064,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         return null;
     }
 
-    private <T> ProgressResponseElementV23 searchInWebhookV23(T timeLineOrStatus,String lastEventId, int deepCount, int position) {
+    private <T> ProgressResponseElementV23 searchInWebhookV23(T timeLineOrStatus, String lastEventId, int deepCount, int position) {
         PnPollingWebhook pnPollingWebhook = getPnPollingWebhook(timeLineOrStatus);
         PnPollingServiceWebhookV23 webhookV23 = (PnPollingServiceWebhookV23) sharedSteps.getPollingFactory().getPollingService(PnPollingStrategy.WEBHOOK_V23);
         PnPollingResponseV23 pnPollingResponseV23 = webhookV23.waitForEvent(sharedSteps.getSentNotification().getIun(),
@@ -1084,8 +1084,49 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         return null;
     }
 
-    private <T> ProgressResponseElement searchInWebhookFileNotFound(T timeLineOrStatus,String lastEventId, int deepCount){
+    private <T> ProgressResponseElement searchInWebhookFileNotFound(T timeLineOrStatus, String lastEventId, int deepCount) {
+        PnPollingWebhook pnPollingWebhook = getPnPollingWebhook(timeLineOrStatus);
+        PnPollingParameter pnPollingParameter = PnPollingParameter.builder()
+                .value("WEBHOOK")
+                .pnPollingWebhook(pnPollingWebhook)
+                .deepCount(deepCount)
+                .lastEventId(lastEventId)
+                .streamId(eventStreamList.get(0).getStreamId())
+                .isRefusedFileNotFound(true)
+                .build();
+        PnPollingServiceWebhookV20 webhookV20 = (PnPollingServiceWebhookV20) sharedSteps.getPollingFactory().getPollingService(PnPollingStrategy.WEBHOOK_V20);
+        PnPollingResponseV20 pnPollingResponseV20 = webhookV20.waitForEvent(sharedSteps.getSentNotification().getIun(), pnPollingParameter);
 
+        log.info("WEBHOOK_PROGRESS_RESPONSE_ELEMENT_V20: " + pnPollingResponseV20.getProgressResponseElementV20());
+        if(pnPollingResponseV20.getProgressResponseElementV20() != null) {
+            sharedSteps.setProgressResponseElements(pnPollingResponseV20.getProgressResponseElementListV20());
+            return pnPollingResponseV20.getProgressResponseElementV20();
+        }
+        return null;
+    }
+
+    private <T> ProgressResponseElementV23 searchInWebhookFileNotFoundV23(T timeLineOrStatus, String lastEventId, int deepCount) {
+        PnPollingWebhook pnPollingWebhook = getPnPollingWebhook(timeLineOrStatus);
+        PnPollingParameter pnPollingParameter = PnPollingParameter.builder()
+                .value("WEBHOOK")
+                .pnPollingWebhook(pnPollingWebhook)
+                .deepCount(deepCount)
+                .lastEventId(lastEventId)
+                .streamId(eventStreamList.get(0).getStreamId())
+                .isRefusedFileNotFound(true)
+                .build();
+        PnPollingServiceWebhookV23 webhookV23 = (PnPollingServiceWebhookV23) sharedSteps.getPollingFactory().getPollingService(PnPollingStrategy.WEBHOOK_V23);
+        PnPollingResponseV23 pnPollingResponseV23 = webhookV23.waitForEvent(sharedSteps.getSentNotification().getIun(), pnPollingParameter);
+
+        log.info("WEBHOOK_PROGRESS_RESPONSE_ELEMENT_V23: " + pnPollingResponseV23.getProgressResponseElementV23());
+        if(pnPollingResponseV23.getProgressResponseElementListV23() != null) {
+            sharedSteps.setProgressResponseElementsV23(pnPollingResponseV23.getProgressResponseElementListV23());
+            return pnPollingResponseV23.getProgressResponseElementV23();
+        }
+        return null;
+    }
+/**
+    private <T> ProgressResponseElement searchInWebhookFileNotFound(T timeLineOrStatus,String lastEventId, int deepCount){
         TimelineElementCategoryV23 timelineElementCategory = null;
         NotificationStatus notificationStatus = null;
         if(timeLineOrStatus instanceof TimelineElementCategoryV23){
@@ -1142,19 +1183,18 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         }//for
 
         //TODO Verificare il corretto comportamento...
-        /**
-            ProgressResponseElementV23 lastProgress = null;
-            for(ProgressResponseElementV23 elem: progressResponseElements){
-                if("REFUSED".equalsIgnoreCase(elem.getNewStatus().getValue()) && elem.getValidationErrors() != null && elem.getValidationErrors().size()>0){
-                    if (elem.getValidationErrors().get(0).getErrorCode()!= null && "FILE_NOTFOUND".equalsIgnoreCase(elem.getValidationErrors().get(0).getErrorCode()) )
-                        progressResponseElement = elem;
-                        break;
-                }
-            }//for
-            **/
+//            ProgressResponseElementV23 lastProgress = null;
+//            for(ProgressResponseElementV23 elem: progressResponseElements){
+//                if("REFUSED".equalsIgnoreCase(elem.getNewStatus().getValue()) && elem.getValidationErrors() != null && elem.getValidationErrors().size()>0){
+//                    if (elem.getValidationErrors().get(0).getErrorCode()!= null && "FILE_NOTFOUND".equalsIgnoreCase(elem.getValidationErrors().get(0).getErrorCode()) )
+//                        progressResponseElement = elem;
+//                        break;
+//                }
+//            }//for
+
         return progressResponseElement;
     }//searchInWebhookTimelineElement
-
+**/
 
     @And("{string} legge la notifica")
     public void userReadNotification(String recipient) {
