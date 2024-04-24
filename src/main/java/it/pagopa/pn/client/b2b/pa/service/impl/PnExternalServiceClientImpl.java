@@ -625,56 +625,20 @@ public class PnExternalServiceClientImpl {
 
     }
     //OPEN SEARCH RESPONSE
+    @Getter
+    @Setter
+    @ToString
     public static class OpenSearchResponse {
         Integer took;
         Boolean timed_out;
         Shards _shards;
-
         OuterHits hits;
 
-        public Integer getTook() {
-            return took;
-        }
-
-        public void setTook(Integer took) {
-            this.took = took;
-        }
-
-        public Boolean getTimed_out() {
-            return timed_out;
-        }
-
-        public void setTimed_out(Boolean timed_out) {
-            this.timed_out = timed_out;
-        }
-
-        public Shards get_shards() {
-            return _shards;
-        }
-
-        public void set_shards(Shards _shards) {
-            this._shards = _shards;
-        }
-
-        public OuterHits getHits() {
-            return hits;
-        }
-
-        public void setHits(OuterHits hits) {
-            this.hits = hits;
-        }
-
-        @Override
-        public String toString() {
-            return "openSearchResponse{" +
-                    "took=" + took +
-                    ", timed_out=" + timed_out +
-                    ", _shards=" + _shards +
-                    ", hits=" + hits +
-                    '}';
-        }
     }
 
+    @Getter
+    @Setter
+    @ToString
     public static class Shards{
         public Shards() {}
         private Integer total;
@@ -683,49 +647,11 @@ public class PnExternalServiceClientImpl {
 
         private Integer failed;
 
-        public Integer getTotal() {
-            return total;
-        }
-
-        public void setTotal(Integer total) {
-            this.total = total;
-        }
-
-        public Integer getSuccessful() {
-            return successful;
-        }
-
-        public void setSuccessful(Integer successful) {
-            this.successful = successful;
-        }
-
-        public Integer getSkipped() {
-            return skipped;
-        }
-
-        public void setSkipped(Integer skipped) {
-            this.skipped = skipped;
-        }
-
-        public Integer getFailed() {
-            return failed;
-        }
-
-        public void setFailed(Integer failed) {
-            this.failed = failed;
-        }
-
-        @Override
-        public String toString() {
-            return "Shards{" +
-                    "total=" + total +
-                    ", successful=" + successful +
-                    ", skipped=" + skipped +
-                    ", failed=" + failed +
-                    '}';
-        }
     }
 
+    @Getter
+    @Setter
+    @ToString
     public static class OuterHits{
         public OuterHits() {
         }
@@ -734,40 +660,11 @@ public class PnExternalServiceClientImpl {
         private Total total;
         private LinkedList<InnerHits> hits;
 
-        public Double getMax_score() {
-            return max_score;
-        }
-
-        public void setMax_score(Double max_score) {
-            this.max_score = max_score;
-        }
-
-        public Total getTotal() {
-            return total;
-        }
-
-        public void setTotal(Total total) {
-            this.total = total;
-        }
-
-        public LinkedList<InnerHits> getHits() {
-            return hits;
-        }
-
-        public void setHits(LinkedList<InnerHits> hits) {
-            this.hits = hits;
-        }
-
-        @Override
-        public String toString() {
-            return "OuterHits{" +
-                    "max_score=" + max_score +
-                    ", total=" + total +
-                    ", hits=" + hits +
-                    '}';
-        }
     }
 
+    @Getter
+    @Setter
+    @ToString
     public static class InnerHits{
         public InnerHits() {
         }
@@ -778,45 +675,7 @@ public class PnExternalServiceClientImpl {
         private Double _score;
         private Source _source;
 
-        public String get_index() {
-            return _index;
-        }
 
-        public void set_index(String _index) {
-            this._index = _index;
-        }
-
-        public String get_type() {
-            return _type;
-        }
-
-        public void set_type(String _type) {
-            this._type = _type;
-        }
-
-        public String get_id() {
-            return _id;
-        }
-
-        public void set_id(String _id) {
-            this._id = _id;
-        }
-
-        public Double get_score() {
-            return _score;
-        }
-
-        public void set_score(Double _score) {
-            this._score = _score;
-        }
-
-        public Source get_source() {
-            return _source;
-        }
-
-        public void set_source(Source _source) {
-            this._source = _source;
-        }
 
         public class Source{
             @Override
@@ -1026,35 +885,15 @@ public class PnExternalServiceClientImpl {
         }
     }
 
+    @Getter
+    @Setter
+    @ToString
     public static class Total{
         public Total() {
         }
         private Integer value;
         private String relation;
 
-        public Integer getValue() {
-            return value;
-        }
-
-        public void setValue(Integer value) {
-            this.value = value;
-        }
-
-        public String getRelation() {
-            return relation;
-        }
-
-        public void setRelation(String relation) {
-            this.relation = relation;
-        }
-
-        @Override
-        public String toString() {
-            return "Total{" +
-                    "value=" + value +
-                    ", relation='" + relation + '\'' +
-                    '}';
-        }
     }
 
 
