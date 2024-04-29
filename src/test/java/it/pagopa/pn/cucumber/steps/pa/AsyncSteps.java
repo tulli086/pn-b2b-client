@@ -124,6 +124,7 @@ public class AsyncSteps {
 
         log.info("User: " + postionUser);
         log.info("Messaggio json da allegare: " + paymentInfoRequest);
+        //TODO utilizzare algoritmo di polling
         for(int i=0; i< NUM_CHECK_PAYMENT_INFO ;i++) {
             try {
                 Assertions.assertDoesNotThrow(() -> {

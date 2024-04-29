@@ -430,7 +430,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
 
 
 
-  @mockNR  @workflowAnalogico @bugD02
+  @mockNR  @workflowAnalogico @mockNormalizzatore
   Scenario: [B2B_TIMELINE_ANALOG_64] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D02 coincidente
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |

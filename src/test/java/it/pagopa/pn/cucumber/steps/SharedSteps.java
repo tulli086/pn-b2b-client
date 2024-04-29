@@ -1480,7 +1480,7 @@ public class SharedSteps {
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1506,7 +1506,7 @@ public class SharedSteps {
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1532,7 +1532,7 @@ public class SharedSteps {
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1568,7 +1568,7 @@ public class SharedSteps {
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1593,7 +1593,7 @@ public class SharedSteps {
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1616,7 +1616,7 @@ public class SharedSteps {
                 log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1638,7 +1638,7 @@ public class SharedSteps {
                 log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1661,7 +1661,7 @@ public class SharedSteps {
                 log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1683,7 +1683,7 @@ public class SharedSteps {
                 log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
