@@ -320,10 +320,7 @@ public class SharedSteps {
 
     @And("al destinatario viene associato lo iuv creato mediante partita debitoria alla posizione {int}")
     public void destinatarioAddIuvGPD(Integer posizione) {
-        //int numberofPayment=notificationRequest.getRecipients().get(0).getPayments().size();
-        //for(int i=0;i<numberofPayment;i++)
-        //this.notificationRequest.getRecipients().get(0).getPayments().get(0).getPagoPa().setNoticeCode(getIuvGPD());
-        //this.notificationRequest.getRecipients().get(0).getPayments().get(i).getPagoPa().setNoticeCode(getIuvGPD().get(i))
+
         Objects.requireNonNull(Objects.requireNonNull(this.notificationRequest.getRecipients().get(0).getPayments()).get(posizione).getPagoPa()).setNoticeCode(getIuvGPD(posizione));
     }
 
@@ -369,7 +366,7 @@ public class SharedSteps {
             selectPA(pa);
             setSenderTaxIdFromProperties();
             notificationRequests.add(newNotificationRequestV23);
-        }//for
+        }
 
         List<Thread> threadList = new LinkedList<>();
         ConcurrentLinkedQueue<FullSentNotificationV23> sentNotifications = new ConcurrentLinkedQueue<>();
@@ -390,11 +387,7 @@ public class SharedSteps {
                 //ATTESA ELEMENTO DI TIMELINE
                 TimelineElementV23 timelineElementV23 = null;
                 for (int i = 0; i < 33; i++) {
-                    try {
-                        Thread.sleep(getWorkFlowWait());
-                    } catch (InterruptedException exc) {
-                        throw new RuntimeException(exc);
-                    }
+                    threadSleep();
                     fullSentNotificationV23 = b2bClient.getSentNotification(fullSentNotificationV23.getIun());
                     logger.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV23.getTimeline());
                     timelineElementV23 = fullSentNotificationV23.getTimeline().stream().filter(elem -> Objects.requireNonNull(elem.getCategory()).equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE)).findAny().orElse(null);
@@ -413,11 +406,7 @@ public class SharedSteps {
         boolean completed = false;
 
         while (attempts < 50) {
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            threadSleep();
             int counter = 0;
             for (Thread thread : threadList) {
                 if (!thread.isAlive()) counter++;
@@ -456,16 +445,7 @@ public class SharedSteps {
                                 .address(getDigitalAddressValue())
                         )
                 , new HashMap<>());
-        /*
-        this.notificationRequest.addRecipientsItem(
-                dataTableTypeUtil.convertNotificationRecipient(new HashMap<>())
-                        .denomination("Mario Cucumber")
-                        .taxId(marioCucumberTaxID)
-                        .digitalDomicile(new NotificationDigitalAddress()
-                                .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                .address(getDigitalAddressValue())));
 
-         */
     }
 
     @And("destinatario Mario Cucumber V1")
@@ -515,8 +495,7 @@ public class SharedSteps {
     }
 
     private void addRecipientToNotification(NewNotificationRequestV23 notificationRequest, NotificationRecipientV23 notificationRecipient, Map<String, String> recipientData) {
-        //logger.info("NEW NOTIFICATION REQUEST: {}",notificationRequest);
-        //logger.info("NEW NOTIFICATION RECIPIENT: {}",notificationRecipient);
+
         if (notificationRequest.getNotificationFeePolicy() == NotificationFeePolicy.DELIVERY_MODE
                 && NotificationValue.getValue(recipientData, PAYMENT.key) != null) {
             String pagopaFormValue = getValue(recipientData, PAYMENT_PAGOPA_FORM.key);
@@ -902,18 +881,18 @@ public class SharedSteps {
     public void laNotificaVieneInviataOkVersioning(String paType, String version) {
         selectPA(paType);
         switch (version.toLowerCase()) {
-            case "v1":
+            case "v1" -> {
                 setSenderTaxIdFromPropertiesV1(version);
                 sendNotificationV1();
-                break;
-            case "v2":
+            }
+            case "v2" -> {
                 setSenderTaxIdFromPropertiesV2(version);
                 sendNotificationV2();
-                break;
-            case "v21":
+            }
+            case "v21" -> {
                 setSenderTaxIdFromPropertiesV21(version);
                 sendNotificationV21();
-                break;
+            }
         }
     }
 
@@ -928,20 +907,21 @@ public class SharedSteps {
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED {string}")
     public void laNotificaVieneInviataOkV21(String paType,String version) {
         selectPA(paType);
-        switch (version.toLowerCase()){
-           case "v1":
-               setSenderTaxIdFromPropertiesV1(version);
-               sendNotificationV1();
-               break;
-           case "v2":
-               setSenderTaxIdFromPropertiesV2(version);
-               sendNotificationV2();
-               break;
-           case "v21":
-               setSenderTaxIdFromPropertiesV21(version);
-               sendNotificationV21();
-               break;
-       }
+        switch (version.toLowerCase()) {
+            case "v1" -> {
+                setSenderTaxIdFromPropertiesV1(version);
+                sendNotificationV1();
+            }
+            case "v2" -> {
+                setSenderTaxIdFromPropertiesV2(version);
+                sendNotificationV2();
+            }
+            case "v21" -> {
+                setSenderTaxIdFromPropertiesV21(version);
+                sendNotificationV21();
+            }
+        }
+
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED per controllo GPD")
@@ -1201,20 +1181,14 @@ public class SharedSteps {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
-                try {
-                    Thread.sleep(wait);
-                } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
-                    throw new RuntimeException(e);
-                }
+
+                threadSleepWait(wait);
+
                 notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
             });
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+
+            threadSleepWait(wait);
+
             Assertions.assertNotNull(notificationResponseComplete);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1227,20 +1201,14 @@ public class SharedSteps {
         try {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
-                try {
-                    Thread.sleep(wait);
-                } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
-                    throw new RuntimeException(e);
-                }
+
+                threadSleepWait(wait);
+
                 notificationResponseComplete = b2bUtils.waitForRequestNoAcceptation(newNotificationResponse);
             });
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+
+            threadSleepWait(wait);
+
             Assertions.assertNull(notificationResponseComplete);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1254,20 +1222,15 @@ public class SharedSteps {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
-                try {
-                    Thread.sleep(wait);
-                } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
-                    throw new RuntimeException(e);
-                }
+
+                threadSleepWait(wait);
+
                 notificationResponseComplete = b2bUtils.waitForRequestAcceptationShort(newNotificationResponse);
             });
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+
+
+            threadSleepWait(wait);
+
             Assertions.assertNotNull(notificationResponseComplete);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1291,12 +1254,9 @@ public class SharedSteps {
                 Assertions.assertTrue("NOTIFICATION_CANCELLATION_ACCEPTED".equalsIgnoreCase(resp.getDetails().get(0).getCode()));
             });
             rifiutata = b2bUtils.waitForRequestNotRefused(newNotificationResponse);
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+
+            threadSleepWait(wait);
+
             Assertions.assertFalse(rifiutata);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1304,6 +1264,16 @@ public class SharedSteps {
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }
+
+    private static void threadSleepWait(int wait) {
+        try {
+            Thread.sleep(wait);
+        } catch (InterruptedException e) {
+            logger.error("Thread.sleep error retry");
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private void searchNotificationV1(String requestId) {
         try {
@@ -1321,21 +1291,12 @@ public class SharedSteps {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponseV1 = b2bUtils.uploadNotificationV1(notificationRequestV1);
 
-                try {
-                    Thread.sleep(getWorkFlowWait());
-                } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
-                    throw new RuntimeException(e);
-                }
+                threadSleep();
+
                 notificationResponseCompleteV1 = b2bUtils.waitForRequestAcceptationV1(newNotificationResponseV1);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
             Assertions.assertNotNull(notificationResponseCompleteV1);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1350,22 +1311,12 @@ public class SharedSteps {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponseV2 = b2bUtils.uploadNotificationV2(notificationRequestV2);
 
-                try {
-                    Thread.sleep(getWorkFlowWait());
-                } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
-                    throw new RuntimeException(e);
-                }
+                threadSleep();
 
                 notificationResponseCompleteV2 = b2bUtils.waitForRequestAcceptationV2(newNotificationResponseV2);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
             Assertions.assertNotNull(notificationResponseCompleteV2);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1375,26 +1326,28 @@ public class SharedSteps {
         }
     }
 
+    private void threadSleep() {
+        try {
+            Thread.sleep(getWorkFlowWait());
+        } catch (InterruptedException e) {
+            logger.error("Thread.sleep error retry");
+            throw new RuntimeException(e);
+        }
+    }
+
     private void sendNotificationV21() {
         try {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponseV21 = b2bUtils.uploadNotificationV21(notificationRequestV21);
-                try {
-                    Thread.sleep(getWorkFlowWait());
-                } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
-                    throw new RuntimeException(e);
-                }
+
+                threadSleep();
+
                 notificationResponseCompleteV21 = b2bUtils.waitForRequestAcceptationV21(newNotificationResponseV21);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
+
             Assertions.assertNotNull(notificationResponseCompleteV21);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1463,12 +1416,8 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
+
             Assertions.assertNotNull(errorCode);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1485,12 +1434,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
 
             Assertions.assertNotNull(errorCode);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1508,12 +1452,8 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
+
             Assertions.assertNotNull(errorCode);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1540,12 +1480,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
 
             Assertions.assertNotNull(errorCode);
 
@@ -1565,12 +1500,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
 
             Assertions.assertNotNull(errorCode);
 
@@ -1589,12 +1519,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
             Assertions.assertNotNull(errorCode);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1611,12 +1536,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
             Assertions.assertNotNull(errorCode);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1633,12 +1553,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
             Assertions.assertNotNull(errorCode);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1655,12 +1570,8 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            try {
-                Thread.sleep(getWorkFlowWait());
-            } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
-                throw new RuntimeException(e);
-            }
+            threadSleep();
+
             Assertions.assertNotNull(errorCode);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1690,109 +1601,103 @@ public class SharedSteps {
 
     public void setSenderTaxIdFromProperties() {
         switch (settedPa) {
-            case "Comune_1":
+            case "Comune_1" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxId);
                 setGrup(SettableApiKey.ApiKeyType.MVP_1);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
-                break;
-            case "Comune_2":
+            }
+            case "Comune_2" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdTwo);
                 setGrup(SettableApiKey.ApiKeyType.MVP_2);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
-                break;
-            case "Comune_Multi":
+            }
+            case "Comune_Multi" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdGa);
                 setGrup(SettableApiKey.ApiKeyType.GA);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
-                break;
-            case "Comune_Son":
+            }
+            case "Comune_Son" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdSON);
                 setGrup(SettableApiKey.ApiKeyType.SON);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.SON;
-                break;
-            case "Comune_Root":
+            }
+            case "Comune_Root" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdROOT);
                 setGrup(SettableApiKey.ApiKeyType.ROOT);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.ROOT;
-                break;
+            }
         }
     }
 
     public void setSenderTaxIdFromPropertiesV1(String version) {
         switch (settedPa) {
-            case "Comune_1":
+            case "Comune_1" -> {
                 this.notificationRequestV1.setSenderTaxId(this.senderTaxId);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1,version);
+                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
-                break;
-            case "Comune_2":
+            }
+            case "Comune_2" -> {
                 this.notificationRequestV1.setSenderTaxId(this.senderTaxIdTwo);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2,version);
+                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
-                break;
-            case "Comune_Multi":
+            }
+            case "Comune_Multi" -> {
                 this.notificationRequestV1.setSenderTaxId(this.senderTaxIdGa);
-                setGrupVersioning(SettableApiKey.ApiKeyType.GA,version);
+                setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
-                break;
+            }
         }
     }
 
     public void setSenderTaxIdFromPropertiesV2(String version) {
         switch (settedPa) {
-            case "Comune_1":
+            case "Comune_1" -> {
                 this.notificationRequestV2.setSenderTaxId(this.senderTaxId);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1,version);
+                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
-                break;
-            case "Comune_2":
+            }
+            case "Comune_2" -> {
                 this.notificationRequestV2.setSenderTaxId(this.senderTaxIdTwo);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2,version);
+                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
-                break;
-            case "Comune_Multi":
+            }
+            case "Comune_Multi" -> {
                 this.notificationRequestV2.setSenderTaxId(this.senderTaxIdGa);
-                setGrupVersioning(SettableApiKey.ApiKeyType.GA,version);
+                setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
-                break;
+            }
         }
     }
 
     public void setSenderTaxIdFromPropertiesV21(String version) {
         switch (settedPa) {
-            case "Comune_1":
+            case "Comune_1" -> {
                 this.notificationRequestV21.setSenderTaxId(this.senderTaxId);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1,version);
+                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
-                break;
-            case "Comune_2":
+            }
+            case "Comune_2" -> {
                 this.notificationRequestV21.setSenderTaxId(this.senderTaxIdTwo);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2,version);
+                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
-                break;
-            case "Comune_Multi":
+            }
+            case "Comune_Multi" -> {
                 this.notificationRequestV21.setSenderTaxId(this.senderTaxIdGa);
-                setGrupVersioning(SettableApiKey.ApiKeyType.GA,version);
+                setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
-                break;
+            }
         }
     }
 
     public String getSenderTaxIdFromProperties(String settedPa) {
-        switch (settedPa) {
-            case "Comune_1":
-                return this.senderTaxId;
-            case "Comune_2":
-                return this.senderTaxIdTwo;
-            case "Comune_Multi":
-                return this.senderTaxIdGa;
-            case "Comune_Son":
-                return this.senderTaxIdSON;
-            case "Comune_Root":
-                return this.senderTaxIdROOT;
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (settedPa) {
+            case "Comune_1" -> this.senderTaxId;
+            case "Comune_2" -> this.senderTaxIdTwo;
+            case "Comune_Multi" -> this.senderTaxIdGa;
+            case "Comune_Son" -> this.senderTaxIdSON;
+            case "Comune_Root" -> this.senderTaxIdROOT;
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     private void setGrup(SettableApiKey.ApiKeyType apiKeyType) {
@@ -1874,28 +1779,27 @@ public class SharedSteps {
 
     public void selectPA(String apiKey) {
         switch (apiKey) {
-            case "Comune_1":
+            case "Comune_1" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_1);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_1);
-                break;
-            case "Comune_2":
+            }
+            case "Comune_2" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_2);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_2);
-                break;
-            case "Comune_Multi":
+            }
+            case "Comune_Multi" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.GA);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.GA);
-                break;
-            case "Comune_Son":
+            }
+            case "Comune_Son" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.SON);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.SON);
-                break;
-            case "Comune_Root":
+            }
+            case "Comune_Root" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.ROOT);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.ROOT);
-                break;
-            default:
-                throw new IllegalArgumentException();
+            }
+            default -> throw new IllegalArgumentException();
         }
         this.b2bUtils.setClient(b2bClient, pollingFactory);
         this.settedPa = apiKey;
@@ -1903,36 +1807,35 @@ public class SharedSteps {
 
     public void selectUser(String recipient) {
         switch (recipient.trim().toLowerCase()) {
-            case "mario cucumber", "ettore fieramosca":
+            case "mario cucumber", "ettore fieramosca" -> {
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_1);
-                break;
-            case "mario gherkin", "cristoforo colombo":
+            }
+            case "mario gherkin", "cristoforo colombo" -> {
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_2);
-                break;
-            case "gherkinsrl":
+            }
+            case "gherkinsrl" -> {
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.PG_1);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.PG_1);
-                break;
-            case "cucumberspa":
+            }
+            case "cucumberspa" -> {
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.PG_2);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.PG_2);
-                break;
-            case "leonardo da vinci":
+            }
+            case "leonardo da vinci" -> {
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_3);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_3);
-                break;
-            case "dino sauro":
+            }
+            case "dino sauro" -> {
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_5);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_5);
-                break;
-            case "mario cucumber con credenziali non valide":
+            }
+            case "mario cucumber con credenziali non valide" -> {
                 webRecipientClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_SCADUTO);
                 iPnWebUserAttributesClient.setBearerToken(SettableBearerToken.BearerTokenType.USER_SCADUTO);
-                break;
-            default:
-                throw new IllegalArgumentException();
+            }
+            default -> throw new IllegalArgumentException();
         }
     }
 
@@ -2095,57 +1998,33 @@ public class SharedSteps {
 
     public String getTimelineEventId(String timelineEventCategory, String iun, DataTest dataFromTest) {
         EventId event = getEventId(iun, dataFromTest);
-        switch (timelineEventCategory) {
-            case "SEND_COURTESY_MESSAGE":
-                return TimelineEventId.SEND_COURTESY_MESSAGE.buildEventId(event);
-            case "REQUEST_REFUSED":
-                return TimelineEventId.REQUEST_REFUSED.buildEventId(event);
-            case "AAR_GENERATION":
-                return TimelineEventId.AAR_GENERATION.buildEventId(event);
-            case "REQUEST_ACCEPTED":
-                return TimelineEventId.REQUEST_ACCEPTED.buildEventId(event);
-            case "SEND_DIGITAL_DOMICILE":
-                return TimelineEventId.SEND_DIGITAL_DOMICILE.buildEventId(event);
-            case "SEND_DIGITAL_FEEDBACK":
-                return TimelineEventId.SEND_DIGITAL_FEEDBACK.buildEventId(event);
-            case "GET_ADDRESS":
-                return TimelineEventId.GET_ADDRESS.buildEventId(event);
-            case "DIGITAL_SUCCESS_WORKFLOW":
-                return TimelineEventId.DIGITAL_SUCCESS_WORKFLOW.buildEventId(event);
-            case "SCHEDULE_REFINEMENT":
-                return TimelineEventId.SCHEDULE_REFINEMENT_WORKFLOW.buildEventId(event);
-            case "REFINEMENT":
-                return TimelineEventId.REFINEMENT.buildEventId(event);
-            case "ANALOG_SUCCESS_WORKFLOW":
-                return TimelineEventId.ANALOG_SUCCESS_WORKFLOW.buildEventId(event);
-            case "DIGITAL_FAILURE_WORKFLOW":
-                return TimelineEventId.DIGITAL_FAILURE_WORKFLOW.buildEventId(event);
-            case "SEND_ANALOG_FEEDBACK":
-                return TimelineEventId.SEND_ANALOG_FEEDBACK.buildEventId(event);
-            case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS":
-                return TimelineEventId.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS.buildEventId(event);
-            case "SEND_ANALOG_PROGRESS":
-                return TimelineEventId.SEND_ANALOG_PROGRESS.buildEventId(event);
-            case "ANALOG_FAILURE_WORKFLOW":
-                return TimelineEventId.ANALOG_FAILURE_WORKFLOW.buildEventId(event);
-            case "PREPARE_ANALOG_DOMICILE":
-                return TimelineEventId.PREPARE_ANALOG_DOMICILE.buildEventId(event);
-            case "SCHEDULE_ANALOG_WORKFLOW":
-                return TimelineEventId.SCHEDULE_ANALOG_WORKFLOW.buildEventId(event);
-            case "SEND_ANALOG_DOMICILE":
-                return TimelineEventId.SEND_ANALOG_DOMICILE.buildEventId(event);
-            case "SEND_SIMPLE_REGISTERED_LETTER":
-                return TimelineEventId.SEND_SIMPLE_REGISTERED_LETTER.buildEventId(event);
-            case "PREPARE_SIMPLE_REGISTERED_LETTER":
-                return TimelineEventId.PREPARE_SIMPLE_REGISTERED_LETTER.buildEventId(event);
-            case "NOTIFICATION_VIEWED":
-                return TimelineEventId.NOTIFICATION_VIEWED.buildEventId(event);
-            case "COMPLETELY_UNREACHABLE":
-                return TimelineEventId.COMPLETELY_UNREACHABLE.buildEventId(event);
-            case "DIGITAL_DELIVERY_CREATION_REQUEST":
-                return TimelineEventId.DIGITAL_DELIVERY_CREATION_REQUEST.buildEventId(event);
-        }
-        return null;
+        return switch (timelineEventCategory) {
+            case "SEND_COURTESY_MESSAGE" -> TimelineEventId.SEND_COURTESY_MESSAGE.buildEventId(event);
+            case "REQUEST_REFUSED" -> TimelineEventId.REQUEST_REFUSED.buildEventId(event);
+            case "AAR_GENERATION" -> TimelineEventId.AAR_GENERATION.buildEventId(event);
+            case "REQUEST_ACCEPTED" -> TimelineEventId.REQUEST_ACCEPTED.buildEventId(event);
+            case "SEND_DIGITAL_DOMICILE" -> TimelineEventId.SEND_DIGITAL_DOMICILE.buildEventId(event);
+            case "SEND_DIGITAL_FEEDBACK" -> TimelineEventId.SEND_DIGITAL_FEEDBACK.buildEventId(event);
+            case "GET_ADDRESS" -> TimelineEventId.GET_ADDRESS.buildEventId(event);
+            case "DIGITAL_SUCCESS_WORKFLOW" -> TimelineEventId.DIGITAL_SUCCESS_WORKFLOW.buildEventId(event);
+            case "SCHEDULE_REFINEMENT" -> TimelineEventId.SCHEDULE_REFINEMENT_WORKFLOW.buildEventId(event);
+            case "REFINEMENT" -> TimelineEventId.REFINEMENT.buildEventId(event);
+            case "ANALOG_SUCCESS_WORKFLOW" -> TimelineEventId.ANALOG_SUCCESS_WORKFLOW.buildEventId(event);
+            case "DIGITAL_FAILURE_WORKFLOW" -> TimelineEventId.DIGITAL_FAILURE_WORKFLOW.buildEventId(event);
+            case "SEND_ANALOG_FEEDBACK" -> TimelineEventId.SEND_ANALOG_FEEDBACK.buildEventId(event);
+            case "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" -> TimelineEventId.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS.buildEventId(event);
+            case "SEND_ANALOG_PROGRESS" -> TimelineEventId.SEND_ANALOG_PROGRESS.buildEventId(event);
+            case "ANALOG_FAILURE_WORKFLOW" -> TimelineEventId.ANALOG_FAILURE_WORKFLOW.buildEventId(event);
+            case "PREPARE_ANALOG_DOMICILE" -> TimelineEventId.PREPARE_ANALOG_DOMICILE.buildEventId(event);
+            case "SCHEDULE_ANALOG_WORKFLOW" -> TimelineEventId.SCHEDULE_ANALOG_WORKFLOW.buildEventId(event);
+            case "SEND_ANALOG_DOMICILE" -> TimelineEventId.SEND_ANALOG_DOMICILE.buildEventId(event);
+            case "SEND_SIMPLE_REGISTERED_LETTER" -> TimelineEventId.SEND_SIMPLE_REGISTERED_LETTER.buildEventId(event);
+            case "PREPARE_SIMPLE_REGISTERED_LETTER" -> TimelineEventId.PREPARE_SIMPLE_REGISTERED_LETTER.buildEventId(event);
+            case "NOTIFICATION_VIEWED" -> TimelineEventId.NOTIFICATION_VIEWED.buildEventId(event);
+            case "COMPLETELY_UNREACHABLE" -> TimelineEventId.COMPLETELY_UNREACHABLE.buildEventId(event);
+            case "DIGITAL_DELIVERY_CREATION_REQUEST" -> TimelineEventId.DIGITAL_DELIVERY_CREATION_REQUEST.buildEventId(event);
+            default -> null;
+        };
     }
 
     public TimelineElementV23 getTimelineElementByEventId(String timelineEventCategory, DataTest dataFromTest) {
