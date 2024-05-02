@@ -24,9 +24,6 @@ import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.RestTemplateConfiguration;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.ProgressResponseElementV23;
-import it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2_3.StreamMetadataResponseV23;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
@@ -53,8 +50,11 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
+
 import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
+import static org.awaitility.Awaitility.await;
 
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -191,7 +191,7 @@ public class SharedSteps {
     private String marioGherkinTaxID;
 
     private final DataTableTypeUtil dataTableTypeUtil;
-    private List<String> iuvGPD;
+    private final List<String> iuvGPD;
     private final IPnWebUserAttributesClient iPnWebUserAttributesClient;
     private final PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey;
     private final PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey;
@@ -353,7 +353,7 @@ public class SharedSteps {
             notificationRecipientMap.put("physicalAddress_address", "Via NationalRegistries @fail-Irreperibile_AR");
             NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(notificationRecipientMap);
             addRecipientToNotification(newNotificationRequestV23,
-                    updateNotificationRecipientV23(notificationRecipientV23,
+                    updateNotificationRecipient(notificationRecipientV23,
                             "signor RaddCasuale",
                             generatedFiscalCode,
                             NotificationRecipientV23.RecipientTypeEnum.PF,
@@ -363,8 +363,7 @@ public class SharedSteps {
 
 
             this.notificationRequest = newNotificationRequestV23;
-            selectPA(pa);
-            setSenderTaxIdFromProperties();
+            selectPaAndSenderTaxId(pa, null);
             notificationRequests.add(newNotificationRequestV23);
         }
 
@@ -375,19 +374,14 @@ public class SharedSteps {
             Thread t = new Thread(() -> {
                 //INVIO NOTIFICA ED ATTESA ACCEPTED
                 NewNotificationResponse internalNotificationResponse = Assertions.assertDoesNotThrow(() -> b2bUtils.uploadNotification(notification));
-                try {
-                    Thread.sleep(getWait());
-                } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
-                    throw new RuntimeException(e);
-                }
+                threadWait(getWait());
                 FullSentNotificationV23 fullSentNotificationV23 = b2bUtils.waitForRequestAcceptation(internalNotificationResponse);
                 Assertions.assertNotNull(fullSentNotificationV23);
 
                 //ATTESA ELEMENTO DI TIMELINE
                 TimelineElementV23 timelineElementV23 = null;
                 for (int i = 0; i < 33; i++) {
-                    threadSleep();
+                    threadWait(getWorkFlowWait());
                     fullSentNotificationV23 = b2bClient.getSentNotification(fullSentNotificationV23.getIun());
                     logger.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV23.getTimeline());
                     timelineElementV23 = fullSentNotificationV23.getTimeline().stream().filter(elem -> Objects.requireNonNull(elem.getCategory()).equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE)).findAny().orElse(null);
@@ -406,7 +400,7 @@ public class SharedSteps {
         boolean completed = false;
 
         while (attempts < 50) {
-            threadSleep();
+            threadWait(getWorkFlowWait());
             int counter = 0;
             for (Thread thread : threadList) {
                 if (!thread.isAlive()) counter++;
@@ -436,7 +430,7 @@ public class SharedSteps {
     public void destinatarioMarioCucumber() {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Mario Cucumber",
                         marioCucumberTaxID,
                         null,
@@ -450,48 +444,40 @@ public class SharedSteps {
 
     @And("destinatario Mario Cucumber V1")
     public void destinatarioMarioCucumberV1() {
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationRecipient notificationRecipient = dataTableTypeUtil.convertNotificationRecipientV1(new HashMap<>());
         this.notificationRequestV1.addRecipientsItem(
-                dataTableTypeUtil.convertNotificationRecipientV1(new HashMap<>())
-                        .denomination("Mario Cucumber")
-                        .taxId(marioCucumberTaxID)
-                        .digitalDomicile(new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationDigitalAddress()
+                updateNotificationRecipient(notificationRecipient,
+                        "Mario Cucumber",
+                        marioCucumberTaxID,
+                        null,
+                        new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationDigitalAddress()
                                 .type(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationDigitalAddress.TypeEnum.PEC)
                                 .address(getDigitalAddressValue())));
     }
 
     @And("destinatario Mario Cucumber V2")
     public void destinatarioMarioCucumberV2() {
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient notificationRecipient = dataTableTypeUtil.convertNotificationRecipientV2(new HashMap<>());
         this.notificationRequestV2.addRecipientsItem(
-                dataTableTypeUtil.convertNotificationRecipientV2(new HashMap<>())
-                        .denomination("Mario Cucumber")
-                        .taxId(marioCucumberTaxID)
-                        .digitalDomicile(new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationDigitalAddress()
+                updateNotificationRecipient(notificationRecipient,
+                        "Mario Cucumber",
+                        marioCucumberTaxID,
+                        null,
+                        new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationDigitalAddress()
                                 .type(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationDigitalAddress.TypeEnum.PEC)
                                 .address(getDigitalAddressValue())));
     }
 
     @And("destinatario Mario Cucumber e:")
-    public void destinatarioMarioCucumberParam(Map<String, String> data) { // @Transpose NotificationRecipientV21 recipient
+    public void destinatarioMarioCucumberParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Mario Cucumber",
                         marioCucumberTaxID,
                         null,
                         null),
                 data);
-    }
-
-    private NotificationRecipientV23 updateNotificationRecipientV23(NotificationRecipientV23 notificationRecipientV23, String denomination, String taxId, NotificationRecipientV23.RecipientTypeEnum recipientType, NotificationDigitalAddress digitalDomicile) {
-        notificationRecipientV23.denomination(denomination).taxId(taxId);
-
-        if(recipientType != null) {
-            notificationRecipientV23.recipientType(recipientType);
-        }
-        if(digitalDomicile != null) {
-            notificationRecipientV23.digitalDomicile(digitalDomicile);
-        }
-        return notificationRecipientV23;
     }
 
     private void addRecipientToNotification(NewNotificationRequestV23 notificationRequest, NotificationRecipientV23 notificationRecipient, Map<String, String> recipientData) {
@@ -512,7 +498,7 @@ public class SharedSteps {
     public void destinatarioMarioGherkin() {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Mario Gherkin",
                         marioGherkinTaxID,
                         null,
@@ -524,33 +510,40 @@ public class SharedSteps {
 
     @And("destinatario Mario Gherkin V1 e:")
     public void destinatarioMarioGherkinParam(@Transpose it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationRecipient recipient) {
+
         this.notificationRequestV1.addRecipientsItem(
-                recipient
-                        .denomination("Mario Gherkin")
-                        .taxId(marioGherkinTaxID));
+                updateNotificationRecipient(recipient,
+                        "Mario Gherkin",
+                        marioGherkinTaxID,
+                        null,
+                        null));
     }
 
     @And("destinatario Mario Gherkin V2 e:")
     public void destinatarioMarioGherkinParam(@Transpose it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient recipient) {
         this.notificationRequestV2.addRecipientsItem(
-                recipient
-                        .denomination("Mario Gherkin")
-                        .taxId(marioGherkinTaxID));
+                updateNotificationRecipient(recipient,
+                        "Mario Gherkin",
+                        marioGherkinTaxID,
+                        null,
+                        null));
     }
 
     @And("destinatario Mario Gherkin V21 e:")
     public void destinatarioMarioGherkinParam(@Transpose it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipientV21 recipient) {
         this.notificationRequestV21.addRecipientsItem(
-                recipient
-                        .denomination("Mario Gherkin")
-                        .taxId(marioGherkinTaxID));
+                updateNotificationRecipient(recipient,
+                        "Mario Gherkin",
+                        marioGherkinTaxID,
+                        null,
+                        null));
     }
 
     @And("destinatario Mario Gherkin e:")
-    public void destinatarioMarioGherkinParam(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
+    public void destinatarioMarioGherkinParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Mario Gherkin",
                         marioGherkinTaxID,
                         null,
@@ -562,7 +555,7 @@ public class SharedSteps {
     public void destinatarioGherkinSpa() {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Gherkin_spa",
                         gherkinSpaTaxID,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -576,7 +569,7 @@ public class SharedSteps {
     public void destinatarioPg1() {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "GherkinSrl",
                         gherkinSrltaxId,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -587,10 +580,10 @@ public class SharedSteps {
     }
 
     @And("destinatario GherkinSrl e:")
-    public void destinatarioPg1param(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
+    public void destinatarioPg1param(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "GherkinSrl",
                         gherkinSrltaxId,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -599,10 +592,10 @@ public class SharedSteps {
     }
 
     @And("destinatario CucumberSpa e:")
-    public void destinatarioPg2param(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
+    public void destinatarioPg2param(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "CucumberSpa",
                         cucumberSpataxId,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -614,7 +607,7 @@ public class SharedSteps {
     public void destinatarioPg2() {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "CucumberSpa",
                         cucumberSpataxId,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -625,10 +618,10 @@ public class SharedSteps {
     }
 
     @And("destinatario Gherkin spa e:")
-    public void destinatarioGherkinSpaParam(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
+    public void destinatarioGherkinSpaParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "GherkinSpa",
                         gherkinSpaTaxID,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -640,7 +633,7 @@ public class SharedSteps {
     public void destinatarioCucumberSrl() {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "CucumberSrl",
                         cucumberSrlTaxID,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -651,36 +644,36 @@ public class SharedSteps {
     }
 
     @And("destinatario Cucumber srl e:")
-    public void destinatarioCucumberSrlParam(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
+    public void destinatarioCucumberSrlParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "CucumberSrl",
                         cucumberSrlTaxID,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
                         null)
-        , data);
+                , data);
     }
 
     @And("destinatario Cucumber Society")
     public void destinatarioCucumberSociety() {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Cucumber_Society",
                         cucumberSocietyTaxID,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
                         new NotificationDigitalAddress()
                                 .type(NotificationDigitalAddress.TypeEnum.PEC)
                                 .address(getDigitalAddressValue()))
-        ,new HashMap<>());
+                ,new HashMap<>());
     }
 
     @And("destinatario Cucumber Society e:")
-    public void destinatarioCucumberSocietyParam(Map<String, String> data) { //@Transpose NotificationRecipientV21 recipient
+    public void destinatarioCucumberSocietyParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Cucumber_Society",
                         cucumberSocietyTaxID,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -690,15 +683,11 @@ public class SharedSteps {
 
     @And("destinatario Signor casuale e:")
     public void destinatarioSignorCasualeMap(Map<String, String> data) {
-        try {
-            Thread.sleep(new Random().nextInt(500));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
+        threadWait(new Random().nextInt(500));
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "signor RaddCasuale",
                         generateCF(System.currentTimeMillis()),
                         NotificationRecipientV23.RecipientTypeEnum.PF,
@@ -710,7 +699,7 @@ public class SharedSteps {
     public void destinatarioSignorCasuale() {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "signor RaddCasuale",
                         generateCF(System.currentTimeMillis()),
                         NotificationRecipientV23.RecipientTypeEnum.PF,
@@ -724,7 +713,7 @@ public class SharedSteps {
     public void destinatarioGherkinAnalogicParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Gherkin Analogic",
                         gherkinAnalogicTaxID,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -736,7 +725,7 @@ public class SharedSteps {
     public void destinatarioGherkinIrreperibileParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Gherkin Irreperibile",
                         gherkinIrreperibileTaxID,
                         NotificationRecipientV23.RecipientTypeEnum.PG,
@@ -745,10 +734,10 @@ public class SharedSteps {
     }
 
     @And("destinatario Cucumber Analogic e:")
-    public void destinatarioCucumberAnalogicParam(Map<String, String> data) {//@Transpose NotificationRecipientV21 recipient
+    public void destinatarioCucumberAnalogicParam(Map<String, String> data) {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(data);
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Cucumber Analogic",
                         cucumberAnalogicTaxID,
                         null,
@@ -760,7 +749,7 @@ public class SharedSteps {
     public void destinatarioCristoforoColombo() {
         NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         addRecipientToNotification(this.notificationRequest,
-                updateNotificationRecipientV23(notificationRecipientV23,
+                updateNotificationRecipient(notificationRecipientV23,
                         "Cristoforo Colombo",
                         "CLMCST42R12D969Z",
                         null,
@@ -780,11 +769,9 @@ public class SharedSteps {
         Assertions.assertDoesNotThrow(() -> Objects.requireNonNull(notificationRequest.getRecipients().get(recipientNumber - 1).getPayments()).get(0));
         String noticeCode = Objects.requireNonNull(Objects.requireNonNull(notificationRequest.getRecipients().get(recipientNumber - 1).getPayments()).get(0).getPagoPa()).getNoticeCode();
         if (recipientName.trim().equalsIgnoreCase("mario cucumber")) {
-            recipient = (recipient.denomination("Mario Cucumber")
-                    .taxId(marioCucumberTaxID));
+            recipient = updateNotificationRecipient(recipient, "Mario Cucumber", marioCucumberTaxID, null, null);
         } else if (recipientName.trim().equalsIgnoreCase("mario gherkin")) {
-            recipient = (recipient.denomination("Mario Gherkin")
-                    .taxId(marioGherkinTaxID));
+            recipient = updateNotificationRecipient(recipient, "Mario Gherkin", marioGherkinTaxID, null, null);
         } else {
             throw new IllegalArgumentException();
         }
@@ -796,9 +783,9 @@ public class SharedSteps {
     public void vieneGenerataUnaNuovaNotificaConUgualeCodiceFiscaleDelCreditoreEUgualeCodiceAvvisoConTaxIdCorretto() {
         String creditorTaxId = Objects.requireNonNull(Objects.requireNonNull(notificationRequest.getRecipients().get(0).getPayments()).get(0).getPagoPa()).getCreditorTaxId();
         String noticeCode = Objects.requireNonNull(Objects.requireNonNull(notificationRequest.getRecipients().get(0).getPayments()).get(0).getPagoPa()).getNoticeCode();
-
+        NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         this.notificationRequest = (dataTableTypeUtil.convertNotificationRequest(new HashMap<>())
-                .addRecipientsItem(dataTableTypeUtil.convertNotificationRecipient(new HashMap<>()).taxId(marioCucumberTaxID)));
+                .addRecipientsItem(updateNotificationRecipient(notificationRecipientV23, null, marioCucumberTaxID, null, null)));
 
         Objects.requireNonNull(Objects.requireNonNull(this.notificationRequest.getRecipients().get(0).getPayments()).get(0).getPagoPa()).setCreditorTaxId(creditorTaxId);
         Objects.requireNonNull(Objects.requireNonNull(this.notificationRequest.getRecipients().get(0).getPayments()).get(0).getPagoPa()).setNoticeCode(noticeCode);
@@ -811,18 +798,6 @@ public class SharedSteps {
         generateNewNotification();
         Objects.requireNonNull(Objects.requireNonNull(this.notificationRequest.getRecipients().get(0).getPayments()).get(0).getPagoPa()).setCreditorTaxId(creditorTaxId);
         Objects.requireNonNull(Objects.requireNonNull(this.notificationRequest.getRecipients().get(0).getPayments()).get(0).getPagoPa()).setNoticeCode(noticeCode);
-    }
-
-    @And("viene configurato noticeCodeAlternative uguale a noticeCode")
-    public void vieneConfiguratoNoticeCodeAlternativeUgualeNoticeCode() {
-        //TODO Controllare...........
-        //this.notificationRequest.getRecipients().get(0).getPayments().get(0).getPagoPa().setNoticeCodeAlternative(this.notificationRequest.getRecipients().get(0).getPayment().getNoticeCode());
-    }
-
-    @And("viene configurato noticeCodeAlternative diversi a noticeCode")
-    public void vieneConfiguratoNoticeCodeAlternativeDiversiNoticeCode() {
-        //TODO Controllare...........
-        // this.notificationRequest.getRecipients().get(0).getPayments().get(0).getPagoPa().setNoticeCodeAlternative(getValue(new HashMap<>(), PAYMENT_NOTICE_CODE_OPTIONAL.key));
     }
 
     @And("viene generata una nuova notifica con uguale paProtocolNumber e idempotenceToken {string}")
@@ -851,83 +826,49 @@ public class SharedSteps {
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED")
     public void laNotificaVieneInviataOk(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotification();
     }
 
+
     @When("la notifica viene inviata tramite api b2b dal {string} con allegato uguale al allegato di pagamento")
     public void laNotificaVieneInviataAllegatiUgualeAlPagamento(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationWithErrorAllegatiUgualiPayment();
     }
 
     @When("verifica che la notifica inviata tramite api b2b dal {string} non diventi ACCEPTED")
     public void laNotificaVieneInviataNoAccept(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationNoAccept();
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si controlla con check rapidi che lo stato diventi ACCEPTED")
     public void laNotificaVieneInviataOkRapidCheck(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationRapidCheck();
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED con la versione {string}")
     public void laNotificaVieneInviataOkVersioning(String paType, String version) {
-        selectPA(paType);
-        switch (version.toLowerCase()) {
-            case "v1" -> {
-                setSenderTaxIdFromPropertiesV1(version);
-                sendNotificationV1();
-            }
-            case "v2" -> {
-                setSenderTaxIdFromPropertiesV2(version);
-                sendNotificationV2();
-            }
-            case "v21" -> {
-                setSenderTaxIdFromPropertiesV21(version);
-                sendNotificationV21();
-            }
-        }
+        configureAndSendNotification(paType, version);
     }
 
     @And("viene effettuato recupero stato della notifica con la V1 dal comune {string}")
-    public void retriveStateNotification(String version, String paType) {
-        selectPA(paType);
+    public void retriveStateNotification(String paType) {
+        selectPaAndSenderTaxId(paType, "V1");
         this.notificationRequestV1= new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequest();
-        setSenderTaxIdFromPropertiesV1("V1");
         searchNotificationV1(Base64Utils.encodeToString(getSentNotification().getIun().getBytes()));
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED {string}")
     public void laNotificaVieneInviataOkV21(String paType,String version) {
-        selectPA(paType);
-        switch (version.toLowerCase()) {
-            case "v1" -> {
-                setSenderTaxIdFromPropertiesV1(version);
-                sendNotificationV1();
-            }
-            case "v2" -> {
-                setSenderTaxIdFromPropertiesV2(version);
-                sendNotificationV2();
-            }
-            case "v21" -> {
-                setSenderTaxIdFromPropertiesV21(version);
-                sendNotificationV21();
-            }
-        }
-
+        configureAndSendNotification(paType, version);
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED per controllo GPD")
     public void laNotificaVieneInviataOkGPD(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationGPD();
     }
 
@@ -962,29 +903,25 @@ public class SharedSteps {
 
     @When("la notifica viene inviata tramite api b2b dal {string} si annulla prima che lo stato diventi REFUSED")
     public void laNotificaVieneInviataRefusedAndCancelled(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationAndCancelPreRefused();
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED e successivamente annullata")
     public void laNotificaVieneInviataOkAndCancelled(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationAndCancel();
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED e successivamente annullata {string}")
     public void laNotificaVieneInviataOkAndCancelledV2(String paType,String versione) {
-        selectPA(paType);
-        setSenderTaxIdFromPropertiesV2(versione);
+        selectPaAndSenderTaxId(paType, versione);
         sendNotificationAndCancelV2();
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataRefused(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationRefused();
     }
 
@@ -993,8 +930,7 @@ public class SharedSteps {
      */
     @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi HTTP_ERROR")
     public void laNotificaVieneInviataHttpError(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationWithError();
         Assertions.assertNotNull(this.notificationError);
         Assertions.assertEquals(400, this.notificationError.getStatusCode().value());
@@ -1002,64 +938,55 @@ public class SharedSteps {
 
     @When("la notifica viene inviata tramite api b2b senza preload allegato dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataSenzaPreloadAllegato(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationWithErrorNotFindAllegato(false);
     }
 
     @When("la notifica viene inviata tramite api b2b effettuando la preload ma senza caricare nessun allegato dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataTramiteApiBBEffettuandoLaPreloadMaSenzaCaricareNessunAllegatoDalESiAttendeCheLoStatoDiventiREFUSED(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationWithErrorNotFindAllegato(true);
     }
 
     @When("la notifica viene inviata tramite api b2b effettuando la preload ma senza caricare nessun allegato json dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataTramiteApiBBEffettuandoLaPreloadMaSenzaCaricareNessunAllegatoJsonDalESiAttendeCheLoStatoDiventiREFUSED(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationWithErrorNotFindAllegatoJson();
     }
 
     @When("la notifica viene inviata tramite api b2b con sha256 differente dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataConShaDifferente(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationWithErrorSha();
     }
 
     @When("la notifica viene inviata tramite api b2b con sha256 Json differente dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataConShaJsonDifferente(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationWithErrorShaJson();
     }
 
     @When("la notifica viene inviata tramite api b2b con estensione errata dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataConEstensioneErrata(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationWithWrongExtension();
     }
 
     @When("la notifica viene inviata tramite api b2b oversize preload allegato dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataPreloadAllegatoOverSize(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationRefusedOverSizeAllegato();
     }
 
     @When("la notifica viene inviata tramite api b2b injection preload allegato dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataPreloadAllegatoInjection(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationRefusedInjectionAllegato();
     }
 
     @When("la notifica viene inviata tramite api b2b over 15 preload allegato dal {string} e si attende che lo stato diventi REFUSED")
     public void laNotificaVieneInviataPreloadAllegatoOver15(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(paType, null);
         sendNotificationRefusedOver15Allegato();
     }
 
@@ -1070,21 +997,13 @@ public class SharedSteps {
 
     @When("la notifica viene inviata dal {string}")
     public void laNotificaVieneInviataDallaPA(String pa) {
-        selectPA(pa);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(pa, null);
         sendNotificationWithError();
     }
 
     @When("la notifica viene inviata dal {string} dalla {string}")
     public void laNotificaVieneInviataDallaPAV1(String pa, String versione) {
-        selectPA(pa);
-        if(versione.equalsIgnoreCase("V1")){
-            setSenderTaxIdFromPropertiesV1(versione);
-        }else if(versione.equalsIgnoreCase("V2")){
-            setSenderTaxIdFromPropertiesV2(versione);
-        }else if(versione.equalsIgnoreCase("V21")){
-            setSenderTaxIdFromPropertiesV21(versione);
-        }
+        selectPaAndSenderTaxId(pa, versione);
         sendNotificationWithError();
     }
 
@@ -1095,8 +1014,7 @@ public class SharedSteps {
 
     @When("la notifica viene inviata tramite api b2b senza preload allegato dal {string}")
     public void laNotificaVieneInviatatramiteApiB2bSenzaPreloadAllegato(String pa) {
-        selectPA(pa);
-        setSenderTaxIdFromProperties();
+        selectPaAndSenderTaxId(pa, null);
         sendNotificationWithErrorNotFindAllegato(false);
     }
 
@@ -1182,12 +1100,12 @@ public class SharedSteps {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
 
-                threadSleepWait(wait);
+                threadWait(wait);
 
                 notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
             });
 
-            threadSleepWait(wait);
+            threadWait(wait);
 
             Assertions.assertNotNull(notificationResponseComplete);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1202,12 +1120,12 @@ public class SharedSteps {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
 
-                threadSleepWait(wait);
+                threadWait(wait);
 
                 notificationResponseComplete = b2bUtils.waitForRequestNoAcceptation(newNotificationResponse);
             });
 
-            threadSleepWait(wait);
+            threadWait(wait);
 
             Assertions.assertNull(notificationResponseComplete);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1223,13 +1141,13 @@ public class SharedSteps {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
 
-                threadSleepWait(wait);
+                threadWait(wait);
 
                 notificationResponseComplete = b2bUtils.waitForRequestAcceptationShort(newNotificationResponse);
             });
 
 
-            threadSleepWait(wait);
+            threadWait(wait);
 
             Assertions.assertNotNull(notificationResponseComplete);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1255,7 +1173,7 @@ public class SharedSteps {
             });
             rifiutata = b2bUtils.waitForRequestNotRefused(newNotificationResponse);
 
-            threadSleepWait(wait);
+            threadWait(wait);
 
             Assertions.assertFalse(rifiutata);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1264,16 +1182,6 @@ public class SharedSteps {
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }
-
-    private static void threadSleepWait(int wait) {
-        try {
-            Thread.sleep(wait);
-        } catch (InterruptedException e) {
-            logger.error("Thread.sleep error retry");
-            throw new RuntimeException(e);
-        }
-    }
-
 
     private void searchNotificationV1(String requestId) {
         try {
@@ -1291,12 +1199,12 @@ public class SharedSteps {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponseV1 = b2bUtils.uploadNotificationV1(notificationRequestV1);
 
-                threadSleep();
+                threadWait(getWorkFlowWait());
 
                 notificationResponseCompleteV1 = b2bUtils.waitForRequestAcceptationV1(newNotificationResponseV1);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
             Assertions.assertNotNull(notificationResponseCompleteV1);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1311,12 +1219,12 @@ public class SharedSteps {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponseV2 = b2bUtils.uploadNotificationV2(notificationRequestV2);
 
-                threadSleep();
+                threadWait(getWorkFlowWait());
 
                 notificationResponseCompleteV2 = b2bUtils.waitForRequestAcceptationV2(newNotificationResponseV2);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
             Assertions.assertNotNull(notificationResponseCompleteV2);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1326,27 +1234,18 @@ public class SharedSteps {
         }
     }
 
-    private void threadSleep() {
-        try {
-            Thread.sleep(getWorkFlowWait());
-        } catch (InterruptedException e) {
-            logger.error("Thread.sleep error retry");
-            throw new RuntimeException(e);
-        }
-    }
-
     private void sendNotificationV21() {
         try {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponseV21 = b2bUtils.uploadNotificationV21(notificationRequestV21);
 
-                threadSleep();
+                threadWait(getWorkFlowWait());
 
                 notificationResponseCompleteV21 = b2bUtils.waitForRequestAcceptationV21(newNotificationResponseV21);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
 
             Assertions.assertNotNull(notificationResponseCompleteV21);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1416,7 +1315,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
 
             Assertions.assertNotNull(errorCode);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1434,7 +1333,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
 
             Assertions.assertNotNull(errorCode);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1452,7 +1351,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
 
             Assertions.assertNotNull(errorCode);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1480,7 +1379,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
 
             Assertions.assertNotNull(errorCode);
 
@@ -1500,7 +1399,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
 
             Assertions.assertNotNull(errorCode);
 
@@ -1519,7 +1418,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
             Assertions.assertNotNull(errorCode);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1536,7 +1435,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
             Assertions.assertNotNull(errorCode);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1553,7 +1452,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
             Assertions.assertNotNull(errorCode);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1570,7 +1469,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadSleep();
+            threadWait(getWorkFlowWait());
 
             Assertions.assertNotNull(errorCode);
 
@@ -1584,13 +1483,15 @@ public class SharedSteps {
 
     private void generateNewNotification() {
         assert this.notificationRequest.getRecipients().get(0).getPayments() != null;
+        NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
         this.notificationRequest = (dataTableTypeUtil.convertNotificationRequest(new HashMap<>())
                 .subject(notificationRequest.getSubject())
                 .senderDenomination(notificationRequest.getSenderDenomination())
-                .addRecipientsItem(dataTableTypeUtil.convertNotificationRecipient(new HashMap<>())
-                        .denomination(notificationRequest.getRecipients().get(0).getDenomination())
-                        .taxId(notificationRequest.getRecipients().get(0).getTaxId())
-                        .recipientType(notificationRequest.getRecipients().get(0).getRecipientType())));
+                .addRecipientsItem(updateNotificationRecipient(notificationRecipientV23,
+                        notificationRequest.getRecipients().get(0).getDenomination(),
+                        notificationRequest.getRecipients().get(0).getTaxId(),
+                        notificationRequest.getRecipients().get(0).getRecipientType(),
+                        null)));
     }
 
     public HttpStatusCodeException consumeNotificationError() {
@@ -1599,21 +1500,33 @@ public class SharedSteps {
         return value;
     }
 
-    public void setSenderTaxIdFromProperties() {
+    public void setSenderTaxIdFromProperties(String version) {
         switch (settedPa) {
             case "Comune_1" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxId);
-                setGrup(SettableApiKey.ApiKeyType.MVP_1);
+                if(version != null){
+                    setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
+                }else{
+                    setGrup(SettableApiKey.ApiKeyType.MVP_1);
+                }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
             }
             case "Comune_2" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdTwo);
-                setGrup(SettableApiKey.ApiKeyType.MVP_2);
+                if(version != null){
+                    setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
+                }else{
+                    setGrup(SettableApiKey.ApiKeyType.MVP_2);
+                }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
             }
             case "Comune_Multi" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdGa);
-                setGrup(SettableApiKey.ApiKeyType.GA);
+                if(version != null){
+                    setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
+                }else{
+                    setGrup(SettableApiKey.ApiKeyType.GA);
+                }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
             }
             case "Comune_Son" -> {
@@ -1625,66 +1538,6 @@ public class SharedSteps {
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdROOT);
                 setGrup(SettableApiKey.ApiKeyType.ROOT);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.ROOT;
-            }
-        }
-    }
-
-    public void setSenderTaxIdFromPropertiesV1(String version) {
-        switch (settedPa) {
-            case "Comune_1" -> {
-                this.notificationRequestV1.setSenderTaxId(this.senderTaxId);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
-                apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
-            }
-            case "Comune_2" -> {
-                this.notificationRequestV1.setSenderTaxId(this.senderTaxIdTwo);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
-                apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
-            }
-            case "Comune_Multi" -> {
-                this.notificationRequestV1.setSenderTaxId(this.senderTaxIdGa);
-                setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
-                apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
-            }
-        }
-    }
-
-    public void setSenderTaxIdFromPropertiesV2(String version) {
-        switch (settedPa) {
-            case "Comune_1" -> {
-                this.notificationRequestV2.setSenderTaxId(this.senderTaxId);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
-                apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
-            }
-            case "Comune_2" -> {
-                this.notificationRequestV2.setSenderTaxId(this.senderTaxIdTwo);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
-                apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
-            }
-            case "Comune_Multi" -> {
-                this.notificationRequestV2.setSenderTaxId(this.senderTaxIdGa);
-                setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
-                apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
-            }
-        }
-    }
-
-    public void setSenderTaxIdFromPropertiesV21(String version) {
-        switch (settedPa) {
-            case "Comune_1" -> {
-                this.notificationRequestV21.setSenderTaxId(this.senderTaxId);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
-                apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
-            }
-            case "Comune_2" -> {
-                this.notificationRequestV21.setSenderTaxId(this.senderTaxIdTwo);
-                setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
-                apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
-            }
-            case "Comune_Multi" -> {
-                this.notificationRequestV21.setSenderTaxId(this.senderTaxIdGa);
-                setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
-                apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
             }
         }
     }
@@ -1918,26 +1771,14 @@ public class SharedSteps {
     }
 
     public List<HashMap<String, String>> getGroupsByPa(String settedPa) {
-        List<HashMap<String, String>> hashMapsList;
-        switch (settedPa) {
-            case "Comune_1":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.MVP_1);
-                break;
-            case "Comune_2":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.MVP_2);
-                break;
-            case "Comune_Multi":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.GA);
-                break;
-            case "Comune_Son":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.SON);
-                break;
-            case "Comune_Root":
-                hashMapsList = this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.ROOT);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
+        List<HashMap<String, String>> hashMapsList = switch (settedPa) {
+            case "Comune_1" -> this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.MVP_1);
+            case "Comune_2" -> this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.MVP_2);
+            case "Comune_Multi" -> this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.GA);
+            case "Comune_Son" -> this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.SON);
+            case "Comune_Root" -> this.pnExternalServiceClient.paGroupInfo(SettableApiKey.ApiKeyType.ROOT);
+            default -> throw new IllegalArgumentException();
+        };
         Assertions.assertNotNull(hashMapsList);
         Assertions.assertFalse(hashMapsList.isEmpty());
         return hashMapsList;
@@ -2094,5 +1935,81 @@ public class SharedSteps {
             DatiPagamento.add(Objects.requireNonNull(Objects.requireNonNull(getSentNotification().getRecipients().get(destinatario).getPayments()).get(pagamento).getPagoPa()).getNoticeCode());
         }
         return DatiPagamento;
+    }
+
+    private static void threadWait(int wait) {
+        try {
+            await().atMost(wait, TimeUnit.MILLISECONDS);
+        } catch (RuntimeException exception) {
+            logger.error("await error exeption");
+            throw exception;
+        }
+    }
+
+    private void configureAndSendNotification(String paType, String version) {
+        selectPaAndSenderTaxId(paType, version);
+        switch (version.toLowerCase()) {
+            case "v1" -> sendNotificationV1();
+            case "v2" -> sendNotificationV2();
+            case "v21" -> sendNotificationV21();
+        }
+    }
+
+    private void selectPaAndSenderTaxId(String paType, String version) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties(version);
+    }
+
+    private <T, V, K> T updateNotificationRecipient(T notificationRecipient, String denomination, String taxId, V recipientType, K digitalDomicile) {
+
+        if (notificationRecipient instanceof NotificationRecipientV23){
+            ((NotificationRecipientV23) notificationRecipient)
+                    .denomination(denomination).taxId(taxId);
+            if(recipientType != null) {
+                ((NotificationRecipientV23) notificationRecipient)
+                        .recipientType((NotificationRecipientV23.RecipientTypeEnum) recipientType);
+            }
+            if(digitalDomicile != null) {
+                ((NotificationRecipientV23) notificationRecipient)
+                        .digitalDomicile((NotificationDigitalAddress) digitalDomicile);
+            }
+        }
+        if (notificationRecipient instanceof it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationRecipient){
+            ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationRecipient) notificationRecipient)
+                    .denomination(denomination).taxId(taxId);
+            if(recipientType != null) {
+                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationRecipient) notificationRecipient)
+                        .recipientType((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationRecipient.RecipientTypeEnum) recipientType);
+            }
+            if(digitalDomicile != null) {
+                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationRecipient) notificationRecipient)
+                        .digitalDomicile((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationDigitalAddress) digitalDomicile);
+            }
+        }
+        if (notificationRecipient instanceof it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient){
+            ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient) notificationRecipient)
+                    .denomination(denomination).taxId(taxId);
+            if(recipientType != null) {
+                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient) notificationRecipient)
+                        .recipientType((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient.RecipientTypeEnum) recipientType);
+            }
+            if(digitalDomicile != null) {
+                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationRecipient) notificationRecipient)
+                        .digitalDomicile((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationDigitalAddress) digitalDomicile);
+            }
+        }
+        if (notificationRecipient instanceof it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient){
+            ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient) notificationRecipient)
+                    .denomination(denomination).taxId(taxId);
+            if(recipientType != null) {
+                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient) notificationRecipient)
+                        .recipientType((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient.RecipientTypeEnum) recipientType);
+            }
+            if(digitalDomicile != null) {
+                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient) notificationRecipient)
+                        .digitalDomicile((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationDigitalAddress) digitalDomicile);
+            }
+        }
+        return notificationRecipient;
     }
 }
