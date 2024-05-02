@@ -29,12 +29,11 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.m
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.cucumber.utils.*;
+import lombok.extern.slf4j.Slf4j;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +43,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -58,6 +56,7 @@ import static org.awaitility.Awaitility.await;
 
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class SharedSteps {
     @Getter
     private final IPnPaB2bClient b2bClient;
@@ -227,7 +226,6 @@ public class SharedSteps {
             .addModule(new JavaTimeModule())
             .build();
     private static final Integer WAITING_GPD = 2000;
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     public static final String DEFAULT_PA = "Comune_1";
     private static final String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
     // private String gherkinSrltaxId = "CCRMCT06A03A433H";
@@ -278,7 +276,7 @@ public class SharedSteps {
     }
     @BeforeAll
     public static void before_all() {
-        logger.debug("SHARED_GLUE START");
+        log.debug("SHARED_GLUE START");
         //only for class activation
     }
 
@@ -383,7 +381,7 @@ public class SharedSteps {
                 for (int i = 0; i < 33; i++) {
                     threadWait(getWorkFlowWait());
                     fullSentNotificationV23 = b2bClient.getSentNotification(fullSentNotificationV23.getIun());
-                    logger.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV23.getTimeline());
+                    log.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV23.getTimeline());
                     timelineElementV23 = fullSentNotificationV23.getTimeline().stream().filter(elem -> Objects.requireNonNull(elem.getCategory()).equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE)).findAny().orElse(null);
                     if (timelineElementV23 != null) {
                         break;
@@ -415,15 +413,15 @@ public class SharedSteps {
 
         Assertions.assertTrue(completed);
         Assertions.assertEquals(sentNotifications.size(), numberOfNotification);
-        logger.debug("NOTIFICATION LIST: {}", sentNotifications);
-        logger.debug("IUN: ");
+        log.debug("NOTIFICATION LIST: {}", sentNotifications);
+        log.debug("IUN: ");
         for (FullSentNotificationV23 notificationV23 : sentNotifications) {
-            logger.info(notificationV23.getIun());
+            log.info(notificationV23.getIun());
         }
-        logger.debug("End IUN list");
+        log.debug("End IUN list");
         //la prima notifica viene inserita
         this.notificationResponseComplete = sentNotifications.poll();
-        logger.debug("notificationResponseComplete: {}", this.notificationResponseComplete);
+        log.debug("notificationResponseComplete: {}", this.notificationResponseComplete);
     }
 
     @And("destinatario Mario Cucumber")
@@ -1043,11 +1041,11 @@ public class SharedSteps {
             List<LegalAndUnverifiedDigitalAddress> legalAddressByRecipient = this.iPnWebUserAttributesClient.getLegalAddressByRecipient();
             if (legalAddressByRecipient != null && !legalAddressByRecipient.isEmpty()) {
                 this.iPnWebUserAttributesClient.deleteRecipientLegalAddress("default", LegalChannelType.PEC);
-                logger.info("PEC FOUND AND DELETED");
+                log.info("PEC FOUND AND DELETED");
             }
         } catch (HttpStatusCodeException httpStatusCodeException) {
             if (httpStatusCodeException.getStatusCode().is4xxClientError()) {
-                logger.info("PEC NOT FOUND");
+                log.info("PEC NOT FOUND");
             } else {
                 throw httpStatusCodeException;
             }
@@ -1381,7 +1379,7 @@ public class SharedSteps {
 
             threadWait(getWorkFlowWait());
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1401,7 +1399,7 @@ public class SharedSteps {
 
             threadWait(getWorkFlowWait());
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1419,7 +1417,7 @@ public class SharedSteps {
             });
 
             threadWait(getWorkFlowWait());
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1436,7 +1434,8 @@ public class SharedSteps {
             });
 
             threadWait(getWorkFlowWait());
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
+
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1453,7 +1452,8 @@ public class SharedSteps {
             });
 
             threadWait(getWorkFlowWait());
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
+
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1471,7 +1471,7 @@ public class SharedSteps {
 
             threadWait(getWorkFlowWait());
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1941,7 +1941,7 @@ public class SharedSteps {
         try {
             await().atMost(wait, TimeUnit.MILLISECONDS);
         } catch (RuntimeException exception) {
-            logger.error("await error exeption");
+            log.error("await error exeption");
             throw exception;
         }
     }
