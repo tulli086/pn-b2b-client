@@ -19,7 +19,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                       |
       | details_recIndex        | 0                                                                                                                                                                                              |
       | details_sentAttemptMade | 0                                                                                                                                                                                              |
-      | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -67,7 +67,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                        |
       | details_recIndex        | 0                                                                                                                                                                                                               |
       | details_sentAttemptMade | 0                                                                                                                                                                                                               |
-      | details_physicalAddress | {"address": "VIA@OK-PERSONAABILITATA_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-PERSONAABILITATA_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -115,7 +115,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                             |
       | details_recIndex        | 0                                                                                                                                                                                                    |
       | details_sentAttemptMade | 0                                                                                                                                                                                                    |
-      | details_physicalAddress | {"address": "VIA@OK-RETRY_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-RETRY_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che il numero di elementi di timeline "SEND_ANALOG_PROGRESS" sia di 2
       | details | NOT_NULL |
@@ -167,7 +167,7 @@ Feature: Workflow analogico
       | loadTimeline            | true                                                                                                                                                                                           |
       | details                 | NOT_NULL                                                                                                                                                                                       |
       | details_recIndex        | 0                                                                                                                                                                                              |
-      | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "COSENZA", "municipalityDetails": ", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
       | details_analogCost      | 196                                                                                                                                                                                            |
     And viene verificato che l'elemento di timeline "DIGITAL_DELIVERY_CREATION_REQUEST" esista
       | details | NOT_NULL |
@@ -189,7 +189,7 @@ Feature: Workflow analogico
     And viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" esista
       | details                 | NOT_NULL                                                                                                                                                                                       |
       | details_recIndex        | 0                                                                                                                                                                                              |
-      | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK_RS", "municipality": "COSENZA", "municipalityDetails": ", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
 
   @e2e
@@ -227,7 +227,7 @@ Feature: Workflow analogico
       | loadTimeline | true |
       | details | NOT_NULL |
       | details_recIndex | 0 |
-      | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": ", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
       | details_analogCost | 133 |
     And viene verificato che l'elemento di timeline "DIGITAL_FAILURE_WORKFLOW" esista
       | details | NOT_NULL |
@@ -245,7 +245,7 @@ Feature: Workflow analogico
     And viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" esista
       | details | NOT_NULL |
       | details_recIndex | 0 |
-      | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
       | loadTimeline | true |
       | details | NOT_NULL |
@@ -279,7 +279,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                      |
       | details_recIndex        | 0                                                                                                                                                                                                             |
       | details_sentAttemptMade | 0                                                                                                                                                                                                             |
-      | details_physicalAddress | {"address": "VIA@OK-GIACENZA-LTE10_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-GIACENZA-LTE10_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -326,7 +326,56 @@ Feature: Workflow analogico
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_physicalAddress | {"address": "VIA@OK-GIACENZA-GT10_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-GIACENZA-GT10_890", "municipality": "MILANO", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | CON080 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG011B |
+      | legalFactsIds | [{"category": "ANALOG_DELIVERY"}] |
+      | details_attachments | [{"documentType": "23L"}] |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_FEEDBACK" esista
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | PNAG012 |
+    And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_deliveryDetailCode | RECAG005C |
+    And viene verificato che l'elemento di timeline "REFINEMENT" esista
+      | loadTimeline | true |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+    And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_SUCCESS_WORKFLOW"
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+
+  @e2e @ignore @giacenza890Complex
+  Scenario: [E2E-WF-ANALOG-8_1] Invio notifica con percorso analogico. Successo giacenza gt 890 (OK-Giacenza-gt10_890).
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+      | physicalCommunication | REGISTERED_LETTER_890           |
+    And destinatario
+      | denomination | Leonardo da Vinci |
+      | taxId | DVNLRD52D15M059P |
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@OK-Giacenza-gt10_890 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene verificato che l'elemento di timeline "ANALOG_SUCCESS_WORKFLOW" esista
+      | loadTimeline | true |
+      | details | NOT_NULL |
+      | details_recIndex | 0 |
+      | details_sentAttemptMade | 0 |
+      | details_physicalAddress | {"address": "VIA@OK-GIACENZA-GT10_890", "municipality": "MILANO", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
       | details_recIndex | 0 |
@@ -376,7 +425,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                         |
       | details_recIndex        | 0                                                                                                                                                                                                                |
       | details_sentAttemptMade | 0                                                                                                                                                                                                                |
-      | details_physicalAddress | {"address": "VIA@OK-GIACENZA-GT10-23L_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-GIACENZA-GT10-23L_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -411,7 +460,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
 
-  @e2e
+  @e2e @giacenza890Complex
   Scenario: [E2E-WF-ANALOG-10] Invio notifica con percorso analogico. Successo giacenza 890 gt 23L(OK-GiacenzaDelegato-gt10-23L_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -478,7 +527,7 @@ Feature: Workflow analogico
     And controlla che il timestamp di "SEND_ANALOG_DOMICILE" sia dopo quello di invio e di attesa di lettura del messaggio di cortesia
       | NULL | NULL |
 
-  @e2e
+  @e2e  @giacenza890Complex
   Scenario: [E2E-WF-ANALOG-12] Invio notifica con percorso analogico. Successo giacenza delegato 890 (OK-GiacenzaDelegato-lte10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -496,7 +545,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                               |
       | details_recIndex        | 0                                                                                                                                                                                                                      |
       | details_sentAttemptMade | 0                                                                                                                                                                                                                      |
-      | details_physicalAddress | {"address": "VIA@OK-GIACENZADELEGATO-LTE10_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-GIACENZADELEGATO-LTE10_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -526,7 +575,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
 
-  @e2e
+  @e2e @giacenza890Complex
   Scenario: [E2E-WF-ANALOG-13] Invio notifica con percorso analogico. Successo giacenza delegato gt 23L 890 (OK-GiacenzaDelegato-gt10-23L_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -544,7 +593,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                                 |
       | details_recIndex        | 0                                                                                                                                                                                                                        |
       | details_sentAttemptMade | 0                                                                                                                                                                                                                        |
-      | details_physicalAddress | {"address": "VIA@OK-GIACENZADELEGATO-GT10-23L_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-GIACENZADELEGATO-GT10-23L_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -579,7 +628,7 @@ Feature: Workflow analogico
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
 
-  @e2e @ignore
+  @e2e @ignore @giacenza890Complex
   Scenario: [E2E-WF-ANALOG-14] Invio notifica con percorso analogico. Fallimento giacenza gt 890 (FAIL-Giacenza-gt10_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -621,7 +670,7 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG007C |
 
-  @e2e @ignore
+  @e2e @ignore @giacenza890Complex
   Scenario: [E2E-WF-ANALOG-15] Invio notifica con percorso analogico. Fallimento giacenza gt 23L 890 (FAIL-Giacenza-gt10-23L_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -663,7 +712,7 @@ Feature: Workflow analogico
       | details_sentAttemptMade | 0 |
       | details_deliveryDetailCode | RECAG007C |
 
-  @e2e @ignore
+  @e2e @ignore @giacenza890Complex
   Scenario: [E2E-WF-ANALOG-16] Invio notifica con percorso analogico. Compiuta giacenza 890 (OK-CompiutaGiacenza_890).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -682,7 +731,7 @@ Feature: Workflow analogico
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_physicalAddress | {"address": "VIA@OK-COMPIUTA-GIACENZA_890", "municipality": "MILANO", "municipalityDetails": "MILANO", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-COMPIUTA-GIACENZA_890", "municipality": "MILANO", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
       | details_recIndex | 0 |
@@ -743,7 +792,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                               |
       | details_recIndex        | 0                                                                                                                                                                                                      |
       | details_sentAttemptMade | 0                                                                                                                                                                                                      |
-      | details_physicalAddress | {"address": "VIA@OK-GIACENZA_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-GIACENZA_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -799,7 +848,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                      |
       | details_recIndex        | 0                                                                                                                                                                                             |
       | details_sentAttemptMade | 0                                                                                                                                                                                             |
-      | details_physicalAddress | {"address": "VIA@OK_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -839,7 +888,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                        |
       | details_recIndex        | 0                                                                                                                                                                                                               |
       | details_sentAttemptMade | 0                                                                                                                                                                                                               |
-      | details_physicalAddress | {"address": "VIA@FAIL-GIACENZA-LTE10_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@FAIL-GIACENZA-LTE10_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -893,7 +942,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                  |
       | details_recIndex        | 0                                                                                                                                                                                                         |
       | details_sentAttemptMade | 0                                                                                                                                                                                                         |
-      | details_physicalAddress | {"address": "VIA@FAIL-GIACENZA_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@FAIL-GIACENZA_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -950,7 +999,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                        |
       | details_recIndex        | 0                                                                                                                                                                                               |
       | details_sentAttemptMade | 0                                                                                                                                                                                               |
-      | details_physicalAddress | {"address": "VIA@FAIL_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@FAIL_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -990,7 +1039,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                     |
       | details_recIndex        | 0                                                                                                                                                                                                            |
       | details_sentAttemptMade | 0                                                                                                                                                                                                            |
-      | details_physicalAddress | {"address": "VIA@OK-GIACENZA-GT10_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-GIACENZA-GT10_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -1029,7 +1078,7 @@ Feature: Workflow analogico
       | details | NOT_NULL |
       | details_recIndex | 0 |
 
-  @e2e @ignore
+  @e2e
   Scenario: [E2E-WF-ANALOG-23] Invio notifica con percorso analogico. Fallimento giacenza gt 10 AR (FAIL-Giacenza-gt10_AR).
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -1049,7 +1098,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                       |
       | details_recIndex        | 0                                                                                                                                                                                                              |
       | details_sentAttemptMade | 0                                                                                                                                                                                                              |
-      | details_physicalAddress | {"address": "VIA@FAIL-GIACENZA-GT10_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@FAIL-GIACENZA-GT10_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -1072,7 +1121,7 @@ Feature: Workflow analogico
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRN004C |
+      | details_deliveryDetailCode | PNRN012 |
     And viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | details | NOT_NULL |
       | details_recIndex | 0 |
@@ -1108,7 +1157,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                          |
       | details_recIndex        | 0                                                                                                                                                                                                                 |
       | details_sentAttemptMade | 0                                                                                                                                                                                                                 |
-      | details_physicalAddress | {"address": "VIA@FAIL-COMPIUTAGIACENZA_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@FAIL-COMPIUTAGIACENZA_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -1131,7 +1180,7 @@ Feature: Workflow analogico
       | details | NOT_NULL |
       | details_recIndex | 0 |
       | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRN005C |
+      | details_deliveryDetailCode | PNRN012 |
     And viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
       | details | NOT_NULL |
       | details_recIndex | 0 |
@@ -1167,7 +1216,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                            |
       | details_recIndex        | 0                                                                                                                                                                                                   |
       | details_sentAttemptMade | 0                                                                                                                                                                                                   |
-      | details_physicalAddress | {"address": "VIA@OK-RETRY_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-RETRY_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che il numero di elementi di timeline "SEND_ANALOG_PROGRESS" sia di 2
       | details | NOT_NULL |
@@ -1227,7 +1276,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                        |
       | details_recIndex        | 0                                                                                                                                                                                                               |
       | details_sentAttemptMade | 0                                                                                                                                                                                                               |
-      | details_physicalAddress | {"address": "VIA@OK-NONRENDICONTABILE_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-NONRENDICONTABILE_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che il numero di elementi di timeline "SEND_ANALOG_PROGRESS" sia di 2
       | details | NOT_NULL |
@@ -1286,7 +1335,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                         |
       | details_recIndex        | 0                                                                                                                                                                                                                |
       | details_sentAttemptMade | 0                                                                                                                                                                                                                |
-      | details_physicalAddress | {"address": "VIA@OK-CAUSAFORZAMAGGIORE_AR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-CAUSAFORZAMAGGIORE_AR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -1345,7 +1394,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                         |
       | details_recIndex        | 0                                                                                                                                                                                                |
       | details_sentAttemptMade | 0                                                                                                                                                                                                |
-      | details_physicalAddress | {"address": "VIA@FAIL_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@FAIL_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -1596,7 +1645,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                         |
       | details_recIndex        | 0                                                                                                                                                                                                                |
       | details_sentAttemptMade | 0                                                                                                                                                                                                                |
-      | details_physicalAddress | {"address": "VIA@OK-NONRENDICONTABILE_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-NONRENDICONTABILE_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che il numero di elementi di timeline "SEND_ANALOG_PROGRESS" sia di 2
       | details | NOT_NULL |
@@ -1655,7 +1704,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                                          |
       | details_recIndex        | 0                                                                                                                                                                                                                 |
       | details_sentAttemptMade | 0                                                                                                                                                                                                                 |
-      | details_physicalAddress | {"address": "VIA@OK-CAUSAFORZAMAGGIORE_890", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK-CAUSAFORZAMAGGIORE_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -1712,7 +1761,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                       |
       | details_recIndex        | 0                                                                                                                                                                                              |
       | details_sentAttemptMade | 0                                                                                                                                                                                              |
-      | details_physicalAddress | {"address": "VIA@OK_RIS", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK_RIS", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
       | details_analogCost      | 133                                                                                                                                                                                            |
 
     And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
@@ -1739,7 +1788,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                         |
       | details_recIndex        | 0                                                                                                                                                                                                |
       | details_sentAttemptMade | 0                                                                                                                                                                                                |
-      | details_physicalAddress | {"address": "VIA@FAIL_RIS", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@FAIL_RIS", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
       | details_analogCost      | 133                                                                                                                                                                                              |
 
     And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
@@ -1778,7 +1827,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                        |
       | details_recIndex        | 0                                                                                                                                                                                               |
       | details_sentAttemptMade | 0                                                                                                                                                                                               |
-      | details_physicalAddress | {"address": "VIA@OK_RIR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK_RIR", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
@@ -1833,7 +1882,7 @@ Feature: Workflow analogico
       | details                 | NOT_NULL                                                                                                                                                                                         |
       | details_recIndex        | 0                                                                                                                                                                                                |
       | details_sentAttemptMade | 0                                                                                                                                                                                                |
-      | details_physicalAddress | {"address": "VIA@FAIL_RIR", "municipality": "COSENZA", "municipalityDetails": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@FAIL_RIR", "municipality": "COSENZA", "municipalityDetails": " "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And viene verificato che l'elemento di timeline "SEND_ANALOG_PROGRESS" esista
       | details | NOT_NULL |
