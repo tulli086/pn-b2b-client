@@ -897,6 +897,13 @@ public class SharedSteps {
         sendNotification();
     }
 
+    @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED short")
+    public void laNotificaVieneInviataOkShort(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationRapid(1000);
+    }
+
     @When("la notifica viene inviata tramite api b2b dal {string} con allegato uguale al allegato di pagamento")
     public void laNotificaVieneInviataAllegatiUgualeAlPagamento(String paType) {
         selectPA(paType);
@@ -1154,6 +1161,7 @@ public class SharedSteps {
         sendNotification(getWorkFlowWait());
     }
 
+
     private void sendNotificationNoAccept() {
         sendNotificationNoAccept(getWorkFlowWait());
     }
@@ -1161,7 +1169,6 @@ public class SharedSteps {
     private void sendNotificationRapidCheck() {
         sendNotificationRapid(100);
     }
-
 
     private void sendNotification(int wait) {
         try {
@@ -2087,6 +2094,7 @@ public class SharedSteps {
         if (timingConfigs.getWorkflowWaitMillis() == null) return workFlowWaitDefault + secureRandom.nextInt(WORKFLOW_WAIT_UPPER_BOUND);
         return timingConfigs.getWorkflowWaitMillis() + secureRandom.nextInt(WORKFLOW_WAIT_UPPER_BOUND);
     }
+
 
     public Integer getWait() {
         if (timingConfigs.getWaitMillis() == null) return waitDefault + secureRandom.nextInt(WAIT_UPPER_BOUND);
