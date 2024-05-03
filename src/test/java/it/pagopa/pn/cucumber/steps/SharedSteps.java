@@ -1506,28 +1506,31 @@ public class SharedSteps {
     public void setSenderTaxIdFromProperties(String version) {
         switch (settedPa) {
             case "Comune_1" -> {
-                this.notificationRequest.setSenderTaxId(this.senderTaxId);
                 if(version != null){
+                    setSenderTaxIdVersioning(version);
                     setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
                 }else{
+                    this.notificationRequest.setSenderTaxId(this.senderTaxId);
                     setGrup(SettableApiKey.ApiKeyType.MVP_1);
                 }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
             }
             case "Comune_2" -> {
-                this.notificationRequest.setSenderTaxId(this.senderTaxIdTwo);
                 if(version != null){
+                    setSenderTaxIdVersioning(version);
                     setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
                 }else{
+                    this.notificationRequest.setSenderTaxId(this.senderTaxId);
                     setGrup(SettableApiKey.ApiKeyType.MVP_2);
                 }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
             }
             case "Comune_Multi" -> {
-                this.notificationRequest.setSenderTaxId(this.senderTaxIdGa);
                 if(version != null){
+                    setSenderTaxIdVersioning(version);
                     setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
                 }else{
+                    this.notificationRequest.setSenderTaxId(this.senderTaxIdGa);
                     setGrup(SettableApiKey.ApiKeyType.GA);
                 }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
@@ -1542,6 +1545,17 @@ public class SharedSteps {
                 setGrup(SettableApiKey.ApiKeyType.ROOT);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.ROOT;
             }
+        }
+    }
+
+    private void setSenderTaxIdVersioning(String version) {
+        switch(version.toLowerCase()){
+
+            case "v1" -> this.notificationRequestV1.setSenderTaxId(this.senderTaxId);
+            case "v2" -> this.notificationRequestV2.setSenderTaxId(this.senderTaxId);
+            case "v21" -> this.notificationRequestV21.setSenderTaxId(this.senderTaxId);
+            case "v23" -> this.notificationRequest.setSenderTaxId(this.senderTaxId);
+
         }
     }
 
