@@ -1175,4 +1175,45 @@ public class InvioNotificheB2bSteps {
 
         });
     }
+
+    @Given("si richiama checkout con dati:")
+    public void siRichiamaCheckoutConDati(Map<String, String> dataCheckout) {
+        PaymentRequest requestCheckout = creationPaymentRequest(dataCheckout);
+     try {
+            PaymentResponse responseCheckout = pnPaymentInfoClientImpl.checkoutCart(requestCheckout);
+            Assertions.assertNotNull(responseCheckout);
+            Assertions.assertNotNull(responseCheckout.getCheckoutUrl());
+            log.info("response checkout: {}", responseCheckout);
+        } catch (AssertionFailedError error) {
+            throw error;
+        }
+    }
+
+    @Given("si richiama checkout con restituzione errore")
+    public void siRichiamaCheckoutConDatiConErrore(Map<String, String> dataCheckout) {
+        PaymentRequest requestCheckout = creationPaymentRequest(dataCheckout);
+        try {
+            PaymentResponse responseCheckout = pnPaymentInfoClientImpl.checkoutCart(requestCheckout);
+        } catch (HttpStatusCodeException e) {
+            this.sharedSteps.setNotificationError(e);
+        }
+    }
+
+    public PaymentRequest creationPaymentRequest(Map<String, String> dataCheckout) {
+        sharedSteps.setNoticeCodeCheckout(dataCheckout.get("noticeCode"));
+
+        PaymentRequest requestCheckout = new PaymentRequest()
+                .paymentNotice(new PaymentNotice()
+                        .noticeNumber(sharedSteps.getNoticeCodeCheckout())
+                        .fiscalCode(dataCheckout.get("fiscalCode"))
+                        .amount(dataCheckout.get("amount") != null ? Integer.parseInt(dataCheckout.get("amount")) : null)
+                        .description(dataCheckout.get("description"))
+                        .companyName(dataCheckout.get("companyName")))
+                .returnUrl(dataCheckout.get("returnUrl"));
+        return requestCheckout;
+    }
+
+
+
+
 }

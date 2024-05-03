@@ -189,6 +189,8 @@ public class SharedSteps {
 
     private final PnPollingFactory pollingFactory;
 
+    private String noticeCodeCheckout;
+
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
@@ -2417,6 +2419,11 @@ public class SharedSteps {
         }
     }
 
+    @And("viene assengato il noticeCode della posizione debitoria alla notifica")
+    public void vieneAssegnatoIlNoticeCodeDellaPosizioneDebitoria(){
+        this.notificationRequest.getRecipients().get(0).getPayments().get(0).getPagoPa().setNoticeCode(getNoticeCodeCheckout());
+    }
+
     public String getIunVersionamento() {
         if (getSentNotificationV1() != null) {
             return getSentNotificationV1().getIun();
@@ -2516,5 +2523,12 @@ public class SharedSteps {
 
     public void setProgressResponseElement(ProgressResponseElement progressResponseElement) {
         this.progressResponseElement = progressResponseElement;
+    }
+
+    public void setNoticeCodeCheckout(String noticeCode) {
+        this.noticeCodeCheckout = noticeCode!=null ? noticeCode : generateRandomNumber();
+    }
+    public String getNoticeCodeCheckout() {
+        return this.noticeCodeCheckout;
     }
 }
