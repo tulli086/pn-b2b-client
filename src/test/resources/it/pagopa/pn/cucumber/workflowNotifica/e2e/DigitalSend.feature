@@ -501,7 +501,7 @@ Feature: Digital send e2e
       | details                 | NOT_NULL                                                                                                                                                                                        |
       | details_recIndex        | 0                                                                                                                                                                                               |
       | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "COSENZA", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost      | 196                                                                                                                                                                                             |
+      | details_analogCost      | 194                                                                                                                                                                                             |
     And viene verificato che l'elemento di timeline "DIGITAL_DELIVERY_CREATION_REQUEST" esista
       | details | NOT_NULL |
       | details_recIndex | 0 |
@@ -516,7 +516,7 @@ And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGI
     And viene verificato che l'elemento di timeline "PREPARE_SIMPLE_REGISTERED_LETTER" esista
       | details                 | NOT_NULL                                                                                                                                                                                       |
       | details_recIndex        | 0                                                                                                                                                                                              |
-      | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_physicalAddress | {"address": "VIA@OK_890", "municipality": "COSENZA",  "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
 
     And si attende che sia presente il perfezionamento per decorrenza termini
       | details | NOT_NULL |
