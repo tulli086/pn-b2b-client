@@ -123,7 +123,7 @@ Feature: avanzamento notifiche b2b persona fisica pagamento
     Then viene verificato data corretta del destinatario 0
 
 
-    Scenario: [B2B-PA-PAY_CHECKOUT_1] creazione posizione debitoria per pagamento da checkout con noticeCode con restituzione errore 422
+    Scenario: [B2B-PA-PAY_CHECKOUT_1] creazione posizione debitoria per pagamento da checkout con noticeCode con restituzione errore 422 - PN-9128
     Given si richiama checkout con restituzione errore
       | fiscalCode  | 77777777777                              |
       | noticeCode  | 302000194484209682                       |
