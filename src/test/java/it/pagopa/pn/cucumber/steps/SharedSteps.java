@@ -901,7 +901,7 @@ public class SharedSteps {
     public void laNotificaVieneInviataOkShort(String paType) {
         selectPA(paType);
         setSenderTaxIdFromProperties();
-        sendNotificationRapid(1000);
+        sendNotificationExtraRapid(1000);
     }
 
     @When("la notifica viene inviata tramite api b2b dal {string} con allegato uguale al allegato di pagamento")
@@ -1264,6 +1264,37 @@ public class SharedSteps {
         }
     }
 
+    private void sendNotificationExtraRapid(int wait) {
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                notificationCreationDate = OffsetDateTime.now();
+                newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
+
+                try {
+                    Thread.sleep(wait);
+                } catch (InterruptedException e) {
+                    log.error("Thread.sleep error retry");
+                    throw new RuntimeException(e);
+                }
+
+                notificationResponseComplete = b2bUtils.waitForRequestAcceptationExtraRapid(newNotificationResponse);
+            });
+
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {
+                log.error("Thread.sleep error retry");
+                throw new RuntimeException(e);
+            }
+            Assertions.assertNotNull(notificationResponseComplete);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
     private void sendNotificationRapidCancellPreRefused(int wait) {
         boolean rifiutata = false;
         try {
@@ -1415,7 +1446,7 @@ public class SharedSteps {
     }
 
     private void sendNotificationAndCancel() {
-        sendNotificationRapid(1000);
+        sendNotificationExtraRapid(1000);
 
         Assertions.assertDoesNotThrow(() -> {
             RequestStatus resp = Assertions.assertDoesNotThrow(() ->

@@ -509,6 +509,14 @@ public class PnPaB2bUtils {
         return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification() ;
     }
 
+    public FullSentNotificationV23 waitForRequestAcceptationExtraRapid( NewNotificationResponse response) {
+
+        PnPollingServiceValidationStatusAcceptedExtraRapidV23 validationStatusAcceptedExtraRapidV23 = (PnPollingServiceValidationStatusAcceptedExtraRapidV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_ACCEPTATION_EXTRA_RAPID_V23);
+        PnPollingResponseV23 pollingResponseV23 = validationStatusAcceptedExtraRapidV23.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
+
+        return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification() ;
+    }
+
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification searchForRequestV1( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse response) {
 
         log.info("Request status for " + response.getNotificationRequestId() );
