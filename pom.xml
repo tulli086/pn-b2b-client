@@ -1440,7 +1440,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
-                                <apiPackage>it.pagopa.pn.client.b2.generated.openapi.clients.externalchannels.api.mock.pec</apiPackage>
+                                <apiPackage>it.pagopa.pn.client.b2b.generated.openapi.clients.externalchannels.api.mock.pec</apiPackage>
                                 <modelPackage>it.pagopa.pn.client.b2b.generated.openapi.clients.externalchannels.model.mock.pec</modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <annotationLibrary>none</annotationLibrary>
@@ -1452,8 +1452,8 @@
                                     @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
                                 </additionalModelTypeAnnotations>
                             </configOptions>
-                            <apiPackage>it.pagopa.pn.client.b2.generated.openapi.clients.externalchannels.api.mock.pec</apiPackage>
-                            <modelPackage>it.pagopa.pn.client.b2.generated.openapi.clients.externalchannels.model.mock.pec</modelPackage>
+                            <apiPackage>it.pagopa.pn.client.b2b.generated.openapi.clients.externalchannels.api.mock.pec</apiPackage>
+                            <modelPackage>it.pagopa.pn.client.b2b.generated.openapi.clients.externalchannels.model.mock.pec</modelPackage>
                         </configuration>
                     </execution>
 
