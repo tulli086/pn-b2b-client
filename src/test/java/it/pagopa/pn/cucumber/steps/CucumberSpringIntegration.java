@@ -70,7 +70,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceValidationStatusNoAcceptedV23.class,
         PnPollingServiceValidationStatusAcceptedShortV23.class,
         PnPollingServiceWebhookV20.class,
-        PnPollingServiceWebhookV23.class
+        PnPollingServiceWebhookV23.class,
+        PnExternalChannelsServiceClientImpl.class
 })
 @EnableScheduling
 @EnableConfigurationProperties
