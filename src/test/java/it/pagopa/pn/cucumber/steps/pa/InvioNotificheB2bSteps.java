@@ -30,7 +30,11 @@ import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+
+import static org.awaitility.Awaitility.await;
 
 
 @Slf4j
@@ -67,74 +71,36 @@ public class InvioNotificheB2bSteps {
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN")
     public void notificationCanBeRetrievedWithIUN() {
         AtomicReference<FullSentNotificationV23> notificationByIun = new AtomicReference<>();
-        try {
-            if (sharedSteps.getSentNotification()!= null) {
-
-                Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotification().getIun()))
-                );
-                Assertions.assertNotNull(notificationByIun.get());
-            } else if (sharedSteps.getSentNotificationV1()!= null) {
-                Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotificationV1().getIun()))
-                );
-                Assertions.assertNotNull(notificationByIun.get());
-            } else if (sharedSteps.getSentNotificationV2()!= null) {
-                Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIun(sharedSteps.getSentNotificationV2().getIun()))
-                );
-                Assertions.assertNotNull(notificationByIun.get());
-            }else {
-                Assertions.assertNotNull(notificationByIun.get());
-            }
-        } catch (AssertionFailedError assertionFailedError) {
-            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
-        }
+        notificationCanBeRetrievedWithIUN(notificationByIun, b2bUtils::getNotificationByIun);
     }
 
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1")
     public void notificationCanBeRetrievedWithIUNV1() {
         AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification> notificationByIun = new AtomicReference<>();
-        try {
-            if(sharedSteps.getSentNotificationV1()!= null) {
-                Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV1().getIun()))
-                );
-            }else if(sharedSteps.getSentNotificationV2()!= null){
-                Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV2().getIun()))
-                );
-            }else if(sharedSteps.getSentNotification()!= null){
-                Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotification().getIun()))
-                );
-            }else {
-                Assertions.assertNotNull(notificationByIun.get());
-            }
-
-            Assertions.assertNotNull(notificationByIun.get());
-        } catch (AssertionFailedError assertionFailedError) {
-            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
-        }
+        notificationCanBeRetrievedWithIUN(notificationByIun, b2bUtils::getNotificationByIunV1);
     }
 
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V20")
     public void notificationCanBeRetrievedWithIUNV2() {
         AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.FullSentNotificationV20> notificationByIun = new AtomicReference<>();
+        notificationCanBeRetrievedWithIUN(notificationByIun, b2bUtils::getNotificationByIunV2);
+    }
+
+    private <T> void notificationCanBeRetrievedWithIUN(AtomicReference<T> notificationByIun, Function<String, T> getNotificationByIunFunction) {
         try {
-            if(sharedSteps.getSentNotificationV1()!= null) {
+            if (sharedSteps.getSentNotification() != null) {
                 Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV1().getIun()))
+                        notificationByIun.set(getNotificationByIunFunction.apply(sharedSteps.getSentNotification().getIun()))
                 );
-            }else if(sharedSteps.getSentNotificationV2()!= null){
+            } else if (sharedSteps.getSentNotificationV1() != null) {
                 Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotificationV2().getIun()))
+                        notificationByIun.set(getNotificationByIunFunction.apply(sharedSteps.getSentNotificationV1().getIun()))
                 );
-            }else if(sharedSteps.getSentNotification()!= null){
+            } else if (sharedSteps.getSentNotificationV2() != null) {
                 Assertions.assertDoesNotThrow(() ->
-                        notificationByIun.set(b2bUtils.getNotificationByIunV2(sharedSteps.getSentNotification().getIun()))
+                        notificationByIun.set(getNotificationByIunFunction.apply(sharedSteps.getSentNotificationV2().getIun()))
                 );
-            }else {
+            } else {
                 Assertions.assertNotNull(notificationByIun.get());
             }
             Assertions.assertNotNull(notificationByIun.get());
@@ -158,7 +124,6 @@ public class InvioNotificheB2bSteps {
     public void notificationCanBeRetrievedWithIUNV1Error() {
         AtomicReference<it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification> notificationByIun = new AtomicReference<>();
         try {
-            //notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotificationV1().getIun()));
             notificationByIun.set(b2bUtils.getNotificationByIunV1(sharedSteps.getSentNotification().getIun()));
         } catch (HttpStatusCodeException e) {
             sharedSteps.setNotificationError(e);
@@ -206,9 +171,10 @@ public class InvioNotificheB2bSteps {
 
 
                 try {
-                    Thread.sleep(sharedSteps.getWorkFlowWait());
-                } catch (InterruptedException exc) {
-                    throw new RuntimeException(exc);
+                    await().atMost(sharedSteps.getWorkFlowWait(), TimeUnit.MILLISECONDS);
+                } catch (RuntimeException exc) {
+                    log.error(exc.getMessage());
+                    throw exc;
                 }
             }
 
@@ -230,30 +196,21 @@ public class InvioNotificheB2bSteps {
     public void notificationCanBeRetrievedWithStatusByWebPA(String status, String paType) {
         sharedSteps.selectPA(paType);
 
-        it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus notificationInternalStatus;
-        switch (status) {
-            case "ACCEPTED":
-                notificationInternalStatus = it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.ACCEPTED;
-                break;
-            case "DELIVERING":
-                notificationInternalStatus = it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.DELIVERING;
-                break;
-            case "DELIVERED":
-                notificationInternalStatus = it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.DELIVERED;
-                break;
-            case "CANCELLED":
-                notificationInternalStatus = it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.CANCELLED;
-                break;
-            case "EFFECTIVE_DATE":
-                notificationInternalStatus = it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.EFFECTIVE_DATE;
-                break;
-            case "REFUSED":
-                notificationInternalStatus = it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.REFUSED;
-                break;
-
-            default:
-                throw new IllegalArgumentException();
-        }
+        it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus notificationInternalStatus = switch (status) {
+            case "ACCEPTED" ->
+                    it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.ACCEPTED;
+            case "DELIVERING" ->
+                    it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.DELIVERING;
+            case "DELIVERED" ->
+                    it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.DELIVERED;
+            case "CANCELLED" ->
+                    it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.CANCELLED;
+            case "EFFECTIVE_DATE" ->
+                    it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.EFFECTIVE_DATE;
+            case "REFUSED" ->
+                    it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.REFUSED;
+            default -> throw new IllegalArgumentException();
+        };
 
         AtomicReference<NotificationSearchResponse> notificationByIun = new AtomicReference<>();
         try {
@@ -312,102 +269,77 @@ public class InvioNotificheB2bSteps {
 
     @Then("viene effettuato un controllo sulla durata della retention di {string} precaricato")
     public void retentionCheckPreload(String documentType) {
-        String key = "";
-        switch (documentType) {
-            case "ATTO OPPONIBILE":
-                key = this.notificationDocumentPreload.getRef().getKey();
-                break;
-            case "PAGOPA":
-                key = this.notificationPaymentAttachmentPreload.getRef().getKey();
-                break;
-            case "F24_STANDARD":
-                key = this.notificationPaymentAttachmentPreload.getRef().getKey();
-                break;
-            case "F24":
-                key = this.notificationMetadataAttachment.getRef().getKey();
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
+        String key = switch (documentType) {
+            case "ATTO OPPONIBILE" -> this.notificationDocumentPreload.getRef().getKey();
+            case "PAGOPA" -> this.notificationPaymentAttachmentPreload.getRef().getKey();
+            case "F24" -> this.notificationMetadataAttachment.getRef().getKey();
+            default -> throw new IllegalArgumentException();
+        };
         Assertions.assertTrue(checkRetetion(key, retentionTimePreLoad));
     }
 
 
     @And("viene effettuato un controllo sulla durata della retention di {string}")
     public void retentionCheckLoad(String documentType) {
-        String key = "";
-        switch (documentType) {
-            case "ATTO OPPONIBILE":
-                key = sharedSteps.getSentNotification().getDocuments().get(0).getRef().getKey();
-                break;
-            case "PAGOPA":
-                key = sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getPagoPa().getAttachment().getRef().getKey();
-                break;
-            case "F24_STANDARD":
-                key = sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getF24().getMetadataAttachment().getRef().getKey();
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
+        String key = switch (documentType) {
+            case "ATTO OPPONIBILE" -> sharedSteps.getSentNotification().getDocuments().get(0).getRef().getKey();
+            case "PAGOPA" ->
+                    sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getPagoPa().getAttachment().getRef().getKey();
+            case "F24" ->
+                    sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getF24().getMetadataAttachment().getRef().getKey();
+            default -> throw new IllegalArgumentException();
+        };
         Assertions.assertTrue(checkRetetion(key, retentionTimeLoad));
     }
 
     @And("viene effettuato un controllo sulla durata della retention di {string} per l'elemento di timeline {string}")
-    public void retentionCheckLoadForTimelineElement(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws InterruptedException {
+    public void retentionCheckLoadForTimelineElement(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws RuntimeException {
         TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
-        switch (documentType) {
-            case "ATTACHMENTS":
-                for (int i = 0; i < sharedSteps.getSentNotification().getDocuments().size(); i++) {
-                    String key = sharedSteps.getSentNotification().getDocuments().get(i).getRef().getKey();
-                    Assertions.assertTrue(checkRetention(key, retentionTimeLoad, timelineElement.getTimestamp()));
-                }
-                break;
-            default:
-                throw new IllegalArgumentException();
+        if (documentType.equals("ATTACHMENTS")) {
+            for (int i = 0; i < sharedSteps.getSentNotification().getDocuments().size(); i++) {
+                String key = sharedSteps.getSentNotification().getDocuments().get(i).getRef().getKey();
+                Assertions.assertTrue(checkRetention(key, retentionTimeLoad, timelineElement.getTimestamp()));
+            }
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 
     @And("viene effettuato un controllo sulla durata della retention del F24 di {string} per l'elemento di timeline {string}")
-    public void retentionCheckLoadForTimelineElementF24(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws InterruptedException {
+    public void retentionCheckLoadForTimelineElementF24(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws RuntimeException {
         TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
-        switch (documentType) {
-            case "ATTACHMENTS":
-                for (int i = 0; i < sharedSteps.getSentNotification().getRecipients().get(0).getPayments().size(); i++) {
-                    String key = sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(i).getF24().getMetadataAttachment().getRef().getKey();
-                    Assertions.assertTrue(checkRetention(key, retentionTimeLoad, timelineElement.getTimestamp()));
-                }
-                break;
-            default:
-                throw new IllegalArgumentException();
+        if (documentType.equals("ATTACHMENTS")) {
+            for (int i = 0; i < sharedSteps.getSentNotification().getRecipients().get(0).getPayments().size(); i++) {
+                String key = sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(i).getF24().getMetadataAttachment().getRef().getKey();
+                Assertions.assertTrue(checkRetention(key, retentionTimeLoad, timelineElement.getTimestamp()));
+            }
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 
     @And("viene effettuato un controllo sul type zip attachment di {string} per l'elemento di timeline {string} con DOC {string}")
-    public void attachmentCheckLoadForTimelineElementF24(String documentType, String timelineEventCategory, String doc, @Transpose DataTest dataFromTest) throws InterruptedException {
+    public void attachmentCheckLoadForTimelineElementF24(String documentType, String timelineEventCategory, String doc, @Transpose DataTest dataFromTest) throws RuntimeException {
         TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
-        switch (documentType) {
-            case "ATTACHMENTS":
-                Assertions.assertNotNull(timelineElement.getDetails().getAttachments());
-                Assertions.assertTrue(doc.equalsIgnoreCase(timelineElement.getDetails().getAttachments().get(0).getDocumentType()));
-                Assertions.assertTrue(timelineElement.getDetails().getAttachments().get(0).getUrl().contains(".zip"));
-                break;
-            default:
-                throw new IllegalArgumentException();
+        if (documentType.equals("ATTACHMENTS")) {
+            Assertions.assertNotNull(timelineElement.getDetails().getAttachments());
+            Assertions.assertTrue(doc.equalsIgnoreCase(timelineElement.getDetails().getAttachments().get(0).getDocumentType()));
+            Assertions.assertTrue(timelineElement.getDetails().getAttachments().get(0).getUrl().contains(".zip"));
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 
     @And("viene effettuato un controllo sulla durata della retention del PAGOPA di {string} per l'elemento di timeline {string}")
-    public void retentionCheckLoadForTimelineElementPAGOPA(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws InterruptedException {
+    public void retentionCheckLoadForTimelineElementPAGOPA(String documentType, String timelineEventCategory, @Transpose DataTest dataFromTest) throws RuntimeException {
         TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory, dataFromTest);
-        switch (documentType) {
-            case "ATTACHMENTS":
-                for (int i = 0; i < sharedSteps.getSentNotification().getRecipients().get(0).getPayments().size(); i++) {
-                    String key = sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(i).getPagoPa().getAttachment().getRef().getKey();
-                    Assertions.assertTrue(checkRetention(key, retentionTimeLoad, timelineElement.getTimestamp()));
-                }
-                break;
-            default:
-                throw new IllegalArgumentException();
+        if (documentType.equals("ATTACHMENTS")) {
+            for (int i = 0; i < sharedSteps.getSentNotification().getRecipients().get(0).getPayments().size(); i++) {
+                String key = sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(i).getPagoPa().getAttachment().getRef().getKey();
+                Assertions.assertTrue(checkRetention(key, retentionTimeLoad, timelineElement.getTimestamp()));
+            }
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 
@@ -421,36 +353,44 @@ public class InvioNotificheB2bSteps {
     }
 
     @When("si tenta il recupero della notifica dal sistema tramite codice IUN {string}")
-    public void retrievalAttemptedIUN(String IUN) {
-        try {
-            b2bUtils.getNotificationByIun(IUN);
-        } catch (HttpStatusCodeException e) {
-            this.sharedSteps.setNotificationError(e);
-        }
+    public void retrievalAttemptedIUN(String iun) {
+        getNotificationByIun(iun);
     }
 
     @When("si tenta il recupero della notifica dal sistema")
     public void retrievalAttemptedIUN() {
+        getNotificationByIun("");
+    }
+
+    private void getNotificationByIun(String iun) {
         try {
-            b2bUtils.getNotificationByIun(new String(Base64Utils.decodeFromString(this.sharedSteps.getNewNotificationResponse().getNotificationRequestId())));
+            if (!iun.isEmpty()){
+                b2bUtils.getNotificationByIun(iun);
+            }else {
+                b2bUtils.getNotificationByIun(new String(Base64Utils.decodeFromString(this.sharedSteps.getNewNotificationResponse().getNotificationRequestId())));
+            }
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
     }
 
     @When("si tenta il recupero della notifica dal sistema tramite codice IUN {string} con la V1")
-    public void retrievalAttemptedIUNConV1(String IUN) {
-        try {
-            b2bUtils.getNotificationByIunV1(IUN);
-        } catch (HttpStatusCodeException e) {
-            this.sharedSteps.setNotificationError(e);
-        }
+    public void retrievalAttemptedIUNConV1(String iun) {
+        getNotificationByIunVersioning(iun, "V1");
     }
 
     @When("si tenta il recupero della notifica dal sistema tramite codice IUN {string} con la V2")
-    public void retrievalAttemptedIUNConV2(String IUN) {
+    public void retrievalAttemptedIUNConV2(String iun) {
+        getNotificationByIunVersioning(iun, "V2");
+    }
+
+    private void getNotificationByIunVersioning(String iun, String version) {
         try {
-            b2bUtils.getNotificationByIunV2(IUN);
+            if (version.equalsIgnoreCase("V1")){
+                b2bUtils.getNotificationByIunV1(iun);
+            }else if (version.equalsIgnoreCase("V2")){
+                b2bUtils.getNotificationByIunV2(iun);
+            }
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
@@ -458,220 +398,54 @@ public class InvioNotificheB2bSteps {
 
     @When("viene richiesto il download del documento {string}")
     public void documentDownload(String type) {
-        String downloadType;
-        switch (type) {
-            case "NOTIFICA":
-                List<NotificationDocument> documents = sharedSteps.getSentNotification().getDocuments();
-                this.downloadResponse = b2bClient
-                        .getSentNotificationDocument(sharedSteps.getSentNotification().getIun(), Integer.parseInt(documents.get(0).getDocIdx()));
-
-                byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                        b2bUtils.downloadFile(this.downloadResponse.getUrl()));
-                this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
-                return;
-            case "PAGOPA":
-                downloadType = "PAGOPA";
-                break;
-            case "F24_FLAT":
-                downloadType = "F24_FLAT";
-                break;
-            case "F24_STANDARD":
-                downloadType = "F24_STANDARD";
-                break;
-            case "F24":
-                downloadType = "F24";
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-        try{
-            this.downloadResponse = b2bClient
-                    .getSentNotificationAttachment(sharedSteps.getIunVersionamento(), 0, downloadType,0);
-
-            if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
-                try {
-                    Thread.sleep(downloadResponse.getRetryAfter()*3);
-                    this.downloadResponse = b2bClient
-                            .getSentNotificationAttachment(sharedSteps.getIunVersionamento(), 0, downloadType,0);
-
-                } catch (InterruptedException exc) {
-                    throw new RuntimeException(exc);
-                }
-            }
-
-            if(!"F24".equalsIgnoreCase(downloadType)) {
-                byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                        b2bUtils.downloadFile(this.downloadResponse.getUrl()));
-                this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
-            }else if("F24".equalsIgnoreCase(downloadType)) {
-                byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                        b2bUtils.downloadFile(this.downloadResponse.getUrl()));
-                this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
-
-            }
-        } catch (HttpStatusCodeException e) {
-            this.sharedSteps.setNotificationError(e);
-        }
+        getDownloadFile(type, sharedSteps.getIunVersionamento(), 0);
     }
-
 
     @When("viene richiesto il download del documento {string} per il destinatario {int}")
     public void documentDownloadPerDestinatario(String type, int destinatario) {
-        String downloadType;
-        switch (type) {
-            case "NOTIFICA":
-                List<NotificationDocument> documents = sharedSteps.getSentNotification().getDocuments();
-                this.downloadResponse = b2bClient
-                        .getSentNotificationDocument(sharedSteps.getSentNotification().getIun(), Integer.parseInt(documents.get(0).getDocIdx()));
-
-                byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                        b2bUtils.downloadFile(this.downloadResponse.getUrl()));
-                this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
-                return;
-            case "PAGOPA":
-                downloadType = "PAGOPA";
-                break;
-            case "F24_FLAT":
-                downloadType = "F24_FLAT";
-                break;
-            case "F24_STANDARD":
-                downloadType = "F24";
-                break;
-            case "F24":
-                downloadType = "F24";
-                break;
-
-            default:
-                throw new IllegalArgumentException();
-        }
-
-        try{
-        this.downloadResponse = b2bClient
-                .getSentNotificationAttachment(sharedSteps.getSentNotification().getIun(), destinatario, downloadType,0);
-        if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
-            try {
-                Thread.sleep(downloadResponse.getRetryAfter()*3);
-                this.downloadResponse = b2bClient
-                        .getSentNotificationAttachment(sharedSteps.getSentNotification().getIun(), destinatario, downloadType,0);
-
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-        }
-        if(!"F24".equalsIgnoreCase(downloadType)) {
-            byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                    b2bUtils.downloadFile(this.downloadResponse.getUrl()));
-            this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
-        }else if("F24".equalsIgnoreCase(downloadType)) {
-            byte[] bytes = Assertions.assertDoesNotThrow(() ->
-                    b2bUtils.downloadFile(this.downloadResponse.getUrl()));
-            this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
-        }
-        } catch (HttpStatusCodeException e) {
-            this.sharedSteps.setNotificationError(e);
-        }
+        getDownloadFile(type, sharedSteps.getSentNotification().getIun(), destinatario);
     }
 
     @When("viene richiesto il download del documento {string} inesistente")
     public void documentAbsentDownload(String type) {
-        String downloadType;
-        switch (type) {
-            case "NOTIFICA":
-                List<NotificationDocument> documents = sharedSteps.getSentNotification().getDocuments();
-                try {
-                    this.downloadResponse = b2bClient
-                            .getSentNotificationDocument(sharedSteps.getSentNotification().getIun(), documents.size());
-                } catch (HttpStatusCodeException e) {
-                    this.sharedSteps.setNotificationError(e);
-                }
-                return;
-            case "PAGOPA":
-                downloadType = "PAGOPA";
-                break;
-            case "F24_FLAT":
-                downloadType = "F24_FLAT";
-                break;
-            case "F24_STANDARD":
-                downloadType = "F24";
-                break;
-            case "F24":
-                downloadType = "F24";
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-        try {
-            this.downloadResponse = b2bClient
-                    .getSentNotificationAttachment(sharedSteps.getSentNotification().getIun(), 100, downloadType,0);
-
-
-            if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
-                try {
-                    Thread.sleep(downloadResponse.getRetryAfter()*3);
-                    this.downloadResponse = b2bClient
-                            .getSentNotificationAttachment(sharedSteps.getSentNotification().getIun(), 0, downloadType,0);
-
-                } catch (InterruptedException exc) {
-                    throw new RuntimeException(exc);
-                }
-            }
-
-        } catch (HttpStatusCodeException e) {
-            this.sharedSteps.setNotificationError(e);
-        }
+        getDownloadFile(type, sharedSteps.getSentNotification().getIun(), 0);
     }
-
-
 
     @When("viene richiesto il download del documento {string} inesistente per il destinatario {int}")
     public void documentAbsentDownload(String type, int destinatario) {
-        String downloadType;
-        switch (type) {
-            case "NOTIFICA":
-                List<NotificationDocument> documents = sharedSteps.getSentNotification().getDocuments();
-                try {
-                    this.downloadResponse = b2bClient
-                            .getSentNotificationDocument(sharedSteps.getSentNotification().getIun(), documents.size());
-                } catch (HttpStatusCodeException e) {
-                    this.sharedSteps.setNotificationError(e);
-                }
-                return;
-            case "PAGOPA":
-                downloadType = "PAGOPA";
-                break;
-            case "F24_FLAT":
-                downloadType = "F24_FLAT";
-                break;
-            case "F24_STANDARD":
-                downloadType = "F24";
-                break;
-            case "F24":
-                downloadType = "F24";
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
+        getDownloadFile(type, sharedSteps.getSentNotification().getIun(), destinatario);
+    }
+
+    private void getDownloadFile(String type, String iun, int destinatario) {
         try {
-            this.downloadResponse = b2bClient
-                    .getSentNotificationAttachment(sharedSteps.getSentNotification().getIun(), destinatario, downloadType,0);
 
-
-            if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
-                try {
-                    Thread.sleep(downloadResponse.getRetryAfter()*3);
-                    this.downloadResponse = b2bClient
-                            .getSentNotificationAttachment(sharedSteps.getSentNotification().getIun(), 0, downloadType,0);
-
-                } catch (InterruptedException exc) {
-                    throw new RuntimeException(exc);
-                }
+            if (type.equalsIgnoreCase("NOTIFICA")) {
+                List<NotificationDocument> documents = sharedSteps.getSentNotification().getDocuments();
+                this.downloadResponse = b2bClient
+                        .getSentNotificationDocument(sharedSteps.getSentNotification().getIun(), Integer.parseInt(documents.get(0).getDocIdx()));
             }
 
+            this.downloadResponse = b2bClient
+                    .getSentNotificationAttachment(iun, destinatario, type, 0);
+
+            if (downloadResponse != null && downloadResponse.getRetryAfter() != null && downloadResponse.getRetryAfter() > 0) {
+                try {
+                    await().atMost(downloadResponse.getRetryAfter() * 3L, TimeUnit.MILLISECONDS);
+                    this.downloadResponse = b2bClient
+                            .getSentNotificationAttachment(iun, destinatario, type, 0);
+
+                } catch (RuntimeException exc) {
+                    log.error(exc.getMessage());
+                    throw exc;
+                }
+            }
+            byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                    b2bUtils.downloadFile(this.downloadResponse.getUrl()));
+            this.sha256DocumentDownload = b2bUtils.computeSha256(new ByteArrayInputStream(bytes));
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
     }
-
 
     @Then("il download si conclude correttamente")
     public void correctlyDownload() {
@@ -706,47 +480,45 @@ public class InvioNotificheB2bSteps {
 
     @Then("si verifica la corretta acquisizione della notifica")
     public void correctAcquisitionNotification() {
-        Assertions.assertDoesNotThrow(() -> b2bUtils.verifyNotification(sharedSteps.getSentNotification()));
+        Assertions.assertDoesNotThrow(() -> verifyNotificationVersioning("V23"));
     }
 
     @Then("si verifica la corretta acquisizione della notifica V1")
 
     public void correctAcquisitionNotificationV1() {
-        Assertions.assertDoesNotThrow(() -> b2bUtils.verifyNotificationV1(sharedSteps.getSentNotificationV1()));
+        Assertions.assertDoesNotThrow(() -> verifyNotificationVersioning("V1"));
     }
 
     @Then("si verifica la corretta acquisizione della notifica V2")
     public void correctAcquisitionNotificationV2() {
-        Assertions.assertDoesNotThrow(() -> b2bUtils.verifyNotificationV2(sharedSteps.getSentNotificationV2()));
+        Assertions.assertDoesNotThrow(() -> verifyNotificationVersioning("V2"));
     }
 
     @Then("si verifica lo scarto dell' acquisizione della notifica V1")
     public void correctAcquisitionNotificationV1Error() {
-        try {
-
-            b2bUtils.verifyNotificationV1(sharedSteps.getSentNotificationV1());
-
-        } catch (AssertionFailedError | IOException assertionFailedError) {
-
-            log.info("Errore di acquisizione notifica");
-        }
+        verifyNotificationVersioning("V1");
 
     }
 
     @Then("si verifica lo scarto dell' acquisizione della notifica V2")
     public void correctAcquisitionNotificationV2Error() {
+        verifyNotificationVersioning("V2");
+    }
+
+    private void verifyNotificationVersioning(String version) {
         try {
-
-            b2bUtils.verifyNotificationV2(sharedSteps.getSentNotificationV2());
-
+            if (version.equalsIgnoreCase("V1")){
+                b2bUtils.verifyNotificationV1(sharedSteps.getSentNotificationV1());
+            }else if (version.equalsIgnoreCase("V2")){
+                b2bUtils.verifyNotificationV2(sharedSteps.getSentNotificationV2());
+            }else if (version.equalsIgnoreCase("V23")){
+                b2bUtils.verifyNotification(sharedSteps.getSentNotification());
+            }
         } catch (AssertionFailedError | IOException assertionFailedError) {
 
             log.info("Errore di acquisizione notifica");
         }
-
     }
-
-
 
     @Then("si verifica la corretta acquisizione della notifica con verifica sha256 del allegato di pagamento {string}")
     public void correctAcquisitionNotificationVerifySha256AllegatiPagamento(String attachname) {
@@ -794,8 +566,8 @@ public class InvioNotificheB2bSteps {
         return retentionTime == between;
     }
 
-    private boolean checkRetention(String fileKey, Integer retentionTime, OffsetDateTime timelineEventTimestamp) throws InterruptedException {
-        Thread.sleep(2 * 60 * 1000);
+    private boolean checkRetention(String fileKey, Integer retentionTime, OffsetDateTime timelineEventTimestamp) throws RuntimeException {
+        await().atMost(120000, TimeUnit.MILLISECONDS);
         PnExternalServiceClientImpl.SafeStorageResponse safeStorageResponse = safeStorageClient.safeStorageInfo(fileKey);
         System.out.println(safeStorageResponse);
         OffsetDateTime timelineEventDate = timelineEventTimestamp.atZoneSameInstant(ZoneId.of("Z")).toOffsetDateTime();
@@ -895,21 +667,7 @@ public class InvioNotificheB2bSteps {
                 null,
                 "Test Automation Desk",
                 "https://api.uat.platform.pagopa.it");
-        try {
-            Assertions.assertDoesNotThrow(() -> {
-                paymentResponse= pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
-                log.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
-            });
-            Assertions.assertNotNull(paymentResponse);
-
-            System.out.println(paymentResponse);
-        } catch (AssertionFailedError assertionFailedError) {
-
-            String message = assertionFailedError.getMessage() +
-                    "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
-
-        }
+        verifyCheckoutCart(paymentRequest, null);
     }
 
     @Then("verifica stato pagamento di una notifica creditorTaxID {string} noticeCode {string} con errore {string}")
@@ -958,7 +716,7 @@ public class InvioNotificheB2bSteps {
 
             });
             Assertions.assertNotNull(paymentInfoResponse);
-            log.info("Informazioni sullo stato del Pagamento: " + paymentInfoResponse.toString());
+            log.info("Informazioni sullo stato del Pagamento: " + paymentInfoResponse);
            Assertions.assertTrue(status.equalsIgnoreCase(paymentInfoResponse.get(0).getStatus().getValue()));
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -979,21 +737,7 @@ public class InvioNotificheB2bSteps {
                 "Test Automation Desk",
                 "https://api.uat.platform.pagopa.it");
 
-        try {
-            Assertions.assertDoesNotThrow(() -> {
-                paymentResponse= pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
-
-            });
-            Assertions.assertNotNull(paymentResponse);
-            log.info("Risposta recupero posizione debitoria: " + paymentResponse.toString());
-            Assertions.assertTrue(codiceErrore.equalsIgnoreCase(paymentResponse.getCheckoutUrl()));
-
-        } catch (AssertionFailedError assertionFailedError) {
-
-            String message = assertionFailedError.getMessage() +
-                    "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
-        }
+        verifyCheckoutCart(paymentRequest, codiceErrore);
     }
 
     @And("l'avviso pagopa viene pagato correttamente su checkout creditorTaxID {string} noticeCode {string} con errore {string}")
@@ -1006,20 +750,7 @@ public class InvioNotificheB2bSteps {
                 "Test Automation Desk",
                 "https://api.uat.platform.pagopa.it");
 
-        try {
-            Assertions.assertDoesNotThrow(() -> {
-                paymentResponse = pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
-            });
-            Assertions.assertNotNull(paymentResponse);
-            log.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
-            Assertions.assertTrue(codiceErrore.equalsIgnoreCase(paymentInfoResponse.get(0).getErrorCode()));
-
-        } catch (AssertionFailedError assertionFailedError) {
-
-            String message = assertionFailedError.getMessage() +
-                    "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
-        }
+        verifyCheckoutCart(paymentRequest, codiceErrore);
     }
 
     @And("la notifica a 2 avvisi di pagamento con OpenApi V1")
@@ -1067,7 +798,6 @@ public class InvioNotificheB2bSteps {
                     notificationByIun.set(b2bUtils.getNotificationByIunV1(iun)));
             Assertions.assertNotNull(notificationByIun.get());
             Assertions.assertNotNull(Objects.requireNonNull(notificationByIun.get().getRecipients().get(0).getPayment()).getNoticeCode());
-            //  Assertions.assertNotNull(notificationByIun.get().getRecipients().get(0).getPayment().getNoticeCodeAlternative());
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
@@ -1090,13 +820,22 @@ public class InvioNotificheB2bSteps {
 
         System.out.println("COSTO NOTIFICA: "+getPaymentInfoV21.get(0).getAmount());
 
+        verifyCheckoutCart(paymentRequest, null);
+    }
+
+    private void verifyCheckoutCart(PaymentRequest paymentRequest, String codiceErrore) {
+
         try {
             Assertions.assertDoesNotThrow(() -> {
                 paymentResponse = pnPaymentInfoClientImpl.checkoutCart(paymentRequest);
-                log.info("Risposta recupero posizione debitoria: " + paymentResponse.toString());});
+                log.info("Risposta recupero posizione debitoria: " + paymentInfoResponse.toString());
+            });
             Assertions.assertNotNull(paymentResponse);
 
-            System.out.println(paymentResponse);
+            if (codiceErrore != null){
+                Assertions.assertTrue(codiceErrore.equalsIgnoreCase(paymentInfoResponse.get(0).getErrorCode()));
+                Assertions.assertTrue(codiceErrore.equalsIgnoreCase(paymentResponse.getCheckoutUrl()));
+            }
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
