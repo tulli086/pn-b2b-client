@@ -75,6 +75,7 @@ Feature: Digital send e2e
       | NULL | NULL |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
       | loadTimeline | true |
+      | pollingType | extraRapid |
       | details | NOT_NULL |
       | details_responseStatus | KO |
       | details_sendingReceipts | [{"id": null, "system": null}] |
@@ -90,6 +91,7 @@ Feature: Digital send e2e
       | details_sentAttemptMade | 0 |
     Then viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
       | loadTimeline | true |
+      | pollingType | extraRapid |
       | details | NOT_NULL |
       | details_responseStatus | KO |
       | details_sendingReceipts | [{"id": null, "system": null}] |
@@ -106,6 +108,7 @@ Feature: Digital send e2e
       | details_sentAttemptMade | 0 |
     And viene verificato che l'elemento di timeline "DIGITAL_SUCCESS_WORKFLOW" esista
       | loadTimeline | true |
+      | pollingType | extraRapid |
       | legalFactsIds | [{"category": "DIGITAL_DELIVERY"}] |
       | details | NOT_NULL |
       | details_digitalAddress | {"address": "example@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |

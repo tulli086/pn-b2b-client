@@ -307,10 +307,14 @@ public class AvanzamentoNotificheB2bSteps {
         // calc how much time wait
         Integer pollingTime = dataFromTest != null ? dataFromTest.getPollingTime() : null;
         Integer numCheck = dataFromTest != null ? dataFromTest.getNumCheck() : null;
+        String pollingType = dataFromTest != null ? dataFromTest.getPollingType() : null;
 
         //TimelineElementWait timelineElementWait = getTimelineElementCategory(timelineEventCategory);
-
         TimingForPolling.TimingResult timingForElement = timingForPolling.getTimingForElement(timelineEventCategory);
+        if ("extraRapid".equals(pollingType)){
+            timingForElement = timingForPolling.getTimingForElement(timelineEventCategory,false,true);
+        }
+
         int defaultPollingTime = timingForElement.waiting();
         int defaultNumCheck = timingForElement.numCheck();
         int waitingTime = (pollingTime != null ? pollingTime : defaultPollingTime) * (numCheck != null ? numCheck : defaultNumCheck);
@@ -334,6 +338,39 @@ public class AvanzamentoNotificheB2bSteps {
                     Assertions.assertNull(timelineElement);
                 }
             });
+
+/**
+        PnPollingServiceTimelineSlowE2eV23 timelineSlowV23 = (PnPollingServiceTimelineSlowE2eV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_SLOW_V23);
+
+        PnPollingResponseV23 pnPollingResponseV23 = timelineSlowV23.waitForEvent(sharedSteps.getIunVersionamento(),
+                PnPollingParameter.builder()
+                        .value(timelineEventCategory)
+                        .build());
+        log.info("NOTIFICATION_TIMELINE: " + pnPollingResponseV23.getNotification().getTimeline());
+        try {
+            Assertions.assertTrue(pnPollingResponseV23.getResult());
+            Assertions.assertNotNull(pnPollingResponseV23.getTimelineElement());
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+            TimelineElementV23 timelineElementV23 = pnPollingResponseV23.getTimelineElement();
+            log.info("TIMELINE_ELEMENT: " + timelineElementV23);
+            sharedSteps.setTimelineElementV23(timelineElementV23);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+        TimelineElementV23 timelineElement = getTimelineByDeliveryPush(timelineEventCategory, dataFromTest);
+        List<TimelineElementV23> timelineElementList = sharedSteps.getSentNotification().getTimeline();
+
+        log.info("NOTIFICATION_TIMELINE: " + timelineElementList);
+        Assertions.assertNotNull(timelineElementList);
+        Assertions.assertNotEquals(0, timelineElementList.size());
+        if (existCheck) {
+            Assertions.assertNotNull(timelineElement);
+        } else {
+            Assertions.assertNull(timelineElement);
+        }
+**/
+
+
     }
 
     private TimelineElementV23 getTimelineByDeliveryPush(String timelineEventCategory, DataTest dataFromTest) {
@@ -421,6 +458,7 @@ public class AvanzamentoNotificheB2bSteps {
     public void readingEventUpToTheTimelineElementOfNotificationDelete(String timelineEventCategory) {
         readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
     }
+
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string}")
     public void readingEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
@@ -549,6 +587,27 @@ public class AvanzamentoNotificheB2bSteps {
 
     public TimelineElementV23 readingEventUpToTheTimelineElementOfNotificationForCategory(String timelineEventCategory) {
         PnPollingServiceTimelineSlowV23 timelineSlowV23 = (PnPollingServiceTimelineSlowV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_SLOW_V23);
+
+        PnPollingResponseV23 pnPollingResponseV23 = timelineSlowV23.waitForEvent(sharedSteps.getIunVersionamento(),
+                PnPollingParameter.builder()
+                        .value(timelineEventCategory)
+                        .build());
+        log.info("NOTIFICATION_TIMELINE: " + pnPollingResponseV23.getNotification().getTimeline());
+        try {
+            Assertions.assertTrue(pnPollingResponseV23.getResult());
+            Assertions.assertNotNull(pnPollingResponseV23.getTimelineElement());
+            sharedSteps.setSentNotification(pnPollingResponseV23.getNotification());
+            TimelineElementV23 timelineElementV23 = pnPollingResponseV23.getTimelineElement();
+            log.info("TIMELINE_ELEMENT: " + timelineElementV23);
+            sharedSteps.setTimelineElementV23(timelineElementV23);
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+        return pnPollingResponseV23.getTimelineElement();
+    }
+
+    public TimelineElementV23 readingEventUpToTheTimelineElementOfNotificationForCategoryExtraRapid(String timelineEventCategory) {
+        PnPollingServiceTimelineExtraRapidV23 timelineSlowV23 = (PnPollingServiceTimelineExtraRapidV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_EXTRA_RAPID_V23);
 
         PnPollingResponseV23 pnPollingResponseV23 = timelineSlowV23.waitForEvent(sharedSteps.getIunVersionamento(),
                 PnPollingParameter.builder()
