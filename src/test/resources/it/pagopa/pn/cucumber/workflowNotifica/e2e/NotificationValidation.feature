@@ -94,33 +94,7 @@ Feature: Validazione notifica e2e
       | details                | NOT_NULL                                  |
       | details_refusalReasons | [{"errorCode": "F24_METADATA_NOT_VALID"}] |
 
-  @e2e @ignore
-  Scenario: [E2E-NOTIFICATION_VALIDATION_TAXID] Invio notifica mono destinatario con taxId non valido scenario negativo
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-    And destinatario
-      | taxId | LNALNI80A01H501T |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-    Then si verifica che la notifica non viene accettata causa "TAX_ID"
-    And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
-      | loadTimeline           | true                               |
-      | details                | NOT_NULL                           |
-      | details_refusalReasons | [{"errorCode": "TAXID_NOT_VALID"}] |
 
-  @e2e @ignore
-  Scenario: [E2E-NOTIFICATION_VALIDATION_PHYSICAL_ADDRESS] Invio notifica mono destinatario con indirizzo fisico non valido scenario negativo
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-    And destinatario
-      | denomination        | Cristoforo Colombo |
-      | taxId               | CLMCST42R12D969Z   |
-      | physicalAddress_zip | 00000              |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-    Then si verifica che la notifica non viene accettata causa "ADDRESS"
-    And viene verificato che l'elemento di timeline "REQUEST_REFUSED" esista
-      | loadTimeline           | true                                 |
-      | details                | NOT_NULL                             |
-      | details_refusalReasons | [{"errorCode": "NOT_VALID_ADDRESS"}] |
 
   @e2e
   Scenario: [E2E-NOTIFICATION_VALIDATION_ASINC_OK] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED e controllo che sia presente nel campo legalFactsIds l'atto opponibile a terzi con category SENDER_ACK positivo
