@@ -15,7 +15,6 @@ Feature: Invio atto intero via PEC (fase 2 - estensione F24)
     And si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 2 allegati
     And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
     And si verifica il contenuto della pec abbia 1 attachment di tipo "NOTIFICATION_ATTACHMENTS"
-    And si verifica il contenuto degli attacchment da inviare nella pec del destinatario 1 con 2 allegati
 
 
   Scenario: [ALLEGATI-PEC_WI-2_2] PG - Verifica PEC contenente allegati (Più Atti, AAR) di una notifica mono destinatario digitale
