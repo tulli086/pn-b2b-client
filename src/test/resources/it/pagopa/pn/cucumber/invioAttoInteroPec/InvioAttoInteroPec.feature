@@ -4,13 +4,11 @@ Feature: Invio atto intero via PEC (fase 2 - estensione F24)
   Scenario: [ALLEGATI-PEC_WI-2_1] PF - Verifica PEC contenente allegati (solo un atto, AAR) di una notifica mono destinatario digitale
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | FLAT_RATE                   |
-      | pagoPaIntMode      | SYNC                        |
+      | senderDenomination | Comune di Palermo           |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@pecOk.it |
-      | payment_pagoPaForm      | NO            |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+      | payment                 | NULL          |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
     And si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 2 allegati
     And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
