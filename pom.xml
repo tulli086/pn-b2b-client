@@ -40,6 +40,7 @@
         <open.api.version.downtime.logs>v2.2.0</open.api.version.downtime.logs>
         <open.api.version.radd.fsu>v2.1.5</open.api.version.radd.fsu>
         <open.api.version.radd.alt>v2.3.0-RC.1</open.api.version.radd.alt>
+        <open.api.version.external.channels>develop</open.api.version.external.channels>
     </properties>
 
     <dependencies>
@@ -1434,7 +1435,7 @@
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-external-channels/develop/docs/openapi/api-mock-received-message-v1.yaml</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-external-channels/${open.api.version.external.channels}/docs/openapi/api-mock-received-message-v1.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
                             <generateApiTests>false</generateApiTests>
