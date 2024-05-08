@@ -926,10 +926,10 @@ public class InvioNotificheB2bSteps {
         try {
             this.documentiPec= pnExternalChannelsServiceClientImpl.getReceivedMessages(sharedSteps.getIunVersionamento(),destinatario);
             Assertions.assertNotNull(documentiPec);
-            Assertions.assertEquals(allegati, documentiPec.get(0).getDigitalNotificationRequest().getAttachmentUrls().size());
-
 
             log.info("documenti pec : {}",documentiPec);
+
+            Assertions.assertEquals(allegati, documentiPec.get(0).getDigitalNotificationRequest().getAttachmentUrls().size());
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
