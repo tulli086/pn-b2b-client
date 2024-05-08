@@ -73,11 +73,6 @@ public class SharedSteps {
     private final PnExternalServiceClientImpl pnExternalServiceClient;
     private final IPnWebUserAttributesClient iPnWebUserAttributesClient;
     private final PnServiceDeskClientImpl serviceDeskClient;
-
-    private final PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey;
-
-    private final PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey;
-
     private NewNotificationResponse newNotificationResponse;
     private it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse newNotificationResponseV1;
 
@@ -194,8 +189,8 @@ public class SharedSteps {
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
                        PnExternalServiceClientImpl pnExternalServiceClient,
                        IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient,
-                       PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey,
-                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey, PnGPDClientImpl pnGPDClientImpl,
+                       PnServiceDeskClientImpl serviceDeskClient,
+                       PnGPDClientImpl pnGPDClientImpl,
                        PnPaymentInfoClientImpl pnPaymentInfoClientImpl, PnB2bClientTimingConfigs timingConfigs,
                        PnPollingFactory pollingFactory) {
         this.dataTableTypeUtil = dataTableTypeUtil;
@@ -206,8 +201,6 @@ public class SharedSteps {
         this.pnExternalServiceClient = pnExternalServiceClient;
         this.iPnWebUserAttributesClient = iPnWebUserAttributesClient;
         this.serviceDeskClient = serviceDeskClient;
-        this.serviceDeskClientImplNoApiKey = serviceDeskClientImplNoApiKey;
-        this.serviceDeskClientImplWrongApiKey = serviceDeskClientImplWrongApiKey;
         this.pnGPDClientImpl = pnGPDClientImpl;
         this.pnPaymentInfoClientImpl = pnPaymentInfoClientImpl;
         this.iuvGPD = new ArrayList<String>();
@@ -2070,15 +2063,6 @@ public class SharedSteps {
 
     public PnServiceDeskClientImpl getServiceDeskClient() {
         return serviceDeskClient;
-    }
-
-
-    public PnServiceDeskClientImplNoApiKey getServiceDeskClientNoApiKey() {
-        return serviceDeskClientImplNoApiKey;
-    }
-
-    public PnServiceDeskClientImplWrongApiKey getServiceDeskClientWrongApiKey() {
-        return serviceDeskClientImplWrongApiKey;
     }
 
     public String getMarioCucumberTaxID() {
