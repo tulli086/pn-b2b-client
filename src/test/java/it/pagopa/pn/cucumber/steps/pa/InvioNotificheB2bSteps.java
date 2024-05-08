@@ -5,10 +5,12 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import it.pagopa.pn.client.b2b.generated.openapi.clients.externalchannels.model.mock.pec.ReceivedMessage;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
+import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalChannelsServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnPaymentInfoClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
@@ -49,6 +51,8 @@ public class InvioNotificheB2bSteps {
     private final PnExternalServiceClientImpl safeStorageClient;
     private final SharedSteps sharedSteps;
     private final PnPaymentInfoClientImpl pnPaymentInfoClientImpl;
+    private final PnExternalChannelsServiceClientImpl pnExternalChannelsServiceClientImpl;
+
     private PaymentResponse paymentResponse;
     private List<PaymentInfoV21> paymentInfoResponse;
     private NotificationDocument notificationDocumentPreload;
@@ -56,16 +60,17 @@ public class InvioNotificheB2bSteps {
     private NotificationMetadataAttachment notificationMetadataAttachment;
     private String sha256DocumentDownload;
     private NotificationAttachmentDownloadMetadataResponse downloadResponse;
-
+    private List<ReceivedMessage> documentiPec;
 
     @Autowired
-    public InvioNotificheB2bSteps(PnExternalServiceClientImpl safeStorageClient, SharedSteps sharedSteps) {
+    public InvioNotificheB2bSteps(PnExternalServiceClientImpl safeStorageClient, SharedSteps sharedSteps,PnExternalChannelsServiceClientImpl pnExternalChannelsServiceClientImpl) {
         this.safeStorageClient = safeStorageClient;
         this.sharedSteps = sharedSteps;
         this.b2bUtils = sharedSteps.getB2bUtils();
         this.b2bClient = sharedSteps.getB2bClient();
         this.webPaClient = sharedSteps.getWebPaClient();
         this.pnPaymentInfoClientImpl =sharedSteps.getPnPaymentInfoClientImpl();
+        this.pnExternalChannelsServiceClientImpl=pnExternalChannelsServiceClientImpl;
     }
 
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN")
@@ -914,4 +919,21 @@ public class InvioNotificheB2bSteps {
 
         });
     }
+
+
+    @And("si verifica il contenuto degli attacchment da inviare nella pec del destinatario {int}")
+    public void vieneVerificatiIDocumentiInviatiDellaPecDelDestinatario(Integer destinatario) {
+        try {
+            this.documentiPec= pnExternalChannelsServiceClientImpl.getReceivedMessages(sharedSteps.getIunVersionamento(),destinatario);
+            Assertions.assertNotNull(documentiPec);
+            log.info("documenti pec : {}",documentiPec);
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+
+    }
+
+
 }
