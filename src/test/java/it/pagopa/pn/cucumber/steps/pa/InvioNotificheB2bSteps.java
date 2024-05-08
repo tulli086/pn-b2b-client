@@ -423,20 +423,20 @@ public class InvioNotificheB2bSteps {
                 List<NotificationDocument> documents = sharedSteps.getSentNotification().getDocuments();
                 this.downloadResponse = b2bClient
                         .getSentNotificationDocument(sharedSteps.getSentNotification().getIun(), Integer.parseInt(documents.get(0).getDocIdx()));
-            }
+            }else {
+                this.downloadResponse = b2bClient
+                        .getSentNotificationAttachment(iun, destinatario, type, 0);
 
-            this.downloadResponse = b2bClient
-                    .getSentNotificationAttachment(iun, destinatario, type, 0);
+                if (downloadResponse != null && downloadResponse.getRetryAfter() != null && downloadResponse.getRetryAfter() > 0) {
+                    try {
+                        await().atMost(downloadResponse.getRetryAfter() * 3L, TimeUnit.MILLISECONDS);
+                        this.downloadResponse = b2bClient
+                                .getSentNotificationAttachment(iun, destinatario, type, 0);
 
-            if (downloadResponse != null && downloadResponse.getRetryAfter() != null && downloadResponse.getRetryAfter() > 0) {
-                try {
-                    await().atMost(downloadResponse.getRetryAfter() * 3L, TimeUnit.MILLISECONDS);
-                    this.downloadResponse = b2bClient
-                            .getSentNotificationAttachment(iun, destinatario, type, 0);
-
-                } catch (RuntimeException exc) {
-                    log.error(exc.getMessage());
-                    throw exc;
+                    } catch (RuntimeException exc) {
+                        log.error(exc.getMessage());
+                        throw exc;
+                    }
                 }
             }
             byte[] bytes = Assertions.assertDoesNotThrow(() ->
