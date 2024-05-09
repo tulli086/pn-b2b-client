@@ -932,11 +932,57 @@ public class InvioNotificheB2bSteps {
             Assertions.assertEquals(allegati, documentiPec.get(0).getDigitalNotificationRequest().getAttachmentUrls().size());
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
-                    "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
+                    "Verifica Allegati pec in errore ";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
 
     }
+
+    @And("si verifica lo SHA degli attachment inseriti nella pec del destinatario {int} di tipo {string}")
+    public void verificaSHAAllegatiPecDelDestinatario(Integer destinatario, String tipoAttachment) {
+        try {
+            this.documentiPec= pnExternalChannelsServiceClientImpl.getReceivedMessages(sharedSteps.getIunVersionamento(),destinatario);
+            Assertions.assertNotNull(documentiPec);
+
+            log.info("documenti pec : {}",documentiPec);
+            //caricamento in Mappa di tutti i documenti della notifica
+            for(NotificationDocument documentNotifica : sharedSteps.getSentNotification().getDocuments()){
+                sharedSteps.getMapAllegatiNotificaSha256().put(documentNotifica.getRef().getKey(),documentNotifica.getDigests().getSha256());
+            }
+            //caricamento in Mappa di tutti i documenti di pagamento della notifica
+            for(NotificationPaymentItem documentPagamento : sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments()){
+                sharedSteps.getMapAllegatiNotificaSha256().put(documentPagamento.getPagoPa().getAttachment().getRef().getKey(),documentPagamento.getPagoPa().getAttachment().getDigests().getSha256());
+            }
+
+            Assertions.assertTrue(!sharedSteps.getMapAllegatiNotificaSha256().isEmpty());
+
+            boolean checkAllegati = true;
+            for(ReceivedMessage documentPec : documentiPec){
+                for(String  documentPecKey : documentPec.getDigitalNotificationRequest().getAttachmentUrls()){
+                    if(documentPecKey.contains(tipoAttachment)){
+                        PnExternalServiceClientImpl.SafeStorageResponse safeStorageResponse = safeStorageClient.safeStorageInfo(documentPecKey.substring(14, documentPecKey.length()));
+                        Assertions.assertNotNull(safeStorageResponse);
+                        Assertions.assertNotNull(safeStorageResponse.getChecksum());
+                        System.out.println(safeStorageResponse);
+                        log.info("documenti pec safeStorageResponse : {}",safeStorageResponse);
+
+                        if (!safeStorageResponse.getChecksum().equals(sharedSteps.getMapAllegatiNotificaSha256().get(safeStorageResponse.getKey()))){
+                            checkAllegati = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            Assertions.assertTrue(checkAllegati);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "Verifica Allegati pec in errore ";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+
 
     @And("si verifica il contenuto della pec abbia {int} attachment di tipo {string}")
     public void presenzaAttachment(Integer numeroDocumenti, String tipologia) {
@@ -952,7 +998,7 @@ public class InvioNotificheB2bSteps {
             Assertions.assertTrue(numeroDocumenti == contoDocumento);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
-                    "{la posizione debitoria " + (paymentResponse == null ? "NULL" : paymentResponse.toString()) + " }";
+                    "Verifica Allegati pec in errore ";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }

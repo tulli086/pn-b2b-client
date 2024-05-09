@@ -184,6 +184,16 @@ public class SharedSteps {
 
     private final PnPollingFactory pollingFactory;
 
+    public HashMap<String, String> getMapAllegatiNotificaSha256() {
+        return mapAllegatiNotificaSha256;
+    }
+
+    public void setMapAllegatiNotificaSha256(HashMap<String, String> mapAllegatiNotificaSha256) {
+        this.mapAllegatiNotificaSha256 = mapAllegatiNotificaSha256;
+    }
+
+    private HashMap<String,String> mapAllegatiNotificaSha256 = new HashMap<>();
+
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
@@ -1161,7 +1171,6 @@ public class SharedSteps {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
-
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
