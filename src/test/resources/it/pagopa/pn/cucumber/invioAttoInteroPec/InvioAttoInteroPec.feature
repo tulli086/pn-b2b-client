@@ -14,7 +14,7 @@ Feature: Invio atto intero via PEC (fase 2 - estensione F24)
     And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
     And si verifica il contenuto della pec abbia 1 attachment di tipo "NOTIFICATION_ATTACHMENTS"
 
-
+  @invioAttoInteroPec
   Scenario: [ALLEGATI-PEC_WI-2_2] PG - Verifica PEC contenente allegati (Più Atti, AAR) di una notifica mono destinatario digitale
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -29,6 +29,7 @@ Feature: Invio atto intero via PEC (fase 2 - estensione F24)
     And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
     And si verifica il contenuto della pec abbia 2 attachment di tipo "NOTIFICATION_ATTACHMENTS"
 
+  @invioAttoInteroPec
   Scenario: [ALLEGATI-PEC_WI-2_3] PF - Verifica PEC contenente allegati (Atto, AAR, Avviso PagoPA) di una notifica mono destinatario digitale con solo avviso PagoPa
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -41,6 +42,7 @@ Feature: Invio atto intero via PEC (fase 2 - estensione F24)
     And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
     And si verifica il contenuto della pec abbia 2 attachment di tipo "NOTIFICATION_ATTACHMENTS"
 
+  @invioAttoInteroPec
   Scenario: [ALLEGATI-PEC_WI-2_4] PF/PG - Verifica PEC contenente allegati (Atto, AAR, Avviso PagoPA, no F24) di una notifica multi destinatario digitale con più avvisi PagoPA e senza modelli F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
