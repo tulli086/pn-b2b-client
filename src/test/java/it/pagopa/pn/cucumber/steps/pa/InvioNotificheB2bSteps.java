@@ -965,7 +965,7 @@ public class InvioNotificheB2bSteps {
                         Assertions.assertNotNull(safeStorageResponse.getChecksum());
                         System.out.println(safeStorageResponse);
                         log.info("documenti pec safeStorageResponse : {}",safeStorageResponse);
-
+                        Assertions.assertNotNull(sharedSteps.getMapAllegatiNotificaSha256().get(safeStorageResponse.getKey()));
                         if (!safeStorageResponse.getChecksum().equals(sharedSteps.getMapAllegatiNotificaSha256().get(safeStorageResponse.getKey()))){
                             checkAllegati = false;
                             break;
