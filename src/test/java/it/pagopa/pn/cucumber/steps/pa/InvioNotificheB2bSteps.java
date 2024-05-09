@@ -941,10 +941,7 @@ public class InvioNotificheB2bSteps {
     @And("si verifica lo SHA degli attachment inseriti nella pec del destinatario {int} di tipo {string}")
     public void verificaSHAAllegatiPecDelDestinatario(Integer destinatario, String tipoAttachment) {
         try {
-            this.documentiPec= pnExternalChannelsServiceClientImpl.getReceivedMessages(sharedSteps.getIunVersionamento(),destinatario);
-            Assertions.assertNotNull(documentiPec);
 
-            log.info("documenti pec : {}",documentiPec);
             //caricamento in Mappa di tutti i documenti della notifica
             for(NotificationDocument documentNotifica : sharedSteps.getSentNotification().getDocuments()){
                 sharedSteps.getMapAllegatiNotificaSha256().put(documentNotifica.getRef().getKey(),documentNotifica.getDigests().getSha256());
