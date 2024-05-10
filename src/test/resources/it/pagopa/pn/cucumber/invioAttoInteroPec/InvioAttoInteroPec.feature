@@ -78,6 +78,28 @@ Feature: Invio atto intero via PEC (fase 2 - estensione F24)
 
 
   @invioAttoInteroPec
+  Scenario: [ALLEGATI-PEC_WI-2_5_1] Verifica presenza e correttezza SHA dei documenti allegati alla PEC in ricevuta consegna PEC
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test@pecOk.it |
+    And destinatario Cucumber Society e:
+      | digitalDomicile_address | test@pecOk.it |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
+    And si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 3 allegati
+    And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
+    And si verifica il contenuto della pec abbia 2 attachment di tipo "NOTIFICATION_ATTACHMENTS"
+    And si verifica il contenuto degli attacchment da inviare nella pec del destinatario 1 con 3 allegati
+    And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
+    And si verifica il contenuto della pec abbia 2 attachment di tipo "NOTIFICATION_ATTACHMENTS"
+    And si verifica lo SHA degli attachment inseriti nella pec del destinatario 0 di tipo "NOTIFICATION_ATTACHMENTS"
+    And si verifica lo SHA degli attachment inseriti nella pec del destinatario 1 di tipo "NOTIFICATION_ATTACHMENTS"
+
+
+
+  @invioAttoInteroPec
   Scenario: [ALLEGATI-PEC_WI-2_6] PF - Verifica PEC contenente allegati (Atto, AAR, Avviso PagoPA,  F24) di una notifica mono destinatario digitale con solo avviso PagoPa e modello F24
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
