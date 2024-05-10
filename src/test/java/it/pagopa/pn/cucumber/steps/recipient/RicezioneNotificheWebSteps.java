@@ -185,28 +185,17 @@ public class RicezioneNotificheWebSteps {
     public void attachmentRetrievedError(String recipient, String attachmentName) {
         this.notificationError = null;
         sharedSteps.selectUser(recipient);
-        try {
-            NotificationAttachmentDownloadMetadataResponse downloadResponse = getReceivedNotificationAttachment(attachmentName);
-
-
-            if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
-                try {
-                    await().atMost(downloadResponse.getRetryAfter()* 3L, TimeUnit.MILLISECONDS);
-                    getReceivedNotificationAttachment(attachmentName);
-                } catch (RuntimeException exc) {
-                    log.error("Await error exception: {}", exc.getMessage());
-                    throw exc;
-                }
-            }
-        } catch (HttpStatusCodeException e) {
-            this.notificationError = e;
-        }
+        retriveAttachement(attachmentName);
     }
 
     @And("{string} tenta il recupero dell'attestazione {string}")
     public void attachmentAttestazioneRetrievedError(String recipient, String attachmentName) {
         this.notificationError = null;
         sharedSteps.selectUser(recipient);
+        retriveAttachement(attachmentName);
+    }
+
+    private void retriveAttachement(String attachmentName) {
         try {
             NotificationAttachmentDownloadMetadataResponse downloadResponse = getReceivedNotificationAttachment(attachmentName);
 

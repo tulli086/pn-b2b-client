@@ -305,11 +305,7 @@ public class RicezioneNotificheWebDelegheSteps {
     @Then("il documento notificato può essere correttamente recuperato da {string} con delega")
     public void theDocumentCanBeProperlyRetrievedByWithMandate(String recipient) {
         sharedSteps.selectUser(recipient);
-        NotificationAttachmentDownloadMetadataResponse downloadResponse = webRecipientClient.getReceivedNotificationDocument(
-                sharedSteps.getSentNotification().getIun(),
-                Integer.parseInt(Objects.requireNonNull(sharedSteps.getSentNotification().getDocuments().get(0).getDocIdx())),
-                UUID.fromString(Objects.requireNonNull(mandateToSearch.getMandateId()))
-        );
+        NotificationAttachmentDownloadMetadataResponse downloadResponse = getReceivedNotificationDocument();
         verifySha256(downloadResponse);
     }
 
@@ -319,11 +315,7 @@ public class RicezioneNotificheWebDelegheSteps {
 
         try {
             Assertions.assertDoesNotThrow(() -> {
-                webRecipientClient.getReceivedNotificationDocument(
-                        sharedSteps.getSentNotification().getIun(),
-                        Integer.parseInt(Objects.requireNonNull(sharedSteps.getSentNotification().getDocuments().get(0).getDocIdx())),
-                        UUID.fromString(Objects.requireNonNull(mandateToSearch.getMandateId()))
-                );
+                getReceivedNotificationDocument();
             });
         } catch (AssertionFailedError assertionFailedError) {
             System.out.println(assertionFailedError.getCause().toString());
@@ -331,6 +323,14 @@ public class RicezioneNotificheWebDelegheSteps {
             System.out.println(assertionFailedError.getCause().getMessage().substring(0, 3).equals(statusCode));
         }
 
+    }
+
+    private NotificationAttachmentDownloadMetadataResponse getReceivedNotificationDocument() {
+        return webRecipientClient.getReceivedNotificationDocument(
+                sharedSteps.getSentNotification().getIun(),
+                Integer.parseInt(Objects.requireNonNull(sharedSteps.getSentNotification().getDocuments().get(0).getDocIdx())),
+                UUID.fromString(Objects.requireNonNull(mandateToSearch.getMandateId()))
+        );
     }
 
     @Then("l'allegato {string} può essere correttamente recuperato da {string} con delega")
