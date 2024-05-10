@@ -121,6 +121,7 @@ public class AnagraficaRaddAltSteps {
     public void vieneControllatoLoStatoDelCsv(String stato) {
 
         VerifyRequestResponse responseUploadCsv = null;
+        //TODO: utilizzare algoritmo di polling
         for (int i = 0; i < NUM_CHECK_STATE_CSV; i++) {
             responseUploadCsv = raddAltClient.verifyRequest(this.uid, this.requestid);
 

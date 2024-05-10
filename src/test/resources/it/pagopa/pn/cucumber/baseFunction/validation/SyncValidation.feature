@@ -1045,3 +1045,25 @@ Feature: verifica validazione sincrona
     And destinatario Mario Cucumber
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" con allegato uguale al allegato di pagamento
     Then l'operazione ha prodotto un errore con status code "400" con messaggio di errore "Same attachment compares more then once in the same request"
+
+  @validation
+  Scenario: [B2B-PA-SYNC_VALIDATION_72] validazione sincrona campo denomination contenente pipe
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | comune di milano            |
+    And destinatario
+      | denomination | Fieramosca pipe\| |
+      | taxId        | FRMTTR76M06B715E |
+    When la notifica viene inviata dal "Comune_Multi"
+    Then l'operazione ha prodotto un errore con status code "400" con messaggio di errore "Field denomination in recipient 0 contains invalid characters."
+
+  @validation
+  Scenario: [B2B-PA-SYNC_VALIDATION_73] validazione sincrona campo denomination non contenente il carattere pipe
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | comune di milano            |
+    And destinatario
+      | denomination | Ettore Fieramosca  |
+      | taxId        | FRMTTR76M06B715E |
+    When la notifica viene inviata dal "Comune_Multi"
+    Then l'invio della notifica non ha prodotto errori
