@@ -167,10 +167,9 @@ public class RicezioneNotificheWebSteps {
             Assertions.assertEquals(Sha256.get(), Objects.requireNonNull(downloadResponse).getSha256());
         }else {
             NotificationAttachmentDownloadMetadataResponse finalDownloadResponse = downloadResponse;
-            Assertions.assertDoesNotThrow(() -> {
-                byte[] bytes = Assertions.assertDoesNotThrow(() ->
+                Assertions.assertDoesNotThrow(() ->
                         b2bUtils.downloadFile(Objects.requireNonNull(finalDownloadResponse).getUrl()));
-            });
+
         }
     }
 
@@ -193,7 +192,7 @@ public class RicezioneNotificheWebSteps {
             if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
                 try {
                     await().atMost(downloadResponse.getRetryAfter()* 3L, TimeUnit.MILLISECONDS);
-                    downloadResponse = getReceivedNotificationAttachment(attachmentName);
+                    getReceivedNotificationAttachment(attachmentName);
                 } catch (RuntimeException exc) {
                     log.error("Await error exception: {}", exc.getMessage());
                     throw exc;
@@ -214,7 +213,7 @@ public class RicezioneNotificheWebSteps {
             if (downloadResponse!= null && downloadResponse.getRetryAfter()!= null && downloadResponse.getRetryAfter()>0){
                 try {
                     await().atMost(downloadResponse.getRetryAfter()* 3L, TimeUnit.MILLISECONDS);
-                    downloadResponse = getReceivedNotificationAttachment(attachmentName);
+                    getReceivedNotificationAttachment(attachmentName);
                 } catch (RuntimeException exc) {
                     log.error("Await error exception: {}", exc.getMessage());
                     throw exc;
@@ -310,30 +309,10 @@ public class RicezioneNotificheWebSteps {
     public NotificationSearchParam convertNotificationSearchParam(Map<String, String> data) {
         NotificationSearchParam searchParam = new NotificationSearchParam();
 
-        Calendar now = Calendar.getInstance();
-        int month = now.get(Calendar.MONTH);
-        String monthString = (((month + "").length() == 2 || month == 9) ? (month + 1) : ("0" + (month + 1))) + "";
-        int day = now.get(Calendar.DAY_OF_MONTH);
-        String dayString = (day + "").length() == 2 ? (day + "") : ("0" + day);
-        String start = data.getOrDefault("startDate", dayString + "/" + monthString + "/" + now.get(Calendar.YEAR));
-        String end = data.getOrDefault("endDate", null);
+        PnPaB2bUtils.Pair<OffsetDateTime, OffsetDateTime> dates =  getStartDateAndEndDate(data);
 
-        OffsetDateTime sentAt = sharedSteps.getSentNotification().getSentAt();
-        LocalDateTime localDateStart = LocalDate.parse(start, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
-        OffsetDateTime startDate = OffsetDateTime.of(localDateStart, sentAt.getOffset());
-
-        OffsetDateTime endDate;
-        if (end != null) {
-            LocalDateTime localDateEnd = LocalDate.parse(end, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
-            endDate = OffsetDateTime.of(localDateEnd, sentAt.getOffset());
-        } else {
-            endDate = sentAt;
-        }
-
-        searchParam.startDate = startDate;
-        searchParam.endDate = endDate;
-        //searchParam.mandateId = data.getOrDefault("mandateId",null);
-        //searchParam.senderId = data.getOrDefault("senderId",null);
+        searchParam.startDate = dates.getValue1();
+        searchParam.endDate = dates.getValue2();
         searchParam.subjectRegExp = data.getOrDefault("subjectRegExp", null);
         String iun = data.getOrDefault("iunMatch", null);
         searchParam.iunMatch = ((iun != null && iun.equalsIgnoreCase("ACTUAL") ? sharedSteps.getSentNotification().getIun() : iun));
@@ -345,6 +324,19 @@ public class RicezioneNotificheWebSteps {
     public NotificationSearchParamWebPA convertNotificationSearchParamWebPA(Map<String, String> data) {
         NotificationSearchParamWebPA searchParam = new NotificationSearchParamWebPA();
 
+        PnPaB2bUtils.Pair<OffsetDateTime, OffsetDateTime> dates =  getStartDateAndEndDate(data);
+
+        searchParam.startDate = dates.getValue1();
+        searchParam.endDate = dates.getValue2();
+        searchParam.subjectRegExp = data.getOrDefault("subjectRegExp", null);
+        String iun = data.getOrDefault("iunMatch", null);
+        searchParam.iunMatch = ((iun != null && iun.equalsIgnoreCase("ACTUAL") ? sharedSteps.getSentNotification().getIun() : iun));
+        searchParam.size = Integer.parseInt(data.getOrDefault("size", "10"));
+        return searchParam;
+    }
+
+    private PnPaB2bUtils.Pair<OffsetDateTime, OffsetDateTime> getStartDateAndEndDate (Map<String, String> data){
+
         Calendar now = Calendar.getInstance();
         int month = now.get(Calendar.MONTH);
         String monthString = (((month + "").length() == 2 || month == 9) ? (month + 1) : ("0" + (month + 1))) + "";
@@ -365,15 +357,7 @@ public class RicezioneNotificheWebSteps {
             endDate = sentAt;
         }
 
-        searchParam.startDate = startDate;
-        searchParam.endDate = endDate;
-        //searchParam.mandateId = data.getOrDefault("mandateId",null);
-        //searchParam.senderId = data.getOrDefault("senderId",null);
-        searchParam.subjectRegExp = data.getOrDefault("subjectRegExp", null);
-        String iun = data.getOrDefault("iunMatch", null);
-        searchParam.iunMatch = ((iun != null && iun.equalsIgnoreCase("ACTUAL") ? sharedSteps.getSentNotification().getIun() : iun));
-        searchParam.size = Integer.parseInt(data.getOrDefault("size", "10"));
-        return searchParam;
+        return new PnPaB2bUtils.Pair<>(startDate, endDate);
     }
 
     private boolean searchNotification(NotificationSearchParam searchParam) {
