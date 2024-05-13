@@ -195,8 +195,6 @@ public class SharedSteps {
     private final DataTableTypeUtil dataTableTypeUtil;
     private final List<String> iuvGPD;
     private final IPnWebUserAttributesClient iPnWebUserAttributesClient;
-    private final PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey;
-    private final PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey;
     private it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse newNotificationResponseV1;
     private it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NewNotificationResponse newNotificationResponseV2;
     private it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NewNotificationResponse newNotificationResponseV21;
@@ -257,8 +255,8 @@ public class SharedSteps {
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
                        PnExternalServiceClientImpl pnExternalServiceClient,
                        IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webPaClient,
-                       PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey,
-                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey, PnGPDClientImpl pnGPDClientImpl,
+                       PnServiceDeskClientImpl serviceDeskClient,
+                       PnGPDClientImpl pnGPDClientImpl,
                        PnPaymentInfoClientImpl pnPaymentInfoClientImpl, PnB2bClientTimingConfigs timingConfigs,
                        PnPollingFactory pollingFactory) {
         this.dataTableTypeUtil = dataTableTypeUtil;
@@ -269,8 +267,6 @@ public class SharedSteps {
         this.pnExternalServiceClient = pnExternalServiceClient;
         this.iPnWebUserAttributesClient = iPnWebUserAttributesClient;
         this.serviceDeskClient = serviceDeskClient;
-        this.serviceDeskClientImplNoApiKey = serviceDeskClientImplNoApiKey;
-        this.serviceDeskClientImplWrongApiKey = serviceDeskClientImplWrongApiKey;
         this.pnGPDClientImpl = pnGPDClientImpl;
         this.pnPaymentInfoClientImpl = pnPaymentInfoClientImpl;
         this.iuvGPD = new ArrayList<>();
@@ -1709,12 +1705,49 @@ public class SharedSteps {
         }
     }
 
-    public PnServiceDeskClientImplNoApiKey getServiceDeskClientNoApiKey() {
-        return serviceDeskClientImplNoApiKey;
+    public PnPollingFactory getPollingFactory(){
+        return pollingFactory;
     }
 
-    public PnServiceDeskClientImplWrongApiKey getServiceDeskClientWrongApiKey() {
-        return serviceDeskClientImplWrongApiKey;
+
+    public IPnWebPaClient getWebPaClient() {
+        return webPaClient;
+    }
+
+    public PnGPDClientImpl getPnGPDClientImpl() {
+        return pnGPDClientImpl;
+    }
+
+    public PnPaymentInfoClientImpl getPnPaymentInfoClientImpl() {
+        return pnPaymentInfoClientImpl;
+    }
+
+    public PnPaB2bUtils getB2bUtils() {
+        return b2bUtils;
+    }
+
+    public IPnWebRecipientClient getWebRecipientClient() {
+        return webRecipientClient;
+    }
+
+    public PnServiceDeskClientImpl getServiceDeskClient() {
+        return serviceDeskClient;
+    }
+
+    public String getMarioCucumberTaxID() {
+        return marioCucumberTaxID;
+    }
+
+    public String getMarioGherkinTaxID() {
+        return marioGherkinTaxID;
+    }
+
+    public String getGherkinSrltaxId() {
+        return gherkinSrltaxId;
+    }
+
+    public String getCucumberSpataxId() {
+        return cucumberSpataxId;
     }
 
     public String getGherkinIrreperibileTaxId() {
