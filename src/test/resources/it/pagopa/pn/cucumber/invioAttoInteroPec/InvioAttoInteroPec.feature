@@ -78,7 +78,7 @@ Feature: Invio atto intero via PEC (fase 2 - estensione F24)
 
 
   @invioAttoInteroPec
-  Scenario: [ALLEGATI-PEC_WI-2_5_12] Verifica presenza e correttezza SHA dei documenti allegati alla PEC in ricevuta consegna PEC
+  Scenario: [ALLEGATI-PEC_WI-2_5_1] Verifica presenza e correttezza SHA dei documenti allegati alla PEC in ricevuta consegna PEC
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
