@@ -223,11 +223,11 @@ Feature: Workflow analogico
       | physicalAddress_address | Via@OK-Retry_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER" esista
-      | loadTimeline | true |
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-      | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": ", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost | 133 |
+      | loadTimeline            | true                                                                                                                                                                                         |
+      | details                 | NOT_NULL                                                                                                                                                                                     |
+      | details_recIndex        | 0                                                                                                                                                                                            |
+      | details_physicalAddress | {"address": "VIA@OK-RETRY_RS", "municipality": "MILANO", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "MI", "zip": "87100", "foreignState": "ITALIA"} |
+      | details_analogCost      | 133                                                                                                                                                                                          |
     And viene verificato che l'elemento di timeline "DIGITAL_FAILURE_WORKFLOW" esista
       | details | NOT_NULL |
       | details_recIndex | 0 |
