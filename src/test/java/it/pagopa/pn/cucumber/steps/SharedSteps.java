@@ -890,13 +890,6 @@ public class SharedSteps {
         sendNotification();
     }
 
-    @When("la notifica viene inviata tramite api b2b dal {string} e si attende che lo stato diventi ACCEPTED short")
-    public void laNotificaVieneInviataOkShort(String paType) {
-        selectPA(paType);
-        setSenderTaxIdFromProperties();
-        sendNotificationExtraRapid(1000);
-    }
-
     @When("la notifica viene inviata tramite api b2b dal {string} con allegato uguale al allegato di pagamento")
     public void laNotificaVieneInviataAllegatiUgualeAlPagamento(String paType) {
         selectPA(paType);
