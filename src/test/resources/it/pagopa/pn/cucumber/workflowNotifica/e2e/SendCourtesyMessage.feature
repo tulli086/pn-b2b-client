@@ -1,4 +1,5 @@
 Feature: Invio messaggi cortesia e2e
+
     @e2e @addressBook1
     Scenario: [E2E-SEND_COURTESY_MESSAGE_1] invio messaggio di cortesia - invio per email
         Given si predispone addressbook per l'utente "Galileo Galilei"
