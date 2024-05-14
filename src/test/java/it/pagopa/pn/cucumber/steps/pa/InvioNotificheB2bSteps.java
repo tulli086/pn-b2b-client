@@ -1193,23 +1193,25 @@ public class InvioNotificheB2bSteps {
     public void siRichiamaCheckoutConDatiConErrore(Map<String, String> dataCheckout) {
         PaymentRequest requestCheckout = creationPaymentRequest(dataCheckout);
         try {
-            PaymentResponse responseCheckout = pnPaymentInfoClientImpl.checkoutCart(requestCheckout);
+            pnPaymentInfoClientImpl.checkoutCart(requestCheckout);
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
     }
 
     public PaymentRequest creationPaymentRequest(Map<String, String> dataCheckout) {
-        sharedSteps.setNoticeCodeCheckout(dataCheckout.get("noticeCode"));
 
         PaymentRequest requestCheckout = new PaymentRequest()
                 .paymentNotice(new PaymentNotice()
-                        .noticeNumber(sharedSteps.getNoticeCodeCheckout())
-                        .fiscalCode(dataCheckout.get("fiscalCode"))
+                        .noticeNumber(dataCheckout.get("noticeCode")!=null? dataCheckout.get("noticeCode"):
+                                sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getPagoPa().getNoticeCode())
+                        .fiscalCode(dataCheckout.get("fiscalCode")!=null? dataCheckout.get("fiscalCode"):
+                                sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getPagoPa().getCreditorTaxId())
                         .amount(dataCheckout.get("amount") != null ? Integer.parseInt(dataCheckout.get("amount")) : null)
                         .description(dataCheckout.get("description"))
                         .companyName(dataCheckout.get("companyName")))
                 .returnUrl(dataCheckout.get("returnUrl"));
+        log.info("request checkout: {}", requestCheckout);
         return requestCheckout;
     }
 

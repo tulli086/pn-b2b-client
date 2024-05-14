@@ -135,12 +135,6 @@ Feature: avanzamento notifiche b2b persona fisica pagamento
 
 
   Scenario: [B2B-PA-PAY_CHECKOUT_2] invio notifica con posizione debiotoria collegata
-    Given si richiama checkout con dati:
-      | fiscalCode  | 77777777777                              |
-      | amount      | 10                                       |
-      | description | PIPPO                                    |
-      | companyName | PLUTO                                    |
-      | returnUrl   | https://www.pagopa.gov.it/it/assistenza/ |
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -149,5 +143,9 @@ Feature: avanzamento notifiche b2b persona fisica pagamento
       | digitalDomicile         | NULL        |
       | physicalAddress_address | Via@ok_890  |
       | payment_creditorTaxId   | 77777777777 |
-    Then viene assengato il noticeCode della posizione debitoria alla notifica
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Given si richiama checkout con dati:
+      | amount      | 10                                       |
+      | description | PIPPO                                    |
+      | companyName | PLUTO                                    |
+      | returnUrl   | https://www.pagopa.gov.it/it/assistenza/ |
