@@ -70,7 +70,7 @@ Feature: Digital send e2e
       | denomination | Galileo Galilei |
       | taxId | GLLGLL64B15G702I |
       | digitalDomicile | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
       | loadTimeline | true |
       | details | NOT_NULL |
@@ -183,7 +183,7 @@ Feature: Digital send e2e
       | denomination | Galileo Galilei |
       | taxId | GLLGLL64B15G702I |
       | digitalDomicile | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
       | loadTimeline | true |
       | details | NOT_NULL |
@@ -295,7 +295,7 @@ Feature: Digital send e2e
       | denomination | Galileo Galilei |
       | taxId | GLLGLL64B15G702I |
       | digitalDomicile | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
@@ -408,7 +408,7 @@ Feature: Digital send e2e
       | taxId | GLLGLL64B15G702I |
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
       | loadTimeline | true |
       | details | NOT_NULL |
@@ -530,7 +530,7 @@ And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGI
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | testpagopa1@pec.pagopa.it |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
     And viene verificato che l'elemento di timeline "DIGITAL_SUCCESS_WORKFLOW" esista
@@ -591,7 +591,7 @@ And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGI
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@OK-pecFirstFailSecondSuccess.it |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SEND_DIGITAL_DOMICILE" esista
       | details | NOT_NULL |
       | details_digitalAddress | {"address": "test@OK-pecFirstFailSecondSuccess.it", "type": "PEC"} |
@@ -634,7 +634,7 @@ And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGI
       | denomination | Cristoforo Colombo |
       | taxId | CLMCST42R12D969Z |
       | digitalDomicile_address | test@FAIL-pecFirstKOSecondKO.it |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_DOMICILE" esista
       | details | NOT_NULL |
@@ -678,7 +678,7 @@ And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGI
       | denomination | Louis Armstrong |
       | taxId | RMSLSO31M04Z404R |
       | digitalDomicile | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
     And viene verificato che l'elemento di timeline "DIGITAL_SUCCESS_WORKFLOW" esista
@@ -747,7 +747,7 @@ And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGI
       | denomination | Sara Bianchi |
       | taxId | SHRSWP58T71D544X |
       | digitalDomicile | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
@@ -894,7 +894,7 @@ And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGI
       | denomination | Mario Rossi |
       | taxId | PGVCKH47H05A521N |
       | digitalDomicile | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
@@ -1040,7 +1040,7 @@ And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGI
       | denomination | Mario Gialli |
       | taxId | PTRVTL34D21F890A |
       | digitalDomicile | NULL |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
@@ -1188,7 +1188,7 @@ And viene schedulato il perfezionamento per decorrenza termini per il caso "DIGI
       | taxId | VHGRBT95E07L215U |
       | digitalDomicile | NULL |
       | physicalAddress_address | Via@ok_890 |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED short
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
       | NULL | NULL |
     And viene verificato che l'elemento di timeline "SEND_DIGITAL_FEEDBACK" esista
