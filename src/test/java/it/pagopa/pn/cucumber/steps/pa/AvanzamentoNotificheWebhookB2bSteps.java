@@ -228,6 +228,13 @@ public class AvanzamentoNotificheWebhookB2bSteps {
         createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false, null,false);
     }
 
+    @When("si crea(no) i(l) nuov(o)(i) stream per il {string} con versione {string} e filtro status {string}")
+    public void createdStream(String pa,String version,String filter) {
+        setPaWebhook(pa);
+        updateApiKeyForStream();
+        createStream(pa,StreamVersion.valueOf(version.trim().toUpperCase()),null,false,  List.of(filter),false);
+    }
+
     @And("si crea il nuovo stream per il {string} con versione {string} \\(caso errato)")
     public void siCreaIlNuovoStreamPerIlConVersioneFORZATOSoloPerCasoErrato(String pa, String version) {
         setPaWebhook(pa);
