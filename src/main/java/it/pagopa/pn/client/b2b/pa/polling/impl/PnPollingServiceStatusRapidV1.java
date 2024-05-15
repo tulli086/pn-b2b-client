@@ -4,50 +4,64 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NotificationStatusHistoryElement;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
+import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
-import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
 @Service(PnPollingStrategy.STATUS_RAPID_V1)
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class PnPollingServiceStatusRapidV1 extends PnPollingTemplate<PnPollingResponseV1> {
-    protected final TimingForTimeline timingForTimeline;
+
+    protected final TimingForPolling timingForPolling;
     private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotification notificationV1;
 
 
-    public PnPollingServiceStatusRapidV1(TimingForTimeline timingForTimeline, IPnPaB2bClient pnPaB2bClient) {
-        this.timingForTimeline = timingForTimeline;
+    public PnPollingServiceStatusRapidV1(TimingForPolling timingForPolling, IPnPaB2bClient pnPaB2bClient) {
+        this.timingForPolling = timingForPolling;
         this.pnPaB2bClient = pnPaB2bClient;
     }
 
     @Override
-    protected Callable<PnPollingResponseV1> getPollingResponse(String iun, String value) {
+    protected Callable<PnPollingResponseV1> getPollingResponse(String iun, PnPollingParameter pnPollingParameter) {
         return () -> {
             PnPollingResponseV1 pnPollingResponse = new PnPollingResponseV1();
-            FullSentNotification fullSentNotification = pnPaB2bClient.getSentNotificationV1(iun);
-            pnPollingResponse.setNotification(fullSentNotification);
-            this.notificationV1 = fullSentNotification;
+            FullSentNotification fullSentNotificationV1;
+            try {
+                fullSentNotificationV1 = pnPaB2bClient.getSentNotificationV1(iun);
+            } catch (Exception exception) {
+                log.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", iun, pnPaB2bClient.getApiKeySetted().name(), exception.getMessage());
+                throw new PnPollingException(exception.getMessage());
+            }
+            pnPollingResponse.setNotification(fullSentNotificationV1);
+            this.notificationV1 = fullSentNotificationV1;
             return pnPollingResponse;
         };
     }
 
     @Override
-    protected Predicate<PnPollingResponseV1> checkCondition(String iun, String value) {
-        return (pnPollingResponse) -> {
+    protected Predicate<PnPollingResponseV1> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
+        return pnPollingResponse -> {
             if(pnPollingResponse.getNotification() == null) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
 
-            if(!isEqualState(pnPollingResponse, value)) {
+            if(!isEqualStatus(pnPollingResponse, pnPollingParameter)) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
-            pnPollingResponse.setResult(true);
+
             return true;
         };
     }
@@ -62,13 +76,13 @@ public class PnPollingServiceStatusRapidV1 extends PnPollingTemplate<PnPollingRe
 
     @Override
     protected Integer getPollInterval(String value) {
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value);
         return timingResult.waiting();
     }
 
     @Override
     protected Integer getAtMost(String value) {
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value);
         return timingResult.waiting() * timingResult.numCheck();
     }
 
@@ -87,15 +101,25 @@ public class PnPollingServiceStatusRapidV1 extends PnPollingTemplate<PnPollingRe
         return this.pnPaB2bClient.getApiKeySetted();
     }
 
-    private boolean isEqualState(PnPollingResponseV1 pnPollingResponse, String value) {
+    private boolean isEqualStatus(PnPollingResponseV1 pnPollingResponse, PnPollingParameter pnPollingParameter) {
         NotificationStatusHistoryElement notificationStatusHistoryElement = pnPollingResponse.getNotification()
                 .getNotificationStatusHistory()
                 .stream()
-                .filter(notification -> notification
-                        .getStatus()
-                        .getValue().equals(value))
+                .filter(pnPollingParameter.getPnPollingPredicate() == null
+                    ?
+                        statusHistory -> statusHistory
+                            .getStatus()
+                            .getValue().equals(pnPollingParameter.getValue())
+                    :
+                        pnPollingParameter.getPnPollingPredicate().getNotificationStatusHistoryElementPredicateV1())
                 .findAny()
                 .orElse(null);
-        return notificationStatusHistoryElement != null;
+
+        if(notificationStatusHistoryElement != null) {
+            pnPollingResponse.setNotificationStatusHistoryElement(notificationStatusHistoryElement);
+            pnPollingResponse.setResult(true);
+            return true;
+        }
+        return false;
     }
 }

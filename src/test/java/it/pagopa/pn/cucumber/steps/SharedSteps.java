@@ -15,6 +15,7 @@ import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebRecipientClient;
@@ -31,10 +32,9 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.m
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
 import it.pagopa.pn.cucumber.utils.*;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,9 +43,7 @@ import org.springframework.boot.convert.DurationStyle;
 import org.springframework.context.annotation.Scope;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
-
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -56,6 +54,7 @@ import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.*;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class SharedSteps {
 
 
@@ -67,18 +66,13 @@ public class SharedSteps {
 
     //private  String iuvGPD;
 
-    private List<String> iuvGPD;
+    private final List<String> iuvGPD;
 
     private final PnPaB2bUtils b2bUtils;
     private final IPnWebRecipientClient webRecipientClient;
     private final PnExternalServiceClientImpl pnExternalServiceClient;
     private final IPnWebUserAttributesClient iPnWebUserAttributesClient;
     private final PnServiceDeskClientImpl serviceDeskClient;
-
-    private final PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey;
-
-    private final PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey;
-
     private NewNotificationResponse newNotificationResponse;
     private it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse newNotificationResponseV1;
 
@@ -97,38 +91,28 @@ public class SharedSteps {
     private HttpStatusCodeException notificationError;
     private OffsetDateTime notificationCreationDate;
 
-
-
     private ProgressResponseElement progressResponseElement;
 
-
-
-    public static final String DEFAULT_PA = "Comune_1";
     private String settedPa = "Comune_1";
     private final ObjectMapper objMapper = JsonMapper.builder()
             .addModule(new JavaTimeModule())
             .build();
 
     private boolean groupToSet = true;
-
     private String errorCode = null;
-
-    private static final Integer WAITING_GPD = 2000;
 
     private RequestNewApiKey requestNewApiKey;
     private ResponseNewApiKey responseNewApiKey;
 
-
-
-
     private TimelineElementV23 timelineElementV23;
     private ProgressResponseElementV23 progressResponseElementV23;
-
 
     private it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.StreamMetadataResponse eventStream;
     private StreamMetadataResponseV23 eventStreamV23;
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Integer WAITING_GPD = 2000;
+
+    public static final String DEFAULT_PA = "Comune_1";
 
     @Value("${pn.external.api-key-taxID}")
     private String senderTaxId;
@@ -150,7 +134,7 @@ public class SharedSteps {
     @Value("${pn.bearer-token.user2.taxID}")
     private String marioGherkinTaxID;
     private final PnB2bClientTimingConfigs timingConfigs;
-    private String schedulingDeltaDefault = "500";
+    private final String schedulingDeltaDefault = "500";
 
     private final Integer workFlowWaitDefault = 31000;
     private final Integer waitDefault = 10000;
@@ -159,8 +143,6 @@ public class SharedSteps {
     private final Integer WORKFLOW_WAIT_UPPER_BOUND = 2900;
     private final Integer WAIT_UPPER_BOUND = 950;
 
-    private final String schedulingDaysSuccessDigitalRefinementDefaultString = "6m";
-    private final String schedulingDaysFailureDigitalRefinementDefaultString = "6m";
     private final Duration schedulingDaysSuccessDigitalRefinementDefault = DurationStyle.detectAndParse("6m");
     private final Duration schedulingDaysFailureDigitalRefinementDefault = DurationStyle.detectAndParse("6m");
     private final Duration schedulingDaysSuccessAnalogRefinementDefault = DurationStyle.detectAndParse("2m");
@@ -169,33 +151,24 @@ public class SharedSteps {
     private final Duration secondNotificationWorkflowWaitingTimeDefault = DurationStyle.detectAndParse("6m");
     private final Duration waitingForReadCourtesyMessageDefault = DurationStyle.detectAndParse("5m");
 
-
     private List<it.pagopa.pn.client.b2b.webhook.generated.openapi.clients.externalb2bwebhook.model_v2.ProgressResponseElement> progressResponseElements = null;
-
-
 
     private List<ProgressResponseElementV23> progressResponseElementsV23 = null;
     public static Integer lastEventID = 0;
 
-    private String gherkinSpaTaxID = "12666810299";
+    private final String gherkinSpaTaxID = "12666810299";
     //  private String cucumberSrlTaxID = "SCTPTR04A01C352E";
 
-    private String cucumberSrlTaxID = "20517490320";
+    private final String cucumberSrlTaxID = "20517490320";
 
-    private String cucumberSocietyTaxID = "20517490320";// "DNNGRL83A01C352D";
-    private String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
+    private final String cucumberSocietyTaxID = "20517490320";// "DNNGRL83A01C352D";
+    private final String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
     // private String gherkinSrltaxId = "CCRMCT06A03A433H";
-    private String gherkinAnalogicTaxID = "05722930657";
-    private String gherkinIrreperibileTaxID = "00749900049";
-    private String gherkinSrltaxId = "12666810299";
-    private String cucumberSpataxId = "20517490320"; //
+    private final String gherkinAnalogicTaxID = "05722930657";
+    private final String gherkinIrreperibileTaxID = "00749900049";
+    private final String gherkinSrltaxId = "12666810299";
+    private final String cucumberSpataxId = "20517490320"; //
 
-    @Value("${pn.interop.base-url}")
-    private String interopBaseUrl;
-    @Value("${pn.interop.token-oauth2.path}")
-    private String tokenOauth2Path;
-    @Value("${pn.interop.token-oauth2.client-assertion}")
-    private String clientAssertion;
 
     @Value("${pn.external.bearer-token-pg1.id}")
     private String idOrganizationGherkinSrl;
@@ -205,19 +178,21 @@ public class SharedSteps {
     @Value("${pn.external.utilized.pec:testpagopa3@pec.pagopa.it}")
     private String digitalAddress;
 
-    private String defaultDigitalAddress = "testpagopa3@pec.pagopa.it";
+    private final String defaultDigitalAddress = "testpagopa3@pec.pagopa.it";
 
     private SettableApiKey.ApiKeyType apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
 
+    private final PnPollingFactory pollingFactory;
 
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
                        PnExternalServiceClientImpl pnExternalServiceClient,
                        IPnWebUserAttributesClient iPnWebUserAttributesClient, IPnWebPaClient webClient,
-                       PnServiceDeskClientImpl serviceDeskClient, PnServiceDeskClientImplNoApiKey serviceDeskClientImplNoApiKey,
-                       PnServiceDeskClientImplWrongApiKey serviceDeskClientImplWrongApiKey, PnGPDClientImpl pnGPDClientImpl,
-                       PnPaymentInfoClientImpl pnPaymentInfoClientImpl, PnB2bClientTimingConfigs timingConfigs) {
+                       PnServiceDeskClientImpl serviceDeskClient,
+                       PnGPDClientImpl pnGPDClientImpl,
+                       PnPaymentInfoClientImpl pnPaymentInfoClientImpl, PnB2bClientTimingConfigs timingConfigs,
+                       PnPollingFactory pollingFactory) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.webClient = webClient;
@@ -226,18 +201,17 @@ public class SharedSteps {
         this.pnExternalServiceClient = pnExternalServiceClient;
         this.iPnWebUserAttributesClient = iPnWebUserAttributesClient;
         this.serviceDeskClient = serviceDeskClient;
-        this.serviceDeskClientImplNoApiKey = serviceDeskClientImplNoApiKey;
-        this.serviceDeskClientImplWrongApiKey = serviceDeskClientImplWrongApiKey;
         this.pnGPDClientImpl = pnGPDClientImpl;
         this.pnPaymentInfoClientImpl = pnPaymentInfoClientImpl;
         this.iuvGPD = new ArrayList<String>();
 
         this.timingConfigs = timingConfigs;
+        this.pollingFactory = pollingFactory;
     }
 
     @BeforeAll
     public static void before_all() {
-        logger.debug("SHARED_GLUE START");
+        log.debug("SHARED_GLUE START");
         //only for class activation
     }
 
@@ -332,7 +306,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(getWait());
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
                 FullSentNotificationV23 fullSentNotificationV23 = b2bUtils.waitForRequestAcceptation(internalNotificationResponse);
@@ -347,8 +321,8 @@ public class SharedSteps {
                         throw new RuntimeException(exc);
                     }
                     fullSentNotificationV23 = b2bClient.getSentNotification(fullSentNotificationV23.getIun());
-                    logger.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV23.getTimeline());
-                    timelineElementV23 = fullSentNotificationV23.getTimeline().stream().filter(elem -> elem.getCategory().equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE)).findAny().orElse(null);
+                    log.info("NOTIFICATION_TIMELINE: " + fullSentNotificationV23.getTimeline());
+                    timelineElementV23 = fullSentNotificationV23.getTimeline().stream().filter(elem -> Objects.requireNonNull(elem.getCategory()).equals(TimelineElementCategoryV23.COMPLETELY_UNREACHABLE)).findAny().orElse(null);
                     if (timelineElementV23 != null) {
                         break;
                     }
@@ -383,15 +357,15 @@ public class SharedSteps {
 
         Assertions.assertTrue(completed);
         Assertions.assertEquals(sentNotifications.size(), numberOfNotification);
-        logger.debug("NOTIFICATION LIST: {}", sentNotifications);
-        logger.debug("IUN: ");
+        log.debug("NOTIFICATION LIST: {}", sentNotifications);
+        log.debug("IUN: ");
         for (FullSentNotificationV23 notificationV23 : sentNotifications) {
-            logger.info(notificationV23.getIun());
+            log.info(notificationV23.getIun());
         }
-        logger.debug("End IUN list");
+        log.debug("End IUN list");
         //la prima notifica viene inserita
         this.notificationResponseComplete = sentNotifications.poll();
-        logger.debug("notificationResponseComplete: {}", this.notificationResponseComplete);
+        log.debug("notificationResponseComplete: {}", this.notificationResponseComplete);
     }
 
     @And("destinatario Mario Cucumber")
@@ -916,6 +890,13 @@ public class SharedSteps {
         sendNotification();
     }
 
+    @When("la notifica viene inviata tramite api b2b dal {string} con allegato uguale al allegato di pagamento")
+    public void laNotificaVieneInviataAllegatiUgualeAlPagamento(String paType) {
+        selectPA(paType);
+        setSenderTaxIdFromProperties();
+        sendNotificationWithErrorAllegatiUgualiPayment();
+    }
+
     @When("verifica che la notifica inviata tramite api b2b dal {string} non diventi ACCEPTED")
     public void laNotificaVieneInviataNoAccept(String paType) {
         selectPA(paType);
@@ -1184,7 +1165,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1194,7 +1175,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseComplete);
@@ -1215,7 +1196,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1225,7 +1206,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNull(notificationResponseComplete);
@@ -1247,7 +1228,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1257,7 +1238,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseComplete);
@@ -1290,7 +1271,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertFalse(rifiutata);
@@ -1328,7 +1309,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(getWorkFlowWait());
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1338,7 +1319,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseCompleteV1);
@@ -1360,7 +1341,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(getWorkFlowWait());
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1370,7 +1351,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseCompleteV2);
@@ -1391,7 +1372,7 @@ public class SharedSteps {
                 try {
                     Thread.sleep(getWorkFlowWait());
                 } catch (InterruptedException e) {
-                    logger.error("Thread.sleep error retry");
+                    log.error("Thread.sleep error retry");
                     throw new RuntimeException(e);
                 }
 
@@ -1401,7 +1382,7 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
             Assertions.assertNotNull(notificationResponseCompleteV21);
@@ -1488,11 +1469,11 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1514,11 +1495,11 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1540,16 +1521,27 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
                     "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+
+    private void sendNotificationWithErrorAllegatiUgualiPayment() {
+        try {
+                       newNotificationResponse = b2bUtils.uploadNotificationAllegatiUgualiPagamento(notificationRequest);
+        } catch (HttpStatusCodeException | IOException e) {
+            if (e instanceof HttpStatusCodeException) {
+                this.notificationError = (HttpStatusCodeException) e;
+            }
         }
     }
 
@@ -1565,11 +1557,11 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1590,11 +1582,11 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
 
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1614,10 +1606,10 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1636,10 +1628,10 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1659,10 +1651,10 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1681,10 +1673,10 @@ public class SharedSteps {
             try {
                 Thread.sleep(getWorkFlowWait());
             } catch (InterruptedException e) {
-                logger.error("Thread.sleep error retry");
+                log.error("Thread.sleep error retry");
                 throw new RuntimeException(e);
             }
-            Assertions.assertNotNull(errorCode);
+            Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1941,23 +1933,29 @@ public class SharedSteps {
         switch (apiKey) {
             case "Comune_1":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_1);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_1);
                 break;
             case "Comune_2":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_2);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_2);
                 break;
             case "Comune_Multi":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.GA);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.GA);
                 break;
             case "Comune_Son":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.SON);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.SON);
                 break;
             case "Comune_Root":
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.ROOT);
+                this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.ROOT);
                 break;
             default:
                 throw new IllegalArgumentException();
         }
-        this.b2bUtils.setClient(b2bClient);
+
+        this.b2bUtils.setClient(b2bClient, pollingFactory);
         this.settedPa = apiKey;
     }
 
@@ -2000,6 +1998,10 @@ public class SharedSteps {
         return b2bClient;
     }
 
+    public PnPollingFactory getPollingFactory(){
+        return pollingFactory;
+    }
+
 
     public IPnWebPaClient getWebPaClient() {
         return webClient;
@@ -2023,15 +2025,6 @@ public class SharedSteps {
 
     public PnServiceDeskClientImpl getServiceDeskClient() {
         return serviceDeskClient;
-    }
-
-
-    public PnServiceDeskClientImplNoApiKey getServiceDeskClientNoApiKey() {
-        return serviceDeskClientImplNoApiKey;
-    }
-
-    public PnServiceDeskClientImplWrongApiKey getServiceDeskClientWrongApiKey() {
-        return serviceDeskClientImplWrongApiKey;
     }
 
     public String getMarioCucumberTaxID() {
@@ -2206,11 +2199,11 @@ public class SharedSteps {
             List<LegalAndUnverifiedDigitalAddress> legalAddressByRecipient = this.iPnWebUserAttributesClient.getLegalAddressByRecipient();
             if (legalAddressByRecipient != null && !legalAddressByRecipient.isEmpty()) {
                 this.iPnWebUserAttributesClient.deleteRecipientLegalAddress("default", LegalChannelType.PEC);
-                logger.info("PEC FOUND AND DELETED");
+                log.info("PEC FOUND AND DELETED");
             }
         } catch (HttpStatusCodeException httpStatusCodeException) {
             if (httpStatusCodeException.getStatusCode().is4xxClientError()) {
-                logger.info("PEC NOT FOUND");
+                log.info("PEC NOT FOUND");
             } else {
                 throw httpStatusCodeException;
             }

@@ -4,51 +4,68 @@ import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.TimelineElementV20;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingTemplate;
+import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV20;
+import it.pagopa.pn.client.b2b.pa.polling.exception.PnPollingException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
-import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import java.lang.invoke.MethodHandles;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 
 @Service(PnPollingStrategy.TIMELINE_RAPID_V20)
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPollingResponseV20> {
-    protected final TimingForTimeline timingForTimeline;
+    protected final TimingForPolling timingForPolling;
     private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotificationV20 notificationV20;
 
 
-    public PnPollingServiceTimelineRapidV20(TimingForTimeline timingForTimeline, IPnPaB2bClient pnPaB2bClient) {
-        this.timingForTimeline = timingForTimeline;
+    public PnPollingServiceTimelineRapidV20(TimingForPolling timingForPolling, IPnPaB2bClient pnPaB2bClient) {
+        this.timingForPolling = timingForPolling;
         this.pnPaB2bClient = pnPaB2bClient;
     }
 
     @Override
-    protected Callable<PnPollingResponseV20> getPollingResponse(String iun, String value) {
+    protected Callable<PnPollingResponseV20> getPollingResponse(String iun, PnPollingParameter pnPollingParameter) {
         return () -> {
             PnPollingResponseV20 pnPollingResponse = new PnPollingResponseV20();
-            FullSentNotificationV20 fullSentNotification = pnPaB2bClient.getSentNotificationV2(iun);
-            pnPollingResponse.setNotification(fullSentNotification);
-            this.notificationV20 = fullSentNotification;
+            FullSentNotificationV20 fullSentNotificationV20;
+            try {
+                fullSentNotificationV20 = pnPaB2bClient.getSentNotificationV2(iun);
+            } catch (Exception exception) {
+                log.error("Error getPollingResponse(), Iun: {}, ApiKey: {}, PnPollingException: {}", iun, pnPaB2bClient.getApiKeySetted().name(), exception.getMessage());
+                throw new PnPollingException(exception.getMessage());
+            }
+            pnPollingResponse.setNotification(fullSentNotificationV20);
+            this.notificationV20 = fullSentNotificationV20;
             return pnPollingResponse;
         };
     }
 
     @Override
-    protected Predicate<PnPollingResponseV20> checkCondition(String iun, String value) {
-        return (pnPollingResponse) -> {
+    protected Predicate<PnPollingResponseV20> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
+        return pnPollingResponse -> {
             if(pnPollingResponse.getNotification() == null) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
 
             if(pnPollingResponse.getNotification().getTimeline().isEmpty() ||
-                    !isPresentCategory(pnPollingResponse, value)) {
+                    !isPresentCategory(pnPollingResponse, pnPollingParameter)) {
                 pnPollingResponse.setResult(false);
                 return false;
             }
-            pnPollingResponse.setResult(true);
+
             return true;
         };
     }
@@ -63,13 +80,13 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
 
     @Override
     protected Integer getPollInterval(String value) {
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value);
         return timingResult.waiting();
     }
 
     @Override
     protected Integer getAtMost(String value) {
-        TimingForTimeline.TimingResult timingResult = timingForTimeline.getTimingForElement(value);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value);
         return timingResult.waiting() * timingResult.numCheck();
     }
 
@@ -88,17 +105,26 @@ public class PnPollingServiceTimelineRapidV20  extends PnPollingTemplate<PnPolli
         return this.pnPaB2bClient.getApiKeySetted();
     }
 
-    private boolean isPresentCategory(PnPollingResponseV20 pnPollingResponse, String value) {
+    private boolean isPresentCategory(PnPollingResponseV20 pnPollingResponse, PnPollingParameter pnPollingParameter) {
         TimelineElementV20 timelineElementV20 = pnPollingResponse
                 .getNotification()
                 .getTimeline()
                 .stream()
-                .filter(timelineElement ->
-                        timelineElement.getCategory() != null
-                        && timelineElement.getCategory().getValue().equals(value))
+                .filter(pnPollingParameter.getPnPollingPredicate() == null
+                    ?
+                        timelineElement->
+                                timelineElement.getCategory() != null
+                                        && Objects.requireNonNull(timelineElement.getCategory().getValue()).equals(pnPollingParameter.getValue())
+                    :
+                        pnPollingParameter.getPnPollingPredicate().getTimelineElementPredicateV20())
                 .findAny()
                 .orElse(null);
 
-        return timelineElementV20 != null;
+        if(timelineElementV20 != null) {
+            pnPollingResponse.setTimelineElement(timelineElementV20);
+            pnPollingResponse.setResult(true);
+            return true;
+        }
+        return false;
     }
 }

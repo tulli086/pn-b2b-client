@@ -4,7 +4,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
 
 
-  @dev @workflowAnalogico
+  @dev @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_40] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode PNAG012 positivo PN-5820
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -19,7 +19,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG005C" e verifica data delay più 0
     #"sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.5s-RECAG012[DELAY:+10d].5s-RECAG011B[DOC:ARCAD;DOC:23L].5s-RECAG005A[DELAY:+20d].5s-RECAG005C[DELAY:+20d]"
 
-  @dev @workflowAnalogico
+  @dev @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_41] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode PNAG012 positivo PN-5820
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -31,10 +31,11 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | physicalAddress_address | via@OK-GiacenzaDelegato-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "PNAG012"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG011B" e verifica tipo DOC "23L"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG006C" e verifica data delay più 0
     #"sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.5s-RECAG012[DELAY:+10d].5s-RECAG011B[DOC:ARCAD;DOC:23L].5s-RECAG006A[DELAY:+25d].5s-RECAG006C[DELAY:+25d]"
 
-  @dev @workflowAnalogico
+  @dev @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_42] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode PNAG012 positivo PN-5820
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -46,10 +47,12 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
       | physicalAddress_address | via@FAIL-Giacenza-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "PNAG012"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG011B" e verifica tipo DOC "23L"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG007B" e verifica tipo DOC "Plico"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG007C" e verifica data delay più 0
     # "sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.5s-RECAG012[DELAY:+10d].5s-RECAG011B[DOC:ARCAD;DOC:23L].5s-RECAG007A[DELAY:+30d].5s-RECAG007B[DOC:Plico;DELAY:+30d].5s-RECAG007C[DELAY:+30d]"
 
-  @dev @workflowAnalogico
+  @dev @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_43] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode PNAG012 positivo PN-5820
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -64,14 +67,13 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG008C" e verifica data delay più 0
     # "sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.5s-RECAG012[DELAY:+10d].5s-RECAG011B[DOC:ARCAD;DOC:23L].5s-RECAG008A[DELAY:+60d].5s-RECAG008B[DOC:Plico;DELAY:+60d].5s-RECAG008C[DELAY:+60d]"
 
-  @dev @ignore @workflowAnalogico
+  @dev @ignore @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_44] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode PNAG012 positivo PN-5820
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario
+    And destinatario Mario Gherkin e:
       | denomination | OK-Giacenza-gt10_890 |
-      | taxId | LVLDAA85T50G702B |
       | digitalDomicile | NULL |
       | physicalAddress_address | via@OK-Giacenza-gt10_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -82,9 +84,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario
+    And destinatario Mario Gherkin e:
       | denomination | OK-CausaForzaMaggiore_AR |
-      | taxId | LVLDAA85T50G702B |
       | digitalDomicile | NULL |
       | physicalAddress_address | via@OK-CausaForzaMaggiore_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -129,9 +130,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario
+    And destinatario Mario Gherkin e:
       | denomination | OK-CausaForzaMaggiore_890 |
-      | taxId | LVLDAA85T50G702B |
       | digitalDomicile | NULL |
       | physicalAddress_address | via@OK-CausaForzaMaggiore_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -147,9 +147,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario
+    And destinatario Mario Gherkin e:
       | denomination | OK-NonRendicontabile_890 |
-      | taxId | LVLDAA85T50G702B |
       | digitalDomicile | NULL |
       | physicalAddress_address | via@OK-NonRendicontabile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -216,7 +215,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     #"@sequence.5s-CON080.5s-RECRN010.5s-RECRN011.5s-RECRN005A.5s-RECRN005B[DOC:Plico].5s-RECRN005C"
 
 
-  @dev @workflowAnalogico
+  @dev @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_52] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode PNAG012 positivo PN-5820
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -346,6 +345,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "CON080" tentativo "ATTEMPT_0"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG003E" e verifica tipo DOC "Plico" tentativo "ATTEMPT_0"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG003E" e verifica tipo DOC "Indagine" tentativo "ATTEMPT_0"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG003F" e deliveryFailureCause "M03" tentativo "ATTEMPT_0"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "CON080" tentativo "ATTEMPT_1"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG003E" e verifica tipo DOC "Plico" tentativo "ATTEMPT_1"
@@ -358,7 +358,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
   #deliveryFailureCause: M03
   #deliveryDetailCode: RECAG003F
 
-  @dev @workflowAnalogico
+  @dev @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_59] Invio Notifica Mono destinatario workflow cartaceo - Caso FAIL-Giacenza-gt10-23L_890 PN-5927
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -370,9 +370,11 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "CON080"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG011A"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "PNAG012"
-    #And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG007B" e verifica tipo DOC "Plico" tentativo "ATTEMPT_0.IDX_3"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG007B" e verifica tipo DOC "23L" tentativo "ATTEMPT_0"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG007B" e verifica tipo DOC "Plico" tentativo "ATTEMPT_0"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG007C" e verifica data delay più 0
+
+
   #"sequence": "@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.60s-RECAG012.5s-RECAG011B[DOC:ARCAD].5s-RECAG007A.5s-RECAG007B[DOC:23L;DOC:Plico].5s-RECAG007C"
 
   @dev @workflowAnalogico
@@ -428,7 +430,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
 
 
 
-  @mockNR  @workflowAnalogico @bugD02
+  @mockNR  @workflowAnalogico @mockNormalizzatore
   Scenario: [B2B_TIMELINE_ANALOG_64] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D02 coincidente
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -459,7 +461,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
-  @workflowAnalogico
+  @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_66] Attesa elemento di timeline REFINEMENT con physicalAddress OK-NO012-lte10
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -471,7 +473,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
-  @workflowAnalogico
+  @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_67] Attesa elemento di timeline REFINEMENT con physicalAddress OK-NO012-gt10
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -484,7 +486,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
 
-  @workflowAnalogico
+  @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_68] Attesa elemento di timeline REFINEMENT con physicalAddress OK-Giacenza-lte10_890-2
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -497,7 +499,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
 
-  @workflowAnalogico
+  @giacenza890Complex
   Scenario: [B2B_TIMELINE_ANALOG_69] Attesa elemento di timeline REFINEMENT con physicalAddress OK-Giacenza-lte10_890-3
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -512,7 +514,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
 
   #{"sequenceName":"OK-MISSING-ARCAD-1","sequence":"@sequence.5s-CON080.5s-RECAG012.5s-RECAG011B[DOC:23L]"  },
   #{"sequenceName":"OK-MISSING-ARCAD-2","sequence":"@sequence.5s-CON080.5s-RECAG011B[DOC:23L].5s-RECAG012"  }
-  @workflowAnalogico @ARCAD
+  @giacenza890Complex @ARCAD
   Scenario: [B2B_TIMELINE_ANALOG_70] PA - invio notifica 890 mono destinatario con sequence @OK-MISSING-ARCAD-1 -PN-9653
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -527,7 +529,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
 
-  @workflowAnalogico @ARCAD
+  @giacenza890Complex @ARCAD
   Scenario: [B2B_TIMELINE_ANALOG_71] PA - Invio notifica 890 multi destinatario (1 dest. con flusso digitale e 1 dest. con sequence @OK-MISSING-ARCAD-1) -PN-9653
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -545,7 +547,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT" per l'utente 0
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT" per l'utente 1
 
-  @workflowAnalogico @ARCAD
+  @giacenza890Complex @ARCAD
   Scenario: [B2B_TIMELINE_ANALOG_72] PA - Invio notifica mono destinatario con sequence @OK-MISSING-ARCAD-2 -PN-9653
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -559,7 +561,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "PNAG012"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
-  @workflowAnalogico @ARCAD
+  @giacenza890Complex @ARCAD
   Scenario: [B2B_TIMELINE_ANALOG_73] PA - Invio notifica 890 multi destinatario (1 dest. con flusso digitale e 1 dest. con sequence @OK-MISSING-ARCAD-2) -PN-9653
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -592,7 +594,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG008C"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
 
-  @workflowAnalogico @realNR @uatEnvCondition
+  @workflowAnalogico @realNR
   Scenario: [B2B_TIMELINE_ANALOG_77] PA mittente: invio notifica analogica FAIL-Irreperibile_AR
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
@@ -622,4 +624,22 @@ Feature: avanzamento notifiche b2b con workflow cartaceo
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED" dalla PA "Comune_Multi"
+
+
+  @workflowAnalogico @uatEnvCondition
+  Scenario: [B2B_TIMELINE_ANALOG_78]  PA mittente: invio notifica analogica FAIL-DiscoveryIrreperibileBadCAP_890 - PN-10146
+    Given viene generata una nuova notifica
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | REGISTERED_LETTER_890           |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile         | NULL                                     |
+      | physicalAddress_address | Via@FAIL-DiscoveryIrreperibileBadCAP_890 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG003E" e verifica tipo DOC "Indagine" tentativo "ATTEMPT_0"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG003E" e verifica tipo DOC "Plico" tentativo "ATTEMPT_0"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG003F" e deliveryFailureCause "M03" tentativo "ATTEMPT_0"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B" e verifica tipo DOC "23L" tentativo "ATTEMPT_1"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG001C" tentativo "ATTEMPT_1"
+
 

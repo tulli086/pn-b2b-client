@@ -11,7 +11,7 @@ import it.pagopa.pn.client.b2b.pa.config.springconfig.ApiKeysConfiguration;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.BearerTokenConfiguration;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.RestTemplateConfiguration;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.TimingConfiguration;
-import it.pagopa.pn.client.b2b.pa.utils.TimingForTimeline;
+import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -38,13 +38,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPrivateDeliveryPushExternalClient.class,
         InteropTokenSingleton.class,
         PnServiceDeskClientImpl.class,
-        PnServiceDeskClientImplNoApiKey.class,
-        PnServiceDeskClientImplWrongApiKey.class,
         PnGPDClientImpl.class,
         PnPaymentInfoClientImpl.class,
         PnRaddFsuClientImpl.class,
         PnRaddAlternativeClientImpl.class,
-        TimingForTimeline.class,
+        TimingForPolling.class,
         PnB2bClientTimingConfigs.class,
         PnPollingFactory.class,
         PnPollingServiceTimelineRapidV23.class,
@@ -62,7 +60,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceStatusSlowV23.class,
         PnPollingServiceStatusSlowV21.class,
         PnPollingServiceStatusSlowV20.class,
-        PnPollingServiceStatusSlowV1.class
+        PnPollingServiceStatusSlowV1.class,
+        PnPollingServiceValidationStatusV1.class,
+        PnPollingServiceValidationStatusV20.class,
+        PnPollingServiceValidationStatusV21.class,
+        PnPollingServiceValidationStatusV23.class,
+        PnPollingServiceValidationStatusNoAcceptedV23.class,
+        PnPollingServiceValidationStatusAcceptedShortV23.class,
+        PnPollingServiceWebhookV20.class,
+        PnPollingServiceWebhookV23.class
 })
 @EnableScheduling
 @EnableConfigurationProperties
