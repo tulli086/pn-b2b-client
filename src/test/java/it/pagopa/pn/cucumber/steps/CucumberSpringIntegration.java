@@ -70,7 +70,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceWebhookV23.class,
         PnPollingServiceValidationStatusAcceptedExtraRapidV23.class,
         PnPollingServiceStatusExtraRapidV23.class,
-        PnPollingServiceTimelineExtraRapidV23.class
+        PnPollingServiceTimelineExtraRapidV23.class,
         MailSenderConfig.class
 })
 @EnableScheduling
