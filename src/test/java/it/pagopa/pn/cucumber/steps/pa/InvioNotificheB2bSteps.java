@@ -925,18 +925,21 @@ public class InvioNotificheB2bSteps {
     private String senderEmail;
 
 
-    @Given("viene inviata una email")
-    public void vieneInviataUnaEmail() {
-        System.out.println("SENDER EMEAIL: "+senderEmail);
+
+    private void sendEmail() {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@testInvio.com");
         message.setTo(senderEmail);
         message.setSubject("prova invio");
-        message.setText("prova di invio 01");
+        message.setText("Test invio su pec mittente");
         emailSender.send(message);
     }
 
 
-
-
+    @Given("si invia una email alla pec mittente e si attendono {int} minuti")
+    public void siInviaUnaEmailAllaPecMittenteESiAttendonoMinuti(int wait) {
+        Assertions.assertDoesNotThrow(this::sendEmail);
+        long waiting = ((wait*60)*1000);
+        Assertions.assertDoesNotThrow(() -> Thread.sleep(waiting));
+    }
 }

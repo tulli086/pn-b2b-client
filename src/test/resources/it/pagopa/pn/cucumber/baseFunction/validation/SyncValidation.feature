@@ -1,9 +1,5 @@
 Feature: verifica validazione sincrona
 
-  @InvioMail
-  Scenario: test invio mail
-    Given viene inviata una email
-
   @OldMemory @authFleet
   Scenario: [B2B-PA-SEND_1] Invio notifica digitale mono destinatario e recupero tramite codice IUN (p.fisica)_scenario positivo
     Given viene generata una nuova notifica
