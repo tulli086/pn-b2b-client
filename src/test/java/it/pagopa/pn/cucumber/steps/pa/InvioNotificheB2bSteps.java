@@ -432,7 +432,6 @@ public class InvioNotificheB2bSteps {
                         await().atMost(downloadResponse.getRetryAfter() * 3L, TimeUnit.MILLISECONDS);
                         this.downloadResponse = b2bClient
                                 .getSentNotificationAttachment(iun, destinatario, type, 0);
-
                     } catch (RuntimeException exc) {
                         log.error(exc.getMessage());
                         throw exc;
@@ -514,15 +513,14 @@ public class InvioNotificheB2bSteps {
             }else if (version.equalsIgnoreCase("V23")){
                 b2bUtils.verifyNotification(sharedSteps.getSentNotification());
             }
-        } catch (AssertionFailedError | IOException assertionFailedError) {
-
+        } catch (AssertionFailedError assertionFailedError) {
             log.info("Errore di acquisizione notifica");
         }
     }
 
     @Then("si verifica la corretta acquisizione della notifica con verifica sha256 del allegato di pagamento {string}")
-    public void correctAcquisitionNotificationVerifySha256AllegatiPagamento(String attachname) {
-        Assertions.assertDoesNotThrow(() -> b2bUtils.verifyNotificationAndSha256AllegatiPagamento(sharedSteps.getSentNotification(),attachname));
+    public void correctAcquisitionNotificationVerifySha256AllegatiPagamento(String attachnament) {
+        Assertions.assertDoesNotThrow(() -> b2bUtils.verifyNotificationAndSha256AllegatiPagamento(sharedSteps.getSentNotification(), attachnament));
     }
 
 
