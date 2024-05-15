@@ -114,12 +114,12 @@ Feature: avanzamento b2b persona giuridica pagamento
       | senderDenomination | Comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
     And destinatario
-      | recipientType      | PG           |
-      | taxId              | 27957814470  |
-      | denomination       | Convivio SPA |
-      | payment_pagoPaForm | SI           |
-      | payment_f24        | NULL         |
-      | apply_cost_pagopa  | SI           |
+      | denomination       | Vita Nova Sas  |
+      | recipientType      | PG             |
+      | taxId              | 12666810299    |
+      | payment_pagoPaForm | SI             |
+      | payment_f24        | NULL           |
+      | apply_cost_pagopa  | SI             |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato il costo = "100" della notifica
 
@@ -131,8 +131,8 @@ Feature: avanzamento b2b persona giuridica pagamento
       | feePolicy          | DELIVERY_MODE               |
     And destinatario
       | recipientType         | PG               |
-      | taxId                 | LELPTR04A01C352E |
-      | denomination          | Le Epistolae srl |
+      | taxId                 | SCTPTR04A01C352E |
+      | denomination          | Il Secretum srl  |
       | payment_pagoPaForm    | SI               |
       | payment_f24           | NULL             |
       | apply_cost_pagopa     | SI               |
@@ -149,8 +149,8 @@ Feature: avanzamento b2b persona giuridica pagamento
       | feePolicy          | DELIVERY_MODE               |
     And destinatario
       | recipientType         | PG               |
-      | taxId                 | LELPTR04A01C352E |
-      | denomination          | Le Epistolae srl |
+      | taxId                 | SCTPTR04A01C352E |
+      | denomination          | Il Secretum srl  |
       | payment_pagoPaForm    | SI               |
       | payment_f24           | NULL             |
       | apply_cost_pagopa     | SI               |
@@ -167,9 +167,9 @@ Feature: avanzamento b2b persona giuridica pagamento
       | senderDenomination | Comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
     And destinatario
+      | denomination       | Vita Nova Sas|
       | recipientType      | PG           |
-      | taxId              | 27957814470  |
-      | denomination       | Convivio SPA |
+      | taxId              | 12666810299  |
       | payment_pagoPaForm | SI           |
       | payment_f24        | NULL         |
       | apply_cost_pagopa  | SI           |
