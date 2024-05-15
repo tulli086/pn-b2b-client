@@ -13,7 +13,7 @@ Feature: avanzamento b2b notifica analogico difgitale
       | senderDenomination | Comune di palermo               |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via@ok_RS    |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST"
     And verifica generazione Atto opponibile senza la messa a disposizione in "DIGITAL_DELIVERY_CREATION_REQUEST"
@@ -52,8 +52,8 @@ Feature: avanzamento b2b notifica analogico difgitale
   @workflowDigitale
   Scenario: [B2B_TIMELINE_FIX_7179_3] Notifica mono destinatario con workflow digitale completato con successo - Destinatario PF
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Gherkin
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 0
@@ -91,13 +91,13 @@ Feature: avanzamento b2b notifica analogico difgitale
   @dev
   Scenario: [B2B_TIMELINE_FIX_7179_5] Notifica analogica mono destinatario con destinatario irreperibile - Destinatario PF
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario
-      | denomination | Test AR Fail 2 |
-      | taxId | DVNLRD52D15M059P |
-      | digitalDomicile | NULL |
+      | denomination            | Test AR Fail 2           |
+      | taxId                   | DVNLRD52D15M059P         |
+      | digitalDomicile         | NULL                     |
       | physicalAddress_address | Via@FAIL-Irreperibile_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
@@ -134,7 +134,7 @@ Feature: avanzamento b2b notifica analogico difgitale
       | senderDenomination | Comune di palermo               |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via@ok_RS    |
     And destinatario Cucumber Society
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 0
@@ -152,16 +152,16 @@ Feature: avanzamento b2b notifica analogico difgitale
   @dev
   Scenario: [B2B_TIMELINE_FIX_7179_8] Notifica multi destinatario con workflow analogico con destinatari irreperibili
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario
-      | denomination | Test AR Fail 2 |
-      | taxId | DVNLRD52D15M059P |
-      | digitalDomicile | NULL |
+      | denomination            | Test AR Fail 2           |
+      | taxId                   | DVNLRD52D15M059P         |
+      | digitalDomicile         | NULL                     |
       | physicalAddress_address | Via@FAIL-Irreperibile_AR |
     And destinatario Mario Gherkin e:
-      | digitalDomicile | NULL |
+      | digitalDomicile         | NULL                     |
       | physicalAddress_address | Via@FAIL-Irreperibile_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi e verificho che l'utente 0 non abbia associato un evento "COMPLETELY_UNREACHABLE"
@@ -173,14 +173,14 @@ Feature: avanzamento b2b notifica analogico difgitale
   @workflowDigitale
   Scenario: [B2B_TIMELINE_FIX_7179_8_1] Notifica multi destinatario con workflow analogico con un destinatario irreperibile
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Cucumber Society
     And destinatario
-      | denomination | Test AR Fail 2 |
-      | taxId | DVNLRD52D15M059P |
-      | digitalDomicile | NULL |
+      | denomination            | Test AR Fail 2           |
+      | taxId                   | DVNLRD52D15M059P         |
+      | digitalDomicile         | NULL                     |
       | physicalAddress_address | Via@FAIL-Irreperibile_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 0
@@ -198,14 +198,14 @@ Feature: avanzamento b2b notifica analogico difgitale
   @workflowDigitale
   Scenario: [B2B_TIMELINE_FIX_7179_8_2] Notifica multi destinatario con workflow analogico con un destinatario irreperibile
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Cucumber Society
     And destinatario
-      | denomination | Test AR Fail 2 |
-      | taxId | DVNLRD52D15M059P |
-      | digitalDomicile | NULL |
+      | denomination            | Test AR Fail 2           |
+      | taxId                   | DVNLRD52D15M059P         |
+      | digitalDomicile         | NULL                     |
       | physicalAddress_address | Via@FAIL-Irreperibile_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 0
@@ -222,14 +222,16 @@ Feature: avanzamento b2b notifica analogico difgitale
 
 
  # 9	multidestinatario -> successo e verifica nuovo WF (con controllo date perfezionamento per decorrenza termini) --> caso completed per tutti i destinatari
-  @workflowDigitale
+  @workflowDigitale @mockPec
   Scenario: [B2B_TIMELINE_FIX_7179_9] Notifica multi destinatario PG PF con workflow digitale completato con successo
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
-    And destinatario Cucumber Society
-    And destinatario Mario Gherkin
+      | subject               | notifica analogica con cucumber |
+      | senderDenomination    | Comune di palermo               |
+      | physicalCommunication | AR_REGISTERED_LETTER            |
+    And destinatario Cucumber Society e:
+      | digitalDomicile_address | test@OK-pecSuccess.it |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test1@OK-pecSuccess.it |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 0
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 1
@@ -242,12 +244,13 @@ Feature: avanzamento b2b notifica analogico difgitale
   @workflowDigitale @mockPec
   Scenario: [B2B_TIMELINE_FIX_7179_10] Notifica multi destinatario PF PF con workflow digitale completato con successo
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-    And destinatario Mario Gherkin
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test@OK-pecSuccess.it |
     And destinatario
-      | taxId | GLLGLL64B15G702I |
-      | digitalDomicile_address | DSRDNI00A01A225I@pec.pagopa.it |
+      | taxId                   | GLLGLL64B15G702I    |
+      | digitalDomicile_address | test1@OK-pecSuccess.it |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 0
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 1
@@ -276,5 +279,28 @@ Feature: avanzamento b2b notifica analogico difgitale
   #Fallimento
   #DELIVERED
   #SCHEDULE_REFINEMENT
+
+
+  #TEST CREATO PER DEMO
+  @ignore
+  Scenario: [B2B_TIMELINE_DIGITALE_SUCCESS] Notifica mono destinatario con workflow digitale completato con successo - Destinatario PF
+    Given viene generata una nuova notifica
+      | subject            | Verbale di accertamento e contestazione di violazione del codice della strada                                                   |
+      | abstract           | È stata notificata una infrazione al codice per un veicolo intestato a te: i dettagli sono consultabili nei documenti allegati. |
+      | senderDenomination | Roma Capitale                                                                                                                   |
+      | feePolicy          | FLAT_RATE                                                                                                                       |
+      | paFee              | 0                                                                                                                               |
+    And destinatario
+      | denomination         | Alessandro Rossi   |
+      | taxId                | EEEEEE00E00E000A   |
+      | payment_pagoPaForm   | SI                 |
+      | payment_f24          | NULL               |
+      | apply_cost_pagopa    | NO                 |
+      | apply_cost_f24       | NO                 |
+      | payment_multy_number | 2                  |
+      | payment_noticeCode   | 302100114815491099 |
+      | payment_noticeCode_1 | 302020114815491079 |
+
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
 
