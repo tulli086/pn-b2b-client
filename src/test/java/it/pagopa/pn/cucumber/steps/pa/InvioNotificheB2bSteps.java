@@ -7,6 +7,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.polling.exception.PnB2bInternalException;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebPaClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
@@ -15,6 +16,7 @@ import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.*;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchResponse;
 import it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationSearchRow;
+import it.pagopa.pn.commons.exceptions.PnExceptionsCodes;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.DataTest;
 import lombok.extern.slf4j.Slf4j;
@@ -215,7 +217,7 @@ public class InvioNotificheB2bSteps {
                     it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.EFFECTIVE_DATE;
             case "REFUSED" ->
                     it.pagopa.pn.client.web.generated.openapi.clients.webPa.model.NotificationStatus.REFUSED;
-            default -> throw new IllegalArgumentException();
+            default -> throw new PnB2bInternalException("status not valid: " + status, PnExceptionsCodes.ERROR_CODE_PN_GENERIC_INVALIDPARAMETER_REQUIRED);
         };
 
         AtomicReference<NotificationSearchResponse> notificationByIun = new AtomicReference<>();
@@ -279,7 +281,7 @@ public class InvioNotificheB2bSteps {
             case "ATTO OPPONIBILE" -> this.notificationDocumentPreload.getRef().getKey();
             case "PAGOPA" -> this.notificationPaymentAttachmentPreload.getRef().getKey();
             case "F24" -> this.notificationMetadataAttachment.getRef().getKey();
-            default -> throw new IllegalArgumentException();
+            default -> throw new PnB2bInternalException("document type not valid: " + documentType, PnExceptionsCodes.ERROR_CODE_PN_GENERIC_INVALIDPARAMETER_REQUIRED);
         };
         Assertions.assertTrue(checkRetetion(key, retentionTimePreLoad));
     }
@@ -293,7 +295,7 @@ public class InvioNotificheB2bSteps {
                     sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getPagoPa().getAttachment().getRef().getKey();
             case "F24" ->
                     sharedSteps.getSentNotification().getRecipients().get(0).getPayments().get(0).getF24().getMetadataAttachment().getRef().getKey();
-            default -> throw new IllegalArgumentException();
+            default -> throw new PnB2bInternalException("document type not valid: " + documentType, PnExceptionsCodes.ERROR_CODE_PN_GENERIC_INVALIDPARAMETER_REQUIRED);
         };
         Assertions.assertTrue(checkRetetion(key, retentionTimeLoad));
     }
@@ -307,7 +309,7 @@ public class InvioNotificheB2bSteps {
                 Assertions.assertTrue(checkRetention(key, retentionTimeLoad, timelineElement.getTimestamp()));
             }
         } else {
-            throw new IllegalArgumentException();
+            throw new PnB2bInternalException("document type different to ATTACHMENTS: " + documentType, PnExceptionsCodes.ERROR_CODE_PN_GENERIC_INVALIDPARAMETER_REQUIRED);
         }
     }
 
@@ -320,7 +322,7 @@ public class InvioNotificheB2bSteps {
                 Assertions.assertTrue(checkRetention(key, retentionTimeLoad, timelineElement.getTimestamp()));
             }
         } else {
-            throw new IllegalArgumentException();
+            throw new PnB2bInternalException("document type different to ATTACHMENTS: " + documentType, PnExceptionsCodes.ERROR_CODE_PN_GENERIC_INVALIDPARAMETER_REQUIRED);
         }
     }
 
@@ -332,7 +334,7 @@ public class InvioNotificheB2bSteps {
             Assertions.assertTrue(doc.equalsIgnoreCase(timelineElement.getDetails().getAttachments().get(0).getDocumentType()));
             Assertions.assertTrue(timelineElement.getDetails().getAttachments().get(0).getUrl().contains(".zip"));
         } else {
-            throw new IllegalArgumentException();
+            throw new PnB2bInternalException("document type different to ATTACHMENTS: " + documentType, PnExceptionsCodes.ERROR_CODE_PN_GENERIC_INVALIDPARAMETER_REQUIRED);
         }
     }
 
@@ -345,7 +347,7 @@ public class InvioNotificheB2bSteps {
                 Assertions.assertTrue(checkRetention(key, retentionTimeLoad, timelineElement.getTimestamp()));
             }
         } else {
-            throw new IllegalArgumentException();
+            throw new PnB2bInternalException("document type different to ATTACHMENTS: " + documentType, PnExceptionsCodes.ERROR_CODE_PN_GENERIC_INVALIDPARAMETER_REQUIRED);
         }
     }
 

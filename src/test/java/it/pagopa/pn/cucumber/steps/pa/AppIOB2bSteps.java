@@ -6,6 +6,8 @@ import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.mod
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.ThirdPartyMessage;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.NotificationDocument;
+import it.pagopa.pn.client.b2b.pa.polling.exception.PnB2bExceptionsCodes;
+import it.pagopa.pn.client.b2b.pa.polling.exception.PnB2bInternalException;
 import it.pagopa.pn.client.b2b.pa.service.IPnAppIOB2bClient;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import lombok.extern.slf4j.Slf4j;
@@ -229,7 +231,7 @@ public class AppIOB2bSteps {
         } else if (recipient.trim().equalsIgnoreCase("mario gherkin")){
             return this.marioGherkinTaxID;
         }else{
-            throw new IllegalArgumentException();
+            throw new PnB2bInternalException("user not valid: " + recipient, PnB2bExceptionsCodes.ERROR_CODE_PN_GENERIC_INVALIDPARAMETER_REQUIRED);
         }
     }
 
