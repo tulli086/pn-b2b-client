@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
 import java.io.ByteArrayInputStream;
@@ -57,15 +59,19 @@ public class InvioNotificheB2bSteps {
     private String sha256DocumentDownload;
     private NotificationAttachmentDownloadMetadataResponse downloadResponse;
 
+    private final JavaMailSender emailSender;
+
 
     @Autowired
-    public InvioNotificheB2bSteps(PnExternalServiceClientImpl safeStorageClient, SharedSteps sharedSteps) {
+    public InvioNotificheB2bSteps(PnExternalServiceClientImpl safeStorageClient, SharedSteps sharedSteps, JavaMailSender emailSender) {
         this.safeStorageClient = safeStorageClient;
         this.sharedSteps = sharedSteps;
         this.b2bUtils = sharedSteps.getB2bUtils();
         this.b2bClient = sharedSteps.getB2bClient();
         this.webPaClient = sharedSteps.getWebPaClient();
         this.pnPaymentInfoClientImpl =sharedSteps.getPnPaymentInfoClientImpl();
+
+        this.emailSender = emailSender;
     }
 
     @And("la notifica può essere correttamente recuperata dal sistema tramite codice IUN")
@@ -913,5 +919,27 @@ public class InvioNotificheB2bSteps {
             Assertions.assertTrue("NOTIFICATION_CANCELLATION_ACCEPTED".equalsIgnoreCase(resp.getDetails().get(0).getCode()));
 
         });
+    }
+
+    @Value("${b2b.sender.mail}")
+    private String senderEmail;
+
+
+
+    private void sendEmail() {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("noreply@testInvio.com");
+        message.setTo(senderEmail);
+        message.setSubject("prova invio");
+        message.setText("Test invio su pec mittente");
+        emailSender.send(message);
+    }
+
+
+    @Given("si invia una email alla pec mittente e si attendono {int} minuti")
+    public void siInviaUnaEmailAllaPecMittenteESiAttendonoMinuti(int wait) {
+        Assertions.assertDoesNotThrow(this::sendEmail);
+        long waiting = ((wait*60)*1000);
+        Assertions.assertDoesNotThrow(() -> Thread.sleep(waiting));
     }
 }

@@ -156,7 +156,7 @@ Feature: verifica validazione sincrona
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di palermo |
     And destinatario
-      | taxId        | CSRGGL44L13H501E |
+      | taxId        | DVNLRD52D15M059P |
     And destinatario
       | taxId        | LNALNI80A01H501T |
     And destinatario
@@ -164,7 +164,7 @@ Feature: verifica validazione sincrona
     And destinatario
       | taxId        | LVLDAA85T50G702B |
     And destinatario
-      | taxId        | BRGLRZ80D58H501Q |
+      | taxId        | FNTLCU80T25F205R |
     And destinatario
       | taxId        | CLMCST42R12D969Z |
     And destinatario
