@@ -189,7 +189,6 @@ public class SharedSteps {
 
     private final PnPollingFactory pollingFactory;
 
-
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
@@ -2518,5 +2517,4 @@ public class SharedSteps {
     public void setProgressResponseElement(ProgressResponseElement progressResponseElement) {
         this.progressResponseElement = progressResponseElement;
     }
-
 }
