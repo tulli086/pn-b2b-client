@@ -473,8 +473,8 @@ public class RicezioneNotificheWebSteps {
         try {
             if(inserimento){
                 this.iPnWebUserAttributesClient.postRecipientCourtesyAddress(senderId, CourtesyChannelType.EMAIL, (new AddressVerification().value(addressVerification)));
+                verificationCode = this.externalClient.getVerificationCode(addressVerification);
             }
-            verificationCode = verificationCode != null ? verificationCode : this.externalClient.getVerificationCode(addressVerification);
             this.iPnWebUserAttributesClient.postRecipientCourtesyAddress(senderId, type, (new AddressVerification().value(addressVerification).verificationCode(verificationCode)));
         } catch (HttpStatusCodeException httpStatusCodeException) {
             sharedSteps.setNotificationError(httpStatusCodeException);
@@ -485,8 +485,8 @@ public class RicezioneNotificheWebSteps {
         try {
             if (inserimento){
                 this.iPnWebUserAttributesClient.postRecipientLegalAddress(senderIdPa, LegalChannelType.PEC, (new AddressVerification().value(addressVerification)));
+                verificationCode = this.externalClient.getVerificationCode(addressVerification);
             }
-            verificationCode = verificationCode != null ? verificationCode : this.externalClient.getVerificationCode(addressVerification);
             this.iPnWebUserAttributesClient.postRecipientLegalAddress(senderIdPa, LegalChannelType.PEC, (new AddressVerification().value(addressVerification).verificationCode(verificationCode)));
         } catch (HttpStatusCodeException httpStatusCodeException) {
             sharedSteps.setNotificationError(httpStatusCodeException);
