@@ -50,6 +50,7 @@ public class PnPaB2bUtils {
         E value2;
     }
     public static final String PN_NOTIFICATION_ATTACHMENTS_ZBEDA_19_F_8997469_BB_75_D_28_FF_12_BDF_321_PDF = "PN_NOTIFICATION_ATTACHMENTS-zbeda19f8997469bb75d28ff12bdf321.pdf";
+    public static final String PN_F24_META_AB_2_ACAB_392_D_042_A_1_A_FD_66_F_59732791_F_2_JSON ="PN_F24_META-ab2acab392d042a1afd66f59732791f2.json";
     public static final String LEGAL_FACT_IS_NOT_A_PDF = "LegalFact is not a PDF ";
     public static final String WRONG_STATUS = "WRONG STATUS: ";
     private final RestTemplate restTemplate;
@@ -289,16 +290,11 @@ public class PnPaB2bUtils {
     }
 
     public NewNotificationResponse uploadNotificationNotFindAllegatoJson(NewNotificationRequestV23 request, boolean noUpload) throws IOException {
-//TODO Modificare.............
         NotificationDocument notificationDocument = null;
-        if (!request.getDocuments().isEmpty() && !noUpload) {
-            notificationDocument = request.getDocuments().get(0);
-            notificationDocument.getRef().setKey(PN_NOTIFICATION_ATTACHMENTS_ZBEDA_19_F_8997469_BB_75_D_28_FF_12_BDF_321_PDF);
-        }
 
         if ((!request.getRecipients().isEmpty()) && !noUpload) {
             NotificationRecipientV23 notificationRecipientV23 = request.getRecipients().get(0);
-            Objects.requireNonNull(Objects.requireNonNull(notificationRecipientV23.getPayments()).get(0).getF24()).getMetadataAttachment().getRef().setKey(PN_NOTIFICATION_ATTACHMENTS_ZBEDA_19_F_8997469_BB_75_D_28_FF_12_BDF_321_PDF);
+            Objects.requireNonNull(Objects.requireNonNull(notificationRecipientV23.getPayments()).get(0).getF24()).getMetadataAttachment().getRef().setKey(PN_F24_META_AB_2_ACAB_392_D_042_A_1_A_FD_66_F_59732791_F_2_JSON);
         }
         composeNewNotification(request, notificationDocument, true, noUpload, 0);
         return sendNewNotification(request);
