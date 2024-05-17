@@ -3,7 +3,7 @@ package it.pagopa.pn.client.b2b.pa.mapper.impl;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.LegalFactCategory;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementCategoryV23;
 import it.pagopa.pn.client.b2b.pa.mapper.model.PnTimelineLegalFactV23;
-import it.pagopa.pn.client.b2b.pa.polling.exception.PnB2bInternalException;
+import it.pagopa.pn.client.b2b.pa.exception.PnB2bInternalException;
 import it.pagopa.pn.client.b2b.pa.service.IPnTimelineLegalFactService;
 import it.pagopa.pn.commons.exceptions.PnExceptionsCodes;
 

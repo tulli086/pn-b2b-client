@@ -2,8 +2,8 @@ package it.pagopa.pn.client.b2b.pa.service.impl;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.pagopa.pn.client.b2b.pa.polling.exception.PnB2bExceptionsCodes;
-import it.pagopa.pn.client.b2b.pa.polling.exception.PnB2bInternalException;
+import it.pagopa.pn.client.b2b.pa.exception.PnB2bExceptionsCodes;
+import it.pagopa.pn.client.b2b.pa.exception.PnB2bInternalException;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;

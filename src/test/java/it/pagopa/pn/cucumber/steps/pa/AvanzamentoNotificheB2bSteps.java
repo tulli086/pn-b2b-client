@@ -10,8 +10,8 @@ import it.pagopa.pn.client.b2b.pa.mapper.model.PnTimelineLegalFactV23;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
 import it.pagopa.pn.client.b2b.pa.polling.dto.*;
-import it.pagopa.pn.client.b2b.pa.polling.exception.PnB2bExceptionsCodes;
-import it.pagopa.pn.client.b2b.pa.polling.exception.PnB2bInternalException;
+import it.pagopa.pn.client.b2b.pa.exception.PnB2bExceptionsCodes;
+import it.pagopa.pn.client.b2b.pa.exception.PnB2bInternalException;
 import it.pagopa.pn.client.b2b.pa.polling.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.*;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
@@ -1441,7 +1441,7 @@ public class AvanzamentoNotificheB2bSteps {
         }else if(versione.equalsIgnoreCase("V2")){
             priceVerificationV2(price, null, 0);
         }else{
-            throw new PnB2bInternalException("version not valid: " + versione, PnB2bExceptionsCodes.ERROR_CODE_PN_GENERIC_INVALIDPARAMETER_VERSION_ERROR);
+            throw new PnB2bInternalException("version not valid: " + versione, PnB2bExceptionsCodes.ERROR_CODE_B2B_INVALIDPARAMETER_VERSION_ERROR);
         }
     }
 
