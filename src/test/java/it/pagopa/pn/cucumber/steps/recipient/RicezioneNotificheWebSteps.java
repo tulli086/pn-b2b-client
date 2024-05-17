@@ -421,8 +421,7 @@ public class RicezioneNotificheWebSteps {
 
     @And("viene inserito un recapito legale {string}")
     public void nuovoRecapitoLegale(String pec) {
-        String verificationCode = this.externalClient.getVerificationCode(pec);
-        postRecipientLegalAddress("default", pec, verificationCode, true);
+        postRecipientLegalAddress("default", pec, null, true);
     }
 
     @When("viene richiesto l'inserimento della pec {string}")
@@ -443,8 +442,7 @@ public class RicezioneNotificheWebSteps {
     @And("viene inserito un recapito legale {string} per il comune {string}")
     public void nuovoRecapitoLegaleDalComune(String pec, String pa) {
         String senderIdPa = getSenderIdPa(pa);
-        String verificationCode = this.externalClient.getVerificationCode(pec);
-        postRecipientLegalAddress(senderIdPa, pec, verificationCode, true);
+        postRecipientLegalAddress(senderIdPa, pec, null, true);
     }
 
     @When("viene richiesto l'inserimento della pec {string} per il comune {string}")
@@ -462,8 +460,7 @@ public class RicezioneNotificheWebSteps {
     @And("viene inserita l'email di cortesia {string} per il comune {string}")
     public void vieneInseritaEmailDiCortesiaDalComune(String email, String pa) {
         String senderIdPa = getSenderIdPa(pa);
-        String verificationCode = this.externalClient.getVerificationCode(email);
-        postRecipientCourtesyAddress(senderIdPa, email, CourtesyChannelType.EMAIL, verificationCode, true);
+        postRecipientCourtesyAddress(senderIdPa, email, CourtesyChannelType.EMAIL, null, true);
     }
 
     @When("viene richiesto l'inserimento del numero di telefono {string} per il comune {string}")
@@ -476,6 +473,7 @@ public class RicezioneNotificheWebSteps {
         try {
             if(inserimento){
                 this.iPnWebUserAttributesClient.postRecipientCourtesyAddress(senderId, CourtesyChannelType.EMAIL, (new AddressVerification().value(addressVerification)));
+                verificationCode = this.externalClient.getVerificationCode(addressVerification);
             }
             this.iPnWebUserAttributesClient.postRecipientCourtesyAddress(senderId, type, (new AddressVerification().value(addressVerification).verificationCode(verificationCode)));
         } catch (HttpStatusCodeException httpStatusCodeException) {
@@ -487,6 +485,7 @@ public class RicezioneNotificheWebSteps {
         try {
             if (inserimento){
                 this.iPnWebUserAttributesClient.postRecipientLegalAddress(senderIdPa, LegalChannelType.PEC, (new AddressVerification().value(addressVerification)));
+                verificationCode = this.externalClient.getVerificationCode(addressVerification);
             }
             this.iPnWebUserAttributesClient.postRecipientLegalAddress(senderIdPa, LegalChannelType.PEC, (new AddressVerification().value(addressVerification).verificationCode(verificationCode)));
         } catch (HttpStatusCodeException httpStatusCodeException) {
