@@ -1,22 +1,37 @@
 package it.pagopa.pn.cucumber.steps.dataTable;
 
+import static it.pagopa.pn.cucumber.steps.utilitySteps.ThreadUtils.threadWaitSeconds;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.ADDRESS_RADD;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.ADDRESS_RADD_CAP;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.ADDRESS_RADD_CITY;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.ADDRESS_RADD_COUNTRY;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.ADDRESS_RADD_PROVINCE;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.ADDRESS_RADD_ROW;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_CAPACITY;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_DESCRIPTION;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_END_VALIDITY;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_EXTERNAL_CODE;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_GEO_LOCATION;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_GEO_LOCATION_LATITUDINE;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_GEO_LOCATION_LONGITUDINE;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_OPENING_TIME;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_PHONE_NUMBER;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.RADD_START_VALIDITY;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.generateRandomNumber;
+import static it.pagopa.pn.cucumber.utils.RaddAltValue.getValue;
+
 import io.cucumber.java.DataTableType;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.Address;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.CreateRegistryRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.GeoLocation;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.UpdateRegistryRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static it.pagopa.pn.cucumber.steps.utilitySteps.ThreadUtils.threadWaitMilliseconds;
-import static it.pagopa.pn.cucumber.utils.RaddAltValue.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class DataTableTypeRaddAlt {
@@ -46,7 +61,7 @@ public class DataTableTypeRaddAlt {
                 .externalCode(getValue(data, RADD_EXTERNAL_CODE.key)==null?null:getValue(data, RADD_EXTERNAL_CODE.key))
                 .capacity(getValue(data, RADD_CAPACITY.key)==null?null:getValue(data, RADD_CAPACITY.key));
 
-            threadWaitMilliseconds(2);
+            threadWaitSeconds(2);
 
         return sportelloRadd;
     }
@@ -83,7 +98,7 @@ public class DataTableTypeRaddAlt {
 
         }
 
-            threadWaitMilliseconds(2);
+            threadWaitSeconds(2);
 
         return listaSportelli;
     }
@@ -95,7 +110,7 @@ public class DataTableTypeRaddAlt {
                 .phoneNumber(getValue(data,RADD_PHONE_NUMBER.key)==null? null:getValue(data,RADD_PHONE_NUMBER.key))
                 .openingTime(getValue(data,RADD_OPENING_TIME.key)==null? null:getValue(data,RADD_OPENING_TIME.key));
 
-            threadWaitMilliseconds(2);
+            threadWaitSeconds(2);
 
         return sportelloAggiornatoRadd;
     }
