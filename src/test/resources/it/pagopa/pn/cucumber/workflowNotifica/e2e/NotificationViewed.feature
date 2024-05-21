@@ -213,15 +213,15 @@ Feature: Notifica visualizzata
       | physicalAddress_address | @FAIL-DiscoveryIrreperibile_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
-      | loadTimeline | true |
-      | pollingTime | 40000 |
-      | numCheck    | 16     |
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
+      | loadTimeline     | true     |
+      | pollingTime      | 40000    |
+      | numCheck         | 25       |
+      | details          | NOT_NULL |
+      | details_recIndex | 0        |
+    Then la notifica può essere correttamente recuperata da "Leonardo da Vinci"
     And viene verificato che l'elemento di timeline "ANALOG_FAILURE_WORKFLOW" esista
       | details | NOT_NULL |
       | details_recIndex | 0 |
-    Then la notifica può essere correttamente recuperata da "Leonardo da Vinci"
     And viene schedulato il perfezionamento per decorrenza termini per il caso "ANALOG_FAILURE_WORKFLOW"
       | details | NOT_NULL |
       | details_recIndex | 0 |
@@ -297,11 +297,11 @@ Feature: Notifica visualizzata
       | physicalAddress_address | @FAIL-Discovery_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then viene verificato che l'elemento di timeline "SCHEDULE_REFINEMENT" esista
-      | loadTimeline | true |
-      | pollingTime | 40000 |
-      | numCheck    | 16     |
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
+      | loadTimeline     | true     |
+      | pollingTime      | 40000    |
+      | numCheck         | 25       |
+      | details          | NOT_NULL |
+      | details_recIndex | 0        |
     Then la notifica può essere correttamente recuperata da "Leonardo da Vinci"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
     And si attende che sia presente il perfezionamento per decorrenza termini
