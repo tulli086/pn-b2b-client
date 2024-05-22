@@ -281,26 +281,7 @@ Feature: avanzamento b2b notifica analogico difgitale
   #SCHEDULE_REFINEMENT
 
 
-  #TEST CREATO PER DEMO
-  @ignore
-  Scenario: [B2B_TIMELINE_DIGITALE_SUCCESS] Notifica mono destinatario con workflow digitale completato con successo - Destinatario PF
-    Given viene generata una nuova notifica
-      | subject            | Verbale di accertamento e contestazione di violazione del codice della strada                                                   |
-      | abstract           | È stata notificata una infrazione al codice per un veicolo intestato a te: i dettagli sono consultabili nei documenti allegati. |
-      | senderDenomination | Roma Capitale                                                                                                                   |
-      | feePolicy          | FLAT_RATE                                                                                                                       |
-      | paFee              | 0                                                                                                                               |
-    And destinatario
-      | denomination         | Alessandro Rossi   |
-      | taxId                | EEEEEE00E00E000A   |
-      | payment_pagoPaForm   | SI                 |
-      | payment_f24          | NULL               |
-      | apply_cost_pagopa    | NO                 |
-      | apply_cost_f24       | NO                 |
-      | payment_multy_number | 2                  |
-      | payment_noticeCode   | 302100114815491099 |
-      | payment_noticeCode_1 | 302020114815491079 |
 
-    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+
 
 
