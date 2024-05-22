@@ -133,27 +133,10 @@ Feature: Api Service Desk
       |CF|
       |TMTSFS80A01H703K|
 
-  @ignore
-  Scenario Outline: [API-SERVICE_SEARCH_18] Invocazione del servizio CREATE_OPERATION con indirizzo errato
-    Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
-    Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
-    When viene invocato il servizio CREATE_OPERATION
-    Then la risposta del servizio CREATE_OPERATION risponde con esito positivo
-    Given viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO
-    When viene invocato il servizio UPLOAD VIDEO
-    Then la risposta del servizio UPLOAD VIDEO risponde con esito positivo
-    Then il video viene caricato su SafeStorage
-    Given viene creata una nuova richiesta per invocare il servizio SEARCH per il "<CF>"
-    When viene invocato il servizio SEARCH con delay
-    Then Il servizio SEARCH risponde con esito positivo e lo stato della consegna è "KO"
 
-
-    Examples:
-      | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
-      | TMTGMN76L05A944V| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80100|NAPOLI|SOCCAVO |NA|ITALIA |
 
   @CallCenterEvoluto
-  Scenario Outline: [API-SERVICE_SEARCH_18_1] Invocazione del servizio CREATE_OPERATION con indirizzo errato
+  Scenario Outline: [API-SERVICE_SEARCH_18] Invocazione del servizio CREATE_OPERATION con indirizzo errato
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
     When viene invocato il servizio CREATE_OPERATION
@@ -300,8 +283,8 @@ Feature: Api Service Desk
     Then il servizio risponde con errore "400"
 
     Examples:
-      | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
-      | TMTSFS80A01H703K| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80100|NAPOLI|XXX |NA|ITALIA |
+      | CF               | FULLNAME         | NAMEROW2 | ADDRESS   | ADDRESSROW2 | CAP   | CITY   | CITY2 | PR | COUNTRY |
+      | TMTSFS80A01H703K | CICCIO PASTICCIO | SIGN.    | Via@ok_RS | INTERNO 2   | 80100 | NAPOLI | XXX   | NA | ITALIA  |
 
   @CallCenterEvoluto
   Scenario Outline: [API-SERVICE_PREUPLOAD_VIDEO_30] Invocazione del servizio UPLOAD VIDEO con esito positivo
@@ -451,28 +434,11 @@ Feature: Api Service Desk
     #  | TMTYRU80A07H703E| TMTRCC80A01A509O|WQUW-ZTGZ-HGVG-202310-W-1| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
       | TMTYRU80A07H703E| TMTRCC80A01A509O| CICCIO PASTICCIO|SIGN.   |Via@ok_RS| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
 
-  @ignore
-    #stato operation CREATING= Operazione in attesa di caricamento del video
-  Scenario Outline: [API-SERVICE_SEARCH_42] Inserimento di una nuova richista di reinvio pratiche con stato operation id in CREATED
-    Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
-    Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
-    When viene invocato il servizio CREATE_OPERATION
-    Then la risposta del servizio CREATE_OPERATION risponde con esito positivo
-    Given viene creata una nuova richiesta per invocare il servizio UPLOAD VIDEO
-    When viene invocato il servizio UPLOAD VIDEO
-    Then la risposta del servizio UPLOAD VIDEO risponde con esito positivo
-    Given viene creata una nuova richiesta per invocare il servizio SEARCH per il "<CF>"
-    When viene invocato il servizio SEARCH
-    Then Il servizio SEARCH risponde con esito positivo e lo stato della consegna è "CREATING"
-
-    Examples:
-      | CF               | FULLNAME        |NAMEROW2|ADDRESS  |ADDRESSROW2|CAP  |CITY |CITY2|PR|COUNTRY|
-      | FRMTTR76M06B715E| CICCIO PASTICCIO|SIGN.   |Via Roma| INTERNO 2  |80121|NAPOLI|XXX |NA|ITALIA |
 
 
     #stato operation CREATING= Operazione in attesa di caricamento del video
   @CallCenterEvoluto
-  Scenario Outline: [API-SERVICE_SEARCH_42_1] Inserimento di una nuova richista di reinvio pratiche con stato operation id in CREATED
+  Scenario Outline: [API-SERVICE_SEARCH_42] Inserimento di una nuova richista di reinvio pratiche con stato operation id in CREATED
     Given viene comunicato il nuovo indirizzo con "<FULLNAME>" "<NAMEROW2>" "<ADDRESS>" "<ADDRESSROW2>" "<CAP>" "<CITY>" "<CITY2>" "<PR>" "<COUNTRY>"
     Given viene creata una nuova richiesta per invocare il servizio CREATE_OPERATION con "<CF>"
     When viene invocato il servizio CREATE_OPERATION
