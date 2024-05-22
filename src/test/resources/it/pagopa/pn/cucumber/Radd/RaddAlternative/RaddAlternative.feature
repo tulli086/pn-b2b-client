@@ -1381,11 +1381,6 @@ Feature: Radd Alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
 
-  @raddAlt @ignore
-  Scenario: [RADD-ALT_AOR-77] PF -  Start di una AOR transaction su notifica irreperibile perfezionata > 120gg - Ricezione errore RetryAfter
-    When la persona fisica "Mario Cucumber" chiede di verificare la presenza di notifiche
-    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-
 
   @raddAlt @zip
   Scenario: [RADD-ALT_ACT-78] PF - Verifica restituzione al cittadino del documento Frontespizio (nome e cognome del destinatario) come primo documento del plico
