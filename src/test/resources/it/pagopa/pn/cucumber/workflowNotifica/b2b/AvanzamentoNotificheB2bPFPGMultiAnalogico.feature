@@ -166,7 +166,8 @@ Feature: avanzamento b2b notifica multi destinatario analogico
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario Mario Gherkin
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test@OK-pecSuccess.it |
     And destinatario
       | denomination | Test 890 Fail |
       | taxId | PRVMNL80A01F205M |
