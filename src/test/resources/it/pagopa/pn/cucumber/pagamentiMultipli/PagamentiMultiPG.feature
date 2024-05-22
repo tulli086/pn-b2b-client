@@ -250,25 +250,7 @@ Feature: avanzamento notifiche b2b persona giuridica multi pagamento
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
 
-  #TODO Vecchio Requisito
-  #28  PA - inserimento notifica mono destinatario con presenza contemporanea di avviso pagoPA e F24: un istanza di pagamento include l’avviso pagoPA ma non il modello F24 [TA]
-  @pagamentiMultipli @ignore
-  Scenario: [B2B-PA-PAY_MULTI_PG_28] PA - inserimento notifica mono destinatario con presenza contemporanea di avviso pagoPA e F24: un istanza di pagamento include l’avviso pagoPA ma non il modello F24 [TA]  e costi di notifica inclusi
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                           |
-    And destinatario
-      | denomination         | Vita Nova Sas |
-      | recipientType        | PG           |
-      | taxId                | 12666810299  |
-      | payment_pagoPaForm   | SI           |
-      | payment_f24          | NULL         |
-      | apply_cost_pagopa    | SI           |
-      | payment_multy_number | 1            |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato il costo = "100" della notifica
+
 
   #29  PA - inserimento notifica mono destinatario con presenza contemporanea di avviso pagoPA e F24: un istanza di pagamento include l’avviso pagoPA ma non il modello F24 [TA]
   @pagamentiMultipli
@@ -1385,7 +1367,7 @@ Feature: avanzamento notifiche b2b persona giuridica multi pagamento
     And viene effettuato un controllo sulla durata della retention di "PAGOPA"
 
     #STESSO TEST B2B-PA-PAY_MULTI_71 IMPLEMENTATO DIVERSAMENTE
-  @pagamentiMultipli @ignore
+  @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_PG_71_2] Verifica retention allegati di pagamento (120gg da data perfezionamento Notifica) - PagoPa
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1451,7 +1433,7 @@ Feature: avanzamento notifiche b2b persona giuridica multi pagamento
     Then viene effettuato un controllo sulla durata della retention di "F24" precaricato
 
 
-  @pagamentiMultipli @ignore
+  @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_PG_72_3] Verifica retention allegati di pagamento (120gg da data perfezionamento Notifica) - F24 [TA]
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -1462,98 +1444,12 @@ Feature: avanzamento notifiche b2b persona giuridica multi pagamento
       | payment_pagoPaForm   | NULL                      |
       | payment_f24          | PAYMENT_F24_STANDARD      |
       | title_payment        | F24_STANDARD_CUCUMBER_SRL |
-      | apply_cost_F24       | SI                        |
+      | apply_cost_f24       | SI                        |
       | payment_multy_number | 1                         |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then si verifica la corretta acquisizione della notifica
     And viene effettuato un controllo sulla durata della retention di "F24"
-
-
-  #73 PA -  Verifica presenza SHA F24 su attestazione opponibile a terzi notifica depositata
-  #Verifica dello sha256 non possibile perché il file viene. generato on demand
-  @pagamentiMultipli @ignore
-  Scenario: [B2B-PA-PAY_MULTI_PG_73] PA -  Verifica presenza SHA F24 su attestazione opponibile a terzi notifica depositata
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                           |
-    And destinatario Cucumber srl e:
-      | payment_pagoPaForm   | NULL                      |
-      | payment_f24          | PAYMENT_F24_STANDARD      |
-      | title_payment        | F24_STANDARD_CUCUMBER_SRL |
-      | apply_cost_F24       | SI                        |
-      | payment_multy_number | 1                         |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
-    #Then si verifica la corretta acquisizione della notifica con verifica sha256 del allegato di pagamento "F24"
-    When viene richiesto il download del documento "F24"
-    Then il download si conclude correttamente
-
-
-
-  #74 Destinatario -  Verifica presenza SHA F24 su attestazione opponibile a terzi notifica depositata
-  #Verifica dello sha256 non possibile perché il file viene. generato on demand
-  @pagamentiMultipli @ignore
-  Scenario: [B2B-PA-PAY_MULTI_PG_74]  Destinatario -  Verifica presenza SHA F24 su attestazione opponibile a terzi notifica depositata
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                           |
-    And destinatario CucumberSpa e:
-      | payment_pagoPaForm   | NULL                      |
-      | payment_f24          | PAYMENT_F24_STANDARD      |
-      | title_payment        | F24_STANDARD_CUCUMBER_SRL |
-      | apply_cost_F24       | SI                        |
-      | payment_multy_number | 1                         |
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
-   # Then si verifica la corretta acquisizione della notifica con verifica sha256 del allegato di pagamento "F24"
-    #viene fatta la stessa verifica sullo Sha256
-    Then l'allegato "F24" può essere correttamente recuperato da "CucumberSpa"
-
-#TODO SOLO TM....
-  #75 PA -  Visualizzazione Box Allegati Modelli F24
-
-
-   #76 Destinatario -  Download PAGOPA/F24 con AppIO
-  @pagamentiMultipli @appIo @ignore
-  Scenario: [B2B-PA-PAY_MULTI_PG_76] Invio notifica con api b2b e recupero documento di pagamento PAGOPA con AppIO
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                           |
-    And destinatario CucumberSpa e:
-      | payment_pagoPaForm   | SI   |
-      | payment_f24          | NULL |
-      | apply_cost_f24       | NO   |
-      | apply_cost_pagopa    | SI   |
-      | payment_multy_number | 1    |
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
-    Then il documento di pagamento "PAGOPA" può essere recuperata tramite AppIO da "CucumberSpa"
-    And il download non ha prodotto errori
-
-
-  @pagamentiMultipli @appIo @ignore
-  Scenario: [B2B-PA-PAY_MULTI_PG_76_1] Invio notifica con api b2b e recupero documento di pagamento F24 con AppIO
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                           |
-    And destinatario CucumberSpa e:
-      | payment_pagoPaForm   | NULL                      |
-      | payment_f24          | PAYMENT_F24_STANDARD      |
-      | title_payment        | F24_STANDARD_CUCUMBER_SRL |
-      | apply_cost_f24       | SI                        |
-      | payment_multy_number | 1                         |
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
-    Then il documento di pagamento "F24" può essere recuperata tramite AppIO da "CucumberSpa"
-    And il download non ha prodotto errori
+    
 
   @pagamentiMultipli
   Scenario: [B2B-PA-PAY_MULTI_PG_77] Destinatario PG: dettaglio notifica annullata - download bollettini di pagamento PagoPA (scenario negativo)

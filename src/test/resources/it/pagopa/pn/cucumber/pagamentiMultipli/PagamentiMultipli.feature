@@ -1429,30 +1429,6 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
     Then si verifica la corretta acquisizione della notifica
     And viene effettuato un controllo sulla durata della retention di "PAGOPA"
 
-    #STESSO TEST B2B-PA-PAY_MULTI_71 IMPLEMENTATO DIVERSAMENTE
-  @pagamentiMultipli @ignore
-  Scenario: [B2B-PA-PAY_MULTI_71_2] Verifica retention allegati di pagamento (120gg da data perfezionamento Notifica) - PagoPa
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                           |
-    And destinatario Mario Gherkin e:
-      | payment_pagoPaForm   | SI   |
-      | payment_f24          | NULL |
-      | apply_cost_pagopa    | SI   |
-      | payment_multy_number | 1    |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REQUEST_ACCEPTED"
-      | NULL | NULL |
-    Then viene verificato che l'elemento di timeline "REFINEMENT" esista
-      | loadTimeline     | true     |
-      | details          | NOT_NULL |
-      | details_recIndex | 0        |
-    And viene effettuato un controllo sulla durata della retention del PAGOPA di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
-      | details          | NOT_NULL |
-      | details_recIndex | 0        |
-   # Then viene effettuato un controllo sulla durata della retention del PAGOPA di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
 
 
   @pagamentiMultipli
