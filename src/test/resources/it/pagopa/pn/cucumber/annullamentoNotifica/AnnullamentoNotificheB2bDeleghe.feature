@@ -30,20 +30,6 @@ Feature: annullamento notifiche b2b
     And la notifica può essere correttamente letta da "Mario Gherkin" con delega
 
 
-  @Annullamento @deleghe1 @ignore
-  Scenario: [B2B-PA-ANNULLAMENTO_32] Invio notifica digitale mono destinatario e recupero documento notificato_scenario negativo
-    Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"
-    And "Mario Gherkin" viene delegato da "Mario Cucumber"
-    And "Mario Gherkin" accetta la delega "Mario Cucumber"
-    When viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | comune di milano            |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
-    When vengono letti gli eventi fino allo stato della notifica "CANCELLED"
-    Then il documento notificato non può essere correttamente recuperato da "Mario Gherkin" con delega restituendo un errore "404"
-
   @Annullamento @deleghe1
   Scenario: [B2B-PA-ANNULLAMENTO_33] Invio notifica digitale mono destinatario e recupero allegato pagopa_scenario negativo
     Given "Mario Gherkin" rifiuta se presente la delega ricevuta "Mario Cucumber"

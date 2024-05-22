@@ -1197,13 +1197,15 @@ public class AvanzamentoNotificheB2bSteps {
 
         for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
 
-            if (element.getCategory().equals(categoriesV23.getTimelineElementInternalCategory())) {
-                if (deliveryDetailCode == null) {
-                    timelineElement = element;
-                    break;
-                } else if (element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
-                    timelineElement = element;
-                    break;
+            if (element.getCategory().equals(categoriesV23.getTimelineElementInternalCategory()) ) {
+                if (!element.getLegalFactsIds().isEmpty() || element.getDetails().getLegalFactId()!=null) {
+                    if (deliveryDetailCode == null) {
+                        timelineElement = element;
+                        break;
+                    } else if (element.getDetails().getDeliveryDetailCode().equals(deliveryDetailCode)) {
+                        timelineElement = element;
+                        break;
+                    }
                 }
             }
         }

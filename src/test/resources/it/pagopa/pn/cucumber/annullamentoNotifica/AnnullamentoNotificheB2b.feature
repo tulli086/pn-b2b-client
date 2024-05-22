@@ -80,18 +80,6 @@ Feature: annullamento notifiche b2b
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
     And vengono letti gli eventi fino allo stato della notifica "CANCELLED"
 
-  @Annullamento @ignore #Modificare il Test in Validation la notifica non può essere annullata bisogna vericare un errore.....
-  Scenario: [B2B-PA-ANNULLAMENTO_7] PA mittente: annullamento notifica in fase di validazione [TA]
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
-    And destinatario Mario Gherkin
-    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino allo stato della notifica "IN_VALIDATION"
-    When la notifica può essere annullata dal sistema tramite codice IUN
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
-    And vengono letti gli eventi fino allo stato della notifica "CANCELLED"
-
   @Annullamento
   Scenario: [B2B-PA-ANNULLAMENTO_8] PA mittente: annullamento notifica con dati pagamento
     Given viene generata una nuova notifica
@@ -136,18 +124,6 @@ Feature: annullamento notifiche b2b
     And vengono letti gli eventi fino allo stato della notifica "CANCELLED"
     And viene verificato il costo = "100" della notifica con un errore "404"
 
-
-  @Annullamento @ignore #Test Verificabile Manualmente
-  Scenario:  [B2B-PA-ANNULLAMENTO_9] PA mittente: notifica con pagamento in stato “Annullata” - presenza box di pagamento
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
-      | feePolicy | DELIVERY_MODE |
-    And destinatario Mario Cucumber e:
-      | payment_creditorTaxId | 77777777777 |
-    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    When la notifica può essere annullata dal sistema tramite codice IUN
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
 
   @Annullamento
   Scenario: [B2B-PA-ANNULLAMENTO_10] PA mittente: dettaglio notifica annullata - download allegati (scenari positivi)
@@ -256,7 +232,7 @@ Feature: annullamento notifiche b2b
     And vengono letti gli eventi fino allo stato della notifica "CANCELLED"
     Then la PA richiede il download dell'attestazione opponibile "DIGITAL_DELIVERY_FAILURE"
 
-  @Annullamento @workflowAnalogico @ignore
+  @Annullamento @workflowAnalogico
   Scenario: [B2B-PA-ANNULLAMENTO_13_5] PA mittente: dettaglio notifica annullata - download atti opponibili a terzi SEND_ANALOG_PROGRESS (scenari positivi)
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -268,7 +244,7 @@ Feature: annullamento notifiche b2b
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" e successivamente annullata
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
     And vengono letti gli eventi fino allo stato della notifica "CANCELLED"
-    Then la PA richiede il download dell'attestazione opponibile "SEND_ANALOG_PROGRESS"
+    Then la PA richiede il download dell'attestazione opponibile "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECRN001B"
 
     #serve un wait più lungo
   @Annullamento @workflowAnalogico
@@ -537,36 +513,6 @@ Feature: annullamento notifiche b2b
     When vengono letti gli eventi fino allo stato della notifica "CANCELLED"
     Then "Mario Gherkin" richiede il download dell'attestazione opponibile "DIGITAL_DELIVERY_FAILURE" con errore "404"
 
-  @Annullamento @workflowAnalogico @ignore
-  Scenario: [B2B-PF-ANNULLAMENTO_19_7] Destinatario PF: dettaglio notifica annullata - download atti opponibili a terzi SEND_ANALOG_PROGRESS (scenario negativo)
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
-    And destinatario
-      | denomination | Test AR Fail 2 |
-      | taxId | MNTMRA03M71C615V |
-      | digitalDomicile         | NULL        |
-      | physicalAddress_address | Via@fail_AR |
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" e successivamente annullata
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
-    Then vengono letti gli eventi fino allo stato della notifica "CANCELLED"
-
-  @Annullamento  @workflowAnalogico  @ignore
-  Scenario: [B2B-PF-ANNULLAMENTO_19_8] Destinatario PF: dettaglio notifica annullata - download atti opponibili a terzi COMPLETELY_UNREACHABLE (scenario negativo)
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
-    And destinatario
-      | denomination | Test AR Fail 2 |
-      | taxId | MNTMRA03M71C615V |
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via@FAIL-Irreperibile_AR |
-    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    And la notifica può essere annullata dal sistema tramite codice IUN
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
-    Then vengono letti gli eventi fino allo stato della notifica "CANCELLED"
 
   @Annullamento
   Scenario: [B2B-PF-ANNULLAMENTO_19_9] Destinatario PF: dettaglio notifica annullata - download atti opponibili a terzi SENDER_ACK (scenario negativo)
@@ -659,6 +605,7 @@ Feature: annullamento notifiche b2b
     Then la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
 
 
+    #integrare il pagamento da checkout quando sarà disponibile
   @Annullamento @ignore #Conflitto 409 Conflict
   Scenario:  [B2B-PA-ANNULLAMENTO_23_1] PA mittente: notifica con pagamento non in stato “Annullata” - inserimento nuova notifica con stesso IUV [TA]
     Given viene generata una nuova notifica
@@ -766,21 +713,6 @@ Feature: annullamento notifiche b2b
     Then vengono letti gli eventi fino allo stato della notifica "CANCELLED"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK" con responseStatus "OK"
 
-  @Annullamento @ignore
-  Scenario:  [B2B-PA-ANNULLAMENTO_29_1] #PA mittente: annullamento notifica inibizione invio pec
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
-    And destinatario Mario Gherkin
-    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
-    #Then vengono letti gli eventi fino allo stato della notifica "CANCELLED"
-        #Valutare lo step
-    #And vengono letti gli eventi e verificho che l'utente 0 non abbia associato un evento "SEND_DIGITAL_PROGRESS"
-    Then viene verificato che l'elemento di timeline "SEND_DIGITAL_PROGRESS" non esista
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
 
   @Annullamento     #Da Verificare...............
   Scenario:  [B2B-PA-ANNULLAMENTO_30] PA mittente: annullamento notifica durante pagamento da parte del destinatario
@@ -896,34 +828,6 @@ Feature: annullamento notifiche b2b
     And vengono letti gli eventi dello stream del "Comune_Multi" fino all'elemento di timeline "DIGITAL_FAILURE_WORKFLOW"
     Then viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati
 
-  @Annullamento @webhook3 @ignore
-  Scenario: [B2B-STREAM_TIMELINE_24_3] Invio notifica digitale ed attesa di un eventi di Timeline stream v2  con controllo EventId incrementale e senza duplicati scenario positivo
-    #Given vengono cancellati tutti gli stream presenti del "Comune_1" con versione "V10"
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di palermo                |
-    And destinatario Mario Gherkin
-    And si predispone 1 nuovo stream V2 denominato "stream-test" con eventType "TIMELINE"
-    And si crea il nuovo stream per il "Comune_2" con versione "V10"
-    And la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
-    And la notifica può essere annullata dal sistema tramite codice IUN
-    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "NOTIFICATION_CANCELLED"
-    And viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati
-    When viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di palermo                 |
-    And destinatario Cucumber Analogic e:
-      | digitalDomicile_address | test@fail.it |
-    And la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "DIGITAL_FAILURE_WORKFLOW"
-    And viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati
-    And viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di palermo           |
-    And destinatario Mario Gherkin
-    And la notifica viene inviata tramite api b2b dal "Comune_2" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi dello stream del "Comune_2" fino all'elemento di timeline "SEND_DIGITAL_DOMICILE"
-    Then viene verificato che il ProgressResponseElement del webhook abbia un EventId incrementale e senza duplicati
 
   @Annullamento1 @webhook2 @cleanC3
   Scenario: [B2B-STREAM_TIMELINE_24_4] Invio notifica digitale ed attesa di un eventi di Timeline stream v1  con controllo EventId incrementale e senza duplicati scenario positivo
