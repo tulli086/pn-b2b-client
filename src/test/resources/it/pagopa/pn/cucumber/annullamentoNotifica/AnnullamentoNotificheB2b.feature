@@ -225,7 +225,8 @@ Feature: annullamento notifiche b2b
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_PROGRESS" e successivamente annullata
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_PROGRESS"
+    And la notifica non può essere annullata dal sistema tramite codice IUN
     When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
     And vengono letti gli eventi fino allo stato della notifica "CANCELLED"
     Then la PA richiede il download dell'attestazione opponibile "PEC_RECEIPT"
@@ -507,7 +508,7 @@ Feature: annullamento notifiche b2b
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED" e successivamente annullata
+    And la notifica non può essere annullata dal sistema tramite codice IUN
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
     When vengono letti gli eventi fino allo stato della notifica "CANCELLED"
     Then "Mario Gherkin" richiede il download dell'attestazione opponibile "PEC_RECEIPT" con errore "404"
