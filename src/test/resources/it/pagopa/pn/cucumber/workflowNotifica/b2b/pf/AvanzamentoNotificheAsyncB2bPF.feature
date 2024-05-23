@@ -32,6 +32,8 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
       | payment_multy_number  | 1           |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
+
+    #integrare il pagamento da checkout quando sarà disponibile
   @Async @ignore
   Scenario: [B2B_ASYNC_4_PF] Notifica mono PF-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Mario Gherkin" con CF "CLMCST42R12D969Z"
@@ -124,6 +126,7 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
     And  viene effettuato il controllo del amount di GPD = "100"
     Then viene cancellata la posizione debitoria di "Mario Gherkin"
 
+    #integrare il pagamento da checkout quando sarà disponibile
   @Async @ignore
   Scenario: [B2B_ASYNC_9_PF] Notifica mono PF Multipagamento-Verifica amount GPD notifica async dopo pagamento di un solo pagamento poi annullata la notifica il secondo pagamento amount non azzerrato
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Mario Gherkin" con CF "CLMCST42R12D969Z"
@@ -152,6 +155,7 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
     And viene effettuato il controllo del amount di GPD = "100"
     Then viene cancellata la posizione debitoria del pagamento 1
 
+    #integrare il pagamento da checkout quando sarà disponibile
   @Async @ignore
   Scenario: [B2B_ASYNC_10_PF] Notifica mono PF Multipagamento-Verifica amount GPD notifica async dopo pagamento tutti i pagamenti poi annullata la notifica il secondo pagamento amount non azzerrato
     Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Mario Gherkin" con CF "CLMCST42R12D969Z"
@@ -404,17 +408,6 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
     #Ogni elemento di timeline analogico ha un analog cost per ogni elemento va verificato che aumenti di  + analog_cost.
     #se riufiutata amount_gpd
 
-  @version @Async @ignore
-  Scenario: [B2B_ASYNC_1_VERSIONAMENTO] Creazione notifica ASYNC con V1 - Errore
-    Given viene generata una nuova notifica V1
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-      | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 10                          |
-    And destinatario Mario Cucumber V1
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED "V1"
-    Then si verifica lo scarto dell' acquisizione della notifica V1
 
   @Async
   Scenario: [B2B_ASYNC_2_MULTI] Notifica multi PF/PG-Verifica amount GPD in fase "REQUEST_REFUSED" costo aggiornato a 0
@@ -583,56 +576,6 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
       | details          | NOT_NULL |
       | details_recIndex | 1        |
     Then vengono cancellate le posizioni debitorie
-
-  @testIntegrazione @ignore
-  Scenario: [B2B_PROVA_INTEGRAZIONE_GPD] Viene creata una posizione debitoria, interrogata e cancellata
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Cucumber_Society" con Piva "20517490320"
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Mario Gherkin" con CF "CLMCST42R12D969Z"
-    Then lettura amount posizione debitoria per la notifica corrente di "Mario Gherkin"
-    And lettura amount posizione debitoria per la notifica corrente di "Cucumber_Society"
-    Then vengono cancellate le posizioni debitorie
-
-
-  @testIntegrazione @ignore
-  Scenario: [B2B_PROVA_INTEGRAZIONE_CHECKOUT] Notifica mono PF-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Mario Gherkin" con CF "CLMCST42R12D969Z"
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-      | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 10                          |
-    And destinatario Mario Gherkin e:
-      | payment_creditorTaxId | 77777777777 |
-      | payment_pagoPaForm    | SI          |
-      | payment_f24           | NULL        |
-      | apply_cost_pagopa     | SI          |
-      | payment_multy_number  | 1           |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Mario Gherkin" alla posizione 0
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And viene aggiunto il costo della notifica totale
-    And lettura amount posizione debitoria per la notifica corrente di "Mario Gherkin"
-    And l'avviso pagopa viene pagato correttamente su checkout
-    #Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
-
-
-  @testIntegrazione @ignore
-  Scenario: [B2B_PROVA_CREAZIONE_PARTITA_DEBITORIA] Notifica mono PF-Rifiuto caso notifiche che riportano l’indicazione di modalità asincrona di integrazione al cui interno risultano avvisi con pagamento già effettuato
-    Given viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Mario Gherkin" con CF "CLMCST42R12D969Z"
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-      | pagoPaIntMode      | ASYNC                       |
-      | paFee              | 10                          |
-    And destinatario Mario Gherkin e:
-      | payment_creditorTaxId | 77777777777 |
-      | payment_pagoPaForm    | SI          |
-      | payment_f24           | NULL        |
-      | apply_cost_pagopa     | SI          |
-      | payment_multy_number  | 1           |
-    And al destinatario viene associato lo iuv creato mediante partita debitoria per "Mario Gherkin" alla posizione 0
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
 
 
 
