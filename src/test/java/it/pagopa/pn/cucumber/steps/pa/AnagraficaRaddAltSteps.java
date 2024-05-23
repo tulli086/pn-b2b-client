@@ -48,7 +48,7 @@ public class AnagraficaRaddAltSteps {
 
     private String uid = getDefaultValue(RADD_UID.key);
 
-    private static final Integer NUM_CHECK_STATE_CSV = 18;
+    private static final Integer NUM_CHECK_STATE_CSV = 25;
     private static final Integer WAITING_STATE_CSV = 10000;
 
     @Autowired
