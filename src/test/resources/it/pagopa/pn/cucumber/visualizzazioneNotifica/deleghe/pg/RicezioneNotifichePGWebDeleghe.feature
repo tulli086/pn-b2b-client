@@ -39,7 +39,7 @@ Feature: Ricezione notifiche destinate al delegante
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then l'allegato "PAGOPA" può essere correttamente recuperato da "CucumberSpa" con delega
 
-  @ignore
+  @deleghe2
   Scenario: [WEB-PG-MANDATE_4] Invio notifica digitale mono destinatario e recupero allegato F24_FLAT_scenario positivo
     Given "CucumberSpa" viene delegato da "GherkinSrl"
     And "CucumberSpa" accetta la delega "GherkinSrl"
@@ -52,16 +52,19 @@ Feature: Ricezione notifiche destinate al delegante
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then l'allegato "F24" può essere correttamente recuperato da "CucumberSpa" con delega
 
-  @ignore
+  @deleghe2
   Scenario: [WEB-PG-MANDATE_5] Invio notifica digitale mono destinatario e recupero allegato F24_STANDARD_scenario positivo
     Given "CucumberSpa" viene delegato da "GherkinSrl"
     And "CucumberSpa" accetta la delega "GherkinSrl"
     When viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | comune di milano            |
+      | feePolicy          | DELIVERY_MODE               |
     And destinatario GherkinSrl e:
       | payment_pagoPaForm | SI                   |
       | payment_f24        | PAYMENT_F24_STANDARD |
+      | apply_cost_pagopa  | SI                   |
+      | apply_cost_f24     | SI                   |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then l'allegato "F24" può essere correttamente recuperato da "CucumberSpa" con delega
 
