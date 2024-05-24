@@ -1947,7 +1947,6 @@ public class AvanzamentoNotificheB2bSteps {
       webRecipientClient.getReceivedNotification(iun, null);
     });
 
-    threadWaitMilliseconds(sharedSteps.getWorkFlowWait());
   }
 
   @And("{string} legge la notifica ricevuta {string}")

@@ -289,8 +289,6 @@ public class InvioNotificheB2bSteps {
     Assertions.assertDoesNotThrow(() -> notificationDocumentAtomic.set(
         b2bUtils.preloadMetadataAttachment(notificationPaymentAttachment)));
 
-    threadWaitMilliseconds(sharedSteps.getWait());
-
     this.notificationMetadataAttachment = notificationDocumentAtomic.get();
   }
 
@@ -1049,7 +1047,7 @@ public class InvioNotificheB2bSteps {
   @Given("si invia una email alla pec mittente e si attendono {int} minuti")
   public void siInviaUnaEmailAllaPecMittenteESiAttendonoMinuti(int wait) {
     Assertions.assertDoesNotThrow(this::sendEmail);
-    long waiting = ((wait * 60) * 1000);
+    long waiting = ((wait * 60L) * 1000);
     Assertions.assertDoesNotThrow(() -> threadWaitMilliseconds(waiting));
   }
 

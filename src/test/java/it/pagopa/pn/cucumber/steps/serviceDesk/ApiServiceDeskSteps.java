@@ -147,7 +147,7 @@ public class ApiServiceDeskSteps {
       Assertions.assertDoesNotThrow(() -> {
         notificationsUnreachableResponse = ipServiceDeskClient.notification(notificationRequest);
       });
-      threadWaitMilliseconds(getWorkFlowWait());
+
       Assertions.assertNotNull(notificationsUnreachableResponse);
     } catch (AssertionFailedError assertionFailedError) {
       String message = assertionFailedError.getMessage() +
@@ -252,7 +252,7 @@ public class ApiServiceDeskSteps {
       Assertions.assertDoesNotThrow(() -> {
         operationsResponse = ipServiceDeskClient.createOperation(createOperationRequest);
       });
-      threadWaitMilliseconds(getWorkFlowWait());
+
       Assertions.assertNotNull(operationsResponse);
     } catch (AssertionFailedError assertionFailedError) {
       String message = assertionFailedError.getMessage() +
@@ -289,7 +289,7 @@ public class ApiServiceDeskSteps {
         videoUploadResponse = ipServiceDeskClient.presignedUrlVideoUpload(
             operationsResponse.getOperationId(), videoUploadRequest);
       });
-      threadWaitMilliseconds(getWorkFlowWait());
+
       Assertions.assertNotNull(videoUploadResponse);
     } catch (AssertionFailedError assertionFailedError) {
       String message = assertionFailedError.getMessage() +
@@ -1207,7 +1207,7 @@ public class ApiServiceDeskSteps {
       Assertions.assertDoesNotThrow(() -> {
         searchResponse = ipServiceDeskClient.searchOperationsFromTaxId(searchNotificationRequest);
       });
-      threadWaitMilliseconds(getWorkFlowWait());
+
       Assertions.assertNotNull(searchResponse);
     } catch (AssertionFailedError assertionFailedError) {
       String message = assertionFailedError.getMessage() +
