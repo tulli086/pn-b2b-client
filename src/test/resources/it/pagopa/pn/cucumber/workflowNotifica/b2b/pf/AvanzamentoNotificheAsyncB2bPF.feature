@@ -244,7 +244,7 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
       | paFee              | 10                          |
     And destinatario Mario Gherkin e:
       | digitalDomicile         | NULL                  |
-      | physicalAddress_address | Via@FAIL-Discovery_AR |
+      | physicalAddress_address | Via@ok_AR |
       | payment_creditorTaxId   | 77777777777           |
       | payment_pagoPaForm      | SI                    |
       | payment_f24             | NULL                  |
@@ -320,7 +320,7 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
     Then viene aggiunto il costo della notifica totale
     Then lettura amount posizione debitoria per la notifica corrente di "Mario Gherkin"
     And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
     Then lettura amount posizione debitoria per la notifica corrente di "Mario Gherkin"
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_SIMPLE_REGISTERED_LETTER" del utente 0
     Then viene cancellata la posizione debitoria di "Mario Gherkin"
@@ -395,7 +395,7 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
     And viene creata una nuova richiesta per istanziare una nuova posizione debitoria per l'ente creditore "77777777777" e amount "100" per "Mario Gherkin" con CF "CLMCST42R12D969Z"
     And al destinatario viene associato lo iuv creato mediante partita debitoria per "Mario Gherkin" alla posizione 0
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS"
     #And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     Then viene verificato il costo finale della notifica amount_gpd + costo_base + pafee + analog_cost per ogni elemento di timeline
     And viene cancellata la posizione debitoria di "Mario Gherkin"
@@ -572,12 +572,12 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
     And viene effettuato il controllo dell'aggiornamento del costo totale del utente 0
     Then  lettura amount posizione debitoria per la notifica corrente di "Gherkin Analogic"
     And viene effettuato il controllo dell'aggiornamento del costo totale del utente 1
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER" per l'utente 0
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" per l'utente 0
     And  lettura amount posizione debitoria per la notifica corrente di "Mario Gherkin"
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_SIMPLE_REGISTERED_LETTER" del utente 0 :
       | details          | NOT_NULL |
       | details_recIndex | 0        |
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER" per l'utente 1
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" per l'utente 1
     And  lettura amount posizione debitoria per la notifica corrente di "Gherkin Analogic"
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_SIMPLE_REGISTERED_LETTER" del utente 1 :
       | details          | NOT_NULL |
