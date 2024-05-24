@@ -54,9 +54,6 @@ public class AsyncSteps {
   }
 
   private String generateRandomIuv() {
-    int randomSleepToRandomize = new Random().nextInt(100);
-
-    threadWaitMilliseconds(randomSleepToRandomize);
 
     String threadNumber = (Thread.currentThread().getId() + "");
     String numberOfThread =

@@ -10,6 +10,9 @@ import org.awaitility.core.ConditionTimeoutException;
 public class ThreadUtils {
 
   private static void threadWait(long wait, TimeUnit timeUnit) {
+    if(wait <= 100) {
+      wait = 101;
+    }
     try {
       await()
           .atMost(wait, timeUnit)
