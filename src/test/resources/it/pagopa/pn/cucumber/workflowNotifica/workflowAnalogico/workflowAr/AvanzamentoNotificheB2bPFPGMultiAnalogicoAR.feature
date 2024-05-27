@@ -33,7 +33,6 @@ Feature: avanzamento b2b notifica multi destinatario analogico AR
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 1
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con responseStatus "OK" per l'utente 0
-    #And vengono letti gli eventi e verificho che l'utente 1 non abbia associato un evento "SEND_ANALOG_FEEDBACK" con responseStatus "OK"
 
 
   @dev @workflowAnalogico
@@ -278,3 +277,33 @@ Feature: avanzamento b2b notifica multi destinatario analogico AR
     Then "Mario Gherkin" legge la notifica dopo i 10 giorni
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT" abbia notificationCost ugauale a "null"
+
+
+
+  @dev @workflowAnalogico
+  Scenario: [B2B_TIMELINE_MULTI_ANALOG_RIR_1] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@ok_RIR |
+    And destinatario Cucumber Society
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 1
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW" per l'utente 0
+    And vengono letti gli eventi e verificho che l'utente 1 non abbia associato un evento "ANALOG_SUCCESS_WORKFLOW"
+
+
+  @dev @workflowAnalogico
+  Scenario: [B2B_TIMELINE_MULTI_ANALOG_RIR_2] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@fail_RIR |
+    And destinatario Cucumber Society
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 1
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con responseStatus "OK" per l'utente 0

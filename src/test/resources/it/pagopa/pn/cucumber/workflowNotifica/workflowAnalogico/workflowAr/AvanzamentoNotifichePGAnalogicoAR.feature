@@ -1,53 +1,52 @@
 Feature: avanzamento notifiche analogico AR persona giuridica
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_PG_ANALOG_1] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_scenario positivo
+  @dev @workflowAnalogico @mockNR
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_1] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
       | subject               | invio notifica con cucumber |
       | senderDenomination    | Comune di milano            |
       | physicalCommunication | AR_REGISTERED_LETTER        |
-    And destinatario Cucumber Analogic e:
+    And destinatario Gherkin Analogic e:
       | digitalDomicile         | NULL      |
       | physicalAddress_address | Via@ok_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_PG_ANALOG_4] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
+  @dev @workflowAnalogico @mockNR
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_2] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di milano                |
       | physicalCommunication | AR_REGISTERED_LETTER            |
-    And destinatario
-      | taxId                   | DNNGRL83A01C352D |
+    And destinatario Gherkin Analogic e:
       | digitalDomicile         | NULL             |
       | physicalAddress_address | Via@fail_AR      |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con responseStatus "OK"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_PG_ANALOG_7] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_AR_scenario positivo
+  @dev @workflowAnalogico @mockNR
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_3] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_AR_scenario positivo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di milano                |
       | physicalCommunication | AR_REGISTERED_LETTER            |
-    And destinatario Cucumber Analogic e:
+    And destinatario Gherkin Analogic e:
       | digitalDomicile         | NULL                  |
       | physicalAddress_address | Via@fail-Discovery_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_PG_ANALOG_9] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_DOMICILE e controllo campo serviceLevel positivo
+  @dev @workflowAnalogico @mockNR
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_4] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_DOMICILE e controllo campo serviceLevel positivo
     Given viene generata una nuova notifica
       | subject               | invio notifica con cucumber |
       | senderDenomination    | Comune di milano            |
       | physicalCommunication | AR_REGISTERED_LETTER        |
-    And destinatario Cucumber Analogic e:
+    And destinatario Gherkin Analogic e:
       | digitalDomicile         | NULL      |
       | physicalAddress_address | Via@ok_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -55,13 +54,13 @@ Feature: avanzamento notifiche analogico AR persona giuridica
     And viene verificato il campo serviceLevel dell' evento di timeline "SEND_ANALOG_DOMICILE" sia valorizzato con "AR_REGISTERED_LETTER"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_PG_ANALOG_11] Invio notifica digitale ed attesa elemento di timeline PREPARE_ANALOG_DOMICILE e controllo campo serviceLevel positivo
+  @dev @workflowAnalogico @mockNR
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_5] Invio notifica digitale ed attesa elemento di timeline PREPARE_ANALOG_DOMICILE e controllo campo serviceLevel positivo
     Given viene generata una nuova notifica
       | subject               | invio notifica con cucumber |
       | senderDenomination    | Comune di milano            |
       | physicalCommunication | AR_REGISTERED_LETTER        |
-    And destinatario Cucumber Analogic e:
+    And destinatario Gherkin Analogic e:
       | digitalDomicile         | NULL      |
       | physicalAddress_address | Via@ok_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -69,13 +68,13 @@ Feature: avanzamento notifiche analogico AR persona giuridica
     And viene verificato il campo serviceLevel dell' evento di timeline "PREPARE_ANALOG_DOMICILE" sia valorizzato con "AR_REGISTERED_LETTER"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_PG_ANALOG_13] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_FEEDBACK e controllo campo serviceLevel positivo
+  @dev @workflowAnalogico @mockNR
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_6] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_FEEDBACK e controllo campo serviceLevel positivo
     Given viene generata una nuova notifica
       | subject               | invio notifica con cucumber |
       | senderDenomination    | Comune di milano            |
       | physicalCommunication | AR_REGISTERED_LETTER        |
-    And destinatario Cucumber Analogic e:
+    And destinatario Gherkin Analogic e:
       | digitalDomicile         | NULL      |
       | physicalAddress_address | Via@ok_AR |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -84,7 +83,7 @@ Feature: avanzamento notifiche analogico AR persona giuridica
 
 
   @dev @workflowAnalogico @mockNR
-  Scenario: [B2B_TIMELINE_PG_ANALOG_15] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_scenario negativo
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_7] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_scenario negativo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di milano                |
@@ -97,7 +96,7 @@ Feature: avanzamento notifiche analogico AR persona giuridica
 
 
   @mockNR  @workflowAnalogico
-  Scenario: [B2B_TIMELINE_PG_ANALOG_19] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D00 non trovato - PG
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_8] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D00 non trovato - PG
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -114,7 +113,7 @@ Feature: avanzamento notifiche analogico AR persona giuridica
 
 
   @ignore @workflowAnalogico
-  Scenario: [B2B_TIMELINE_PG_ANALOG_20] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D01 non valido - PG
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_9] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D01 non valido - PG
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -131,7 +130,7 @@ Feature: avanzamento notifiche analogico AR persona giuridica
 
 
   @ignore @workflowAnalogico
-  Scenario: [B2B_TIMELINE_PG_ANALOG_21] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D02 coincidente - PG
+  Scenario: [B2B_TIMELINE_PG_ANALOG_AR_10] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D02 coincidente - PG
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -150,3 +149,40 @@ Feature: avanzamento notifiche analogico AR persona giuridica
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE_FAILURE" con failureCause "D02"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"
+
+
+
+  @dev @workflowAnalogico @mockNR
+  Scenario: [B2B_TIMELINE_PG_ANALOG_RIR_1] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_scenario positivo
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Gherkin Analogic e:
+      | digitalDomicile         | NULL       |
+      | physicalAddress_address | Via@ok_RIR |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
+
+
+  @dev @workflowAnalogico @mockNR
+  Scenario: [B2B_TIMELINE_PG_ANALOG_RIR_2] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
+    Given viene generata una nuova notifica
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di milano                |
+    And destinatario Gherkin Analogic e:
+      | digitalDomicile         | NULL         |
+      | physicalAddress_address | Via@fail_RIR |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con responseStatus "OK"
+
+
+  @dev @workflowAnalogico @mockNR
+  Scenario: [B2B_TIMELINE_PG_ANALOG_RIR_3] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_scenario negativo
+    Given viene generata una nuova notifica
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di milano                |
+    And destinatario Gherkin Irreperibile e:
+      | digitalDomicile         | NULL         |
+      | physicalAddress_address | Via@fail_RIR |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
