@@ -104,22 +104,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_8] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
-    Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber |
-      | senderDenomination    | Comune di palermo               |
-      | physicalCommunication | AR_REGISTERED_LETTER            |
-    And destinatario
-      | denomination            | Test AR Fail     |
-      | taxId                   | MNDLCU98T68C933T |
-      | digitalDomicile         | NULL             |
-      | physicalAddress_address | Via@fail_AR      |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con responseStatus "OK"
-
-
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_9] Invio notifica digitale ed attesa elemento di timeline PREPARE_ANALOG_DOMICILE e controllo campi municipalityDetails e foreignState positivo
+  Scenario: [B2B_TIMELINE_ANALOG_AR_8] Invio notifica digitale ed attesa elemento di timeline PREPARE_ANALOG_DOMICILE e controllo campi municipalityDetails e foreignState positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -132,7 +117,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_10] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_DOMICILE e controllo campo serviceLevel positivo
+  Scenario: [B2B_TIMELINE_ANALOG_AR_9] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_DOMICILE e controllo campo serviceLevel positivo
     Given viene generata una nuova notifica
       | subject               | invio notifica con cucumber |
       | senderDenomination    | Comune di milano            |
@@ -146,7 +131,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_11] Invio notifica digitale ed attesa elemento di timeline PREPARE_ANALOG_DOMICILE e controllo campo serviceLevel positivo
+  Scenario: [B2B_TIMELINE_ANALOG_AR_10] Invio notifica digitale ed attesa elemento di timeline PREPARE_ANALOG_DOMICILE e controllo campo serviceLevel positivo
     Given viene generata una nuova notifica
       | subject               | invio notifica con cucumber |
       | senderDenomination    | Comune di milano            |
@@ -160,7 +145,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_12] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_FEEDBACK e controllo campo serviceLevel positivo
+  Scenario: [B2B_TIMELINE_ANALOG_AR_11] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_FEEDBACK e controllo campo serviceLevel positivo
     Given viene generata una nuova notifica
       | subject               | invio notifica con cucumber |
       | senderDenomination    | Comune di milano            |
@@ -173,24 +158,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
     And viene verificato il campo serviceLevel dell' evento di timeline "SEND_ANALOG_FEEDBACK" sia valorizzato con "AR_REGISTERED_LETTER"
 
 
-  @dev @ignore @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_25] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR negativo
-    Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber |
-      | senderDenomination    | Comune di palermo               |
-      | physicalCommunication | AR_REGISTERED_LETTER            |
-    And destinatario
-      | denomination            | Test AR Fail     |
-      | taxId                   | MNDLCU98T68C933T |
-      | digitalDomicile         | NULL             |
-      | physicalAddress_address | Via@fail_AR      |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    #MNDLCU98T68C933T CF non valido per eseguire il test sul nuovo DEV2
-
-
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_14] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
+  Scenario: [B2B_TIMELINE_ANALOG_AR_12] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_scenario negativo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -205,7 +174,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_15] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_NR negativo
+  Scenario: [B2B_TIMELINE_ANALOG_AR_13] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_AR_NR negativo
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -220,7 +189,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_16] Attesa elemento di timeline SEND_ANALOG_DOMICILE_scenario positivo PN-5283 Presente
+  Scenario: [B2B_TIMELINE_ANALOG_AR_14] Attesa elemento di timeline SEND_ANALOG_DOMICILE_scenario positivo PN-5283 Presente
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -233,7 +202,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_17] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECRN015 AR momentaneamente non rendicontabile positivo PN-6079
+  Scenario: [B2B_TIMELINE_ANALOG_AR_15] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECRN015 AR momentaneamente non rendicontabile positivo PN-6079
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -249,7 +218,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
     #"sequence": "@sequence.5s-CON080.5s-RECRN015.5s-RECRN001A.5s-RECRN001B[DOC:AR;DELAY:1s].5s-RECRN001C"
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_18] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECRN013 AR momentaneamente non rendicontabile positivo PN-6079
+  Scenario: [B2B_TIMELINE_ANALOG_AR_16] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECRN013 AR momentaneamente non rendicontabile positivo PN-6079
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -269,7 +238,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_19] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-DiscoveryIrreperibile_AR_scenario positivo
+  Scenario: [B2B_TIMELINE_ANALOG_AR_17] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-DiscoveryIrreperibile_AR_scenario positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -288,7 +257,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_20] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D00 non trovato
+  Scenario: [B2B_TIMELINE_ANALOG_AR_18] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D00 non trovato
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -302,7 +271,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW"
 
   @mockNR  @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_AR_21] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D01 non valido
+  Scenario: [B2B_TIMELINE_ANALOG_AR_19] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D01 non valido
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -317,7 +286,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @mockNR  @workflowAnalogico @mockNormalizzatore
-  Scenario: [B2B_TIMELINE_ANALOG_AR_22] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D02 coincidente
+  Scenario: [B2B_TIMELINE_ANALOG_AR_20] Attesa elemento di timeline PREPARE_ANALOG_DOMICILE_FAILURE con failureCode D02 coincidente
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -337,7 +306,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @workflowAnalogico @realNR
-  Scenario: [B2B_TIMELINE_ANALOG_AR_23] PA mittente: invio notifica analogica FAIL-Irreperibile_AR
+  Scenario: [B2B_TIMELINE_ANALOG_AR_21] PA mittente: invio notifica analogica FAIL-Irreperibile_AR
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di MILANO                |
@@ -353,7 +322,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
 
 
   @workflowAnalogico @mockNR
-  Scenario: [B2B_TIMELINE_ANALOG_AR_24]  PA mittente: invio notifica analogica FAIL-Irreperibile_AR
+  Scenario: [B2B_TIMELINE_ANALOG_AR_22]  PA mittente: invio notifica analogica FAIL-Irreperibile_AR
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
