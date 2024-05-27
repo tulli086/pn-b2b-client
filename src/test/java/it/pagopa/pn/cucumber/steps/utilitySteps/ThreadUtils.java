@@ -12,7 +12,7 @@ public class ThreadUtils {
     private static void threadWait(long wait, TimeUnit timeUnit) {
         try {
             await()
-                    .atMost(isValidWait(wait), timeUnit)
+                    .atMost(checkWait(wait, timeUnit), timeUnit)
                     .with()
                     .until(() -> false);
         } catch (ConditionTimeoutException exception) {
@@ -20,8 +20,11 @@ public class ThreadUtils {
         }
     }
 
-    private static long isValidWait(long wait) {
-        return wait <= 100 ? 101 : wait;
+    private static long checkWait(long wait, TimeUnit timeUnit) {
+        if (timeUnit.equals(TimeUnit.MILLISECONDS)) {
+            return wait <= 100 ? 101 : wait;
+        }
+        return wait;
     }
 
     public static void threadWaitMilliseconds(long wait) {
