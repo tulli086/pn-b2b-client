@@ -1105,8 +1105,6 @@ public class SharedSteps {
                 notificationResponseComplete = b2bUtils.waitForRequestAcceptation(newNotificationResponse);
             });
 
-            threadWaitMilliseconds(wait);
-
             Assertions.assertNotNull(notificationResponseComplete);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1124,8 +1122,6 @@ public class SharedSteps {
 
                 notificationResponseComplete = b2bUtils.waitForRequestNoAcceptation(newNotificationResponse);
             });
-
-            threadWaitMilliseconds(wait);
 
             Assertions.assertNull(notificationResponseComplete);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1145,9 +1141,6 @@ public class SharedSteps {
 
                 notificationResponseComplete = b2bUtils.waitForRequestAcceptationShort(newNotificationResponse);
             });
-
-
-            threadWaitMilliseconds(wait);
 
             Assertions.assertNotNull(notificationResponseComplete);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1172,8 +1165,6 @@ public class SharedSteps {
                 Assertions.assertTrue("NOTIFICATION_CANCELLATION_ACCEPTED".equalsIgnoreCase(resp.getDetails().get(0).getCode()));
             });
             rifiutata = b2bUtils.waitForRequestNotRefused(newNotificationResponse);
-
-            threadWaitMilliseconds(wait);
 
             Assertions.assertFalse(rifiutata);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1204,7 +1195,6 @@ public class SharedSteps {
                 notificationResponseCompleteV1 = b2bUtils.waitForRequestAcceptationV1(newNotificationResponseV1);
             });
 
-            threadWaitMilliseconds(getWorkFlowWait());
             Assertions.assertNotNull(notificationResponseCompleteV1);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1224,7 +1214,6 @@ public class SharedSteps {
                 notificationResponseCompleteV2 = b2bUtils.waitForRequestAcceptationV2(newNotificationResponseV2);
             });
 
-            threadWaitMilliseconds(getWorkFlowWait());
             Assertions.assertNotNull(notificationResponseCompleteV2);
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1244,8 +1233,6 @@ public class SharedSteps {
 
                 notificationResponseCompleteV21 = b2bUtils.waitForRequestAcceptationV21(newNotificationResponseV21);
             });
-
-            threadWaitMilliseconds(getWorkFlowWait());
 
             Assertions.assertNotNull(notificationResponseCompleteV21);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1315,8 +1302,6 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadWaitMilliseconds(getWorkFlowWait());
-
             Assertions.assertNotNull(errorCode);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1333,8 +1318,6 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadWaitMilliseconds(getWorkFlowWait());
-
             Assertions.assertNotNull(errorCode);
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1350,8 +1333,6 @@ public class SharedSteps {
                 newNotificationResponse = b2bUtils.uploadNotificationNotEqualSha(notificationRequest);
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
-
-            threadWaitMilliseconds(getWorkFlowWait());
 
             Assertions.assertNotNull(errorCode);
         } catch (AssertionFailedError assertionFailedError) {
@@ -1379,8 +1360,6 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadWaitMilliseconds(getWorkFlowWait());
-
             Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1399,8 +1378,6 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadWaitMilliseconds(getWorkFlowWait());
-
             Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1418,7 +1395,6 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadWaitMilliseconds(getWorkFlowWait());
             Assertions.assertFalse(errorCode.isEmpty());
 
         } catch (AssertionFailedError assertionFailedError) {
@@ -1435,9 +1411,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadWaitMilliseconds(getWorkFlowWait());
             Assertions.assertFalse(errorCode.isEmpty());
-
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1453,9 +1427,7 @@ public class SharedSteps {
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
 
-            threadWaitMilliseconds(getWorkFlowWait());
             Assertions.assertFalse(errorCode.isEmpty());
-
 
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() +
@@ -1470,8 +1442,6 @@ public class SharedSteps {
                 newNotificationResponse = b2bUtils.uploadNotificationOver15Allegato(notificationRequest);
                 errorCode = b2bUtils.waitForRequestRefused(newNotificationResponse);
             });
-
-            threadWaitMilliseconds(getWorkFlowWait());
 
             Assertions.assertFalse(errorCode.isEmpty());
 

@@ -264,7 +264,6 @@ public class InvioNotificheB2bSteps {
         NotificationMetadataAttachment notificationPaymentAttachment = b2bUtils.newMetadataAttachment("classpath:/METADATA_CORRETTO.json");
         AtomicReference<NotificationMetadataAttachment> notificationDocumentAtomic = new AtomicReference<>();
         Assertions.assertDoesNotThrow(() -> notificationDocumentAtomic.set(b2bUtils.preloadMetadataAttachment(notificationPaymentAttachment)));
-        threadWaitMilliseconds( sharedSteps.getWait());
 
         this.notificationMetadataAttachment = notificationDocumentAtomic.get();
     }
