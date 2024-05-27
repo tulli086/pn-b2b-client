@@ -30,6 +30,8 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+
+import static it.pagopa.pn.cucumber.steps.utilitySteps.ThreadUtils.threadWaitMilliseconds;
 import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.generateRandomNumber;
 
@@ -247,11 +249,9 @@ public class RaddAltSteps {
         this.startTransactionResponse = raddAltClient.startActTransaction(uid, actStartTransactionRequest);
 
         if(this.startTransactionResponse.getStatus().getCode().equals(StartTransactionResponseStatus.CodeEnum.NUMBER_2)){
-            try {
-                Thread.sleep(this.startTransactionResponse.getStatus().getRetryAfter().longValue());
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+
+            threadWaitMilliseconds(this.startTransactionResponse.getStatus().getRetryAfter().longValue());
+
             this.startTransactionResponse = raddAltClient.startActTransaction(uid, actStartTransactionRequest);
         }
         System.out.println("startTransactionResponse: " + startTransactionResponse);

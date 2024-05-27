@@ -26,8 +26,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
+
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
+import static it.pagopa.pn.cucumber.steps.utilitySteps.ThreadUtils.threadWaitMilliseconds;
 import static org.awaitility.Awaitility.await;
 
 
@@ -263,12 +264,8 @@ public class InvioNotificheB2bSteps {
         NotificationMetadataAttachment notificationPaymentAttachment = b2bUtils.newMetadataAttachment("classpath:/METADATA_CORRETTO.json");
         AtomicReference<NotificationMetadataAttachment> notificationDocumentAtomic = new AtomicReference<>();
         Assertions.assertDoesNotThrow(() -> notificationDocumentAtomic.set(b2bUtils.preloadMetadataAttachment(notificationPaymentAttachment)));
-        try {
-            Thread.sleep( sharedSteps.getWait());
-        } catch (InterruptedException e) {
-            log.error("Thread.sleep error retry");
-            throw new RuntimeException(e);
-        }
+        threadWaitMilliseconds( sharedSteps.getWait());
+
         this.notificationMetadataAttachment = notificationDocumentAtomic.get();
     }
 
@@ -937,8 +934,8 @@ public class InvioNotificheB2bSteps {
     @Given("si invia una email alla pec mittente e si attendono {int} minuti")
     public void siInviaUnaEmailAllaPecMittenteESiAttendonoMinuti(int wait) {
         Assertions.assertDoesNotThrow(this::sendEmail);
-        long waiting = ((wait*60)*1000);
-        Assertions.assertDoesNotThrow(() -> Thread.sleep(waiting));
+        long waiting = ((wait*60L)*1000);
+        Assertions.assertDoesNotThrow(() -> threadWaitMilliseconds(waiting));
     }
 
     @Given("si richiama checkout con dati:")
