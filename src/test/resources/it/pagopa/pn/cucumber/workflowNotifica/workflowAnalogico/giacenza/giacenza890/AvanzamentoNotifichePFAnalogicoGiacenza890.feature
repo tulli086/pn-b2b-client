@@ -304,3 +304,17 @@ Feature: avanzamento notifiche b2b con workflow cartaceo giacenza 890
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "PNAG012"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT" per l'utente 0
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT" per l'utente 1
+
+
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_GIACENZA_890_21] Attesa elemento di timeline REFINEMENT con physicalAddress OK-PersonaAbilitata_890
+    Given viene generata una nuova notifica
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile         | NULL              |
+      | physicalAddress_address | Via@OK-PersonaAbilitata_890 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG002B" e verifica tipo DOC "23L"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG002C"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
