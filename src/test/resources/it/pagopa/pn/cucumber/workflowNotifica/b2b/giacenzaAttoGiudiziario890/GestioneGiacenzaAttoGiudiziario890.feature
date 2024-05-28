@@ -318,10 +318,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo gestione giacenza atto 
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     #@sequence.5s-CON080.5s-RECAG010.5s-RECAG011A.60s-RECAG011B[DOC:ARCAD;DOC:23L].60s-RECAG007A.5s-RECAG007B[DOC:Plico].5s-RECAG007C
-    #PNAG012 come evento di feedback con data: RECAG011A + refinementDuration (1 minuto in DEV)
 
- # SEND_ANALOG_FEEDBACK------------------
-  #deliveryDetailCode: RECRN002C
 
   @giacenza890Simplified
   Scenario: [B2B_GIACENZA_890_WI1.1_14] Non Attesa elemento di timeline SEND_ANALOG_FEEDBACK con physicalAddress OK-NO012-lte10 (Scenario negativo)

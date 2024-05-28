@@ -16,7 +16,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
 
-  @dev @workflowAnalogico
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_ANALOG_890_2] Attesa elemento di timeline SEND_ANALOG_FEEDBACK_fail_890_scenario negativo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -204,7 +204,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
 
 
   @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_17] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECRN015 890 momentaneamente non rendicontabile positivo PN-6079
+  Scenario: [B2B_TIMELINE_ANALOG_890_17] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECAG015 890 momentaneamente non rendicontabile positivo PN-6079
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -294,6 +294,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
       | digitalDomicile         | NULL                          |
       | physicalAddress_address | Via@FAIL_IndirizzoInesatto890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG003B" e verifica tipo DOC "Plico"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG003C" e deliveryFailureCause "M06"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
@@ -307,6 +308,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
       | digitalDomicile         | NULL             |
       | physicalAddress_address | Via@OK-Retry_890 |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001C" e deliveryFailureCause "F02"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG001B" e verifica tipo DOC "23L"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con deliveryDetailCode "RECAG001C" e deliveryFailureCause "F02"
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
