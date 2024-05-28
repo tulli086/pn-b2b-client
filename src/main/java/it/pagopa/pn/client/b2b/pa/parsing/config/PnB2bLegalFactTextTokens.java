@@ -12,6 +12,12 @@ public class PnB2bLegalFactTextTokens {
     private String startNomeCognomeRagioneSociale;
     private String endNomeCognomeRagioneSociale;
 
+    private String startNomeCognomeRagioneSocialeDestinatario;
+    private String endNomeCognomeRagioneSocialeDestinatario;
+
+    private String startNomeCognomeRagioneSocialeDelegato;
+    private String endNomeCognomeRagioneSocialeDelegato;
+
     private String startCodiceFiscale;
     private String endCodiceFiscale;
 
@@ -38,9 +44,6 @@ public class PnB2bLegalFactTextTokens {
 
     private String startIunNotificaPresaInCarico;
     private String endIunNotificaPresaInCarico;
-
-    private String startHash;
-    private String endHash;
 
     private String startDataDestinatario;
     private String endDataDestinatario;

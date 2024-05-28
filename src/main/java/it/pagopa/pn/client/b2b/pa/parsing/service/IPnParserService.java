@@ -1,8 +1,10 @@
 package it.pagopa.pn.client.b2b.pa.parsing.service;
 
-import it.pagopa.pn.client.b2b.pa.parsing.dto.PnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.model.PnLegalFact;
+import lombok.Getter;
+
 import java.io.IOException;
-import java.util.HashMap;
 
 
 public interface IPnParserService {
@@ -16,6 +18,19 @@ public interface IPnParserService {
         LEGALFACT_NOTIFICA_AVVENUTO_SUCCESSO_DELEGATO
     }
 
-    String extractSingle(String source, String campo, LegalFactType legalFactType) throws IOException;
-    HashMap<String, String> extractMulti(String source, LegalFactType legalFactType) throws IOException;
+    @Getter
+    enum LegalFactKeyValues {
+        IUN("iun"),
+        DATA("data"),
+        NOME_COGNOME_RAGIONE_SOCIALE("nomeCognomeRagioneSociale"),
+        DESTINATARIO_DIGITALE("destinatarioDigitale"),
+        DESTINATARIO("destinatario");
+        private final String field;
+
+        LegalFactKeyValues(String field){
+            this.field = field;
+        }
+    }
+    String extractSingle(String source, String campo, LegalFactType legalFactType) throws IOException, NoSuchFieldException, IllegalAccessException;
+    IPnLegalFact extractMulti(String source, LegalFactType legalFactType) throws IOException;
 }
