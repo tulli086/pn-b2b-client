@@ -4,7 +4,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico 890
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
 
 
-  @dev @workflowAnalogico
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_890_1] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -19,7 +19,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico 890
     And vengono letti gli eventi e verificho che l'utente 1 non abbia associato un evento "ANALOG_SUCCESS_WORKFLOW"
 
 
-  @dev @workflowAnalogico
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_890_2] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -34,7 +34,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico 890
     #And vengono letti gli eventi e verificho che l'utente 1 non abbia associato un evento "SEND_ANALOG_FEEDBACK" con responseStatus "OK"
 
 
-  @dev @workflowAnalogico
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_890_3] Invio notifica e atteso stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -50,7 +50,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico 890
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
 
-  @dev @workflowAnalogico
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_890_4] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_890_scenario  positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -98,7 +98,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico 890
     And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_FAILURE_WORKFLOW" per l'utente 0
 
 
-  @dev @workflowAnalogico
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_890_7] Invio notifica multidestinatario 1 tentativo analogico e successo digitale e controllo date business PN-9059
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -118,7 +118,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico 890
     And si verifica che scheduleDate del SCHEDULE_REFINEMENT sia uguale al timestamp di REFINEMENT per l'utente 1
 
 
-  @dev @workflowAnalogico
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_890_8] Invio notifica multidestinatario 1 tentativo analogico e 1 tentativo analogico e controllo date business PN-9059
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
