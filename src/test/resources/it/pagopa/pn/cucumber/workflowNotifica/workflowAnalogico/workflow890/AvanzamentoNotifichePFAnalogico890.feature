@@ -4,7 +4,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
 
 
-  @dev @workflowAnalogico
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_ANALOG_890_1] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -30,8 +30,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_4] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_890_scenario positivo
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_3] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-Discovery_890_scenario positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -42,8 +42,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_5] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_scenario positivo
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_4] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -56,35 +56,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
 
-  @dev @ignore @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_6] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
-    Given viene generata una nuova notifica
-      | subject            | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo               |
-    And destinatario
-      | denomination            | Test 890 Fail    |
-      | taxId                   | PRVMNL80A01F205M |
-      | digitalDomicile         | NULL             |
-      | physicalAddress_address | Via@fail_890     |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK" con responseStatus "KO"
-     #PRVMNL80A01F205M ha un indirizzo PEC
-
-
-  @dev @ignore @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_7] Invio notifica ed attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_scenario positivo
-    Given viene generata una nuova notifica
-      | subject            | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo               |
-    And destinatario Mario Gherkin e:
-      | digitalDomicile         | NULL       |
-      | physicalAddress_address | Via@ok_890 |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
-
-
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_8] Attesa elemento di timeline SEND_ANALOG_FEEDBACK e verifica campo SEND_ANALOG_FEEDBACK positivo
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_5] Attesa elemento di timeline SEND_ANALOG_FEEDBACK e verifica campo SEND_ANALOG_FEEDBACK positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -96,8 +69,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     And viene verificato il campo sendRequestId dell' evento di timeline "SEND_ANALOG_FEEDBACK"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_9] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_DOMICILE e controllo campi municipalityDetails e foreignState positivo
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_6] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_DOMICILE e controllo campi municipalityDetails e foreignState positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -109,7 +82,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     And viene verificato che nell'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" siano configurati i campi municipalityDetails e foreignState
 
 
-  Scenario: [B2B_TIMELINE_ANALOG_890_10] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_DOMICILE e controllo campo serviceLevel positivo
+  Scenario: [B2B_TIMELINE_ANALOG_890_7] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_DOMICILE e controllo campo serviceLevel positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -121,8 +94,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     And viene verificato il campo serviceLevel dell' evento di timeline "SEND_ANALOG_DOMICILE" sia valorizzato con "REGISTERED_LETTER_890"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_11] Invio notifica digitale ed attesa elemento di timeline PREPARE_ANALOG_DOMICILE e controllo campo serviceLevel positivo
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_8] Invio notifica digitale ed attesa elemento di timeline PREPARE_ANALOG_DOMICILE e controllo campo serviceLevel positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -133,8 +106,9 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE"
     And viene verificato il campo serviceLevel dell' evento di timeline "PREPARE_ANALOG_DOMICILE" sia valorizzato con "REGISTERED_LETTER_890"
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_12] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_FEEDBACK e controllo campo serviceLevel positivo
+
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_9] Invio notifica digitale ed attesa elemento di timeline SEND_ANALOG_FEEDBACK e controllo campo serviceLevel positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -146,25 +120,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     And viene verificato il campo serviceLevel dell' evento di timeline "SEND_ANALOG_FEEDBACK" sia valorizzato con "REGISTERED_LETTER_890"
 
 
-
-  @dev @ignore @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_13] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_890 negativo
-    Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-    And destinatario
-      | denomination | Test 890 Fail |
-      | taxId | PRVMNL80A01F205M |
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via@fail_890 |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    #PRVMNL80A01F205M ha un indirizzo PEC
-
-
-
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_14] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_890_scenario negativo
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_10] Attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_890_scenario negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -176,8 +133,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_15] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_890_NR negativo
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_11] Invio notifica ed attesa elemento di timeline COMPLETELY_UNREACHABLE_fail_890_NR negativo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -190,21 +147,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
 
-  @dev @ignore @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_16] Invio notifica digitale senza allegato ed attesa elemento di timeline SEND_ANALOG_DOMICILE e controllo numero pagine AAR
-    Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
-      | document | NO |
-    And destinatario Mario Gherkin e:
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via minzoni |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" verifica numero pagine AAR 1
-
-
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_17] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECAG015 890 momentaneamente non rendicontabile positivo PN-6079
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_12] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECAG001C 890 momentaneamente non rendicontabile positivo PN-6079
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -220,8 +164,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     #"@sequence.5s-CON080.5s-RECAG015.5s-RECAG001A.5s-RECAG001B[DOC:23L].5s-RECAG001C"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_18] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECRN013 890 momentaneamente non rendicontabile positivo PN-6079
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_13] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK con deliveryDetailCode RECRN013 890 momentaneamente non rendicontabile positivo PN-6079
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -237,8 +181,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
     #"@sequence.5s-CON080.5s-RECAG013@retry.5s-CON080.5s-RECAG001A.5s-RECAG001B[DOC:23L].5s-RECAG001C"
 
 
-  @dev @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_19] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-DiscoveryIrreperibile_890_scenario positivo
+  @workflowAnalogico
+  Scenario: [B2B_TIMELINE_ANALOG_890_14] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-DiscoveryIrreperibile_890_scenario positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -258,7 +202,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
 
 
   @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_20] Attesa elemento di timeline REFINEMENT con physicalAddress OK-WO-011B
+  Scenario: [B2B_TIMELINE_ANALOG_890_15] Attesa elemento di timeline REFINEMENT con physicalAddress OK-WO-011B
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -271,7 +215,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo 890
 
 
   @workflowAnalogico
-  Scenario: [B2B_TIMELINE_ANALOG_890_21] Attesa elemento di timeline REFINEMENT con physicalAddress OK-REC008_890 - PN-9929
+  Scenario: [B2B_TIMELINE_ANALOG_890_16] Attesa elemento di timeline REFINEMENT con physicalAddress OK-REC008_890 - PN-9929
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
