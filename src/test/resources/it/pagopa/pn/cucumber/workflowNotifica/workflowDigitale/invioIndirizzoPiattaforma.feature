@@ -12,3 +12,6 @@ Feature: avanzamento b2b notifica difgitale con indirizzo piattaforma
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
     And viene verificato che nell'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE" e' presente il campo Digital Address di piattaforma
     #Serve un CF con indirizzo digitale in piattaforma
+
+
+
