@@ -418,18 +418,6 @@ Feature: avanzamento notifiche b2b persona fisica
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
 
-  @workflowDigitale
-  Scenario: [B2B_TIMELINE_HOTFIX-BINGQ2.2_1] Invio notifica digitale ed attesa stato DELIVERED con invio mail a pec mittente (bug HOTFIX-BINGQ2.2)
-    Given si invia una email alla pec mittente e si attendono 6 minuti
-    And viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-    And destinatario Gherkin spa
-    And destinatario Mario Cucumber
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
-
-
   Scenario: [B2B-TIMELINE_HOTFIX-BUG-PEC_1] notifica con allegato oltre i 30MB e 60 allegati pagoPa - PN-11212  (verifica manuale nella pec del solo AAR)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
