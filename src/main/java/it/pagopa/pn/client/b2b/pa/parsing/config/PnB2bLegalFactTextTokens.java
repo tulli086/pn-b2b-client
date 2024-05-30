@@ -9,66 +9,20 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "pn.pdf.configuration", ignoreUnknownFields = false)
 public class PnB2bLegalFactTextTokens {
-    private String startNomeCognomeRagioneSociale;
-    private String endNomeCognomeRagioneSociale;
-
-    private String startNomeCognomeRagioneSocialeDestinatario;
-    private String endNomeCognomeRagioneSocialeDestinatario;
-
+    private String nomeCognomeRagioneSociale;
+    private String nomeCognomeRagioneSocialeDestinatario;
     private String startNomeCognomeRagioneSocialeDelegato;
     private String endNomeCognomeRagioneSocialeDelegato;
-
-    private String startCodiceFiscale;
-    private String endCodiceFiscale;
-
-    private String startDomicilioDigitale;
-    private String endDomicilioDigitale;
-
-    private String startTipoDomicilioDigitale;
-    private String endTipoDomicilioDigitale;
-
-    private String startTipoDomicilioDigitaleNotificaDigitale;
-    private String endTipoDomicilioDigitaleNotificaDigitale;
-
-    private String startTipoDomicilioDigitaleNotificaPresaInCarico;
-    private String endTipoDomicilioDigitaleNotificaPresaInCarico;
-
-    private String startDataOraDecorrenza;
-    private String endDataOraDecorrenza;
-
-    private String startDataOraFine;
-    private String endDataOraFine;
-
-    private String startIun;
-    private String endIun;
-
-    private String startIunNotificaPresaInCarico;
-    private String endIunNotificaPresaInCarico;
-
-    private String startDataDestinatario;
-    private String endDataDestinatario;
-
-    private String startDataDelegato;
-    private String endDataDelegato;
-
-    private String startDataNotificaDigitale;
-    private String endDataNotificaDigitale;
-
-    private String startDataNotificaPresaInCarico;
-    private String endDataNotificaPresaInCarico;
-
-    private String startIndirizzoFisico;
-    private String endIndirizzoFisico;
-
-    private String startPrimaData;
-    private String endPrimaData;
-
-    private String startSecondaData;
-    private String endSecondaData;
-
-    private String startMittente;
-    private String endMittente;
-
-    private String startCfMittente;
-    private String endCfMittente;
+    private String codiceFiscale;
+    private String domicilioDigitale;
+    private String tipoDomicilioDigitale;
+    private String dataOraDecorrenza;
+    private String dataOraFine;
+    private String iun;
+    private String dataNotificaDigitale;
+    private String indirizzoFisico;
+    private String primaData;
+    private String secondaData;
+    private String mittente;
+    private String cfMittente;
 }

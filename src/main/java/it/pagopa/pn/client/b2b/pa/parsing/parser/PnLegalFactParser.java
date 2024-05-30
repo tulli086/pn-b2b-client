@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static it.pagopa.pn.client.b2b.pa.parsing.parser.PnTextToken.*;
@@ -43,7 +44,7 @@ public class PnLegalFactParser implements IPnParserService {
     }
 
     private IPnLegalFact parse(String source, LegalFactType legalFactType) throws IOException {
-        String pdfText = extractContent(source);
+        String pdfText = cleanupString(Objects.requireNonNull(extractContent(source)));
         log.info("PDF TEXT{}", pdfText);
 //        textToken = new PnTextToken(pdfText);
 
@@ -68,8 +69,8 @@ public class PnLegalFactParser implements IPnParserService {
 
     private IPnLegalFact getLegalFactNotificaDowntime(String pdfText) {
 
-        String dataOraDecorrenza = extractDateTime(Pattern.compile(pnB2bLegalFactTextTokens.getStartDataOraDecorrenza()), pdfText);
-        String dataOraFine = extractDateTime(Pattern.compile(pnB2bLegalFactTextTokens.getStartDataOraFine()), pdfText);
+        String dataOraDecorrenza = extractDateTime(Pattern.compile(pnB2bLegalFactTextTokens.getDataOraDecorrenza()), pdfText);
+        String dataOraFine = extractDateTime(Pattern.compile(pnB2bLegalFactTextTokens.getDataOraFine()), pdfText);
 
         return PnLegalFactNotificaDowntime.builder()
                 .dataOraDecorrenza(dataOraDecorrenza)
@@ -79,12 +80,12 @@ public class PnLegalFactParser implements IPnParserService {
 
     private IPnLegalFact getLegalFactNotificaDigitale(String pdfText) {
 
-        String iun = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartIun()), pdfText);
-        String nomeCognome = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartNomeCognomeRagioneSociale()), pdfText);
-        String codiceFiscale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartCodiceFiscale()), pdfText);
-        String domicilioDigitale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartDomicilioDigitale()), pdfText);
-        String tipoDomicilioDigitale = Objects.requireNonNull(extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartTipoDomicilioDigitaleNotificaDigitale(), Pattern.DOTALL), pdfText)).replaceAll("[\\r\\n]", "");
-        String dataAttestazioneOpponibile = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartDataNotificaDigitale()), pdfText);
+        String iun = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getIun()), pdfText);
+        String nomeCognome = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getNomeCognomeRagioneSociale()), pdfText);
+        String codiceFiscale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getCodiceFiscale()), pdfText);
+        String domicilioDigitale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getDomicilioDigitale()), pdfText);
+        String tipoDomicilioDigitale = Objects.requireNonNull(extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getTipoDomicilioDigitale(), Pattern.DOTALL), pdfText));
+        String dataAttestazioneOpponibile = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getDataNotificaDigitale()), pdfText);
 
         PnDestinatarioDigitale pnDestinatarioDigitale = new PnDestinatarioDigitale(
                 nomeCognome,
@@ -102,12 +103,12 @@ public class PnLegalFactParser implements IPnParserService {
 
     private IPnLegalFact getLegalFactNotificaMancatoRecapito(String pdfText) {
 
-        String iun = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartIun()), pdfText);
-        String nomeCognome = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartNomeCognomeRagioneSociale()), pdfText);
-        String codiceFiscale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartCodiceFiscale()), pdfText);
-        String domicilioDigitale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartDomicilioDigitale()), pdfText);
-        String tipoDomicilioDigitale = Objects.requireNonNull(extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartTipoDomicilioDigitale()), pdfText));
-        List<String> date = extractMultiDate(Pattern.compile(pnB2bLegalFactTextTokens.getStartPrimaData()), pdfText);
+        String iun = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getIun()), pdfText);
+        String nomeCognome = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getNomeCognomeRagioneSociale()), pdfText);
+        String codiceFiscale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getCodiceFiscale()), pdfText);
+        String domicilioDigitale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getDomicilioDigitale()), pdfText);
+        String tipoDomicilioDigitale = Objects.requireNonNull(extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getTipoDomicilioDigitale()), pdfText));
+        List<String> date = extractMultiDate(Pattern.compile(pnB2bLegalFactTextTokens.getPrimaData()), pdfText);
 
 
         PnDestinatarioDigitale pnDestinatarioDigitale = new PnDestinatarioDigitale(
@@ -127,14 +128,14 @@ public class PnLegalFactParser implements IPnParserService {
 
     private IPnLegalFact getLegalFactNotificaPresaInCarico(String pdfText) {
 
-        String dataAttestazione = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartDataNotificaPresaInCarico()), pdfText);
-        String mittente = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartMittente()), pdfText);
-        String cfMittente = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartCfMittente()), pdfText);
-        String iun = Objects.requireNonNull(extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartIunNotificaPresaInCarico(), Pattern.DOTALL), pdfText)).replaceAll("[\\r\\n]", "");
-        String nomeCognome = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartNomeCognomeRagioneSociale()), pdfText);
-        String codiceFiscale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartCodiceFiscale()), pdfText);
-        String domicilioDigitale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartDomicilioDigitale()), pdfText);
-        String tipoDomicilioDigitale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getStartTipoDomicilioDigitale()), pdfText);
+        String dataAttestazione = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getDataNotificaDigitale()), pdfText);
+        String mittente = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getMittente()), pdfText);
+        String cfMittente = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getCfMittente()), pdfText);
+        String iun = Objects.requireNonNull(extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getIun(), Pattern.DOTALL), pdfText));
+        String nomeCognome = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getNomeCognomeRagioneSociale()), pdfText);
+        String codiceFiscale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getCodiceFiscale()), pdfText);
+        String domicilioDigitale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getDomicilioDigitale()), pdfText);
+        String tipoDomicilioDigitale = extractValue(Pattern.compile(pnB2bLegalFactTextTokens.getTipoDomicilioDigitale()), pdfText);
 
 
         PnDestinatarioDigitale pnDestinatarioDigitale = new PnDestinatarioDigitale(
@@ -236,5 +237,22 @@ public class PnLegalFactParser implements IPnParserService {
     @Override
     public IPnLegalFact extractMulti(String source, LegalFactType legalFactType) throws IOException {
         return parse(source, legalFactType);
+    }
+
+    private String cleanupString (String text) {
+
+        Matcher matcher = Pattern.compile("[^d\\s]\\r\\n").matcher(text);
+
+        int i = 0;
+        StringBuilder builder = new StringBuilder();
+        while (matcher.find()){
+           String group = matcher.group(i);
+           matcher.appendReplacement(builder, group.charAt(0) + " \r\n");
+        }
+
+        matcher.appendTail(builder);
+        String newText = builder.toString();
+
+        return newText.replaceAll("\\s\\r\\n", " ");
     }
 }
