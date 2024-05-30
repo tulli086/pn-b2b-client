@@ -44,3 +44,13 @@ Feature: avanzamento b2b notifica difgitale fallito
           Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_FAILURE_WORKFLOW"
           Then vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
           And si verifica che scheduleDate del SCHEDULE_REFINEMENT sia uguale al timestamp di REFINEMENT per l'utente 0
+
+
+     Scenario: [B2B-TIMELINE_MULTI_4] Invio notifica multi destinatario SCHEDULE_ANALOG_WORKFLOW_scenario positivo
+          Given viene generata una nuova notifica
+               | subject | invio notifica GA cucumber |
+               | senderDenomination | Comune di palermo |
+          And destinatario Mario Cucumber e:
+               | digitalDomicile | NULL |
+          When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+          Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_ANALOG_WORKFLOW"

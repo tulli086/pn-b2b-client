@@ -7,7 +7,7 @@ Feature: avanzamento b2b notifica difgitale con indirizzo piattaforma
       | senderDenomination | Comune di milano |
     And destinatario
       | taxId | GLLGLL64B15G702I |
-      | digitalDomicile_address | DSRDNI00A01A225I@pec.pagopa.it |
+      | digitalDomicile | NULL |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
     And viene verificato che nell'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE" e' presente il campo Digital Address di piattaforma
