@@ -1,8 +1,5 @@
 Feature: avanzamento notifiche b2b persona fisica
 
-
-
-
   @mockPec
   Scenario: [TEST_PAPER_NEW]
     Given viene generata una nuova notifica
@@ -50,6 +47,7 @@ Feature: avanzamento notifiche b2b persona fisica
       | physicalAddress_address | Via @sequence.5s-CON080.5s-RECRN001A.15m-RECRN001B[DOC:AR;DELAY:15m].5s-RECRN001C[DELAY:15m] |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
+
 
   Scenario: [B2B_TIMELINE_27] Invio notifica digitale e lettura notifica da un utente con token scaduto PN-9110
     Given viene generata una nuova notifica
@@ -226,7 +224,6 @@ Feature: avanzamento notifiche b2b persona fisica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
 
 
-
   @mockPec
   Scenario: [TEST_PAPER_NEW_14]
     Given viene generata una nuova notifica
@@ -249,7 +246,6 @@ Feature: avanzamento notifiche b2b persona fisica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
 
 
-
   @mockPec
   Scenario: [TEST_PAPER_ASSOCIAZIONE_1] evento RECRS002A non valido KO
     Given viene generata una nuova notifica
@@ -260,7 +256,6 @@ Feature: avanzamento notifiche b2b persona fisica
       | physicalAddress_address | Via @FAIL-EVENTO-INESISTENTE |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
-
 
   @mockPec
   Scenario: [TEST_PAPER_ASSOCIAZIONE_2] statusCode presente con deliveryFailureCause non presente OK

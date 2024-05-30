@@ -583,7 +583,7 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
       | details          | NOT_NULL |
       | details_recIndex | 1        |
     Then vengono cancellate le posizioni debitorie
-    
+
 
 
 
