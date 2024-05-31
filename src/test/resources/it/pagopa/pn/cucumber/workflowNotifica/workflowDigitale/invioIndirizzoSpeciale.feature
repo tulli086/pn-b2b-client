@@ -589,3 +589,163 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK" con responseStatus "OK"
     And viene verificato che nell'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK" con responseStatus "OK" sia presente il campo deliveryDetailCode
 
+
+  #[B2B_TIMELINE_PG_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_50] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino allo stato della notifica "ACCEPTED"
+
+  #[B2B_TIMELINE_PG_2]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_51] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+
+  #[B2B_TIMELINE_PG_4]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_52] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "GET_ADDRESS"
+
+  #[B2B_TIMELINE_PG_5]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_53] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino allo stato della notifica "DELIVERING"
+
+  #[B2B_TIMELINE_PG_6]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_54] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
+
+  #[B2B_TIMELINE_PG_7]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_55] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
+
+
+  @dev
+  #[B2B_TIMELINE_PG_10]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_56] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK"
+
+  @dev
+  #[B2B_TIMELINE_PG_11]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_57] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_PROGRESS"
+
+
+
+
+  @testLite
+  #[B2B_TIMELINE_MULTI_PG_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_58] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    And destinatario Cucumber srl
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino allo stato della notifica "ACCEPTED"
+
+  #[B2B_TIMELINE_MULTI_PG_2]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_59] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    And destinatario Cucumber srl
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+
+  @testLite
+  #[B2B_TIMELINE_MULTI_PG_3]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_60] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    And destinatario Cucumber srl
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
+
+  #[B2B_TIMELINE_MULTI_PG_4]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_61] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    And destinatario Cucumber srl
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "GET_ADDRESS"
+
+  #[B2B_TIMELINE_MULTI_PG_8]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_62] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    And destinatario Mario Cucumber
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+
+  #[B2B_TIMELINE_MULTI_PG-CF_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_63] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    And destinatario Cucumber Society
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino allo stato della notifica "DELIVERING"
+
+  #[B2B_TIMELINE_MULTI_PG-CF_2]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_64] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    And destinatario Cucumber Society
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
+
+  #[B2B_TIMELINE_MULTI_PG-CF_3]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_65] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario Gherkin spa
+    And destinatario Cucumber Society
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "GET_ADDRESS"
