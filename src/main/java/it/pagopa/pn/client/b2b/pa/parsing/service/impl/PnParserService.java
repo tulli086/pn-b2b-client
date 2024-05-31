@@ -1,6 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.parsing.service.impl;
 
-import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.design.IPnLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.PnLegalFactParser;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +21,11 @@ public class PnParserService {
         this.pnLegalFactParser = pnLegalFactParser;
     }
 
-    public String extractSingle(String source, String campo, IPnParserService.LegalFactType legalFactType) throws IOException, NoSuchFieldException, IllegalAccessException {
-            return pnLegalFactParser.extractSingle(source, campo, legalFactType);
+    public String extractSingleField(String source, String field, IPnParserService.LegalFactType legalFactType) throws IOException, NoSuchFieldException, IllegalAccessException {
+        return pnLegalFactParser.extractSingleField(source, field, legalFactType);
     }
 
-    public IPnLegalFact extractMulti(String source, IPnParserService.LegalFactType legalFactType) throws IOException {
-        return pnLegalFactParser.extractMulti(source, legalFactType);
+    public IPnLegalFact extractAllField(String source, IPnParserService.LegalFactType legalFactType) throws IOException {
+        return pnLegalFactParser.extractAllField(source, legalFactType);
     }
 }

@@ -10,19 +10,18 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "pn.pdf.configuration", ignoreUnknownFields = false)
 public class PnB2bLegalFactTextTokens {
     private String nomeCognomeRagioneSociale;
-    private String nomeCognomeRagioneSocialeDestinatario;
-    private String startNomeCognomeRagioneSocialeDelegato;
-    private String endNomeCognomeRagioneSocialeDelegato;
+    private String iun;
     private String codiceFiscale;
+    private String codiceFiscalePartitaIva;
     private String domicilioDigitale;
     private String tipoDomicilioDigitale;
+    private String tipoDomicilioDigitaleMancatoRecapito;
+    private String tipoDomicilioDigitaleNotificaPresaInCarico;
     private String dataOraDecorrenza;
     private String dataOraFine;
-    private String iun;
-    private String dataNotificaDigitale;
-    private String indirizzoFisico;
-    private String primaData;
-    private String secondaData;
+    private String indirizzoFisicoNotificaPresaInCarico;
+    private String indirizzoFisicoNotificaPresaInCaricoMultiDestinatario;
+    private String dataAttestazioneOpponibile;
     private String mittente;
     private String cfMittente;
 }
