@@ -61,7 +61,8 @@ Feature: avanzamento notifiche analogico RS persona giuridica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_FEEDBACK"
 
   @dev
-  Scenario: [B2B_TIMELINE_PG_8] Invio notifica digitale ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
+  #[B2B_TIMELINE_PG_8]
+  Scenario: [B2B_TIMELINE_PG_RS_4] Invio notifica digitale ed attesa elemento di timeline DIGITAL_FAILURE_WORKFLOW_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -71,7 +72,8 @@ Feature: avanzamento notifiche analogico RS persona giuridica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_SIMPLE_REGISTERED_LETTER"
 
   @dev
-  Scenario: [B2B_TIMELINE_PG_9] Invio notifica digitale ed attesa elemento di timeline SEND_SIMPLE_REGISTERED_LETTER positivo
+  #[B2B_TIMELINE_PG_9]
+  Scenario: [B2B_TIMELINE_PG_RS_5] Invio notifica digitale ed attesa elemento di timeline SEND_SIMPLE_REGISTERED_LETTER positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |

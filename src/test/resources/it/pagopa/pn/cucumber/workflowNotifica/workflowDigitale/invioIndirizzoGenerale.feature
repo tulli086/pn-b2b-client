@@ -19,7 +19,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
   #Risultato:  La notifica viene inviata correttamente al domicilio digitale corrispondente al destinatario inserito (test@pec.it), recuperato tramite INAD.
  #OK---------->
   @uat @workflowDigitale @realNR
-  Scenario: [B2B_TIMELINE_7597_1] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - INAD OK
+  #[B2B_TIMELINE_7597_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_1] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - INAD OK
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -34,7 +35,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
   #OK------------>
   @workflowDigitale @mockNR
-  Scenario: [B2B_TIMELINE_7597_1_1] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - INAD OK
+  #[B2B_TIMELINE_7597_1_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_2] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - INAD OK
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -57,7 +59,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
   #OK------------>
   @workflowDigitale @mockNR
-  Scenario: [B2B_TIMELINE_7597_2] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - IPA risponde OK
+  #[B2B_TIMELINE_7597_2]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_3]  Invio Notifica mono destinatario a PF con recupero del domicilio digitale - IPA risponde OK
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -73,7 +76,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
   #OK------->atocaloreirpino@pec.it
   #92051670641 Servizio Reale
   @uat @workflowDigitale @realNR
-  Scenario: [B2B_TIMELINE_7597_2_1] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde OK
+  #[B2B_TIMELINE_7597_2_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_4] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde OK
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -89,7 +93,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
   #OK------------>
   @workflowDigitale @mockNR
-  Scenario: [B2B_TIMELINE_7597_2_2] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde OK
+  #[B2B_TIMELINE_7597_2_2]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_5] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde OK
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -105,7 +110,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
   #OK------------>
   @workflowDigitale @mockNR
-  Scenario: [B2B_TIMELINE_7597_2_3] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - IPA risponde KO e viene fatta chiamata a INIPEC
+  #[B2B_TIMELINE_7597_2_3]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_6] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - IPA risponde KO e viene fatta chiamata a INIPEC
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -121,7 +127,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
   #Controllare ---KO serve una PIVA che va sui servizi reali e dove Fallisce IPA e  INIPEC restituisce la PEC (ATTUALMENTE TUTTE LE PG RESTITUISCONO UN 200 OK PER IPA)..
   @dev @ignore
-  Scenario: [B2B_TIMELINE_7597_2_4] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde KO e viene fatta chiamata a INIPEC
+  #[B2B_TIMELINE_7597_2_4]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_7] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde KO e viene fatta chiamata a INIPEC
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -137,7 +144,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
   #OK---------->aslnapoli1centro@pec.aslna1centro.it
   @uat @workflowDigitale @realNR
-  Scenario: [B2B_TIMELINE_7597_2_5] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde OK e non viene fatta chiamata a INIPEC
+  #[B2B_TIMELINE_7597_2_5]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_8] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde OK e non viene fatta chiamata a INIPEC
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -158,7 +166,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
   #OK------------>
   @workflowDigitale  @mockNR
-  Scenario: [B2B_TIMELINE_7597_3] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde lista vuota e parte chiamata INIPEC
+  #[B2B_TIMELINE_7597_3]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_9] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA risponde lista vuota e parte chiamata INIPEC
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -182,7 +191,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
   #OK------------>
   @workflowDigitale @mockNR
-  Scenario: [B2B_TIMELINE_7597_4] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - IPA e INIPEC risponde lista vuota e parte chiamata INAD
+  #[B2B_TIMELINE_7597_4]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_10] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - IPA e INIPEC risponde lista vuota e parte chiamata INAD
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -198,7 +208,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
   #Controllare ---KO serve una PIVA che va sui servizi reali e dove Fallisce IPA e  INIPEC mentre INAD restituisce la PEC (ATTUALMENTE TUTTE LE PG RESTITUISCONO UN 200 OK PER IPA)..
 
   @dev  @ignore
-  Scenario: [B2B_TIMELINE_7597_5] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA e INIPEC risponde lista vuota e parte chiamata INAD
+  #[B2B_TIMELINE_7597_5]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_11] Invio Notifica mono destinatario a PG con recupero del domicilio digitale - IPA e INIPEC risponde lista vuota e parte chiamata INAD
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -214,7 +225,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
   #OK------------>test@pec.it
   @uat @workflowDigitale @realNR
-  Scenario: [B2B_TIMELINE_7597_4_1] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - IPA e INIPEC risponde lista vuota e parte chiamata INAD
+  #[B2B_TIMELINE_7597_4_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_12] Invio Notifica mono destinatario a PF con recupero del domicilio digitale - IPA e INIPEC risponde lista vuota e parte chiamata INAD
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -229,7 +241,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
 
   @dev @mockNR
-  Scenario: [B2B_TIMELINE_23] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE sia presente il campo Digital Address scenario positivo PN-5992
+  #[B2B_TIMELINE_23]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_13] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE sia presente il campo Digital Address scenario positivo PN-5992
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -240,7 +253,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
     Then viene verificato che nell'elemento di timeline della notifica "PUBLIC_REGISTRY_RESPONSE" sia presente il campo Digital Address da National Registry
 
   @dev @realNR
-  Scenario: [B2B_TIMELINE_23_1] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE sia presente il campo Digital Address scenario positivo PN-5992
+  #[B2B_TIMELINE_23_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_14] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE sia presente il campo Digital Address scenario positivo PN-5992
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -252,7 +266,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata 
 
 
   @dev
-  Scenario: [B2B_TIMELINE_PG_16] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE sia presente il campo Digital Address scenario positivo PN-5992
+  #[B2B_TIMELINE_PG_16]
+  Scenario: [B2B_TIMELINE_DIGITAL_GENERAL_15] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE sia presente il campo Digital Address scenario positivo PN-5992
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |

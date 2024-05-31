@@ -1,7 +1,8 @@
 Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_MULTI_PF_PG_01] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
+  #B2B_TIMELINE_MULTI_PF_PG_01
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_1] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -12,7 +13,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_MULTI_PF_PF_06] Invio notifica multidestinatario con pagamento destinatario 0 e 1 scenario  positivo
+  #[B2B_TIMELINE_MULTI_PF_PF_06]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_2] Invio notifica multidestinatario con pagamento destinatario 0 e 1 scenario  positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -29,7 +31,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_MULTI_PF_PF_07] Invio notifica multidestinatario con pagamento destinatario 0 e non del destinatario 1 scenario  positivo
+ # [B2B_TIMELINE_MULTI_PF_PF_07]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_3] Invio notifica multidestinatario con pagamento destinatario 0 e non del destinatario 1 scenario  positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -44,7 +47,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_MULTI_PF_PF_08] Invio notifica multidestinatario con pagamento destinatario 1 e non del destinatario 0 scenario  positivo
+  #[B2B_TIMELINE_MULTI_PF_PF_08]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_4]  Invio notifica multidestinatario con pagamento destinatario 1 e non del destinatario 0 scenario  positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -57,7 +61,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     And non vengono letti gli eventi fino all'elemento di timeline della notifica "PAYMENT" per l'utente 0
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_MULTI_PF_PF_08] Invio notifica multidestinatario con pagamento destinatario 1 e non del destinatario 0 scenario  positivo
+  #[B2B_TIMELINE_MULTI_PF_PF_08]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_5] Invio notifica multidestinatario con pagamento destinatario 1 e non del destinatario 0 scenario  positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -70,7 +75,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     And non vengono letti gli eventi fino all'elemento di timeline della notifica "PAYMENT" per l'utente 0
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_1] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
+  #[B2B_TIMELINE_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_6] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -79,7 +85,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino allo stato della notifica "ACCEPTED"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_2] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
+  #[B2B_TIMELINE_2]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_7] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -88,7 +95,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_3] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
+  #[B2B_TIMELINE_3]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_8] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -97,7 +105,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_4] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+  #[B2B_TIMELINE_4]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_9] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -106,7 +115,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "GET_ADDRESS"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_5] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
+  #[B2B_TIMELINE_5]
+  Scenario:[B2B_TIMELINE_DIGITAL_SPECIAL_10]  Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -115,7 +125,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERING"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_6] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
+  #[B2B_TIMELINE_6]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_11] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -124,7 +135,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
 
   @ignore @tbc @workflowDigitale
-  Scenario: [B2B_TIMELINE_7] Invio notifica digitale ed attesa stato DELIVERING-VIEWED_scenario positivo
+  #[B2B_TIMELINE_7]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_12]Invio notifica digitale ed attesa stato DELIVERING-VIEWED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -135,7 +147,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then si verifica che la notifica abbia lo stato VIEWED
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_8] Invio notifica digitale ed attesa elemento di timeline DELIVERING-NOTIFICATION_VIEWED_scenario positivo
+  #[B2B_TIMELINE_8]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_13] Invio notifica digitale ed attesa elemento di timeline DELIVERING-NOTIFICATION_VIEWED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -146,7 +159,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
 
   @SmokeTest @workflowDigitale @mockPec
-  Scenario: [B2B_TIMELINE_9] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+   #[B2B_TIMELINE_9]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_14] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -157,7 +171,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
   @workflowDigitale @mockPec
-  Scenario: [B2B_TIMELINE_10] Invio notifica digitale ed attesa stato DELIVERED-VIEWED_scenario positivo
+   #B2B_TIMELINE_10]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_15] Invio notifica digitale ed attesa stato DELIVERED-VIEWED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -169,7 +184,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then si verifica che la notifica abbia lo stato VIEWED
 
   @workflowDigitale @mockPec
-  Scenario: [B2B_TIMELINE_11] Invio notifica digitale ed attesa elemento di timeline DELIVERED-NOTIFICATION_VIEWED_scenario positivo
+   #[B2B_TIMELINE_11]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_16] Invio notifica digitale ed attesa elemento di timeline DELIVERED-NOTIFICATION_VIEWED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -182,7 +198,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_18] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo campo deliveryDetailCode positivo
+   #[B2B_TIMELINE_18]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_17] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo campo deliveryDetailCode positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -190,8 +207,10 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK" con responseStatus "OK"
     And viene verificato che nell'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK" con responseStatus "OK" sia presente il campo deliveryDetailCode
+
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_DIGITAL_UAT_10000] Invio notifica ed attesa elemento di  positivo
+   #[B2B_TIMELINE_DIGITAL_UAT_10000]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_18] Invio notifica ed attesa elemento di  positivo
     Given viene generata una nuova notifica
       | subject | notifica digitale con cucumber |
       | senderDenomination | Comune di palermo |
@@ -200,7 +219,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_25] Invio notifica digitale con verifica uguaglianza tra scheduleDate di SCHEDULE_REFINEMENT e timestamp del REFINEMENT PN-9059
+   #[B2B_TIMELINE_25]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_19] Invio notifica digitale con verifica uguaglianza tra scheduleDate di SCHEDULE_REFINEMENT e timestamp del REFINEMENT PN-9059
     Given viene generata una nuova notifica
       | subject            | invio notifica multi cucumber |
       | senderDenomination | Comune di milano              |
@@ -211,7 +231,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
       #Test in ignore per il discorso che a volte arriva prima EFFECTIVE_DATE di un destinario rispetto al'altro destinatario (Caso di test comunque coperto da altri test mono destinatario)
   @workflowDigitale @ignore
-  Scenario: [B2B-TIMELINE_MULTI_1] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+   #[B2B-TIMELINE_MULTI_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_20]Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
@@ -221,7 +242,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
   @workflowDigitale
-  Scenario: [B2B-TIMELINE_MULTI_2] Invio notifica multi destinatario_scenario positivo
+   #[B2B-TIMELINE_MULTI_2]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_21] Invio notifica multi destinatario_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
@@ -232,7 +254,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
 
   @workflowDigitale
-  Scenario: [B2B-TIMELINE_MULTI_3] Invio notifica multi destinatario_scenario positivo
+   #[B2B-TIMELINE_MULTI_3]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_22]Invio notifica multi destinatario_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
@@ -243,7 +266,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_MULTI_7] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
+   #[B2B_TIMELINE_MULTI_7]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_23] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
@@ -253,7 +277,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_MULTI_9] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
+   #[B2B_TIMELINE_MULTI_9]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_24] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
@@ -263,7 +288,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERING"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_MULTI_10] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
+   #[B2B_TIMELINE_MULTI_10]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_25] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
@@ -273,7 +299,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_14] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
+   #[B2B_TIMELINE_14]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_26] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -283,7 +310,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_15] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
+  # [B2B_TIMELINE_15]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_27] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_PROGRESS_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -293,7 +321,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_HOTFIX-BINGQ2.2_1] Invio notifica digitale ed attesa stato DELIVERED con invio mail a pec mittente (bug HOTFIX-BINGQ2.2)
+   #[B2B_TIMELINE_HOTFIX-BINGQ2.2_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_28] Invio notifica digitale ed attesa stato DELIVERED con invio mail a pec mittente (bug HOTFIX-BINGQ2.2)
     Given si invia una email alla pec mittente e si attendono 6 minuti
     And viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -304,7 +333,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_PG_3] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
+   #[B2B_TIMELINE_PG_3]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_29] Invio notifica digitale ed attesa elemento di timeline AAR_GENERATION positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -313,7 +343,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "AAR_GENERATION"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_PG-CF_3] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+   #[B2B_TIMELINE_PG-CF_3]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_30] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -322,7 +353,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
   @workflowDigitale
-  Scenario: [B2B_TIMELINE_MULTI_PG_5] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
+   #[B2B_TIMELINE_MULTI_PG_5]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_31] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -331,7 +363,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERING"
 
-  Scenario: [B2B_TIMELINE_MULTI_PG_6] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
+   #[B2B_TIMELINE_MULTI_PG_6]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_32] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -342,7 +375,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
         #Test in ignore per il discorso che a volte arriva prima EFFECTIVE_DATE di un destinario rispetto al'altro destinatario (Caso di test comunque coperto da altri test mono destinatario)
   @workflowDigitale @ignore
-  Scenario: [B2B_TIMELINE_MULTI_PG_7] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+   #[B2B_TIMELINE_MULTI_PG_7]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_33] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -355,7 +389,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     #TODO Chiedere se conviene spostare...
 
   @workflowDigitale
-  Scenario: [B2B-PA-PAY_1] Invio e visualizzazione notifica e verifica amount e effectiveDate
+   #[B2B-PA-PAY_1]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_34] Invio e visualizzazione notifica e verifica amount e effectiveDate
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -369,7 +404,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono verificati costo = "100" e data di perfezionamento della notifica
 
   @workflowDigitale
-  Scenario: [B2B-PA-PAY_2] Invio notifica e verifica amount
+   #[B2B-PA-PAY_2]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_35] Invio notifica e verifica amount
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -382,7 +418,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then viene verificato il costo = "100" della notifica
 
   @workflowDigitale
-  Scenario: [B2B-PA-PAY_3] Invio notifica FLAT e verifica amount
+   #[B2B-PA-PAY_3]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_36] Invio notifica FLAT e verifica amount
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -392,7 +429,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then viene verificato il costo = "0" della notifica
 
   @workflowDigitale
-  Scenario: [B2B-PA-PAY_4] Invio e visualizzazione notifica e verifica amount e effectiveDate
+   #[B2B-PA-PAY_4]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_37] Invio e visualizzazione notifica e verifica amount e effectiveDate
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -405,7 +443,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     And si attende il corretto pagamento della notifica
 
   @workflowDigitale
-  Scenario: [B2B-PA-PAY_6] Invio notifica e verifica amount
+   #[B2B-PA-PAY_6]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_38]Invio notifica e verifica amount
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -418,7 +457,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
 
   @workflowDigitale
-  Scenario: [B2B-PA-PAY_8] Comunicazione da parte della PA dell'avvenuto pagamento di tipo PagoPA  7741
+   #[B2B-PA-PAY_8]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_39] Comunicazione da parte della PA dell'avvenuto pagamento di tipo PagoPA  7741
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -434,7 +474,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
 
   @workflowDigitale
-  Scenario: [B2B-PA-PAY_9] Verifica restituzione data di visualizzazione a quella del NOTIFICATION_VIEWED_CREATION_REQUEST per la chiamata retrieveNotificationPrice - PN-8970
+   #[B2B-PA-PAY_9]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_40] Verifica restituzione data di visualizzazione a quella del NOTIFICATION_VIEWED_CREATION_REQUEST per la chiamata retrieveNotificationPrice - PN-8970
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di Palermo           |
@@ -450,8 +491,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then viene verificato data corretta del destinatario 0
 
 
-
-  Scenario: [B2B_TIMELINE_MULTI_PF_PG_02] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+   #[B2B_TIMELINE_MULTI_PF_PG_02]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_41] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -460,7 +501,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "GET_ADDRESS"
 
-  Scenario: [B2B_TIMELINE_MULTI_PF_PG_03] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
+  # [B2B_TIMELINE_MULTI_PF_PG_03]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_42] Invio notifica digitale ed attesa stato DELIVERING_scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -469,7 +511,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERING"
 
-  Scenario: [B2B_TIMELINE_MULTI_PF_PG_04] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
+  # [B2B_TIMELINE_MULTI_PF_PG_04]
+  Scenario:[B2B_TIMELINE_DIGITAL_SPECIAL_43]  Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_DOMICILE_scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -478,7 +521,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
 
-  Scenario: [B2B_TIMELINE_MULTI_PF_PG_05] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
+   #[B2B_TIMELINE_MULTI_PF_PG_05]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_44] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | Comune di milano            |
@@ -487,8 +531,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
-
-  Scenario: [B2B_TIMELINE_MULTI_5] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
+   #[B2B_TIMELINE_MULTI_5]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_45] Invio notifica digitale ed attesa stato ACCEPTED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
@@ -497,8 +541,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "ACCEPTED"
 
-
-  Scenario: [B2B_TIMELINE_MULTI_6] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
+   #[B2B_TIMELINE_MULTI_6]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_46] Invio notifica digitale ed attesa elemento di timeline REQUEST_ACCEPTED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
@@ -508,8 +552,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
 
 
-
-  Scenario: [B2B_TIMELINE_MULTI_8] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
+   #[B2B_TIMELINE_MULTI_8]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_47] Invio notifica digitale ed attesa elemento di timeline GET_ADDRESS_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
@@ -520,7 +564,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
 
 
   @dev
-  Scenario: [B2B_TIMELINE_24] Invio notifica digitale ed attesa elemento di timeline DELIVERED-NOTIFICATION_VIEWED_scenario positivo
+   #[B2B_TIMELINE_24]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_48] Invio notifica digitale ed attesa elemento di timeline DELIVERED-NOTIFICATION_VIEWED_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -534,7 +579,8 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
     And viene effettuato un controllo sulla durata della retention di "ATTO OPPONIBILE"
 
-  Scenario: [B2B_TIMELINE_PG_14] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo campo deliveryDetailCode positivo
+   #[B2B_TIMELINE_PG_14]
+  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_49] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo campo deliveryDetailCode positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |

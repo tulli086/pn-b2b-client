@@ -1,7 +1,8 @@
 Feature: avanzamento b2b notifica difgitale fallito
 
      @workflowDigitale
-     Scenario: [B2B_TIMELINE_16] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
+     #B2B_TIMELINE_16
+     Scenario: [B2B_TIMELINE_DIGITAL_FAILURE_1] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_CALL_scenario positivo
           Given viene generata una nuova notifica
                | subject | invio notifica con cucumber |
                | senderDenomination | Comune di milano |
@@ -12,7 +13,8 @@ Feature: avanzamento b2b notifica difgitale fallito
 
 
      @workflowDigitale
-     Scenario: [B2B_TIMELINE_17] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
+     #[B2B_TIMELINE_17]
+     Scenario: [B2B_TIMELINE_DIGITAL_FAILURE_2] Invio notifica digitale ed attesa elemento di timeline PUBLIC_REGISTRY_RESPONSE_scenario positivo
           Given viene generata una nuova notifica
                | subject | invio notifica con cucumber |
                | senderDenomination | Comune di milano |
@@ -22,7 +24,8 @@ Feature: avanzamento b2b notifica difgitale fallito
           Then vengono letti gli eventi fino all'elemento di timeline della notifica "PUBLIC_REGISTRY_RESPONSE"
 
      @svil @workflowDigitale
-     Scenario: [B2B_TIMELINE_19] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo campi deliveryDetailCode e deliveryFailureCause positivo
+     #[B2B_TIMELINE_19]
+     Scenario: [B2B_TIMELINE_DIGITAL_FAILURE_3] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo campi deliveryDetailCode e deliveryFailureCause positivo
           Given viene generata una nuova notifica
                | subject | invio notifica con cucumber |
                | senderDenomination | Comune di milano |
@@ -34,7 +37,8 @@ Feature: avanzamento b2b notifica difgitale fallito
           And viene verificato che nell'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK" con responseStatus "KO" sia presente i campi deliveryDetailCode e deliveryFailureCause
 
      @workflowDigitale
-     Scenario: [B2B_TIMELINE_26] Invio notifica digitale che va in DIGITAL_FAILURE con verifica uguaglianza tra scheduleDate di SCHEDULE_REFINEMENT e timestamp del REFINEMENT PN-9059
+     #[B2B_TIMELINE_26]
+     Scenario:  [B2B_TIMELINE_DIGITAL_FAILURE_4] Invio notifica digitale che va in DIGITAL_FAILURE con verifica uguaglianza tra scheduleDate di SCHEDULE_REFINEMENT e timestamp del REFINEMENT PN-9059
           Given viene generata una nuova notifica
                | subject            | invio notifica multi cucumber |
                | senderDenomination | Comune di milano              |
@@ -45,8 +49,8 @@ Feature: avanzamento b2b notifica difgitale fallito
           Then vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
           And si verifica che scheduleDate del SCHEDULE_REFINEMENT sia uguale al timestamp di REFINEMENT per l'utente 0
 
-
-     Scenario: [B2B-TIMELINE_MULTI_4] Invio notifica multi destinatario SCHEDULE_ANALOG_WORKFLOW_scenario positivo
+     #[B2B-TIMELINE_MULTI_4]
+     Scenario: [B2B_TIMELINE_DIGITAL_FAILURE_5] Invio notifica multi destinatario SCHEDULE_ANALOG_WORKFLOW_scenario positivo
           Given viene generata una nuova notifica
                | subject | invio notifica GA cucumber |
                | senderDenomination | Comune di palermo |
@@ -57,7 +61,8 @@ Feature: avanzamento b2b notifica difgitale fallito
 
 
      @svil
-     Scenario: [B2B_TIMELINE_PG_15] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo campi deliveryDetailCode e deliveryFailureCause positivo
+     #[B2B_TIMELINE_PG_15]
+     Scenario: [B2B_TIMELINE_DIGITAL_FAILURE_6] Invio notifica digitale ed attesa elemento di timeline SEND_DIGITAL_FEEDBACK e controllo campi deliveryDetailCode e deliveryFailureCause positivo
           Given viene generata una nuova notifica
                | subject | invio notifica con cucumber |
                | senderDenomination | Comune di milano |

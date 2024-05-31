@@ -66,7 +66,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
 
 
   @dev @ignore @workflowDigitale
-  Scenario: [B2B_TIMELINE_ANALOG_33] Invio notifica ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECAG011A positivo PN-5783
+  #[B2B_TIMELINE_ANALOG_33]
+  Scenario:  [B2B_TIMELINE_RS_4]Invio notifica ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECAG011A positivo PN-5783
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo |
@@ -78,7 +79,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
 
 
   @dev
-  Scenario: [B2B_TIMELINE_12] Invio notifica digitale ed attesa elemento di timeline PREPARE_SIMPLE_REGISTERED_LETTER_scenario positivo
+  #[B2B_TIMELINE_12]
+  Scenario: [B2B_TIMELINE_RS_5] Invio notifica digitale ed attesa elemento di timeline PREPARE_SIMPLE_REGISTERED_LETTER_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -88,7 +90,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_SIMPLE_REGISTERED_LETTER"
 
   @dev
-  Scenario: [B2B_TIMELINE_13] Invio notifica digitale ed attesa elemento di timeline SEND_SIMPLE_REGISTERED_LETTER positivo
+  #[B2B_TIMELINE_13]
+  Scenario: [B2B_TIMELINE_RS_6] Invio notifica digitale ed attesa elemento di timeline SEND_SIMPLE_REGISTERED_LETTER positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
@@ -120,7 +123,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
   #- RECRSI003C --> c'è il mock @OK_RIS ma non c'è il controllo della sua presenza
   #- RECRSI004B --> presente in un test e2e con mock @FAIL_RIS
 
-  @dev @ignore @workflowDigitale
+  @dev  @workflowDigitale
   Scenario: [B2B_TIMELINE_RIS_4] Invio notifica ed attesa elemento di timeline SEND_ANALOG_FEEDBACK_scenario negativo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
