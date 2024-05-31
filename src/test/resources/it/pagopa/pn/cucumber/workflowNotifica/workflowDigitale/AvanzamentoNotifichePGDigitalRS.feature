@@ -92,8 +92,8 @@ Feature: avanzamento notifiche analogico RS persona giuridica
       | digitalDomicile_address | test@fail.it |
       | physicalAddress_address | Via@fail_RS  |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" con deliveryDetailCode "RECRSI002B" e verifica tipo DOC "Plico"
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" con deliveryDetailCode "RECRSI002C"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" con deliveryDetailCode "RECRS002B" e verifica tipo DOC "Plico"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" con deliveryDetailCode "RECRS002C" e deliveryFailureCause "M07"
 #"sequence": "@sequence.5s-CON080.5s-RECRS002A[FAILCAUSE:M07].5s-RECRS002B[DOC:Plico].5s-RECRS002C"
 
   @dev @workflowDigitale
