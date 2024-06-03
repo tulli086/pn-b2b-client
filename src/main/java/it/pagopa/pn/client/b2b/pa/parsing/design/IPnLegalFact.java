@@ -4,5 +4,5 @@ import java.util.Map;
 
 
 public interface IPnLegalFact {
-    Map<String, Object> getAllValues();
+    Map<String, Object> getAllLegalFactValues();
 }

@@ -1,5 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.parsing.design;
 
+import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,10 +27,10 @@ public class PnDestinatario {
         this.codiceFiscale = codiceFiscale;
     }
 
-    public Map<String, Object> getAllValues() {
+    public Map<String, Object> getAllDestinatarioValues() {
         Map<String, Object> map = new HashMap<>();
-        map.put("nomeCognomeRagioneSociale", nomeCognomeRagioneSociale);
-        map.put("codiceFiscale", codiceFiscale);
+        map.put(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), nomeCognomeRagioneSociale);
+        map.put(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), codiceFiscale);
         return map;
     }
 

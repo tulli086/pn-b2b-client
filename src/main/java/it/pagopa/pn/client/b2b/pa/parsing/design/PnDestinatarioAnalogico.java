@@ -1,5 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.parsing.design;
 
+import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import java.util.HashMap;
@@ -25,9 +26,9 @@ public class PnDestinatarioAnalogico extends PnDestinatarioDigitale {
     }
 
     @Override
-    public Map<String, Object> getAllValues() {
-        Map<String, Object> map = new HashMap<>(super.getAllValues());
-        map.put("indirizzoFisico", indirizzoFisico);
+    public Map<String, Object> getAllDestinatarioValues() {
+        Map<String, Object> map = new HashMap<>(super.getAllDestinatarioValues());
+        map.put(IPnParserService.LegalFactKeyValues.INDIRIZZO_FISICO.getField(), indirizzoFisico);
         return map;
     }
 

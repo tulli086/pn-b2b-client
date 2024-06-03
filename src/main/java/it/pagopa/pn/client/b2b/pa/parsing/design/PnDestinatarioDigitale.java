@@ -1,5 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.parsing.design;
 
+import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,10 +35,10 @@ public class PnDestinatarioDigitale extends PnDestinatario {
     }
 
     @Override
-    public Map<String, Object> getAllValues() {
-        Map<String, Object> map = new HashMap<>(super.getAllValues());
-        map.put("domicilioDigitale", domicilioDigitale);
-        map.put("tipoDomicilioDigitale", tipoDomicilioDigitale);
+    public Map<String, Object> getAllDestinatarioValues() {
+        Map<String, Object> map = new HashMap<>(super.getAllDestinatarioValues());
+        map.put(IPnParserService.LegalFactKeyValues.DOMICILIO_DIGITALE.getField(), domicilioDigitale);
+        map.put(IPnParserService.LegalFactKeyValues.TIPO_DOMICILIO_DIGITALE.getField(), tipoDomicilioDigitale);
         return map;
     }
 

@@ -1,5 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.parsing.design;
 
+import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,10 +27,10 @@ public abstract class PnLegalFact implements IPnLegalFact {
     }
 
     @Override
-    public Map<String, Object> getAllValues() {
-        Map<String, Object> map = new HashMap<>(pnDestinatario.getAllValues());
-        map.put("iun", iun);
-        map.put("dataAttestazioneOpponibile", dataAttestazioneOpponibile);
+    public Map<String, Object> getAllLegalFactValues() {
+        Map<String, Object> map = new HashMap<>(pnDestinatario.getAllDestinatarioValues());
+        map.put(IPnParserService.LegalFactKeyValues.IUN.getField(), iun);
+        map.put(IPnParserService.LegalFactKeyValues.DATA_ATTESTAZIONE_OPPONIBILE.getField(), dataAttestazioneOpponibile);
         return map;
     }
 

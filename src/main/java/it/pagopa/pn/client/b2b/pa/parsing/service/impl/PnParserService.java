@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import java.io.*;
+import java.util.Map;
 
 
 @Slf4j
@@ -21,11 +21,11 @@ public class PnParserService {
         this.pnLegalFactParser = pnLegalFactParser;
     }
 
-    public String extractSingleField(String source, String field, IPnParserService.LegalFactType legalFactType) throws IOException, NoSuchFieldException, IllegalAccessException {
+    public Map<String, Object> extractSingleField(String source, IPnParserService.LegalFactKeyValues field, IPnParserService.LegalFactType legalFactType) {
         return pnLegalFactParser.extractSingleField(source, field, legalFactType);
     }
 
-    public IPnLegalFact extractAllField(String source, IPnParserService.LegalFactType legalFactType) throws IOException {
+    public IPnLegalFact extractAllField(String source, IPnParserService.LegalFactType legalFactType) {
         return pnLegalFactParser.extractAllField(source, legalFactType);
     }
 }
