@@ -1526,7 +1526,7 @@ public class SharedSteps {
                     setSenderTaxIdVersioning(version);
                     setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
                 }else{
-                    this.notificationRequest.setSenderTaxId(this.senderTaxId);
+                    this.notificationRequest.setSenderTaxId(this.senderTaxIdTwo);
                     setGrup(SettableApiKey.ApiKeyType.MVP_2);
                 }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
