@@ -69,11 +69,11 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
   #[B2B_TIMELINE_ANALOG_33]
   Scenario:  [B2B_TIMELINE_RS_4]Invio notifica ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECAG011A positivo PN-5783
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via@ok_RS    |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG011A"
 
@@ -82,8 +82,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
   #[B2B_TIMELINE_12]
   Scenario: [B2B_TIMELINE_RS_5] Invio notifica digitale ed attesa elemento di timeline PREPARE_SIMPLE_REGISTERED_LETTER_scenario positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
@@ -93,8 +93,8 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
   #[B2B_TIMELINE_13]
   Scenario: [B2B_TIMELINE_RS_6] Invio notifica digitale ed attesa elemento di timeline SEND_SIMPLE_REGISTERED_LETTER positivo
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
-      | senderDenomination | Comune di milano |
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
     And destinatario Mario Cucumber e:
       | digitalDomicile_address | test@fail.it |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
@@ -102,11 +102,11 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
 
   Scenario:  [B2B_TIMELINE_RS_7]Invio notifica ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECRS001C positivo
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS |
+      | physicalAddress_address | Via@ok_RS    |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" con deliveryDetailCode "RECRS001C"
   #"sequence": "@sequence.5s-CON080.5s-RECRS001C"
@@ -145,44 +145,3 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
 
   #"sequence": "@sequence.5s-CON080.5s-RECRSI001.5s-RECRSI002.5s-RECRSI004A.5s-RECRSI004B[DOC:Plico].5s-RECRSI004C"
 
-
-
-
-  @e2e @ignore
-  Scenario: [E2E-WF-ANALOG-35] Invio notifica con percorso digitale. Fallimento RIS (FAIL_RIS).
-    Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-      | physicalCommunication | REGISTERED_LETTER_890 |
-    And destinatario
-      | denomination | Leonardo da Vinci |
-      | taxId | DVNLRD52D15M059P |
-      | digitalDomicile | email@fail.it |
-      | physicalAddress_address | Via@FAIL_RIS |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER" esista
-
-      | loadTimeline            | true                                                                                                                                                                                             |
-      | details                 | NOT_NULL                                                                                                                                                                                         |
-      | details_recIndex        | 0                                                                                                                                                                                                |
-      | details_sentAttemptMade | 0                                                                                                                                                                                                |
-      | details_physicalAddress | {"address": "VIA@FAIL_RIS", "municipality": "COSENZA", "municipalityDetails": "", "at": "Presso", "addressDetails": "SCALA B", "province": "CS", "zip": "87100", "foreignState": "ITALIA"} |
-      | details_analogCost      | 133                                                                                                                                                                                              |
-
-    And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
-      | loadTimeline | true |
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | CON080 |
-    And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRSI004B |
-      | details_attachments | [{"documentType": "Plico"}] |
-    And viene verificato che l'elemento di timeline "SEND_SIMPLE_REGISTERED_LETTER_PROGRESS" esista
-      | details | NOT_NULL |
-      | details_recIndex | 0 |
-      | details_sentAttemptMade | 0 |
-      | details_deliveryDetailCode | RECRSI004C |
