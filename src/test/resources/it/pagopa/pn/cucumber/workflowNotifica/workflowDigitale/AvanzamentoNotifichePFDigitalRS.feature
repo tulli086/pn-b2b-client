@@ -38,19 +38,6 @@ Feature: avanzamento notifiche b2b con workflow cartaceo RS/RIR
       | physicalAddress_address | Via@ok_RIS   |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
-    
-  @dev @ignore @workflowDigitale
-  #[B2B_TIMELINE_ANALOG_33]
-  Scenario:  [B2B_TIMELINE_RS_4]Invio notifica ed attesa elemento di timeline SEND_ANALOG_PROGRESS con deliveryDetailCode RECAG011A positivo PN-5783
-    Given viene generata una nuova notifica
-      | subject            | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo               |
-    And destinatario Mario Gherkin e:
-      | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS    |
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_PROGRESS" con deliveryDetailCode "RECAG011A"
-
 
   @dev
   #[B2B_TIMELINE_12]
