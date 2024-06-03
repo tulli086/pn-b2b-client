@@ -374,7 +374,7 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
 
         #Test in ignore per il discorso che a volte arriva prima EFFECTIVE_DATE di un destinario rispetto al'altro destinatario (Caso di test comunque coperto da altri test mono destinatario)
-  @workflowDigitale @ignore
+  @workflowDigitale
    #[B2B_TIMELINE_MULTI_PG_7]
   Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_33] Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
