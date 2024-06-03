@@ -134,7 +134,7 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
 
-  @ignore @tbc @workflowDigitale
+  @tbc @workflowDigitale
   #[B2B_TIMELINE_7]
   Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_12]Invio notifica digitale ed attesa stato DELIVERING-VIEWED_scenario positivo
     Given viene generata una nuova notifica
@@ -230,7 +230,7 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     And si verifica che scheduleDate del SCHEDULE_REFINEMENT sia uguale al timestamp di REFINEMENT per l'utente 0
 
       #Test in ignore per il discorso che a volte arriva prima EFFECTIVE_DATE di un destinario rispetto al'altro destinatario (Caso di test comunque coperto da altri test mono destinatario)
-  @workflowDigitale @ignore
+  @workflowDigitale
    #[B2B-TIMELINE_MULTI_1]
   Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_20]Invio notifica digitale ed attesa stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
