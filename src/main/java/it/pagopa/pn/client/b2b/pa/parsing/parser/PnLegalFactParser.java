@@ -2,8 +2,6 @@ package it.pagopa.pn.client.b2b.pa.parsing.parser;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnB2bLegalFactTextTokens;
 import it.pagopa.pn.client.b2b.pa.parsing.design.IPnLegalFact;
-import it.pagopa.pn.client.b2b.pa.parsing.design.PnDestinatario;
-import it.pagopa.pn.client.b2b.pa.parsing.design.PnDestinatarioDigitale;
 import it.pagopa.pn.client.b2b.pa.parsing.dto.*;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,14 +38,14 @@ public class PnLegalFactParser extends PnCoreTokens implements IPnParserService 
                 return result;
             } else if(pnLegalFact instanceof PnLegalFactNotificaDigitale notificaDigitale) {
                 if(field.getField().equals(LegalFactKeyValues.DESTINATARIO.getField())){
-                    return getDestinatario(notificaDigitale, false, false);
+                    return getDestinatario(notificaDigitale, false);
                 } else {
                     result.put(field.getField(), notificaDigitale.getAllLegalFactValues().get(field.getField()));
                 }
                 return result;
             } else if(pnLegalFact instanceof PnLegalFactNotificaMancatoRecapito notificaMancatoRecapito) {
                 if(field.getField().equals(LegalFactKeyValues.DESTINATARIO.getField())){
-                    return getDestinatario(notificaMancatoRecapito, false, false);
+                    return getDestinatario(notificaMancatoRecapito, false);
                 } else if(field.getField().equals(LegalFactKeyValues.SECONDO_DESTINATARIO_DIGITALE.getField())){
                     return getSecondoDestinatarioDigitale(notificaMancatoRecapito);
                 } else {
@@ -56,7 +54,7 @@ public class PnLegalFactParser extends PnCoreTokens implements IPnParserService 
                 return result;
             } else if(pnLegalFact instanceof PnLegalFactNotificaPresaInCaricoMultiDestinatario notificaPresaInCaricoMultiDestinatario) {
                 if(field.getField().equals(LegalFactKeyValues.DESTINATARIO.getField())){
-                    return getDestinatario(notificaPresaInCaricoMultiDestinatario, false, false);
+                    return getDestinatario(notificaPresaInCaricoMultiDestinatario, false);
                 } else if(field.getField().equals(LegalFactKeyValues.DESTINATARI_ANALOGICI.getField())){
                     return getDestinatariAnalogici(notificaPresaInCaricoMultiDestinatario);
                 } else {
@@ -65,14 +63,14 @@ public class PnLegalFactParser extends PnCoreTokens implements IPnParserService 
                 return result;
             } else if(pnLegalFact instanceof PnLegalFactNotificaPresaInCarico notificaPresaInCarico) {
                 if(field.getField().equals(LegalFactKeyValues.DESTINATARIO.getField())){
-                    return getDestinatario(notificaPresaInCarico, false, false);
+                    return getDestinatario(notificaPresaInCarico, false);
                 } else {
                     result.put(field.getField(), notificaPresaInCarico.getAllLegalFactValues().get(field.getField()));
                 }
                 return result;
             } else if(pnLegalFact instanceof PnLegalFactNotificaAvvenutoAccessoDelegato notificaAvvenutoSuccessoDelegato) {
                 if(field.getField().equals(LegalFactKeyValues.DESTINATARIO.getField())){
-                    return getDestinatario(notificaAvvenutoSuccessoDelegato, false, false);
+                    return getDestinatario(notificaAvvenutoSuccessoDelegato, false);
                 } else if(field.getField().equals(LegalFactKeyValues.DELEGATO.getField())){
                     return getDelegato(notificaAvvenutoSuccessoDelegato);
                 } else {
@@ -81,7 +79,7 @@ public class PnLegalFactParser extends PnCoreTokens implements IPnParserService 
                 return result;
             } else if(pnLegalFact instanceof PnLegalFactNotificaAvvenutoAccesso notificaAvvenutoSuccesso) {
                 if(field.getField().equals(LegalFactKeyValues.DESTINATARIO.getField())){
-                    return getDestinatario(notificaAvvenutoSuccesso, false, false);
+                    return getDestinatario(notificaAvvenutoSuccesso, false);
                 } else {
                     result.put(field.getField(), notificaAvvenutoSuccesso.getAllLegalFactValues().get(field.getField()));
                 }
@@ -127,5 +125,4 @@ public class PnLegalFactParser extends PnCoreTokens implements IPnParserService 
         }
         return null;
     }
-
 }
