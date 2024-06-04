@@ -579,6 +579,6 @@ Feature: avanzamento notifiche asincrone b2b PF - controllo costi
 
 
 
-  #Utile per test manuali
-  Scenario: url per il pagamento della notifica su checkout
-    When Si effettua la chiamata su external-reg per ricevere l'url di checkout con noticeCode "347011196700966544" e creditorTaxId "77777777777"
+
+
+
