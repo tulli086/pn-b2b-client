@@ -27,7 +27,7 @@ public class PnLegalFactNotificaAvvenutoAccessoDelegato extends PnLegalFactNotif
         this.delegato = new PnDestinatario(nomeCognomeRagioneSocialeDelegato, codiceFiscaleDelegato);
     }
 
-    private Pair<PnDestinatario, PnDestinatario> getDestinatarioAndDelegato() {
+    public Pair<PnDestinatario, PnDestinatario> getDestinatarioAndDelegato() {
         return Pair.of(super.getPnDestinatario(), delegato);
     }
 

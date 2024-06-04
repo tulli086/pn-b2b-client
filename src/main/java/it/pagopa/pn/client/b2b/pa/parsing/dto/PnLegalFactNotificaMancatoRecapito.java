@@ -32,13 +32,19 @@ public class PnLegalFactNotificaMancatoRecapito extends PnLegalFact {
         this.secondaData = secondaData;
     }
 
-    @Override
-    public Map<String, Object> getAllLegalFactValues() {
-        Map<String, Object> map = new HashMap<>(super.getAllLegalFactValues());
+    public Map<String, Object> getSecondoDestinatarioDigitaleValues() {
+        Map<String, Object> map = new HashMap<>();
         map.put(IPnParserService.LegalFactKeyValues.SECONDO_DESTINATARIO_DIGITALE.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), secondoDestinatarioDigitale.getCodiceFiscale());
         map.put(IPnParserService.LegalFactKeyValues.SECONDO_DESTINATARIO_DIGITALE.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), secondoDestinatarioDigitale.getNomeCognomeRagioneSociale());
         map.put(IPnParserService.LegalFactKeyValues.SECONDO_DESTINATARIO_DIGITALE.getField() + "." + IPnParserService.LegalFactKeyValues.DOMICILIO_DIGITALE.getField(), secondoDestinatarioDigitale.getDomicilioDigitale());
         map.put(IPnParserService.LegalFactKeyValues.SECONDO_DESTINATARIO_DIGITALE.getField() + "." + IPnParserService.LegalFactKeyValues.TIPO_DOMICILIO_DIGITALE.getField(), secondoDestinatarioDigitale.getTipoDomicilioDigitale());
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getAllLegalFactValues() {
+        Map<String, Object> map = new HashMap<>(super.getAllLegalFactValues());
+        map.putAll(secondoDestinatarioDigitale.getAllDestinatarioValues());
         map.put(IPnParserService.LegalFactKeyValues.PRIMA_DATA.getField(), primaData);
         map.put(IPnParserService.LegalFactKeyValues.SECONDA_DATA.getField(), secondaData);
         return map;

@@ -173,48 +173,44 @@ public class PnCoreTokens extends PnCorePatterns {
         return pnDestinatariAnalogicList;
     }
 
-    protected <T> HashMap<String, Object> getDestinatario(T pnLegalFact, boolean isDelegato, boolean isSecondoDestinatarioDigitale) {
+    protected HashMap<String, Object> getDestinatario(IPnLegalFact pnLegalFact, boolean isDelegato) {
         HashMap<String, Object> result = new HashMap<>();
         if(pnLegalFact instanceof PnLegalFactNotificaDigitale notificaDigitale) {
-            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), (String) notificaDigitale.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
-            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), (String) notificaDigitale.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), notificaDigitale.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), notificaDigitale.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
         } else if(pnLegalFact instanceof PnLegalFactNotificaMancatoRecapito notificaMancatoRecapito) {
-            if(isSecondoDestinatarioDigitale) {
-                result.putAll(notificaMancatoRecapito.getAllLegalFactValues());
-            } else {
-                result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), (String) notificaMancatoRecapito.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
-                result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), (String) notificaMancatoRecapito.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
-            }
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), notificaMancatoRecapito.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), notificaMancatoRecapito.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
         } else if(pnLegalFact instanceof PnLegalFactNotificaAvvenutoAccessoDelegato avvenutoAccessoDelegato) {
             if(isDelegato) {
-                result.put(IPnParserService.LegalFactKeyValues.DELEGATO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), (String) avvenutoAccessoDelegato.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
-                result.put(IPnParserService.LegalFactKeyValues.DELEGATO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), (String) avvenutoAccessoDelegato.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
+                result.put(IPnParserService.LegalFactKeyValues.DELEGATO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), avvenutoAccessoDelegato.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
+                result.put(IPnParserService.LegalFactKeyValues.DELEGATO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), avvenutoAccessoDelegato.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
             } else {
-                result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), (String) avvenutoAccessoDelegato.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
-                result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), (String) avvenutoAccessoDelegato.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
+                result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), avvenutoAccessoDelegato.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
+                result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), avvenutoAccessoDelegato.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
             }
         } else if(pnLegalFact instanceof PnLegalFactNotificaAvvenutoAccesso avvenutoAccesso) {
-            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), (String) avvenutoAccesso.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
-            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), (String) avvenutoAccesso.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), avvenutoAccesso.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), avvenutoAccesso.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
         } else if(pnLegalFact instanceof PnLegalFactNotificaPresaInCaricoMultiDestinatario notificaPresaInCaricoMultiDestinatario) {
-            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), (String) notificaPresaInCaricoMultiDestinatario.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
-            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), (String) notificaPresaInCaricoMultiDestinatario.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), notificaPresaInCaricoMultiDestinatario.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), notificaPresaInCaricoMultiDestinatario.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
         } else if(pnLegalFact instanceof PnLegalFactNotificaPresaInCarico notificaPresaInCarico) {
-            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), (String) notificaPresaInCarico.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
-            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), (String) notificaPresaInCarico.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), notificaPresaInCarico.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField()));
+            result.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), notificaPresaInCarico.getAllLegalFactValues().get(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField()));
         }
         return result;
     }
 
     protected HashMap<String, Object> getDelegato(PnLegalFactNotificaAvvenutoAccessoDelegato avvenutoAccessoDelegato) {
-        return getDestinatario(avvenutoAccessoDelegato, true, false);
+        return getDestinatario(avvenutoAccessoDelegato, true);
     }
 
     protected HashMap<String, Object> getSecondoDestinatarioDigitale(PnLegalFactNotificaMancatoRecapito mancatoRecapito) {
-        return getDestinatario(mancatoRecapito, false, true);
+        return new HashMap<>(mancatoRecapito.getSecondoDestinatarioDigitaleValues());
     }
 
     protected HashMap<String, Object> getDestinatariAnalogici(PnLegalFactNotificaPresaInCaricoMultiDestinatario presaInCaricoMultiDestinatario) {
-        return new HashMap<>(presaInCaricoMultiDestinatario.getAllLegalFactValues());
+        return new HashMap<>(presaInCaricoMultiDestinatario.getDestinatariAnalogiciValues());
     }
 }

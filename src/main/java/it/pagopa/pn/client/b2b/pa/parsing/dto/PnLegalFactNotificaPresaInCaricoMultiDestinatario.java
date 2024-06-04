@@ -41,22 +41,27 @@ public class PnLegalFactNotificaPresaInCaricoMultiDestinatario extends PnLegalFa
         this.destinatariAnalogici.add(pnDestinatarioAnalogico);
     }
 
+    public Map<String, Object> getDestinatariAnalogiciValues() {
+        Map<String, Object> outputMap = new HashMap<>();
+        mappingDestinatariAnalogici(outputMap);
+        return outputMap;
+    }
+
     @Override
     public Map<String, Object> getAllLegalFactValues() {
-        Map<String, Object> destinatarioMap = new HashMap<>(super.getAllLegalFactValues());
-        Map<String, Object> outputMap = new HashMap<>();
-        destinatarioMap
-                .keySet()
-                .forEach(key ->  outputMap.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "." + key, destinatarioMap.get(key)));
+        Map<String, Object> outputMap = new HashMap<>(super.getAllLegalFactValues());
+        mappingDestinatariAnalogici(outputMap);
+        return outputMap;
+    }
 
+    private void  mappingDestinatariAnalogici(Map<String, Object> toMap) {
         for(int i = 0; i < destinatariAnalogici.size(); i++) {
             Map<String, Object> destinatariMap = new HashMap<>(destinatariAnalogici.get(i).getAllDestinatarioValues());
             int index = i + 1;
             destinatariMap
                     .keySet()
-                    .forEach(key ->  outputMap.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "_" + index + "." + key , destinatariMap.get(key)));
+                    .forEach(key ->  toMap.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "_" + index + "." + key , destinatariMap.get(key)));
         }
-        return outputMap;
     }
 
     @Override
