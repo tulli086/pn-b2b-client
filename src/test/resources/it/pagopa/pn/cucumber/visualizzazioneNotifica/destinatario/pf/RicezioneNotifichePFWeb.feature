@@ -29,7 +29,7 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then l'allegato "PAGOPA" può essere correttamente recuperato da "Mario Gherkin"
 
-  @ignore
+
   Scenario: [WEB-PF-RECIPIENT_4] Invio notifica digitale mono destinatario e recupero allegato F24_FLAT_scenario positivo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -41,19 +41,7 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then l'allegato "F24" può essere correttamente recuperato da "Mario Gherkin"
 
-  @ignore
-  Scenario: [WEB-PF-RECIPIENT_5] Invio notifica digitale mono destinatario e recupero allegato F24_STANDARD_scenario positivo
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | comune di milano            |
-      | feePolicy          | DELIVERY_MODE               |
-    And destinatario Mario Gherkin e:
-      | payment_pagoPaForm | SI                   |
-      | payment_f24        | PAYMENT_F24_STANDARD |
-    When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    Then l'allegato "F24" può essere correttamente recuperato da "Mario Gherkin"
 
-  @ignore
   Scenario: [WEB-PF-RECIPIENT_6] Invio notifica digitale mono destinatario e recupero allegato F24_STANDARD_scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -76,20 +64,22 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
     And "Mario Gherkin" tenta il recupero della notifica
     Then il recupero ha prodotto un errore con status code "404"
 
-  @ignore
+
   Scenario: [WEB-PF-RECIPIENT_8] Invio notifica digitale altro destinatario e recupero allegato F24_STANDARD_scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
       | senderDenomination | comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
     And destinatario Mario Cucumber e:
-      | payment_pagoPaForm | SI               |
-      | payment_f24        | PAYMENT_F24_FLAT |
+      | payment_pagoPaForm | SI                   |
+      | payment_f24        | PAYMENT_F24_STANDARD |
+      | title_payment      | F24_STANDARD_MARIO   |
+      | apply_cost_f24     | SI                   |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And "Mario Gherkin" tenta il recupero dell'allegato "F24"
     Then il download ha prodotto un errore con status code "404"
 
-  @ignore
+
   Scenario: [WEB-PF-RECIPIENT_9] Invio notifica digitale altro destinatario e recupero allegato F24_FLAT_scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -102,7 +92,7 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
     And "Mario Gherkin" tenta il recupero dell'allegato "F24"
     Then il download ha prodotto un errore con status code "404"
 
-  @ignore
+
   Scenario: [WEB-PF-RECIPIENT_10] Invio notifica digitale altro destinatario e recupero allegato pagopa_scenario negativo
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -113,6 +103,7 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And "Mario Gherkin" tenta il recupero dell'allegato "PAGOPA"
     Then il download ha prodotto un errore con status code "404"
+
 
   Scenario: [WEB-PF-RECIPIENT_11] Invio notifica digitale mono destinatario e recupero tramite ricerca API WEB_scenario positivo
     Given viene generata una nuova notifica
