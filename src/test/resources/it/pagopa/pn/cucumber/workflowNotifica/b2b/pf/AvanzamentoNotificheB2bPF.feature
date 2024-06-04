@@ -48,7 +48,6 @@ Feature: avanzamento notifiche b2b persona fisica
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
 
-
   Scenario: [B2B_TIMELINE_27] Invio notifica digitale e lettura notifica da un utente con token scaduto PN-9110
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -224,6 +223,7 @@ Feature: avanzamento notifiche b2b persona fisica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
 
 
+
   @mockPec
   Scenario: [TEST_PAPER_NEW_14]
     Given viene generata una nuova notifica
@@ -246,6 +246,7 @@ Feature: avanzamento notifiche b2b persona fisica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
 
 
+
   @mockPec
   Scenario: [TEST_PAPER_ASSOCIAZIONE_1] evento RECRS002A non valido KO
     Given viene generata una nuova notifica
@@ -256,6 +257,7 @@ Feature: avanzamento notifiche b2b persona fisica
       | physicalAddress_address | Via @FAIL-EVENTO-INESISTENTE |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
+
 
   @mockPec
   Scenario: [TEST_PAPER_ASSOCIAZIONE_2] statusCode presente con deliveryFailureCause non presente OK
@@ -314,18 +316,16 @@ Feature: avanzamento notifiche b2b persona fisica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
 
 
-  Scenario: [B2B-TEST_1] PA mittente: annullamento notifica in stato “irreperibile totale”
-    Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di MILANO |
-      | physicalCommunication |  AR_REGISTERED_LETTER |
-    And destinatario
-      | denomination | Test AR Fail 2 |
-      | taxId | MNTMRA03M71C615V |
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via@FAIL-Irreperibile_AR |
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+  @workflowDigitale
+  Scenario: [B2B_TIMELINE_HOTFIX-BINGQ2.2_1] Invio notifica digitale ed attesa stato DELIVERED con invio mail a pec mittente (bug HOTFIX-BINGQ2.2)
+    Given si invia una email alla pec mittente e si attendono 6 minuti
+    And viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Gherkin spa
+    And destinatario Mario Cucumber
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
 
   Scenario: [B2B-TIMELINE_HOTFIX-BUG-PEC_1] notifica con allegato oltre i 30MB e 60 allegati pagoPa - PN-11212  (verifica manuale nella pec del solo AAR)
