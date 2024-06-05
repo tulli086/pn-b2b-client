@@ -252,6 +252,16 @@ public class SharedSteps {
     private static final String NOT_VALID_ADDRESS = "NOT_VALID_ADDRESS";
 
 
+    public HashMap<String, String> getMapAllegatiNotificaSha256() {
+        return mapAllegatiNotificaSha256;
+    }
+
+    public void setMapAllegatiNotificaSha256(HashMap<String, String> mapAllegatiNotificaSha256) {
+        this.mapAllegatiNotificaSha256 = mapAllegatiNotificaSha256;
+    }
+
+    private HashMap<String,String> mapAllegatiNotificaSha256 = new HashMap<>();
+
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
@@ -1518,7 +1528,7 @@ public class SharedSteps {
                     setSenderTaxIdVersioning(version);
                     setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
                 }else{
-                    this.notificationRequest.setSenderTaxId(this.senderTaxId);
+                    this.notificationRequest.setSenderTaxId(this.senderTaxIdTwo);
                     setGrup(SettableApiKey.ApiKeyType.MVP_2);
                 }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
@@ -1549,10 +1559,10 @@ public class SharedSteps {
     private void setSenderTaxIdVersioning(String version) {
         switch(version.toLowerCase()){
 
-            case "v1" -> this.notificationRequestV1.setSenderTaxId(this.senderTaxId);
-            case "v2" -> this.notificationRequestV2.setSenderTaxId(this.senderTaxId);
-            case "v21" -> this.notificationRequestV21.setSenderTaxId(this.senderTaxId);
-            case "v23" -> this.notificationRequest.setSenderTaxId(this.senderTaxId);
+            case "v1" -> this.notificationRequestV1.setSenderTaxId(getSenderTaxIdFromProperties(settedPa));
+            case "v2" -> this.notificationRequestV2.setSenderTaxId(getSenderTaxIdFromProperties(settedPa));
+            case "v21" -> this.notificationRequestV21.setSenderTaxId(getSenderTaxIdFromProperties(settedPa));
+            case "v23" -> this.notificationRequest.setSenderTaxId(getSenderTaxIdFromProperties(settedPa));
 
         }
     }
