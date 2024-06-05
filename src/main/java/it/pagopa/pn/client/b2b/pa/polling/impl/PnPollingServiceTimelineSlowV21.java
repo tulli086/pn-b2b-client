@@ -17,13 +17,13 @@ public class PnPollingServiceTimelineSlowV21 extends PnPollingServiceTimelineRap
 
     @Override
     protected Integer getPollInterval(String value) {
-        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value, true);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value, true, false);
         return timingResult.waiting();
     }
 
     @Override
     protected Integer getAtMost(String value) {
-        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value, true);
+        TimingForPolling.TimingResult timingResult = timingForPolling.getTimingForElement(value, true, false);
         return timingResult.waiting() * timingResult.numCheck();
     }
 }

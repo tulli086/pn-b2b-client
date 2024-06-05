@@ -58,7 +58,7 @@ public class PnPollingServiceValidationStatusV21 extends PnPollingTemplate<PnPol
 
     @Override
     protected Predicate<PnPollingResponseV21> checkCondition(String id, PnPollingParameter pnPollingParameter) {
-        return (pnPollingResponse) -> {
+        return pnPollingResponse -> {
             if(pnPollingResponse.getStatusResponse() == null) {
                 pnPollingResponse.setResult(false);
                 return false;

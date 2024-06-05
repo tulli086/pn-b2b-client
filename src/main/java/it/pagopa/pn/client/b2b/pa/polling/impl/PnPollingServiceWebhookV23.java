@@ -67,7 +67,7 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
 
     @Override
     protected Predicate<PnPollingResponseV23> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
-        return (pnPollingResponse) -> {
+        return pnPollingResponse -> {
             if(pnPollingResponse.getProgressResponseElementListV23() == null
                    || pnPollingResponse.getProgressResponseElementListV23().isEmpty()) {
                 pnPollingResponse.setResult(false);
@@ -122,10 +122,11 @@ public class PnPollingServiceWebhookV23 extends PnPollingTemplate<PnPollingRespo
     private boolean isWaitTerminated(PnPollingResponseV23 pnPollingResponse, PnPollingParameter pnPollingParameter) {
         ProgressResponseElementV23 progressResponseElementV23 = pnPollingResponse.getProgressResponseElementListV23()
                 .stream()
-                .peek(progressResponseElement -> {
+                .map(progressResponseElement -> {
                     if(!pnPollingParameter.getPnPollingWebhook().getProgressResponseElementListV23().contains(progressResponseElement)) {
                         pnPollingParameter.getPnPollingWebhook().getProgressResponseElementListV23().addLast(progressResponseElement);
                     }
+                    return progressResponseElement;
                 })
                 .filter(toCheckCondition(pnPollingParameter))
                 .findAny()

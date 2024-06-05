@@ -298,7 +298,7 @@ Feature: avanzamento notifiche b2b persona fisica
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT"
 
-  @mockPec
+  @mockPec @giacenza890Complex
   Scenario: [TEST_PAPER_NEW_2]
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -614,3 +614,38 @@ Feature: avanzamento notifiche b2b persona fisica
       | physicalAddress_address | Via@FAIL-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+
+
+  @workflowDigitale
+  Scenario: [B2B_TIMELINE_HOTFIX-BINGQ2.2_1] Invio notifica digitale ed attesa stato DELIVERED con invio mail a pec mittente (bug HOTFIX-BINGQ2.2)
+    Given si invia una email alla pec mittente e si attendono 6 minuti
+    And viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+    And destinatario Gherkin spa
+    And destinatario Mario Cucumber
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
+
+
+  Scenario: [B2B-TIMELINE_HOTFIX-BUG-PEC_1] notifica con allegato oltre i 30MB e 60 allegati pagoPa - PN-11212  (verifica manuale nella pec del solo AAR)
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | document           | DOC_1_PG;DOC_30MB           |
+      | feePolicy          | DELIVERY_MODE               |
+    And destinatario Mario Gherkin e:
+      | payment_pagoPaForm   | SI |
+      | apply_cost_pagopa    | SI |
+      | payment_multy_number | 60 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+
+
+  Scenario: [B2B-TIMELINE_HOTFIX-BUG-PEC_2] notifica con allegato di 30MB e 1 allegato  - PN-11212 (verifica manuale nella pec del solo AAR)
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di milano            |
+      | document           | DOC_1_PG;DOC_30MB           |
+      | feePolicy          | DELIVERY_MODE               |
+    And destinatario Mario Gherkin
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED

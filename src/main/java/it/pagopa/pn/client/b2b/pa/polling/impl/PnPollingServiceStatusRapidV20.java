@@ -24,7 +24,6 @@ public class PnPollingServiceStatusRapidV20 extends PnPollingTemplate<PnPollingR
     protected final TimingForPolling timingForPolling;
     private final IPnPaB2bClient pnPaB2bClient;
     private FullSentNotificationV20 notificationV20;
-    private NotificationStatusHistoryElement notificationStatusHistoryElement;
 
 
     public PnPollingServiceStatusRapidV20(TimingForPolling timingForPolling, IPnPaB2bClient pnPaB2bClient) {
@@ -51,7 +50,7 @@ public class PnPollingServiceStatusRapidV20 extends PnPollingTemplate<PnPollingR
 
     @Override
     protected Predicate<PnPollingResponseV20> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
-        return (pnPollingResponse) -> {
+        return pnPollingResponse -> {
             if(pnPollingResponse.getNotification() == null) {
                 pnPollingResponse.setResult(false);
                 return false;
@@ -62,8 +61,6 @@ public class PnPollingServiceStatusRapidV20 extends PnPollingTemplate<PnPollingR
                 return false;
             }
 
-            pnPollingResponse.setResult(true);
-            pnPollingResponse.setNotificationStatusHistoryElement(notificationStatusHistoryElement);
             return true;
         };
     }
@@ -118,7 +115,8 @@ public class PnPollingServiceStatusRapidV20 extends PnPollingTemplate<PnPollingR
                 .orElse(null);
 
         if(notificationStatusHistoryElement != null) {
-            this.notificationStatusHistoryElement = notificationStatusHistoryElement;
+            pnPollingResponse.setNotificationStatusHistoryElement(notificationStatusHistoryElement);
+            pnPollingResponse.setResult(true);
             return true;
         }
         return false;

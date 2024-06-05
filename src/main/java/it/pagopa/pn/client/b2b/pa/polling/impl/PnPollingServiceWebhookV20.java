@@ -69,7 +69,7 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
 
     @Override
     protected Predicate<PnPollingResponseV20> checkCondition(String iun, PnPollingParameter pnPollingParameter) {
-        return (pnPollingResponse) -> {
+        return pnPollingResponse -> {
             if(pnPollingResponse.getProgressResponseElementListV20() == null
                     || pnPollingResponse.getProgressResponseElementListV20().isEmpty()) {
                 pnPollingResponse.setResult(false);
@@ -124,10 +124,11 @@ public class PnPollingServiceWebhookV20 extends PnPollingTemplate<PnPollingRespo
     private boolean isWaitTerminated(PnPollingResponseV20 pnPollingResponse, PnPollingParameter pnPollingParameter) {
         ProgressResponseElement progressResponseElementV20 = pnPollingResponse.getProgressResponseElementListV20()
                 .stream()
-                .peek(progressResponseElement -> {
+                .map(progressResponseElement -> {
                     if(!pnPollingParameter.getPnPollingWebhook().getProgressResponseElementListV20().contains(progressResponseElement)) {
                         pnPollingParameter.getPnPollingWebhook().getProgressResponseElementListV20().addLast(progressResponseElement);
                     }
+                    return progressResponseElement;
                 })
                 .filter(pnPollingParameter.getIsRefusedFileNotFound() != null && pnPollingParameter.getIsRefusedFileNotFound()
                         ?

@@ -77,7 +77,7 @@ public class TimingForPolling {
         REFINEMENT(15,1),
         SCHEDULE_REFINEMENT(15,1),
         DIGITAL_DELIVERY_CREATION_REQUEST(15,1),
-        DIGITAL_SUCCESS_WORKFLOW(2,3),
+        DIGITAL_SUCCESS_WORKFLOW(3,3),
         DIGITAL_FAILURE_WORKFLOW(9,1),
         ANALOG_SUCCESS_WORKFLOW(14,1),
         ANALOG_FAILURE_WORKFLOW(14,1),
@@ -122,7 +122,8 @@ public class TimingForPolling {
         //TIMING FOR WEBHOOK
         WEBHOOK(150000, 500);
 
-        private int numCheck,waitingMultiplier;
+        private final int numCheck;
+        private final int waitingMultiplier;
 
         Element(int numCheck, int waitingMultiplier){
             this.numCheck = numCheck;

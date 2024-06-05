@@ -9,20 +9,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
 import java.time.OffsetDateTime;
+
 
 @Component
 public class PnWebPaClientImpl implements IPnWebPaClient {
-
     private final SenderReadWebApi senderReadWebApi;
 
-    public PnWebPaClientImpl(
-            RestTemplate restTemplate,
-            @Value("${pn.webapi.external.base-url}") String basePath,
-            @Value("${pn.external.bearer-token-pa-1}") String bearerToken,
-            @Value("${pn.webapi.external.user-agent}")String userAgent
-    ) {
+
+    public PnWebPaClientImpl(RestTemplate restTemplate,
+                             @Value("${pn.webapi.external.base-url}") String basePath,
+                             @Value("${pn.external.bearer-token-pa-1}") String bearerToken,
+                             @Value("${pn.webapi.external.user-agent}")String userAgent) {
         this.senderReadWebApi = new SenderReadWebApi( newApiClient( restTemplate, basePath, bearerToken,userAgent) );
     }
 

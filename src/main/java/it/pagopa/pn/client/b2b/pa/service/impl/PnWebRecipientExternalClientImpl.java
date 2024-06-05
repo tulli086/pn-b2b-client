@@ -9,7 +9,6 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.mo
 import it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model_v1.FullReceivedNotification;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -40,16 +39,15 @@ public class PnWebRecipientExternalClientImpl implements IPnWebRecipientClient {
 
 
     public PnWebRecipientExternalClientImpl(RestTemplate restTemplate,
-            @Value("${pn.webapi.external.base-url}") String basePath,
-            @Value("${pn.bearer-token.user1}") String marioCucumberBearerToken,
-            @Value("${pn.bearer-token.user2}") String marioGherkinBearerToken,
-            @Value("${pn.bearer-token.user3}") String leonardoBearerToken,
-            @Value("${pn.bearer-token.user5}") String dinoBearerToken,
-            @Value("${pn.bearer-token.scaduto}") String userBearerTokenScaduto,
-            @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
-            @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
-            @Value("${pn.webapi.external.user-agent}")String userAgent
-    ) {
+                                            @Value("${pn.webapi.external.base-url}") String basePath,
+                                            @Value("${pn.bearer-token.user1}") String marioCucumberBearerToken,
+                                            @Value("${pn.bearer-token.user2}") String marioGherkinBearerToken,
+                                            @Value("${pn.bearer-token.user3}") String leonardoBearerToken,
+                                            @Value("${pn.bearer-token.user5}") String dinoBearerToken,
+                                            @Value("${pn.bearer-token.scaduto}") String userBearerTokenScaduto,
+                                            @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
+                                            @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
+                                            @Value("${pn.webapi.external.user-agent}")String userAgent) {
         this.restTemplate = restTemplate;
         this.marioCucumberBearerToken = marioCucumberBearerToken;
         this.marioGherkinBearerToken = marioGherkinBearerToken;
@@ -193,5 +191,4 @@ public class PnWebRecipientExternalClientImpl implements IPnWebRecipientClient {
     public DocumentDownloadMetadataResponse getDocumentsWeb(String iun, DocumentCategory documentType, String documentId, String mandateId) throws RestClientException {
         return this.documentsWebApi.getDocumentsWeb(iun,documentType,documentId,mandateId);
     }
-
 }

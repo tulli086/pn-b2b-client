@@ -1,6 +1,5 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
-
 import it.pagopa.pn.client.b2b.pa.service.IPnPaymentInfoClient;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.ApiClient;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.api.PaymentInfoApi;
@@ -18,9 +17,8 @@ public class PnPaymentInfoClientImpl implements IPnPaymentInfoClient {
 
 
     public PnPaymentInfoClientImpl(RestTemplate restTemplate,
-            @Value("${pn.webapi.external.base-url}") String deliveryBasePath ,
-            @Value("${pn.bearer-token-payinfo}") String key
-    ) {
+                                   @Value("${pn.webapi.external.base-url}") String deliveryBasePath ,
+                                   @Value("${pn.bearer-token-payinfo}") String key) {
         this.paymentInfoApi = new PaymentInfoApi(newApiClient( restTemplate, deliveryBasePath,key));
     }
 

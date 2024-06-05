@@ -274,7 +274,7 @@ public class ApikeyManagerSteps {
         setBearerToken(settedPa);
         String group = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.LAST);
         Assertions.assertNotNull(firstGroupUsed);
-        Assertions.assertTrue(!firstGroupUsed.equals(group));
+        Assertions.assertNotEquals(firstGroupUsed, group);
         this.sharedSteps.getNotificationRequest().setGroup(group);
     }
 
@@ -283,7 +283,7 @@ public class ApikeyManagerSteps {
         setBearerToken(settedPa);
         String group = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.LAST);
         Assertions.assertNotNull(firstGroupUsed);
-        Assertions.assertTrue(!firstGroupUsed.equals(group));
+        Assertions.assertNotEquals(firstGroupUsed, group);
 
         requestNewApiKey = new RequestNewApiKey().name("CUCUMBER GROUP TEST");
         responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
@@ -303,7 +303,7 @@ public class ApikeyManagerSteps {
         setBearerToken(settedPa);
         String group = this.sharedSteps.getGroupIdByPa(settedPa, GroupPosition.FIRST);
         Assertions.assertNotNull(firstGroupUsed);
-        Assertions.assertTrue(firstGroupUsed.equals(group));
+        Assertions.assertEquals(firstGroupUsed, group);
 
         requestNewApiKey = new RequestNewApiKey().name("CUCUMBER GROUP TEST");
         responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(settedPa);
