@@ -74,6 +74,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         LegalFactTextTokens.class,
         PnB2bLegalFactTextTokens.class,
         PnLegalFactParser.class,
+        PnExternalChannelsServiceClientImpl.class
 })
 @EnableScheduling
 @EnableConfigurationProperties
