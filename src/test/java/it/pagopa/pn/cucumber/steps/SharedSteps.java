@@ -2077,4 +2077,11 @@ public class SharedSteps {
         }
         return notificationRecipient;
     }
+
+    @And("senza destinatario")
+    public void senzaDestinatario() {
+        NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
+        addRecipientToNotification(this.notificationRequest,
+                notificationRecipientV23, new HashMap<>());
+    }
 }
