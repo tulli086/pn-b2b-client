@@ -1111,8 +1111,7 @@ Feature: verifica validazione sincrona
       | senderDenomination | comune di milano            |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | <email> |
-    When la notifica viene inviata dal "Comune_1"cam
-    Then l'operazione ha prodotto un errore con status code "400" con messaggio di errore "<error>"
+    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Examples:
-      | email            | error          |
-      | V.S.-SRL@PEC.COM | ECMA 262 regex |
+      | email            |
+      | V.S.-SRL@PEC.COM |
