@@ -1103,3 +1103,16 @@ Feature: verifica validazione sincrona
       | taxId        | FRMTTR76M06B715E     |
     When la notifica viene inviata dal "Comune_Multi"
     Then l'operazione ha prodotto un errore con status code "400"
+
+  @syncValidation #@validation
+  Scenario Outline: [B2B-PA-SYNC_VALIDATION_74] validazione sincrona campo details_digitalAddress -PN-11485
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | comune di milano            |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | <email> |
+    When la notifica viene inviata dal "Comune_1"cam
+    Then l'operazione ha prodotto un errore con status code "400" con messaggio di errore "<error>"
+    Examples:
+      | email            | error          |
+      | V.S.-SRL@PEC.COM | ECMA 262 regex |
