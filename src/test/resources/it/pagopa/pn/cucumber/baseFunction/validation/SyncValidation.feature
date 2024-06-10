@@ -1103,4 +1103,3 @@ Feature: verifica validazione sincrona
       | taxId        | FRMTTR76M06B715E     |
     When la notifica viene inviata dal "Comune_Multi"
     Then l'operazione ha prodotto un errore con status code "400"
-    
