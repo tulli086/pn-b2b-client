@@ -64,6 +64,22 @@ Feature: avanzamento b2b notifica PG analogico con chiamata a National Registry 
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
 
+    #TENERE DA PARTEE QUESTI TEST CON QUESTA PIVA
+  @dev @workflowAnalogico @testLite @realNR
+  Scenario: [B2B_TIMELINE_7915_5_yyy] Invio Notifica mono destinatario a PG con recupero del domicilio fisico - caso KO
+    Given viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+    And destinatario
+      | denomination            | Test digitale ok          |
+      | recipientType           | PG                        |
+      | taxId                   | 00193820255               |
+      | digitalDomicile         | NULL                      |
+      | physicalAddress_address | Via@FAIL-Irreperibile_890 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
+
+
 
   @workflowAnalogico @mockNR
   Scenario: [B2B-TEST_1_2] Invio Notifica mono destinatario a PG in stato “irreperibile totale” PG IPA non Trovato INFO non Trovato INAD non Trovato - Mock
@@ -74,6 +90,23 @@ Feature: avanzamento b2b notifica PG analogico con chiamata a National Registry 
     And destinatario
       | denomination | Test AR Fail 2 |
       | taxId | 05722930657 |
+      | digitalDomicile | NULL |
+      | recipientType   | PG                 |
+      | physicalAddress_address | Via@FAIL-Irreperibile_AR |
+    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
+
+
+    #TENERE DA PARTEE QUESTI TEST CON QUESTA PIVA
+  @workflowAnalogico @realNR
+  Scenario: [B2B-TEST_1_3] Invio Notifica mono destinatario a PG in stato “irreperibile totale” PG IPA non Trovato INFO non Trovato INAD non Trovato - Mock
+    Given viene generata una nuova notifica
+      | subject | notifica analogica con cucumber |
+      | senderDenomination | Comune di MILANO |
+      | physicalCommunication |  AR_REGISTERED_LETTER |
+    And destinatario
+      | denomination | Test AR Fail 2 |
+      | taxId | 00103300448 |
       | digitalDomicile | NULL |
       | recipientType   | PG                 |
       | physicalAddress_address | Via@FAIL-Irreperibile_AR |
