@@ -28,10 +28,9 @@ Feature: Sperimentazione Radd wave 1
       | apply_cost_f24               | SI                   |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
-    Then si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 4 allegati
+    Then si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 3 allegati
     And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
     And si verifica il contenuto della pec abbia 2 attachment di tipo "NOTIFICATION_ATTACHMENTS"
-    And si verifica il contenuto della pec abbia 1 attachment di tipo "F24"
     Then download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è "AAR RADD"
 
 
@@ -66,9 +65,9 @@ Feature: Sperimentazione Radd wave 1
     And destinatario Mario Gherkin e:
       | digitalDomicile              | NULL                 |
       | physicalAddress_address      | Via@ok_AR            |
-      | physicalAddress_municipality | BARI                 |
-      | physicalAddress_province     | BA                   |
-      | physicalAddress_zip          | 70128                |
+      | physicalAddress_municipality | NAPOLI               |
+      | physicalAddress_province     | NA                   |
+      | physicalAddress_zip          | 80124                |
       | payment_f24                  | PAYMENT_F24_STANDARD |
       | title_payment                | F24_STANDARD_GHERKIN |
       | apply_cost_f24               | SI                   |
@@ -88,9 +87,9 @@ Feature: Sperimentazione Radd wave 1
     And destinatario Mario Gherkin e:
       | digitalDomicile_address      | test@fail.it         |
       | physicalAddress_address      | Via@ok_RS            |
-      | physicalAddress_municipality | BARI                 |
-      | physicalAddress_province     | BA                   |
-      | physicalAddress_zip          | 70121                |
+      | physicalAddress_municipality | NAPOLI               |
+      | physicalAddress_province     | NA                   |
+      | physicalAddress_zip          | 80124                |
       | payment_f24                  | PAYMENT_F24_STANDARD |
       | title_payment                | F24_STANDARD_GHERKIN |
       | apply_cost_f24               | SI                   |
@@ -109,18 +108,17 @@ Scenario: [RADD_WAVE_4] - Invio notifica digitale (1° tentativo OK) a destinata
       | document           | DOC_1_PG;         |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address      | test@pecOk.it        |
-      | physicalAddress_municipality | BARI                 |
-      | physicalAddress_province     | BA                   |
-      | physicalAddress_zip          | 70123                |
+      | physicalAddress_municipality | NAPOLI               |
+      | physicalAddress_province     | NA                   |
+      | physicalAddress_zip          | 80124                |
       | payment_f24                  | PAYMENT_F24_STANDARD |
       | title_payment                | F24_STANDARD_GHERKIN |
       | apply_cost_f24               | SI                   |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
-    Then si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 4 allegati
+    Then si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 3 allegati
     And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
     And si verifica il contenuto della pec abbia 2 attachment di tipo "NOTIFICATION_ATTACHMENTS"
-    And si verifica il contenuto della pec abbia 1 attachment di tipo "F24"
     Then download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è "AAR RADD"
 
 
@@ -132,9 +130,9 @@ Scenario: [RADD_WAVE_4] - Invio notifica digitale (1° tentativo OK) a destinata
       | feePolicy          | DELIVERY_MODE     |
       | document           | DOC_1_PG;         |
     And destinatario Mario Gherkin e:
-      | physicalAddress_municipality | BARI                 |
-      | physicalAddress_province     | BA                   |
-      | physicalAddress_zip          | 70123                |
+      | physicalAddress_municipality | NAPOLI               |
+      | physicalAddress_province     | NA                   |
+      | physicalAddress_zip          | 80124                |
       | payment_f24                  | PAYMENT_F24_STANDARD |
       | title_payment                | F24_STANDARD_GHERKIN |
       | apply_cost_f24               | SI                   |
@@ -224,10 +222,9 @@ Scenario: [RADD_WAVE_4] - Invio notifica digitale (1° tentativo OK) a destinata
       | apply_cost_f24               | SI                   |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
-    Then si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 4 allegati
+    Then si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 3 allegati
     And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
     And si verifica il contenuto della pec abbia 2 attachment di tipo "NOTIFICATION_ATTACHMENTS"
-    And si verifica il contenuto della pec abbia 1 attachment di tipo "F24"
     Then download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è "AAR"
 
 
@@ -302,15 +299,17 @@ Scenario: [RADD_WAVE_4] - Invio notifica digitale (1° tentativo OK) a destinata
       | senderDenomination | Comune di palermo              |
       | feePolicy          | DELIVERY_MODE                  |
       | document           | DOC_1_PG;                      |
-    And destinatario Mario Cucumber e:
-      | digitalDomicile              | NULL                   |
-      | physicalAddress_address      | Via@FAIL-Discovery_890 |
-      | physicalAddress_municipality | BARI                   |
-      | physicalAddress_province     | BA                     |
-      | physicalAddress_zip          | 70125                  |
-      | payment_f24                  | PAYMENT_F24_STANDARD   |
-      | title_payment                | F24_STANDARD_GHERKIN   |
-      | apply_cost_f24               | SI                     |
+    And destinatario
+      | denomination                 | Alessandro Manzoni        |
+      | taxId                        | MNZLSN99E05F205J          |
+      | digitalDomicile              | NULL                      |
+      | physicalAddress_address      | Via@FAIL-IRREPERIBILE_890 |
+      | physicalAddress_municipality | NAPOLI                    |
+      | physicalAddress_province     | NA                        |
+      | physicalAddress_zip          | 80124                     |
+      | payment_f24                  | PAYMENT_F24_STANDARD      |
+      | title_payment                | F24_STANDARD_GHERKIN      |
+      | apply_cost_f24               | SI                        |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
     And viene verificato che il peso della busta cartacea sia di 35
@@ -332,9 +331,9 @@ Scenario: [RADD_WAVE_4] - Invio notifica digitale (1° tentativo OK) a destinata
       | taxId                        | DRCGNN12A46A326K      |
       | digitalDomicile              | NULL                  |
       | physicalAddress_address      | Via@FAIL-Discovery_AR |
-      | physicalAddress_municipality | BARI                  |
-      | physicalAddress_province     | BA                    |
-      | physicalAddress_zip          | 70125                 |
+      | physicalAddress_municipality | NAPOLI                |
+      | physicalAddress_province     | NA                    |
+      | physicalAddress_zip          | 80124                 |
       | payment_f24                  | PAYMENT_F24_STANDARD  |
       | title_payment                | F24_STANDARD_GHERKIN  |
       | apply_cost_f24               | SI                    |
