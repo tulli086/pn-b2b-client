@@ -1070,3 +1070,36 @@ Feature: verifica validazione sincrona
       | taxId        | FRMTTR76M06B715E |
     When la notifica viene inviata dal "Comune_Multi"
     Then l'invio della notifica non ha prodotto errori
+
+  @validation
+  Scenario: [B2B-PA-SYNC_VALIDATION_74] validazione sincrona campo denomination contenente più di 44 caratteri
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | comune di milano            |
+    And destinatario
+      | denomination | Fieramosca aaaaaaaaaaaaaaa aaaaaaaaaaaaa aaaaaaaa |
+      | taxId        | FRMTTR76M06B715E                                  |
+    When la notifica viene inviata dal "Comune_Multi"
+    Then l'operazione ha prodotto un errore con status code "400"
+
+  @validation
+  Scenario: [B2B-PA-SYNC_VALIDATION_75] validazione sincrona campo denomination contenente euro
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | comune di milano            |
+    And destinatario
+      | denomination | Fieramosca €     |
+      | taxId        | FRMTTR76M06B715E |
+    When la notifica viene inviata dal "Comune_Multi"
+    Then l'operazione ha prodotto un errore con status code "400"
+
+  @validation
+  Scenario: [B2B-PA-SYNC_VALIDATION_76] validazione sincrona campo denomination contenente a capo e inizio riga
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | comune di milano            |
+    And destinatario
+      | denomination | Fieramosca\n\rEttore |
+      | taxId        | FRMTTR76M06B715E     |
+    When la notifica viene inviata dal "Comune_Multi"
+    Then l'operazione ha prodotto un errore con status code "400"
