@@ -13,7 +13,7 @@ Feature: avanzamento b2b notifica analogico difgitale
       | senderDenomination | Comune di palermo               |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS    |
+      | physicalAddress_address | Via@ok_RS |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST"
     And verifica generazione Atto opponibile senza la messa a disposizione in "DIGITAL_DELIVERY_CREATION_REQUEST"
@@ -51,8 +51,8 @@ Feature: avanzamento b2b notifica analogico difgitale
   @workflowDigitale
   Scenario: [B2B_TIMELINE_FIX_7179_3] Notifica mono destinatario con workflow digitale completato con successo - Destinatario PF
     Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 0
@@ -134,7 +134,7 @@ Feature: avanzamento b2b notifica analogico difgitale
       | senderDenomination | Comune di palermo               |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
-      | physicalAddress_address | Via@ok_RS    |
+      | physicalAddress_address | Via@ok_RS |
     And destinatario Cucumber Society
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 0
@@ -282,9 +282,5 @@ Feature: avanzamento b2b notifica analogico difgitale
   #Fallimento
   #DELIVERED
   #SCHEDULE_REFINEMENT
-
-
-
-
 
 

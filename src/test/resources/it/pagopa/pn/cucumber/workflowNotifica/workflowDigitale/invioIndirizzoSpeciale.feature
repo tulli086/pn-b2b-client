@@ -236,8 +236,10 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Given viene generata una nuova notifica
       | subject | invio notifica GA cucumber |
       | senderDenomination | Comune di palermo |
-    And destinatario Mario Gherkin
-    And destinatario Mario Cucumber
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test@OK-pecSuccess.it |
+    And destinatario Mario Cucumber e:
+      | digitalDomicile_address | test1@OK-pecSuccess.it |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
@@ -380,8 +382,10 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
-    And destinatario Gherkin spa
-    And destinatario Cucumber srl
+    And destinatario Gherkin spa e:
+      | digitalDomicile_address | test@OK-pecSuccess.it |
+    And destinatario Cucumber srl e:
+      | digitalDomicile_address | test1@OK-pecSuccess.it |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
@@ -749,3 +753,16 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     And destinatario Cucumber Society
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "GET_ADDRESS"
+
+
+  Scenario:[B2B_TIMELINE_DIGITAL_SPECIAL_66] verifica sequence contenente carattere _ bug PN-9087
+    And viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Sappada           |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile_address | test@OK-FEEDBACK.it |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_PROGRESS" con deliveryDetailCode "C001"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK" con deliveryDetailCode "C004"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_PROGRESS" con deliveryDetailCode "C001" tentativo "ATTEMPT_1"
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_FEEDBACK" con deliveryDetailCode "C004" tentativo "ATTEMPT_1"
