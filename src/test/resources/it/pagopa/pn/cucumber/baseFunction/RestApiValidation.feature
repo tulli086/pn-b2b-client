@@ -25,7 +25,7 @@ Feature: verifica funzionamento api rest
     Then si tenta il recupero dal sistema tramite codice IUN dalla PA "Comune_1"
     And l'operazione ha generato un errore con status code "404"
 
-  @authFleet
+  @restApiValidation
   Scenario: [REST_VALIDATION_4] Invio notifica digitale_scenario senza destinatario
     Given viene generata una nuova notifica
       | subject            | invio notifica multi cucumber |
