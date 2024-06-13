@@ -37,17 +37,19 @@ Feature: avanzamento b2b notifica multi destinatario analogico 890
   @workflowAnalogico
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_890_3] Invio notifica e atteso stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
-      | subject | notifica analogica con cucumber |
-      | senderDenomination | Comune di palermo |
-    And destinatario Mario Gherkin e:
-      | digitalDomicile_address | test@OK-pecSuccess.it |
+      | subject            | notifica analogica con cucumber |
+      | senderDenomination | Comune di palermo               |
     And destinatario
-      | denomination | Test 890 Fail |
-      | taxId | PRVMNL80A01F205M |
-      | digitalDomicile | NULL |
-      | physicalAddress_address | Via@fail_890 |
+      | denomination            | Test 890 ok      |
+      | taxId                   | DVNLRD52D15M059P |
+      | digitalDomicile         | NULL             |
+      | physicalAddress_address | Via1@ok_890       |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile              | NULL           |
+      | physicalAddress_address      | Via2@ok_890     |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 0
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW" per l'utente 0
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW" per l'utente 1
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED"
 
 
