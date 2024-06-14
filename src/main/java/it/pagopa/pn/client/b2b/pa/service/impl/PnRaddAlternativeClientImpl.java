@@ -35,7 +35,7 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final String raddistaAudErrato;
     private final String raddistaJwtKidDiverso;
     private final String raddistaJwtPrivateDiverso;
-    private final String raddistaJwksOver1Mb;
+    private final String raddistaJwksOver50Kb;
     private final AuthTokenRaddType issuerTokenSetted;
     private final ActOperationsApi actOperationsApi;
     private final AorOperationsApi aorOperationsApi;
@@ -57,7 +57,7 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
                                        @Value("${pn.external.bearer-token-radd-aud-erratto}") String raddistaAudErrato,
                                        @Value("${pn.external.bearer-token-radd-kid-diverso}") String raddistaJwtKidDiverso,
                                        @Value("${pn.external.bearer-token-radd-privateKey-diverso}") String raddistaJwtPrivateDiverso,
-                                       @Value("${pn.external.bearer-token-radd-over-1MB}") String raddistaJwksOver1Mb
+                                       @Value("${pn.external.bearer-token-radd-over-50KB}") String raddistaJwksOver50Kb
                                        ) {
         this.raddista1 = raddista1;
         this.raddista2 = raddista2;
@@ -67,7 +67,7 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         this.raddistaAudErrato = raddistaAudErrato;
         this.raddistaJwtKidDiverso = raddistaJwtKidDiverso;
         this.raddistaJwtPrivateDiverso = raddistaJwtPrivateDiverso;
-        this.raddistaJwksOver1Mb = raddistaJwksOver1Mb;
+        this.raddistaJwksOver50Kb = raddistaJwksOver50Kb;
         this.actOperationsApi = new ActOperationsApi(newApiClientExternal(restTemplate,basePath, raddista1));
         this.aorOperationsApi = new AorOperationsApi(newApiClientExternal(restTemplate,basePath, raddista1));
         this.documentOperationsApi = new DocumentOperationsApi(newApiClientExternal(restTemplate,basePath, raddista1));
@@ -249,8 +249,8 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
                 selectRaddistaHeaderErrato(this.raddista1);
                 beenSet=true;
             }
-            case OVER_1MB -> {
-                selectRaddista(this.raddistaJwksOver1Mb);
+            case OVER_50KB -> {
+                selectRaddista(this.raddistaJwksOver50Kb);
                 beenSet=true;
             }
         }

@@ -56,6 +56,6 @@ Feature: Radd Alternative jwt verification
     And l'operazione ha prodotto un errore con status code "403"
 
   @raddAlt
-  Scenario: [RADD_ALT-JWT-9] PF -  Recupero notifica con codice IUN esistente associato e JWT creato da JWKS oltre 1 MB
-    Then L'operatore usa lo IUN "errato" per recuperare gli atti di "Mario Cucumber" da issuer "issuer_over_1MB"
+  Scenario: [RADD_ALT-JWT-9] PF -  Recupero notifica con codice IUN esistente associato e JWT creato da JWKS oltre 50KB
+    Then L'operatore usa lo IUN "errato" per recuperare gli atti di "Mario Cucumber" da issuer "issuer_over_50KB"
     And Viene restituito un messaggio di errore "input non valido" con codice di errore 10 su radd alternative
