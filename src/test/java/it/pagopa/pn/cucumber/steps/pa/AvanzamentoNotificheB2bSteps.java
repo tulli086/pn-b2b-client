@@ -27,6 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpStatusCodeException;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -41,6 +46,8 @@ import static org.awaitility.Awaitility.await;
 
 @Slf4j
 public class AvanzamentoNotificheB2bSteps {
+
+    @Autowired
     private PnPaB2bUtils utils;
     private final IPnPaB2bClient b2bClient;
     private final SharedSteps sharedSteps;
@@ -3280,10 +3287,9 @@ try{
     }
 
     @Then("download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è {string}")
-    public void downloadAttestazioneOpponibileAAREControlloDelContenutoDelFilePerVerificareSeIlTipoE(String aarType) {
+    public void verificaContentTypeAttestazione(String contentType) {
         LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = getLegalFactIdAAR("PN_AAR");
-        byte[] source = utils.downloadFile(legalFactDownloadMetadataResponse.getUrl());
-        Assertions.assertNotNull(source);
+        Assertions.assertTrue(utils.downloadUrlAndCheckContent(legalFactDownloadMetadataResponse.getUrl(), contentType));
     }
 
 

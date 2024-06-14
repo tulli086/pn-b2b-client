@@ -194,4 +194,4 @@ Feature: Allegati notifica
     And destinatario Mario Cucumber
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then si verifica la corretta acquisizione della notifica
-    Then download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è "AAR RADD"
+    Then download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è "application/pdf"
