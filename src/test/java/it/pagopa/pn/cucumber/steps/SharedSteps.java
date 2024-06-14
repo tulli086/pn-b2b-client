@@ -226,7 +226,7 @@ public class SharedSteps {
     private final ObjectMapper objMapper = JsonMapper.builder()
             .addModule(new JavaTimeModule())
             .build();
-    private static final Integer WAITING_GPD = 2000;
+    private static final Integer WAITING_GPD = 1000;
     public static final String DEFAULT_PA = "Comune_1";
     private static final String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
     // private String gherkinSrltaxId = "CCRMCT06A03A433H";
@@ -1303,7 +1303,7 @@ public class SharedSteps {
 
     private void sendNotificationAndCancel() {
 
-        sendNotificationExtraRapid(1000);
+        sendNotificationExtraRapid(500);
 
         Assertions.assertDoesNotThrow(() -> {
             RequestStatus resp = Assertions.assertDoesNotThrow(() ->
