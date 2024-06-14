@@ -4,6 +4,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.mapper.impl.PnTimelineAndLegalFactV23;
 import it.pagopa.pn.client.b2b.pa.mapper.model.PnTimelineLegalFactV23;
@@ -32,12 +33,15 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static java.time.OffsetDateTime.now;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
 public class AvanzamentoNotificheB2bSteps {
+    private PnPaB2bUtils utils;
     private final IPnPaB2bClient b2bClient;
     private final SharedSteps sharedSteps;
     private final IPnWebRecipientClient webRecipientClient;
@@ -3235,6 +3239,51 @@ try{
         }catch(AssertionFailedError assertionFailedError){
         sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
     }
+    }
+
+    public LegalFactDownloadMetadataResponse getLegalFactIdAAR(String aarType) {
+        AtomicReference<LegalFactDownloadMetadataResponse> legalFactDownloadMetadataResponse = new AtomicReference<>();
+        try {
+            Thread.sleep(sharedSteps.getWait());
+        } catch (InterruptedException exc) {
+            throw new RuntimeException(exc);
+        }
+
+        TimelineElementCategoryV23 timelineElementInternalCategory= TimelineElementCategoryV23.AAR_GENERATION;
+        TimelineElementV23 timelineElement = null;
+
+        for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+
+            if (Objects.requireNonNull(element.getCategory()).equals(timelineElementInternalCategory)) {
+                timelineElement = element;
+                break;
+            }
+        }
+
+        Assertions.assertNotNull(timelineElement);
+        String keySearch = null;
+        if (!Objects.requireNonNull(timelineElement.getDetails()).getGeneratedAarUrl().isEmpty()) {
+
+            if (timelineElement.getDetails().getGeneratedAarUrl().contains(aarType)) {
+                keySearch = timelineElement.getDetails().getGeneratedAarUrl().substring(timelineElement.getDetails().getGeneratedAarUrl().indexOf(aarType));
+            }
+
+            String finalKeySearch = keySearch;
+            try {
+                Assertions.assertDoesNotThrow(() -> {
+                    legalFactDownloadMetadataResponse.set(this.b2bClient.getDownloadLegalFact(sharedSteps.getSentNotification().getIun(), finalKeySearch));});
+            } catch (AssertionFailedError assertionFailedError) {
+                sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+            }
+        }
+        return legalFactDownloadMetadataResponse.get();
+    }
+
+    @Then("download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è {string}")
+    public void downloadAttestazioneOpponibileAAREControlloDelContenutoDelFilePerVerificareSeIlTipoE(String aarType) {
+        LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = getLegalFactIdAAR("PN_AAR");
+        byte[] source = utils.downloadFile(legalFactDownloadMetadataResponse.getUrl());
+        Assertions.assertNotNull(source);
     }
 
 
