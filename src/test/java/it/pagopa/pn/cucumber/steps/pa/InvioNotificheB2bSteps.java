@@ -1171,4 +1171,49 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
         return attchmentNotification;
     }
 
+    private PnExternalServiceClientImpl.SafeStorageResponse getLegalFactIdAAR(String aarType) {
+        AtomicReference<PnExternalServiceClientImpl.SafeStorageResponse> safeStorageResponse = new AtomicReference<>();
+        try {
+            Thread.sleep(sharedSteps.getWait());
+        } catch (InterruptedException exc) {
+            throw new RuntimeException(exc);
+        }
+
+        TimelineElementCategoryV23 timelineElementInternalCategory= TimelineElementCategoryV23.AAR_GENERATION;
+        TimelineElementV23 timelineElement = null;
+
+        for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
+
+            if (Objects.requireNonNull(element.getCategory()).equals(timelineElementInternalCategory)) {
+                timelineElement = element;
+                break;
+            }
+        }
+
+        Assertions.assertNotNull(timelineElement);
+        String keySearch = null;
+        if (!Objects.requireNonNull(timelineElement.getDetails()).getGeneratedAarUrl().isEmpty()) {
+
+            if (timelineElement.getDetails().getGeneratedAarUrl().contains(aarType)) {
+                keySearch = timelineElement.getDetails().getGeneratedAarUrl().substring(timelineElement.getDetails().getGeneratedAarUrl().indexOf(aarType));
+            }
+
+            String finalKeySearch = keySearch;
+            try {
+                Assertions.assertDoesNotThrow(() -> {
+                    //legalFactDownloadMetadataResponse.set(this.b2bClient.getDownloadLegalFact(sharedSteps.getSentNotification().getIun(), finalKeySearch));});
+                    safeStorageResponse.set(safeStorageClient.safeStorageInfo(finalKeySearch));});
+                } catch (AssertionFailedError assertionFailedError) {
+                sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+            }
+        }
+        return safeStorageResponse.get();
+    }
+
+    @Then("download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è {string}")
+    public void verificaContentTypeAttestazione(String contentType) {
+        PnExternalServiceClientImpl.SafeStorageResponse safeStorageResponse = getLegalFactIdAAR("PN_AAR");
+        Assertions.assertTrue(b2bUtils.downloadUrlAndCheckContent(safeStorageResponse.getDownload().getUrl(), contentType));
+    }
+
 }
