@@ -250,6 +250,16 @@ public class SharedSteps {
     private static final String NOT_VALID_ADDRESS = "NOT_VALID_ADDRESS";
 
 
+    public HashMap<String, String> getMapAllegatiNotificaSha256() {
+        return mapAllegatiNotificaSha256;
+    }
+
+    public void setMapAllegatiNotificaSha256(HashMap<String, String> mapAllegatiNotificaSha256) {
+        this.mapAllegatiNotificaSha256 = mapAllegatiNotificaSha256;
+    }
+
+    private HashMap<String,String> mapAllegatiNotificaSha256 = new HashMap<>();
+
     @Autowired
     public SharedSteps(DataTableTypeUtil dataTableTypeUtil, IPnPaB2bClient b2bClient,
                        PnPaB2bUtils b2bUtils, IPnWebRecipientClient webRecipientClient,
@@ -1516,7 +1526,7 @@ public class SharedSteps {
                     setSenderTaxIdVersioning(version);
                     setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
                 }else{
-                    this.notificationRequest.setSenderTaxId(this.senderTaxId);
+                    this.notificationRequest.setSenderTaxId(this.senderTaxIdTwo);
                     setGrup(SettableApiKey.ApiKeyType.MVP_2);
                 }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
@@ -1547,10 +1557,10 @@ public class SharedSteps {
     private void setSenderTaxIdVersioning(String version) {
         switch(version.toLowerCase()){
 
-            case "v1" -> this.notificationRequestV1.setSenderTaxId(this.senderTaxId);
-            case "v2" -> this.notificationRequestV2.setSenderTaxId(this.senderTaxId);
-            case "v21" -> this.notificationRequestV21.setSenderTaxId(this.senderTaxId);
-            case "v23" -> this.notificationRequest.setSenderTaxId(this.senderTaxId);
+            case "v1" -> this.notificationRequestV1.setSenderTaxId(getSenderTaxIdFromProperties(settedPa));
+            case "v2" -> this.notificationRequestV2.setSenderTaxId(getSenderTaxIdFromProperties(settedPa));
+            case "v21" -> this.notificationRequestV21.setSenderTaxId(getSenderTaxIdFromProperties(settedPa));
+            case "v23" -> this.notificationRequest.setSenderTaxId(getSenderTaxIdFromProperties(settedPa));
 
         }
     }
@@ -1648,22 +1658,27 @@ public class SharedSteps {
             case "Comune_1" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_1);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_1);
+                this.webPaClient.setBearerToken(SettableBearerToken.BearerTokenType.MVP_1);
             }
             case "Comune_2" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_2);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.MVP_2);
+                this.webPaClient.setBearerToken(SettableBearerToken.BearerTokenType.MVP_2);
             }
             case "Comune_Multi" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.GA);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.GA);
+                this.webPaClient.setBearerToken(SettableBearerToken.BearerTokenType.GA);
             }
             case "Comune_Son" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.SON);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.SON);
+                this.webPaClient.setBearerToken(SettableBearerToken.BearerTokenType.SON);
             }
             case "Comune_Root" -> {
                 this.b2bClient.setApiKeys(IPnPaB2bClient.ApiKeyType.ROOT);
                 this.pollingFactory.setApiKeys(IPnPaB2bClient.ApiKeyType.ROOT);
+                this.webPaClient.setBearerToken(SettableBearerToken.BearerTokenType.ROOT);
             }
             default -> throw new IllegalArgumentException();
         }
@@ -2048,18 +2063,25 @@ public class SharedSteps {
                         .digitalDomicile((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationDigitalAddress) digitalDomicile);
             }
         }
-        if (notificationRecipient instanceof it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient){
-            ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient) notificationRecipient)
+        if (notificationRecipient instanceof it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipientV21){
+            ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipientV21) notificationRecipient)
                     .denomination(denomination).taxId(taxId);
             if(recipientType != null) {
-                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient) notificationRecipient)
-                        .recipientType((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient.RecipientTypeEnum) recipientType);
+                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipientV21) notificationRecipient)
+                        .recipientType((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipientV21.RecipientTypeEnum) recipientType);
             }
             if(digitalDomicile != null) {
-                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipient) notificationRecipient)
+                ((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationRecipientV21) notificationRecipient)
                         .digitalDomicile((it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v21.NotificationDigitalAddress) digitalDomicile);
             }
         }
         return notificationRecipient;
+    }
+
+    @And("senza destinatario")
+    public void senzaDestinatario() {
+        NotificationRecipientV23 notificationRecipientV23 = dataTableTypeUtil.convertNotificationRecipient(new HashMap<>());
+        addRecipientToNotification(this.notificationRequest,
+                notificationRecipientV23, new HashMap<>());
     }
 }
