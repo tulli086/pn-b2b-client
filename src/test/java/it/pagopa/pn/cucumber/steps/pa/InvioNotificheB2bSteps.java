@@ -1171,8 +1171,8 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
         return attchmentNotification;
     }
 
-    private PnExternalServiceClientImpl.SafeStorageResponse getLegalFactIdAAR(String aarType) {
-        AtomicReference<PnExternalServiceClientImpl.SafeStorageResponse> safeStorageResponse = new AtomicReference<>();
+    private LegalFactDownloadMetadataResponse getLegalFactIdAAR(String aarType) {
+        AtomicReference<LegalFactDownloadMetadataResponse> legalFactDownloadMetadataResponse = new AtomicReference<>();
         try {
             Thread.sleep(sharedSteps.getWait());
         } catch (InterruptedException exc) {
@@ -1201,19 +1201,18 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
             String finalKeySearch = keySearch;
             try {
                 Assertions.assertDoesNotThrow(() -> {
-                    //legalFactDownloadMetadataResponse.set(this.b2bClient.getDownloadLegalFact(sharedSteps.getSentNotification().getIun(), finalKeySearch));});
-                    safeStorageResponse.set(safeStorageClient.safeStorageInfo(finalKeySearch));});
+                    legalFactDownloadMetadataResponse.set(this.b2bClient.getDownloadLegalFact(sharedSteps.getSentNotification().getIun(), finalKeySearch));});
                 } catch (AssertionFailedError assertionFailedError) {
                 sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
             }
         }
-        return safeStorageResponse.get();
+        return legalFactDownloadMetadataResponse.get();
     }
 
     @Then("download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è {string}")
     public void verificaContentTypeAttestazione(String contentType) {
-        PnExternalServiceClientImpl.SafeStorageResponse safeStorageResponse = getLegalFactIdAAR("PN_AAR");
-        Assertions.assertTrue(b2bUtils.downloadUrlAndCheckContent(safeStorageResponse.getDownload().getUrl(), contentType));
+        LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = getLegalFactIdAAR("PN_AAR");
+        Assertions.assertTrue(b2bUtils.downloadUrlAndCheckContent(legalFactDownloadMetadataResponse.getUrl(), contentType));
     }
 
 }
