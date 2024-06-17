@@ -34,7 +34,7 @@ Feature: avanzamento b2b notifica multi destinatario analogico 890
     #And vengono letti gli eventi e verificho che l'utente 1 non abbia associato un evento "SEND_ANALOG_FEEDBACK" con responseStatus "OK"
 
 
-  @workflowAnalogico
+
   Scenario: [B2B_TIMELINE_MULTI_ANALOG_890_3] Invio notifica e atteso stato DELIVERED_scenario positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
