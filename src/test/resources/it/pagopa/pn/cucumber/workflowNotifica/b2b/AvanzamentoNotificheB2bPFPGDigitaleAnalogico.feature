@@ -60,10 +60,8 @@ Feature: avanzamento b2b notifica analogico difgitale
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED"
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED" per il destinatario 0 e presente l'evento "DIGITAL_DELIVERY_CREATION_REQUEST"
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED" per il destinatario 0 e presente l'evento "SCHEDULE_REFINEMENT_WORKFLOW"
-    And vengono letti gli eventi fino allo stato della notifica "DELIVERED" per il destinatario 0 e presente l'evento "DIGITAL_SUCCESS_WORKFLOW"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT" e verifica data schedulingDate per il destinatario 0 rispetto ell'evento in timeline "SEND_DIGITAL_FEEDBACK"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
-
     And la PA richiede il download dell'attestazione opponibile "DIGITAL_DELIVERY"
     #And vengono letti gli eventi e verificho che l'utente 0 non abbia associato un evento "SEND_SIMPLE_REGISTERED_LETTER"
 
@@ -80,7 +78,6 @@ Feature: avanzamento b2b notifica analogico difgitale
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED"
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED" per il destinatario 0 e presente l'evento "DIGITAL_DELIVERY_CREATION_REQUEST"
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED" per il destinatario 0 e presente l'evento "SCHEDULE_REFINEMENT_WORKFLOW"
-    And vengono letti gli eventi fino allo stato della notifica "DELIVERED" per il destinatario 0 e presente l'evento "DIGITAL_SUCCESS_WORKFLOW"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT" e verifica data schedulingDate per il destinatario 0 rispetto ell'evento in timeline "SEND_DIGITAL_FEEDBACK"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
     And la PA richiede il download dell'attestazione opponibile "DIGITAL_DELIVERY"
@@ -114,7 +111,7 @@ Feature: avanzamento b2b notifica analogico difgitale
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test@fail.it |
     And destinatario Cucumber Analogic e:
-      | digitalDomicile_address | test@fail.it |
+      | digitalDomicile_address | test1@fail.it |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED"
     Then esiste l'elemento di timeline della notifica "DIGITAL_DELIVERY_CREATION_REQUEST" per l'utente 0
@@ -192,10 +189,8 @@ Feature: avanzamento b2b notifica analogico difgitale
     #And vengono letti gli eventi fino allo stato della notifica "DELIVERED" per il destinatario 0 e presente l'evento "SCHEDULE_REFINEMENT_WORKFLOW"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT" e verifica data schedulingDate per il destinatario 0 rispetto ell'evento in timeline "SEND_DIGITAL_FEEDBACK"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 0
-
     And la PA richiede il download dell'attestazione opponibile "DIGITAL_DELIVERY"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE" per l'utente 1
-      #Ritardare Il Perfezionamento per lo stato DELIVERED
     And vengono letti gli eventi fino allo stato della notifica "EFFECTIVE_DATE"
 
   @workflowDigitale
@@ -220,7 +215,6 @@ Feature: avanzamento b2b notifica analogico difgitale
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 0
     And la PA richiede il download dell'attestazione opponibile "DIGITAL_DELIVERY"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE" per l'utente 1
-      #Ritardare Il Perfezionamento per lo stato DELIVERED
     And vengono letti gli eventi fino allo stato della notifica "EFFECTIVE_DATE"
 
 
@@ -262,25 +256,5 @@ Feature: avanzamento b2b notifica analogico difgitale
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT" e verifica data schedulingDate per il destinatario 1 rispetto ell'evento in timeline "SEND_DIGITAL_FEEDBACK"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 0
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 1
-
-
-
-
-    #And destinatario
-      #| denomination | Test 890 Fail |
-      #| taxId | PRVMNL80A01F205M |
-      #| digitalDomicile | NULL |
-      #| physicalAddress_address | Via@fail_890 |
-
-
-  #Fallimento
-  #DIGITAL_DELIVERY_CREATION_REQUEST
-  #SCHEDULE_REFINEMENT
-  #SEND_SIMPLE_REGISTERED_LETTER
-  #DELIVERED
-
-  #Fallimento
-  #DELIVERED
-  #SCHEDULE_REFINEMENT
 
 
