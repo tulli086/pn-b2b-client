@@ -30,9 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpStatusCodeException;
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -3293,4 +3292,34 @@ try{
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
     }
+
+    private Map<String, String> populatePaperMessageMap(Instant date) {
+        String iun = sharedSteps.getSentNotification().getIun();
+        Map<String, String> mapInfo = new HashMap<>();
+        mapInfo.put("requestId", iun);
+        mapInfo.put("attachments", null);
+        mapInfo.put("clientRequestTimeStamp", String.valueOf(getOffsetDateTimeFromDate(date)));
+        mapInfo.put("deliveryFailureCause", null);
+        mapInfo.put("discoveredAddress", null);
+        mapInfo.put("iun", iun);
+        mapInfo.put("productType", "AR");
+        mapInfo.put("registeredLetterCode", null);
+        mapInfo.put("statusCode", "CON020XXX");
+        mapInfo.put("statusDateTime", String.valueOf(getOffsetDateTimeFromDate(date)));
+        mapInfo.put("statusDescription", "Affido conservato");
+        return mapInfo;
+    }
+
+    public static OffsetDateTime getOffsetDateTimeFromDate(Instant date) {
+        return OffsetDateTime.ofInstant(date, ZoneOffset.UTC);
+    }
+
+    @Then ("viene invocato il consolidatore con clientRequestTimeStamp e statusDateTime nel futuro")
+    public void vieneInvocatoIlConsolidatore() {
+
+        Map<String, String> mapInfo = populatePaperMessageMap(Instant.now());
+        String internalId = externalClient.pushPaperMessageNotification(mapInfo);
+        log.info(internalId);
+    }
+
 }

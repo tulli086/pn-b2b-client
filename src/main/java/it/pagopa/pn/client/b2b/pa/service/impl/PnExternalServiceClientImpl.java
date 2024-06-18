@@ -2,6 +2,8 @@ package it.pagopa.pn.client.b2b.pa.service.impl;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
@@ -623,6 +625,36 @@ public class PnExternalServiceClientImpl {
         });
         return queryBuilder.toString();
 
+    }
+
+    private ResponseEntity<String> pushPaperMessageNotificationWithHttpInfo(Map<String, String> mapInfo) {
+        Object postBody = null;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            postBody = objectMapper.writeValueAsString(mapInfo);
+        }catch (JsonProcessingException exception) {
+            log.error("Error during parse Json", exception.getMessage());
+        }
+
+        final Map<String, Object> uriVariables = new HashMap<>();
+        uriVariables.put("requestIdx", mapInfo.get("requestId"));
+
+        final HttpHeaders headerParams = new HttpHeaders();
+        headerParams.add("x-pagopa-extch-cx-id", mapInfo.get("requestId"));
+
+        final String[] localVarAccepts = {
+                "application/json", "application/problem+json"
+        };
+        final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
+        final MediaType localVarContentType = MediaType.APPLICATION_JSON;
+
+        ParameterizedTypeReference<String> returnType = new ParameterizedTypeReference<>() {
+        };
+        return invokeAPI(extChannelsBasePath, "/external-channels/v1/paper-deliveries-engagements/{requestIdx}", HttpMethod.PUT, uriVariables, null, postBody, headerParams, localVarAccept, localVarContentType, returnType);
+    }
+
+    public String pushPaperMessageNotification(Map<String, String> mapInfo) {
+        return pushPaperMessageNotificationWithHttpInfo(mapInfo).getBody();
     }
     //OPEN SEARCH RESPONSE
     @Getter

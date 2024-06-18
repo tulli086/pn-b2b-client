@@ -157,3 +157,18 @@ Feature: Analog send e2e
     And viene effettuato un controllo sulla durata della retention di "ATTACHMENTS" per l'elemento di timeline "REFINEMENT"
       | details | NOT_NULL |
       | details_recIndex | 0 |
+
+  @e2e
+  Scenario: [B2B_ANALOG_SEND_4] Verifica data nel futuro
+    And viene generata una nuova notifica
+      | subject | invio notifica con cucumber |
+      | senderDenomination | Comune di milano |
+      | physicalCommunication | REGISTERED_LETTER_890           |
+    And destinatario
+      | denomination | Leonardo da Vinci |
+      | taxId | DVNLRD52D15M059P |
+      | digitalDomicile | NULL |
+      | physicalAddress_address | Via@OK-CompiutaGiacenza_890 |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then viene invocato il consolidatore con clientRequestTimeStamp e statusDateTime nel futuro
+    And l'operazione ha prodotto un errore con status code "400"
