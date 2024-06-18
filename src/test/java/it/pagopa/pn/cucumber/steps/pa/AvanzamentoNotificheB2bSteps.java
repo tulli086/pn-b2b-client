@@ -8,6 +8,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.DelegateInfo;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.FullSentNotificationV23;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.LegalFactCategory;
@@ -28,6 +29,9 @@ import it.pagopa.pn.client.b2b.pa.mapper.impl.PnTimelineAndLegalFactV23;
 import it.pagopa.pn.client.b2b.pa.mapper.model.PnTimelineLegalFactV23;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
+import it.pagopa.pn.client.b2b.pa.polling.dto.*;
+import it.pagopa.pn.client.b2b.pa.polling.impl.*;
+import it.pagopa.pn.client.b2b.pa.service.*;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingParameter;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingPredicate;
 import it.pagopa.pn.client.b2b.pa.polling.dto.PnPollingResponseV1;
@@ -70,6 +74,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpStatusCodeException;
+import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import static java.time.OffsetDateTime.now;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.awaitility.Awaitility.await;
 
 @Slf4j
 public class AvanzamentoNotificheB2bSteps {
