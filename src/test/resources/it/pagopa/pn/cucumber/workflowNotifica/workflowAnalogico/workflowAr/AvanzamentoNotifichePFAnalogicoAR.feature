@@ -237,7 +237,7 @@ Feature: avanzamento notifiche b2b con workflow cartaceo AR
     #vedere il discorso Retry presenza due volte di CON080
 
 
-
+  @workflowAnalogico
   Scenario: [B2B_TIMELINE_ANALOG_AR_17] Attesa elemento di timeline ANALOG_SUCCESS_WORKFLOW_FAIL-DiscoveryIrreperibile_AR_scenario positivo
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |

@@ -88,7 +88,7 @@ Feature: avanzamento notifiche analogico 890 persona giuridica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
 
 
-
+  @workflowAnalogico @mockNR
   Scenario: [B2B_TIMELINE_PG_ANALOG_890_8] Invio notifica ed attesa sospensione invio cartaceo per avvenuto pagamento positivo
     Given viene generata una nuova notifica
       | subject | notifica analogica con cucumber |
