@@ -39,7 +39,8 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
       | payment_pagoPaForm | SI               |
       | payment_f24        | PAYMENT_F24_FLAT |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    Then l'allegato "F24" può essere correttamente recuperato da "Mario Gherkin"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
+    And l'allegato "F24" può essere correttamente recuperato da "Mario Gherkin"
 
   @ignore
   Scenario: [WEB-PF-RECIPIENT_5] Invio notifica digitale mono destinatario e recupero allegato F24_STANDARD_scenario positivo
@@ -50,8 +51,11 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
     And destinatario Mario Gherkin e:
       | payment_pagoPaForm | SI                   |
       | payment_f24        | PAYMENT_F24_STANDARD |
+      | title_payment      | F24_STANDARD_GHERKIN |
+      | apply_cost_f24     | SI                   |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
-    Then l'allegato "F24" può essere correttamente recuperato da "Mario Gherkin"
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
+    And l'allegato "F24" può essere correttamente recuperato da "Mario Gherkin"
 
   @ignore
   Scenario: [WEB-PF-RECIPIENT_6] Invio notifica digitale mono destinatario e recupero allegato F24_STANDARD_scenario negativo
@@ -83,8 +87,10 @@ Feature: Ricezione notifiche api web con invio tramite api B2B
       | senderDenomination | comune di milano            |
       | feePolicy          | DELIVERY_MODE               |
     And destinatario Mario Cucumber e:
-      | payment_pagoPaForm | SI               |
-      | payment_f24        | PAYMENT_F24_FLAT |
+      | payment_pagoPaForm | SI                   |
+      | payment_f24        | PAYMENT_F24_STANDARD |
+      | title_payment      | F24_STANDARD_GHERKIN |
+      | apply_cost_f24     | SI                   |
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     And "Mario Gherkin" tenta il recupero dell'allegato "F24"
     Then il download ha prodotto un errore con status code "404"
