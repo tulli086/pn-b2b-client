@@ -1,5 +1,6 @@
 Feature: verifica funzionamento api rest
 
+  @restApiValidation
   Scenario: [REST_VALIDATION_1] Invio notifica digitale mono destinatario e verifica stato_scenario positivo
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
@@ -16,6 +17,7 @@ Feature: verifica funzionamento api rest
     Then l'operazione ha prodotto un errore con status code "404"
 
     #TODO: da spostare ?
+  @restApiValidation
   Scenario: [REST_VALIDATION_3] Invio notifica digitale_scenario negativo
     Given viene generata una nuova notifica
       | subject | invio notifica multi cucumber |
