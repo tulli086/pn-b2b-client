@@ -4,6 +4,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.mapper.impl.PnTimelineAndLegalFactV23;
 import it.pagopa.pn.client.b2b.pa.mapper.model.PnTimelineLegalFactV23;
@@ -20,6 +21,9 @@ import it.pagopa.pn.client.b2b.web.generated.openapi.clients.privateDeliveryPush
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.DataTest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +36,18 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static java.time.OffsetDateTime.now;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
 public class AvanzamentoNotificheB2bSteps {
+    @Autowired
+    private PnPaB2bUtils utils;
     private final IPnPaB2bClient b2bClient;
     private final SharedSteps sharedSteps;
     private final IPnWebRecipientClient webRecipientClient;
@@ -2649,6 +2659,11 @@ public class AvanzamentoNotificheB2bSteps {
 
     @And("download attestazione opponibile AAR")
     public void downloadLegalFactIdAAR() {
+            getLegalFactIdAAR("PN_AAR");
+        }
+
+    public LegalFactDownloadMetadataResponse getLegalFactIdAAR(String aarType) {
+        AtomicReference<LegalFactDownloadMetadataResponse> legalFactDownloadMetadataResponse = new AtomicReference<>();
         try {
             Thread.sleep(sharedSteps.getWait());
         } catch (InterruptedException exc) {
@@ -2660,27 +2675,57 @@ public class AvanzamentoNotificheB2bSteps {
 
         for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
 
-            if (element.getCategory().equals(timelineElementInternalCategory)) {
-                timelineElement = element;
-                break;
+                if (Objects.requireNonNull(element.getCategory()).equals(timelineElementInternalCategory)) {
+                    timelineElement = element;
+                    break;
+                }
             }
+
+            Assertions.assertNotNull(timelineElement);
+            String keySearch = null;
+                if (!Objects.requireNonNull(timelineElement.getDetails()).getGeneratedAarUrl().isEmpty()) {
+
+                    if (timelineElement.getDetails().getGeneratedAarUrl().contains(aarType)) {
+                            keySearch = timelineElement.getDetails().getGeneratedAarUrl().substring(timelineElement.getDetails().getGeneratedAarUrl().indexOf(aarType));
+                        }
+
+                        String finalKeySearch = keySearch;
+                        try {
+                            Assertions.assertDoesNotThrow(() -> {
+                                legalFactDownloadMetadataResponse.set(this.b2bClient.getDownloadLegalFact(sharedSteps.getSentNotification().getIun(), finalKeySearch));
+                            });
+                        } catch (AssertionFailedError assertionFailedError) {
+                            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+                        }
+                    }
+                    return legalFactDownloadMetadataResponse.get();
+                }
+
+
+    @Then("download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è {string}")
+    public void downloadAttestazioneOpponibileAAREControlloDelContenutoDelFilePerVerificareSeIlTipoE(String aarType) {
+        LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = getLegalFactIdAAR("PN_AAR");
+        byte[] source = utils.downloadFile(legalFactDownloadMetadataResponse.getUrl());
+        Assertions.assertNotNull(source);
+        Assertions.assertTrue(checkTypeAAR(source, aarType));
+    }
+
+    private boolean checkTypeAAR(byte[] source, String aarType) {
+        Pattern pattern = Pattern.compile("\\((CAF)\\s");
+        try (final PDDocument document = Loader.loadPDF(source)) {
+            final PDFTextStripper pdfStripper = new PDFTextStripper();
+            pdfStripper.setSortByPosition(true);
+            String extractedText = pdfStripper.getText(document);
+            Matcher matcher = pattern.matcher(extractedText);
+            if(aarType.equals("AAR")) {  //if AAR then check ' CAF ' pattern NOT exist
+                return !matcher.find();
+            } else if(aarType.equals("AAR RADD")) { //if AAR RADD then check ' CAF ' pattern exist
+                return matcher.find();
+            }
+        } catch (Exception exception) {
+            log.error("Error parsing PDF {}", exception);
         }
-
-        Assertions.assertNotNull(timelineElement);
-        String keySearch = null;
-        if (timelineElement.getDetails().getGeneratedAarUrl() != null && !timelineElement.getDetails().getGeneratedAarUrl().isEmpty()) {
-
-            if (timelineElement.getDetails().getGeneratedAarUrl().contains("PN_AAR")) {
-                keySearch = timelineElement.getDetails().getGeneratedAarUrl().substring(timelineElement.getDetails().getGeneratedAarUrl().indexOf("PN_AAR"));
-            }
-
-            String finalKeySearch = keySearch;
-            try {
-                Assertions.assertDoesNotThrow(() -> this.b2bClient.getDownloadLegalFact(sharedSteps.getSentNotification().getIun(), finalKeySearch));
-            } catch (AssertionFailedError assertionFailedError) {
-                sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
-            }
-        }
+        return false;
     }
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} e verifica indirizzo secondo tentativo {string}")
@@ -2964,8 +3009,6 @@ try{
     @Then("viene verificato il costo {string} di una notifica {string} del utente {string}")
     public void notificationPriceVerificationIvaIncluded(String tipoCosto, String tipoNotifica ,String user ) {
 
-       sharedSteps.setSentNotification(sharedSteps.getB2bUtils().getNotificationByIun(sharedSteps.getIunVersionamento()));
-
         FullSentNotificationV23 notificaV23= sharedSteps.getSentNotification();
         Assertions.assertNotNull(notificaV23);
 
@@ -3078,10 +3121,33 @@ try{
             }catch(AssertionFailedError assertionFailedError){
                 sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
             }
-
         }
-
     }
+
+    @Then("viene verificato che per il calcolo del iva il campo vat sia di {int} e il campo paFee sia di {int} per il destinatario {int}")
+    public void notificationPriceVerificationResponse(Integer vat, Integer paFee, Integer destinatario) {
+
+        List<NotificationPaymentItem> listNotificationPaymentItem = sharedSteps.getSentNotification().getRecipients().get(destinatario).getPayments();
+
+        for(NotificationPaymentItem pagamento : listNotificationPaymentItem){
+            NotificationPriceResponseV23 notificationPriceV23 = this.b2bClient.getNotificationPriceV23(pagamento.getPagoPa().getCreditorTaxId(), pagamento.getPagoPa().getNoticeCode());
+
+            try {
+                Assertions.assertNotNull(notificationPriceV23.getTotalPrice());
+                Assertions.assertNotNull(notificationPriceV23.getPartialPrice());
+                Assertions.assertNotNull(notificationPriceV23.getIun());
+                Assertions.assertNotNull(notificationPriceV23.getAnalogCost());
+                Assertions.assertNotNull(notificationPriceV23.getPaFee());
+                Assertions.assertNotNull(notificationPriceV23.getVat());
+                Assertions.assertEquals(vat, notificationPriceV23.getVat());
+                Assertions.assertEquals(paFee, notificationPriceV23.getPaFee());
+                log.info("notification price v23: {}",notificationPriceV23);
+            }catch(AssertionFailedError assertionFailedError){
+                sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+            }
+        }
+    }
+
 
     @And("viene verificato data corretta del destinatario {int}")
     public void verificationDateNotificationPrice(Integer destinatario) {
@@ -3220,4 +3286,13 @@ try{
     }
 
 
+    @And ("viene verificato che il peso della busta cartacea sia di {int}")
+    public void verificaCostoePesoInvioCartaceo(Integer peso){
+        TimelineElementV23 timeline= sharedSteps.getTimelineElementV23();
+        try {
+            Assertions.assertEquals(peso,timeline.getDetails().getEnvelopeWeight());
+        }catch(AssertionFailedError assertionFailedError){
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
+    }
 }
