@@ -709,9 +709,11 @@ Feature: annullamento notifiche b2b
     Given viene generata una nuova notifica
       | subject | invio notifica con cucumber |
     And destinatario
-      | denomination | Louis Armstrong |
-      | taxId | RMSLSO31M04Z404R |
-      | digitalDomicile | NULL |
+      | denomination    | Louis Armstrong  |
+      | taxId           | RMSLSO31M04Z404R |
+      | digitalDomicile | NULL             |
+      | payment_f24     | PAYMENT_F24_FLAT |
+      | title_payment   | F24_FLAT_GHERKIN |
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     When vengono letti gli eventi fino all'elemento di timeline della notifica annullata "NOTIFICATION_CANCELLATION_REQUEST"
     Then viene controllato che l'elemento di timeline della notifica "SEND_COURTESY_MESSAGE" non esiste
@@ -1004,7 +1006,9 @@ Feature: annullamento notifiche b2b
       | subject | invio notifica con cucumber |
       | senderDenomination | Comune di milano |
     And destinatario Mario Gherkin e:
-      | digitalDomicile_address |   test@OK-PEC-SLOW.it  |
+      | digitalDomicile_address | test@OK-PEC-SLOW.it |
+      | payment_f24             | PAYMENT_F24_FLAT    |
+      | title_payment           | F24_FLAT_GHERKIN    |
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     When vengono letti gli eventi fino all'elemento di timeline della notifica annullata "NOTIFICATION_CANCELLATION_REQUEST"
     Then viene controllato che l'elemento di timeline della notifica "SEND_DIGITAL_PROGRESS" non esiste
