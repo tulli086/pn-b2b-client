@@ -187,15 +187,17 @@ Feature: Radd Alternative Atto Intero
       | physicalCommunication | REGISTERED_LETTER_890          |
       | feePolicy             | DELIVERY_MODE                  |
       | document              | DOC_3_PG;                      |
-    And destinatario Mario Gherkin e:
-      | digitalDomicile              | NULL                   |
-      | physicalAddress_address      | Via@FAIL-Discovery_890 |
-      | physicalAddress_municipality | VENEZIA                |
-      | physicalAddress_province     | VE                     |
-      | physicalAddress_zip          | 30121                  |
-      | payment_f24                  | PAYMENT_F24_STANDARD   |
-      | title_payment                | F24_STANDARD_GHERKIN   |
-      | apply_cost_f24               | SI                     |
+    And destinatario
+      | denomination                 | Alessandro Manzoni        |
+      | taxId                        | MNZLSN99E05F205J          |
+      | digitalDomicile              | NULL                      |
+      | physicalAddress_address      | Via@FAIL-IRREPERIBILE_890 |
+      | physicalAddress_municipality | VENEZIA                   |
+      | physicalAddress_province     | VE                        |
+      | physicalAddress_zip          | 30121                     |
+      | payment_f24                  | PAYMENT_F24_STANDARD      |
+      | title_payment                | F24_STANDARD_GHERKIN      |
+      | apply_cost_f24               | SI                        |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
     And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
@@ -211,15 +213,17 @@ Feature: Radd Alternative Atto Intero
       | physicalCommunication | AR_REGISTERED_LETTER           |
       | feePolicy             | DELIVERY_MODE                  |
       | document              | DOC_3_PG;                      |
-    And destinatario Mario Gherkin e:
-      | digitalDomicile              | NULL                  |
-      | physicalAddress_address      | Via@FAIL-Discovery_AR |
-      | physicalAddress_municipality | VENEZIA               |
-      | physicalAddress_province     | VE                    |
-      | physicalAddress_zip          | 30121                 |
-      | payment_f24                  | PAYMENT_F24_STANDARD  |
-      | title_payment                | F24_STANDARD_GHERKIN  |
-      | apply_cost_f24               | SI                    |
+    And destinatario
+      | denomination                 | Alessandro Manzoni       |
+      | taxId                        | MNZLSN99E05F205J         |
+      | digitalDomicile              | NULL                     |
+      | physicalAddress_address      | Via@FAIL-IRREPERIBILE_AR |
+      | physicalAddress_municipality | VENEZIA                  |
+      | physicalAddress_province     | VE                       |
+      | physicalAddress_zip          | 30121                    |
+      | payment_f24                  | PAYMENT_F24_STANDARD     |
+      | title_payment                | F24_STANDARD_GHERKIN     |
+      | apply_cost_f24               | SI                       |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
     And viene verificato il costo di 351 e il peso di 10 nei details del'elemento di timeline letto
