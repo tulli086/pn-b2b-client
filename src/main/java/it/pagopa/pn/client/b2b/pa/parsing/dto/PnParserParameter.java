@@ -13,7 +13,7 @@ public class PnParserParameter {
     private int multiDestinatarioPosition;
 
 
-    public boolean isValidKeyValues() {
+    public boolean isValidField() {
         return legalFactType.getLegalFactFieldList().contains(legalFactField);
     }
 }

@@ -19,7 +19,7 @@ public class PnParserService {
     }
 
     public PnParserResponse extractSingleField(String source, PnParserParameter parserParameter) {
-        if (parserParameter.isValidKeyValues()) {
+        if (parserParameter.isValidField()) {
             return pnLegalFactParser.extractSingleField(source, parserParameter);
         }
         return null;
