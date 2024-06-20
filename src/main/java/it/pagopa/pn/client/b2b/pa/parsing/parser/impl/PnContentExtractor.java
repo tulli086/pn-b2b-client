@@ -12,7 +12,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
 import org.springframework.core.io.Resource;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -66,11 +65,11 @@ public class PnContentExtractor implements IPnContentExtractor {
     }
 
     @Override
-    public PnParserRecord.PnParserFieldToken getField(PnTextSlidingWindow pnTextSlidingWindow, List<String> valuesList) {
+    public String getField(PnTextSlidingWindow pnTextSlidingWindow, List<String> valuesList) {
         for(String value: valuesList) {
-            PnParserRecord.PnParserFieldToken fieldToken = getFieldByToken(pnTextSlidingWindow, value);
-            if(fieldToken != null) {
-                return fieldToken;
+            String field = getFieldByToken(pnTextSlidingWindow, value);
+            if(field != null) {
+                return field;
             }
             pnTextSlidingWindow.slideWindow(value);
         }
@@ -99,9 +98,9 @@ public class PnContentExtractor implements IPnContentExtractor {
         return count;
     }
 
-    private PnParserRecord.PnParserFieldToken getFieldByToken(PnTextSlidingWindow pnTextSlidingWindow, String value) {
+    private String getFieldByToken(PnTextSlidingWindow pnTextSlidingWindow, String value) {
         if(isValueBetweenTokens(pnTextSlidingWindow.getSlidedText(), value, pnTextSlidingWindow.getTokenStart(), pnTextSlidingWindow.getTokenEnd())) {
-            return new PnParserRecord.PnParserFieldToken(pnLegalFactTokens.getFieldByToken(pnTextSlidingWindow.getTokenStart()), value);
+            return value;
         }
         return null;
     }
