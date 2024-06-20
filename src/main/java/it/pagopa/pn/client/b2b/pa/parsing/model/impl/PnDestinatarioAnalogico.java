@@ -1,14 +1,14 @@
-package it.pagopa.pn.client.b2b.pa.parsing.design;
+package it.pagopa.pn.client.b2b.pa.parsing.model.impl;
 
+import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 
-@ToString
 @Setter
 @Getter
 @SuperBuilder
@@ -26,10 +26,10 @@ public class PnDestinatarioAnalogico extends PnDestinatarioDigitale {
     }
 
     @Override
-    public Map<String, Object> getAllDestinatarioValues() {
-        Map<String, Object> map = new HashMap<>(super.getAllDestinatarioValues());
-        map.put(IPnParserService.LegalFactKeyValues.INDIRIZZO_FISICO.getField(), indirizzoFisico);
-        return map;
+    public PnParserRecord.PnParserFieldValues getAllDestinatarioValues() {
+        PnParserRecord.PnParserFieldValues parserFieldValues = super.getAllDestinatarioValues();
+        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.DESTINATARIO_INDIRIZZO_FISICO, indirizzoFisico);
+        return parserFieldValues;
     }
 
     @Override
@@ -44,5 +44,12 @@ public class PnDestinatarioAnalogico extends PnDestinatarioDigitale {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), indirizzoFisico);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()
+                + ", indirizzoFisico=" + indirizzoFisico
+                + ")";
     }
 }

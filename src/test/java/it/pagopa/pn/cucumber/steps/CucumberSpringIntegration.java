@@ -4,8 +4,9 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.*;
-import it.pagopa.pn.client.b2b.pa.parsing.config.PnB2bLegalFactTextTokens;
-import it.pagopa.pn.client.b2b.pa.parsing.parser.PnLegalFactParser;
+import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokenProperty;
+import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.impl.PnLegalFactParser;
 import it.pagopa.pn.client.b2b.pa.parsing.service.impl.PnParserService;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.polling.impl.*;
@@ -72,7 +73,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         MailSenderConfig.class,
         PnParserService.class,
         LegalFactTextTokens.class,
-        PnB2bLegalFactTextTokens.class,
+        PnLegalFactTokenProperty.class,
+        PnLegalFactTokens.class,
         PnLegalFactParser.class,
         PnExternalChannelsServiceClientImpl.class
 })

@@ -1,17 +1,14 @@
-package it.pagopa.pn.client.b2b.pa.parsing.design;
+package it.pagopa.pn.client.b2b.pa.parsing.model.impl;
 
+import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 
-@ToString
 @Setter
 @Getter
 @SuperBuilder
@@ -35,11 +32,11 @@ public class PnDestinatarioDigitale extends PnDestinatario {
     }
 
     @Override
-    public Map<String, Object> getAllDestinatarioValues() {
-        Map<String, Object> map = new HashMap<>(super.getAllDestinatarioValues());
-        map.put(IPnParserService.LegalFactKeyValues.DOMICILIO_DIGITALE.getField(), domicilioDigitale);
-        map.put(IPnParserService.LegalFactKeyValues.TIPO_DOMICILIO_DIGITALE.getField(), tipoDomicilioDigitale);
-        return map;
+    public PnParserRecord.PnParserFieldValues getAllDestinatarioValues() {
+        PnParserRecord.PnParserFieldValues parserFieldValues = super.getAllDestinatarioValues();
+        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE, domicilioDigitale);
+        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE, tipoDomicilioDigitale);
+        return parserFieldValues;
     }
 
     @Override
@@ -54,5 +51,13 @@ public class PnDestinatarioDigitale extends PnDestinatario {
     @Override
     public int hashCode() {
         return Objects.hash(domicilioDigitale, tipoDomicilioDigitale);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()
+                + ", domicilioDigitale=" + domicilioDigitale
+                + ", tipoDomicilioDigitale=" + tipoDomicilioDigitale
+                + ")";
     }
 }

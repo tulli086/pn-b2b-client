@@ -1,11 +1,11 @@
 package it.pagopa.pn.client.b2b.pa.parsing.dto;
 
-import it.pagopa.pn.client.b2b.pa.parsing.design.PnDestinatario;
+import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatario;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.apache.commons.lang3.tuple.Pair;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -27,16 +27,30 @@ public class PnLegalFactNotificaAvvenutoAccessoDelegato extends PnLegalFactNotif
         this.delegato = new PnDestinatario(nomeCognomeRagioneSocialeDelegato, codiceFiscaleDelegato);
     }
 
-    public Pair<PnDestinatario, PnDestinatario> getDestinatarioAndDelegato() {
-        return Pair.of(super.getPnDestinatario(), delegato);
+    public Map<IPnParserService.LegalFactField, String> mapDestinatarioToDelegato(PnParserRecord.PnParserFieldValues toMap) {
+        Map<IPnParserService.LegalFactField, String> delegatoMap = new HashMap<>();
+        toMap.fieldValue().forEach((key, value) -> {
+            if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE)) {
+                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_NOME_COGNOME_RAGIONE_SOCIALE, value);
+            } else if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_CODICE_FISCALE)) {
+                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_CODICE_FISCALE, value);
+            } else if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE)) {
+                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_DOMICILIO_DIGITALE, value);
+            } else if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE)) {
+                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_TIPO_DOMICILIO_DIGITALE, value);
+            } else if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_INDIRIZZO_FISICO)) {
+                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_INDIRIZZO_FISICO, value);
+            }
+        });
+        return delegatoMap;
     }
 
     @Override
-    public Map<String, Object> getAllLegalFactValues() {
-        Map<String, Object> map = new HashMap<>(super.getAllLegalFactValues());
-        map.put(IPnParserService.LegalFactKeyValues.DELEGATO.getField() + "." + IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE, delegato.getNomeCognomeRagioneSociale());
-        map.put(IPnParserService.LegalFactKeyValues.DELEGATO.getField() + "." + IPnParserService.LegalFactKeyValues.CODICE_FISCALE, delegato.getCodiceFiscale());
-        return map;
+    public PnParserRecord.PnParserFieldValues getAllLegalFactValues() {
+        PnParserRecord.PnParserFieldValues parentParserFieldValues = super.getAllLegalFactValues();
+        PnParserRecord.PnParserFieldValues delegatoParserFieldValues = delegato.getAllDestinatarioValues();
+        parentParserFieldValues.fieldValue().putAll(mapDestinatarioToDelegato(delegatoParserFieldValues));
+        return parentParserFieldValues;
     }
 
     @Override

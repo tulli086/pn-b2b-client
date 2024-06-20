@@ -1,5 +1,7 @@
-package it.pagopa.pn.client.b2b.pa.parsing.design;
+package it.pagopa.pn.client.b2b.pa.parsing.model.impl;
 
+import it.pagopa.pn.client.b2b.pa.parsing.model.IPnDestinatario;
+import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +13,11 @@ import java.util.Map;
 import java.util.Objects;
 
 
-@ToString
 @Setter
 @Getter
 @SuperBuilder
 @NoArgsConstructor
-public class PnDestinatario {
+public class PnDestinatario implements IPnDestinatario {
     private String nomeCognomeRagioneSociale;
     private String codiceFiscale;
 
@@ -27,11 +28,12 @@ public class PnDestinatario {
         this.codiceFiscale = codiceFiscale;
     }
 
-    public Map<String, Object> getAllDestinatarioValues() {
-        Map<String, Object> map = new HashMap<>();
-        map.put(IPnParserService.LegalFactKeyValues.NOME_COGNOME_RAGIONE_SOCIALE.getField(), nomeCognomeRagioneSociale);
-        map.put(IPnParserService.LegalFactKeyValues.CODICE_FISCALE.getField(), codiceFiscale);
-        return map;
+    @Override
+    public PnParserRecord.PnParserFieldValues getAllDestinatarioValues() {
+        Map<IPnParserService.LegalFactField, String> destinatarioValues = new HashMap<>();
+        destinatarioValues.put(IPnParserService.LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE, nomeCognomeRagioneSociale);
+        destinatarioValues.put(IPnParserService.LegalFactField.DESTINATARIO_CODICE_FISCALE, codiceFiscale);
+        return new PnParserRecord.PnParserFieldValues(destinatarioValues);
     }
 
     @Override
@@ -46,5 +48,13 @@ public class PnDestinatario {
     @Override
     public int hashCode() {
         return Objects.hash(nomeCognomeRagioneSociale, codiceFiscale);
+    }
+
+    @Override
+    public String toString() {
+        return "("
+                + "nomeCognomeRagioneSociale=" + nomeCognomeRagioneSociale
+                + ", codiceFiscale=" + codiceFiscale
+                + ")";
     }
 }

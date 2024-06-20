@@ -1,11 +1,13 @@
 package it.pagopa.pn.client.b2b.pa.parsing.dto;
 
-import it.pagopa.pn.client.b2b.pa.parsing.design.PnDestinatarioAnalogico;
-import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
+import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioAnalogico;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 @Getter
@@ -41,27 +43,9 @@ public class PnLegalFactNotificaPresaInCaricoMultiDestinatario extends PnLegalFa
         this.destinatariAnalogici.add(pnDestinatarioAnalogico);
     }
 
-    public Map<String, Object> getDestinatariAnalogiciValues() {
-        Map<String, Object> outputMap = new HashMap<>();
-        mappingDestinatariAnalogici(outputMap);
-        return outputMap;
-    }
-
     @Override
-    public Map<String, Object> getAllLegalFactValues() {
-        Map<String, Object> outputMap = new HashMap<>(super.getAllLegalFactValues());
-        mappingDestinatariAnalogici(outputMap);
-        return outputMap;
-    }
-
-    private void  mappingDestinatariAnalogici(Map<String, Object> toMap) {
-        for(int i = 0; i < destinatariAnalogici.size(); i++) {
-            Map<String, Object> destinatariMap = new HashMap<>(destinatariAnalogici.get(i).getAllDestinatarioValues());
-            int index = i + 1;
-            destinatariMap
-                    .keySet()
-                    .forEach(key ->  toMap.put(IPnParserService.LegalFactKeyValues.DESTINATARIO.getField() + "_" + index + "." + key , destinatariMap.get(key)));
-        }
+    public PnParserRecord.PnParserFieldValues getAllLegalFactValues() {
+        return super.getAllLegalFactValues();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package it.pagopa.pn.client.b2b.pa.parsing.dto;
 
-import it.pagopa.pn.client.b2b.pa.parsing.design.IPnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,11 +24,11 @@ public class PnLegalFactNotificaDowntime implements IPnLegalFact {
     }
 
     @Override
-    public Map<String, Object> getAllLegalFactValues() {
-        Map<String, Object> map = new HashMap<>();
-        map.put(IPnParserService.LegalFactKeyValues.DATA_ORA_DECORRENZA.getField(), dataOraDecorrenza);
-        map.put(IPnParserService.LegalFactKeyValues.DATA_ORA_FINE.getField(), dataOraFine);
-        return map;
+    public PnParserRecord.PnParserFieldValues getAllLegalFactValues() {
+        Map<IPnParserService.LegalFactField, String> legalFactValues = new HashMap<>();
+        legalFactValues.put(IPnParserService.LegalFactField.DATA_ORA_DECORRENZA, dataOraDecorrenza);
+        legalFactValues.put(IPnParserService.LegalFactField.DATA_ORA_FINE, dataOraFine);
+        return new PnParserRecord.PnParserFieldValues(legalFactValues);
     }
 
     @Override

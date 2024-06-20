@@ -1,9 +1,9 @@
 package it.pagopa.pn.client.b2b.pa.parsing.service;
 
-import it.pagopa.pn.client.b2b.pa.parsing.design.IPnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserParameter;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserResponse;
 import lombok.Getter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -11,57 +11,91 @@ public interface IPnParserService {
     @Getter
     enum LegalFactType {
         LEGALFACT_NOTIFICA_DOWNTIME(
-                LegalFactKeyValues.DATA_ORA_DECORRENZA,
-                LegalFactKeyValues.DATA_ORA_FINE),
+                LegalFactField.DATA_ORA_DECORRENZA,
+                LegalFactField.DATA_ORA_FINE),
         LEGALFACT_NOTIFICA_DIGITALE(
-                LegalFactKeyValues.IUN,
-                LegalFactKeyValues.DATA_ATTESTAZIONE_OPPONIBILE,
-                LegalFactKeyValues.DESTINATARIO),
+                LegalFactField.IUN,
+                LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE,
+                LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE,
+                LegalFactField.DESTINATARIO_CODICE_FISCALE,
+                LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_INDIRIZZO_FISICO),
         LEGALFACT_NOTIFICA_MANCATO_RECAPITO(
-                LegalFactKeyValues.IUN,
-                LegalFactKeyValues.DATA_ATTESTAZIONE_OPPONIBILE,
-                LegalFactKeyValues.DESTINATARIO_DIGITALE,
-                LegalFactKeyValues.SECONDO_DESTINATARIO_DIGITALE,
-                LegalFactKeyValues.PRIMA_DATA,
-                LegalFactKeyValues.SECONDA_DATA),
+                LegalFactField.IUN,
+                LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE,
+                LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE,
+                LegalFactField.DESTINATARIO_CODICE_FISCALE,
+                LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_INDIRIZZO_FISICO,
+                LegalFactField.PRIMA_DATA,
+                LegalFactField.SECONDA_DATA),
         LEGALFACT_NOTIFICA_PRESA_IN_CARICO(
-                LegalFactKeyValues.IUN,
-                LegalFactKeyValues.DATA_ATTESTAZIONE_OPPONIBILE,
-                LegalFactKeyValues.DESTINATARIO,
-                LegalFactKeyValues.MITTENTE,
-                LegalFactKeyValues.CF_MITTENTE),
+                LegalFactField.IUN,
+                LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE,
+                LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE,
+                LegalFactField.DESTINATARIO_CODICE_FISCALE,
+                LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_INDIRIZZO_FISICO,
+                LegalFactField.MITTENTE,
+                LegalFactField.CF_MITTENTE),
         LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO(
-                LegalFactKeyValues.IUN,
-                LegalFactKeyValues.DATA_ATTESTAZIONE_OPPONIBILE,
-                LegalFactKeyValues.MITTENTE,
-                LegalFactKeyValues.CF_MITTENTE,
-                LegalFactKeyValues.DESTINATARIO,
-                LegalFactKeyValues.DESTINATARI_ANALOGICI),
+                LegalFactField.IUN,
+                LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE,
+                LegalFactField.MITTENTE,
+                LegalFactField.CF_MITTENTE,
+                LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE,
+                LegalFactField.DESTINATARIO_CODICE_FISCALE,
+                LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_INDIRIZZO_FISICO),
         LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO(
-                LegalFactKeyValues.IUN,
-                LegalFactKeyValues.DATA_ATTESTAZIONE_OPPONIBILE,
-                LegalFactKeyValues.DESTINATARIO),
+                LegalFactField.IUN,
+                LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE,
+                LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE,
+                LegalFactField.DESTINATARIO_CODICE_FISCALE,
+                LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_INDIRIZZO_FISICO),
         LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO(
-                LegalFactKeyValues.IUN,
-                LegalFactKeyValues.DATA_ATTESTAZIONE_OPPONIBILE,
-                LegalFactKeyValues.DESTINATARIO,
-                LegalFactKeyValues.DELEGATO);
+                LegalFactField.IUN,
+                LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE,
+                LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE,
+                LegalFactField.DESTINATARIO_CODICE_FISCALE,
+                LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE,
+                LegalFactField.DESTINATARIO_INDIRIZZO_FISICO,
+                LegalFactField.DELEGATO_NOME_COGNOME_RAGIONE_SOCIALE,
+                LegalFactField.DELEGATO_CODICE_FISCALE,
+                LegalFactField.DELEGATO_DOMICILIO_DIGITALE,
+                LegalFactField.DELEGATO_TIPO_DOMICILIO_DIGITALE,
+                LegalFactField.DELEGATO_INDIRIZZO_FISICO);
 
-        private final List<LegalFactKeyValues> legalFactKeyValuesList;
-        LegalFactType(LegalFactKeyValues... keyValues){
-            this.legalFactKeyValuesList = List.of(keyValues);
+        private final List<LegalFactField> legalFactFieldList;
+        LegalFactType(LegalFactField... keyValues){
+            this.legalFactFieldList = List.of(keyValues);
         }
     }
 
     @Getter
-    enum LegalFactKeyValues {
+    enum LegalFactField {
         IUN("iun"),
         DATA_ATTESTAZIONE_OPPONIBILE("dataAttestazioneOpponibile"),
-        DESTINATARIO("destinatario"),
-        DESTINATARIO_DIGITALE("destinatarioDigitale"),
-        SECONDO_DESTINATARIO_DIGITALE("secondoDestinatarioDigitale"),
-        DELEGATO("delegato"),
-        DESTINATARI_ANALOGICI("destinatariAnalogici"),
+
+        DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE("destinatarioNomeCognomeRagioneSociale"),
+        DESTINATARIO_CODICE_FISCALE("destinatarioCodiceFiscale"),
+        DESTINATARIO_DOMICILIO_DIGITALE("destinatarioDomicilioDigitale"),
+        DESTINATARIO_TIPO_DOMICILIO_DIGITALE("destinatarioTipoDomicilioDigitale"),
+        DESTINATARIO_INDIRIZZO_FISICO("destinatarioIndirizzoFisico"),
+
+        DELEGATO_NOME_COGNOME_RAGIONE_SOCIALE("delegatoNomeCognomeRagioneSociale"),
+        DELEGATO_CODICE_FISCALE("delegatoCodiceFiscale"),
+        DELEGATO_DOMICILIO_DIGITALE("delegatoDomicilioDigitale"),
+        DELEGATO_TIPO_DOMICILIO_DIGITALE("delegatoTipoDomicilioDigitale"),
+        DELEGATO_INDIRIZZO_FISICO("delegatoIndirizzoFisico"),
+
         MITTENTE("mittente"),
         CF_MITTENTE("cfMittente"),
         PRIMA_DATA("primaData"),
@@ -76,10 +110,10 @@ public interface IPnParserService {
 
         private final String field;
 
-        LegalFactKeyValues(String field){
+        LegalFactField(String field){
             this.field = field;
         }
     }
-    HashMap<String, Object> extractSingleField(String source, IPnParserService.LegalFactKeyValues field, LegalFactType legalFactType) throws IOException, NoSuchFieldException, IllegalAccessException;
-    IPnLegalFact extractAllField(String source, LegalFactType legalFactType) throws IOException;
+    PnParserResponse extractSingleField(String source, PnParserParameter parserParameter) throws IOException, NoSuchFieldException, IllegalAccessException;
+    PnParserResponse extractAllField(String source, PnParserParameter parserParameter) throws IOException;
 }

@@ -1,13 +1,12 @@
 package it.pagopa.pn.client.b2b.pa.parsing.dto;
 
-import it.pagopa.pn.client.b2b.pa.parsing.design.PnDestinatarioAnalogico;
-import it.pagopa.pn.client.b2b.pa.parsing.design.PnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioAnalogico;
+import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -34,11 +33,11 @@ public class PnLegalFactNotificaPresaInCarico extends PnLegalFact {
     }
 
     @Override
-    public Map<String, Object> getAllLegalFactValues() {
-        Map<String, Object> map = new HashMap<>(super.getAllLegalFactValues());
-        map.put(IPnParserService.LegalFactKeyValues.MITTENTE.getField(), mittente);
-        map.put(IPnParserService.LegalFactKeyValues.CF_MITTENTE.getField(), cfMittente);
-        return map;
+    public PnParserRecord.PnParserFieldValues getAllLegalFactValues() {
+        PnParserRecord.PnParserFieldValues parserFieldValues = super.getAllLegalFactValues();
+        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.MITTENTE, mittente);
+        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.CF_MITTENTE, cfMittente);
+        return parserFieldValues;
     }
 
     @Override
