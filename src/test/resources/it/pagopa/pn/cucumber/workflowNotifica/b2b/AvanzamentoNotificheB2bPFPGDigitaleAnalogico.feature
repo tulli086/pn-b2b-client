@@ -21,7 +21,6 @@ Feature: avanzamento b2b notifica analogico difgitale
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SCHEDULE_REFINEMENT" e verifica data schedulingDate per il destinatario 0 rispetto ell'evento in timeline "DIGITAL_DELIVERY_CREATION_REQUEST"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_FAILURE_WORKFLOW"
-
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED"
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED" per il destinatario 0 e presente l'evento "DIGITAL_DELIVERY_CREATION_REQUEST"
     And vengono letti gli eventi fino allo stato della notifica "DELIVERED" per il destinatario 0 e presente l'evento "SCHEDULE_REFINEMENT_WORKFLOW"
@@ -225,7 +224,7 @@ Feature: avanzamento b2b notifica analogico difgitale
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
       | physicalCommunication | AR_REGISTERED_LETTER            |
-    And destinatario Cucumber Society e:
+    And destinatario Gherkin Analogic e:
       | digitalDomicile_address | test@OK-pecSuccess.it |
     And destinatario Mario Gherkin e:
       | digitalDomicile_address | test1@OK-pecSuccess.it |
