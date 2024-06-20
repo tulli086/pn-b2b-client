@@ -1,19 +1,16 @@
 package it.pagopa.pn.client.b2b.pa.parsing.parser.impl;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
-import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
-import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserResponse;
 import it.pagopa.pn.client.b2b.pa.parsing.dto.*;
+import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParser;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.PnContentToken;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.Objects;
 
 
 @Slf4j

@@ -1,8 +1,8 @@
 package it.pagopa.pn.client.b2b.pa.parsing.dto;
 
 import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
-import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserParameter;
 import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 

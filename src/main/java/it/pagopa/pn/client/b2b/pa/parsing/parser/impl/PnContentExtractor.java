@@ -188,7 +188,7 @@ public class PnContentExtractor implements IPnContentExtractor {
         // Controlla se vi sono parole tra il value ed il tokenEnd
         String betweenText = text.substring(pos2 + value.length(), pos3).trim();
         if (!betweenText.isEmpty()) {
-            List<Integer> brokenValueList = cleanUpByBrokenValues(value, betweenText, valueList);
+            List<Integer> brokenValueList = cleanUpByBrokenValues(betweenText, valueList);
             int substituteIndex = brokenValueList.remove(0);
             String concatenatedValue = value.trim() + "\r\n" + betweenText;
             valueList.set(substituteIndex, concatenatedValue);
@@ -199,7 +199,7 @@ public class PnContentExtractor implements IPnContentExtractor {
         return null;
     }
 
-    private List<Integer> cleanUpByBrokenValues(String value, String betweenText, List<String> valueList) {
+    private List<Integer> cleanUpByBrokenValues(String betweenText, List<String> valueList) {
         List<Integer> brokenValueList = new ArrayList<>();
         String[] splitted = betweenText.split("\\r\\n");
         int posToRemove = valueList.indexOf(splitted[0]);

@@ -2,14 +2,12 @@ package it.pagopa.pn.client.b2b.pa.parsing.model.impl;
 
 import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
-import it.pagopa.pn.client.b2b.pa.parsing.parser.impl.PnContentExtractor;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import java.util.HashMap;
-import java.util.Map;
+
 import java.util.Objects;
 
 
