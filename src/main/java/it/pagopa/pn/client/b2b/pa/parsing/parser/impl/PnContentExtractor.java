@@ -115,7 +115,7 @@ public class PnContentExtractor implements IPnContentExtractor {
     }
 
     private String extractAdjacentWordByValue(String text, String value, boolean isLeft) {
-        int wordCount = 15;
+        int wordCount = 10;
         String regex = "\\s+";
         int position = text.indexOf(value);
         if(position == -1)
@@ -125,14 +125,14 @@ public class PnContentExtractor implements IPnContentExtractor {
         if(isLeft) {
             String substring = text.substring(0, position);
             String[] words = substring.split(regex);
-            for (int i = Math.max(0, words.length - wordCount); i < words.length; i++) {
+            for (int i = Math.max(0, words.length - wordCount * 2); i < words.length; i++) {
                 stringBuilder.append(words[i]);
                 stringBuilder.append(" ");
             }
         } else {
             String substring = text.substring(position+value.length());
             String[] words = substring.split(regex);
-            for (int i = 0; i < Math.min(wordCount*2.0, words.length); i++) {
+            for (int i = 0; i < Math.min(wordCount * 2, words.length); i++) {
                 stringBuilder.append(words[i]);
                 stringBuilder.append(" ");
             }
