@@ -1,4 +1,4 @@
-package it.pagopa.pn.client.b2b.pa.parsing.parser;
+package it.pagopa.pn.client.b2b.pa.parsing.parser.impl;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokenProperty;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
@@ -9,29 +9,31 @@ import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioAnalogico;
 import it.pagopa.pn.client.b2b.pa.parsing.dto.*;
 import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioDigitale;
-import it.pagopa.pn.client.b2b.pa.parsing.parser.impl.PnContentExtractor;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnLegalFactContent;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.PnTextSlidingWindow;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class PnContentToken extends PnContentExtractor {
+public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFactContent {
     private final PnLegalFactTokenProperty tokenProperty;
 
 
-    public PnContentToken(PnLegalFactTokens pnLegalFactTokens) {
+    public PnLegalFactContent(PnLegalFactTokens pnLegalFactTokens) {
         super(pnLegalFactTokens);
         this.tokenProperty = pnLegalFactTokens.getTokenProps();
     }
 
+    @Override
     public IPnLegalFact getLegalFactNotificaDowntime(PnParserRecord.PnParserContent content) {
-
         return PnLegalFactNotificaDowntime.builder()
                 .dataOraDecorrenza(getDataOraDecorrenza(content))
                 .dataOraFine(getDataOraFineDecorrenza(content))
                 .build();
     }
 
+    @Override
     public IPnLegalFact getLegalFactNotificaDigitale(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaDigitale.builder()
                 .iun(getIun(content, false))
@@ -40,6 +42,7 @@ public class PnContentToken extends PnContentExtractor {
                 .build();
     }
 
+    @Override
     public IPnLegalFact getLegalFactNotificaMancatoRecapito(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaMancatoRecapito.builder()
                 .iun(getIun(content, false))
@@ -50,6 +53,7 @@ public class PnContentToken extends PnContentExtractor {
                 .build();
     }
 
+    @Override
     public IPnLegalFact getLegalFactNotificaPresaInCarico(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaPresaInCarico.builder()
                 .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false))
@@ -60,6 +64,7 @@ public class PnContentToken extends PnContentExtractor {
                 .build();
     }
 
+    @Override
     public IPnLegalFact getLegalFactNotificaPresaInCaricoMultiDestinatario(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaPresaInCaricoMultiDestinatario.builder()
                 .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false))
@@ -71,6 +76,7 @@ public class PnContentToken extends PnContentExtractor {
                 .build();
     }
 
+    @Override
     public IPnLegalFact getLegalFactNotificaAvvenutoAccesso(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaAvvenutoAccesso.builder()
                 .iun(getIun(content, false))
@@ -78,7 +84,7 @@ public class PnContentToken extends PnContentExtractor {
                 .pnDestinatario((PnDestinatario) getDestinatario(content, false, false,false, false))
                 .build();
     }
-
+    @Override
     public IPnLegalFact getLegalFactNotificaAvvenutoAccessoDelegato(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaAvvenutoAccessoDelegato.builder()
                 .iun(getIun(content, false))
@@ -87,6 +93,9 @@ public class PnContentToken extends PnContentExtractor {
                 .delegato((PnDestinatario) getDestinatarioOrDelegato(content, false))
                 .build();
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private IPnDestinatario getDestinatario(PnParserRecord.PnParserContent content, boolean isDestinatarioDigitale, boolean isDestinatarioAnalogico, boolean isWithNotificaDigitale, boolean isWithNotificaMultiDestinatario) {
         if(isDestinatarioDigitale) {
@@ -158,8 +167,6 @@ public class PnContentToken extends PnContentExtractor {
                 getCodiceFiscale(content, false, false));
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private String getIun(PnParserRecord.PnParserContent content, boolean isWithNotificaPresaInCarico) {
         if (isWithNotificaPresaInCarico) {
             return cleanUp(getField(PnTextSlidingWindow.builder()

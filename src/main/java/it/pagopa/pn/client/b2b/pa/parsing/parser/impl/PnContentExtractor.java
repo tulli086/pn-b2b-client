@@ -1,7 +1,7 @@
 package it.pagopa.pn.client.b2b.pa.parsing.parser.impl;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
-import it.pagopa.pn.client.b2b.pa.parsing.dto.PnTextSlidingWindow;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.PnTextSlidingWindow;
 import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnContentExtractor;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;

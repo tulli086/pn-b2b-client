@@ -5,7 +5,6 @@ import it.pagopa.pn.client.b2b.pa.parsing.dto.*;
 import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParser;
-import it.pagopa.pn.client.b2b.pa.parsing.parser.PnContentToken;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,12 @@ import org.springframework.stereotype.Component;
 public class PnLegalFactParser implements IPnParserService, IPnParser {
     @Autowired
     private ResourceLoader resourceLoader;
-    private PnContentToken contentTokens;
+    private PnLegalFactContent contentTokens;
 
 
     @Autowired
     public PnLegalFactParser(PnLegalFactTokens pnLegalFactTokens)  {
-        this.contentTokens = new PnContentToken(pnLegalFactTokens);
+        this.contentTokens = new PnLegalFactContent(pnLegalFactTokens);
     }
 
     @Override
@@ -69,7 +68,7 @@ public class PnLegalFactParser implements IPnParserService, IPnParser {
         if(legalFact == null) {
             return null;
         }
-        return new PnParserResponse(legalFact, parserParameter);
+        return new PnParserResponse(legalFact);
     }
 
     @Override

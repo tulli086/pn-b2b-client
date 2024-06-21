@@ -1,6 +1,5 @@
 package it.pagopa.pn.client.b2b.pa.parsing.parser;
 
-import it.pagopa.pn.client.b2b.pa.parsing.dto.PnTextSlidingWindow;
 import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import org.springframework.core.io.Resource;

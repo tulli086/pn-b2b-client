@@ -2,7 +2,6 @@ package it.pagopa.pn.client.b2b.pa.parsing.dto;
 
 import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
 import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +9,10 @@ import java.util.List;
 @Getter
 public class PnParserResponse  {
     private IPnLegalFact pnLegalFact;
-    private PnParserParameter parserParameter;
     private List<String> field;
 
-    public PnParserResponse(IPnLegalFact pnLegalFact, PnParserParameter parserParameter) {
+    public PnParserResponse(IPnLegalFact pnLegalFact) {
         this.pnLegalFact = pnLegalFact;
-        this.parserParameter = parserParameter;
         this.field = new ArrayList<>();
     }
 

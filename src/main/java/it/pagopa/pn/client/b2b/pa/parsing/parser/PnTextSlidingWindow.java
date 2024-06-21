@@ -1,4 +1,4 @@
-package it.pagopa.pn.client.b2b.pa.parsing.dto;
+package it.pagopa.pn.client.b2b.pa.parsing.parser;
 
 import lombok.Builder;
 import lombok.Getter;
