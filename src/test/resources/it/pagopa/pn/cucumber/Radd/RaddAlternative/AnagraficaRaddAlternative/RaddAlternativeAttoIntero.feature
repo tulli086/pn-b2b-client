@@ -280,5 +280,5 @@ Feature: Radd Alternative Atto Intero
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
     And viene verificato il costo di 351 e il peso di 10 nei details del'elemento di timeline letto
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_1"
-    And viene verificato il costo di 351 e il peso di 10 nei details del'elemento di timeline letto
+    And viene verificato il costo di 440 e il peso di 10 nei details del'elemento di timeline letto
 
