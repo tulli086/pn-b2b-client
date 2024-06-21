@@ -179,7 +179,7 @@ Feature: Radd Alternative Atto Intero
     And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
 
 
-  @raddAttoIntero
+  @raddAttoIntero @uatEnvCondition
   Scenario: [RADD_FILTRO_ATTO-INTERO_9] invio notifica 890 con 2 tentativi coperto da RADD e controllo diminuzione costi filtro base (eseguire controllo manuale costi del F24)
     Given viene generata una nuova notifica
       | subject               | notifica analogica filtro base |
@@ -205,7 +205,33 @@ Feature: Radd Alternative Atto Intero
     And viene verificato il costo di 800 e il peso di 10 nei details del'elemento di timeline letto
 
 
-  @raddAttoIntero
+  @raddAttoIntero @mockEnvCondition
+  Scenario: [RADD_FILTRO_ATTO-INTERO_9_UAT] invio notifica 890 con 2 tentativi coperto da RADD e controllo diminuzione costi filtro base (eseguire controllo manuale costi del F24)
+    Given viene generata una nuova notifica
+      | subject               | notifica analogica filtro base |
+      | senderDenomination    | Comune di palermo              |
+      | physicalCommunication | REGISTERED_LETTER_890          |
+      | feePolicy             | DELIVERY_MODE                  |
+      | document              | DOC_3_PG;                      |
+    And destinatario
+      | denomination                 | utenza radd               |
+      | taxId                        | STTSGT90A01H501J          |
+      | digitalDomicile              | NULL                      |
+      | physicalAddress_address      | Via@FAIL-IRREPERIBILE_890 |
+      | physicalAddress_municipality | VENEZIA                   |
+      | physicalAddress_province     | VE                        |
+      | physicalAddress_zip          | 30121                     |
+      | payment_f24                  | PAYMENT_F24_STANDARD      |
+      | title_payment                | F24_STANDARD_GHERKIN      |
+      | apply_cost_f24               | SI                        |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
+    And viene verificato il costo di 818 e il peso di 10 nei details del'elemento di timeline letto
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_1"
+    And viene verificato il costo di 800 e il peso di 10 nei details del'elemento di timeline letto
+
+
+  @raddAttoIntero @uatEnvCondition
   Scenario: [RADD_FILTRO_ATTO-INTERO_10] invio notifica AR con 2 tentativi coperto da RADD e controllo diminuzione costi filtro base (eseguire controllo manuale costi del F24)
     Given viene generata una nuova notifica
       | subject               | notifica analogica filtro base |
@@ -231,5 +257,28 @@ Feature: Radd Alternative Atto Intero
     And viene verificato il costo di 351 e il peso di 10 nei details del'elemento di timeline letto
 
 
-
+  @raddAttoIntero @mockEnvCondition
+  Scenario: [RADD_FILTRO_ATTO-INTERO_10_UAT] invio notifica AR con 2 tentativi coperto da RADD e controllo diminuzione costi filtro base (eseguire controllo manuale costi del F24)
+    Given viene generata una nuova notifica
+      | subject               | notifica analogica filtro base |
+      | senderDenomination    | Comune di palermo              |
+      | physicalCommunication | AR_REGISTERED_LETTER           |
+      | feePolicy             | DELIVERY_MODE                  |
+      | document              | DOC_3_PG;                      |
+    And destinatario
+      | denomination                 | utenza radd              |
+      | taxId                        | STTSGT90A01H501J         |
+      | digitalDomicile              | NULL                     |
+      | physicalAddress_address      | Via@FAIL-IRREPERIBILE_AR |
+      | physicalAddress_municipality | VENEZIA                  |
+      | physicalAddress_province     | VE                       |
+      | physicalAddress_zip          | 30121                    |
+      | payment_f24                  | PAYMENT_F24_STANDARD     |
+      | title_payment                | F24_STANDARD_GHERKIN     |
+      | apply_cost_f24               | SI                       |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
+    And viene verificato il costo di 351 e il peso di 10 nei details del'elemento di timeline letto
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_1"
+    And viene verificato il costo di 351 e il peso di 10 nei details del'elemento di timeline letto
 
