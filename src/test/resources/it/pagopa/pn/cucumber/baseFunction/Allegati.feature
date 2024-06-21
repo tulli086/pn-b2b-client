@@ -187,7 +187,7 @@ Feature: Allegati notifica
     Then si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 da "data vault"
     And si verifica che negli url non contenga il docTag nel "analogico"
 
-  @legalFact
+  @checkLegalFact
   Scenario: [B2B_PN8893_1] - Verifica content-type su gli atti opponibili a terzi
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
