@@ -5,6 +5,6 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
-@PropertySource(value = "file:config/parser.properties", ignoreResourceNotFound = true)
-public class LegalFactTextTokens {
+@PropertySource(value = "file:config/parser-legalfact.properties", ignoreResourceNotFound = true)
+public class LegalFactTokenConfiguration {
 }

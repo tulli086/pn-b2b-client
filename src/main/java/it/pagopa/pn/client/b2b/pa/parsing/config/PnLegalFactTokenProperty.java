@@ -1,14 +1,26 @@
 package it.pagopa.pn.client.b2b.pa.parsing.config;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "pn.pdf.configuration", ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = "pn.parser.legalfact.config.token", ignoreUnknownFields = false)
 public class PnLegalFactTokenProperty {
+    @Value("${pn.parser.legalfact.config.cleanup-footer}")
+    private String cleanupFooter;
+    @Value("${pn.parser.legalfact.config.cleanup-delegato}")
+    private String cleanupDelegato;
+    @Value("${pn.parser.legalfact.config.cleanup-destinatario}")
+    private String cleanupDestinatario;
+    @Value("${pn.parser.legalfact.config.cleanup-regex-nsbp}")
+    private String regexCleanupNsbp;
+    @Value("${pn.parser.legalfact.config.cleanup-regex-carriage-newline}")
+    private String regexCarriageNewline;
+
     private String iunStart;
     private String iunEnd1;
     private String iunEnd2;

@@ -72,7 +72,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceWebhookV23.class,
         MailSenderConfig.class,
         PnParserService.class,
-        LegalFactTextTokens.class,
+        LegalFactTokenConfiguration.class,
         PnLegalFactTokenProperty.class,
         PnLegalFactTokens.class,
         PnLegalFactParser.class,

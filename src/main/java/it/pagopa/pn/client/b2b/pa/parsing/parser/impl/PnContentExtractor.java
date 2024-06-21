@@ -18,14 +18,6 @@ import java.util.*;
 
 @Slf4j
 public class PnContentExtractor implements IPnContentExtractor {
-    private static final String CLEANUP_FOOTER = "PagoPA S.p.A.\r\n" +
-            "società per azioni con socio unico\r\n" +
-            "capitale sociale di euro 1,000,000 interamente versato\r\n" +
-            "sede legale in Roma, Piazza Colonna 370, CAP 00187\r\n" +
-            "n. di iscrizione a Registro Imprese di Roma, CF e P.IVA 15376371009";
-    private static final String CLEANUP_DELEGATO = "Delegato";
-    private static final String CLEANUP_DESTINATARIO = "Destinatario";
-    private static final String REGEX_CLEANUP_NSBP = "\\u00a0";
     private final PnLegalFactTokens pnLegalFactTokens;
 
 
@@ -79,9 +71,9 @@ public class PnContentExtractor implements IPnContentExtractor {
     @Override
     public String cleanUp(String text, boolean mantainWhitespace) {
         if(mantainWhitespace) {
-            return text.replaceAll("\\r\\n", " ");
+            return text.replaceAll(pnLegalFactTokens.getTokenProps().getRegexCarriageNewline(), " ");
         }
-        return text.replaceAll("\\r\\n", "");
+        return text.replaceAll(pnLegalFactTokens.getTokenProps().getRegexCarriageNewline(), "");
     }
 
     @Override
@@ -200,7 +192,7 @@ public class PnContentExtractor implements IPnContentExtractor {
 
     private List<Integer> cleanUpByBrokenValues(String betweenText, List<String> valueList) {
         List<Integer> brokenValueList = new ArrayList<>();
-        String[] splitted = betweenText.split("\\r\\n");
+        String[] splitted = betweenText.split(pnLegalFactTokens.getTokenProps().getRegexCarriageNewline());
         int posToRemove = valueList.indexOf(splitted[0]);
         if (posToRemove != -1)
             brokenValueList.add(posToRemove-1);
@@ -214,8 +206,8 @@ public class PnContentExtractor implements IPnContentExtractor {
     }
 
     private String cleanUpText(String text) {
-        String cleanedText = text.replaceAll(CLEANUP_FOOTER, "");
-        cleanedText = cleanedText.replaceAll(REGEX_CLEANUP_NSBP, "");
+        String cleanedText = text.replaceAll(pnLegalFactTokens.getTokenProps().getCleanupFooter(), "");
+        cleanedText = cleanedText.replaceAll(pnLegalFactTokens.getTokenProps().getRegexCleanupNsbp(), "");
         cleanedText = normalizeLineEndings(cleanedText);
         return cleanedText;
     }
@@ -243,8 +235,8 @@ public class PnContentExtractor implements IPnContentExtractor {
     private List<String> removeUselessValues(List<String> boldValueList) {
         List<String> cleanedList = new ArrayList<>(boldValueList);
         cleanedList.remove(0);
-        cleanedList.remove(CLEANUP_DESTINATARIO);
-        cleanedList.remove(CLEANUP_DELEGATO);
+        cleanedList.remove(pnLegalFactTokens.getTokenProps().getCleanupDestinatario());
+        cleanedList.remove(pnLegalFactTokens.getTokenProps().getCleanupDelegato());
         return cleanedList;
     }
 
