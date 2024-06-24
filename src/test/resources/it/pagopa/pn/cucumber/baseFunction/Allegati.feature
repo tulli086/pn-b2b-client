@@ -187,7 +187,7 @@ Feature: Allegati notifica
     Then si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 da "data vault"
     And si verifica che negli url non contenga il docTag nel "analogico"
 
-  @legalFact
+  @checkLegalFact
   Scenario: [B2B_PN8893_1] - Verifica content-type su gli atti opponibili a terzi
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -195,4 +195,5 @@ Feature: Allegati notifica
     And destinatario Mario Cucumber
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then si verifica la corretta acquisizione della notifica
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
     Then download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è "application/pdf"
