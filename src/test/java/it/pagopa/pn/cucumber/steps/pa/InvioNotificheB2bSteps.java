@@ -1208,7 +1208,7 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
         return legalFactDownloadMetadataResponse.get();
     }
 
-    @Then("download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è {string}")
+    @Then("download attestazione opponibile AAR e controllo del contenuto del file per verificare se il content-type è {string}")
     public void verificaContentTypeAttestazione(String contentType) {
         LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = getLegalFactIdAAR("PN_AAR");
         Assertions.assertTrue(b2bUtils.downloadUrlAndCheckContent(legalFactDownloadMetadataResponse.getUrl(), contentType));

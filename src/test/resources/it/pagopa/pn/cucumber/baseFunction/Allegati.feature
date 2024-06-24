@@ -196,4 +196,4 @@ Feature: Allegati notifica
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then si verifica la corretta acquisizione della notifica
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
-    Then download attestazione opponibile AAR e controllo del contenuto del file per verificare se il tipo è "application/pdf"
+    Then download attestazione opponibile AAR e controllo del contenuto del file per verificare se il content-type è "application/pdf"
