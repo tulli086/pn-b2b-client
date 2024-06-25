@@ -2,6 +2,8 @@ package it.pagopa.pn.client.b2b.pa.service.impl;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
@@ -624,6 +626,45 @@ public class PnExternalServiceClientImpl {
         return queryBuilder.toString();
 
     }
+
+    private ResponseEntity<String> pushConsolidatoreNotificationWithHttpInfo(
+            Map<String, String> mapInfo) {
+        Object postBody = null;
+        List<Map<String, String>> requestList = new ArrayList<>();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            requestList.add(mapInfo);
+            postBody = objectMapper.writeValueAsString(requestList);
+        } catch (JsonProcessingException exception) {
+            log.error("Error during parse Json", exception.getMessage());
+        }
+
+        final Map<String, Object> uriVariables = new HashMap<>();
+
+        final HttpHeaders headerParams = new HttpHeaders();
+        headerParams.add("x-pagopa-extch-service-id", "pn-cons-000");
+        headerParams.add("x-api-key", "apiKey-pn-cons-000");
+
+        final String[] localVarAccepts = {
+                "application/json", "application/problem+json"
+        };
+        final List<MediaType> localVarAccept = MediaType.parseMediaTypes(
+                StringUtils.arrayToCommaDelimitedString(localVarAccepts));
+        final MediaType localVarContentType = MediaType.APPLICATION_JSON;
+
+        ParameterizedTypeReference<String> returnType = new ParameterizedTypeReference<>() {
+        };
+
+        return invokeAPI(extChannelsBasePath,
+                "/consolidatore-ingress/v1/push-progress-events/",
+                HttpMethod.PUT, uriVariables, null, postBody,
+                headerParams, localVarAccept, localVarContentType, returnType);
+    }
+
+    public String pushConsolidatoreNotification(Map<String, String> mapInfo) {
+        return pushConsolidatoreNotificationWithHttpInfo(mapInfo).getBody();
+    }
+
     //OPEN SEARCH RESPONSE
     @Getter
     @Setter
