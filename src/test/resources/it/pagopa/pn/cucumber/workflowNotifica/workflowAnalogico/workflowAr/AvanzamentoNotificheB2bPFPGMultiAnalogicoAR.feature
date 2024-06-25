@@ -102,15 +102,15 @@ Feature: avanzamento b2b notifica multi destinatario analogico AR
       | senderDenomination    | Comune di palermo               |
       | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario
-      | denomination            | Leonardo Da Vinci        |
-      | taxId                   | DVNLRD52D15M059P         |
-      | digitalDomicile         | NULL                     |
-      | physicalAddress_address | Via@FAIL-Irreperibile_AR |
+      | denomination            | Leonardo Da Vinci             |
+      | taxId                   | DVNLRD52D15M059P              |
+      | digitalDomicile         | NULL                          |
+      | physicalAddress_address | Via@FAIL-Irreperibile_AR_SLOW |
     And destinatario Cucumber Society
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then "Leonardo Da Vinci" legge la notifica
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW" per l'utente 1
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" per l'utente 0
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "PREPARE_ANALOG_DOMICILE" per l'utente 0
+    Then "Leonardo Da Vinci" legge la notifica
     And viene verificato che l'elemento di timeline "REFINEMENT" non esista
       | details          | NOT_NULL |
       | details_recIndex | 0        |
