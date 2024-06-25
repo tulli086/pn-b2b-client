@@ -75,25 +75,25 @@ public class PnExternalServiceClientImpl {
     private final InteropTokenSingleton interopTokenSingleton;
 
     public PnExternalServiceClientImpl(
-            RestTemplate restTemplate,
-            InteropTokenSingleton interopTokenSingleton,
-            @Value("${pn.safeStorage.base-url}") String safeStorageBasePath,
-            @Value("${pn.external.base-url}") String gruopInfoBasePath,
-            @Value("${pn.external.api-key}") String apiKeyMvp1,
-            @Value("${pn.external.api-key-2}") String apiKeyMvp2,
-            @Value("${pn.external.api-key-GA}") String apiKeyGa,
-            @Value("${pn.external.api-key-SON}") String apiKeySON,
-            @Value("${pn.external.api-key-ROOT}") String apiKeyROOT,
-            @Value("${pn.interop.enable}") String enableInterop,
-            @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
-            @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
-            @Value("${pn.webapi.external.base-url}") String basePathWebApi,
-            @Value("${pn.externalChannels.base-url}") String extChannelsBasePath,
-            @Value("${pn.delivery.base-url}") String deliveryBasePath,
-            @Value("${pn.dataVault.base-url}") String dataVaultBasePath,
-            @Value("${pn.OpenSearch.base-url}") String openSearchBaseUrl,
-            @Value("${pn.OpenSearch.username}") String openSearchUsername,
-            @Value("${pn.OpenSearch.password}") String openSearchPassword
+        RestTemplate restTemplate,
+        InteropTokenSingleton interopTokenSingleton,
+        @Value("${pn.safeStorage.base-url}") String safeStorageBasePath,
+        @Value("${pn.external.base-url}") String gruopInfoBasePath,
+        @Value("${pn.external.api-key}") String apiKeyMvp1,
+        @Value("${pn.external.api-key-2}") String apiKeyMvp2,
+        @Value("${pn.external.api-key-GA}") String apiKeyGa,
+        @Value("${pn.external.api-key-SON}") String apiKeySON,
+        @Value("${pn.external.api-key-ROOT}") String apiKeyROOT,
+        @Value("${pn.interop.enable}") String enableInterop,
+        @Value("${pn.bearer-token.pg1}") String gherkinSrlBearerToken,
+        @Value("${pn.bearer-token.pg2}") String cucumberSpaBearerToken,
+        @Value("${pn.webapi.external.base-url}") String basePathWebApi,
+        @Value("${pn.externalChannels.base-url}") String extChannelsBasePath,
+        @Value("${pn.delivery.base-url}") String deliveryBasePath,
+        @Value("${pn.dataVault.base-url}") String dataVaultBasePath,
+        @Value("${pn.OpenSearch.base-url}") String openSearchBaseUrl,
+        @Value("${pn.OpenSearch.username}") String openSearchUsername,
+        @Value("${pn.OpenSearch.password}") String openSearchPassword
     ) {
         this.restTemplate = restTemplate;
         this.safeStorageBasePath = safeStorageBasePath;
@@ -179,7 +179,7 @@ public class PnExternalServiceClientImpl {
         headerParams.add("Authorization","Basic "+Base64.getEncoder().encodeToString(usernamePassword.getBytes()));
 
         final String[] localVarAccepts = {
-                "application/json", "application/problem+json"
+            "application/json", "application/problem+json"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
@@ -205,7 +205,7 @@ public class PnExternalServiceClientImpl {
         final HttpHeaders headerParams = new HttpHeaders();
 
         final String[] localVarAccepts = {
-                "application/json", "application/problem+json"
+            "application/json", "application/problem+json"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
@@ -264,7 +264,7 @@ public class PnExternalServiceClientImpl {
         headerParams.add("Authorization","Bearer "+bearerToken);
 
         final String[] localVarAccepts = {
-                "application/json", "application/problem+json"
+            "application/json", "application/problem+json"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
@@ -294,7 +294,7 @@ public class PnExternalServiceClientImpl {
         }
 
         final String[] localVarAccepts = {
-                "application/json", "application/problem+json"
+            "application/json", "application/problem+json"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
@@ -316,7 +316,7 @@ public class PnExternalServiceClientImpl {
         final HttpHeaders headerParams = new HttpHeaders();
 
         final String[] localVarAccepts = {
-                "application/json", "application/problem+json"
+            "application/json", "application/problem+json"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
@@ -338,7 +338,7 @@ public class PnExternalServiceClientImpl {
         final HttpHeaders headerParams = new HttpHeaders();
 
         final String[] localVarAccepts = {
-                "application/json", "application/problem+json", "text/plain"
+            "application/json", "application/problem+json", "text/plain"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.TEXT_PLAIN;
@@ -351,17 +351,17 @@ public class PnExternalServiceClientImpl {
 
     public static class SafeStorageResponse{
 
-            String key;
-            String versionId;
-            String documentType;
-            String documentStatus;
-            String contentType;
-            Integer contentLength;
-            String checksum;
-           String retentionUntil;
-           Download download;
+        String key;
+        String versionId;
+        String documentType;
+        String documentStatus;
+        String contentType;
+        Integer contentLength;
+        String checksum;
+        String retentionUntil;
+        Download download;
 
-           public SafeStorageResponse(){}
+        public SafeStorageResponse(){}
 
         public String getKey() {
             return key;
@@ -438,28 +438,28 @@ public class PnExternalServiceClientImpl {
         @Override
         public String toString() {
             return "SafeStorageResponse{" +
-                    "key='" + key + '\'' +
-                    ", versionId='" + versionId + '\'' +
-                    ", documentType='" + documentType + '\'' +
-                    ", documentStatus='" + documentStatus + '\'' +
-                    ", contentType='" + contentType + '\'' +
-                    ", contentLength=" + contentLength +
-                    ", checksum='" + checksum + '\'' +
-                    ", retentionUntil='" + retentionUntil + '\'' +
-                    ", download=" + download +
-                    '}';
+                "key='" + key + '\'' +
+                ", versionId='" + versionId + '\'' +
+                ", documentType='" + documentType + '\'' +
+                ", documentStatus='" + documentStatus + '\'' +
+                ", contentType='" + contentType + '\'' +
+                ", contentLength=" + contentLength +
+                ", checksum='" + checksum + '\'' +
+                ", retentionUntil='" + retentionUntil + '\'' +
+                ", download=" + download +
+                '}';
         }
 
         public static class Download{
-               String url;
-               String retryAfter;
+            String url;
+            String retryAfter;
 
             @Override
             public String toString() {
                 return "Download{" +
-                        "url='" + url + '\'' +
-                        ", retryAfter='" + retryAfter + '\'' +
-                        '}';
+                    "url='" + url + '\'' +
+                    ", retryAfter='" + retryAfter + '\'' +
+                    '}';
             }
 
             public Download(){}
@@ -501,7 +501,7 @@ public class PnExternalServiceClientImpl {
 
 
         final String[] localVarAccepts = {
-                "application/json", "application/problem+json","*/*"
+            "application/json", "application/problem+json","*/*"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
@@ -530,7 +530,7 @@ public class PnExternalServiceClientImpl {
 
 
         final String[] localVarAccepts = {
-                "application/json", "application/problem+json","*/*"
+            "application/json", "application/problem+json","*/*"
         };
         final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
@@ -627,34 +627,42 @@ public class PnExternalServiceClientImpl {
 
     }
 
-    private ResponseEntity<String> pushPaperMessageNotificationWithHttpInfo(Map<String, String> mapInfo) {
+    private ResponseEntity<String> pushConsolidatoreNotificationWithHttpInfo(
+        Map<String, String> mapInfo) {
         Object postBody = null;
+        List<Map<String, String>> requestList = new ArrayList<>();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            postBody = objectMapper.writeValueAsString(mapInfo);
-        }catch (JsonProcessingException exception) {
+            requestList.add(mapInfo);
+            postBody = objectMapper.writeValueAsString(requestList);
+        } catch (JsonProcessingException exception) {
             log.error("Error during parse Json", exception.getMessage());
         }
 
         final Map<String, Object> uriVariables = new HashMap<>();
-        uriVariables.put("requestIdx", mapInfo.get("requestId"));
 
         final HttpHeaders headerParams = new HttpHeaders();
-        headerParams.add("x-pagopa-extch-cx-id", mapInfo.get("requestId"));
+        headerParams.add("x-pagopa-extch-service-id", "pn-cons-000");
+        headerParams.add("x-api-key", "apiKey-pn-cons-000");
 
         final String[] localVarAccepts = {
-                "application/json", "application/problem+json"
+            "application/json", "application/problem+json"
         };
-        final List<MediaType> localVarAccept = MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(localVarAccepts));
+        final List<MediaType> localVarAccept = MediaType.parseMediaTypes(
+            StringUtils.arrayToCommaDelimitedString(localVarAccepts));
         final MediaType localVarContentType = MediaType.APPLICATION_JSON;
 
         ParameterizedTypeReference<String> returnType = new ParameterizedTypeReference<>() {
         };
-        return invokeAPI(extChannelsBasePath, "/external-channels/v1/paper-deliveries-engagements/{requestIdx}", HttpMethod.PUT, uriVariables, null, postBody, headerParams, localVarAccept, localVarContentType, returnType);
+
+        return invokeAPI(extChannelsBasePath,
+            "/consolidatore-ingress/v1/push-progress-events/",
+            HttpMethod.PUT, uriVariables, null, postBody,
+            headerParams, localVarAccept, localVarContentType, returnType);
     }
 
-    public String pushPaperMessageNotification(Map<String, String> mapInfo) {
-        return pushPaperMessageNotificationWithHttpInfo(mapInfo).getBody();
+    public String pushConsolidatoreNotification(Map<String, String> mapInfo) {
+        return pushConsolidatoreNotificationWithHttpInfo(mapInfo).getBody();
     }
     //OPEN SEARCH RESPONSE
     @Getter
@@ -713,25 +721,25 @@ public class PnExternalServiceClientImpl {
             @Override
             public String toString() {
                 return "Source{" +
-                        "msg='" + msg + '\'' +
-                        ", trace_id='" + trace_id + '\'' +
-                        ", level=" + level +
-                        ", logGroup='" + logGroup + '\'' +
-                        ", aud_type='" + aud_type + '\'' +
-                        ", pid=" + pid +
-                        ", message='" + message + '\'' +
-                        ", aud_orig='" + aud_orig + '\'' +
-                        ", tags=" + Arrays.toString(tags) +
-                        ", kinesisSeqNumber='" + kinesisSeqNumber + '\'' +
-                        ", hostname='" + hostname + '\'' +
-                        ", timestamp='" + timestamp + '\'' +
-                        ", level_value=" + level_value +
-                        ", v=" + v +
-                        ", name='" + name + '\'' +
-                        ", logStream='" + logStream + '\'' +
-                        ", logger_name='" + logger_name + '\'' +
-                        ", time='" + time + '\'' +
-                        '}';
+                    "msg='" + msg + '\'' +
+                    ", trace_id='" + trace_id + '\'' +
+                    ", level=" + level +
+                    ", logGroup='" + logGroup + '\'' +
+                    ", aud_type='" + aud_type + '\'' +
+                    ", pid=" + pid +
+                    ", message='" + message + '\'' +
+                    ", aud_orig='" + aud_orig + '\'' +
+                    ", tags=" + Arrays.toString(tags) +
+                    ", kinesisSeqNumber='" + kinesisSeqNumber + '\'' +
+                    ", hostname='" + hostname + '\'' +
+                    ", timestamp='" + timestamp + '\'' +
+                    ", level_value=" + level_value +
+                    ", v=" + v +
+                    ", name='" + name + '\'' +
+                    ", logStream='" + logStream + '\'' +
+                    ", logger_name='" + logger_name + '\'' +
+                    ", time='" + time + '\'' +
+                    '}';
             }
 
             public Source() {
@@ -908,12 +916,12 @@ public class PnExternalServiceClientImpl {
         @Override
         public String toString() {
             return "InnerHits{" +
-                    "_index='" + _index + '\'' +
-                    ", _type='" + _type + '\'' +
-                    ", _id='" + _id + '\'' +
-                    ", _score=" + _score +
-                    ", _source=" + _source +
-                    '}';
+                "_index='" + _index + '\'' +
+                ", _type='" + _type + '\'' +
+                ", _id='" + _id + '\'' +
+                ", _score=" + _score +
+                ", _source=" + _source +
+                '}';
         }
     }
 
