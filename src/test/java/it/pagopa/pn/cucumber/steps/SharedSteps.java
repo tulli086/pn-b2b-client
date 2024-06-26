@@ -156,8 +156,7 @@ public class SharedSteps {
     @Getter
     @Setter
     private List<ProgressResponseElementV23> progressResponseElementsV23 = null;
-    @Value("${pn.interop.enable}")
-    private String enableInterop;
+
     @Value("${pn.interop.base-url}")
     private String interopBaseUrl;
 
@@ -236,6 +235,7 @@ public class SharedSteps {
     private static final String schedulingDeltaDefault = "500";
     private static final Integer workFlowWaitDefault = 31000;
     private static final Integer waitDefault = 10000;
+    private static final Integer retryGroup = 0;
     private static final Integer WORKFLOW_WAIT_UPPER_BOUND = 2900;
     private static final Integer WAIT_UPPER_BOUND = 950;
     private static final String ALLEGATO = "ALLEGATO";
@@ -1552,7 +1552,7 @@ public class SharedSteps {
             case "Comune_1" -> {
                 if(version != null){
                     setSenderTaxIdVersioning(version);
-                    setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version, 0);
+                    setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
                 }else{
                     this.notificationRequest.setSenderTaxId(this.senderTaxId);
                     setGrup(SettableApiKey.ApiKeyType.MVP_1,0);
@@ -1562,7 +1562,7 @@ public class SharedSteps {
             case "Comune_2" -> {
                 if(version != null){
                     setSenderTaxIdVersioning(version);
-                    setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version, 0);
+                    setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
                 }else{
                     this.notificationRequest.setSenderTaxId(this.senderTaxIdTwo);
                     setGrup(SettableApiKey.ApiKeyType.MVP_2,0);
@@ -1572,7 +1572,7 @@ public class SharedSteps {
             case "Comune_Multi" -> {
                 if(version != null){
                     setSenderTaxIdVersioning(version);
-                    setGrupVersioning(SettableApiKey.ApiKeyType.GA, version, 0);
+                    setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
                 }else{
                     this.notificationRequest.setSenderTaxId(this.senderTaxIdGa);
                     setGrup(SettableApiKey.ApiKeyType.GA,0);
@@ -1616,14 +1616,21 @@ public class SharedSteps {
 
     private void setGrup(SettableApiKey.ApiKeyType apiKeyType, int depth) {
         try {
-            String id;
             if (groupToSet && this.notificationRequest.getGroup() == null) {
-                id = findGroup(apiKeyType);
+                List<HashMap<String, String>> hashMapsList = pnExternalServiceClient.paGroupInfo(apiKeyType);
+                if (hashMapsList == null || hashMapsList.isEmpty()) return;
+                String id = null;
+                for (HashMap<String, String> elem : hashMapsList) {
+                    if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
+                        id = elem.get("id");
+                        break;
+                    }
+                }
+                if (id == null) return;
                 this.notificationRequest.setGroup(id);
             }
         }catch (HttpStatusCodeException error){
-            if(error.getStatusCode().toString().substring(0,3).equals("403") && enableInterop.equalsIgnoreCase("true") && depth < 1){
-                threadWait(2000);
+            if(error.getStatusCode().toString().substring(0,3).equals("403") && depth < 1){
                 setGrup(apiKeyType,depth+1);
             }else{
                 throw error;
@@ -1631,49 +1638,33 @@ public class SharedSteps {
         }
     }
 
+    private void setGrupVersioning(SettableApiKey.ApiKeyType apiKeyType,String version) {
+        String group=null;
 
-    private void setGrupVersioning(SettableApiKey.ApiKeyType apiKeyType, String version,int depth) {
-        String group = null;
-        String id;
-
-        switch (version.toLowerCase()) {
-            case "v1" -> group = this.notificationRequestV1.getGroup();
-            case "v2" -> group = this.notificationRequestV2.getGroup();
-            case "v21" -> group = this.notificationRequestV21.getGroup();
+        switch (version.toLowerCase()){
+            case "v1" -> group=this.notificationRequestV1.getGroup();
+            case "v2" -> group=this.notificationRequestV2.getGroup();
+            case "v21" -> group=this.notificationRequestV21.getGroup();
         }
-        try {
-            if (groupToSet && group == null) {
-                id = findGroup(apiKeyType);
 
-                switch (version.toLowerCase()) {
-                    case "v1" -> this.notificationRequestV1.setGroup(id);
-                    case "v2" -> this.notificationRequestV2.setGroup(id);
-                    case "v21" -> this.notificationRequestV21.setGroup(id);
+        if (groupToSet && group == null) {
+            List<HashMap<String, String>> hashMapsList = pnExternalServiceClient.paGroupInfo(apiKeyType);
+            if (hashMapsList == null || hashMapsList.isEmpty()) return;
+            String id = null;
+            for (HashMap<String, String> elem : hashMapsList) {
+                if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
+                    id = elem.get("id");
+                    break;
                 }
             }
-        } catch (HttpStatusCodeException error) {
-            if (error.getStatusCode().toString().substring(0, 3).equals("403") && enableInterop.equalsIgnoreCase("true") && depth < 1) {
-                threadWait(2000);
-                setGrupVersioning(apiKeyType, version, depth + 1);
-            } else {
-                throw error;
+            if (id == null) return;
+
+            switch (version.toLowerCase()){
+                case "v1" -> this.notificationRequestV1.setGroup(id);
+                case "v2" -> this.notificationRequestV2.setGroup(id);
+                case "v21" -> this.notificationRequestV21.setGroup(id);
             }
         }
-    }
-
-
-
-    private String findGroup(SettableApiKey.ApiKeyType apiKeyType){
-        List<HashMap<String, String>> hashMapsList = pnExternalServiceClient.paGroupInfo(apiKeyType);
-        String id=null;
-        if (hashMapsList == null || hashMapsList.isEmpty()) return id;
-        for (HashMap<String, String> elem : hashMapsList) {
-            if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
-                id = elem.get("id");
-                break;
-            }
-        }
-        return id;
     }
 
     public FullSentNotificationV23 getSentNotification() {
