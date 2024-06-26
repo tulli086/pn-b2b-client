@@ -1,6 +1,7 @@
 package it.pagopa.pn.client.b2b.pa.parsing.parser.impl;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
+import it.pagopa.pn.client.b2b.pa.parsing.exception.PnParserException;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.PnTextSlidingWindow;
 import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnContentExtractor;
@@ -14,6 +15,8 @@ import org.apache.pdfbox.text.TextPosition;
 import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Slf4j
@@ -38,13 +41,13 @@ public class PnContentExtractor implements IPnContentExtractor {
             pdfTextStripper.setEndPage(document.getNumberOfPages());
 
             List<String> boldValueList = boldWordExtractor.getBoldWordList();
-            if(boldValueList.isEmpty()) throw new RuntimeException();
+            if(boldValueList.isEmpty()) throw new PnParserException("PDF not valid: document did not contain bold words!!!");
 
             return getContent(pdfTextStripper.getText(document), boldValueList, legalFactType);
         } catch (IOException exception) {
-            log.error("Error parsing PDF: {}", exception.getMessage());
+            log.error("PdfBox error: {}", exception.getMessage());
         } catch (RuntimeException exception) {
-            log.error("PDF not valid: document did not contain bold words!!!");
+            log.error("Error during parsing: {}", exception.getMessage());
         }
         return null;
     }
@@ -60,7 +63,7 @@ public class PnContentExtractor implements IPnContentExtractor {
     public String getField(PnTextSlidingWindow pnTextSlidingWindow, List<String> valuesList) {
         for(String value: valuesList) {
             String field = getFieldByToken(pnTextSlidingWindow, value);
-            if(field != null) {
+            if(field != null && !pnTextSlidingWindow.isToDiscard(value)) {
                 return field;
             }
             pnTextSlidingWindow.slideWindow(value);
@@ -98,15 +101,32 @@ public class PnContentExtractor implements IPnContentExtractor {
     }
 
     private boolean isValueBetweenTokens(String text, String value, String tokenStart, String tokenEnd) {
-        String checkingLeft = extractAdjacentWordByValue(text, value, true);
-        String checkingRight = extractAdjacentWordByValue(text, value, false);
+        String checkingLeft = extractAdjacentWordByValue(text, value, tokenStart, true);
+        String checkingRight = extractAdjacentWordByValue(text, value, tokenEnd, false);
         if(checkingLeft != null || checkingRight != null)
-            return checkingLeft.contains(tokenStart) && checkingRight.contains(tokenEnd);
+            return isExactlyContained(checkingLeft, tokenStart) && isExactlyContained(checkingRight, tokenEnd);
         return false;
     }
 
-    private String extractAdjacentWordByValue(String text, String value, boolean isLeft) {
-        int wordCount = 10;
+    private boolean isExactlyContained(String source, String subItem) {
+        String quotedSubItem = Pattern.quote(subItem);
+        String pattern = "(?<!\\S)" + quotedSubItem + "(?!\\S)";
+
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(source);
+        return m.find();
+    }
+
+    private int countTokenWord(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return 0;
+        }
+        String[] words = input.trim().split("\\s+");
+        return words.length;
+    }
+
+    private String extractAdjacentWordByValue(String text, String value, String token, boolean isLeft) {
+        int wordCount = countTokenWord(token);
         String regex = "\\s+";
         int position = text.indexOf(value);
         if(position == -1)
@@ -180,11 +200,13 @@ public class PnContentExtractor implements IPnContentExtractor {
         String betweenText = text.substring(pos2 + value.length(), pos3).trim();
         if (!betweenText.isEmpty()) {
             List<Integer> brokenValueList = cleanUpByBrokenValues(betweenText, valueList);
-            int substituteIndex = brokenValueList.remove(0);
-            String concatenatedValue = value.trim() + "\r\n" + betweenText;
-            valueList.set(substituteIndex, concatenatedValue);
-            brokenValueList.sort(Collections.reverseOrder());
-            brokenValueList.forEach(brokenValue -> valueList.remove(brokenValue.intValue()));
+            if(!brokenValueList.isEmpty()) {
+                int substituteIndex = brokenValueList.remove(0);
+                String concatenatedValue = value.trim() + "\r\n" + betweenText;
+                valueList.set(substituteIndex, concatenatedValue);
+                brokenValueList.sort(Collections.reverseOrder());
+                brokenValueList.forEach(brokenValue -> valueList.remove(brokenValue.intValue()));
+            }
             return brokenValueList;
         }
         return null;
@@ -242,7 +264,9 @@ public class PnContentExtractor implements IPnContentExtractor {
 
     private List<String> removeHashValues(String text, List<String> boldValueList) {
         List<String> cleanedList = new ArrayList<>(boldValueList);
-        cleanedList.removeIf(value -> isValueBetweenTokens(text, value, pnLegalFactTokens.getTokenProps().getHashStart(), pnLegalFactTokens.getTokenProps().getHashEnd()));
+        if(isExactlyContained(text, pnLegalFactTokens.getTokenProps().getHashStart())) {
+            cleanedList.removeIf(value -> isValueBetweenTokens(text, value, pnLegalFactTokens.getTokenProps().getHashStart(), pnLegalFactTokens.getTokenProps().getHashEnd()));
+        }
         return cleanedList;
     }
 

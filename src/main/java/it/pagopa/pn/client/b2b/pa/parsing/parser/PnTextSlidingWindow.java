@@ -13,6 +13,7 @@ public class PnTextSlidingWindow {
     private String slidedText;
     private String tokenStart;
     private String tokenEnd;
+    private String discardValue;
 
 
     public void slideWindow(String pointToSlide) {
@@ -22,5 +23,11 @@ public class PnTextSlidingWindow {
         else
             slidingIndex = slidingIndex + pointToSlide.length();
         this.slidedText = slidedText.substring(slidingIndex);
+    }
+
+    public boolean isToDiscard(String toDiscard) {
+        if(discardValue == null)
+            return false;
+        return discardValue.equals(toDiscard);
     }
 }

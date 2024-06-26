@@ -38,7 +38,7 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
         return PnLegalFactNotificaDigitale.builder()
                 .iun(getIun(content, false))
                 .pnDestinatario((PnDestinatarioDigitale) getDestinatario(content, true, false,true, false))
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, false, true))
+                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, false, true, false))
                 .build();
     }
 
@@ -49,14 +49,14 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
                 .pnDestinatario((PnDestinatario) getDestinatario(content, true, false,false, false))
                 .primaData(getPrimaData(content))
                 .secondaData(getSecondaData(content))
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, false, false))
+                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, false, false, true))
                 .build();
     }
 
     @Override
     public IPnLegalFact getLegalFactNotificaPresaInCarico(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaPresaInCarico.builder()
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false))
+                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false, false))
                 .mittente(getMittente(content))
                 .cfMittente(getCfMittente(content))
                 .iun(getIun(content, true))
@@ -67,7 +67,7 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
     @Override
     public IPnLegalFact getLegalFactNotificaPresaInCaricoMultiDestinatario(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaPresaInCaricoMultiDestinatario.builder()
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false))
+                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false, false))
                 .mittente(getMittente(content))
                 .cfMittente(getCfMittente(content))
                 .iun(getIun(content, true))
@@ -80,7 +80,7 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
     public IPnLegalFact getLegalFactNotificaAvvenutoAccesso(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaAvvenutoAccesso.builder()
                 .iun(getIun(content, false))
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, true, false, false, false))
+                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, true, false, false, false, false))
                 .pnDestinatario((PnDestinatario) getDestinatario(content, false, false,false, false))
                 .build();
     }
@@ -88,7 +88,7 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
     public IPnLegalFact getLegalFactNotificaAvvenutoAccessoDelegato(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaAvvenutoAccessoDelegato.builder()
                 .iun(getIun(content, false))
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, true, false, false))
+                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, true, false, false, false))
                 .pnDestinatario((PnDestinatario) getDestinatarioOrDelegato(content, true))
                 .delegato((PnDestinatario) getDestinatarioOrDelegato(content, false))
                 .build();
@@ -206,7 +206,8 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
                                                  boolean isWithNotificaAvvenutoAccesso,
                                                  boolean isWithNotificaAvvenutoAccessoDelegato,
                                                  boolean isWithNotificaPresaInCaricoAndMultiDestinatario,
-                                                 boolean isWithNotificaDigitale) {
+                                                 boolean isWithNotificaDigitale,
+                                                 boolean isWithNotificaMancatoRecapito) {
         if(isWithNotificaAvvenutoAccesso) {
             return cleanUp(getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
@@ -235,7 +236,7 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
                     .tokenStart(tokenProperty.getDataAttestazioneOpponibileStart())
                     .tokenEnd(tokenProperty.getDataAttestazioneOpponibileEnd4())
                     .build(), content.valueList()), true);
-        } else {
+        } else if(isWithNotificaMancatoRecapito){
             return cleanUp(getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
@@ -243,6 +244,7 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
                     .tokenEnd(tokenProperty.getDataAttestazioneOpponibileEnd5())
                     .build(), content.valueList()), true);
         }
+        return null;
     }
 
     private String getCodiceFiscale(PnParserRecord.PnParserContent content, boolean isDestinatario, boolean isDestinatarioDigitaleOrAnalogico) {
@@ -378,6 +380,7 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
                 .slidedText(content.text())
                 .tokenStart(tokenProperty.getPrimaDataStart())
                 .tokenEnd(tokenProperty.getPrimaDataEnd())
+                .discardValue(getDataAttestazioneOpponibile(content, false, false, false, false, true))
                 .build(), content.valueList()), true);
     }
 
