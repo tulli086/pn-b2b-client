@@ -3319,7 +3319,7 @@ try{
         Instant now = null;
         if (statusDate.equalsIgnoreCase("Futuro")) {
             now = Instant.now()
-                    .plusSeconds(utils.convertToSeconds(pnEcConsAllowedFutureOffsetDuration));
+                    .plusSeconds(utils.convertToSeconds(pnEcConsAllowedFutureOffsetDuration)).plusSeconds(60);
         } else {
             now = Instant.now();
         }
