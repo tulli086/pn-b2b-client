@@ -3326,8 +3326,7 @@ try{
 
         Map<String, String> mapInfo = populateConsolidatoreMap(now);
         try {
-            String internalId = externalClient.pushConsolidatoreNotification(mapInfo);
-            log.info(internalId);
+            externalClient.pushConsolidatoreNotification(mapInfo);
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
         }
