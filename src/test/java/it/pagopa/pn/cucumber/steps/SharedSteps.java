@@ -235,7 +235,6 @@ public class SharedSteps {
     private static final String schedulingDeltaDefault = "500";
     private static final Integer workFlowWaitDefault = 31000;
     private static final Integer waitDefault = 10000;
-    private static final Integer retryGroup = 0;
     private static final Integer WORKFLOW_WAIT_UPPER_BOUND = 2900;
     private static final Integer WAIT_UPPER_BOUND = 950;
     private static final String ALLEGATO = "ALLEGATO";
@@ -1555,7 +1554,7 @@ public class SharedSteps {
                     setGrupVersioning(SettableApiKey.ApiKeyType.MVP_1, version);
                 }else{
                     this.notificationRequest.setSenderTaxId(this.senderTaxId);
-                    setGrup(SettableApiKey.ApiKeyType.MVP_1,0);
+                    setGrup(SettableApiKey.ApiKeyType.MVP_1);
                 }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_1;
             }
@@ -1565,7 +1564,7 @@ public class SharedSteps {
                     setGrupVersioning(SettableApiKey.ApiKeyType.MVP_2, version);
                 }else{
                     this.notificationRequest.setSenderTaxId(this.senderTaxIdTwo);
-                    setGrup(SettableApiKey.ApiKeyType.MVP_2,0);
+                    setGrup(SettableApiKey.ApiKeyType.MVP_2);
                 }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.MVP_2;
             }
@@ -1575,18 +1574,18 @@ public class SharedSteps {
                     setGrupVersioning(SettableApiKey.ApiKeyType.GA, version);
                 }else{
                     this.notificationRequest.setSenderTaxId(this.senderTaxIdGa);
-                    setGrup(SettableApiKey.ApiKeyType.GA,0);
+                    setGrup(SettableApiKey.ApiKeyType.GA);
                 }
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.GA;
             }
             case "Comune_Son" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdSON);
-                setGrup(SettableApiKey.ApiKeyType.SON,0);
+                setGrup(SettableApiKey.ApiKeyType.SON);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.SON;
             }
             case "Comune_Root" -> {
                 this.notificationRequest.setSenderTaxId(this.senderTaxIdROOT);
-                setGrup(SettableApiKey.ApiKeyType.ROOT,0);
+                setGrup(SettableApiKey.ApiKeyType.ROOT);
                 apiKeyTypeSetted = SettableApiKey.ApiKeyType.ROOT;
             }
         }
@@ -1614,27 +1613,19 @@ public class SharedSteps {
         };
     }
 
-    private void setGrup(SettableApiKey.ApiKeyType apiKeyType, int depth) {
-        try {
-            if (groupToSet && this.notificationRequest.getGroup() == null) {
-                List<HashMap<String, String>> hashMapsList = pnExternalServiceClient.paGroupInfo(apiKeyType);
-                if (hashMapsList == null || hashMapsList.isEmpty()) return;
-                String id = null;
-                for (HashMap<String, String> elem : hashMapsList) {
-                    if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
-                        id = elem.get("id");
-                        break;
-                    }
+    private void setGrup(SettableApiKey.ApiKeyType apiKeyType) {
+        if (groupToSet && this.notificationRequest.getGroup() == null) {
+            List<HashMap<String, String>> hashMapsList = pnExternalServiceClient.paGroupInfo(apiKeyType);
+            if (hashMapsList == null || hashMapsList.isEmpty()) return;
+            String id = null;
+            for (HashMap<String, String> elem : hashMapsList) {
+                if (elem.get("status").equalsIgnoreCase("ACTIVE")) {
+                    id = elem.get("id");
+                    break;
                 }
-                if (id == null) return;
-                this.notificationRequest.setGroup(id);
             }
-        }catch (HttpStatusCodeException error){
-            if(error.getStatusCode().toString().substring(0,3).equals("403") && depth < 1){
-                setGrup(apiKeyType,depth+1);
-            }else{
-                throw error;
-            }
+            if (id == null) return;
+            this.notificationRequest.setGroup(id);
         }
     }
 
