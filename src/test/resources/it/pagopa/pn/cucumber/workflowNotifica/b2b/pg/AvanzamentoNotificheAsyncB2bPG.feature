@@ -131,10 +131,7 @@ Feature: avanzamento notifiche asincrone b2b PG - controllo costi
     And al destinatario viene associato lo iuv creato mediante partita debitoria per "Cucumber Analogic" alla posizione 0
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED per controllo GPD
     And viene aggiunto il costo della notifica totale
-    Then  lettura amount posizione debitoria per la notifica corrente di "Gherkin Analogic"
-    And si controlla che l'aggiornamento del costo del utente 0 sia corretto
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE" al tentativo "ATTEMPT_0"
-    And  lettura amount posizione debitoria per la notifica corrente di "Gherkin Analogic"
     And viene effettuato il controllo del cambiamento del amount nella timeline "SEND_ANALOG_DOMICILE" del utente 0 al tentativo:
       | details                 | NOT_NULL |
       | details_recIndex        | 0        |
