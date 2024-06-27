@@ -12,5 +12,4 @@ public interface IPnLegalFactContent {
     IPnLegalFact getLegalFactNotificaPresaInCaricoMultiDestinatario(PnParserRecord.PnParserContent content);
     IPnLegalFact getLegalFactNotificaAvvenutoAccesso(PnParserRecord.PnParserContent content);
     IPnLegalFact getLegalFactNotificaAvvenutoAccessoDelegato(PnParserRecord.PnParserContent content);
-
 }

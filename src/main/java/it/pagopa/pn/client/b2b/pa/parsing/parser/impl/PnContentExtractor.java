@@ -117,7 +117,7 @@ public class PnContentExtractor implements IPnContentExtractor {
         return m.find();
     }
 
-    private int countTokenWord(String input) {
+    private int countTokenWords(String input) {
         if (input == null || input.trim().isEmpty()) {
             return 0;
         }
@@ -126,7 +126,7 @@ public class PnContentExtractor implements IPnContentExtractor {
     }
 
     private String extractAdjacentWordByValue(String text, String value, String token, boolean isLeft) {
-        int wordCount = countTokenWord(token);
+        int wordCount = countTokenWords(token);
         String regex = "\\s+";
         int position = text.indexOf(value);
         if(position == -1)
@@ -183,16 +183,16 @@ public class PnContentExtractor implements IPnContentExtractor {
         String tokenEnd = pnTextSlidingWindow.getTokenEnd();
 
         // Trovare l'indice posizionale di tokenStart, value e tokenEnd
+        int pos1 = customIndexOf(text, tokenStart, 0);
         int indexValue = text.indexOf(value);
-        int pos1 = text.indexOf(tokenStart);
         if (pos1 == -1 || (pos1 > indexValue))
             return null;
 
         int pos2 = text.indexOf(value, pos1 + tokenStart.length());
-        if (pos2 == -1 || !text.substring(pos1 + tokenStart.length(), pos2).trim().isEmpty())
+        if (pos2 == -1 || !text.substring(pos1 + tokenStart.length() + countControlCharacters(text.substring(pos1, pos2)), pos2).trim().isEmpty())
             return null; // Non vi sono parole tra tokenStart e value
 
-        int pos3 = text.indexOf(tokenEnd, pos2 + value.length());
+        int pos3 = customIndexOf(text, tokenEnd, pos2 + value.length());
         if (pos3 == -1)
             return null; // Non vi sono parole tra value e tokenEnd
 
@@ -210,6 +210,20 @@ public class PnContentExtractor implements IPnContentExtractor {
             return brokenValueList;
         }
         return null;
+    }
+
+    private int countControlCharacters(String input) {
+        if (input == null) {
+            return 0;
+        }
+
+        int count = 0;
+        for (int i = 0; i < input.length(); i++) {
+            if (Character.isISOControl(input.charAt(i))) {
+                count++;
+            }
+        }
+        return count;
     }
 
     private List<Integer> cleanUpByBrokenValues(String betweenText, List<String> valueList) {
@@ -231,7 +245,7 @@ public class PnContentExtractor implements IPnContentExtractor {
         String cleanedText = text.replaceAll(pnLegalFactTokens.getTokenProps().getCleanupFooter(), "");
         cleanedText = cleanedText.replaceAll(pnLegalFactTokens.getTokenProps().getRegexCleanupNsbp(), "");
         cleanedText = normalizeLineEndings(cleanedText);
-        return cleanedText;
+        return cleanedText.trim();
     }
 
     private List<String> cleanUpList(String text, List<String> boldValueList) {
@@ -254,6 +268,33 @@ public class PnContentExtractor implements IPnContentExtractor {
         return normalizedText.toString();
     }
 
+    private int customIndexOf(String source, String toFind, int fromIndex) {
+        if (fromIndex < 0 || fromIndex >= source.length()) {
+            return -1;
+        }
+        // Normalizzazione delle stringhe da cui iniziare la ricerca
+        String sourceFromIndex = source.substring(fromIndex);
+        String normalizedSourceFromIndex = sourceFromIndex.replaceAll("[\r\n\\s]+", "");
+        String normalizedToFind = toFind.replaceAll("[\r\n\\s]+", "");
+
+        int indexInNormalized = normalizedSourceFromIndex.indexOf(normalizedToFind);
+        if (indexInNormalized == -1) {
+            return -1;
+        }
+        // Calcolo della posizione reale nella stringa originale
+        int sourcePos = fromIndex;
+        int matchPos = 0;
+
+        while (sourcePos < source.length() && matchPos < indexInNormalized) {
+            char currentChar = source.charAt(sourcePos);
+            if (!Character.isWhitespace(currentChar) && currentChar != '\r' && currentChar != '\n') {
+                matchPos++;
+            }
+            sourcePos++;
+        }
+        return sourcePos+1;
+    }
+
     private List<String> removeUselessValues(List<String> boldValueList) {
         List<String> cleanedList = new ArrayList<>(boldValueList);
         cleanedList.remove(0);
@@ -264,7 +305,7 @@ public class PnContentExtractor implements IPnContentExtractor {
 
     private List<String> removeHashValues(String text, List<String> boldValueList) {
         List<String> cleanedList = new ArrayList<>(boldValueList);
-        if(isExactlyContained(text, pnLegalFactTokens.getTokenProps().getHashStart())) {
+        if(text.contains(pnLegalFactTokens.getTokenProps().getHashStart())) {
             cleanedList.removeIf(value -> isValueBetweenTokens(text, value, pnLegalFactTokens.getTokenProps().getHashStart(), pnLegalFactTokens.getTokenProps().getHashEnd()));
         }
         return cleanedList;

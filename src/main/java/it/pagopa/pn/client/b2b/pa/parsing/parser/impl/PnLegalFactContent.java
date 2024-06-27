@@ -11,18 +11,26 @@ import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioDigitale;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnLegalFactContent;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.PnTextSlidingWindow;
+import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
+import org.springframework.core.io.Resource;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFactContent {
+public class PnLegalFactContent implements IPnLegalFactContent {
     private final PnLegalFactTokenProperty tokenProperty;
-
+    private final PnContentExtractor contentExtractor;
 
     public PnLegalFactContent(PnLegalFactTokens pnLegalFactTokens) {
-        super(pnLegalFactTokens);
+//        super(pnLegalFactTokens);
         this.tokenProperty = pnLegalFactTokens.getTokenProps();
+        this.contentExtractor = new PnContentExtractor(pnLegalFactTokens);
+    }
+
+    public PnParserRecord.PnParserContent extractContent(Resource resource, String source, IPnParserService.LegalFactType legalFactType) {
+        return contentExtractor.extractContent(resource, source, legalFactType);
     }
 
     @Override
@@ -129,7 +137,7 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
         String text = content.text();
         List<String> valueList = content.valueList();
-        int cntDestinatario = countDuplicates(text, tokenProperty.getNomeCognomeRagioneSocialeStart1());
+        int cntDestinatario = contentExtractor.countDuplicates(text, tokenProperty.getNomeCognomeRagioneSocialeStart1());
 
         for(int i = 1; i <= cntDestinatario; i++) {
             String nomeCognomeRagioneSociale = getNomeCognomeRagioneSociale(content, true);
@@ -146,8 +154,8 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
                     new PnDestinatarioAnalogico(nomeCognomeRagioneSociale,
                             codiceFiscale,
                             domicilioDigitale,
-                            cleanUp(tipologiaDomicilio, true),
-                            cleanUp(indirizzoFisico, true)));
+                            contentExtractor.cleanUp(tipologiaDomicilio, true),
+                            contentExtractor.cleanUp(indirizzoFisico, true)));
 
             int slidingIndex = text.indexOf(indirizzoFisico) + indirizzoFisico.length();
             text = text.substring(slidingIndex);
@@ -169,14 +177,16 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
 
     private String getIun(PnParserRecord.PnParserContent content, boolean isWithNotificaPresaInCarico) {
         if (isWithNotificaPresaInCarico) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getIunStart())
                     .tokenEnd(tokenProperty.getIunEnd2())
                     .build(), content.valueList()), false);
         }
-        return cleanUp(getField(PnTextSlidingWindow.builder()
+        return contentExtractor.cleanUp(
+                contentExtractor.getField(PnTextSlidingWindow.builder()
                 .originalText(content.text())
                 .slidedText(content.text())
                 .tokenStart(tokenProperty.getIunStart())
@@ -186,14 +196,16 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
 
     private String getNomeCognomeRagioneSociale(PnParserRecord.PnParserContent content, boolean isDestinatario) {
         if(isDestinatario) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getNomeCognomeRagioneSocialeStart1())
                     .tokenEnd(tokenProperty.getNomeCognomeRagioneSocialeEnd())
                     .build(), content.valueList()), true);
         } else {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getNomeCognomeRagioneSocialeStart2())
@@ -209,61 +221,69 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
                                                  boolean isWithNotificaDigitale,
                                                  boolean isWithNotificaMancatoRecapito) {
         if(isWithNotificaAvvenutoAccesso) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return cleanDataAttestazioneOpponibile(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getDataAttestazioneOpponibileStart())
                     .tokenEnd(tokenProperty.getDataAttestazioneOpponibileEnd1())
-                    .build(), content.valueList()), true);
+                    .build(), content.valueList()));
         } else if(isWithNotificaAvvenutoAccessoDelegato) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return cleanDataAttestazioneOpponibile(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getDataAttestazioneOpponibileStart())
                     .tokenEnd(tokenProperty.getDataAttestazioneOpponibileEnd2())
-                    .build(), content.valueList()), true);
+                    .build(), content.valueList()));
         } else if(isWithNotificaPresaInCaricoAndMultiDestinatario) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return cleanDataAttestazioneOpponibile(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getDataAttestazioneOpponibileStart())
                     .tokenEnd(tokenProperty.getDataAttestazioneOpponibileEnd3())
-                    .build(), content.valueList()), true);
+                    .build(), content.valueList()));
         } else if(isWithNotificaDigitale) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return cleanDataAttestazioneOpponibile(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getDataAttestazioneOpponibileStart())
                     .tokenEnd(tokenProperty.getDataAttestazioneOpponibileEnd4())
-                    .build(), content.valueList()), true);
+                    .build(), content.valueList()));
         } else if(isWithNotificaMancatoRecapito){
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return cleanDataAttestazioneOpponibile(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getDataAttestazioneOpponibileStart())
                     .tokenEnd(tokenProperty.getDataAttestazioneOpponibileEnd5())
-                    .build(), content.valueList()), true);
+                    .build(), content.valueList()));
         }
         return null;
     }
 
     private String getCodiceFiscale(PnParserRecord.PnParserContent content, boolean isDestinatario, boolean isDestinatarioDigitaleOrAnalogico) {
         if(isDestinatario) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getCodiceFiscaleStart())
                     .tokenEnd(tokenProperty.getCodiceFiscaleEnd2())
                     .build(), content.valueList()), false);
         } else if(isDestinatarioDigitaleOrAnalogico) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getCodiceFiscaleStart())
                     .tokenEnd(tokenProperty.getCodiceFiscaleEnd3())
                     .build(), content.valueList()), false);
         } else {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getCodiceFiscaleStart())
@@ -273,7 +293,8 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
     }
 
     private String getDomicilioDigitale(PnParserRecord.PnParserContent content) {
-        return cleanUp(getField(PnTextSlidingWindow.builder()
+        return contentExtractor.cleanUp(
+                contentExtractor.getField(PnTextSlidingWindow.builder()
                 .originalText(content.text())
                 .slidedText(content.text())
                 .tokenStart(tokenProperty.getDomicilioDigitaleStart())
@@ -283,21 +304,24 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
 
     private String getTipologiaDomicilioDigitale(PnParserRecord.PnParserContent content, boolean isDestinatarioAnalogico, boolean isDestinatarioDigitale) {
         if(isDestinatarioAnalogico) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
                     .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd1())
                     .build(), content.valueList()), true);
         } else if(isDestinatarioDigitale) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
                     .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd2())
                     .build(), content.valueList()), true);
         } else {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
@@ -308,14 +332,16 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
 
     private String getIndirizzoFisico(PnParserRecord.PnParserContent content, boolean isDestinatarioAnalogico) {
         if(isDestinatarioAnalogico) {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getIndirizzoFisicoStart())
                     .tokenEnd(tokenProperty.getIndirizzoFisicoEnd1())
                     .build(), content.valueList()), true);
         } else {
-            return cleanUp(getField(PnTextSlidingWindow.builder()
+            return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getIndirizzoFisicoStart())
@@ -325,71 +351,89 @@ public class PnLegalFactContent extends PnContentExtractor implements IPnLegalFa
     }
 
     private String getDataOraDecorrenza(PnParserRecord.PnParserContent content) {
-        return cleanUp(getField(PnTextSlidingWindow.builder()
-                .originalText(content.text())
-                .slidedText(content.text())
-                .tokenStart(tokenProperty.getDataDecorrenzaStart())
-                .tokenEnd(tokenProperty.getDataDecorrenzaEnd())
-                .build(), content.valueList()), true)
-                .concat(" ")
-                .concat(cleanUp(getField(PnTextSlidingWindow.builder()
+        return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
                         .originalText(content.text())
                         .slidedText(content.text())
-                        .tokenStart(tokenProperty.getOraDecorrenzaStart())
-                        .tokenEnd(tokenProperty.getOraDecorrenzaEnd())
-                        .build(), content.valueList()), true));
+                        .tokenStart(tokenProperty.getDataDecorrenzaStart())
+                        .tokenEnd(tokenProperty.getDataDecorrenzaEnd())
+                        .build(), content.valueList()), true)
+                        .concat(" ")
+                        .concat(contentExtractor.cleanUp(
+                                    contentExtractor.getField(PnTextSlidingWindow.builder()
+                                    .originalText(content.text())
+                                    .slidedText(content.text())
+                                    .tokenStart(tokenProperty.getOraDecorrenzaStart())
+                                    .tokenEnd(tokenProperty.getOraDecorrenzaEnd())
+                                    .build(), content.valueList()), true));
     }
 
     private String getDataOraFineDecorrenza(PnParserRecord.PnParserContent content) {
-        return cleanUp(getField(PnTextSlidingWindow.builder()
-                .originalText(content.text())
-                .slidedText(content.text())
-                .tokenStart(tokenProperty.getDataFineDecorrenzaStart())
-                .tokenEnd(tokenProperty.getDataFineDecorrenzaEnd())
-                .build(), content.valueList()), true)
-                .concat(" ")
-                .concat(cleanUp(getField(PnTextSlidingWindow.builder()
-                        .originalText(content.text())
-                        .slidedText(content.text())
-                        .tokenStart(tokenProperty.getOraFineDecorrenzaStart())
-                        .tokenEnd(tokenProperty.getOraFineDecorrenzaEnd())
-                        .build(), content.valueList()), true));
+        return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
+                    .originalText(content.text())
+                    .slidedText(content.text())
+                    .tokenStart(tokenProperty.getDataFineDecorrenzaStart())
+                    .tokenEnd(tokenProperty.getDataFineDecorrenzaEnd())
+                    .build(), content.valueList()), true)
+                    .concat(" ")
+                    .concat(contentExtractor.cleanUp(
+                                contentExtractor.getField(PnTextSlidingWindow.builder()
+                                .originalText(content.text())
+                                .slidedText(content.text())
+                                .tokenStart(tokenProperty.getOraFineDecorrenzaStart())
+                                .tokenEnd(tokenProperty.getOraFineDecorrenzaEnd())
+                                .build(), content.valueList()), true));
     }
 
     private String getMittente(PnParserRecord.PnParserContent content) {
-        return cleanUp(getField(PnTextSlidingWindow.builder()
-                .originalText(content.text())
-                .slidedText(content.text())
-                .tokenStart(tokenProperty.getMittenteStart())
-                .tokenEnd(tokenProperty.getMittenteEnd())
-                .build(), content.valueList()), true);
+        return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
+                    .originalText(content.text())
+                    .slidedText(content.text())
+                    .tokenStart(tokenProperty.getMittenteStart())
+                    .tokenEnd(tokenProperty.getMittenteEnd())
+                    .build(), content.valueList()), true);
     }
 
     private String getCfMittente(PnParserRecord.PnParserContent content) {
-        return cleanUp(getField(PnTextSlidingWindow.builder()
-                .originalText(content.text())
-                .slidedText(content.text())
-                .tokenStart(tokenProperty.getCfMittenteStart())
-                .tokenEnd(tokenProperty.getCfMittenteEnd())
-                .build(), content.valueList()), false);
+        return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
+                    .originalText(content.text())
+                    .slidedText(content.text())
+                    .tokenStart(tokenProperty.getCfMittenteStart())
+                    .tokenEnd(tokenProperty.getCfMittenteEnd())
+                    .build(), content.valueList()), false);
     }
 
     private String getPrimaData(PnParserRecord.PnParserContent content) {
-        return cleanUp(getField(PnTextSlidingWindow.builder()
-                .originalText(content.text())
-                .slidedText(content.text())
-                .tokenStart(tokenProperty.getPrimaDataStart())
-                .tokenEnd(tokenProperty.getPrimaDataEnd())
-                .discardValue(getDataAttestazioneOpponibile(content, false, false, false, false, true))
-                .build(), content.valueList()), true);
+        return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
+                    .originalText(content.text())
+                    .slidedText(content.text())
+                    .tokenStart(tokenProperty.getPrimaDataStart())
+                    .tokenEnd(tokenProperty.getPrimaDataEnd())
+                    .discardValue(getDataAttestazioneOpponibile(content, false, false, false, false, true))
+                    .build(), content.valueList()), true);
     }
 
     private String getSecondaData(PnParserRecord.PnParserContent content) {
-        return cleanUp(getField(PnTextSlidingWindow.builder()
-                .originalText(content.text())
-                .slidedText(content.text())
-                .tokenStart(tokenProperty.getSecondaDataStart())
-                .tokenEnd(tokenProperty.getSecondaDataEnd())
-                .build(), content.valueList()), true);
+        return contentExtractor.cleanUp(
+                    contentExtractor.getField(PnTextSlidingWindow.builder()
+                    .originalText(content.text())
+                    .slidedText(content.text())
+                    .tokenStart(tokenProperty.getSecondaDataStart())
+                    .tokenEnd(tokenProperty.getSecondaDataEnd())
+                    .build(), content.valueList()), true);
+    }
+
+    private String cleanDataAttestazioneOpponibile(String dataAttestazioneOpponibile) {
+        String[] splitted = dataAttestazioneOpponibile.split(" ");
+        StringBuilder cleaned = new StringBuilder();
+        for (String value: splitted) {
+            cleaned.append(contentExtractor.cleanUp(value, false));
+            cleaned.append(" ");
+        }
+        return contentExtractor.cleanUp(cleaned.toString().trim(), true);
     }
 }
