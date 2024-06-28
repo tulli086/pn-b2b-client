@@ -258,14 +258,6 @@ public class AsyncSteps {
         TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,null);
         int analogCost = Objects.requireNonNull(Objects.requireNonNull(timelineElement.getDetails()).getAnalogCost());
         amountNotifica.set(user,amountNotifica.get(user) + analogCost);
-        try {
-            Assertions.assertEquals(amountGPD,amountNotifica.get(user));
-        } catch (AssertionFailedError assertionFailedError) {
-            String message = assertionFailedError.getMessage() +
-                    "{timelineElement  " + timelineElement.toString() + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
-
-        }
     }
 
     @Then("viene effettuato il controllo del cambiamento del amount nella timeline {string} del (utente)(pagamento) {int} (al tentativo):")
@@ -273,27 +265,16 @@ public class AsyncSteps {
         TimelineElementV23 timelineElement = sharedSteps.getTimelineElementByEventId(timelineEventCategory,dataFromTest);
         int analogCost = Objects.requireNonNull(Objects.requireNonNull(timelineElement.getDetails()).getAnalogCost());
         amountNotifica.set(user, amountNotifica.get(user) + analogCost);
-        try {
-            Assertions.assertEquals(amountGPD,amountNotifica.get(user));
-        } catch (AssertionFailedError assertionFailedError) {
-            String message = assertionFailedError.getMessage() +
-                    "{timelineElement " + timelineElement + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
-        }
     }
 
-    @Then("viene effettuato il controllo dell'aggiornamento del costo totale del utente {int}")
-    public void vieneEffettuatoIlControlloDelCambiamentoDelCostoTotale(Integer user) {
-        try {
-            log.info("Costo base presente su Notifica"+amountNotifica.get(user));
-            log.info("Costo base presente su GPD"+amountGPD);
-            Assertions.assertEquals(amountGPD,amountNotifica.get(user));
-        } catch (AssertionFailedError assertionFailedError) {
-            String message = assertionFailedError.getMessage() +
-                    "{Amount GPD " + (amountGPD == null ? "NULL" : amountGPD.toString()) + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
-        }
+
+    @Then("si controlla che l'aggiornamento del costo del (utente)(pagamento) {int} sia corretto")
+    public void vieneEffettuatoIlControlloDelCambiamentoDelAmount(Integer user) {
+            log.info("Costo totale attualmente presente sulla Notifica: {}", amountNotifica.get(user));
+            log.info("Costo totale attualmente presente sulla posizione debitoria: {}", amountGPD);
+            Assertions.assertEquals(amountNotifica.get(user),amountGPD);
     }
+
 
     //dopo accettato amount_gpd + 100 (costo base) + pafee
     //Ogni elemento di timeline analogico ha un analog cost per ogni elemento va verificato che aumenti di  + analog_cost.

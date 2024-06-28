@@ -40,5 +40,8 @@ public class PreconditionChecker {
         Assumptions.assumeFalse(env.equalsIgnoreCase("uat"));
     }
 
-
+    @Before("@mockEnvCondition")
+    public void mockCondition(){
+        Assumptions.assumeTrue(env.equalsIgnoreCase("uat"));
+    }
 }

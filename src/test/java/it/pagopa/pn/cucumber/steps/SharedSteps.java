@@ -226,7 +226,7 @@ public class SharedSteps {
     private final ObjectMapper objMapper = JsonMapper.builder()
             .addModule(new JavaTimeModule())
             .build();
-    private static final Integer WAITING_GPD = 2000;
+    private static final Integer WAITING_GPD = 1000;
     public static final String DEFAULT_PA = "Comune_1";
     private static final String cucumberAnalogicTaxID = "SNCLNN65D19Z131V";
     // private String gherkinSrltaxId = "CCRMCT06A03A433H";
@@ -1093,6 +1093,7 @@ public class SharedSteps {
         sendNotification(getWorkFlowWait());
     }
 
+
     private void sendNotificationNoAccept() {
         sendNotificationNoAccept(getWorkFlowWait());
     }
@@ -1164,9 +1165,43 @@ public class SharedSteps {
         }
     }
 
+
+    private void sendNotificationExtraRapid(int wait) {
+        try {
+            Assertions.assertDoesNotThrow(() -> {
+                notificationCreationDate = OffsetDateTime.now();
+                newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);
+
+                try {
+                    Thread.sleep(wait);
+                } catch (InterruptedException e) {
+                    log.error("Thread.sleep error retry");
+                    throw new RuntimeException(e);
+                }
+
+                notificationResponseComplete = b2bUtils.waitForRequestAcceptationExtraRapid(newNotificationResponse);
+            });
+
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {
+                log.error("Thread.sleep error retry");
+                throw new RuntimeException(e);
+            }
+            Assertions.assertNotNull(notificationResponseComplete);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() +
+                    "{RequestID: " + (newNotificationResponse == null ? "NULL" : newNotificationResponse.getNotificationRequestId()) + " }";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+
     private void sendNotificationRapidCancellPreRefused() {
         int wait = 1000;
         boolean rifiutata;
+
         try {
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
@@ -1267,7 +1302,9 @@ public class SharedSteps {
     }
 
     private void sendNotificationAndCancel() {
-        sendNotificationRapid(1000);
+
+        sendNotificationExtraRapid(500);
+
         Assertions.assertDoesNotThrow(() -> {
             RequestStatus resp = Assertions.assertDoesNotThrow(() ->
                     b2bClient.notificationCancellation(notificationResponseComplete.getIun()));
@@ -1788,6 +1825,7 @@ public class SharedSteps {
         if (timingConfigs.getWorkflowWaitMillis() == null) return workFlowWaitDefault + secureRandom.nextInt(WORKFLOW_WAIT_UPPER_BOUND);
         return timingConfigs.getWorkflowWaitMillis() + secureRandom.nextInt(WORKFLOW_WAIT_UPPER_BOUND);
     }
+
 
     public Integer getWait() {
         if (timingConfigs.getWaitMillis() == null) return waitDefault + secureRandom.nextInt(WAIT_UPPER_BOUND);

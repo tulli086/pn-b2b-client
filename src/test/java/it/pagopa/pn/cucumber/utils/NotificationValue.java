@@ -65,6 +65,7 @@ public enum NotificationValue {
     /*TIMELINE DETAILS*/
     PROGRESS_INDEX("progressIndex", "-1", false),
     POLLING_TIME("pollingTime", null, false),
+    POLLING_Type("pollingType", null, false),
     NUM_CHECK("numCheck", null, false),
     LOAD_TIMELINE("loadTimeline", "false", false),
     IS_FIRST_SEND_RETRY("isFirstSendRetry", "false", false),
