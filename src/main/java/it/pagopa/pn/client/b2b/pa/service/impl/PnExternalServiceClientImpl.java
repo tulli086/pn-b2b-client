@@ -74,7 +74,7 @@ public class PnExternalServiceClientImpl {
 
     private final InteropTokenSingleton interopTokenSingleton;
 
-    private final String dataVaultApiKey;
+    private final String consolidatoreApiKey;
 
     public PnExternalServiceClientImpl(
             RestTemplate restTemplate,
@@ -96,7 +96,7 @@ public class PnExternalServiceClientImpl {
             @Value("${pn.OpenSearch.base-url}") String openSearchBaseUrl,
             @Value("${pn.OpenSearch.username}") String openSearchUsername,
             @Value("${pn.OpenSearch.password}") String openSearchPassword,
-            @Value("{pn.dataVault.api.key}") String dataVaultApiKey
+            @Value("${pn.consolidatore.api.key}") String consolidatoreApiKey
     ) {
         this.restTemplate = restTemplate;
         this.safeStorageBasePath = safeStorageBasePath;
@@ -121,7 +121,7 @@ public class PnExternalServiceClientImpl {
         this.openSearchBaseUrl = openSearchBaseUrl;
         this.openSearchUsername = openSearchUsername;
         this.openSearchPassword = openSearchPassword;
-        this.dataVaultApiKey = dataVaultApiKey;
+        this.consolidatoreApiKey = consolidatoreApiKey;
 
     }
 
@@ -647,7 +647,7 @@ public class PnExternalServiceClientImpl {
 
         final HttpHeaders headerParams = new HttpHeaders();
         headerParams.add("x-pagopa-extch-service-id", "pn-cons-000");
-        headerParams.add("x-api-key", dataVaultApiKey);
+        headerParams.add("x-api-key", consolidatoreApiKey);
 
         final String[] localVarAccepts = {
                 "application/json", "application/problem+json"
