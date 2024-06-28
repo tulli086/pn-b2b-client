@@ -707,13 +707,16 @@ Feature: annullamento notifiche b2b
   @Annullamento
   Scenario:  [B2B-PA-ANNULLAMENTO_27_1] PA mittente: annullamento notifica inibizione invio sms di cortesia
     Given viene generata una nuova notifica
-      | subject | invio notifica con cucumber |
+      | subject   | invio notifica con cucumber |
+      | feePolicy | DELIVERY_MODE               |
     And destinatario
-      | denomination    | Louis Armstrong  |
-      | taxId           | RMSLSO31M04Z404R |
-      | digitalDomicile | NULL             |
-      | payment_f24     | PAYMENT_F24_FLAT |
-      | title_payment   | F24_FLAT_GHERKIN |
+      | denomination         | Louis Armstrong      |
+      | taxId                | RMSLSO31M04Z404R     |
+      | digitalDomicile      | NULL                 |
+      | payment_f24          | PAYMENT_F24_STANDARD |
+      | title_payment        | F24_STANDARD_GHERKIN |
+      | apply_cost_f24       | SI                   |
+      | payment_multy_number | 2                    |
     And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
     When vengono letti gli eventi fino all'elemento di timeline della notifica annullata "NOTIFICATION_CANCELLATION_REQUEST"
     Then viene controllato che l'elemento di timeline della notifica "SEND_COURTESY_MESSAGE" non esiste
