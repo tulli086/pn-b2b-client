@@ -55,6 +55,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceStatusRapidV20.class,
         PnPollingServiceStatusRapidV1.class,
         PnPollingServiceTimelineSlowV23.class,
+        PnPollingServiceTimelineSlowE2eV23.class,
         PnPollingServiceTimelineSlowV21.class,
         PnPollingServiceTimelineSlowV20.class,
         PnPollingServiceTimelineSlowV1.class,
@@ -70,6 +71,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceValidationStatusAcceptedShortV23.class,
         PnPollingServiceWebhookV20.class,
         PnPollingServiceWebhookV23.class,
+        PnPollingServiceValidationStatusAcceptedExtraRapidV23.class,
+        PnPollingServiceStatusExtraRapidV23.class,
+        PnPollingServiceTimelineExtraRapidV23.class,
         MailSenderConfig.class,
         PnParserService.class,
         LegalFactTokenConfiguration.class,
@@ -77,6 +81,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnLegalFactTokens.class,
         PnLegalFactParser.class,
         PnExternalChannelsServiceClientImpl.class
+
 })
 @EnableScheduling
 @EnableConfigurationProperties
