@@ -13,7 +13,6 @@ import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnLegalFactContent;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.PnTextSlidingWindow;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import org.springframework.core.io.Resource;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,8 +22,8 @@ public class PnLegalFactContent implements IPnLegalFactContent {
     private final PnLegalFactTokenProperty tokenProperty;
     private final PnContentExtractor contentExtractor;
 
+
     public PnLegalFactContent(PnLegalFactTokens pnLegalFactTokens) {
-//        super(pnLegalFactTokens);
         this.tokenProperty = pnLegalFactTokens.getTokenProps();
         this.contentExtractor = new PnContentExtractor(pnLegalFactTokens);
     }
