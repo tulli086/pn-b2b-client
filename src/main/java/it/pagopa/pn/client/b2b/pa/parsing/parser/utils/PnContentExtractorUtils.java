@@ -1,16 +1,16 @@
-package it.pagopa.pn.client.b2b.pa.parsing.util;
+package it.pagopa.pn.client.b2b.pa.parsing.parser.utils;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokenProperty;
-import it.pagopa.pn.client.b2b.pa.parsing.parser.PnTextSlidingWindow;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class PnParserContentUtil {
+public class PnContentExtractorUtils {
+
+    private PnContentExtractorUtils() {}
+
     public static String getFieldByToken(PnTextSlidingWindow pnTextSlidingWindow, String value) {
         if(isValueBetweenTokens(pnTextSlidingWindow.getSlidedText(), value, pnTextSlidingWindow.getTokenStart(), pnTextSlidingWindow.getTokenEnd())) {
             return value;
@@ -78,15 +78,15 @@ public class PnParserContentUtil {
         int pos1 = customIndexOf(text, tokenStart, 0);
         int indexValue = text.indexOf(value);
         if (pos1 == -1 || (pos1 > indexValue))
-            return null;
+            return Collections.emptyList();
 
         int pos2 = text.indexOf(value, pos1 + tokenStart.length());
         if (pos2 == -1 || !text.substring(pos1 + tokenStart.length() + countControlCharacters(text.substring(pos1, pos2)), pos2).trim().isEmpty())
-            return null; // Non vi sono parole tra tokenStart e value
+            return Collections.emptyList(); // Non vi sono parole tra tokenStart e value
 
         int pos3 = customIndexOf(text, tokenEnd, pos2 + value.length());
         if (pos3 == -1)
-            return null; // Non vi sono parole tra value e tokenEnd
+            return Collections.emptyList(); // Non vi sono parole tra value e tokenEnd
 
         // Controlla se vi sono parole tra il value ed il tokenEnd
         String betweenText = text.substring(pos2 + value.length(), pos3).trim();
@@ -94,14 +94,14 @@ public class PnParserContentUtil {
             List<Integer> brokenValueList = cleanUpByBrokenValues(betweenText, valueList, tokenProps);
             if(!brokenValueList.isEmpty()) {
                 int substituteIndex = brokenValueList.remove(0);
-                String concatenatedValue = value.trim() + tokenProps.getRegexCarriageNewline() + betweenText;
+                String concatenatedValue = value.trim() + "\r\n" + betweenText;
                 valueList.set(substituteIndex, concatenatedValue);
                 brokenValueList.sort(Collections.reverseOrder());
                 brokenValueList.forEach(brokenValue -> valueList.remove(brokenValue.intValue()));
             }
             return brokenValueList;
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public static int customIndexOf(String source, String toFind, int fromIndex) {
@@ -200,5 +200,18 @@ public class PnParserContentUtil {
             cleanedList.removeIf(value -> isValueBetweenTokens(text, value, tokenProps.getHashStart(), tokenProps.getHashEnd()));
         }
         return cleanedList;
+    }
+
+    public static int countDuplicates(String text, String toSearch) {
+        if (toSearch.isEmpty()) {
+            return 0;
+        }
+        int count = 0;
+        int fromIndex = 0;
+        while ((fromIndex = text.indexOf(toSearch, fromIndex)) != -1) {
+            count++;
+            fromIndex += toSearch.length();
+        }
+        return count;
     }
 }

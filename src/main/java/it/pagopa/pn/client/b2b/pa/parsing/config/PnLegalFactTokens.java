@@ -12,13 +12,13 @@ import java.util.List;
 @Component
 public class PnLegalFactTokens {
     private final PnLegalFactTokenProperty tokenProps;
-    private final List<TokenFieldGroup> fieldTokenList;
+    private final List<PnTokenFieldGroup> fieldTokenList;
 
 
     public PnLegalFactTokens(PnLegalFactTokenProperty tokenProps) {
         this.tokenProps = tokenProps;
         this.fieldTokenList = Arrays.asList(
-                new TokenFieldGroup(
+                new PnTokenFieldGroup(
                         Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DIGITALE,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO,
@@ -26,13 +26,13 @@ public class PnLegalFactTokens {
                         IPnParserService.LegalFactField.IUN.getField(),
                         tokenProps.getIunStart(),
                         tokenProps.getIunEnd1()),
-                new TokenFieldGroup(
+                new PnTokenFieldGroup(
                         Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO),
                         IPnParserService.LegalFactField.IUN.getField(),
                         tokenProps.getIunStart(),
                         tokenProps.getIunEnd2()),
-                new TokenFieldGroup(
+                new PnTokenFieldGroup(
                         Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DIGITALE,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO,
@@ -42,106 +42,106 @@ public class PnLegalFactTokens {
                         IPnParserService.LegalFactField.NOME_COGNOME_RAGIONE_SOCIALE.getField(),
                         tokenProps.getNomeCognomeRagioneSocialeStart1(),
                         tokenProps.getNomeCognomeRagioneSocialeEnd()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO),
                         IPnParserService.LegalFactField.NOME_COGNOME_RAGIONE_SOCIALE.getField(),
                         tokenProps.getNomeCognomeRagioneSocialeStart2(),
                         tokenProps.getNomeCognomeRagioneSocialeEnd()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO),
                         IPnParserService.LegalFactField.CODICE_FISCALE.getField(),
                         tokenProps.getCodiceFiscaleStart(),
                         tokenProps.getCodiceFiscaleEnd1()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO),
                         IPnParserService.LegalFactField.CODICE_FISCALE.getField(),
                         tokenProps.getCodiceFiscaleStart(),
                         tokenProps.getCodiceFiscaleEnd2()),
-                new TokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
+                new PnTokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DIGITALE,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
                         IPnParserService.LegalFactField.CODICE_FISCALE.getField(),
                         tokenProps.getCodiceFiscaleStart(),
                         tokenProps.getCodiceFiscaleEnd3()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO),
                         IPnParserService.LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE.getField(),
                         tokenProps.getDataAttestazioneOpponibileStart(),
                         tokenProps.getDataAttestazioneOpponibileEnd1()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO),
                         IPnParserService.LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE.getField(),
                         tokenProps.getDataAttestazioneOpponibileStart(),
                         tokenProps.getDataAttestazioneOpponibileEnd2()),
-                new TokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
+                new PnTokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO),
                         IPnParserService.LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE.getField(),
                         tokenProps.getDataAttestazioneOpponibileStart(),
                         tokenProps.getDataAttestazioneOpponibileEnd3()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DIGITALE),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DIGITALE),
                         IPnParserService.LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE.getField(),
                         tokenProps.getDataAttestazioneOpponibileStart(),
                         tokenProps.getDataAttestazioneOpponibileEnd4()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
                         IPnParserService.LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE.getField(),
                         tokenProps.getDataAttestazioneOpponibileStart(),
                         tokenProps.getDataAttestazioneOpponibileEnd5()),
-                new TokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
+                new PnTokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DIGITALE,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
                         IPnParserService.LegalFactField.DOMICILIO_DIGITALE.getField(),
                         tokenProps.getDomicilioDigitaleStart(),
                         tokenProps.getDomicilioDigitaleEnd()),
-                new TokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
+                new PnTokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO),
                         IPnParserService.LegalFactField.TIPO_DOMICILIO_DIGITALE.getField(),
                         tokenProps.getTipologiaDomicilioDigitaleStart(),
                         tokenProps.getTipologiaDomicilioDigitaleEnd1()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DIGITALE),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DIGITALE),
                         IPnParserService.LegalFactField.TIPO_DOMICILIO_DIGITALE.getField(),
                         tokenProps.getTipologiaDomicilioDigitaleStart(),
                         tokenProps.getTipologiaDomicilioDigitaleEnd2()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
                         IPnParserService.LegalFactField.TIPO_DOMICILIO_DIGITALE.getField(),
                         tokenProps.getTipologiaDomicilioDigitaleStart(),
                         tokenProps.getTipologiaDomicilioDigitaleEnd3()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME),
                         IPnParserService.LegalFactField.DATA_ORA_DECORRENZA.getField(),
                         tokenProps.getDataDecorrenzaStart(),
                         tokenProps.getDataDecorrenzaEnd()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME),
                         IPnParserService.LegalFactField.DATA_ORA_DECORRENZA.getField(),
                         tokenProps.getOraDecorrenzaStart(),
                         tokenProps.getOraDecorrenzaEnd()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME),
                         IPnParserService.LegalFactField.DATA_ORA_FINE.getField(),
                         tokenProps.getDataFineDecorrenzaStart(),
                         tokenProps.getDataFineDecorrenzaEnd()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME),
                         IPnParserService.LegalFactField.DATA_ORA_FINE.getField(),
                         tokenProps.getOraFineDecorrenzaStart(),
                         tokenProps.getOraFineDecorrenzaEnd()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO),
                         IPnParserService.LegalFactField.INDIRIZZO_FISICO.getField(),
                         tokenProps.getIndirizzoFisicoStart(),
                         tokenProps.getIndirizzoFisicoEnd1()),
-                new TokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO,
+                new PnTokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO),
                         IPnParserService.LegalFactField.INDIRIZZO_FISICO.getField(),
                         tokenProps.getIndirizzoFisicoStart(),
                         tokenProps.getIndirizzoFisicoEnd2()),
-                new TokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
+                new PnTokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO),
                         IPnParserService.LegalFactField.MITTENTE.getField(),
                         tokenProps.getMittenteStart(),
                         tokenProps.getMittenteEnd()),
-                new TokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
+                new PnTokenFieldGroup(Arrays.asList(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,
                         IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO),
                         IPnParserService.LegalFactField.CF_MITTENTE.getField(),
                         tokenProps.getCfMittenteStart(),
                         tokenProps.getCfMittenteEnd()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
                         IPnParserService.LegalFactField.PRIMA_DATA.getField(),
                         tokenProps.getPrimaDataStart(),
                         tokenProps.getPrimaDataEnd()),
-                new TokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
+                new PnTokenFieldGroup(List.of(IPnParserService.LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO),
                         IPnParserService.LegalFactField.SECONDA_DATA.getField(),
                         tokenProps.getSecondaDataStart(),
                         tokenProps.getSecondaDataEnd()));
@@ -149,15 +149,15 @@ public class PnLegalFactTokens {
 
     public String getFieldByToken(String token) {
         return fieldTokenList.stream()
-                .filter(tokenFieldGroup -> tokenFieldGroup.contains(token))
-                .map(TokenFieldGroup::getField)
+                .filter(pnTokenFieldGroup -> pnTokenFieldGroup.contains(token))
+                .map(PnTokenFieldGroup::getField)
                 .findFirst()
                 .orElse(null);
     }
 
     @Getter
     @AllArgsConstructor
-    public class TokenFieldGroup {
+    public class PnTokenFieldGroup {
         private List<IPnParserService.LegalFactType> legalFactTypeList;
         private String field;
         private String tokenStart;

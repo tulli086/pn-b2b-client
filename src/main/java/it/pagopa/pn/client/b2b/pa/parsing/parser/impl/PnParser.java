@@ -8,25 +8,22 @@ import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParser;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 
 @Slf4j
 @Component
-public class PnLegalFactParser implements IPnParserService, IPnParser {
-    @Autowired
-    private ResourceLoader resourceLoader;
-    private PnLegalFactContent contentTokens;
+public class PnParser implements IPnParserService, IPnParser {
+    private final PnParserLegalFact parserLegalFact;
 
 
     @Autowired
-    public PnLegalFactParser(PnLegalFactTokens pnLegalFactTokens)  {
-        this.contentTokens = new PnLegalFactContent(pnLegalFactTokens);
+    public PnParser(PnLegalFactTokens pnLegalFactTokens)  {
+        this.parserLegalFact = new PnParserLegalFact(pnLegalFactTokens);
     }
 
     @Override
-    public PnParserResponse extractSingleField(String source, PnParserParameter parserParameter) {
+    public PnParserResponse extractSingleField(byte[] source, PnParserParameter parserParameter) {
         PnParserResponse pnParserResponse = extractAllField(source, parserParameter);
         if(pnParserResponse == null)
             return null;
@@ -63,7 +60,7 @@ public class PnLegalFactParser implements IPnParserService, IPnParser {
     }
 
     @Override
-    public PnParserResponse extractAllField(String source, PnParserParameter parserParameter) {
+    public PnParserResponse extractAllField(byte[] source, PnParserParameter parserParameter) {
         IPnLegalFact legalFact = parse(source, parserParameter);
         if(legalFact == null) {
             return null;
@@ -72,27 +69,27 @@ public class PnLegalFactParser implements IPnParserService, IPnParser {
     }
 
     @Override
-    public IPnLegalFact parse(String source, PnParserParameter parserParameter) {
+    public IPnLegalFact parse(byte[] source, PnParserParameter parserParameter) {
         LegalFactType legalFactType = parserParameter.getLegalFactType();
-        PnParserRecord.PnParserContent content = contentTokens.extractContent(resourceLoader.getResource(source), source, legalFactType);
+        PnParserRecord.PnParserContent content = parserLegalFact.extractContent(source, legalFactType);
         if(content == null) {
             return null;
         }
 
         if(legalFactType.equals(LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME)) {
-            return contentTokens.getLegalFactNotificaDowntime(content);
+            return parserLegalFact.getLegalFactNotificaDowntime(content);
         } else if(legalFactType.equals(LegalFactType.LEGALFACT_NOTIFICA_DIGITALE)) {
-            return contentTokens.getLegalFactNotificaDigitale(content);
+            return parserLegalFact.getLegalFactNotificaDigitale(content);
         } else if(legalFactType.equals(LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO)) {
-            return contentTokens.getLegalFactNotificaMancatoRecapito(content);
+            return parserLegalFact.getLegalFactNotificaMancatoRecapito(content);
         } else if(legalFactType.equals(LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO)) {
-            return contentTokens.getLegalFactNotificaPresaInCarico(content);
+            return parserLegalFact.getLegalFactNotificaPresaInCarico(content);
         } else if(legalFactType.equals(LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO)) {
-            return contentTokens.getLegalFactNotificaPresaInCaricoMultiDestinatario(content);
+            return parserLegalFact.getLegalFactNotificaPresaInCaricoMultiDestinatario(content);
         } else if(legalFactType.equals(LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO)) {
-            return contentTokens.getLegalFactNotificaAvvenutoAccesso(content);
+            return parserLegalFact.getLegalFactNotificaAvvenutoAccesso(content);
         } else if(legalFactType.equals(LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO)) {
-            return contentTokens.getLegalFactNotificaAvvenutoAccessoDelegato(content);
+            return parserLegalFact.getLegalFactNotificaAvvenutoAccessoDelegato(content);
         } else {
             return null;
         }

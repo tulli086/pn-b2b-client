@@ -1,24 +1,21 @@
-package it.pagopa.pn.client.b2b.pa.parsing.parser.impl;
+package it.pagopa.pn.client.b2b.pa.parsing.parser.utils;
 
+import static it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnContentExtractorUtils.countDuplicates;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokenProperty;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
 import it.pagopa.pn.client.b2b.pa.parsing.model.IPnDestinatario;
 import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatario;
 import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioAnalogico;
-import it.pagopa.pn.client.b2b.pa.parsing.dto.*;
-import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioDigitale;
-import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnLegalFactContent;
-import it.pagopa.pn.client.b2b.pa.parsing.parser.PnTextSlidingWindow;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.impl.PnContentExtractor;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
-import org.springframework.core.io.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class PnLegalFactContent implements IPnLegalFactContent {
+public class PnLegalFactContent {
     private final PnLegalFactTokenProperty tokenProperty;
     private final PnContentExtractor contentExtractor;
 
@@ -28,83 +25,11 @@ public class PnLegalFactContent implements IPnLegalFactContent {
         this.contentExtractor = new PnContentExtractor(pnLegalFactTokens);
     }
 
-    public PnParserRecord.PnParserContent extractContent(Resource resource, String source, IPnParserService.LegalFactType legalFactType) {
-        return contentExtractor.extractContent(resource, source, legalFactType);
+    public PnParserRecord.PnParserContent extractContent(byte[] source, IPnParserService.LegalFactType legalFactType) {
+        return contentExtractor.extractContent(source, legalFactType);
     }
 
-    @Override
-    public IPnLegalFact getLegalFactNotificaDowntime(PnParserRecord.PnParserContent content) {
-        return PnLegalFactNotificaDowntime.builder()
-                .dataOraDecorrenza(getDataOraDecorrenza(content))
-                .dataOraFine(getDataOraFineDecorrenza(content))
-                .build();
-    }
-
-    @Override
-    public IPnLegalFact getLegalFactNotificaDigitale(PnParserRecord.PnParserContent content) {
-        return PnLegalFactNotificaDigitale.builder()
-                .iun(getIun(content, false))
-                .pnDestinatario((PnDestinatarioDigitale) getDestinatario(content, true, false,true, false))
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, false, true, false))
-                .build();
-    }
-
-    @Override
-    public IPnLegalFact getLegalFactNotificaMancatoRecapito(PnParserRecord.PnParserContent content) {
-        return PnLegalFactNotificaMancatoRecapito.builder()
-                .iun(getIun(content, false))
-                .pnDestinatario((PnDestinatario) getDestinatario(content, true, false,false, false))
-                .primaData(getPrimaData(content))
-                .secondaData(getSecondaData(content))
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, false, false, true))
-                .build();
-    }
-
-    @Override
-    public IPnLegalFact getLegalFactNotificaPresaInCarico(PnParserRecord.PnParserContent content) {
-        return PnLegalFactNotificaPresaInCarico.builder()
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false, false))
-                .mittente(getMittente(content))
-                .cfMittente(getCfMittente(content))
-                .iun(getIun(content, true))
-                .pnDestinatario((PnDestinatario) getDestinatario(content, false,true, false, false))
-                .build();
-    }
-
-    @Override
-    public IPnLegalFact getLegalFactNotificaPresaInCaricoMultiDestinatario(PnParserRecord.PnParserContent content) {
-        return PnLegalFactNotificaPresaInCaricoMultiDestinatario.builder()
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false, false))
-                .mittente(getMittente(content))
-                .cfMittente(getCfMittente(content))
-                .iun(getIun(content, true))
-                .pnDestinatario((PnDestinatario) getDestinatario(content, false,true, false, true))
-                .destinatariAnalogici(getDestinatariAnalogici(content))
-                .build();
-    }
-
-    @Override
-    public IPnLegalFact getLegalFactNotificaAvvenutoAccesso(PnParserRecord.PnParserContent content) {
-        return PnLegalFactNotificaAvvenutoAccesso.builder()
-                .iun(getIun(content, false))
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, true, false, false, false, false))
-                .pnDestinatario((PnDestinatario) getDestinatario(content, false, false,false, false))
-                .build();
-    }
-    @Override
-    public IPnLegalFact getLegalFactNotificaAvvenutoAccessoDelegato(PnParserRecord.PnParserContent content) {
-        return PnLegalFactNotificaAvvenutoAccessoDelegato.builder()
-                .iun(getIun(content, false))
-                .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, true, false, false, false))
-                .pnDestinatario((PnDestinatario) getDestinatarioOrDelegato(content, true))
-                .delegato((PnDestinatario) getDestinatarioOrDelegato(content, false))
-                .build();
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private IPnDestinatario getDestinatario(PnParserRecord.PnParserContent content, boolean isDestinatarioDigitale, boolean isDestinatarioAnalogico, boolean isWithNotificaDigitale, boolean isWithNotificaMultiDestinatario) {
+    protected IPnDestinatario getDestinatario(PnParserRecord.PnParserContent content, boolean isDestinatarioDigitale, boolean isDestinatarioAnalogico, boolean isWithNotificaDigitale, boolean isWithNotificaMultiDestinatario) {
         if(isDestinatarioDigitale) {
             return new PnDestinatarioDigitale(
                     getNomeCognomeRagioneSociale(content, true),
@@ -132,11 +57,11 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                 getCodiceFiscale(content, false, false));
     }
 
-    private List<PnDestinatarioAnalogico> getDestinatariAnalogici(PnParserRecord.PnParserContent content) {
+    protected List<PnDestinatarioAnalogico> getDestinatariAnalogici(PnParserRecord.PnParserContent content) {
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
         String text = content.text();
         List<String> valueList = content.valueList();
-        int cntDestinatario = contentExtractor.countDuplicates(text, tokenProperty.getNomeCognomeRagioneSocialeStart1());
+        int cntDestinatario = countDuplicates(text, tokenProperty.getNomeCognomeRagioneSocialeStart1());
 
         for(int i = 1; i <= cntDestinatario; i++) {
             String nomeCognomeRagioneSociale = getNomeCognomeRagioneSociale(content, true);
@@ -165,7 +90,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
         return pnDestinatarioAnalogicoList;
     }
 
-    private IPnDestinatario getDestinatarioOrDelegato(PnParserRecord.PnParserContent content, boolean isDestinatario) {
+    protected IPnDestinatario getDestinatarioOrDelegato(PnParserRecord.PnParserContent content, boolean isDestinatario) {
         if(isDestinatario) {
             return new PnDestinatario(getNomeCognomeRagioneSociale(content, true),
                     getCodiceFiscale(content, true, false));
@@ -174,7 +99,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                 getCodiceFiscale(content, false, false));
     }
 
-    private String getIun(PnParserRecord.PnParserContent content, boolean isWithNotificaPresaInCarico) {
+    protected String getIun(PnParserRecord.PnParserContent content, boolean isWithNotificaPresaInCarico) {
         if (isWithNotificaPresaInCarico) {
             return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
@@ -193,7 +118,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                 .build(), content.valueList()), false);
     }
 
-    private String getNomeCognomeRagioneSociale(PnParserRecord.PnParserContent content, boolean isDestinatario) {
+    protected String getNomeCognomeRagioneSociale(PnParserRecord.PnParserContent content, boolean isDestinatario) {
         if(isDestinatario) {
             return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
@@ -213,7 +138,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
         }
     }
 
-    private String getDataAttestazioneOpponibile(PnParserRecord.PnParserContent content,
+    protected String getDataAttestazioneOpponibile(PnParserRecord.PnParserContent content,
                                                  boolean isWithNotificaAvvenutoAccesso,
                                                  boolean isWithNotificaAvvenutoAccessoDelegato,
                                                  boolean isWithNotificaPresaInCaricoAndMultiDestinatario,
@@ -263,7 +188,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
         return null;
     }
 
-    private String getCodiceFiscale(PnParserRecord.PnParserContent content, boolean isDestinatario, boolean isDestinatarioDigitaleOrAnalogico) {
+    protected String getCodiceFiscale(PnParserRecord.PnParserContent content, boolean isDestinatario, boolean isDestinatarioDigitaleOrAnalogico) {
         if(isDestinatario) {
             return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
@@ -291,7 +216,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
         }
     }
 
-    private String getDomicilioDigitale(PnParserRecord.PnParserContent content) {
+    protected String getDomicilioDigitale(PnParserRecord.PnParserContent content) {
         return contentExtractor.cleanUp(
                 contentExtractor.getField(PnTextSlidingWindow.builder()
                 .originalText(content.text())
@@ -301,7 +226,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                 .build(), content.valueList()), false);
     }
 
-    private String getTipologiaDomicilioDigitale(PnParserRecord.PnParserContent content, boolean isDestinatarioAnalogico, boolean isDestinatarioDigitale) {
+    protected String getTipologiaDomicilioDigitale(PnParserRecord.PnParserContent content, boolean isDestinatarioAnalogico, boolean isDestinatarioDigitale) {
         if(isDestinatarioAnalogico) {
             return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
@@ -329,7 +254,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
         }
     }
 
-    private String getIndirizzoFisico(PnParserRecord.PnParserContent content, boolean isDestinatarioAnalogico) {
+    protected String getIndirizzoFisico(PnParserRecord.PnParserContent content, boolean isDestinatarioAnalogico) {
         if(isDestinatarioAnalogico) {
             return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
@@ -349,7 +274,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
         }
     }
 
-    private String getDataOraDecorrenza(PnParserRecord.PnParserContent content) {
+    protected String getDataOraDecorrenza(PnParserRecord.PnParserContent content) {
         return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
                         .originalText(content.text())
@@ -367,7 +292,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                                     .build(), content.valueList()), true));
     }
 
-    private String getDataOraFineDecorrenza(PnParserRecord.PnParserContent content) {
+    protected String getDataOraFineDecorrenza(PnParserRecord.PnParserContent content) {
         return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
@@ -385,7 +310,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                                 .build(), content.valueList()), true));
     }
 
-    private String getMittente(PnParserRecord.PnParserContent content) {
+    protected String getMittente(PnParserRecord.PnParserContent content) {
         return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
@@ -395,7 +320,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                     .build(), content.valueList()), true);
     }
 
-    private String getCfMittente(PnParserRecord.PnParserContent content) {
+    protected String getCfMittente(PnParserRecord.PnParserContent content) {
         return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
@@ -405,7 +330,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                     .build(), content.valueList()), false);
     }
 
-    private String getPrimaData(PnParserRecord.PnParserContent content) {
+    protected String getPrimaData(PnParserRecord.PnParserContent content) {
         return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
@@ -416,7 +341,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                     .build(), content.valueList()), true);
     }
 
-    private String getSecondaData(PnParserRecord.PnParserContent content) {
+    protected String getSecondaData(PnParserRecord.PnParserContent content) {
         return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
@@ -426,7 +351,7 @@ public class PnLegalFactContent implements IPnLegalFactContent {
                     .build(), content.valueList()), true);
     }
 
-    private String cleanDataAttestazioneOpponibile(String dataAttestazioneOpponibile) {
+    protected String cleanDataAttestazioneOpponibile(String dataAttestazioneOpponibile) {
         String[] splitted = dataAttestazioneOpponibile.split(" ");
         StringBuilder cleaned = new StringBuilder();
         for (String value: splitted) {

@@ -6,7 +6,7 @@ import it.pagopa.pn.client.b2b.pa.config.PnB2bClientTimingConfigs;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.*;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokenProperty;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
-import it.pagopa.pn.client.b2b.pa.parsing.parser.impl.PnLegalFactParser;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.impl.PnParser;
 import it.pagopa.pn.client.b2b.pa.parsing.service.impl.PnParserService;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.polling.impl.*;
@@ -79,7 +79,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         LegalFactTokenConfiguration.class,
         PnLegalFactTokenProperty.class,
         PnLegalFactTokens.class,
-        PnLegalFactParser.class,
+        PnParser.class,
         PnExternalChannelsServiceClientImpl.class
 
 })

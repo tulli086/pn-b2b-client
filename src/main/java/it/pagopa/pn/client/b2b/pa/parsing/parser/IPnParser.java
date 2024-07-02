@@ -5,5 +5,5 @@ import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserParameter;
 
 
 public interface IPnParser {
-    IPnLegalFact parse(String source, PnParserParameter parserParameter);
+    IPnLegalFact parse(byte[] source, PnParserParameter parserParameter);
 }

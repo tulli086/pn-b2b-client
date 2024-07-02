@@ -114,6 +114,6 @@ public interface IPnParserService {
             this.field = field;
         }
     }
-    PnParserResponse extractSingleField(String source, PnParserParameter parserParameter) throws IOException, NoSuchFieldException, IllegalAccessException;
-    PnParserResponse extractAllField(String source, PnParserParameter parserParameter) throws IOException;
+    PnParserResponse extractSingleField(byte[] source, PnParserParameter parserParameter) throws IOException, NoSuchFieldException, IllegalAccessException;
+    PnParserResponse extractAllField(byte[] source, PnParserParameter parserParameter) throws IOException;
 }

@@ -1,8 +1,9 @@
 package it.pagopa.pn.client.b2b.pa.parsing.parser.impl;
 
+import static it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnContentExtractorUtils.*;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
 import it.pagopa.pn.client.b2b.pa.parsing.exception.PnParserException;
-import it.pagopa.pn.client.b2b.pa.parsing.parser.PnTextSlidingWindow;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnTextSlidingWindow;
 import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnContentExtractor;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
@@ -12,10 +13,8 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
-import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.util.*;
-import static it.pagopa.pn.client.b2b.pa.parsing.util.PnParserContentUtil.*;
 
 
 @Slf4j
@@ -28,8 +27,8 @@ public class PnContentExtractor implements IPnContentExtractor {
     }
 
     @Override
-    public PnParserRecord.PnParserContent extractContent(Resource resource, String source, IPnParserService.LegalFactType legalFactType) {
-        try (final PDDocument document = Loader.loadPDF(resource.getFile())) {
+    public PnParserRecord.PnParserContent extractContent(byte[] source, IPnParserService.LegalFactType legalFactType) {
+        try (final PDDocument document = Loader.loadPDF(source)) {
             PnBoldWordExtractor boldWordExtractor = new PnBoldWordExtractor();
             boldWordExtractor.setSortByPosition(true);
             boldWordExtractor.getText(document);
@@ -40,7 +39,8 @@ public class PnContentExtractor implements IPnContentExtractor {
             pdfTextStripper.setEndPage(document.getNumberOfPages());
 
             List<String> boldValueList = boldWordExtractor.getBoldWordList();
-            if(boldValueList.isEmpty()) throw new PnParserException("PDF not valid: document did not contain bold words!!!");
+            if(boldValueList.isEmpty())
+                throw new PnParserException("PDF not valid: document did not contain bold words!!!");
 
             return getContent(pdfTextStripper.getText(document), boldValueList, legalFactType);
         } catch (IOException exception) {
@@ -78,19 +78,6 @@ public class PnContentExtractor implements IPnContentExtractor {
         return text.replaceAll(pnLegalFactTokens.getTokenProps().getRegexCarriageNewline(), "");
     }
 
-    public int countDuplicates(String text, String toSearch) {
-        if (toSearch.isEmpty()) {
-            return 0;
-        }
-        int count = 0;
-        int fromIndex = 0;
-        while ((fromIndex = text.indexOf(toSearch, fromIndex)) != -1) {
-            count++;
-            fromIndex += toSearch.length();
-        }
-        return count;
-    }
-
     private List<String> composeBrokenValue(String text, List<String> toRecomposeList, IPnParserService.LegalFactType legalFactType) {
         PnTextSlidingWindow pnTextSlidingWindow = PnTextSlidingWindow.builder().slidedText(text).originalText(text).build();
         List<String> composeList = new ArrayList<>(toRecomposeList);
@@ -99,12 +86,12 @@ public class PnContentExtractor implements IPnContentExtractor {
 
         while (iterator.hasNext()) {
             String value = iterator.next();
-            for(PnLegalFactTokens.TokenFieldGroup group: pnLegalFactTokens.getFieldTokenList()) {
+            for(PnLegalFactTokens.PnTokenFieldGroup group: pnLegalFactTokens.getFieldTokenList()) {
                 if(group.getLegalFactTypeList().contains(legalFactType)) {
                     pnTextSlidingWindow.setTokenStart(group.getTokenStart());
                     pnTextSlidingWindow.setTokenEnd(group.getTokenEnd());
                     List<Integer> brokenValueList = concatenateValue(pnTextSlidingWindow, value, composeList, pnLegalFactTokens.getTokenProps());
-                    if(brokenValueList != null) {
+                    if(!brokenValueList.isEmpty()) {
                         for(int i = 1; i <= brokenValueList.size(); i++) {
                             iterator.next();
                         }
@@ -120,8 +107,8 @@ public class PnContentExtractor implements IPnContentExtractor {
 
     @Getter
     private class PnBoldWordExtractor extends PDFTextStripper {
-        private final String BOLD = "bold";
-        private List<String> boldWordList;
+        private static final String BOLD = "bold";
+        private final List<String> boldWordList;
 
         public PnBoldWordExtractor() {
             super();
