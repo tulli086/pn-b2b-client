@@ -86,7 +86,7 @@ public class PnContentExtractor implements IPnContentExtractor {
 
         while (iterator.hasNext()) {
             String value = iterator.next();
-            for(PnLegalFactTokens.PnTokenFieldGroup group: pnLegalFactTokens.getFieldTokenList()) {
+            for(PnLegalFactTokens.PnLegalFactTypeTokenGroup group: pnLegalFactTokens.getFieldTokenList()) {
                 if(group.getLegalFactTypeList().contains(legalFactType)) {
                     pnTextSlidingWindow.setTokenStart(group.getTokenStart());
                     pnTextSlidingWindow.setTokenEnd(group.getTokenEnd());
