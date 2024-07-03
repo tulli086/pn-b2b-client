@@ -3300,7 +3300,7 @@ try{
     private Map<String, String> populateConsolidatoreMap(Instant date) {
         String iun = sharedSteps.getSentNotification().getIun();
         Map<String, String> mapInfo = new HashMap<>();
-        String requestId = "PREPARE_ANALOG_DOMICILE.IUN_".concat(iun).concat(".RECINDEX_0.ATTEMPT_0.PCRETRY_0");
+        String requestId = iun.concat(".RECINDEX_0.PCRETRY_0");
         mapInfo.put("requestId", requestId);
         mapInfo.put("attachments", null);
         mapInfo.put("clientRequestTimeStamp", utils.getOffsetDateTimeFromDate(date));
