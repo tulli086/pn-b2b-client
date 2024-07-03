@@ -3300,13 +3300,14 @@ try{
     private Map<String, String> populateConsolidatoreMap(Instant date) {
         String iun = sharedSteps.getSentNotification().getIun();
         Map<String, String> mapInfo = new HashMap<>();
-        mapInfo.put("requestId", "PREPARE_ANALOG_DOMICILE.IUN_GDHR-TAEM-VRNX-202312-Y-1.RECINDEX_0.ATTEMPT_0.PCRETRY_0");
+        String requestId = "PREPARE_ANALOG_DOMICILE.IUN_".concat(iun).concat(".RECINDEX_0.ATTEMPT_0.PCRETRY_0");
+        mapInfo.put("requestId", requestId);
         mapInfo.put("attachments", null);
         mapInfo.put("clientRequestTimeStamp", utils.getOffsetDateTimeFromDate(date));
         mapInfo.put("deliveryFailureCause", null);
         mapInfo.put("discoveredAddress", null);
         mapInfo.put("iun", iun);
-        mapInfo.put("productType", "AR");
+        mapInfo.put("productType", "890");
         mapInfo.put("registeredLetterCode", null);
         mapInfo.put("statusCode", "CON020");
         mapInfo.put("statusDateTime", utils.getOffsetDateTimeFromDate(date));
