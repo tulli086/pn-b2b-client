@@ -17,7 +17,8 @@ public class PnLegalFactNotificaMancatoRecapito extends PnLegalFact {
     private String primaData;
     private String secondaData;
 
-    public PnLegalFactNotificaMancatoRecapito(String iun,
+    public PnLegalFactNotificaMancatoRecapito(String title,
+                                              String iun,
                                               String dataAttestazioneOpponibile,
                                               String nomeCognomeRagioneSociale,
                                               String codiceFiscale,
@@ -25,7 +26,7 @@ public class PnLegalFactNotificaMancatoRecapito extends PnLegalFact {
                                               String tipoDomicilioDigitale,
                                               String primaData,
                                               String secondaData) {
-        super(new PnDestinatarioDigitale(nomeCognomeRagioneSociale, codiceFiscale,domicilioDigitale, tipoDomicilioDigitale), iun, dataAttestazioneOpponibile);
+        super(new PnDestinatarioDigitale(nomeCognomeRagioneSociale, codiceFiscale,domicilioDigitale, tipoDomicilioDigitale), title, iun, dataAttestazioneOpponibile);
         this.primaData = primaData;
         this.secondaData = secondaData;
     }

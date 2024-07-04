@@ -8,6 +8,7 @@ import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatario;
 import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioDigitale;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnLegalFactContent;
+import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 
 
 public class PnParserLegalFact extends PnLegalFactContent implements IPnParserLegalFact {
@@ -18,6 +19,7 @@ public class PnParserLegalFact extends PnLegalFactContent implements IPnParserLe
     @Override
     public IPnLegalFact getLegalFactNotificaDowntime(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaDowntime.builder()
+                .title(getTitle(content))
                 .dataOraDecorrenza(getDataOraDecorrenza(content))
                 .dataOraFine(getDataOraFineDecorrenza(content))
                 .build();
@@ -26,6 +28,7 @@ public class PnParserLegalFact extends PnLegalFactContent implements IPnParserLe
     @Override
     public IPnLegalFact getLegalFactNotificaDigitale(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaDigitale.builder()
+                .title(getTitle(content))
                 .iun(getIun(content, false))
                 .pnDestinatario((PnDestinatarioDigitale) getDestinatario(content, true, false,true, false))
                 .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, false, true, false))
@@ -35,6 +38,7 @@ public class PnParserLegalFact extends PnLegalFactContent implements IPnParserLe
     @Override
     public IPnLegalFact getLegalFactNotificaMancatoRecapito(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaMancatoRecapito.builder()
+                .title(getTitle(content))
                 .iun(getIun(content, false))
                 .pnDestinatario((PnDestinatario) getDestinatario(content, true, false,false, false))
                 .primaData(getPrimaData(content))
@@ -46,6 +50,7 @@ public class PnParserLegalFact extends PnLegalFactContent implements IPnParserLe
     @Override
     public IPnLegalFact getLegalFactNotificaAvvenutoAccesso(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaAvvenutoAccesso.builder()
+                .title(getTitle(content))
                 .iun(getIun(content, false))
                 .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, true, false, false, false, false))
                 .pnDestinatario((PnDestinatario) getDestinatario(content, false, false,false, false))
@@ -55,6 +60,7 @@ public class PnParserLegalFact extends PnLegalFactContent implements IPnParserLe
     @Override
     public IPnLegalFact getLegalFactNotificaAvvenutoAccessoDelegato(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaAvvenutoAccessoDelegato.builder()
+                .title(getTitle(content))
                 .iun(getIun(content, false))
                 .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, true, false, false, false))
                 .pnDestinatario((PnDestinatario) getDestinatarioOrDelegato(content, true))
@@ -65,6 +71,7 @@ public class PnParserLegalFact extends PnLegalFactContent implements IPnParserLe
     @Override
     public IPnLegalFact getLegalFactNotificaPresaInCarico(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaPresaInCarico.builder()
+                .title(getTitle(content))
                 .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false, false))
                 .mittente(getMittente(content))
                 .cfMittente(getCfMittente(content))
@@ -76,6 +83,7 @@ public class PnParserLegalFact extends PnLegalFactContent implements IPnParserLe
     @Override
     public IPnLegalFact getLegalFactNotificaPresaInCaricoMultiDestinatario(PnParserRecord.PnParserContent content) {
         return PnLegalFactNotificaPresaInCaricoMultiDestinatario.builder()
+                .title(getTitle(content))
                 .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false, false))
                 .mittente(getMittente(content))
                 .cfMittente(getCfMittente(content))

@@ -17,7 +17,8 @@ public class PnLegalFactNotificaPresaInCaricoMultiDestinatario extends PnLegalFa
     private List<PnDestinatarioAnalogico> destinatariAnalogici;
 
 
-    public PnLegalFactNotificaPresaInCaricoMultiDestinatario(String iun,
+    public PnLegalFactNotificaPresaInCaricoMultiDestinatario(String title,
+                                                             String iun,
                                                              String dataAttestazioneOpponibile,
                                                              String nomeCognomeRagioneSociale,
                                                              String codiceFiscale,
@@ -26,7 +27,7 @@ public class PnLegalFactNotificaPresaInCaricoMultiDestinatario extends PnLegalFa
                                                              String indirizzoFisico,
                                                              String mittente,
                                                              String cfMittente) {
-        super(iun, dataAttestazioneOpponibile, nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipoDomicilioDigitale, indirizzoFisico, mittente, cfMittente);
+        super(title, iun, dataAttestazioneOpponibile, nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipoDomicilioDigitale, indirizzoFisico, mittente, cfMittente);
         this.destinatariAnalogici = new ArrayList<>();
     }
 

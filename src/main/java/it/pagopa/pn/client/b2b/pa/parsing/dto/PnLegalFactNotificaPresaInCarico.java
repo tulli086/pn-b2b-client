@@ -18,7 +18,8 @@ public class PnLegalFactNotificaPresaInCarico extends PnLegalFact {
     private String cfMittente;
 
 
-    public PnLegalFactNotificaPresaInCarico(String iun,
+    public PnLegalFactNotificaPresaInCarico(String title,
+                                            String iun,
                                             String dataAttestazioneOpponibile,
                                             String nomeCognomeRagioneSociale,
                                             String codiceFiscale,
@@ -27,7 +28,7 @@ public class PnLegalFactNotificaPresaInCarico extends PnLegalFact {
                                             String indirizzoFisico,
                                             String mittente,
                                             String cfMittente) {
-        super(new PnDestinatarioAnalogico(nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipoDomicilioDigitale, indirizzoFisico), iun, dataAttestazioneOpponibile);
+        super(new PnDestinatarioAnalogico(nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipoDomicilioDigitale, indirizzoFisico), title, iun, dataAttestazioneOpponibile);
         this.mittente = mittente;
         this.cfMittente = cfMittente;
     }

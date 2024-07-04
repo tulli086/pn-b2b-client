@@ -99,6 +99,10 @@ public class PnLegalFactContent {
                 getCodiceFiscale(content, false, false));
     }
 
+    protected String getTitle(PnParserRecord.PnParserContent content) {
+        return content.valueList().get(0);
+    }
+
     protected String getIun(PnParserRecord.PnParserContent content, boolean isWithNotificaPresaInCarico) {
         if (isWithNotificaPresaInCarico) {
             return contentExtractor.cleanUp(

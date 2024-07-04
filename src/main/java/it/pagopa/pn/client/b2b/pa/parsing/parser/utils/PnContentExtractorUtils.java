@@ -189,7 +189,6 @@ public class PnContentExtractorUtils {
 
     public static List<String> removeUselessValues(List<String> boldValueList, List<String> toRemoveValue) {
         List<String> cleanedList = new ArrayList<>(boldValueList);
-        cleanedList.remove(0);
         cleanedList.removeIf(toRemoveValue::contains);
         return cleanedList;
     }

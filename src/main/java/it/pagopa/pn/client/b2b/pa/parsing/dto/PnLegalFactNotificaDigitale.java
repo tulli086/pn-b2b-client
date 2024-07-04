@@ -7,13 +7,14 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 public class PnLegalFactNotificaDigitale extends PnLegalFact {
-    public PnLegalFactNotificaDigitale(String iun,
+    public PnLegalFactNotificaDigitale(String title,
+                                       String iun,
                                        String dataAttestazioneOpponibile,
                                        String nomeCognomeRagioneSociale,
                                        String codiceFiscale,
                                        String domicilioDigitale,
                                        String tipoDomicilioDigitale) {
-        super(new PnDestinatarioDigitale(nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipoDomicilioDigitale), iun, dataAttestazioneOpponibile);
+        super(new PnDestinatarioDigitale(nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipoDomicilioDigitale), title, iun, dataAttestazioneOpponibile);
     }
 
     @Override

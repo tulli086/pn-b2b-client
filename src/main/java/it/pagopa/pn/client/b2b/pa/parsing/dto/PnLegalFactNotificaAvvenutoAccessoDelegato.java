@@ -17,13 +17,14 @@ import java.util.Objects;
 public class PnLegalFactNotificaAvvenutoAccessoDelegato extends PnLegalFactNotificaAvvenutoAccesso {
     private PnDestinatario delegato;
 
-    public PnLegalFactNotificaAvvenutoAccessoDelegato(String iun,
+    public PnLegalFactNotificaAvvenutoAccessoDelegato(String title,
+                                                      String iun,
                                                       String data,
                                                       String nomeCognomeRagioneSocialeDestinatario,
                                                       String codiceFiscaleDestinatario,
                                                       String nomeCognomeRagioneSocialeDelegato,
                                                       String codiceFiscaleDelegato) {
-        super(nomeCognomeRagioneSocialeDestinatario, codiceFiscaleDestinatario, iun, data);
+        super(nomeCognomeRagioneSocialeDestinatario, codiceFiscaleDestinatario, title, iun, data);
         this.delegato = new PnDestinatario(nomeCognomeRagioneSocialeDelegato, codiceFiscaleDelegato);
     }
 

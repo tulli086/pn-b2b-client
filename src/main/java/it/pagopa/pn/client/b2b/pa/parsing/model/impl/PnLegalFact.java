@@ -16,12 +16,14 @@ import java.util.Objects;
 @SuperBuilder
 public abstract class PnLegalFact implements IPnLegalFact {
     private PnDestinatario pnDestinatario;
+    private String title;
     private String iun;
     private String dataAttestazioneOpponibile;
 
 
-    protected PnLegalFact(PnDestinatario pnDestinatario, String iun, String dataAttestazioneOpponibile) {
+    protected PnLegalFact(PnDestinatario pnDestinatario, String title, String iun, String dataAttestazioneOpponibile) {
         this.pnDestinatario = pnDestinatario;
+        this.title = title;
         this.iun = iun;
         this.dataAttestazioneOpponibile = dataAttestazioneOpponibile;
     }
@@ -29,6 +31,7 @@ public abstract class PnLegalFact implements IPnLegalFact {
     @Override
     public PnParserRecord.PnParserFieldValues getAllLegalFactValues() {
         PnParserRecord.PnParserFieldValues parserFieldValues = pnDestinatario.getAllDestinatarioValues();
+        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.TITLE, title);
         parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.IUN, iun);
         parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE, dataAttestazioneOpponibile);
         return parserFieldValues;

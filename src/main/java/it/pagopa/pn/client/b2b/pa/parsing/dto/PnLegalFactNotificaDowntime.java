@@ -14,11 +14,13 @@ import java.util.Map;
 @Setter
 @Builder
 public class PnLegalFactNotificaDowntime implements IPnLegalFact {
+    private String title;
     private String dataOraDecorrenza;
     private String dataOraFine;
 
 
-    public PnLegalFactNotificaDowntime(String dataOraDecorrenza, String dataOraFine) {
+    public PnLegalFactNotificaDowntime(String title, String dataOraDecorrenza, String dataOraFine) {
+        this.title = title;
         this.dataOraDecorrenza = dataOraDecorrenza;
         this.dataOraFine = dataOraFine;
     }
@@ -26,6 +28,7 @@ public class PnLegalFactNotificaDowntime implements IPnLegalFact {
     @Override
     public PnParserRecord.PnParserFieldValues getAllLegalFactValues() {
         Map<IPnParserService.LegalFactField, String> legalFactValues = new HashMap<>();
+        legalFactValues.put(IPnParserService.LegalFactField.TITLE, title);
         legalFactValues.put(IPnParserService.LegalFactField.DATA_ORA_DECORRENZA, dataOraDecorrenza);
         legalFactValues.put(IPnParserService.LegalFactField.DATA_ORA_FINE, dataOraFine);
         return new PnParserRecord.PnParserFieldValues(legalFactValues);
