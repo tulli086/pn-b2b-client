@@ -36,7 +36,7 @@
         <open.api.version.delivery.push_v23>36069ddec82d35af4a574df944d47db7e24c2c37</open.api.version.delivery.push_v23>
         <open.api.version.user.attributes>v2.4.0</open.api.version.user.attributes>
         <open.api.version.mandate>v2.4.0</open.api.version.mandate>
-        <open.api.version.apikey.manager>v2.2.0</open.api.version.apikey.manager>
+        <open.api.version.apikey.manager>v1.0.0</open.api.version.apikey.manager> <!--BFF API-->
         <open.api.version.downtime.logs>v2.2.0</open.api.version.downtime.logs>
         <open.api.version.radd.fsu>v2.1.5</open.api.version.radd.fsu>
         <open.api.version.radd.alt>v2.5.0-RC.4</open.api.version.radd.alt>
@@ -1109,7 +1109,7 @@
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-apikey-manager/${open.api.version.apikey.manager}/docs/openapi/pn-apikey-manager-external-web.yaml</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-bff/${open.api.version.apikey.manager}/docs/openapi/api-external-pn-bff-pa-apikeys.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
                             <generateApiTests>false</generateApiTests>

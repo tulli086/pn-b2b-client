@@ -4,10 +4,7 @@ import it.pagopa.pn.client.b2b.pa.service.IPnApiKeyManagerClient;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.ApiClient;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.api.ApiKeysApi;
-import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ApiKeysResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestApiKeyStatus;
-import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
-import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -59,24 +56,24 @@ public class PnApiKeyManagerExternalClientImpl implements IPnApiKeyManagerClient
         ApiClient newApiClient = new ApiClient( restTemplate );
         newApiClient.setBasePath( basePath );
         newApiClient.addDefaultHeader("user-agent",userAgent);
-        newApiClient.setBearerToken(bearerToken);
+        newApiClient.addDefaultHeader("Authorization","Bearer "+bearerToken);
         return newApiClient;
     }
 
-    public void changeStatusApiKey(String id, RequestApiKeyStatus requestApiKeyStatus) throws RestClientException {
-        apiKeysApi.changeStatusApiKey(id, requestApiKeyStatus);
+    public void changeStatusApiKey(String id, BffRequestApiKeyStatus requestApiKeyStatus) throws RestClientException {
+        apiKeysApi.changeStatusApiKeyV1(id, requestApiKeyStatus);
     }
 
     public void deleteApiKeys(String id) throws RestClientException {
-        apiKeysApi.deleteApiKeys(id);
+        apiKeysApi.deleteApiKeyV1(id);
     }
 
-    public ApiKeysResponse getApiKeys(Integer limit, String lastKey, String lastUpdate, Boolean showVirtualKey) throws RestClientException {
-        return apiKeysApi.getApiKeys(limit, lastKey, lastUpdate, showVirtualKey);
+    public BffApiKeysResponse getApiKeys(Integer limit, String lastKey, String lastUpdate, Boolean showVirtualKey) throws RestClientException {
+        return apiKeysApi.getApiKeysV1(limit, lastKey, lastUpdate, showVirtualKey);
     }
 
-    public ResponseNewApiKey newApiKey(RequestNewApiKey requestNewApiKey) throws RestClientException {
-        return apiKeysApi.newApiKey(requestNewApiKey);
+    public BffResponseNewApiKey newApiKey(BffRequestNewApiKey requestNewApiKey) throws RestClientException {
+        return apiKeysApi.newApiKeyV1(requestNewApiKey);
     }
 
     //TODO: indagare l'utilizzo di questo metodo

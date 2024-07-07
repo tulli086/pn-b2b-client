@@ -244,7 +244,7 @@ public class AnagraficaRaddAltSteps {
     }
 
 
-    @When("si controlla che il sporetello sia in stato {string}")
+    @When("si controlla che il sportello sia in stato {string}")
     public void vieneCercatoloSportelloEControlloStato( String status) {
         RegistryRequestResponse dato= null;
 

@@ -24,6 +24,8 @@ import it.pagopa.pn.client.b2b.pa.service.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
 import it.pagopa.pn.client.b2b.pa.config.springconfig.RestTemplateConfiguration;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.BffRequestNewApiKey;
+import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.BffResponseNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.RequestNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
@@ -117,11 +119,11 @@ public class SharedSteps {
 
     @Getter
     @Setter
-    private RequestNewApiKey requestNewApiKey;
+    private BffRequestNewApiKey requestNewApiKey;
 
     @Getter
     @Setter
-    private ResponseNewApiKey responseNewApiKey;
+    private BffResponseNewApiKey responseNewApiKey;
 
     @Getter
     @Setter
