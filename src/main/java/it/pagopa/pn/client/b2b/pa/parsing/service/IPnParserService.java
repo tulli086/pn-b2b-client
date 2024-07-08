@@ -4,23 +4,34 @@ import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserParameter;
 import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserResponse;
 import lombok.Getter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 
 public interface IPnParserService {
     @Getter
-    enum LegalFactTitle {
-        TITLE_NOTIFICA_DOWNTIME("Attestazione opponibile a terzi"),
-        TITLE_NOTIFICA_DIGITALE("Attestazione opponibile a terzi: notifica digitale"),
-        TITLE_NOTIFICA_MANCATO_RECAPITO("Attestazione opponibile a terzi: mancato recapito digitale"),
-        TITLE_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO("Attestazione opponibile a terzi: notifica presa in carico"),
-        TITLE_NOTIFICA_PRESA_IN_CARICO("Attestazione opponibile a terzi: notifica presa in carico"),
-        TITLE_NOTIFICA_AVVENUTO_ACCESSO("Attestazione opponibile a terzi: avvenuto accesso"),
-        TITLE_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO("Attestazione opponibile a terzi: avvenuto accesso");
+    enum LegalFactTypeTitle {
+        TYPE_TITLE_NOTIFICA_DOWNTIME(LegalFactType.LEGALFACT_NOTIFICA_DOWNTIME, "Attestazione opponibile a terzi"),
+        TYPE_TITLE_NOTIFICA_DIGITALE(LegalFactType.LEGALFACT_NOTIFICA_DIGITALE, "Attestazione opponibile a terzi: notifica digitale"),
+        TYPE_TITLE_NOTIFICA_MANCATO_RECAPITO(LegalFactType.LEGALFACT_NOTIFICA_MANCATO_RECAPITO,"Attestazione opponibile a terzi: mancato recapito digitale"),
+        TYPE_TITLE_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO(LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO,"Attestazione opponibile a terzi: notifica presa in carico"),
+        TYPE_TITLE_NOTIFICA_PRESA_IN_CARICO(LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO,"Attestazione opponibile a terzi: notifica presa in carico"),
+        TYPE_TITLE_NOTIFICA_AVVENUTO_ACCESSO(LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO,"Attestazione opponibile a terzi: avvenuto accesso"),
+        TYPE_TITLE_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO(LegalFactType.LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO_DELEGATO,"Attestazione opponibile a terzi: avvenuto accesso");
 
+        private final LegalFactType type;
         private final String title;
-        LegalFactTitle(String title){
+        LegalFactTypeTitle(LegalFactType type, String title){
+            this.type = type;
             this.title = title;
+        }
+
+        public static String getTitleByType(LegalFactType type) {
+            return Arrays.stream(LegalFactTypeTitle.values())
+                    .filter(value -> value.getType().equals(type))
+                    .findAny()
+                    .get()
+                    .getTitle();
         }
     }
 
@@ -97,8 +108,8 @@ public interface IPnParserService {
                 LegalFactField.DELEGATO_INDIRIZZO_FISICO);
 
         private final List<LegalFactField> legalFactFieldList;
-        LegalFactType(LegalFactField... keyValues){
-            this.legalFactFieldList = List.of(keyValues);
+        LegalFactType(LegalFactField... field){
+            this.legalFactFieldList = List.of(field);
         }
     }
 
