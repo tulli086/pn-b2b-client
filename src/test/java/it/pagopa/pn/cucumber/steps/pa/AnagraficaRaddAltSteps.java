@@ -23,7 +23,10 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static it.pagopa.pn.cucumber.utils.NotificationValue.generateRandomNumber;
@@ -248,7 +251,7 @@ public class AnagraficaRaddAltSteps {
                 .mapToObj(numCheck -> {
                     waitState(WAITING_STATE_CSV);
                     RegistryRequestResponse registryRequestResponse = getRegistryRequestResponse(status);
-                    checkWaitForAcceptedStatus(status);
+                    if (status.equalsIgnoreCase(ACCEPTED)) waitState(WAITING_ACCEPTED_STATE);
                     return registryRequestResponse;
                 })
                 .filter(data -> data.getStatus() != null && data.getStatus().equalsIgnoreCase(status))
@@ -267,12 +270,6 @@ public class AnagraficaRaddAltSteps {
 
         } catch (AssertionFailedError assertionFailedError) {
             throwAssertFailerForSportelloIssue(assertionFailedError, dato);
-        }
-    }
-
-    private static void checkWaitForAcceptedStatus(String status) {
-        if(status.equalsIgnoreCase(ACCEPTED)){
-            waitState(WAITING_ACCEPTED_STATE);
         }
     }
 
@@ -308,7 +305,7 @@ public class AnagraficaRaddAltSteps {
     public void vieneCercatoloSportelloEControlloStatoAReject( String errore, @Transpose CreateRegistryRequest dataSportello) {
 
         RegistryRequestResponse dato = this.sportelliCsvRaddista.getItems().stream()
-                .filter(elem-> elem.getOriginalRequest()
+                .filter(elem -> elem.getOriginalRequest()
                         .getOriginalAddress()
                         .getCity().equalsIgnoreCase(dataSportello.getAddress().getCity()))
                 .findAny()
