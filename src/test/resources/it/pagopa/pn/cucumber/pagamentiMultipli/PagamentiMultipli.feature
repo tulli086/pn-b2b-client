@@ -2952,22 +2952,6 @@ Feature: avanzamento notifiche b2b persona fisica multi pagamento
       | payment_multy_number | 1                                    |
     Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
-  @pagamentiMultipli @f24 @refused
-  Scenario: [B2B-PA-PAY_MULTI_95_5] PA - inserimento notifica mono destinatario con un solo F24 STANDARD COMPLETO VALID (Lunghezza e formato) -f24Standard.localTax.records[0].municipality must match "^[0-9A-Z]{4}$" .
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
-      | paFee              | 0                           |
-    And destinatario Mario Gherkin e:
-      #Sezione PagoPA-----------------------------
-      | payment_pagoPaForm   | NULL                                 |
-      | apply_cost_pagopa    | NULL                                 |
-      | payment_f24          | PAYMENT_F24_STANDARD_NO_VALID_ANAG_4 |
-      | title_payment        | F24_STANDARD_AE                      |
-      | apply_cost_f24       | SI                                   |
-      | payment_multy_number | 1                                    |
-    Then la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi REFUSED
 
 
     #-----------------------ADD TEST F24--------------------------

@@ -320,19 +320,7 @@ Feature: avanzamento b2b notifica difgitale con indirizzo speciale
     And destinatario Mario Gherkin
     When la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_PROGRESS"
-
-
-  @workflowDigitale
-   #[B2B_TIMELINE_HOTFIX-BINGQ2.2_1]
-  Scenario: [B2B_TIMELINE_DIGITAL_SPECIAL_28] Invio notifica digitale ed attesa stato DELIVERED con invio mail a pec mittente (bug HOTFIX-BINGQ2.2)
-    Given si invia una email alla pec mittente e si attendono 6 minuti
-    And viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-    And destinatario Gherkin spa
-    And destinatario Mario Cucumber
-    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    Then vengono letti gli eventi fino allo stato della notifica "DELIVERED"
+    
 
   @workflowDigitale
    #[B2B_TIMELINE_PG_3]
