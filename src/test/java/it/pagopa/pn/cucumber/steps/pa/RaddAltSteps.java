@@ -31,9 +31,10 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
+
 import static it.pagopa.pn.cucumber.utils.FiscalCodeGenerator.generateCF;
 import static it.pagopa.pn.cucumber.utils.NotificationValue.generateRandomNumber;
-
 
 @Slf4j
 public class RaddAltSteps {
@@ -249,6 +250,7 @@ public class RaddAltSteps {
                         .iun(this.iun)
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                         .checksum(this.documentUploadResponse.getValue2());
+
         System.out.println("actStartTransactionRequest: " + actStartTransactionRequest);
         this.startTransactionResponse = raddAltClient.startActTransaction(uid, actStartTransactionRequest);
 
@@ -647,13 +649,26 @@ public class RaddAltSteps {
         }
     }
 
-private void downloadFrontespizio(String operationType,String operationid,String attachmentId) {
-    byte[] download = raddAltClient.documentDownload(operationType,
-            operationid,
-            attachmentId);
-    Assertions.assertNotNull(download);
-    pnPaB2bUtils.stampaPdfTramiteByte(download, "target/classes/frontespizio" + generateRandomNumber() + ".pdf");
-}
+    @When("L'operatore scansiona il qrCode e stampa gli atti per {int} volte senza errori")
+    public void lOperatoreScansionaIlQrCodeEStampaGliAttiPerIntVolteSenzaErrori(int iteration) {
+        IntStream.range(0, iteration).forEach(i -> {
+            lOperatoreScansioneIlQrCodePerRecuperariGliAtti();
+            laScansioneSiConcludeCorrettamenteAlternative();
+            vengonoCaricatiIDocumentoDiIdentitaDelCittadino();
+            vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR();
+            lOperazioneDiDownloadDegliAttiSiConcludeCorrettamente();
+            vieneConclusaLaVisualizzatiDiAttiEdAttestazioniDellaNotifica();
+            laChiusuraDelleTransazionePerIlRecuperoDegliAarNonGeneraErrori();
+        });
+    }
+
+    private void downloadFrontespizio(String operationType,String operationid,String attachmentId) {
+        byte[] download = raddAltClient.documentDownload(operationType,
+                operationid,
+                attachmentId);
+        Assertions.assertNotNull(download);
+        pnPaB2bUtils.stampaPdfTramiteByte(download, "target/classes/frontespizio" + generateRandomNumber() + ".pdf");
+    }
 
     public void creazioneZip() throws IOException {
         String[] files = {};
@@ -704,9 +719,6 @@ private void downloadFrontespizio(String operationType,String operationid,String
             }
     }
 
-
-
-
     public void changeRaddista(String raddista) {
         switch (raddista.toLowerCase()) {
             case "issuer_1" -> raddAltClient.setAuthTokenRadd(SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_1);
@@ -722,4 +734,5 @@ private void downloadFrontespizio(String operationType,String operationid,String
             default -> throw new IllegalArgumentException();
         }
     }
+
 }
