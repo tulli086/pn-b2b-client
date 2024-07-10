@@ -594,7 +594,7 @@ public class AvanzamentoNotificheB2bSteps {
 
         try {
             Assertions.assertTrue(countTimeLineEventCategory <= 1,
-                    "L'elemento di timeline della notifica '" + timelineEventCategory + "' è presente più di una volta.");
+                    "L'elemento di timeline della notifica '" + timelineEventCategory + "' è presente solo una volta.");
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
