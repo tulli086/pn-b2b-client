@@ -1216,6 +1216,8 @@ public class PnPaB2bUtils {
 
         if (unit == 'm') {
             return number * 60;
+        } else if (unit == 'h') {
+            return number * 3600;
         } else {
             throw new IllegalArgumentException("Unità di misura non supportata");
         }
