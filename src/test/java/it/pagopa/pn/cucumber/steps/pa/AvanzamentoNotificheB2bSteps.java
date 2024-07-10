@@ -65,7 +65,7 @@ public class AvanzamentoNotificheB2bSteps {
     private final PnPollingFactory pnPollingFactory;
     private final TimingForPolling timingForPolling;
     private String legalFactUrl;
-
+    private String legalFactType;
 
     @Autowired
     public AvanzamentoNotificheB2bSteps(SharedSteps sharedSteps,
@@ -1186,7 +1186,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("la PA richiede il download dell'attestazione opponibile {string}")
     public void paRequiresDownloadOfLegalFact(String legalFactCategory) {
-        downloadLegalFact(legalFactCategory, true, false, false, null);
+        legalFactUrl = downloadLegalFact(legalFactCategory, true, false, false, null);
     }
 
     @Then("verifica generazione Atto opponibile senza la messa a disposizione in {string}")
@@ -1222,18 +1222,18 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("la PA richiede il download dell'attestazione opponibile {string} con deliveryDetailCode {string}")
     public void paRequiresDownloadOfLegalFactWithDeliveryDetailCode(String legalFactCategory, String deliveryDetailCode) {
-        downloadLegalFact(legalFactCategory, true, false, false, deliveryDetailCode);
+        legalFactUrl = downloadLegalFact(legalFactCategory, true, false, false, deliveryDetailCode);
     }
 
     @Then("viene richiesto tramite appIO il download dell'attestazione opponibile {string}")
     public void appIODownloadLegalFact(String legalFactCategory) {
-        downloadLegalFact(legalFactCategory, false, true, false, null);
+        legalFactUrl = downloadLegalFact(legalFactCategory, false, true, false, null);
     }
 
     @Then("{string} richiede il download dell'attestazione opponibile {string}")
     public void userDownloadLegalFact(String user, String legalFactCategory) {
         sharedSteps.selectUser(user);
-        downloadLegalFact(legalFactCategory, false, false, true, null);
+        legalFactUrl = downloadLegalFact(legalFactCategory, false, false, true, null);
     }
 
     @Then("la PA richiede il download dell'attestazione opponibile PEC_RECEIPT")
@@ -1251,7 +1251,7 @@ public class AvanzamentoNotificheB2bSteps {
     public void userDownloadLegalFactError(String user, String legalFactCategory,String statusCode) {
         try {
             sharedSteps.selectUser(user);
-            downloadLegalFact(legalFactCategory, false, false, true, null);
+            legalFactUrl =  downloadLegalFact(legalFactCategory, false, false, true, null);
         } catch (AssertionFailedError assertionFailedError) {
             // System.out.println(assertionFailedError.getCause().toString());
             // System.out.println(assertionFailedError.getCause().getMessage().toString());
@@ -1266,6 +1266,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("si verifica se il legalFact è di tipo {string}")
     public void siVerificaSeIlLegalFactEDiTipo(String legalFactType) {
+        this.legalFactType = legalFactType;
         byte[] source = utils.downloadFile(legalFactUrl);
         Assertions.assertNotNull(source);
         checkLegalFactType(source, legalFactType);
@@ -1276,6 +1277,28 @@ public class AvanzamentoNotificheB2bSteps {
         byte[] source = utils.downloadFile(legalFactUrl);
         Assertions.assertNotNull(source);
         checkLegalFactTypeAndFieldValue(source, legalFactType, legalFactField, legalFactValue);
+    }
+
+    @Then("si verifica se il legalFact contiene il campo {string} con value {string}")
+    public void siVerificaSeIlLegalFactContieneIlCampoConValue(String legalFactField, String legalFactValue) {
+        byte[] source = utils.downloadFile(legalFactUrl);
+        Assertions.assertNotNull(source);
+        checkLegalFactFieldValue(source, legalFactField, legalFactValue);
+    }
+
+    private void checkLegalFactType(byte[] source, String legalFactType) {
+        PnParserResponse pnParserResponse =
+                pnParserService.extractAllField(source,
+                        PnParserParameter.builder()
+                                .legalFactType(IPnParserService.LegalFactType.valueOf(legalFactType))
+                                .legalFactField(IPnParserService.LegalFactField.TITLE)
+                                .build());
+
+        Assertions.assertNotNull(pnParserResponse);
+        Assertions.assertNotNull(pnParserResponse.getPnLegalFact());
+        log.info("PN_LEGAL_FACT:\n {}", pnParserResponse.getPnLegalFact());
+        Assertions.assertEquals(pnParserResponse.getPnLegalFact().getAllLegalFactValues().fieldValue().get(IPnParserService.LegalFactField.TITLE),
+                IPnParserService.LegalFactTypeTitle.getTitleByType(IPnParserService.LegalFactType.valueOf(legalFactType)));
     }
 
     private void checkLegalFactTypeAndFieldValue(byte[] source, String legalFactType, String legalFactField, String legalFactValue) {
@@ -1295,19 +1318,8 @@ public class AvanzamentoNotificheB2bSteps {
         Assertions.assertEquals(legalFactValue, pnParserResponse.getPnLegalFact().getAllLegalFactValues().fieldValue().get(IPnParserService.LegalFactField.valueOf(legalFactField)));
     }
 
-    private void checkLegalFactType(byte[] source, String legalFactType) {
-        PnParserResponse pnParserResponse =
-                pnParserService.extractAllField(source,
-                        PnParserParameter.builder()
-                                .legalFactType(IPnParserService.LegalFactType.valueOf(legalFactType))
-                                .legalFactField(IPnParserService.LegalFactField.TITLE)
-                                .build());
-
-        Assertions.assertNotNull(pnParserResponse);
-        Assertions.assertNotNull(pnParserResponse.getPnLegalFact());
-        log.info("PN_LEGAL_FACT:\n {}", pnParserResponse.getPnLegalFact());
-        Assertions.assertEquals(pnParserResponse.getPnLegalFact().getAllLegalFactValues().fieldValue().get(IPnParserService.LegalFactField.TITLE),
-                IPnParserService.LegalFactTypeTitle.getTitleByType(IPnParserService.LegalFactType.valueOf(legalFactType)));
+    private void checkLegalFactFieldValue(byte[] source, String legalFactField, String legalFactValue) {
+        checkLegalFactTypeAndFieldValue(source, legalFactType, legalFactField, legalFactValue);
     }
 
     private String downloadLegalFact(String legalFactCategory, boolean pa, boolean appIO, boolean webRecipient, String deliveryDetailCode) {
