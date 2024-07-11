@@ -1,8 +1,18 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
 import it.pagopa.pn.client.b2b.pa.service.IPnIndicizzazioneSafeStorage;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.ApiClient;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
+import org.springframework.stereotype.Component;
 
+@Component()
 public class IPnIndicizzazioneSafeStorageImpl implements IPnIndicizzazioneSafeStorage {
+
+  private final ApiClient indicizzazioneClient;
+
+  public IPnIndicizzazioneSafeStorageImpl(ApiClient indicizzazioneClient) {
+    this.indicizzazioneClient = indicizzazioneClient;
+  }
 
   @Override
   public String searchFileKeyWithTags() {
@@ -25,9 +35,10 @@ public class IPnIndicizzazioneSafeStorageImpl implements IPnIndicizzazioneSafeSt
   }
 
   @Override
-  public String getFileWithTags() {
-    return null;
+  public AdditionalFileTagsGetResponse getFileWithTags(String fileKey) {
+    return null;//TODO additionalFileTagsGetWithHttpInfo(fileKey).getBody();
   }
+
   @Override
   public boolean setApiKeys(ApiKeyType apiKey) {
     return false;

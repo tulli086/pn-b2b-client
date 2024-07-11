@@ -20,3 +20,4 @@ Feature: Indicizzazione Safe Storage
     Then Vengono controllati i file "UpdateSingleConSet" modificati
 
 
+
