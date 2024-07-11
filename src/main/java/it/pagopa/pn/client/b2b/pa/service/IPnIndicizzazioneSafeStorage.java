@@ -4,14 +4,13 @@ import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 
 public interface IPnIndicizzazioneSafeStorage extends SettableApiKey {
 
-    //TODO MATTEO
-    String searchFileKey();
+    String searchFileKeyWithTags();
 
-    String updateMassive();
+    String updateMassiveWithTags();
 
-    String updateSingle();
+    String updateSingleWithTags();
 
-    String createFile();
+    String createFileWithTags();
 
-    String getFile();
+    String getFileWithTags();
 }
