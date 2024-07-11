@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import static it.pagopa.pn.cucumber.utils.NotificationValue.generateRandomNumber;
@@ -254,6 +255,7 @@ public class AnagraficaRaddAltSteps {
                     if (status.equalsIgnoreCase(ACCEPTED)) waitState(WAITING_ACCEPTED_STATE);
                     return registryRequestResponse;
                 })
+                .filter(Objects::nonNull)
                 .filter(data -> data.getStatus() != null && data.getStatus().equalsIgnoreCase(status))
                 .findFirst()
                 .map(data -> {
@@ -322,9 +324,9 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-    private static void throwAssertFailerForSportelloIssue(AssertionFailedError assertionFailedError, RegistryRequestResponse dato) {
+    private void throwAssertFailerForSportelloIssue(AssertionFailedError assertionFailedError, RegistryRequestResponse dato) {
         String message = assertionFailedError.getMessage() +
-                "{sportello: " + (dato == null ? "NULL" : dato) + " }";
+                " {sportello: " + (dato == null ? "NULL" : dato) + " requestId: " + this.requestid + " }";
         throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
     }
 
