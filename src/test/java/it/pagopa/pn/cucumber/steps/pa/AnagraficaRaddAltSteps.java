@@ -248,7 +248,7 @@ public class AnagraficaRaddAltSteps {
     @When("si controlla che il sportello sia in stato {string}")
     public void vieneCercatoloSportelloEControlloStato(String status) {
 
-        RegistryRequestResponse dato = IntStream.of(0, NUM_CHECK_STATE_CSV)
+        RegistryRequestResponse dato = IntStream.range(0, NUM_CHECK_STATE_CSV)
                 .mapToObj(numCheck -> {
                     waitState(WAITING_STATE_CSV);
                     RegistryRequestResponse registryRequestResponse = getRegistryRequestResponse(status);
@@ -258,11 +258,9 @@ public class AnagraficaRaddAltSteps {
                 .filter(Objects::nonNull)
                 .filter(data -> data.getStatus() != null && data.getStatus().equalsIgnoreCase(status))
                 .findFirst()
-                .map(data -> {
-                    log.info("sportello status corretto: '{}'", data);
-                    return data;
-                })
                 .orElse(null);
+
+        if (dato != null) log.info("sportello status corretto: '{}'", dato);
 
         try {
             Assertions.assertNotNull(dato);
@@ -277,7 +275,6 @@ public class AnagraficaRaddAltSteps {
 
     private RegistryRequestResponse getRegistryRequestResponse(String status) {
         return Optional.ofNullable(retrieveSportello())
-                .filter(data -> data.getItems() != null)
                 .map(RequestResponse::getItems)
                 .flatMap(data -> data.stream()
                         .filter(elem -> elem.getRequestId() != null && elem.getStatus() != null)
