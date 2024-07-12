@@ -2,16 +2,21 @@ package it.pagopa.pn.client.b2b.pa.service;
 
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
 
 public interface IPnIndicizzazioneSafeStorage extends SettableApiKey {
 
-    String searchFileKeyWithTags();
+    void getFileWithTagsByFileKey();
 
-    String updateMassiveWithTags();
+    void createFileWithTags();
 
-    String updateSingleWithTags();
+    AdditionalFileTagsUpdateResponse updateSingleWithTags(String fileKey,
+        AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest);
 
-    String createFileWithTags();
+    void updateMassiveWithTags();
 
-    AdditionalFileTagsGetResponse getFileWithTags(String fileKey);
+    AdditionalFileTagsGetResponse getTagsByFileKey(String fileKey);
+
+    void searchFileKeyWithTags();
 }

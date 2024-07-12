@@ -14,8 +14,7 @@ Feature: Indicizzazione Safe Storage
   #    | /safe-storage/v1/files/tags                | GET       |
 
   Scenario: UpdateSingle SUCCESS - solo operazioni SET
-    Given Vengono impostate le configurazioni di default
-    And Viene popolato il database con un insieme di "FileNoTag"
+    Given Viene popolato il database con un insieme di "FileNoTag"
     When Viene chiamata l'updateSingle passando come body "UpdateSingleConSet"
     Then Vengono controllati i file "UpdateSingleConSet" modificati
 
