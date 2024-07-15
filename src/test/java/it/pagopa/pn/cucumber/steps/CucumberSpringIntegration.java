@@ -11,7 +11,6 @@ import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.pa.utils.TimingForPolling;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 
@@ -72,7 +71,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceStatusExtraRapidV23.class,
         PnPollingServiceTimelineExtraRapidV23.class,
         MailSenderConfig.class,
-        PnExternalChannelsServiceClientImpl.class
+        PnExternalChannelsServiceClientImpl.class,
+        PnIndicizzazioneSafeStorageClientImpl.class
 
 })
 @EnableScheduling

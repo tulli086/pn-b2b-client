@@ -13,10 +13,19 @@ Feature: Indicizzazione Safe Storage
   #    | /safe-storage/v1/files/{fileKey}/tags      | GET       |
   #    | /safe-storage/v1/files/tags                | GET       |
 
-  Scenario: UpdateSingle SUCCESS - solo operazioni SET
-    Given Viene popolato il database con un insieme di "FileNoTag"
-    When Viene chiamata l'updateSingle passando come body "UpdateSingleConSet"
-    Then Vengono controllati i file "UpdateSingleConSet" modificati
+  Scenario Outline: UpdateSingle SUCCESS
+    Given Viene popolato il database
+      | dbData | <dbData> |
+    When Viene chiamato l'updateSingle
+      | requestName | <requestName> |
+      | fileKeyName | test          |
+    Then La response coincide con "<expectedOutput>"
+    Examples:
+      | dbData          | requestName                       | expectedOutput                   |
+      | FileWithoutTags | UPDATE_SINGLE_ONLY_SET.json       | ResponseUpdateSingleOnlySet      |
+      | FileWithTags    | UPDATE_SINGLE_ONLY_DELETE.json    | ResponseUpdateSingleOnlyDelete   |
+      | FileWithTags    | UPDATE_SINGLE_SET_AND_DELETE.json | ResponseUpdateSingleSetAndDelete |
+
 
 
 

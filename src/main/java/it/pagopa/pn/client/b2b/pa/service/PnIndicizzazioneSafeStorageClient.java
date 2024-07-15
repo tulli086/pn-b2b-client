@@ -5,14 +5,14 @@ import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.mod
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
 
-public interface IPnIndicizzazioneSafeStorage extends SettableApiKey {
+public interface PnIndicizzazioneSafeStorageClient extends SettableApiKey {
 
     void getFileWithTagsByFileKey();
 
     void createFileWithTags();
 
     AdditionalFileTagsUpdateResponse updateSingleWithTags(String fileKey,
-        AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest);
+                                                          AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest);
 
     void updateMassiveWithTags();
 

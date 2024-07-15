@@ -1,8 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
-import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENEBLED_INTEROP;
-
-import it.pagopa.pn.client.b2b.pa.service.IPnIndicizzazioneSafeStorage;
+import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
 import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.ApiClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.api.AdditionalFileTagsApi;
@@ -16,27 +14,28 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENEBLED_INTEROP;
+
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class IPnIndicizzazioneSafeStorageImpl implements IPnIndicizzazioneSafeStorage {
+public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSafeStorageClient {
   private final AdditionalFileTagsApi additionalFileTagsApi;
-
   private final RestTemplate restTemplate;
   private final String devBasePath;
   private final String enableInterop;
   private String bearerTokenInterop;
   private final InteropTokenSingleton interopTokenSingleton;
   private ApiKeyType apiKeySetted;
-
   private final String apiKeyIndexing;
 
   //TODO: modificare i valori nel value
-  public IPnIndicizzazioneSafeStorageImpl(
-      RestTemplate restTemplate, InteropTokenSingleton interopTokenSingleton,
-      @Value("${pn.external.base-url}") String devBasePath,
-      @Value("${pn.interop.enable}") String enableInterop,
-      @Value("${pn.external.api-key}") String apiKeyIndexing) {
+  public PnIndicizzazioneSafeStorageClientImpl(
+          RestTemplate restTemplate,
+          InteropTokenSingleton interopTokenSingleton,
+          @Value("${pn.external.base-url}") String devBasePath,
+          @Value("${pn.interop.enable}") String enableInterop,
+          @Value("${pn.external.api-key}") String apiKeyIndexing) {
     this.restTemplate = restTemplate;
     this.apiKeyIndexing = apiKeyIndexing;
     this.enableInterop = enableInterop;
@@ -45,7 +44,7 @@ public class IPnIndicizzazioneSafeStorageImpl implements IPnIndicizzazioneSafeSt
     if (ENEBLED_INTEROP.equalsIgnoreCase(enableInterop)) {
       this.bearerTokenInterop = interopTokenSingleton.getTokenInterop();
     }
-    this.additionalFileTagsApi = new AdditionalFileTagsApi( newApiClient( restTemplate, devBasePath, apiKeyIndexing, bearerTokenInterop, enableInterop) );
+    this.additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, devBasePath, apiKeyIndexing, bearerTokenInterop, enableInterop));
     this.apiKeySetted = ApiKeyType.INDEXING;
   }
 

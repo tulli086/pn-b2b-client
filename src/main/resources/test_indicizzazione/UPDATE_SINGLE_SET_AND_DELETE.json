@@ -1,0 +1,20 @@
+{
+  "SET": {
+    "CONSERVATION_STATUS": [
+      "OK"
+    ],
+    "IUN": [
+      "XXXFEF3RFD",
+      "CHDGDTFENM"
+    ]
+  },
+  "DELETE": {
+    "DOCUMENT_CREATIONDATE": [
+      "2024-06-27"
+    ],
+    "NOTIFICATION_CREATIONDATE": [
+      "2024-06-27",
+      "2024-06-30"
+    ]
+  }
+}
