@@ -6,8 +6,10 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -51,8 +53,19 @@ public class IndicizzazioneSteps {
         }
     }
 
-    @Then("La response coincide con {string}")
-    public void controllaOutput(String expectedOutput) {
-
+    @Then("La response coincide con l'output previsto")
+    public void controllaOutput(DataTable dataTable) {
+        Map<String, String> data = dataTable.asMap(String.class, String.class);
+        String expectedOutput = data.get("expectedOutput");
+        String fileKeyName = data.get("fileKeyName");
+        ObjectMapper objectMapper = new ObjectMapper();
+        AdditionalFileTagsGetResponse response = pnIndicizzazioneSafeStorageClient.getTagsByFileKey(fileKeyName);
+        try {
+            AdditionalFileTagsGetResponse expectedResponse =
+                    objectMapper.readValue(new File(JSON_PATH + expectedOutput), AdditionalFileTagsGetResponse.class);
+            Assertions.assertEquals(expectedResponse, response);
+        } catch (Exception e) {
+            //TODO
+        }
     }
 }
