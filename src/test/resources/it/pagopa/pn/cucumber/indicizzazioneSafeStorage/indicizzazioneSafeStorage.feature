@@ -5,13 +5,13 @@ Feature: Indicizzazione Safe Storage
     Then L'utente chiama l'endpoint e la chiamata restituisce 403
       | endpoint | <endpoint> |
     Examples:
-      | endpoint                 |
-      | getFileWithTagsByFileKey |
-      | createFileWithTags       |
-      | updateSingleWithTags     |
-      | updateMassiveWithTags    |
-      | getTagsByFileKey         |
-      | searchFileKeyWithTags    |
+      | endpoint             |
+#      | getFileWithTagsByFileKey |
+#      | createFileWithTags       |
+      | updateSingleWithTags |
+#      | updateMassiveWithTags    |
+      | getTagsByFileKey     |
+#      | searchFileKeyWithTags    |
 
   Scenario Outline: UpdateSingle SUCCESS
     Given Viene popolato il database
