@@ -1,8 +1,8 @@
 Feature: Indicizzazione Safe Storage
 
   Scenario Outline: FAILED AUTHORIZATION
-    When L'utente non è autorizzato ad accedere all'API
-    Then L'utente chiama l'endpoint e la chiamata restituisce 403
+    When L'utente chiama l'endpoint senza essere autorizzato ad accedervi
+    Then La chiamata restituisce 403
       | endpoint | <endpoint> |
     Examples:
       | endpoint             |

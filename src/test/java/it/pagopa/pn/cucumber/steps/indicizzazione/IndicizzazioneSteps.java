@@ -70,12 +70,12 @@ public class IndicizzazioneSteps {
         }
     }
 
-    @When("L'utente non è autorizzato ad accedere all'API")
+    @When("L'utente chiama l'endpoint senza essere autorizzato ad accedervi")
     public void utenteNonAutorizzato() {
         //TODO: disattivare l'autorizzazione dell'utente
     }
 
-    @Then("L'utente chiama l'endpoint e la chiamata restituisce 403")
+    @Then("La chiamata restituisce 403")
     public void chiamataEndpoint(DataTable dataTable) {
         Map<String, String> data = dataTable.asMap(String.class, String.class);
 
