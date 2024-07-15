@@ -8,14 +8,14 @@ import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
+import java.io.File;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import java.io.File;
-import java.util.Map;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
@@ -67,5 +67,35 @@ public class IndicizzazioneSteps {
         } catch (Exception e) {
             //TODO
         }
+    }
+
+    @When("L'utente non è autorizzato ad accedere all'API")
+    public void utenteNonAutorizzato() {
+        //TODO: disattivare l'autorizzazione dell'utente
+    }
+
+    @Then("L'utente chiama l'endpoint e la chiamata restituisce 403")
+    public void chiamataEndpoint(DataTable dataTable) {
+        Map<String, String> data = dataTable.asMap(String.class, String.class);
+
+        //TODO: modificare il controllo il base alla risposta effettiva
+        switch (data.get("endpoint")) {
+            case "getFileWithTagsByFileKey" ->
+                Assertions.assertThrows(HttpClientErrorException.class,
+                    () -> pnIndicizzazioneSafeStorageClient.getFileWithTagsByFileKey());
+            case "createFileWithTags" -> Assertions.assertThrows(HttpClientErrorException.class,
+                () -> pnIndicizzazioneSafeStorageClient.createFileWithTags());
+            case "updateSingleWithTags" -> Assertions.assertThrows(HttpClientErrorException.class,
+                () -> pnIndicizzazioneSafeStorageClient.updateSingleWithTags(
+                    "test", new AdditionalFileTagsUpdateRequest()));
+            case "updateMassiveWithTags" -> Assertions.assertThrows(HttpClientErrorException.class,
+                () -> pnIndicizzazioneSafeStorageClient.updateMassiveWithTags());
+            case "getTagsByFileKey" -> Assertions.assertThrows(HttpClientErrorException.class,
+                () -> pnIndicizzazioneSafeStorageClient.getTagsByFileKey("test"));
+            case "searchFileKeyWithTags" -> Assertions.assertThrows(HttpClientErrorException.class,
+                () -> pnIndicizzazioneSafeStorageClient.searchFileKeyWithTags());
+            default -> Assertions.fail("Endpoint non riconosciuto");
+        }
+
     }
 }
