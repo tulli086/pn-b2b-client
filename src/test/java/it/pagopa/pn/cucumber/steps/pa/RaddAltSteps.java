@@ -87,6 +87,7 @@ public class RaddAltSteps {
         this.actInquiryResponse = actInquiryResponse;
     }
 
+
     @When("L'operatore usa lo IUN {string} per recuperare gli atti di {string}")
     public void lOperatoreUsoIUNPerRecuperariGliAtti(String tipologiaIun, String cf) {
         selectUserRaddAlternative(cf);
