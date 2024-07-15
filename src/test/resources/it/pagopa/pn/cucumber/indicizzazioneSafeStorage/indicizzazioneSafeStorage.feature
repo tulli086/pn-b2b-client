@@ -32,11 +32,12 @@ Feature: Indicizzazione Safe Storage
 
   Scenario: UpdateSingle ERROR - SET+DELETE Stesso tag
     Given Viene popolato il database
-      | dbData | <dbData> |
+      | dbData | request/CREATE_FILE_WITH_TAGS.json |
     When Viene chiamato l'updateSingle
-      | requestName | <requestName> |
-      | fileKeyName | test          |
-    Then La response dell'updateSingle coincide con l'output previsto
+      | requestName | request/UPDATE_SINGLE_ERROR_SET_AND_DELETE.json |
+      | fileKeyName | test  |
+    Then La response dell'updateSingle coincide con il response code previsto
+      | expectedOutput | 400 |
 
 
 

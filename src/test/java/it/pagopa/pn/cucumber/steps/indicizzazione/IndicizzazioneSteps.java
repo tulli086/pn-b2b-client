@@ -83,7 +83,7 @@ public class IndicizzazioneSteps {
     public void chiamataEndpoint(DataTable dataTable) {
         Map<String, String> data = dataTable.asMap(String.class, String.class);
 
-        //TODO: modificare il controllo il base alla risposta effettiva
+        //TODO: modificare il controllo il base alla risposta effettiva, dobbiamo utilizzare il resultCode?
         switch (data.get("endpoint")) {
             case "getFileWithTagsByFileKey" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
                     pnIndicizzazioneSafeStorageClient.getFileWithTagsByFileKey());
@@ -101,8 +101,10 @@ public class IndicizzazioneSteps {
             default -> Assertions.fail("Endpoint non riconosciuto");
         }
     }
-    @Then("La response dell'updateSingle coincide con l'output previsto")
-    public void responseCheck(){
-
+    @Then("La response dell'updateSingle coincide con il response code previsto")
+    public void responseCheck(DataTable dataTable){
+        Map<String, String> data = dataTable.asMap(String.class, String.class);
+        //TODO: questa API non ritorna un body?
+        Assertions.assertEquals(data.get("expectedOutput"), updateSingleResponse.getResultCode());
     }
 }
