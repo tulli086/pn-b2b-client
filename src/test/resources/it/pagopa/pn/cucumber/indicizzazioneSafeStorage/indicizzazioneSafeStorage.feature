@@ -19,7 +19,7 @@ Feature: Indicizzazione Safe Storage
     When Viene chiamato l'updateSingle
       | requestName | <requestName> |
       | fileKeyName | test          |
-    Then La response coincide con l'output previsto
+    Then I file del database coincidono con quelli attesi
       | expectedOutput | "<expectedOutput>" |
       | fileKeyName    | test               |
     Examples:
@@ -29,6 +29,14 @@ Feature: Indicizzazione Safe Storage
       | request/CREATE_FILE_WITH_TAGS.json | request/UPDATE_SINGLE_ONLY_DELETE_2.json  | response/UPDATE_SINGLE_ONLY_DELETE_2.json  |
       | request/CREATE_FILE_WITH_TAGS.json | request/UPDATE_SINGLE_ONLY_DELETE_3.json  | response/UPDATE_SINGLE_ONLY_DELETE_3.json  |
       | request/CREATE_FILE_WITH_TAGS.json | request/UPDATE_SINGLE_SET_AND_DELETE.json | response/UPDATE_SINGLE_SET_AND_DELETE.json |
+
+  Scenario: UpdateSingle ERROR - SET+DELETE Stesso tag
+    Given Viene popolato il database
+      | dbData | <dbData> |
+    When Viene chiamato l'updateSingle
+      | requestName | <requestName> |
+      | fileKeyName | test          |
+    Then La response dell'updateSingle coincide con l'output previsto
 
 
 

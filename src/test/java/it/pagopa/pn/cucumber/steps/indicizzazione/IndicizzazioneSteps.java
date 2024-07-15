@@ -8,6 +8,7 @@ import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +55,8 @@ public class IndicizzazioneSteps {
         }
     }
 
-    @Then("La response coincide con l'output previsto")
-    public void controllaOutput(DataTable dataTable) {
+    @Then("I file del database coincidono con quelli attesi")
+    public void controllaDatabase(DataTable dataTable) {
         Map<String, String> data = dataTable.asMap(String.class, String.class);
         String expectedOutput = data.get("expectedOutput");
         String fileKeyName = data.get("fileKeyName");
@@ -96,6 +97,9 @@ public class IndicizzazioneSteps {
                     pnIndicizzazioneSafeStorageClient.searchFileKeyWithTags());
             default -> Assertions.fail("Endpoint non riconosciuto");
         }
+    }
+    @Then("La response dell'updateSingle coincide con l'output previsto")
+    public void responseCheck(){
 
     }
 }
