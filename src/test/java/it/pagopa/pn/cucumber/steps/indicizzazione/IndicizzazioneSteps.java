@@ -8,7 +8,7 @@ import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
-import lombok.Synchronized;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class IndicizzazioneSteps {
-    private final PnIndicizzazioneSafeStorageClient pnIndicizzazioneSafeStorageClient;
-
     private static final String JSON_PATH = "src/main/resources/test_indicizzazione/";
+    private final PnIndicizzazioneSafeStorageClient pnIndicizzazioneSafeStorageClient;
+    private AdditionalFileTagsUpdateResponse updateSingleResponse;
 
     @Autowired
     public IndicizzazioneSteps(PnIndicizzazioneSafeStorageClient pnIndicizzazioneSafeStorageClient) {
@@ -49,8 +50,9 @@ public class IndicizzazioneSteps {
         try {
             AdditionalFileTagsUpdateRequest request =
                     objectMapper.readValue(new File(JSON_PATH + requestName), AdditionalFileTagsUpdateRequest.class);
-            pnIndicizzazioneSafeStorageClient.updateSingleWithTags(fileKeyName, request);
-        } catch (Exception e) {
+            this.updateSingleResponse = pnIndicizzazioneSafeStorageClient.updateSingleWithTags(fileKeyName, request);
+            this.updateSingleResponse = new AdditionalFileTagsUpdateResponse();//TODO MATTEO eliminare, solo per testare la valorizzazione
+        } catch (IOException e) {
             //TODO
         }
     }
@@ -63,12 +65,13 @@ public class IndicizzazioneSteps {
         ObjectMapper objectMapper = new ObjectMapper();
         AdditionalFileTagsGetResponse response = pnIndicizzazioneSafeStorageClient.getTagsByFileKey(fileKeyName);
         try {
-            AdditionalFileTagsGetResponse expectedResponse =
-                    objectMapper.readValue(new File(JSON_PATH + expectedOutput), AdditionalFileTagsGetResponse.class);
+            AdditionalFileTagsGetResponse expectedResponse = objectMapper.readValue(
+                    new File(JSON_PATH + expectedOutput), AdditionalFileTagsGetResponse.class);
             Assertions.assertEquals(expectedResponse, response);
-        } catch (Exception e) {
+        } catch (IOException e) {
             //TODO
         }
+
     }
 
     @When("L'utente chiama l'endpoint senza essere autorizzato ad accedervi")
@@ -87,7 +90,7 @@ public class IndicizzazioneSteps {
             case "createFileWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
                     pnIndicizzazioneSafeStorageClient.createFileWithTags());
             case "updateSingleWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-                    pnIndicizzazioneSafeStorageClient.updateSingleWithTags(
+                    this.updateSingleResponse = pnIndicizzazioneSafeStorageClient.updateSingleWithTags(
                             "test", new AdditionalFileTagsUpdateRequest()));
             case "updateMassiveWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
                     pnIndicizzazioneSafeStorageClient.updateMassiveWithTags());

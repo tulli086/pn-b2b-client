@@ -23,12 +23,12 @@ Feature: Indicizzazione Safe Storage
       | expectedOutput | "<expectedOutput>" |
       | fileKeyName    | test               |
     Examples:
-      | dbData                             | requestName                               | expectedOutput                             |
-      | request/CREATE_FILE_NO_TAGS.json   | request/UPDATE_SINGLE_ONLY_SET.json       | response/UPDATE_SINGLE_ONLY_SET.json       |
-      | request/CREATE_FILE_WITH_TAGS.json | request/UPDATE_SINGLE_ONLY_DELETE_1.json  | response/UPDATE_SINGLE_ONLY_DELETE_1.json  |
-      | request/CREATE_FILE_WITH_TAGS.json | request/UPDATE_SINGLE_ONLY_DELETE_2.json  | response/UPDATE_SINGLE_ONLY_DELETE_2.json  |
-      | request/CREATE_FILE_WITH_TAGS.json | request/UPDATE_SINGLE_ONLY_DELETE_3.json  | response/UPDATE_SINGLE_ONLY_DELETE_3.json  |
-      | request/CREATE_FILE_WITH_TAGS.json | request/UPDATE_SINGLE_SET_AND_DELETE.json | response/UPDATE_SINGLE_SET_AND_DELETE.json |
+      | dbData                                | requestName                               | expectedOutput                             |
+      | request/CREATE_FILE_WITHOUT_TAGS.json | request/UPDATE_SINGLE_ONLY_SET.json       | response/UPDATE_SINGLE_ONLY_SET.json       |
+      | request/CREATE_FILE_WITH_TAGS.json    | request/UPDATE_SINGLE_ONLY_DELETE_1.json  | response/UPDATE_SINGLE_ONLY_DELETE_1.json  |
+      | request/CREATE_FILE_WITH_TAGS.json    | request/UPDATE_SINGLE_ONLY_DELETE_2.json  | response/UPDATE_SINGLE_ONLY_DELETE_2.json  |
+      | request/CREATE_FILE_WITH_TAGS.json    | request/UPDATE_SINGLE_ONLY_DELETE_3.json  | response/UPDATE_SINGLE_ONLY_DELETE_3.json  |
+      | request/CREATE_FILE_WITH_TAGS.json    | request/UPDATE_SINGLE_SET_AND_DELETE.json | response/UPDATE_SINGLE_SET_AND_DELETE.json |
 
   Scenario: UpdateSingle ERROR - SET+DELETE Stesso tag
     Given Viene popolato il database
