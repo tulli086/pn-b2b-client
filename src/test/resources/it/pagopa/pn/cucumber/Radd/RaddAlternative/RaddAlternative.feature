@@ -7,18 +7,20 @@ Feature: Radd Alternative
   # Assert:
   # Visualizzazione in timeline nuovo evento di avvenuta consegna documenti tramite RADD (NOTIFICATION_RADD_RETRIEVED)
   # stato Avvenuto Accesso non presente in timeline sia lato destinatario che lato PA
-  # Fare lo stesso caso per Mario Gherkin
   @raddAlt @zip
-  Scenario: [RADD-ALT_ACT-1] PF/PA - Scansione documenti e creazione file zip con scansione QR, stampa e consegna documenti disponibili associati.
+  Scenario Outline: [RADD-ALT_ACT-1] PF/PA - Scansione documenti e creazione file zip con scansione QR, stampa e consegna documenti disponibili associati.
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative |
-      | senderDenomination | Comune di Palermo                            |
-    And destinatario Mario Cucumber
+      | senderDenomination | Comune di Palermo
+    And destinatario
+      | denomination    | "<CITIZEN>"  |
+      | taxId           | "<CF>" |
+      | digitalDomicile_address | testpagopa3@pec.pagopa.it |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
-    And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-    And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
+    And Il cittadino "<CITIZEN>" come destinatario 0 mostra il QRCode "corretto"
+    And L'operatore scansione il qrCode per recuperare gli atti di "<CITIZEN>"
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
@@ -26,11 +28,15 @@ Feature: Radd Alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
-    And lato destinatario la notifica può essere correttamente recuperata da "Mario Cucumber" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
-    And lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
+    And lato destinatario la notifica può essere correttamente recuperata da "<CITIZEN>" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
+    And lato desinatario "<CITIZEN>" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
       | details          | NOT_NULL |
       | details_recIndex | 0        |
+    Examples:
+    | CITIZEN | CF
+    | Mario Cucumber | FRMTTR76M06B715E
+    | Mario Gherkin  | CLMCST42R12D969Z
 
   @raddAlt @zip
   Scenario: [RADD-ALT_ACT-55] PF - Scansione QR code esistente associato al CF corretto, per una notifica con allegati di pagamento (Avviso PagoPA e F24)
@@ -391,7 +397,6 @@ Feature: Radd Alternative
     And si verifica se il file richiede l'autenticazione
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
-
 
   @raddAlt @uatEnvCondition
   Scenario: [RADD-ALT_ACT-82] Inserimento notifica indirizzata a PG con sequence OK_890_ZIP  - verifica presenza elemento di timeline contenente la ricevuta di postalizzazione in formato zip
@@ -788,25 +793,32 @@ Feature: Radd Alternative
 # FLUSSO AOR su PF con QrCode - successfully cases
 
   #[RADD-ALT_AOR-24], [RADD-ALT_AOR-25], [RADD-ALT_AOR-26], [RADD-ALT_AOR-26_1]
-  # fare lo stesso check su And la persona fisica "Leonardo Da Vinci" chiede di verificare la presenza di notifiche
   @raddAlt @zip
-  Scenario: [RADD-ALT_AOR-23] PF - Visualizzazione link AAR disponibili con consegna documenti al cittadino successivi alla stampa documenti per notifiche associate al CF corretto (irreperibile totale)
+  Scenario Outline: [RADD-ALT_AOR-23] PF - Visualizzazione link AAR disponibili con consegna documenti al cittadino successivi alla stampa documenti per notifiche associate al CF corretto (irreperibile totale)
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
       | physicalCommunication | AR_REGISTERED_LETTER            |
     And destinatario Signor casuale e:
+    And destinatario
+      | denomination    | "<CITIZEN>"  |
+      | taxId                   | <CF>                           |
       | digitalDomicile         | NULL                                         |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    And la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
+    And la persona fisica <CITIZEN> chiede di verificare la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
+    Examples:
+      | CITIZEN | CF
+      | "signor RaddCasuale" | "FRMTTR76M06B715E" #qua viene generato un cf casuale corretto cosa ci metto??
+      | "Leonardo Da Vinci"  | "DVNLRD52D15M059P"
+
 
   @raddAlt @authFleet
   Scenario: [RADD-ALT_AOR-64] PF - Notifiche Disponibili associate al CF corretto fornito dal destinatario (irreperibile totale) con allegato Avviso PagoPA e F24
