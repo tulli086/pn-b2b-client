@@ -3,10 +3,10 @@ package it.pagopa.pn.client.b2b.pa.parsing.parser.impl;
 import static it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnContentExtractorUtils.*;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
 import it.pagopa.pn.client.b2b.pa.parsing.exception.PnParserException;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnTextSlidingWindow;
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnContentExtractor;
-import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
@@ -27,7 +27,7 @@ public class PnContentExtractor implements IPnContentExtractor {
     }
 
     @Override
-    public PnParserRecord.PnParserContent extractContent(byte[] source, IPnParserService.LegalFactType legalFactType) {
+    public PnParserRecord.PnParserContent extractContent(byte[] source, IPnParserLegalFact.LegalFactType legalFactType) {
         try (final PDDocument document = Loader.loadPDF(source)) {
             PnBoldWordExtractor boldWordExtractor = new PnBoldWordExtractor();
             boldWordExtractor.setSortByPosition(true);
@@ -52,7 +52,7 @@ public class PnContentExtractor implements IPnContentExtractor {
     }
 
     @Override
-    public PnParserRecord.PnParserContent getContent(String text, List<String> valuesList, IPnParserService.LegalFactType legalFactType) {
+    public PnParserRecord.PnParserContent getContent(String text, List<String> valuesList, IPnParserLegalFact.LegalFactType legalFactType) {
         String cleanedText = cleanUpText(text, pnLegalFactTokens.getTokenProps());
         List<String> cleanedList = cleanUpList(cleanedText, valuesList, pnLegalFactTokens.getTokenProps());
         return new PnParserRecord.PnParserContent(cleanedText, composeBrokenValue(cleanedText, cleanedList, legalFactType));
@@ -78,7 +78,7 @@ public class PnContentExtractor implements IPnContentExtractor {
         return text.replaceAll(pnLegalFactTokens.getTokenProps().getRegexCarriageNewline(), "");
     }
 
-    private List<String> composeBrokenValue(String text, List<String> toRecomposeList, IPnParserService.LegalFactType legalFactType) {
+    private List<String> composeBrokenValue(String text, List<String> toRecomposeList, IPnParserLegalFact.LegalFactType legalFactType) {
         PnTextSlidingWindow pnTextSlidingWindow = PnTextSlidingWindow.builder().slidedText(text).originalText(text).build();
         List<String> composeList = new ArrayList<>(toRecomposeList);
         LinkedList<String> linkedList = new LinkedList<>(toRecomposeList);

@@ -1,8 +1,9 @@
-package it.pagopa.pn.client.b2b.pa.parsing.model.impl;
+package it.pagopa.pn.client.b2b.pa.parsing.dto.impLegalFact;
 
-import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
-import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.IPnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
+import static it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact.*;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatario;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,9 +32,9 @@ public abstract class PnLegalFact implements IPnLegalFact {
     @Override
     public PnParserRecord.PnParserFieldValues getAllLegalFactValues() {
         PnParserRecord.PnParserFieldValues parserFieldValues = pnDestinatario.getAllDestinatarioValues();
-        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.TITLE, title);
-        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.IUN, iun);
-        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE, dataAttestazioneOpponibile);
+        parserFieldValues.fieldValue().put(LegalFactField.TITLE, title);
+        parserFieldValues.fieldValue().put(LegalFactField.IUN, iun);
+        parserFieldValues.fieldValue().put(LegalFactField.DATA_ATTESTAZIONE_OPPONIBILE, dataAttestazioneOpponibile);
         return parserFieldValues;
     }
 

@@ -1,7 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.parsing.parser.utils;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokenProperty;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

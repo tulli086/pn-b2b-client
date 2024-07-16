@@ -1,11 +1,11 @@
 package it.pagopa.pn.client.b2b.pa.parsing.parser.impl;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
-import it.pagopa.pn.client.b2b.pa.parsing.dto.*;
-import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
-import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatario;
-import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioDigitale;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.IPnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.impLegalFact.*;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatario;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatarioDigitale;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnLegalFactContent;
 import lombok.extern.slf4j.Slf4j;

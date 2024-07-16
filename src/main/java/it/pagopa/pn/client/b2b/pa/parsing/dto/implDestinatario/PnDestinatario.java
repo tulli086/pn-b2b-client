@@ -1,8 +1,8 @@
-package it.pagopa.pn.client.b2b.pa.parsing.model.impl;
+package it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario;
 
-import it.pagopa.pn.client.b2b.pa.parsing.model.IPnDestinatario;
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
-import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.IPnDestinatario;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
+import static it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,9 +29,9 @@ public class PnDestinatario implements IPnDestinatario {
 
     @Override
     public PnParserRecord.PnParserFieldValues getAllDestinatarioValues() {
-        Map<IPnParserService.LegalFactField, String> destinatarioValues = new HashMap<>();
-        destinatarioValues.put(IPnParserService.LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE, nomeCognomeRagioneSociale);
-        destinatarioValues.put(IPnParserService.LegalFactField.DESTINATARIO_CODICE_FISCALE, codiceFiscale);
+        Map<LegalFactField, String> destinatarioValues = new HashMap<>();
+        destinatarioValues.put(LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE, nomeCognomeRagioneSociale);
+        destinatarioValues.put(LegalFactField.DESTINATARIO_CODICE_FISCALE, codiceFiscale);
         return new PnParserRecord.PnParserFieldValues(destinatarioValues);
     }
 

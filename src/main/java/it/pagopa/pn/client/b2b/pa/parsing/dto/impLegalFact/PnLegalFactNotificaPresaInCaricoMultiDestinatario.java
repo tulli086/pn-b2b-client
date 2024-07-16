@@ -1,7 +1,7 @@
-package it.pagopa.pn.client.b2b.pa.parsing.dto;
+package it.pagopa.pn.client.b2b.pa.parsing.dto.impLegalFact;
 
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
-import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioAnalogico;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatarioAnalogico;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;

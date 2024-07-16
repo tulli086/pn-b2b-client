@@ -1,8 +1,8 @@
-package it.pagopa.pn.client.b2b.pa.parsing.dto;
+package it.pagopa.pn.client.b2b.pa.parsing.dto.impLegalFact;
 
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
-import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatario;
-import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatario;
+import static it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -28,19 +28,19 @@ public class PnLegalFactNotificaAvvenutoAccessoDelegato extends PnLegalFactNotif
         this.delegato = new PnDestinatario(nomeCognomeRagioneSocialeDelegato, codiceFiscaleDelegato);
     }
 
-    public Map<IPnParserService.LegalFactField, String> mapDestinatarioToDelegato(PnParserRecord.PnParserFieldValues toMap) {
-        Map<IPnParserService.LegalFactField, String> delegatoMap = new HashMap<>();
+    public Map<LegalFactField, String> mapDestinatarioToDelegato(PnParserRecord.PnParserFieldValues toMap) {
+        Map<LegalFactField, String> delegatoMap = new HashMap<>();
         toMap.fieldValue().forEach((key, value) -> {
-            if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE)) {
-                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_NOME_COGNOME_RAGIONE_SOCIALE, value);
-            } else if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_CODICE_FISCALE)) {
-                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_CODICE_FISCALE, value);
-            } else if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE)) {
-                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_DOMICILIO_DIGITALE, value);
-            } else if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE)) {
-                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_TIPO_DOMICILIO_DIGITALE, value);
-            } else if(key.equals(IPnParserService.LegalFactField.DESTINATARIO_INDIRIZZO_FISICO)) {
-                delegatoMap.put(IPnParserService.LegalFactField.DELEGATO_INDIRIZZO_FISICO, value);
+            if(key.equals(LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE)) {
+                delegatoMap.put(LegalFactField.DELEGATO_NOME_COGNOME_RAGIONE_SOCIALE, value);
+            } else if(key.equals(LegalFactField.DESTINATARIO_CODICE_FISCALE)) {
+                delegatoMap.put(LegalFactField.DELEGATO_CODICE_FISCALE, value);
+            } else if(key.equals(LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE)) {
+                delegatoMap.put(LegalFactField.DELEGATO_DOMICILIO_DIGITALE, value);
+            } else if(key.equals(LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE)) {
+                delegatoMap.put(LegalFactField.DELEGATO_TIPO_DOMICILIO_DIGITALE, value);
+            } else if(key.equals(LegalFactField.DESTINATARIO_INDIRIZZO_FISICO)) {
+                delegatoMap.put(LegalFactField.DELEGATO_INDIRIZZO_FISICO, value);
             }
         });
         return delegatoMap;

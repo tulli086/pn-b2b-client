@@ -3,13 +3,13 @@ package it.pagopa.pn.client.b2b.pa.parsing.parser.utils;
 import static it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnContentExtractorUtils.countDuplicates;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokenProperty;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
-import it.pagopa.pn.client.b2b.pa.parsing.model.IPnDestinatario;
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
-import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatario;
-import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioAnalogico;
-import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioDigitale;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.IPnDestinatario;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatario;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatarioAnalogico;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatarioDigitale;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.impl.PnContentExtractor;
-import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +25,7 @@ public class PnLegalFactContent {
         this.contentExtractor = new PnContentExtractor(pnLegalFactTokens);
     }
 
-    public PnParserRecord.PnParserContent extractContent(byte[] source, IPnParserService.LegalFactType legalFactType) {
+    public PnParserRecord.PnParserContent extractContent(byte[] source, IPnParserLegalFact.LegalFactType legalFactType) {
         return contentExtractor.extractContent(source, legalFactType);
     }
 

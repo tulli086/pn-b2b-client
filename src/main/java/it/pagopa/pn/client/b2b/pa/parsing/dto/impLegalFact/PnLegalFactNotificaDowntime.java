@@ -1,8 +1,8 @@
-package it.pagopa.pn.client.b2b.pa.parsing.dto;
+package it.pagopa.pn.client.b2b.pa.parsing.dto.impLegalFact;
 
-import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
-import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
+import static it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact.*;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.IPnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,10 +27,10 @@ public class PnLegalFactNotificaDowntime implements IPnLegalFact {
 
     @Override
     public PnParserRecord.PnParserFieldValues getAllLegalFactValues() {
-        Map<IPnParserService.LegalFactField, String> legalFactValues = new HashMap<>();
-        legalFactValues.put(IPnParserService.LegalFactField.TITLE, title);
-        legalFactValues.put(IPnParserService.LegalFactField.DATA_ORA_DECORRENZA, dataOraDecorrenza);
-        legalFactValues.put(IPnParserService.LegalFactField.DATA_ORA_FINE, dataOraFine);
+        Map<LegalFactField, String> legalFactValues = new HashMap<>();
+        legalFactValues.put(LegalFactField.TITLE, title);
+        legalFactValues.put(LegalFactField.DATA_ORA_DECORRENZA, dataOraDecorrenza);
+        legalFactValues.put(LegalFactField.DATA_ORA_FINE, dataOraFine);
         return new PnParserRecord.PnParserFieldValues(legalFactValues);
     }
 

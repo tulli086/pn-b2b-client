@@ -1,7 +1,7 @@
-package it.pagopa.pn.client.b2b.pa.parsing.model.impl;
+package it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario;
 
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
-import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
+import static it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,8 +34,8 @@ public class PnDestinatarioDigitale extends PnDestinatario {
     @Override
     public PnParserRecord.PnParserFieldValues getAllDestinatarioValues() {
         PnParserRecord.PnParserFieldValues parserFieldValues = super.getAllDestinatarioValues();
-        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE, domicilioDigitale);
-        parserFieldValues.fieldValue().put(IPnParserService.LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE, tipoDomicilioDigitale);
+        parserFieldValues.fieldValue().put(LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE, domicilioDigitale);
+        parserFieldValues.fieldValue().put(LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE, tipoDomicilioDigitale);
         return parserFieldValues;
     }
 

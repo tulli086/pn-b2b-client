@@ -2,9 +2,14 @@ package it.pagopa.pn.client.b2b.pa.parsing.parser.impl;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
 import it.pagopa.pn.client.b2b.pa.parsing.dto.*;
-import it.pagopa.pn.client.b2b.pa.parsing.model.IPnLegalFact;
-import it.pagopa.pn.client.b2b.pa.parsing.model.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implResponse.PnLegalFactResponse;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implResponse.PnParserLegalFactResponse;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.IPnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserRecord;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.impLegalFact.*;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParser;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact.LegalFactType;
 import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,49 +28,49 @@ public class PnParser implements IPnParserService, IPnParser {
     }
 
     @Override
-    public PnParserResponse extractSingleField(byte[] source, PnParserParameter parserParameter) {
-        PnParserResponse pnParserResponse = extractAllField(source, parserParameter);
-        if(pnParserResponse == null)
+    public IPnParserResponse extractSingleField(byte[] source, PnParserParameter parserParameter) {
+        PnParserLegalFactResponse pnParserLegalFactResponse = (PnParserLegalFactResponse) extractAllField(source, parserParameter);
+        if(pnParserLegalFactResponse == null)
             return null;
 
-        IPnParserService.LegalFactField field = parserParameter.getLegalFactField();
-        if(pnParserResponse.getPnLegalFact() instanceof PnLegalFactNotificaDowntime notificaDowntime) {
-            pnParserResponse.setField(notificaDowntime.getAllLegalFactValues().fieldValue().get(field));
-            return pnParserResponse;
-        } else if(pnParserResponse.getPnLegalFact() instanceof PnLegalFactNotificaDigitale notificaDigitale) {
-            pnParserResponse.setField(notificaDigitale.getAllLegalFactValues().fieldValue().get(field));
-            return pnParserResponse;
-        } else if(pnParserResponse.getPnLegalFact() instanceof PnLegalFactNotificaMancatoRecapito notificaMancatoRecapito) {
-            pnParserResponse.setField(notificaMancatoRecapito.getAllLegalFactValues().fieldValue().get(field));
-            return pnParserResponse;
-        }else if(pnParserResponse.getPnLegalFact() instanceof PnLegalFactNotificaPresaInCaricoMultiDestinatario notificaPresaInCaricoMultiDestinatario) {
+        IPnParserLegalFact.LegalFactField field = parserParameter.getLegalFactField();
+        if(pnParserLegalFactResponse.getResponse().getPnLegalFact() instanceof PnLegalFactNotificaDowntime notificaDowntime) {
+            pnParserLegalFactResponse.getResponse().setField(notificaDowntime.getAllLegalFactValues().fieldValue().get(field));
+            return pnParserLegalFactResponse;
+        } else if(pnParserLegalFactResponse.getResponse().getPnLegalFact() instanceof PnLegalFactNotificaDigitale notificaDigitale) {
+            pnParserLegalFactResponse.getResponse().setField(notificaDigitale.getAllLegalFactValues().fieldValue().get(field));
+            return pnParserLegalFactResponse;
+        } else if(pnParserLegalFactResponse.getResponse().getPnLegalFact() instanceof PnLegalFactNotificaMancatoRecapito notificaMancatoRecapito) {
+            pnParserLegalFactResponse.getResponse().setField(notificaMancatoRecapito.getAllLegalFactValues().fieldValue().get(field));
+            return pnParserLegalFactResponse;
+        }else if(pnParserLegalFactResponse.getResponse().getPnLegalFact() instanceof PnLegalFactNotificaPresaInCaricoMultiDestinatario notificaPresaInCaricoMultiDestinatario) {
             if(parserParameter.getMultiDestinatarioPosition() == 0) {
-                pnParserResponse.setField(notificaPresaInCaricoMultiDestinatario.getAllLegalFactValues().fieldValue().get(field));
+                pnParserLegalFactResponse.getResponse().setField(notificaPresaInCaricoMultiDestinatario.getAllLegalFactValues().fieldValue().get(field));
             } else {
                 PnParserRecord.PnParserFieldValues parserFieldValues = notificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().get(parserParameter.getMultiDestinatarioPosition()-1).getAllDestinatarioValues();
-                pnParserResponse.setField(parserFieldValues.fieldValue().get(field));
+                pnParserLegalFactResponse.getResponse().setField(parserFieldValues.fieldValue().get(field));
             }
-            return pnParserResponse;
-        } else if(pnParserResponse.getPnLegalFact() instanceof PnLegalFactNotificaPresaInCarico notificaPresaInCarico) {
-            pnParserResponse.setField(notificaPresaInCarico.getAllLegalFactValues().fieldValue().get(field));
-            return pnParserResponse;
-        } else if(pnParserResponse.getPnLegalFact() instanceof PnLegalFactNotificaAvvenutoAccessoDelegato notificaAvvenutoAccessoDelegato) {
-            pnParserResponse.setField(notificaAvvenutoAccessoDelegato.getAllLegalFactValues().fieldValue().get(field));
-            return pnParserResponse;
-        } else if(pnParserResponse.getPnLegalFact() instanceof PnLegalFactNotificaAvvenutoAccesso notificaAvvenutoAccesso) {
-            pnParserResponse.setField(notificaAvvenutoAccesso.getAllLegalFactValues().fieldValue().get(field));
-            return pnParserResponse;
+            return pnParserLegalFactResponse;
+        } else if(pnParserLegalFactResponse.getResponse().getPnLegalFact() instanceof PnLegalFactNotificaPresaInCarico notificaPresaInCarico) {
+            pnParserLegalFactResponse.getResponse().setField(notificaPresaInCarico.getAllLegalFactValues().fieldValue().get(field));
+            return pnParserLegalFactResponse;
+        } else if(pnParserLegalFactResponse.getResponse().getPnLegalFact() instanceof PnLegalFactNotificaAvvenutoAccessoDelegato notificaAvvenutoAccessoDelegato) {
+            pnParserLegalFactResponse.getResponse().setField(notificaAvvenutoAccessoDelegato.getAllLegalFactValues().fieldValue().get(field));
+            return pnParserLegalFactResponse;
+        } else if(pnParserLegalFactResponse.getResponse().getPnLegalFact() instanceof PnLegalFactNotificaAvvenutoAccesso notificaAvvenutoAccesso) {
+            pnParserLegalFactResponse.getResponse().setField(notificaAvvenutoAccesso.getAllLegalFactValues().fieldValue().get(field));
+            return pnParserLegalFactResponse;
         }
         return null;
     }
 
     @Override
-    public PnParserResponse extractAllField(byte[] source, PnParserParameter parserParameter) {
+    public IPnParserResponse extractAllField(byte[] source, PnParserParameter parserParameter) {
         IPnLegalFact legalFact = parse(source, parserParameter);
         if(legalFact == null) {
             return null;
         }
-        return new PnParserResponse(legalFact);
+        return new PnParserLegalFactResponse(new PnLegalFactResponse(legalFact));
     }
 
     @Override

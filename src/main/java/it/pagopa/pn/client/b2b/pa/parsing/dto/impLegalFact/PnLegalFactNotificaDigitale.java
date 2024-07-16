@@ -1,7 +1,6 @@
-package it.pagopa.pn.client.b2b.pa.parsing.dto;
+package it.pagopa.pn.client.b2b.pa.parsing.dto.impLegalFact;
 
-import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnDestinatarioDigitale;
-import it.pagopa.pn.client.b2b.pa.parsing.model.impl.PnLegalFact;
+import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatarioDigitale;
 import lombok.experimental.SuperBuilder;
 
 
