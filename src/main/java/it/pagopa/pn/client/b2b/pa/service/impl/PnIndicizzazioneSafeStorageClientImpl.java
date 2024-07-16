@@ -29,10 +29,9 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   //TODO: modificare i valori nel value
   public PnIndicizzazioneSafeStorageClientImpl(
           RestTemplate restTemplate,
-          @Value("${pn.external.base-url}") String devBasePath,
-          @Value("${pn.external.api-key}") String apiKeyIndexing) {
+          @Value("${pn.safeStorage.base-url.pagopa}") String devBasePath) {
     this.restTemplate = restTemplate;
-    this.apiKeyIndexing = apiKeyIndexing;
+    this.apiKeyIndexing = "pn-test_api_key";
     this.devBasePath = devBasePath;
     this.additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, devBasePath, apiKeyIndexing));
     this.apiKeySetted = ApiKeyType.INDEXING;
