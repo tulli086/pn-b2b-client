@@ -3,13 +3,15 @@ package it.pagopa.pn.cucumber.steps.pa;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
-import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.FullSentNotificationV23;
+import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.TimelineElementV23;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnGPDClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnPaymentInfoClientImpl;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.PaymentOptionModel;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.PaymentPositionModel;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.gpd.model.TransferModel;
-import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.*;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.PaymentInfoRequest;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.PaymentInfoV21;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.DataTest;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +19,8 @@ import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import java.time.*;
+
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -236,9 +239,7 @@ public class AsyncSteps {
             log.info("Amount GPD: "+amountGPD);
             Assertions.assertEquals(amountGPD,Integer.parseInt(amount));
         } catch (AssertionFailedError assertionFailedError) {
-            String message = assertionFailedError.getMessage() +
-                    "{amountGPD " + (amountGPD == null ? "NULL" : amountGPD.toString()) + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+            sharedSteps.throwAssertFailerWithAmountGDPAndIUN(assertionFailedError, amountGPD);
         }
     }
 
@@ -247,9 +248,7 @@ public class AsyncSteps {
         try {
             Assertions.assertEquals(amountGPD,amountNotifica.get(user));
         } catch (AssertionFailedError assertionFailedError) {
-            String message = assertionFailedError.getMessage() +
-                    "{Amount GPD " + (amountGPD == null ? "NULL" : amountGPD.toString()) + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+            sharedSteps.throwAssertFailerWithAmountGDPAndIUN(assertionFailedError, amountGPD);
         }
     }
 
@@ -342,9 +341,7 @@ public class AsyncSteps {
             amountGPD= amountGPD - Integer.parseInt(String.valueOf(Objects.requireNonNull(paymentPositionModel.get(0).getPaymentOption()).get(0).getAmount()));
             avanzamentoNotificheB2bSteps.priceVerificationV23(amountGPD,null,0,tipoCosto);
         } catch (AssertionFailedError assertionFailedError) {
-            String message = assertionFailedError.getMessage() +
-                    "{Amount GPD " + (amountGPD == null ? "NULL" : amountGPD.toString()) + " }";
-            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+            sharedSteps.throwAssertFailerWithAmountGDPAndIUN(assertionFailedError, amountGPD);
         }
     }
 

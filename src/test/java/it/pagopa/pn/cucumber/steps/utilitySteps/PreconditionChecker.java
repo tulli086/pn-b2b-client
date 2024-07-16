@@ -30,8 +30,8 @@ public class PreconditionChecker {
         System.out.println("ENV: "+env+" isInteropEnabled: "+isInteropEnabled);
         return switch (env) {
             case "test" -> !isInteropEnabled;
-            case "uat" -> isInteropEnabled;
-            default -> false;
+            case "uat", "hotfix" -> isInteropEnabled;
+            default -> true;
         };
     }
 
