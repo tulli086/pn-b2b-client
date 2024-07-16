@@ -23,7 +23,6 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   private final AdditionalFileTagsApi additionalFileTagsApi;
   private final RestTemplate restTemplate;
   private final String devBasePath;
-  private String bearerToken;
   private ApiKeyType apiKeySetted;
   private final String apiKeyIndexing;
 
@@ -31,64 +30,50 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   public PnIndicizzazioneSafeStorageClientImpl(
           RestTemplate restTemplate,
           @Value("${pn.external.base-url}") String devBasePath,
-          @Value("${pn.external.api-key}") String apiKeyIndexing,
-          //TODO: individuare il token corretto
-          @Value("${pn.external.bearer-token-user1.pagopa}") String bearerToken) {
+          @Value("${pn.external.api-key}") String apiKeyIndexing) {
     this.restTemplate = restTemplate;
     this.apiKeyIndexing = apiKeyIndexing;
     this.devBasePath = devBasePath;
-    this.bearerToken = bearerToken;
-    this.additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, devBasePath, apiKeyIndexing,
-        this.bearerToken));
+    this.additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, devBasePath, apiKeyIndexing));
     this.apiKeySetted = ApiKeyType.INDEXING;
   }
 
-  private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apiKey, String bearerToken) {
+  private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apiKey) {
     ApiClient newApiClient = new ApiClient( restTemplate );
     newApiClient.setBasePath( basePath );
 
     //TODO modificare i valori di api-key e client-id
     newApiClient.addDefaultHeader("x-pagopa-safestorage-cx-id", "test");
     newApiClient.addDefaultHeader("x-api-key", apiKey );
-    newApiClient.addDefaultHeader("Authorization", "Bearer =" + bearerToken);
     return newApiClient;
-  }
-
-  public void refreshAndSetTokenInteropClient(){
-    log.info("webhookClient call interopTokenSingleton");
-    this.additionalFileTagsApi.getApiClient().addDefaultHeader("Authorization", "Bearer =" + bearerToken);
   }
 
   @Override
   public void getFileWithTagsByFileKey() {
-    refreshAndSetTokenInteropClient();
+
   }
 
   @Override
   public void createFileWithTags() {
-    refreshAndSetTokenInteropClient();
+
   }
 
   @Override
   public AdditionalFileTagsUpdateResponse updateSingleWithTags(String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
-    refreshAndSetTokenInteropClient();
     return additionalFileTagsApi.additionalFileTagsUpdate(fileKey, additionalFileTagsUpdateRequest);
   }
 
   @Override
   public void updateMassiveWithTags() {
-    refreshAndSetTokenInteropClient();
   }
 
   @Override
   public AdditionalFileTagsGetResponse getTagsByFileKey(String fileKey) {
-    refreshAndSetTokenInteropClient();
     return additionalFileTagsApi.additionalFileTagsGet(fileKey);
   }
 
   @Override
   public void searchFileKeyWithTags() {
-    refreshAndSetTokenInteropClient();
   }
 
   @Override
@@ -102,8 +87,7 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
 
   @Override
   public void setApiKey(String apiKey){
-    this.additionalFileTagsApi.setApiClient(newApiClient(restTemplate, devBasePath, apiKey,
-        bearerToken));
+    this.additionalFileTagsApi.setApiClient(newApiClient(restTemplate, devBasePath, apiKey));
   }
 
   @Override
