@@ -8,9 +8,6 @@ import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model.*;
 import it.pagopa.pn.client.b2b.pa.mapper.impl.PnTimelineAndLegalFactV23;
 import it.pagopa.pn.client.b2b.pa.mapper.model.PnTimelineLegalFactV23;
-import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserParameter;
-import it.pagopa.pn.client.b2b.pa.parsing.dto.PnParserResponse;
-import it.pagopa.pn.client.b2b.pa.parsing.service.IPnParserService;
 import it.pagopa.pn.client.b2b.pa.parsing.service.impl.PnParserService;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingFactory;
 import it.pagopa.pn.client.b2b.pa.polling.design.PnPollingStrategy;
@@ -43,16 +40,15 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import static java.time.OffsetDateTime.now;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.awaitility.Awaitility.await;
+
 
 @Slf4j
 public class AvanzamentoNotificheB2bSteps {
     @Autowired
     private PnPaB2bUtils utils;
-    private final PnParserService pnParserService;
     private final IPnPaB2bClient b2bClient;
     private final SharedSteps sharedSteps;
     private final IPnWebRecipientClient webRecipientClient;
@@ -64,24 +60,23 @@ public class AvanzamentoNotificheB2bSteps {
     private final PnTimelineAndLegalFactV23 pnTimelineAndLegalFactV23;
     private final PnPollingFactory pnPollingFactory;
     private final TimingForPolling timingForPolling;
-    private String legalFactUrl;
-    private String legalFactType;
+    private final LegalFactContentVerifySteps legalFactContentVerifySteps;
+
 
     @Autowired
     public AvanzamentoNotificheB2bSteps(SharedSteps sharedSteps,
                                         TimingForPolling timingForPolling,
                                         IPnPrivateDeliveryPushExternalClient pnPrivateDeliveryPushExternalClient,
-                                        PnParserService pnParserService) {
+                                        LegalFactContentVerifySteps legalFactContentVerifySteps) {
         this.sharedSteps = sharedSteps;
         this.pnPrivateDeliveryPushExternalClient = pnPrivateDeliveryPushExternalClient;
         this.externalClient = sharedSteps.getPnExternalServiceClient();
         this.pnTimelineAndLegalFactV23 = new PnTimelineAndLegalFactV23();
-
         this.b2bClient = sharedSteps.getB2bClient();
         this.webRecipientClient = sharedSteps.getWebRecipientClient();
         this.pnPollingFactory = sharedSteps.getPollingFactory();
         this.timingForPolling = timingForPolling;
-        this.pnParserService = pnParserService;
+        this.legalFactContentVerifySteps = legalFactContentVerifySteps;
     }
 
     @Then("vengono letti gli eventi fino allo stato della notifica {string} dalla PA {string}")
@@ -1186,7 +1181,8 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("la PA richiede il download dell'attestazione opponibile {string}")
     public void paRequiresDownloadOfLegalFact(String legalFactCategory) {
-        legalFactUrl = downloadLegalFact(legalFactCategory, true, false, false, null);
+        String legalFactUrl = downloadLegalFact(legalFactCategory, true, false, false, null);
+        legalFactContentVerifySteps.setLegalFactUrl(legalFactUrl);
     }
 
     @Then("verifica generazione Atto opponibile senza la messa a disposizione in {string}")
@@ -1222,18 +1218,21 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("la PA richiede il download dell'attestazione opponibile {string} con deliveryDetailCode {string}")
     public void paRequiresDownloadOfLegalFactWithDeliveryDetailCode(String legalFactCategory, String deliveryDetailCode) {
-        legalFactUrl = downloadLegalFact(legalFactCategory, true, false, false, deliveryDetailCode);
+        String legalFactUrl = downloadLegalFact(legalFactCategory, true, false, false, deliveryDetailCode);
+        legalFactContentVerifySteps.setLegalFactUrl(legalFactUrl);
     }
 
     @Then("viene richiesto tramite appIO il download dell'attestazione opponibile {string}")
     public void appIODownloadLegalFact(String legalFactCategory) {
-        legalFactUrl = downloadLegalFact(legalFactCategory, false, true, false, null);
+        String legalFactUrl = downloadLegalFact(legalFactCategory, false, true, false, null);
+        legalFactContentVerifySteps.setLegalFactUrl(legalFactUrl);
     }
 
     @Then("{string} richiede il download dell'attestazione opponibile {string}")
     public void userDownloadLegalFact(String user, String legalFactCategory) {
         sharedSteps.selectUser(user);
-        legalFactUrl = downloadLegalFact(legalFactCategory, false, false, true, null);
+        String legalFactUrl = downloadLegalFact(legalFactCategory, false, false, true, null);
+        legalFactContentVerifySteps.setLegalFactUrl(legalFactUrl);
     }
 
     @Then("la PA richiede il download dell'attestazione opponibile PEC_RECEIPT")
@@ -1251,7 +1250,8 @@ public class AvanzamentoNotificheB2bSteps {
     public void userDownloadLegalFactError(String user, String legalFactCategory,String statusCode) {
         try {
             sharedSteps.selectUser(user);
-            legalFactUrl =  downloadLegalFact(legalFactCategory, false, false, true, null);
+            String legalFactUrl = downloadLegalFact(legalFactCategory, false, false, true, null);
+            legalFactContentVerifySteps.setLegalFactUrl(legalFactUrl);
         } catch (AssertionFailedError assertionFailedError) {
             // System.out.println(assertionFailedError.getCause().toString());
             // System.out.println(assertionFailedError.getCause().getMessage().toString());
@@ -1261,65 +1261,8 @@ public class AvanzamentoNotificheB2bSteps {
 
     @And("ricerca ed effettua download del legalFact con la categoria {string}")
     public void ricercaEdEffettuaDownloadDelLegalFactConLaCategoria(String legalFactCategory) {
-        legalFactUrl = downloadLegalFact(legalFactCategory, false, false, true, null);
-    }
-
-    @Then("si verifica se il legalFact è di tipo {string}")
-    public void siVerificaSeIlLegalFactEDiTipo(String legalFactType) {
-        this.legalFactType = legalFactType;
-        byte[] source = utils.downloadFile(legalFactUrl);
-        Assertions.assertNotNull(source);
-        checkLegalFactType(source, legalFactType);
-    }
-
-    @Then("si verifica se il legalFact è di tipo {string} e contiene il campo {string} con value {string}")
-    public void siVerificaSeIlLegalFactEDiTipoEContieneIlCampoConValue(String legalFactType, String legalFactField, String legalFactValue) {
-        byte[] source = utils.downloadFile(legalFactUrl);
-        Assertions.assertNotNull(source);
-        checkLegalFactTypeAndFieldValue(source, legalFactType, legalFactField, legalFactValue);
-    }
-
-    @Then("si verifica se il legalFact contiene il campo {string} con value {string}")
-    public void siVerificaSeIlLegalFactContieneIlCampoConValue(String legalFactField, String legalFactValue) {
-        byte[] source = utils.downloadFile(legalFactUrl);
-        Assertions.assertNotNull(source);
-        checkLegalFactFieldValue(source, legalFactField, legalFactValue);
-    }
-
-    private void checkLegalFactType(byte[] source, String legalFactType) {
-        PnParserResponse pnParserResponse =
-                pnParserService.extractAllField(source,
-                        PnParserParameter.builder()
-                                .legalFactType(IPnParserService.LegalFactType.valueOf(legalFactType))
-                                .legalFactField(IPnParserService.LegalFactField.TITLE)
-                                .build());
-
-        Assertions.assertNotNull(pnParserResponse);
-        Assertions.assertNotNull(pnParserResponse.getPnLegalFact());
-        log.info("PN_LEGAL_FACT:\n {}", pnParserResponse.getPnLegalFact());
-        Assertions.assertEquals(pnParserResponse.getPnLegalFact().getAllLegalFactValues().fieldValue().get(IPnParserService.LegalFactField.TITLE),
-                IPnParserService.LegalFactTypeTitle.getTitleByType(IPnParserService.LegalFactType.valueOf(legalFactType)));
-    }
-
-    private void checkLegalFactTypeAndFieldValue(byte[] source, String legalFactType, String legalFactField, String legalFactValue) {
-        PnParserResponse pnParserResponse =
-                pnParserService.extractAllField(source,
-                        PnParserParameter.builder()
-                                .legalFactType(IPnParserService.LegalFactType.valueOf(legalFactType))
-                                .legalFactField(IPnParserService.LegalFactField.valueOf(legalFactField))
-                                .build());
-
-        Assertions.assertNotNull(pnParserResponse);
-        Assertions.assertNotNull(pnParserResponse.getPnLegalFact());
-        log.info("PN_LEGAL_FACT:\n {}", pnParserResponse.getPnLegalFact());
-        Assertions.assertEquals(pnParserResponse.getPnLegalFact().getAllLegalFactValues().fieldValue().get(IPnParserService.LegalFactField.TITLE),
-                IPnParserService.LegalFactTypeTitle.getTitleByType(IPnParserService.LegalFactType.valueOf(legalFactType)));
-        Assertions.assertNotNull(pnParserResponse.getPnLegalFact().getAllLegalFactValues().fieldValue().get(IPnParserService.LegalFactField.valueOf(legalFactField)));
-        Assertions.assertEquals(legalFactValue, pnParserResponse.getPnLegalFact().getAllLegalFactValues().fieldValue().get(IPnParserService.LegalFactField.valueOf(legalFactField)));
-    }
-
-    private void checkLegalFactFieldValue(byte[] source, String legalFactField, String legalFactValue) {
-        checkLegalFactTypeAndFieldValue(source, legalFactType, legalFactField, legalFactValue);
+        String legalFactUrl = downloadLegalFact(legalFactCategory, false, false, true, null);
+        legalFactContentVerifySteps.setLegalFactUrl(legalFactUrl);
     }
 
     private String downloadLegalFact(String legalFactCategory, boolean pa, boolean appIO, boolean webRecipient, String deliveryDetailCode) {
@@ -1329,14 +1272,10 @@ public class AvanzamentoNotificheB2bSteps {
             throw new RuntimeException(exc);
         }
 
-
         PnTimelineLegalFactV23 categoriesV23 = pnTimelineAndLegalFactV23.getCategory(legalFactCategory);
-
-
         TimelineElementV23 timelineElement = null;
 
         for (TimelineElementV23 element : sharedSteps.getSentNotification().getTimeline()) {
-
             if (Objects.requireNonNull(element.getCategory()).equals(categoriesV23.getTimelineElementInternalCategory())) {
                 if (deliveryDetailCode == null) {
                     timelineElement = element;
@@ -1360,27 +1299,23 @@ public class AvanzamentoNotificheB2bSteps {
             String finalKeySearch = getKeyLegalFact(key);
 
             if (pa) {
-                AtomicReference<LegalFactDownloadMetadataResponse> legalFactDownloadMetadataResponse = new AtomicReference<>();
-                Assertions.assertDoesNotThrow(() ->  legalFactDownloadMetadataResponse.set(this.b2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch, finalKeySearch)));
-                return legalFactDownloadMetadataResponse.get().getUrl();
+                LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = Assertions.assertDoesNotThrow(() ->  this.b2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch, finalKeySearch));
+                return legalFactDownloadMetadataResponse.getUrl();
             }
             if (appIO) {
-
                 // Assertions.assertDoesNotThrow(() -> this.appIOB2bClient.getLegalFact(sharedSteps.getSentNotification().getIun(), categorySearch.toString(), finalKeySearch,
                 //  sharedSteps.getSentNotification().getRecipients().get(0).getTaxId()));
-
             }
             if (webRecipient) {
-                AtomicReference<it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactDownloadMetadataResponse> legalFactDownloadMetadataResponse = new AtomicReference<>();
+                it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse =
                 Assertions.assertDoesNotThrow(() ->
-                    legalFactDownloadMetadataResponse.set(this.webRecipientClient.getLegalFact(sharedSteps.getSentNotification().getIun(),
+                    this.webRecipientClient.getLegalFact(sharedSteps.getSentNotification().getIun(),
                             sharedSteps.deepCopy(categorySearch,
                                     it.pagopa.pn.client.web.generated.openapi.clients.externalWebRecipient.model.LegalFactCategory.class),
                             finalKeySearch
-
-                    )));
-                System.out.println("NOME FILE PEC RECIPIENT DEST" + legalFactDownloadMetadataResponse.get().getFilename());
-                return legalFactDownloadMetadataResponse.get().getUrl();
+                    ));
+                System.out.println("NOME FILE PEC RECIPIENT DEST" + legalFactDownloadMetadataResponse.getFilename());
+                return legalFactDownloadMetadataResponse.getUrl();
             }
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
