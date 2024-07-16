@@ -1,20 +1,19 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
-import it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.ApiClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.api.AdditionalFileTagsApi;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsSearchResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import static it.pagopa.pn.client.b2b.pa.service.utils.InteropTokenSingleton.ENEBLED_INTEROP;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -63,6 +62,12 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   }
 
   @Override
+  public ResponseEntity<AdditionalFileTagsUpdateResponse> updateSingleWithTagsWithHttpInfo(
+          String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
+    return additionalFileTagsApi.additionalFileTagsUpdateWithHttpInfo(fileKey, additionalFileTagsUpdateRequest);
+  }
+
+  @Override
   public void updateMassiveWithTags() {
   }
 
@@ -72,7 +77,8 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   }
 
   @Override
-  public void searchFileKeyWithTags() {
+  public AdditionalFileTagsSearchResponse searchFileKeyWithTags() {
+    return null;
   }
 
   @Override

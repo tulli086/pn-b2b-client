@@ -35,7 +35,7 @@ Feature: Indicizzazione Safe Storage
       | dbData | request/CREATE_FILE_WITH_TAGS.json |
     When Viene chiamato l'updateSingle
       | requestName | request/UPDATE_SINGLE_ERROR_SET_AND_DELETE.json |
-      | fileKeyName | test  |
+      | fileKeyName | test |
     Then La response dell'updateSingle coincide con il response code previsto
       | expectedOutput | 400 |
 

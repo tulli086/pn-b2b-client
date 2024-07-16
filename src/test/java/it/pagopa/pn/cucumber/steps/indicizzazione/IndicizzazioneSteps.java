@@ -50,8 +50,8 @@ public class IndicizzazioneSteps {
         try {
             AdditionalFileTagsUpdateRequest request =
                     objectMapper.readValue(new File(JSON_PATH + requestName), AdditionalFileTagsUpdateRequest.class);
-            this.updateSingleResponse = pnIndicizzazioneSafeStorageClient.updateSingleWithTags(fileKeyName, request);
-            this.updateSingleResponse = new AdditionalFileTagsUpdateResponse();//TODO MATTEO eliminare, solo per testare la valorizzazione
+            updateSingleResponse = pnIndicizzazioneSafeStorageClient.updateSingleWithTags(fileKeyName, request);
+            updateSingleResponse = new AdditionalFileTagsUpdateResponse();//TODO MATTEO eliminare, solo per testare la valorizzazione
         } catch (IOException e) {
             //TODO
         }
@@ -89,9 +89,12 @@ public class IndicizzazioneSteps {
                     pnIndicizzazioneSafeStorageClient.getFileWithTagsByFileKey());
             case "createFileWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
                     pnIndicizzazioneSafeStorageClient.createFileWithTags());
-            case "updateSingleWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-                    this.updateSingleResponse = pnIndicizzazioneSafeStorageClient.updateSingleWithTags(
-                            "test", new AdditionalFileTagsUpdateRequest()));
+            case "updateSingleWithTags" ->
+//                    Assertions.assertEquals(pnIndicizzazioneSafeStorageClient.updateSingleWithTagsWithHttpInfo(
+//                            "test", new AdditionalFileTagsUpdateRequest()).getStatusCodeValue(), 403);
+                    Assertions.assertThrows(HttpClientErrorException.class, () ->
+                            updateSingleResponse = pnIndicizzazioneSafeStorageClient.updateSingleWithTags(
+                                    "test", new AdditionalFileTagsUpdateRequest()));
             case "updateMassiveWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
                     pnIndicizzazioneSafeStorageClient.updateMassiveWithTags());
             case "getTagsByFileKey" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
