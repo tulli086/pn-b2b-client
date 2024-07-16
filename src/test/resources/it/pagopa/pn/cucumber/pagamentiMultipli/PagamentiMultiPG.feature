@@ -506,6 +506,7 @@ Feature: avanzamento notifiche b2b persona giuridica multi pagamento
       | apply_cost_f24       | SI                       |
       | payment_multy_number | 1                        |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
     When si verifica la corretta acquisizione della notifica
     Then viene richiesto il download del documento "F24"
     And il download non ha prodotto errori
@@ -538,6 +539,8 @@ Feature: avanzamento notifiche b2b persona giuridica multi pagamento
       | apply_cost_f24       | SI                       |
       | payment_multy_number | 1                        |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE" per l'utente 0
+    When vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE" per l'utente 1
     When si verifica la corretta acquisizione della notifica
     Then viene richiesto il download del documento "F24" per il destinatario 0
     And il download non ha prodotto errori

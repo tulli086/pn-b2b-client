@@ -640,6 +640,7 @@ public class DataTableTypeUtil {
         String analogCost = getValue(data, DETAILS_ANALOG_COST.key);
         String pollingTime = getValue(data, POLLING_TIME.key);
         String numCheck = getValue(data, NUM_CHECK.key);
+        String pollingType = getValue(data, POLLING_Type.key);
         String loadTimeline = getValue(data, LOAD_TIMELINE.key);
 
         if (data.size() == 1 && data.get("NULL") != null) {
@@ -675,6 +676,7 @@ public class DataTableTypeUtil {
         dataTest.setFirstSendRetry(isFirstRetry != null ? Boolean.valueOf(isFirstRetry) : null);
         dataTest.setProgressIndex(progressIndex != null ? Integer.parseInt(progressIndex) : null);
         dataTest.setPollingTime(pollingTime != null ? Integer.parseInt(pollingTime) : null);
+        dataTest.setPollingType(pollingType != null ? pollingType : null);
         dataTest.setNumCheck(numCheck != null ? Integer.parseInt(numCheck) : null);
         dataTest.setLoadTimeline(loadTimeline != null ? Boolean.valueOf(loadTimeline) : null);
 
