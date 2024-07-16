@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 
 @Setter
@@ -57,24 +54,26 @@ public class PnDestinatarioAnalogico extends PnDestinatarioDigitale {
     }
 
     public static List<PnDestinatarioAnalogico> mapToDestinatarioAnalogico(List<Map<String, String>> listOfMap) {
-        List<PnDestinatarioAnalogico> mappedList = new ArrayList<>();
-        List<Map<String, String>> observedList = new ArrayList<>();
-        PnDestinatarioAnalogico destinatarioAnalogico = new PnDestinatarioAnalogico();
+        List<PnDestinatarioAnalogico> destinatari = new ArrayList<>();
+        PnDestinatarioAnalogico destinatarioAnalogico = null;
+        Set<String> processedKeys = new HashSet<>();
 
-        for(Map<String, String> mappa: listOfMap) {
-            boolean containsDestinatario = mappa.keySet().stream().anyMatch(key -> key.contains(IPnParserLegalFact.DESTINATARIO));
-            if(!observedList.isEmpty()) {
-                boolean isDuplicate = observedList.stream().anyMatch(map -> map.keySet().containsAll(mappa.keySet()));
-                if(isDuplicate) {
-                    mappedList.add(destinatarioAnalogico);
-                    observedList.clear();
-                    destinatarioAnalogico = new PnDestinatarioAnalogico();
-                }
-            }
-            if(containsDestinatario) {
-                observedList.add(mappa);
-                for(String key: mappa.keySet()) {
-                    String value = mappa.get(key);
+        for (Map<String, String> map : listOfMap) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+
+                if (isDestinatarioKey(key)) {
+                    if (processedKeys.contains(key)) {
+                        destinatari.add(destinatarioAnalogico);
+                        destinatarioAnalogico = null;
+                        processedKeys.clear();
+                    }
+                    processedKeys.add(key);
+
+                    if (destinatarioAnalogico == null) {
+                        destinatarioAnalogico = new PnDestinatarioAnalogico();
+                    }
                     if(key.equals(IPnParserLegalFact.LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE.name())) {
                         destinatarioAnalogico.setNomeCognomeRagioneSociale(value);
                     } else if(key.equals(IPnParserLegalFact.LegalFactField.DESTINATARIO_CODICE_FISCALE.name())) {
@@ -89,9 +88,19 @@ public class PnDestinatarioAnalogico extends PnDestinatarioDigitale {
                 }
             }
         }
-        if(!observedList.isEmpty()) {
-            mappedList.add(destinatarioAnalogico);
+
+        if (destinatarioAnalogico != null) {
+            destinatari.add(destinatarioAnalogico);
         }
-        return mappedList;
+
+        return destinatari;
+    }
+
+    private static boolean isDestinatarioKey(String key) {
+        return key.equals(IPnParserLegalFact.LegalFactField.DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE.name()) ||
+                key.equals(IPnParserLegalFact.LegalFactField.DESTINATARIO_CODICE_FISCALE.name()) ||
+                key.equals(IPnParserLegalFact.LegalFactField.DESTINATARIO_DOMICILIO_DIGITALE.name()) ||
+                key.equals(IPnParserLegalFact.LegalFactField.DESTINATARIO_TIPO_DOMICILIO_DIGITALE.name()) ||
+                key.equals(IPnParserLegalFact.LegalFactField.DESTINATARIO_INDIRIZZO_FISICO.name());
     }
 }
