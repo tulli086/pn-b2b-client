@@ -104,7 +104,6 @@ public class IndicizzazioneSteps {
     @Then("La response dell'updateSingle coincide con il response code previsto")
     public void responseCheck(DataTable dataTable){
         Map<String, String> data = dataTable.asMap(String.class, String.class);
-        //TODO: questa API non ritorna un body?
         Assertions.assertEquals(data.get("expectedOutput"), updateSingleResponse.getResultCode());
     }
 }
