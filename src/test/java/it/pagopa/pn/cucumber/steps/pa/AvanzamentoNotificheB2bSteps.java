@@ -62,6 +62,8 @@ public class AvanzamentoNotificheB2bSteps {
     private final TimingForPolling timingForPolling;
     @Value("${pn.external.allowed.future.offset.duration}")
     private String pnEcConsAllowedFutureOffsetDuration;
+    @Value("${pn.consolidatore.requestId}")
+    private String requestIdConsolidator;
 
 
     @Autowired
@@ -3300,7 +3302,7 @@ try{
     private Map<String, String> populateConsolidatoreMap(Instant date) {
         String iun = sharedSteps.getSentNotification().getIun();
         Map<String, String> mapInfo = new HashMap<>();
-        mapInfo.put("requestId", "PREPARE_ANALOG_DOMICILE.IUN_TAXJ-VQJU-MUYU-202311-V-1.RECINDEX_0.ATTEMPT_0.PCRETRY_0");
+        mapInfo.put("requestId", requestIdConsolidator);
         mapInfo.put("attachments", null);
         mapInfo.put("clientRequestTimeStamp", utils.getOffsetDateTimeFromDate(date));
         mapInfo.put("deliveryFailureCause", null);
