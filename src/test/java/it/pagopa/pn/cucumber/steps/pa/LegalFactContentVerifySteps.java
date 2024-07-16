@@ -187,12 +187,22 @@ public class LegalFactContentVerifySteps {
 
         if(multiDestinatarioPosition == 0) {
             Assertions.assertEquals(destinatarioAnalogicoList.size(), pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().size());
-            Assertions.assertTrue(destinatarioAnalogicoList.containsAll(pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici())
-                            && pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().containsAll(destinatarioAnalogicoList));
+            for(int i = 0; i < pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().size(); i++) {
+                Assertions.assertTrue(areDestinatariEquals(pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().get(i), destinatarioAnalogicoList.get(i)));
+            }
         } else {
-            Assertions.assertEquals(multiDestinatarioPosition, pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().indexOf(destinatarioAnalogicoList.get(0))+1);
+            for(int i = 0; i < pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().size(); i++) {
+                if(pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().get(i).equals(destinatarioAnalogicoList.get(i))) {
+                    Assertions.assertEquals(multiDestinatarioPosition, i+1);
+                    break;
+                }
+            }
             Assertions.assertEquals(destinatarioAnalogicoList.get(0), pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().get(multiDestinatarioPosition-1));
             Assertions.assertTrue(pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().containsAll(destinatarioAnalogicoList));
         }
+    }
+
+    private boolean areDestinatariEquals(PnDestinatarioAnalogico destinatarioAnalogico1, PnDestinatarioAnalogico destinatarioAnalogico2) {
+        return destinatarioAnalogico1.equals(destinatarioAnalogico2);
     }
 }
