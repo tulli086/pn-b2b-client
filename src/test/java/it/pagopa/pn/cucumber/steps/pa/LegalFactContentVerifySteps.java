@@ -185,6 +185,9 @@ public class LegalFactContentVerifySteps {
         assertLegalFactParserResponse(pnParserLegalFactResponse);
         PnLegalFactNotificaPresaInCaricoMultiDestinatario pnLegalFactNotificaPresaInCaricoMultiDestinatario = (PnLegalFactNotificaPresaInCaricoMultiDestinatario) pnParserLegalFactResponse.getResponse().getPnLegalFact();
 
+        log.info("PN_LEGAL_FACT listToCompare: {}", destinatarioAnalogicoList);
+        log.info("PN_LEGAL_FACT listComposed: {}", pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici());
+
         if(multiDestinatarioPosition == 0) {
             Assertions.assertEquals(destinatarioAnalogicoList.size(), pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().size());
             for(int i = 0; i < pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().size(); i++) {
