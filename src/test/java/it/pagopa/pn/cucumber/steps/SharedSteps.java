@@ -34,6 +34,7 @@ import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.m
 import it.pagopa.pn.client.web.generated.openapi.clients.externalApiKeyManager.model.ResponseNewApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
+import it.pagopa.pn.cucumber.steps.pa.StepSharedContext;
 import it.pagopa.pn.cucumber.utils.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,6 +66,8 @@ import static org.awaitility.Awaitility.await;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class SharedSteps {
+    @Getter
+    private final StepSharedContext stepSharedContext;
     @Getter
     private final IPnPaB2bClient b2bClient;
 
@@ -272,7 +275,8 @@ public class SharedSteps {
                        PnServiceDeskClientImpl serviceDeskClient,
                        PnGPDClientImpl pnGPDClientImpl,
                        PnPaymentInfoClientImpl pnPaymentInfoClientImpl, PnB2bClientTimingConfigs timingConfigs,
-                       PnPollingFactory pollingFactory) {
+                       PnPollingFactory pollingFactory,
+                       StepSharedContext stepSharedContext) {
         this.dataTableTypeUtil = dataTableTypeUtil;
         this.b2bClient = b2bClient;
         this.webPaClient = webPaClient;
@@ -286,7 +290,9 @@ public class SharedSteps {
         this.iuvGPD = new ArrayList<>();
         this.timingConfigs = timingConfigs;
         this.pollingFactory = pollingFactory;
+        this.stepSharedContext = stepSharedContext;
     }
+
     @BeforeAll
     public static void before_all() {
         log.debug("SHARED_GLUE START");

@@ -1,4 +1,4 @@
-Feature: avanzamento b2b notifica difgitale fallito
+Feature: avanzamento b2b notifica digitale fallito
 
      @workflowDigitale
      #B2B_TIMELINE_16

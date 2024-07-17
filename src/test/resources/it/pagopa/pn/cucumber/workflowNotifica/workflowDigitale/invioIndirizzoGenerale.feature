@@ -1,4 +1,4 @@
-Feature: avanzamento b2b notifica difgitale con indirizzo generale con chiamata a National Registry (INAD-IPA-INIPEC)
+Feature: avanzamento b2b notifica digitale con indirizzo generale con chiamata a National Registry (INAD-IPA-INIPEC)
 
 
   @dev @mockNR

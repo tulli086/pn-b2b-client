@@ -40,6 +40,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,7 +63,7 @@ public class AvanzamentoNotificheB2bSteps {
     private final PnTimelineAndLegalFactV23 pnTimelineAndLegalFactV23;
     private final PnPollingFactory pnPollingFactory;
     private final TimingForPolling timingForPolling;
-
+    private final StepSharedContext stepSharedContext;
 
     @Autowired
     public AvanzamentoNotificheB2bSteps(SharedSteps sharedSteps,
@@ -77,6 +78,7 @@ public class AvanzamentoNotificheB2bSteps {
         this.webRecipientClient = sharedSteps.getWebRecipientClient();
         this.pnPollingFactory = sharedSteps.getPollingFactory();
         this.timingForPolling = timingForPolling;
+        this.stepSharedContext = sharedSteps.getStepSharedContext();
     }
 
     @Then("vengono letti gli eventi fino allo stato della notifica {string} dalla PA {string}")
@@ -480,13 +482,31 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string}")
     public void readingEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
-        readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
+        stepSharedContext.setResponse(readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory));
+    }
+
+    @Then("gli eventi di timeline ricevuti sono i seguenti$")
+    public void verifyTimelineEventsAreTheOnesExpected(List<String> expectedEvents) {
+        PnPollingResponseV23 timelineElementV23 = stepSharedContext.getResponse();
+        List<String> actualTimeline = Optional.ofNullable(timelineElementV23)
+                .map(PnPollingResponseV23::getNotification)
+                .map(FullSentNotificationV23::getTimeline)
+                .orElse(List.of())
+                .stream()
+                .map(TimelineElementV23::getCategory)
+                .map(TimelineElementCategoryV23::toString)
+                .toList();
+        try {
+            Assertions.assertFalse(expectedEvents.stream().anyMatch(Predicate.not(actualTimeline::contains)));
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} abbia notificationCost ugauale a {string}")
     public void TimelineElementOfNotification(String timelineEventCategory, String cost) {
-        TimelineElementV23 event = readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
-        Long notificationCost = event.getDetails().getNotificationCost();
+        PnPollingResponseV23 event = readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
+        Long notificationCost = event.getTimelineElement().getDetails().getNotificationCost();
 
         if (cost.equalsIgnoreCase("null")) {
             Assertions.assertNull(notificationCost);
@@ -603,7 +623,7 @@ public class AvanzamentoNotificheB2bSteps {
         }
     }
 
-    public TimelineElementV23 readingEventUpToTheTimelineElementOfNotificationForCategory(String timelineEventCategory) {
+    public PnPollingResponseV23 readingEventUpToTheTimelineElementOfNotificationForCategory(String timelineEventCategory) {
         PnPollingServiceTimelineSlowV23 timelineSlowV23 = (PnPollingServiceTimelineSlowV23) pnPollingFactory.getPollingService(PnPollingStrategy.TIMELINE_SLOW_V23);
 
         PnPollingResponseV23 pnPollingResponseV23 = timelineSlowV23.waitForEvent(sharedSteps.getIunVersionamento(),
@@ -621,7 +641,7 @@ public class AvanzamentoNotificheB2bSteps {
         } catch (AssertionFailedError assertionFailedError) {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
-        return pnPollingResponseV23.getTimelineElement();
+        return pnPollingResponseV23;
     }
 
     public TimelineElementV23 readingEventUpToTheTimelineElementOfNotificationForCategoryExtraRapid(String timelineEventCategory) {
@@ -2912,7 +2932,7 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} con indirizzo normalizzato:")
     public void vengonoLettiGliEventiFinoAllElementoDiTimelineDellaNotificaConIndirizzoNormalizzato(String timelineEventCategory, DataTable table) {
-        TimelineElementV23 timelineElementV23 = readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
+        TimelineElementV23 timelineElementV23 = readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory).getTimelineElement();
 
         System.out.println(table);
         log.info("indirizzo: {}", timelineElementV23.getDetails().getOldAddress());
