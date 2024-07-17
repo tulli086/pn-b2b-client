@@ -3,15 +3,15 @@ Feature: Indicizzazione Safe Storage
   Scenario Outline: FAILED AUTHORIZATION
     When L'utente chiama l'endpoint senza essere autorizzato ad accedervi
     Then La chiamata restituisce 403
-      | endpoint | <endpoint> |
+      | endpoint | <endpoint>    |
     Examples:
-      | endpoint             |
+      | endpoint                 |
 #      | getFileWithTagsByFileKey |
 #      | createFileWithTags       |
-      | updateSingleWithTags |
+      | updateSingleWithTags     |
 #      | updateMassiveWithTags    |
-      | getTagsByFileKey     |
-#      | searchFileKeyWithTags    |
+      | getTagsByFileKey         |
+      | searchFileKeyWithTags    |
 
   Scenario Outline: UpdateSingle SUCCESS
     Given Viene popolato il database

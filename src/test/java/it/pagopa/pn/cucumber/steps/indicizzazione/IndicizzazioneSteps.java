@@ -9,16 +9,15 @@ import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.HttpClientErrorException;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
@@ -76,7 +75,7 @@ public class IndicizzazioneSteps {
 
     @When("L'utente chiama l'endpoint senza essere autorizzato ad accedervi")
     public void utenteNonAutorizzato() {
-        //TODO: disattivare l'autorizzazione dell'utente
+        pnIndicizzazioneSafeStorageClient.setApiKey("api-key-non-autorizzata");
     }
 
     @Then("La chiamata restituisce 403")
@@ -89,18 +88,25 @@ public class IndicizzazioneSteps {
                     pnIndicizzazioneSafeStorageClient.getFileWithTagsByFileKey());
             case "createFileWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
                     pnIndicizzazioneSafeStorageClient.createFileWithTags());
-            case "updateSingleWithTags" ->
-//                    Assertions.assertEquals(pnIndicizzazioneSafeStorageClient.updateSingleWithTagsWithHttpInfo(
-//                            "test", new AdditionalFileTagsUpdateRequest()).getStatusCodeValue(), 403);
-                    Assertions.assertThrows(HttpClientErrorException.class, () ->
-                            updateSingleResponse = pnIndicizzazioneSafeStorageClient.updateSingleWithTags(
-                                    "test", new AdditionalFileTagsUpdateRequest()));
+            case "updateSingleWithTags" -> {
+                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
+                    pnIndicizzazioneSafeStorageClient.updateSingleWithTags(
+                        "test", new AdditionalFileTagsUpdateRequest())).getStatusText();
+                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
+            }
             case "updateMassiveWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
                     pnIndicizzazioneSafeStorageClient.updateMassiveWithTags());
-            case "getTagsByFileKey" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-                    pnIndicizzazioneSafeStorageClient.getTagsByFileKey("test"));
-            case "searchFileKeyWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-                    pnIndicizzazioneSafeStorageClient.searchFileKeyWithTags());
+            case "getTagsByFileKey" -> {
+                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
+                    pnIndicizzazioneSafeStorageClient.getTagsByFileKey("test-key")).getStatusText();
+                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
+            }
+            case "searchFileKeyWithTags" -> {
+                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
+                        pnIndicizzazioneSafeStorageClient.searchFileKeyWithTags("test-id", "", true))
+                    .getStatusText();
+                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
+            }
             default -> Assertions.fail("Endpoint non riconosciuto");
         }
     }

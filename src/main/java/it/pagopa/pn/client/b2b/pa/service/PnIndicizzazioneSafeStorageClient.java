@@ -9,19 +9,32 @@ import org.springframework.http.ResponseEntity;
 
 public interface PnIndicizzazioneSafeStorageClient extends SettableApiKey {
 
+
     void getFileWithTagsByFileKey();
+
+    void getFileWithTagsByFileKeyWithHttpInfo();
 
     void createFileWithTags();
 
+    void createFileWithTagsWithHttpInfo();
+
     AdditionalFileTagsUpdateResponse updateSingleWithTags(String fileKey,
-                                                          AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest);
+        AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest);
 
     ResponseEntity<AdditionalFileTagsUpdateResponse> updateSingleWithTagsWithHttpInfo(
-            String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest);
+        String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest);
 
     void updateMassiveWithTags();
 
+    void updateMassiveWithTagsWithHttpInfo();
+
     AdditionalFileTagsGetResponse getTagsByFileKey(String fileKey);
 
-    AdditionalFileTagsSearchResponse searchFileKeyWithTags();
+    ResponseEntity<AdditionalFileTagsGetResponse> getTagsByFileKeyWithHttpInfo(String fileKey);
+
+    AdditionalFileTagsSearchResponse searchFileKeyWithTags(String id, String logic,
+        Boolean tags);
+
+    ResponseEntity<AdditionalFileTagsSearchResponse> searchFileKeyWithTagsWithHttpInfo(
+        String id, String logic, Boolean tags);
 }

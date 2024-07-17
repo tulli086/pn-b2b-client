@@ -32,16 +32,16 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
     this.restTemplate = restTemplate;
     this.apiKeyIndexing = "pn-test_api_key";
     this.devBasePath = devBasePath;
-    this.additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, devBasePath, apiKeyIndexing));
+    this.additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, devBasePath, "pn-test", apiKeyIndexing));
     this.apiKeySetted = ApiKeyType.INDEXING;
   }
 
-  private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apiKey) {
+  private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String clientId, String apiKey) {
     ApiClient newApiClient = new ApiClient( restTemplate );
     newApiClient.setBasePath( basePath );
 
     //TODO modificare i valori di api-key e client-id
-    newApiClient.addDefaultHeader("x-pagopa-safestorage-cx-id", "test");
+    newApiClient.addDefaultHeader("x-pagopa-safestorage-cx-id", clientId);
     newApiClient.addDefaultHeader("x-api-key", apiKey );
     return newApiClient;
   }
@@ -52,18 +52,29 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   }
 
   @Override
+  public void getFileWithTagsByFileKeyWithHttpInfo() {
+
+  }
+
+  @Override
   public void createFileWithTags() {
 
   }
 
   @Override
-  public AdditionalFileTagsUpdateResponse updateSingleWithTags(String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
+  public void createFileWithTagsWithHttpInfo() {
+
+  }
+
+  @Override
+  public AdditionalFileTagsUpdateResponse updateSingleWithTags(String fileKey,
+      AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
     return additionalFileTagsApi.additionalFileTagsUpdate(fileKey, additionalFileTagsUpdateRequest);
   }
 
   @Override
   public ResponseEntity<AdditionalFileTagsUpdateResponse> updateSingleWithTagsWithHttpInfo(
-          String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
+      String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
     return additionalFileTagsApi.additionalFileTagsUpdateWithHttpInfo(fileKey, additionalFileTagsUpdateRequest);
   }
 
@@ -72,13 +83,28 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   }
 
   @Override
-  public AdditionalFileTagsGetResponse getTagsByFileKey(String fileKey) {
-    return additionalFileTagsApi.additionalFileTagsGet(fileKey);
+  public void updateMassiveWithTagsWithHttpInfo() {
   }
 
   @Override
-  public AdditionalFileTagsSearchResponse searchFileKeyWithTags() {
-    return null;
+  public AdditionalFileTagsGetResponse getTagsByFileKey(String fileKey) {
+    return additionalFileTagsApi.additionalFileTagsGet(fileKey);
+  }
+  @Override
+  public ResponseEntity<AdditionalFileTagsGetResponse> getTagsByFileKeyWithHttpInfo(String fileKey) {
+    return additionalFileTagsApi.additionalFileTagsGetWithHttpInfo(fileKey);
+  }
+
+  @Override
+  public AdditionalFileTagsSearchResponse searchFileKeyWithTags(String id, String logic,
+      Boolean tags) {
+    return additionalFileTagsApi.additionalFileTagsSearch(id, logic, tags);
+  }
+
+  @Override
+  public ResponseEntity<AdditionalFileTagsSearchResponse> searchFileKeyWithTagsWithHttpInfo(
+      String id, String logic, Boolean tags) {
+    return additionalFileTagsApi.additionalFileTagsSearchWithHttpInfo(id, logic, tags);
   }
 
   @Override
@@ -92,7 +118,7 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
 
   @Override
   public void setApiKey(String apiKey){
-    this.additionalFileTagsApi.setApiClient(newApiClient(restTemplate, devBasePath, apiKey));
+    this.additionalFileTagsApi.setApiClient(newApiClient(restTemplate, devBasePath, "pn-test", apiKey));
   }
 
   @Override
