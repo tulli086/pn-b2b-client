@@ -1,11 +1,13 @@
 package it.pagopa.pn.client.b2b.pa.parsing.parser.utils;
 
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokenProperty;
+import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+@Slf4j
 public class PnContentExtractorUtils {
 
     private PnContentExtractorUtils() {}
@@ -160,6 +162,8 @@ public class PnContentExtractorUtils {
     }
 
     public static String cleanUpText(String text, PnLegalFactTokenProperty tokenProps) {
+        log.info("PnParserContent.originalText: {}", text);
+        log.info("PnParserContent.footer: {}", tokenProps.getCleanupFooter());
         String cleanedText = text.replaceAll(tokenProps.getCleanupFooter(), "");
         cleanedText = cleanedText.replaceAll(tokenProps.getRegexCleanupNsbp(), "");
         cleanedText = normalizeLineEndings(cleanedText);
