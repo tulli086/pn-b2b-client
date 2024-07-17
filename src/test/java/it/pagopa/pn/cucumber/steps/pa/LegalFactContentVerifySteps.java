@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +51,8 @@ public class LegalFactContentVerifySteps {
     }
 
     @Then("si verifica se il legalFact contiene i campi per il destinatario")
-    public void siVerificaSeIlLegalFactContieneICampiPerIlDestinatario(DataTable dataTable) {
+    public void siVerificaSeIlLegalFactContieneICampiPerIlDestinatario(DataTable dataTable) throws IOException {
         byte[] source = b2bUtils.downloadFile(legalFactUrl);
-
         //Creation of a list of map for each dataTable pair
         List<Map<String, String>> listOfMap = dataTable
                 .asLists()
@@ -83,9 +83,8 @@ public class LegalFactContentVerifySteps {
     }
 
     @Then("si verifica se il legalFact contiene i campi")
-    public void siVerificaSeIlLegalFactContieneICampi(DataTable dataTable) {
+    public void siVerificaSeIlLegalFactContieneICampi(DataTable dataTable) throws IOException {
         byte[] source = b2bUtils.downloadFile(legalFactUrl);
-
         if(IPnParserLegalFact.LegalFactType.valueOf(legalFactType).equals(IPnParserLegalFact.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO)) {
             //Creation of a list of map for each dataTable pair
             List<Map<String, String>> listOfMap = dataTable
@@ -184,28 +183,17 @@ public class LegalFactContentVerifySteps {
     private void assertLegalFactDestinatario(PnParserLegalFactResponse pnParserLegalFactResponse, List<PnDestinatarioAnalogico> destinatarioAnalogicoList, int multiDestinatarioPosition) {
         assertLegalFactParserResponse(pnParserLegalFactResponse);
         PnLegalFactNotificaPresaInCaricoMultiDestinatario pnLegalFactNotificaPresaInCaricoMultiDestinatario = (PnLegalFactNotificaPresaInCaricoMultiDestinatario) pnParserLegalFactResponse.getResponse().getPnLegalFact();
-
         log.info("PN_LEGAL_FACT listToCompare: {}", destinatarioAnalogicoList);
         log.info("PN_LEGAL_FACT listComposed: {}", pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici());
 
         if(multiDestinatarioPosition == 0) {
             Assertions.assertEquals(destinatarioAnalogicoList.size(), pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().size());
-            for(int i = 0; i < pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().size(); i++) {
-                Assertions.assertTrue(areDestinatariEquals(pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().get(i), destinatarioAnalogicoList.get(i)));
-            }
+            Assertions.assertTrue(destinatarioAnalogicoList.containsAll(pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici())
+                    && pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().containsAll(destinatarioAnalogicoList));
         } else {
-            for(int i = 0; i < pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().size(); i++) {
-                if(pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().get(i).equals(destinatarioAnalogicoList.get(i))) {
-                    Assertions.assertEquals(multiDestinatarioPosition, i+1);
-                    break;
-                }
-            }
+            Assertions.assertEquals(multiDestinatarioPosition, pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().indexOf(destinatarioAnalogicoList.get(0))+1);
             Assertions.assertEquals(destinatarioAnalogicoList.get(0), pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().get(multiDestinatarioPosition-1));
             Assertions.assertTrue(pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().containsAll(destinatarioAnalogicoList));
         }
-    }
-
-    private boolean areDestinatariEquals(PnDestinatarioAnalogico destinatarioAnalogico1, PnDestinatarioAnalogico destinatarioAnalogico2) {
-        return destinatarioAnalogico1.equals(destinatarioAnalogico2);
     }
 }
