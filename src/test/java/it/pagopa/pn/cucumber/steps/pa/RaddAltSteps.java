@@ -13,6 +13,7 @@ import it.pagopa.pn.client.b2b.pa.service.utils.SettableAuthTokenRadd;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.Compress;
+import it.pagopa.pn.cucumber.utils.RaddOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
@@ -77,7 +78,6 @@ public class RaddAltSteps {
         this.externalServiceClient = externalServiceClient;
         this.sharedSteps = sharedSteps;
         this.pnPaB2bUtils = pnPaB2bUtils;
-
     }
 
     @When("L'operatore scansione il qrCode per recuperare gli atti di {string}")
@@ -145,7 +145,6 @@ public class RaddAltSteps {
         this.actInquiryResponse = actInquiryResponse;
     }
 
-
     private ActInquiryResponseStatus.CodeEnum getErrorCodeRaddAlternative(int errorCode) {
         switch (errorCode) {
             case 0 -> {
@@ -203,58 +202,65 @@ public class RaddAltSteps {
         Assertions.assertEquals(ActInquiryResponseStatus.CodeEnum.NUMBER_0, actInquiryResponse.getStatus().getCode());
     }
 
+    @And("vengono caricati i documento di identità del cittadino su radd alternative")
+    public void vengonoCaricatiIDocumentoDiIdentitaDelCittadino() {
+        this.operationid = generateRandomNumber();
+        uploadDocumentRaddAlternative(true);
+    }
+
     @And("vengono caricati i documento di identità del cittadino su radd alternative per errore")
     public void vengonoCaricatiIDocumentoDiIdentitaDelCittadinoPerErrore() {
         this.operationid = generateRandomNumber();
-        uploadDocumentRaddAlternative(true, null);
-    }
-
-/*    @And("vengono caricati i documento di identità del cittadino su radd alternative")
-    public void vengonoCaricatiIDocumentoDiIdentitaDelCittadino() {
-        this.operationid = generateRandomNumber();
-        uploadDocumentRaddAlternative(true, uid);
-    }*/
-
-    @And("l'operatore senza ruolo carica i documento di identità del cittadino su radd alternative senza successo")
-    public void vengonoCaricatiIDocumentoDiIdentitaDelCittadino() {
-        this.operationid = generateRandomNumber();
-        Assertions.assertDoesNotThrow(()-> uploadDocumentRaddAlternative(true, uidRaddUploaderOperator));
+        uploadDocumentRaddOperatorAlternative(true, null);
     }
 
     @And("vengono caricati i documento di identità del cittadino su radd alternative dall'operatore RADD {string}")
-    public void vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeDallOperatoreRADD(String uidRaddOperator) {
+    public void vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeDallOperatoreRADD(String raddOperatorType) {
+        RaddOperator raddOperator = RaddOperator.valueOf(raddOperatorType);
+        raddAltClient.setAuthTokenRadd(raddOperator.getIssuerType());
         this.operationid = generateRandomNumber();
-        uploadDocumentRaddAlternative(true, uidRaddOperator);
+        Assertions.assertDoesNotThrow(()->
+                uploadDocumentRaddOperatorAlternative(true, raddOperator.getUid()));
     }
 
-    @And("vengono caricati i documento di identità del cittadino su radd alternative dall'operatore RADD uploader")
-    public void vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeDallOperatoreRADDUploader() {
+    @And("l'operatore {string} tenta di caricare i documento di identità del cittadino su radd alternative senza successo")
+    public void lOperatoreTentaDiCaricareIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeSenzaSuccesso(String raddOperatorType) {
+        RaddOperator raddOperator = RaddOperator.valueOf(raddOperatorType);
+        raddAltClient.setAuthTokenRadd(raddOperator.getIssuerType());
         this.operationid = generateRandomNumber();
-        Assertions.assertDoesNotThrow(()-> uploadDocumentRaddAlternative(true, uidRaddUploaderOperator));
+        Assertions.assertThrows(RuntimeException.class, () ->  uploadDocumentRaddOperatorAlternative(true, raddOperator.getUid()));
     }
 
-    @And("l'operatore standard tenta di caricare i documento di identità del cittadino su radd alternative senza successo")
-    public void lOperatoreStandardTentaDiCaricareIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeSenzaSuccesso() {
+    @And("si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative")
+    public void siIniziaIlProcessoDiCaricamentoDeiDocumentoDiIdentitàDelCittadinoMaNonSiPortaAConclusione() {
         this.operationid = generateRandomNumber();
-        Assertions.assertThrows(RuntimeException.class, () ->  uploadDocumentRaddAlternative(true, uidRaddStandardOperator));
+        uploadDocumentRaddAlternative(false);
     }
 
-    @And("si inizia il processo di caricamento per radd standard dei documento di identità del cittadino ma non si porta a conclusione su radd alternative")
-    public void siIniziaIlProcessoDiCaricamentoPerRaddStandardDeiDocumentoDiIdentitàDelCittadinoMaNonSiPortaAConclusione() {
+    @And("si inizia il processo di caricamento per radd {string} dei documento di identità del cittadino ma non si porta a conclusione su radd alternative")
+    public void siIniziaIlProcessoDiCaricamentoPerRaddStandardDeiDocumentoDiIdentitàDelCittadinoMaNonSiPortaAConclusione(String raddOperatorType) {
+        RaddOperator raddOperator = RaddOperator.valueOf(raddOperatorType);
+        raddAltClient.setAuthTokenRadd(raddOperator.getIssuerType());
         this.operationid = generateRandomNumber();
-        uploadDocumentRaddAlternative(false, uidRaddStandardOperator);
+        uploadDocumentRaddOperatorAlternative(false, raddOperator.getUid());
     }
 
-    @And("si inizia il processo di caricamento per radd uploader dei documento di identità del cittadino ma non si porta a conclusione su radd alternative")
-    public void siIniziaIlProcessoDiCaricamentoPerRaddUploaderDeiDocumentoPerRaddUploaderDiIdentitàDelCittadinoMaNonSiPortaAConclusione() {
-        this.operationid = generateRandomNumber();
-        uploadDocumentRaddAlternative(false, uidRaddUploaderOperator);
-    }
-
-    private void uploadDocumentRaddAlternative(boolean usePresignedUrl, String uidRaddOperator) {
+    private void uploadDocumentRaddAlternative(boolean usePresignedUrl) {
         try {
             creazioneZip();
-            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddAlternativeDocument("classpath:/"+this.fileZip, usePresignedUrl,this.operationid, uidRaddOperator);
+            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddAlternativeDocument("classpath:/"+this.fileZip, usePresignedUrl,this.operationid);
+            Assertions.assertNotNull(uploadResponse);
+            this.documentUploadResponse = uploadResponse;
+            log.info("documentUploadResponse: {}", documentUploadResponse);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void uploadDocumentRaddOperatorAlternative(boolean usePresignedUrl, String uidRaddOperator) {
+        try {
+            creazioneZip();
+            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddOperatoreAlternativeDocument("classpath:/"+this.fileZip, usePresignedUrl,this.operationid, uidRaddOperator);
             Assertions.assertNotNull(uploadResponse);
             this.documentUploadResponse = uploadResponse;
             log.info("documentUploadResponse: {}", documentUploadResponse);
@@ -265,31 +271,28 @@ public class RaddAltSteps {
 
     @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative")
     public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR() {
-        startTransactionActRaddAlternative(this.operationid,true, uid);
+        startTransactionActRaddAlternative(this.operationid,true);
     }
 
-    @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore standard")
-    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARDaRaddAlternativePerOperatoreStandard() {
-        startTransactionActRaddAlternative(this.operationid,true, uidRaddStandardOperator);
-    }
-
-    @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore uploader")
-    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARDaRaddAlternativePerOperatoreUploader() {
-        startTransactionActRaddAlternative(this.operationid,true, uidRaddUploaderOperator);
+    @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore {string}")
+    public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARDaRaddAlternativePerOperatoreStandard(String raddOperatorType) {
+        RaddOperator raddOperator = RaddOperator.valueOf(raddOperatorType);
+        raddAltClient.setAuthTokenRadd(raddOperator.getIssuerType());
+        startTransactionActRaddAlternativeForOperator(this.operationid,true, raddOperator.getUid());
     }
 
     @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId dal raddista {string}")
     public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARUtilizzandoIlPrecedenteOperationIdOrganizzazioneDiversa(String raddista ) {
         changeRaddista(raddista);
-        startTransactionActRaddAlternative(this.operationid,true, null);
+        startTransactionActRaddAlternative(this.operationid, true);
     }
 
     @Then("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative senza ritentativi")
     public void vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARSenzaRetry() {
-        startTransactionActRaddAlternative(this.operationid,false, null);
+        startTransactionActRaddAlternative(this.operationid, false);
     }
 
-    private void startTransactionActRaddAlternative(String operationid, boolean retry, String uidRaddOperator) {
+    private void startTransactionActRaddAlternative(String operationid, boolean retry) {
         ActStartTransactionRequest actStartTransactionRequest =
                 new ActStartTransactionRequest()
                         .qrCode(this.qrCode)
@@ -299,9 +302,36 @@ public class RaddAltSteps {
                         .recipientTaxId(this.currentUserCf)
                         .recipientType(this.recipientType.equalsIgnoreCase("PF")? ActStartTransactionRequest.RecipientTypeEnum.PF:
                                 ActStartTransactionRequest.RecipientTypeEnum.PG)
-                        .iun(uidRaddOperator)
+                        .iun(this.iun)
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                         .checksum(this.documentUploadResponse.getValue2());
+        System.out.println("actStartTransactionRequest: " + actStartTransactionRequest);
+        this.startTransactionResponse = raddAltClient.startActTransaction(uid, actStartTransactionRequest);
+
+        if(this.startTransactionResponse.getStatus().getCode().equals(StartTransactionResponseStatus.CodeEnum.NUMBER_2) && retry){
+            try {
+                Thread.sleep(this.startTransactionResponse.getStatus().getRetryAfter().longValue());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            this.startTransactionResponse = raddAltClient.startActTransaction(uid, actStartTransactionRequest);
+        }
+        System.out.println("startTransactionResponse: " + startTransactionResponse);
+    }
+
+    private void startTransactionActRaddAlternativeForOperator(String operationid, boolean retry, String uidRaddOperator) {
+        ActStartTransactionRequest actStartTransactionRequest =
+                new ActStartTransactionRequest()
+                        .qrCode(this.qrCode)
+                        .versionToken("string")
+                        .fileKey(this.documentUploadResponse != null ? this.documentUploadResponse.getValue1() : null)
+                        .operationId(operationid)
+                        .recipientTaxId(this.currentUserCf)
+                        .recipientType(this.recipientType.equalsIgnoreCase("PF")? ActStartTransactionRequest.RecipientTypeEnum.PF:
+                                ActStartTransactionRequest.RecipientTypeEnum.PG)
+                        .iun(uidRaddOperator)
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                        .checksum(this.documentUploadResponse != null ? this.documentUploadResponse.getValue2() : null);
 
         System.out.println("actStartTransactionRequest: " + actStartTransactionRequest);
         this.startTransactionResponse = raddAltClient.startActTransaction(uid, actStartTransactionRequest);
@@ -395,26 +425,11 @@ public class RaddAltSteps {
                 this.recipientType);
     }
 
-    @And("la persona fisica {string} chiede di verificare ad operatore radd uploader la presenza di notifiche")
-    public void laPersonaFisicaChiedeDiVerificareAdOperatoreRaddUploaderLaPresenzaDiNotifiche(String citizen) {
+    @And("la persona fisica {string} chiede di verificare ad operatore radd {string} la presenza di notifiche")
+    public void laPersonaFisicaChiedeDiVerificareAdOperatoreRaddLaPresenzaDiNotifiche(String citizen, String raddOperatorType) {
+        RaddOperator raddOperator = RaddOperator.valueOf(raddOperatorType);
         selectUserRaddAlternative(citizen);
-        this.aorInquiryResponse = raddAltClient.aorInquiry(uidRaddUploaderOperator,
-                this.currentUserCf,
-                this.recipientType);
-    }
-
-    @And("la persona fisica {string} chiede di verificare ad operatore radd standard la presenza di notifiche")
-    public void laPersonaFisicaChiedeDiVerificareAdOperatoreRaddStandardLaPresenzaDiNotifiche(String citizen) {
-        selectUserRaddAlternative(citizen);
-        this.aorInquiryResponse = raddAltClient.aorInquiry(uidRaddStandardOperator,
-                this.currentUserCf,
-                this.recipientType);
-    }
-
-    @And("la persona fisica {string} chiede di verificare ad operatore {string} la presenza di notifiche")
-    public void laPersonaFisicaChiedeDiVerificareAdOperatoreLaPresenzaDiNotifiche(String citizen, String uidRaddOperator) {
-        selectUserRaddAlternative(citizen);
-        this.aorInquiryResponse = raddAltClient.aorInquiry(uidRaddOperator,
+        this.aorInquiryResponse = raddAltClient.aorInquiry(raddOperator.getUid(),
                 this.currentUserCf,
                 this.recipientType);
     }
@@ -427,6 +442,7 @@ public class RaddAltSteps {
         Assertions.assertEquals(ResponseStatus.CodeEnum.NUMBER_0, this.aorInquiryResponse.getStatus().getCode());
         log.info("aorInquiryResponse: {}", this.aorInquiryResponse);
     }
+
 
     @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) su radd alternative")
     public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibile() {
@@ -442,54 +458,6 @@ public class RaddAltSteps {
                         //.delegateTaxId("")
                         .checksum(this.documentUploadResponse.getValue2());
         this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid, aorStartTransactionRequest);
-    }
-
-    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) su radd alternative da operatore radd uploader")
-    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileDaOperatoreRaddUploader() {
-        AorStartTransactionRequest aorStartTransactionRequest =
-                new AorStartTransactionRequest()
-                        .versionToken("string")
-                        .fileKey(this.documentUploadResponse != null ? this.documentUploadResponse.getValue1() : null)
-                        .operationId(this.operationid)
-                        .recipientTaxId(this.currentUserCf)
-                        .recipientType(this.recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
-                                AorStartTransactionRequest.RecipientTypeEnum.PG)
-                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
-                        //.delegateTaxId("")
-                        .checksum(this.documentUploadResponse != null ? this.documentUploadResponse.getValue2() : null);
-        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uidRaddUploaderOperator, aorStartTransactionRequest);
-    }
-
-    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) su radd alternative da operatore radd standard")
-    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileDaOperatoreRaddStandard() {
-        AorStartTransactionRequest aorStartTransactionRequest =
-                new AorStartTransactionRequest()
-                        .versionToken("string")
-                        .fileKey(this.documentUploadResponse.getValue1())
-                        .operationId(this.operationid)
-                        .recipientTaxId(this.currentUserCf)
-                        .recipientType(this.recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
-                                AorStartTransactionRequest.RecipientTypeEnum.PG)
-                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
-                        //.delegateTaxId("")
-                        .checksum(this.documentUploadResponse.getValue2());
-        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uidRaddStandardOperator, aorStartTransactionRequest);
-    }
-
-    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) su radd alternative da operatore radd con uid {string}")
-    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileDaOperatoreConUid(String uidRaddOperator) {
-        AorStartTransactionRequest aorStartTransactionRequest =
-                new AorStartTransactionRequest()
-                        .versionToken("string")
-                        .fileKey(this.documentUploadResponse.getValue1())
-                        .operationId(this.operationid)
-                        .recipientTaxId(this.currentUserCf)
-                        .recipientType(this.recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
-                                AorStartTransactionRequest.RecipientTypeEnum.PG)
-                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
-                        //.delegateTaxId("")
-                        .checksum(this.documentUploadResponse.getValue2());
-        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(uidRaddOperator, aorStartTransactionRequest);
     }
 
     @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) 2 volte su radd alternative")
@@ -526,6 +494,24 @@ public class RaddAltSteps {
                         .checksum(this.documentUploadResponse.getValue2());
         this.aorStartTransactionResponse = raddAltClient.startAorTransaction(this.uid,
                 aorStartTransactionRequest);
+    }
+
+    @Then("Vengono recuperati gli aar delle notifiche in stato irreperibile della persona (fisica)(giuridica) su radd alternative da operatore radd {string}")
+    public void vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileDaOperatoreRaddType(String raddOperatorType) {
+        RaddOperator raddOperator = RaddOperator.valueOf(raddOperatorType);
+        raddAltClient.setAuthTokenRadd(raddOperator.getIssuerType());
+        AorStartTransactionRequest aorStartTransactionRequest =
+                new AorStartTransactionRequest()
+                        .versionToken("string")
+                        .fileKey(this.documentUploadResponse != null ? this.documentUploadResponse.getValue1() : null)
+                        .operationId(this.operationid)
+                        .recipientTaxId(this.currentUserCf)
+                        .recipientType(this.recipientType.equalsIgnoreCase("PF")?AorStartTransactionRequest.RecipientTypeEnum.PF:
+                                AorStartTransactionRequest.RecipientTypeEnum.PG)
+                        .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
+                        //.delegateTaxId("")
+                        .checksum(this.documentUploadResponse != null ? this.documentUploadResponse.getValue2() : null);
+        this.aorStartTransactionResponse = raddAltClient.startAorTransaction(raddOperator.getUid(), aorStartTransactionRequest);
     }
 
     @And("il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative")
@@ -753,16 +739,11 @@ public class RaddAltSteps {
         this.actInquiryResponse = actInquiryResponse;
     }
 
-    @When("L'operatore uploader scansione il qrCode per recuperare gli atti da radd alternative")
-    public void lOperatoreUploaderScansioneIlQrCodePerRecuperariGliAtti() {
-        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(uidRaddUploaderOperator, this.currentUserCf, this.recipientType, qrCode, null);
-        log.info("actInquiryResponse: {}",actInquiryResponse);
-        this.actInquiryResponse = actInquiryResponse;
-    }
-
-    @When("L'operatore standard scansione il qrCode per recuperare gli atti da radd alternative")
-    public void lOperatoreStandardScansioneIlQrCodePerRecuperariGliAtti() {
-        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(uidRaddStandardOperator, this.currentUserCf, this.recipientType, qrCode, null);
+    @When("L'operatore {string} scansione il qrCode per recuperare gli atti da radd alternative")
+    public void lOperatoreUploaderScansioneIlQrCodePerRecuperariGliAtti(String raddOperatorType) {
+        RaddOperator raddOperator = RaddOperator.valueOf(raddOperatorType);
+        raddAltClient.setAuthTokenRadd(raddOperator.getIssuerType());
+        ActInquiryResponse actInquiryResponse = raddAltClient.actInquiry(raddOperator.getUid(), this.currentUserCf, this.recipientType, qrCode, null);
         log.info("actInquiryResponse: {}",actInquiryResponse);
         this.actInquiryResponse = actInquiryResponse;
     }
@@ -792,7 +773,7 @@ public class RaddAltSteps {
         IntStream.range(0, iteration).forEach(i -> {
             lOperatoreScansioneIlQrCodePerRecuperariGliAtti();
             laScansioneSiConcludeCorrettamenteAlternative();
-            vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeDallOperatoreRADDUploader();
+            vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeDallOperatoreRADD("UPLOADER");
             vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR();
             lOperazioneDiDownloadDegliAttiSiConcludeCorrettamente();
             vieneConclusaLaVisualizzatiDiAttiEdAttestazioniDellaNotifica();
@@ -806,7 +787,7 @@ public class RaddAltSteps {
         IntStream.range(0, maxPrintRequest).forEach(i -> {
             lOperatoreScansioneIlQrCodePerRecuperariGliAtti();
             laScansioneSiConcludeCorrettamenteAlternative();
-            //vengonoCaricatiIDocumentoDiIdentitaDelCittadino();
+            vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeDallOperatoreRADD("");
             vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR();
             lOperazioneDiDownloadDegliAttiSiConcludeCorrettamente();
             vieneConclusaLaVisualizzatiDiAttiEdAttestazioniDellaNotifica();

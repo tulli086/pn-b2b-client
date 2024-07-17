@@ -36,6 +36,9 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final String raddistaJwtKidDiverso;
     private final String raddistaJwtPrivateDiverso;
     private final String raddistaJwksOver50Kb;
+    private final String raddistaUploader;
+    private final String raddistaStandard;
+    private final String raddistaWithoutRole;
     private final AuthTokenRaddType issuerTokenSetted;
     private final ActOperationsApi actOperationsApi;
     private final AorOperationsApi aorOperationsApi;
@@ -46,13 +49,15 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
     private final ImportApi apiCaricamentoCsv;
     private final RegistryApi apiAnagraficaCRUD;
 
-
     public PnRaddAlternativeClientImpl(RestTemplate restTemplate,
                                        @Value("${pn.radd.alt.external.base-url}") String basePath,
                                        @Value("${pn.external.bearer-token-radd-1}") String raddista1,
                                        @Value("${pn.external.bearer-token-radd-2}") String raddista2,
                                        @Value("${pn.external.bearer-token-radd-non-censito}") String raddistaNonCensito,
                                        @Value("${pn.external.bearer-token-radd-dati-errati}") String raddistaDatiErrati,
+                                       @Value("${pn.external.bearer-token-radd-uploader}") String raddistaUploader,
+                                       @Value("${pn.external.bearer-token-radd-standard}") String raddistaStandard,
+                                       @Value("${pn.external.bearer-token-radd-without-role}") String raddistaWithoutRole,
                                        @Value("${pn.external.bearer-token-radd-jwt-scaduto}") String raddistaJwtScaduto,
                                        @Value("${pn.external.bearer-token-radd-aud-erratto}") String raddistaAudErrato,
                                        @Value("${pn.external.bearer-token-radd-kid-diverso}") String raddistaJwtKidDiverso,
@@ -68,6 +73,9 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
         this.raddistaJwtKidDiverso = raddistaJwtKidDiverso;
         this.raddistaJwtPrivateDiverso = raddistaJwtPrivateDiverso;
         this.raddistaJwksOver50Kb = raddistaJwksOver50Kb;
+        this.raddistaUploader = raddistaUploader;
+        this.raddistaStandard = raddistaStandard;
+        this.raddistaWithoutRole = raddistaWithoutRole;
         this.actOperationsApi = new ActOperationsApi(newApiClientExternal(restTemplate,basePath, raddista1));
         this.aorOperationsApi = new AorOperationsApi(newApiClientExternal(restTemplate,basePath, raddista1));
         this.documentOperationsApi = new DocumentOperationsApi(newApiClientExternal(restTemplate,basePath, raddista1));
@@ -223,6 +231,18 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
             }
             case ISSUER_NON_CENSITO -> {
                 selectRaddista(this.raddistaNonCensito);
+                beenSet=true;
+            }
+            case ISSUER_UPLOADER -> {
+                selectRaddista(this.raddistaUploader);
+                beenSet=true;
+            }
+            case ISSUER_STANDARD -> {
+                selectRaddista(this.raddistaStandard);
+                beenSet=true;
+            }
+            case ISSUER_WITHOUT_ROLE -> {
+                selectRaddista(this.raddistaWithoutRole);
                 beenSet=true;
             }
             case DATI_ERRATI -> {

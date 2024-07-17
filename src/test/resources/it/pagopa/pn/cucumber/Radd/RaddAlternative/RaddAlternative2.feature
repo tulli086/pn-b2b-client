@@ -21,7 +21,7 @@ Feature: Radd Alternative
     And Il cittadino "<CITIZEN>" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti di "<CITIZEN>"
     Then la scansione si conclude correttamente su radd alternative
-    # And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
@@ -59,7 +59,7 @@ Feature: Radd Alternative
     And Il cittadino "Mario Gherkin" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti di "Mario Gherkin"
     Then la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 6 documenti
@@ -86,7 +86,7 @@ Feature: Radd Alternative
     And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti di "Mario Cucumber"
     Then la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 5 documenti
@@ -113,7 +113,7 @@ Feature: Radd Alternative
     When Il cittadino "Mario Gherkin" come destinatario 0 mostra il QRCode "corretto"
     Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
@@ -138,7 +138,7 @@ Feature: Radd Alternative
     And Il cittadino "Mario Gherkin" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     Then la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
@@ -175,7 +175,7 @@ Feature: Radd Alternative
     And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     Then la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And si verifica se il file richiede l'autenticazione
@@ -188,7 +188,7 @@ Feature: Radd Alternative
     When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "dopo 120gg"
     Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 4 su radd alternative
 
@@ -268,7 +268,7 @@ Feature: Radd Alternative
     And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    # And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
+    And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 4 su radd alternative
 
@@ -286,12 +286,12 @@ Feature: Radd Alternative
     Then Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And la transazione viene abortita per gli "act"
     Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
@@ -312,7 +312,7 @@ Feature: Radd Alternative
     And Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "corretto"
     And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
@@ -341,7 +341,7 @@ Feature: Radd Alternative
     And Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti di "CucumberSpa"
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 6 documenti
@@ -368,7 +368,7 @@ Feature: Radd Alternative
     And Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti di "CucumberSpa"
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 5 documenti
@@ -391,7 +391,7 @@ Feature: Radd Alternative
     Then Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "corretto"
     And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And si verifica se il file richiede l'autenticazione
@@ -421,7 +421,7 @@ Feature: Radd Alternative
     When Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "dopo 120gg"
     Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 4 su radd alternative
 
@@ -463,7 +463,7 @@ Feature: Radd Alternative
     And Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
+    And si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti genera un errore "documenti non disponibili" con codice 4 su radd alternative
 
@@ -481,12 +481,12 @@ Feature: Radd Alternative
     Then Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "corretto"
     And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And la transazione viene abortita per gli "act"
     And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     Then viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
@@ -523,7 +523,7 @@ Feature: Radd Alternative
     And  Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     And L'operatore scansione il qrCode per recuperare gli atti di "Mario Cucumber"
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 6 documenti
@@ -532,7 +532,7 @@ Feature: Radd Alternative
     Then  Il cittadino "CucumberSpa" come destinatario 1 mostra il QRCode "corretto"
     And L'operatore scansione il qrCode per recuperare gli atti di "CucumberSpa"
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 6 documenti
@@ -551,7 +551,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti di "Mario Cucumber"
     Then la lettura si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     When viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
@@ -577,7 +577,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "Mario Cucumber"
     And la lettura si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 5 documenti
@@ -605,7 +605,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "Mario Cucumber"
     And la lettura si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 8 documenti
@@ -655,7 +655,7 @@ Feature: Radd Alternative
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si controlla con check rapidi che lo stato diventi ACCEPTED
     When L'operatore usa lo IUN "corretto" per recuperare gli atti di "Mario Cucumber"
     Then la lettura si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative senza ritentativi
     And l'operazione di download degli atti genera un errore "documento non disponibile per il download" con codice 2 su radd alternative
 
@@ -673,7 +673,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     And L'operatore usa lo IUN "corretto" per recuperare gli atti di "CucumberSpa"
     And la lettura si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
@@ -700,7 +700,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "CucumberSpa"
     And la lettura si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 5 documenti
@@ -726,7 +726,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     Then L'operatore usa lo IUN "corretto" per recuperare gli atti di "CucumberSpa"
     And la lettura si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And l'operazione di download restituisce 8 documenti
@@ -810,7 +810,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     And la persona fisica "<CITIZEN>" chiede di verificare la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
@@ -841,7 +841,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     And la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
@@ -865,10 +865,10 @@ Feature: Radd Alternative
       | payment_multy_number    | 2                                             |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    And la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
-    And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
-    And Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
+    When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
+    Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
@@ -893,7 +893,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
@@ -918,7 +918,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
@@ -955,7 +955,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     And la persona fisica "Signor Casuale" chiede di verificare la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
@@ -975,7 +975,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     And la persona fisica "Signor Casuale" chiede di verificare la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And la transazione viene abortita per gli "aor"
@@ -994,7 +994,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor Casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And la transazione viene abortita per gli "aor"
@@ -1017,7 +1017,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     And la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono recuperati gli aar delle notifiche in stato irreperibile della persona giuridica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
@@ -1043,7 +1043,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
@@ -1068,7 +1068,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
@@ -1092,7 +1092,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
@@ -1117,7 +1117,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
@@ -1151,7 +1151,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona giuridica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
@@ -1191,21 +1191,21 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE" per l'utente 1
     When la persona fisica "Signor Casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente e vengono restituiti 2 aar su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     When la persona giuridica "Gherkin Irreperibile" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
 
 # ACT TRANSACTION
 
-#  scenario gia coperto sulle nuove feature... chiedere solo in che senso 2 step issuer2
+#  scenario gia coperto sulle nuove feature...
 #
 #  @raddAlt @zip
 #  Scenario: [RADD-ALT_ACT-75] PF -  Start di una ACT transaction con stesso operationId da cxId diversi - ricezione OK
@@ -1219,7 +1219,7 @@ Feature: Radd Alternative
 #    When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
 #    Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
 #    And la scansione si conclude correttamente su radd alternative
-#    #And vengono caricati i documento di identità del cittadino su radd alternative
+#    And vengono caricati i documento di identità del cittadino su radd alternative
 #    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
 #    And l'operazione di download degli atti si conclude correttamente su radd alternative
 #    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId dal raddista "issuer_2"
@@ -1237,7 +1237,7 @@ Feature: Radd Alternative
     When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
@@ -1258,7 +1258,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
@@ -1277,7 +1277,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica 2 volte su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
@@ -1293,7 +1293,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica con lo stesso operationId dal raddista "issuer_2"
@@ -1318,7 +1318,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     When la persona fisica "Signor Casuale" chiede di verificare la presenza di notifiche
     Then La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And L'operatore esegue il download del frontespizio del operazione "aor"
@@ -1337,7 +1337,7 @@ Feature: Radd Alternative
     When Il cittadino "CucumberSpa" come destinatario 0 mostra il QRCode "corretto"
     Then L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And L'operatore esegue il download del frontespizio del operazione "act"
@@ -1353,7 +1353,7 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
     When L'operatore usa lo IUN "corretto" per recuperare gli atti di "Mario Cucumber"
     And la lettura si conclude correttamente su radd alternative
-    #And vengono caricati i documento di identità del cittadino su radd alternative
+    And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     Then L'operatore esegue il download del frontespizio del operazione "act" con attachmentId "nonEsistente"
