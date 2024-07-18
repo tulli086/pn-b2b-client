@@ -1,12 +1,7 @@
 package it.pagopa.pn.client.b2b.pa.service;
 
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsSearchResponse;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.FileCreationRequest;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.FileCreationResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.*;
 import org.springframework.http.ResponseEntity;
 
 public interface PnIndicizzazioneSafeStorageClient extends SettableApiKey {
@@ -43,4 +38,8 @@ public interface PnIndicizzazioneSafeStorageClient extends SettableApiKey {
     FileCreationResponse createFile(String document);
 
     ResponseEntity<FileCreationResponse> createFileWithHttpInfo(FileCreationRequest fileCreationRequest);
+
+    FileDownloadResponse getFile(String fileKey, Boolean metadataOnly, Boolean tags);
+
+    ResponseEntity<FileDownloadResponse> getFileWithHttpInfo(String fileKey, Boolean metadataOnly, Boolean tags);
 }
