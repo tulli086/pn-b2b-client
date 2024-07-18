@@ -284,7 +284,7 @@ public class PnLegalFactContent {
             log.info("CONTENT - getIndirizzoFisico.result2: {}", result);
             log.info("CONTENT - getIndirizzoFisico.content.contains(): {}", content.text().contains(tokenProperty.getCleanupFooter()));
             log.info("CONTENT - getIndirizzoFisico.result.contains(): {}", result.contains(tokenProperty.getCleanupFooter()));
-            return result.replace(tokenProperty.getCleanupFooter(), "");
+            return result.replace(tokenProperty.getCleanupFooter().replaceAll(tokenProperty.getRegexCarriageNewline(), " ").trim(), "");
         }
     }
 
