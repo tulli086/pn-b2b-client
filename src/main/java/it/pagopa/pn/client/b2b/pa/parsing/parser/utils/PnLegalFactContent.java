@@ -11,11 +11,12 @@ import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatarioAna
 import it.pagopa.pn.client.b2b.pa.parsing.dto.implDestinatario.PnDestinatarioDigitale;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.impl.PnContentExtractor;
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
+@Slf4j
 public class PnLegalFactContent {
     private final PnLegalFactTokenProperty tokenProperty;
     private final PnContentExtractor contentExtractor;
@@ -61,7 +62,6 @@ public class PnLegalFactContent {
     protected List<PnDestinatarioAnalogico> getDestinatariAnalogici(PnParserRecord.PnParserContent content) {
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
         String text = content.text();
-        List<String> valueList = content.valueList();
         int cntDestinatario = countDuplicates(text, tokenProperty.getNomeCognomeRagioneSocialeStart1());
 
         for(int i = 1; i <= cntDestinatario; i++) {
@@ -81,13 +81,8 @@ public class PnLegalFactContent {
                             domicilioDigitale,
                             contentExtractor.cleanUp(tipologiaDomicilio, true),
                             contentExtractor.cleanUp(indirizzoFisico, true)));
-
-            int slidingIndex = text.indexOf(indirizzoFisico) + indirizzoFisico.length();
-            text = text.substring(slidingIndex);
-            for (String element : Arrays.asList(nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipologiaDomicilio, indirizzoFisico)) {
-                valueList.remove(element);
-            }
         }
+        log.info("CONTENT - getDestinatariAnalogici: {}", pnDestinatarioAnalogicoList);
         return pnDestinatarioAnalogicoList;
     }
 
@@ -285,6 +280,8 @@ public class PnLegalFactContent {
                                 .tokenEnd(tokenProperty.getIndirizzoFisicoEnd2())
                                 .build(), content.valueList()), true);
             }
+            log.info("CONTENT - getIndirizzoFisico: {}", result);
+            log.info("CONTENT - getIndirizzoFisico.contains(): {}", content.text().contains(tokenProperty.getCleanupFooter()));
             return result;
         }
     }
