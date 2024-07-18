@@ -3,10 +3,8 @@ package it.pagopa.pn.client.b2b.pa.service.impl;
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.ApiClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.api.AdditionalFileTagsApi;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsSearchResponse;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.api.FileUploadApi;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSafeStorageClient {
   private final AdditionalFileTagsApi additionalFileTagsApi;
+  private final FileUploadApi fileUploadApi;
   private final RestTemplate restTemplate;
   private final String devBasePath;
   private ApiKeyType apiKeySetted;
@@ -33,16 +32,19 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
     this.apiKeyIndexing = "pn-test_api_key";
     this.devBasePath = devBasePath;
     this.additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, devBasePath, "pn-test", apiKeyIndexing));
+    this.fileUploadApi = new FileUploadApi(newApiClient(restTemplate, devBasePath, null, apiKeyIndexing));
     this.apiKeySetted = ApiKeyType.INDEXING;
   }
 
   private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String clientId, String apiKey) {
-    ApiClient newApiClient = new ApiClient( restTemplate );
-    newApiClient.setBasePath( basePath );
+    ApiClient newApiClient = new ApiClient(restTemplate);
+    newApiClient.setBasePath(basePath);
 
     //TODO modificare i valori di api-key e client-id
-    newApiClient.addDefaultHeader("x-pagopa-safestorage-cx-id", clientId);
-    newApiClient.addDefaultHeader("x-api-key", apiKey );
+    if (clientId != null) {
+      newApiClient.addDefaultHeader("x-pagopa-safestorage-cx-id", clientId);
+    }
+    newApiClient.addDefaultHeader("x-api-key", apiKey);
     return newApiClient;
   }
 
@@ -69,13 +71,15 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   @Override
   public AdditionalFileTagsUpdateResponse updateSingleWithTags(String fileKey,
       AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
-    return additionalFileTagsApi.additionalFileTagsUpdate(fileKey, additionalFileTagsUpdateRequest);
+    return null;
+//    return additionalFileTagsApi.additionalFileTagsUpdate(fileKey, additionalFileTagsUpdateRequest);
   }
 
   @Override
   public ResponseEntity<AdditionalFileTagsUpdateResponse> updateSingleWithTagsWithHttpInfo(
       String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
-    return additionalFileTagsApi.additionalFileTagsUpdateWithHttpInfo(fileKey, additionalFileTagsUpdateRequest);
+//    return additionalFileTagsApi.additionalFileTagsUpdateWithHttpInfo(fileKey, additionalFileTagsUpdateRequest);
+    return null;
   }
 
   @Override
@@ -88,28 +92,40 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
 
   @Override
   public AdditionalFileTagsGetResponse getTagsByFileKey(String fileKey) {
-    return additionalFileTagsApi.additionalFileTagsGet(fileKey);
+    return null;
+//    return additionalFileTagsApi.additionalFileTagsGet(fileKey);
   }
   @Override
   public ResponseEntity<AdditionalFileTagsGetResponse> getTagsByFileKeyWithHttpInfo(String fileKey) {
-    return additionalFileTagsApi.additionalFileTagsGetWithHttpInfo(fileKey);
+    return null;
+//    return additionalFileTagsApi.additionalFileTagsGetWithHttpInfo(fileKey);
   }
 
   @Override
   public AdditionalFileTagsSearchResponse searchFileKeyWithTags(String id, String logic,
-      Boolean tags) {
+                                                                Boolean tags) {
     return additionalFileTagsApi.additionalFileTagsSearch(id, logic, tags);
   }
 
   @Override
   public ResponseEntity<AdditionalFileTagsSearchResponse> searchFileKeyWithTagsWithHttpInfo(
-      String id, String logic, Boolean tags) {
+          String id, String logic, Boolean tags) {
     return additionalFileTagsApi.additionalFileTagsSearchWithHttpInfo(id, logic, tags);
   }
 
   @Override
+  public FileCreationResponse createFile(FileCreationRequest fileCreationRequest) {
+    return fileUploadApi.createFile("pn-test", fileCreationRequest);
+  }
+
+  @Override
+  public ResponseEntity<FileCreationResponse> createFileWithHttpInfo(FileCreationRequest fileCreationRequest) {
+    return null;
+  }
+
+  @Override
   public boolean setApiKeys(ApiKeyType apiKey) {
-    if(this.apiKeySetted != ApiKeyType.INDEXING){
+    if (this.apiKeySetted != ApiKeyType.INDEXING) {
       setApiKey(this.apiKeyIndexing);
       this.apiKeySetted = ApiKeyType.INDEXING;
     }

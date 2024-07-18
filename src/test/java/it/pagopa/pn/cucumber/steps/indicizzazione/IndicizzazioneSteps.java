@@ -6,11 +6,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.*;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -25,7 +22,6 @@ import java.util.Map;
 @Slf4j
 public class IndicizzazioneSteps {
     private static final String JSON_PATH = "src/main/resources/test_indicizzazione/";
-
     private static final String TEST_FILE_KEY_NAME = "test_file_key";
     private final PnIndicizzazioneSafeStorageClient pnIndicizzazioneSafeStorageClient;
     private AdditionalFileTagsUpdateResponse updateSingleResponse;
@@ -35,13 +31,18 @@ public class IndicizzazioneSteps {
         this.pnIndicizzazioneSafeStorageClient = pnIndicizzazioneSafeStorageClient;
     }
 
-    @Given("Viene popolato il database")
-    public void initDbWithFileWithoutTag(DataTable dataTable) {
+    @Given("Viene caricato un nuovo documento")
+    public void initDbWithFileWithoutTag() {
         //TODO utilizzare la create non appena disponibile in modo da inizializzare il DB
-        Map<String, String> data = dataTable.asMap(String.class, String.class);
-        String dbData = data.get("dbData");
-        pnIndicizzazioneSafeStorageClient.createFileWithTags();
-        System.out.println(dbData);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            FileCreationRequest request =
+                    objectMapper.readValue(new File(JSON_PATH + "request/UPLOAD_DOCUMENT.json"), FileCreationRequest.class);
+            FileCreationResponse uploadUrl = pnIndicizzazioneSafeStorageClient.createFile(request);
+            System.out.println(uploadUrl);
+        } catch (IOException e) {
+            //TODO
+        }
     }
 
     @When("Viene chiamato l'updateSingle")
@@ -119,9 +120,20 @@ public class IndicizzazioneSteps {
         Assertions.assertEquals(data.get("expectedOutput"), updateSingleResponse.getResultCode());
     }
 
-    @AfterEach
-    private void resettaDb() {
-        //TODO ripulire tutte le file_key where name = TEST_FILE_KEY_NAME
-        log.debug("DB riportato allo stato originario");
+    @Then("La richiesta va in errore {string} con il messaggio")
+    public void get400ErrorMessage(DataTable dataTable, String errorCode) {
+        Map<String, String> data = dataTable.asMap(String.class, String.class);
+        String errorMessage = data.get("errorMessage");
+        Assertions.assertEquals(errorCode, updateSingleResponse.getResultCode());
+        switch (errorMessage) {
+            case "MaxFileKeys" -> Assertions.assertEquals("TODO", updateSingleResponse.getResultDescription());
+            case "MaxOperationsOnTagsPerRequest" ->
+                    Assertions.assertEquals("TODO", updateSingleResponse.getResultDescription());
+            case "MaxValuesPerTagDocument" ->
+                    Assertions.assertEquals("TODO", updateSingleResponse.getResultDescription());
+            case "MaxTagsPerDocument" -> Assertions.assertEquals("TODO", updateSingleResponse.getResultDescription());
+            case "MaxValuesPerTagPerRequest" ->
+                    Assertions.assertEquals("TODO", updateSingleResponse.getResultDescription());
+        }
     }
 }
