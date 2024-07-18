@@ -148,7 +148,7 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   private void actionsPostPreload(FileCreationRequest request, FileCreationResponse response) {
     String sha = "";
     try {
-      sha = this.b2bUtils.computeSha256("classpath:/" + response.getKey());
+      sha = this.b2bUtils.computeSha256("classpath:/sample.pdf");
     } catch (Exception e) {
       //TODO
     }
@@ -158,7 +158,7 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
     headers.add("x-amz-checksum-sha256", sha);
     headers.add("x-amz-meta-secret", response.getSecret());
     log.info("headers: {}", headers);
-    HttpEntity<Resource> req = new HttpEntity<>(ctx.getResource(response.toString()), headers);
+    HttpEntity<Resource> req = new HttpEntity<>(ctx.getResource("classpath:/sample.pdf"), headers);
     restTemplate.exchange(URI.create(response.getUploadUrl()), HttpMethod.PUT, req, Object.class);
   }
 
