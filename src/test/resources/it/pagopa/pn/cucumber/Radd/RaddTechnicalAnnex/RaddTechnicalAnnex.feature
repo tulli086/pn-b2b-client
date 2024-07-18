@@ -21,7 +21,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
 #    And lato destinatario la notifica può essere correttamente recuperata da "Mario Cucumber" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
 #    And lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-PRINT_ACTS-2] PF - Stampa limitata di documenti disponibili associati a QR code esistente con CF corretto
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
@@ -38,7 +38,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
   #capire come configurare/riprendere caso in cui MAX-Print request ha valore definito > & != 0
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-PRINT_ACTS-3] PF - Restituzione errore - Stampa limitata di documenti disponibili associati con raggiungimento limite raggiunto
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
@@ -56,7 +56,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
 
 #OPERATORE UPLOADER
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_AOR-1] Operatore RADD_UPLOADER - Start di una AOR transaction con fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -73,7 +73,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "UPLOADER"
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_AOR-2] Operatore RADD_UPLOADER - Start di una AOR transaction senza fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -91,7 +91,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And il recupero degli aar genera un errore "Campo fileKey obbligatorio mancante" con codice 5 su radd alternative
     #capire il codice errore se c'è
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-3] PF - Operatore RADD_UPLOADER - Start di una ACT transaction con fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
@@ -107,7 +107,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "UPLOADER"
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-4] Operatore RADD_UPLOADER - Start di una ACT transaction senza fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
@@ -125,7 +125,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
 
   # OPERATORE STANDARD
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_AOR-5] Operatore RADD_STANDARD - Start di una AOR transaction senza fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -141,7 +141,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "STANDARD"
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_AOR-6] Operatore RADD_STANDARD - Start di una AOR transaction senza fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -160,7 +160,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And il recupero degli aar genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
     #capire il codice errore se c'è
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-7] Operatore RADD_STANDARD - Start di una ACT transaction senza fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
@@ -175,7 +175,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "STANDARD"
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-8] Operatore RADD_STANDARD - Start di una ACT transaction con fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
@@ -192,7 +192,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And il recupero degli aar genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
     #capire il codice errore se c'è
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-8] Operatore RADD_STANDARD - Tentativo di eseguire documentUpload - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
@@ -208,7 +208,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
 
 # OPERATORE NON CENSITO
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_AOR-5] Operatore non censito - Start di una AOR transaction senza fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -224,7 +224,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "WITHOUT_ROLE"
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_AOR-6] Operatore senza ruolo - Start di una AOR transaction senza fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -242,7 +242,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And il recupero degli aar genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
     #capire il codice errore se c'è
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-7] Operatore senza ruolo - Start di una ACT transaction senza fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
@@ -257,7 +257,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "WITHOUT_ROLE"
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-8] Operatore senza ruolo - Start di una ACT transaction con fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
@@ -274,7 +274,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And il recupero degli aar genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
     #capire il codice errore se c'è
 
-  #@raddAlt @zip
+  @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-8] Operatore senza ruolo - Tentativo di eseguire documentUpload - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
