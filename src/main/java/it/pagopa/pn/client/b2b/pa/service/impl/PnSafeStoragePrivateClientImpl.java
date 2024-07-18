@@ -31,9 +31,9 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
     private final String apiKeySafeStorage;
 
     public PnSafeStoragePrivateClientImpl(RestTemplate restTemplate,
-                                          @Value("pn.safeStorage.base-url")String safeStorageBaseUrl,
-                                          @Value("pn.safeStorage.apikey")String apiKeySafeStorage,
-                                          @Value("pn.safeStorage.clientId")String clientIdSafeStorage) {
+                                          @Value("${pn.safeStorage.base-url}")String safeStorageBaseUrl,
+                                          @Value("${pn.safeStorage.apikey}")String apiKeySafeStorage,
+                                          @Value("${pn.safeStorage.clientId}")String clientIdSafeStorage) {
 
         this.apiKeySafeStorage = apiKeySafeStorage;
         this.clientIdSafeStorage = clientIdSafeStorage;
