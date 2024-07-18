@@ -1,10 +1,18 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.ApiClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.api.AdditionalFileTagsApi;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.api.FileUploadApi;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.*;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsSearchResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.FileCreationRequest;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.FileCreationResponse;
+import java.io.File;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -60,7 +68,6 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
 
   @Override
   public void createFileWithTags() {
-
   }
 
   @Override
@@ -110,8 +117,21 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   }
 
   @Override
-  public FileCreationResponse createFile(FileCreationRequest fileCreationRequest) {
-    return fileUploadApi.createFile("pn-test", fileCreationRequest);
+  public FileCreationResponse createFile(String document) {
+    //TODO utilizzare la create non appena disponibile in modo da inizializzare il DB
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      FileCreationRequest request =
+          objectMapper.readValue(new File(document), FileCreationRequest.class);
+      FileCreationResponse response = fileUploadApi.createFile("pn-test", request);
+      System.out.println(response);
+      String uploadUrl = response.getUploadUrl();
+
+
+    } catch (IOException e) {
+      //TODO
+    }
+    return null;
   }
 
   @Override
