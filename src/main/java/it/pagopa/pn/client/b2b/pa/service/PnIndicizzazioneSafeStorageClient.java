@@ -35,7 +35,9 @@ public interface PnIndicizzazioneSafeStorageClient extends SettableApiKey {
     ResponseEntity<AdditionalFileTagsSearchResponse> searchFileKeyWithTagsWithHttpInfo(
             String id, String logic, Boolean tags);
 
-    FileCreationResponse createFile(String document);
+    FileCreationResponse createFile();
+
+    FileCreationResponse createFile(FileCreationRequest fileCreationRequest);
 
     ResponseEntity<FileCreationResponse> createFileWithHttpInfo(FileCreationRequest fileCreationRequest);
 

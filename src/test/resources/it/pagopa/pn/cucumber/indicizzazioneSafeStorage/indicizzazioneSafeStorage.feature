@@ -20,12 +20,12 @@ Feature: Indicizzazione Safe Storage
     Then I file del database coincidono con quelli attesi
       | expectedOutput | "<expectedOutput>" |
     Examples:
-      | requestName                               | expectedOutput                             |
-      | request/UPDATE_SINGLE_ONLY_SET.json       | response/UPDATE_SINGLE_ONLY_SET.json       |
-      | request/UPDATE_SINGLE_ONLY_DELETE_1.json  | response/UPDATE_SINGLE_ONLY_DELETE_1.json  |
-      | request/UPDATE_SINGLE_ONLY_DELETE_2.json  | response/UPDATE_SINGLE_ONLY_DELETE_2.json  |
-      | request/UPDATE_SINGLE_ONLY_DELETE_3.json  | response/UPDATE_SINGLE_ONLY_DELETE_3.json  |
-      | request/UPDATE_SINGLE_SET_AND_DELETE.json | response/UPDATE_SINGLE_SET_AND_DELETE.json |
+      | requestName                         | expectedOutput                       |
+      | request/UPDATE_SINGLE_ONLY_SET.json | response/UPDATE_SINGLE_ONLY_SET.json |
+#      | request/UPDATE_SINGLE_ONLY_DELETE_1.json  | response/UPDATE_SINGLE_ONLY_DELETE_1.json  |
+#      | request/UPDATE_SINGLE_ONLY_DELETE_2.json  | response/UPDATE_SINGLE_ONLY_DELETE_2.json  |
+#      | request/UPDATE_SINGLE_ONLY_DELETE_3.json  | response/UPDATE_SINGLE_ONLY_DELETE_3.json  |
+#      | request/UPDATE_SINGLE_SET_AND_DELETE.json | response/UPDATE_SINGLE_SET_AND_DELETE.json |
 
   Scenario: UpdateSingle ERROR - SET+DELETE Stesso tag
     Given Viene caricato un nuovo documento

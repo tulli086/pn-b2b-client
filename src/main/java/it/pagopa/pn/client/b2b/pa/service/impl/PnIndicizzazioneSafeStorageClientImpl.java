@@ -1,6 +1,5 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.ApiClient;
@@ -13,24 +12,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSafeStorageClient {
-  private final PnPaB2bUtils b2bUtils;
   private final AdditionalFileTagsApi additionalFileTagsApi;
   private final FileDownloadApi fileDownloadApi;
   private final FileUploadApi fileUploadApi;
@@ -44,7 +33,6 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   public PnIndicizzazioneSafeStorageClientImpl(
           PnPaB2bUtils b2bUtils, RestTemplate restTemplate,
           @Value("${pn.safeStorage.base-url.pagopa}") String devBasePath, ApplicationContext ctx) {
-    this.b2bUtils = b2bUtils;
     this.restTemplate = restTemplate;
     this.ctx = ctx;
     this.apiKeyIndexing = "pn-test_api_key";
@@ -128,44 +116,38 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   }
 
   @Override
-  public FileCreationResponse createFile(String document) {
-    //TODO utilizzare la create non appena disponibile in modo da inizializzare il DB
-    ObjectMapper objectMapper = new ObjectMapper();
-    try {
-      FileCreationRequest request =
-          objectMapper.readValue(new File(document), FileCreationRequest.class);
-      FileCreationResponse response = fileUploadApi.createFile("pn-test", request);
-      log.info(String.valueOf(response));
-
-      actionsPostPreload(request, response);
-
-    } catch (IOException e) {
-      //TODO
-    }
+  public FileCreationResponse createFile() {
     return null;
   }
 
-  private void actionsPostPreload(FileCreationRequest request, FileCreationResponse response) {
-    String sha = "";
-    try {
-      sha = this.b2bUtils.computeSha256("classpath:/sample.pdf");
-    } catch (Exception e) {
-      //TODO
-    }
-
-    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-    headers.add("Content-type", request.getContentType());
-    headers.add("x-amz-checksum-sha256", sha);
-    headers.add("x-amz-meta-secret", response.getSecret());
-    log.info("headers: {}", headers);
-    HttpEntity<Resource> req = new HttpEntity<>(ctx.getResource("classpath:/sample.pdf"), headers);
-    restTemplate.exchange(URI.create(response.getUploadUrl()), HttpMethod.PUT, req, Object.class);
+  @Override
+  public FileCreationResponse createFile(FileCreationRequest fileCreationRequest) {
+    return fileUploadApi.createFile("pn-test", fileCreationRequest);
   }
 
   @Override
   public ResponseEntity<FileCreationResponse> createFileWithHttpInfo(FileCreationRequest fileCreationRequest) {
-    return null;
+    return fileUploadApi.createFileWithHttpInfo("pn-test", fileCreationRequest);
   }
+
+
+//  private void actionsPostPreload(FileCreationRequest request, FileCreationResponse response) {
+//    String sha = "";
+//    try {
+//      sha = this.b2bUtils.computeSha256("classpath:/sample.pdf");
+//    } catch (Exception e) {
+//      //TODO
+//    }
+//
+//    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+//    headers.add("Content-type", request.getContentType());
+//    headers.add("x-amz-checksum-sha256", sha);
+//    headers.add("x-amz-meta-secret", response.getSecret());
+//    log.info("headers: {}", headers);
+//    HttpEntity<Resource> req = new HttpEntity<>(ctx.getResource("classpath:/sample.pdf"), headers);
+//    ResponseEntity<Object> returnValue = restTemplate.exchange(URI.create(response.getUploadUrl()), HttpMethod.PUT, req, Object.class);
+//  }
+
 
   @Override
   public FileDownloadResponse getFile(String fileKey, Boolean metadataOnly, Boolean tags) {

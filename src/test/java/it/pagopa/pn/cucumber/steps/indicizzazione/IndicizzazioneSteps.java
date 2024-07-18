@@ -5,15 +5,16 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.PnIndicizzazioneSafeStorageClient;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsGetResponse;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateRequest;
-import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.AdditionalFileTagsUpdateResponse;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.indicizzazione.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.File;
@@ -27,15 +28,30 @@ public class IndicizzazioneSteps {
     private static final String TEST_FILE_KEY_NAME = "test_file_key";
     private final PnIndicizzazioneSafeStorageClient pnIndicizzazioneSafeStorageClient;
     private AdditionalFileTagsUpdateResponse updateSingleResponse;
+    private final PnPaB2bUtils b2bUtils;
+    private String sha;
 
     @Autowired
-    public IndicizzazioneSteps(PnIndicizzazioneSafeStorageClient pnIndicizzazioneSafeStorageClient) {
+    public IndicizzazioneSteps(PnIndicizzazioneSafeStorageClient pnIndicizzazioneSafeStorageClient, PnPaB2bUtils b2bUtils) {
         this.pnIndicizzazioneSafeStorageClient = pnIndicizzazioneSafeStorageClient;
+        this.b2bUtils = b2bUtils;
     }
 
     @Given("Viene caricato un nuovo documento")
     public void initDbWithFileWithoutTag() {
-      pnIndicizzazioneSafeStorageClient.createFile(JSON_PATH + "request/UPLOAD_DOCUMENT.json");
+        FileCreationRequest request = createFileRequest();
+        try {
+            sha = this.b2bUtils.computeSha256("classpath:/sample.pdf");
+        } catch (Exception e) {
+            //TODO
+        }
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-type", request.getContentType());
+        headers.add("x-amz-checksum-sha256", sha);
+        headers.add("x-checksum", "SHA-256");
+        headers.add("x-checksum-value", sha);
+        FileCreationResponse response = pnIndicizzazioneSafeStorageClient.createFile();
     }
 
     @When("Viene chiamato l'updateSingle")
@@ -127,5 +143,13 @@ public class IndicizzazioneSteps {
             case "MaxValuesPerTagPerRequest" ->
                     Assertions.assertEquals("TODO", updateSingleResponse.getResultDescription());
         }
+    }
+
+    private FileCreationRequest createFileRequest() {
+        FileCreationRequest request = new FileCreationRequest();
+        request.setContentType("application/pdf");
+        request.setStatus("SAVED");
+        request.setDocumentType("PN_NOTIFICATION_ATTACHMENTS");
+        return request;
     }
 }
