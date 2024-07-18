@@ -38,8 +38,9 @@ public class IndicizzazioneSteps {
         try {
             FileCreationRequest request =
                     objectMapper.readValue(new File(JSON_PATH + "request/UPLOAD_DOCUMENT.json"), FileCreationRequest.class);
-            FileCreationResponse uploadUrl = pnIndicizzazioneSafeStorageClient.createFile(request);
-            System.out.println(uploadUrl);
+            FileCreationResponse response = pnIndicizzazioneSafeStorageClient.createFile(request);
+            System.out.println(response);
+            String uploadUrl = response.getUploadUrl();
         } catch (IOException e) {
             //TODO
         }

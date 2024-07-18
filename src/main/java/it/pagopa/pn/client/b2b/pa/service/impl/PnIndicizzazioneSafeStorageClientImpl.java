@@ -71,15 +71,13 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
   @Override
   public AdditionalFileTagsUpdateResponse updateSingleWithTags(String fileKey,
       AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
-    return null;
-//    return additionalFileTagsApi.additionalFileTagsUpdate(fileKey, additionalFileTagsUpdateRequest);
+    return additionalFileTagsApi.additionalFileTagsUpdate(fileKey, "pn-test", additionalFileTagsUpdateRequest);
   }
 
   @Override
   public ResponseEntity<AdditionalFileTagsUpdateResponse> updateSingleWithTagsWithHttpInfo(
       String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) {
-//    return additionalFileTagsApi.additionalFileTagsUpdateWithHttpInfo(fileKey, additionalFileTagsUpdateRequest);
-    return null;
+    return additionalFileTagsApi.additionalFileTagsUpdateWithHttpInfo(fileKey, "pn-test", additionalFileTagsUpdateRequest);
   }
 
   @Override
@@ -92,13 +90,11 @@ public class PnIndicizzazioneSafeStorageClientImpl implements PnIndicizzazioneSa
 
   @Override
   public AdditionalFileTagsGetResponse getTagsByFileKey(String fileKey) {
-    return null;
-//    return additionalFileTagsApi.additionalFileTagsGet(fileKey);
+    return additionalFileTagsApi.additionalFileTagsGet(fileKey, "pn-test");
   }
   @Override
   public ResponseEntity<AdditionalFileTagsGetResponse> getTagsByFileKeyWithHttpInfo(String fileKey) {
-    return null;
-//    return additionalFileTagsApi.additionalFileTagsGetWithHttpInfo(fileKey);
+    return additionalFileTagsApi.additionalFileTagsGetWithHttpInfo(fileKey, "pn-test");
   }
 
   @Override
