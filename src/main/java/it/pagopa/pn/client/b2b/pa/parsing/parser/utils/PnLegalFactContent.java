@@ -50,9 +50,9 @@ public class PnLegalFactContent {
                     getTipologiaDomicilioDigitale(content, true, false),
                     isWithNotificaMultiDestinatario
                     ?
-                            getIndirizzoFisico(content, true)
-                    :
                             getIndirizzoFisico(content, false)
+                    :
+                            getIndirizzoFisico(content, true)
             );
         }
         return new PnDestinatario(getNomeCognomeRagioneSociale(content, true),
@@ -71,9 +71,9 @@ public class PnLegalFactContent {
             String tipologiaDomicilio = getTipologiaDomicilioDigitale(content, true, false);
             String indirizzoFisico;
             if (i == cntDestinatario) {
-                indirizzoFisico = getIndirizzoFisico(content, false);
-            } else {
                 indirizzoFisico = getIndirizzoFisico(content, true);
+            } else {
+                indirizzoFisico = getIndirizzoFisico(content, false);
             }
             pnDestinatarioAnalogicoList.add(
                     new PnDestinatarioAnalogico(nomeCognomeRagioneSociale,
@@ -254,8 +254,8 @@ public class PnLegalFactContent {
         }
     }
 
-    protected String getIndirizzoFisico(PnParserRecord.PnParserContent content, boolean isDestinatarioAnalogico) {
-        if(isDestinatarioAnalogico) {
+    protected String getIndirizzoFisico(PnParserRecord.PnParserContent content, boolean isLastDestinatarioAnalogico) {
+        if(!isLastDestinatarioAnalogico) {
             return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
@@ -271,6 +271,7 @@ public class PnLegalFactContent {
                             .tokenStart(tokenProperty.getIndirizzoFisicoStart())
                             .tokenEnd(tokenProperty.getIndirizzoFisicoEnd3())
                             .build(), content.valueList()), true);
+            log.info("CONTENT - getIndirizzoFisico.result1: {}", result);
             if(result == null) {
                 result = contentExtractor.cleanUp(
                         contentExtractor.getField(PnTextSlidingWindow.builder()
@@ -280,9 +281,10 @@ public class PnLegalFactContent {
                                 .tokenEnd(tokenProperty.getIndirizzoFisicoEnd2())
                                 .build(), content.valueList()), true);
             }
-            log.info("CONTENT - getIndirizzoFisico: {}", result);
-            log.info("CONTENT - getIndirizzoFisico.contains(): {}", content.text().contains(tokenProperty.getCleanupFooter()));
-            return result;
+            log.info("CONTENT - getIndirizzoFisico.result2: {}", result);
+            log.info("CONTENT - getIndirizzoFisico.content.contains(): {}", content.text().contains(tokenProperty.getCleanupFooter()));
+            log.info("CONTENT - getIndirizzoFisico.result.contains(): {}", result.contains(tokenProperty.getCleanupFooter()));
+            return result.replace(tokenProperty.getCleanupFooter(), "");
         }
     }
 
