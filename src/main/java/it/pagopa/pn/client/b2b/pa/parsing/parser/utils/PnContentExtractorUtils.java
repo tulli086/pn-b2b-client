@@ -146,6 +146,19 @@ public class PnContentExtractorUtils {
         return count;
     }
 
+    public static int countDates(String text) {
+        String DATE_PATTERN = "\\b\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2}\\b";
+        Pattern pattern = Pattern.compile(DATE_PATTERN);
+        Matcher matcher = pattern.matcher(text);
+
+        int cnt = 0;
+        while (matcher.find()) {
+            cnt++;
+        }
+
+        return cnt;
+    }
+
     public static List<Integer> cleanUpByBrokenValues(String betweenText, List<String> valueList, PnLegalFactTokenProperty tokenProps) {
         List<Integer> brokenValueList = new ArrayList<>();
         String[] splitted = betweenText.split(tokenProps.getRegexCarriageNewline());

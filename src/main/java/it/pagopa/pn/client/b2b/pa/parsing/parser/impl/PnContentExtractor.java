@@ -72,6 +72,10 @@ public class PnContentExtractor implements IPnContentExtractor {
 
     @Override
     public String cleanUp(String text, boolean mantainWhitespace) {
+        if(text == null) {
+            return null;
+        }
+
         if(mantainWhitespace) {
             return text.replaceAll(pnLegalFactTokens.getTokenProps().getRegexCarriageNewline(), " ");
         }

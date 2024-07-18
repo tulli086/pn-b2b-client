@@ -1,5 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.parsing.parser.utils;
 
+import static it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnContentExtractorUtils.countDates;
 import static it.pagopa.pn.client.b2b.pa.parsing.parser.utils.PnContentExtractorUtils.countDuplicates;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokenProperty;
 import it.pagopa.pn.client.b2b.pa.parsing.config.PnLegalFactTokens;
@@ -268,13 +269,23 @@ public class PnLegalFactContent {
                     .tokenEnd(tokenProperty.getIndirizzoFisicoEnd1())
                     .build(), content.valueList()), true);
         } else {
-            return contentExtractor.cleanUp(
+            String result = contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
-                    .originalText(content.text())
-                    .slidedText(content.text())
-                    .tokenStart(tokenProperty.getIndirizzoFisicoStart())
-                    .tokenEnd(tokenProperty.getIndirizzoFisicoEnd2())
-                    .build(), content.valueList()), true);
+                            .originalText(content.text())
+                            .slidedText(content.text())
+                            .tokenStart(tokenProperty.getIndirizzoFisicoStart())
+                            .tokenEnd(tokenProperty.getIndirizzoFisicoEnd3())
+                            .build(), content.valueList()), true);
+            if(result == null) {
+                result = contentExtractor.cleanUp(
+                        contentExtractor.getField(PnTextSlidingWindow.builder()
+                                .originalText(content.text())
+                                .slidedText(content.text())
+                                .tokenStart(tokenProperty.getIndirizzoFisicoStart())
+                                .tokenEnd(tokenProperty.getIndirizzoFisicoEnd2())
+                                .build(), content.valueList()), true);
+            }
+            return result;
         }
     }
 
@@ -341,7 +352,13 @@ public class PnLegalFactContent {
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getPrimaDataStart())
                     .tokenEnd(tokenProperty.getPrimaDataEnd())
-                    .discardValue(getDataAttestazioneOpponibile(content, false, false, false, false, true))
+                    .discardValue(
+                            countDates(
+                                    content.text()) > 2
+                                    ?
+                                        getDataAttestazioneOpponibile(content, false, false, false, false, true)
+                                    :
+                                        null)
                     .build(), content.valueList()), true);
     }
 

@@ -62,6 +62,7 @@ public class PnLegalFactTokenProperty {
     private String indirizzoFisicoStart;
     private String indirizzoFisicoEnd1;
     private String indirizzoFisicoEnd2;
+    private String indirizzoFisicoEnd3;
 
     private String mittenteStart;
     private String mittenteEnd;
