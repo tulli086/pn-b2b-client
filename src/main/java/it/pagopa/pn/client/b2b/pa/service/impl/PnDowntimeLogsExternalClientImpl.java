@@ -6,8 +6,6 @@ import it.pagopa.pn.client.b2b.web.generated.openapi.clients.externalDowntimeLog
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.externalDowntimeLogs.api.WriteApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.externalDowntimeLogs.model.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +14,6 @@ import java.util.*;
 
 
 @Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnDowntimeLogsExternalClientImpl implements IPnDowntimeLogsClient {
     private final ReadApi readApi;
     private final WriteApi writeApi;
