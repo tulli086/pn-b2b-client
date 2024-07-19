@@ -1,6 +1,5 @@
 package it.pagopa.pn.cucumber;
 
-
 import org.junit.platform.suite.api.*;
 
 import static io.cucumber.junit.platform.engine.Constants.*;
@@ -16,6 +15,6 @@ import static io.cucumber.junit.platform.engine.Constants.*;
         @ConfigurationParameter(key = EXECUTION_MODE_FEATURE_PROPERTY_NAME, value = "concurrent"),
 })
 @ExcludeTags({"ignore"})
-@IncludeTags({"CostoCartaceoCompleteRS","CostoCartaceoCompleteAR","CostoCartaceoComplete890"})
-public class CostoGrammiAnalogicoTest {
+@IncludeTags({"CostoCartaceoCompleteAR"})
+public class CostoGrammiAnalogicoARTest {
 }
