@@ -11,16 +11,16 @@ import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Addit
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateResponse;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -31,16 +31,14 @@ public class SafeStorageSteps {
     private List<FileCreationResponse> createdFiles;
     private AdditionalFileTagsUpdateRequest updateRequest;
     private ResponseEntity<AdditionalFileTagsUpdateResponse> updateResponseEntity;
+
     private ResponseEntity genericResponseEntity;
-    private final List<String> tagsName;
 
     @Autowired
     public SafeStorageSteps(IPnSafeStoragePrivateClient safeStorageClient,
-                            PnPaB2bUtils b2bUtils,
-                            @Value("${pn.safeStorage.tagsName}") List<String> tagsName) {
+        PnPaB2bUtils b2bUtils) {
         this.safeStorageClient = safeStorageClient;
         this.b2bUtils = b2bUtils;
-        this.tagsName = tagsName;
 
         createdFiles = new ArrayList<>();
     }
@@ -105,29 +103,45 @@ public class SafeStorageSteps {
         this.createdFiles.add(fileCreationResponse);
     }
 
-//    @When("L'utente effettua un'operazione {String} senza essere autorizzato ad accedervi")
-//    public void utenteNonAutorizzato(String operation) {
-////        safeStorageClient.setApiKey("api-key-non-autorizzata");
-//        ResponseEntity responseEntity = null;
-//        switch (operation) {
-//            case "CREATE_FILE" ->
-//                    responseEntity = safeStorageClient.createFileWithHttpInfo("api-key-non-autorizzata", "", "", new FileCreationRequest());
-//            case "GET_FILE" ->
-//                    responseEntity = safeStorageClient.getFileWithHttpInfo("test", "api-key-non-autorizzata", true, true);
-//            case "UPDATE_SINGLE" ->
-//                    responseEntity = safeStorageClient.additionalFileTagsUpdateWithHttpInfo("test", "api-key-non-autorizzata", new AdditionalFileTagsUpdateRequest());
-////            case "UPDATE_MASSIVE" -> TODO;
-//            case "SEARCH" ->
-//                    responseEntity = safeStorageClient.additionalFileTagsSearchWithHttpInfo("api-key-non-autorizzata", "AND", true);
-////            case "GET_TAGS" -> TODO;
-//        }
-//        this.genericResponseEntity = responseEntity;
-//    }
+    //TODO fare metodo separato per caricare il file tramite presigned url
+//    private void loadToPresignedUrl(String url, String secret, String sha256, )
+
+    @When("L'utente chiama l'endpoint senza essere autorizzato ad accedervi")
+    public void utenteNonAutorizzato() {
+        safeStorageClient.setApiKey("api-key-non-autorizzata");
+    }
 
     @Then("La chiamata restituisce 403")
     public void chiamataEndpoint(DataTable dataTable) {
-        Assertions.assertNotNull(this.genericResponseEntity);
-        Assertions.assertEquals(403, this.genericResponseEntity.getStatusCodeValue());
+        Map<String, String> data = dataTable.asMap(String.class, String.class);
+
+        //TODO: modificare il controllo il base alla risposta effettiva, dobbiamo utilizzare il resultCode?
+        switch (data.get("endpoint")) {
+            case "getFileWithTagsByFileKey" ->
+                Assertions.assertThrows(HttpClientErrorException.class, () ->
+                    safeStorageClient.getFile("test", true, true));
+//            case "createFileWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
+//                    safeStorageClient.createFile(new FileCreationRequest()));
+            case "updateSingleWithTags" -> {
+                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
+                    safeStorageClient.additionalFileTagsUpdate("test",
+                        new AdditionalFileTagsUpdateRequest())).getStatusText();
+                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
+            }
+//            case "updateMassiveWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
+//                    safeStorageClient.updateMassiveWithTags());
+            case "getTagsByFileKey" -> {
+                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
+                    safeStorageClient.additionalFileTagsGet("test")).getStatusText();
+                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
+            }
+            case "searchFileKeyWithTags" -> {
+                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
+                    safeStorageClient.additionalFileTagsSearch("test-id", true)).getStatusText();
+                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
+            }
+            default -> Assertions.fail("Endpoint non riconosciuto");
+        }
     }
 
     @When("lo si prova a modificare passando una request che presenta elementi con operazioni SET e DELETE sullo stesso tag")
@@ -138,26 +152,26 @@ public class SafeStorageSteps {
         this.updateRequest = request;
     }
 
-//    @When("lo si prova a modificare associandogli nella request uno o più tag che sono già associati al numero massimo di file key consentite")
-//    public void createRequestWithMaxFileKeys() {
-//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-//        //TODO
-//        this.updateRequest = request;
-//    }
-//
-//    @When("lo si prova a modificare passando una request che contiene un numero di operazioni su uno stesso tag superiore al limite consentito")
-//    public void createRequestWithMaxOperationsOnTag() {
-//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-//        //TODO
-//        this.updateRequest = request;
-//    }
-//
-//    @When("lo si prova a modificare passando una request che contiene uno o più tag con valori associati in numero superiore al limite consentito")
-//    public void createRequestMaxValuesPerTagDocument() {
-//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-//        //TODO
-//        this.updateRequest = request;
-//    }
+    @When("lo si prova a modificare associandogli nella request uno o più tag che sono già associati al numero massimo di file key consentite")
+    public void createRequestWithMaxFileKeys() {
+        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
+        //TODO
+        this.updateRequest = request;
+    }
+
+    @When("lo si prova a modificare passando una request che contiene un numero di operazioni su uno stesso tag superiore al limite consentito")
+    public void createRequestWithMaxOperationsOnTag() {
+        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
+        //TODO
+        this.updateRequest = request;
+    }
+
+    @When("lo si prova a modificare passando una request che contiene uno o più tag con valori associati in numero superiore al limite consentito")
+    public void createRequestMaxValuesPerTagDocument() {
+        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
+        //TODO
+        this.updateRequest = request;
+    }
 
     @And("viene invocato l'update passando il suddetto bodyRequest")
     public void callUpdateWithRequestBody() {
@@ -170,8 +184,45 @@ public class SafeStorageSteps {
         Assertions.assertEquals(this.updateResponseEntity.getStatusCodeValue(), statusCode);
     }
 
-    public AdditionalFileTagsUpdateRequest createUpdateRequest(Map<String, String> specificationsMap) {
+    @When("Si modifica il documento creato secondo le seguenti operazioni")
+    public void updateDocument(DataTable dataTable) {
+        Map<String, String> data = dataTable.asMap(String.class, String.class);
+
+        String fileKey = this.createdFiles.get(0).getKey();
+        System.out.println(fileKey);
+        safeStorageClient.additionalFileTagsUpdate(fileKey, createUpdateRequest(data));
+    }
+
+    @Then("Il documento è stato correttamente modificato con la seguente lista di tag")
+    public void checkDocument(DataTable dataTable) {
+        Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(
+            createdFiles.get(0).getKey()).getTags();
+        List<String> expectedTags = dataTable.asList();
+        expectedTags.forEach(tag -> {
+            String[] splittedTags = tag.split(":");
+            String tagName = splittedTags[0];
+            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+
+            assert tagMap != null;
+            Assertions.assertTrue(tagMap.containsKey(tagName));
+            Assertions.assertEquals(tagValues, tagMap.get(tagName));
+        });
+    }
+
+    private AdditionalFileTagsUpdateRequest createUpdateRequest(
+        Map<String, String> specificationsMap) {
         AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
+        specificationsMap.forEach((tag, operation) -> {
+            String[] splittedTags = tag.split(":");
+            String tagName = splittedTags[0];
+            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+
+            if (operation.equals("SET")) {
+                request.putSETItem(tagName, tagValues);
+            } else if (operation.equals("DELETE")) {
+                request.putDELETEItem(tagName, tagValues);
+            }
+        });
         return request;
     }
 
