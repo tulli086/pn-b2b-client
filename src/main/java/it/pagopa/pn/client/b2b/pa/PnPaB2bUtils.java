@@ -9,6 +9,7 @@ import it.pagopa.pn.client.b2b.pa.polling.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddFsuClient;
+import it.pagopa.pn.client.b2b.pa.utils.Pair;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadResponse;
@@ -48,13 +49,7 @@ import java.util.*;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnPaB2bUtils {
-    @AllArgsConstructor
-    @Data
-    @ToString
-    public static class Pair<K, E> {
-        K value1;
-        E value2;
-    }
+
     public static final String PN_NOTIFICATION_ATTACHMENTS_ZBEDA_19_F_8997469_BB_75_D_28_FF_12_BDF_321_PDF = "PN_NOTIFICATION_ATTACHMENTS-zbeda19f8997469bb75d28ff12bdf321.pdf";
     public static final String PN_F24_META_AB_2_ACAB_392_D_042_A_1_A_FD_66_F_59732791_F_2_JSON ="PN_F24_META-ab2acab392d042a1afd66f59732791f2.json";
     public static final String LEGAL_FACT_IS_NOT_A_PDF = "LegalFact is not a PDF ";
@@ -100,15 +95,19 @@ public class PnPaB2bUtils {
 
     public NewNotificationResponse uploadNotification(NewNotificationRequestV23 request) throws IOException {
         //PRELOAD DOCUMENTI NOTIFICA
+        //PUNTO 2
         List<NotificationDocument> newdocs = new ArrayList<>();
+        Integer idx = 0;
         for (NotificationDocument doc : request.getDocuments()) {
             try {
-                Thread.sleep(this.random.nextInt(350));
+                Thread.sleep(new Random().nextInt(350));
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new PnB2bException(e.getMessage());
+                //Thread.currentThread().interrupt(); TODO: VERIFICARE E RIMUOVERE
+                throw new RuntimeException(e.getMessage());
             }
             if (doc != null) {
+                doc.setDocIdx(idx.toString());
+                idx++;
                 newdocs.add(this.preloadDocument(doc));
             }
         }
@@ -132,7 +131,7 @@ public class PnPaB2bUtils {
             try {
                 Thread.sleep(this.random.nextInt(350));
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                //Thread.currentThread().interrupt(); TODO: VERIFICARE E RIMUOVERE
                 throw new PnB2bException(e.getMessage());
             }
             if (paymentInfo.getPagoPa()!= null) {
@@ -187,7 +186,7 @@ public class PnPaB2bUtils {
             try {
                 Thread.sleep(this.random.nextInt(350));
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                //Thread.currentThread().interrupt(); TODO: VERIFICARE E RIMUOVERE
                 throw new PnB2bException(e.getMessage());
             }
 
@@ -217,7 +216,7 @@ public class PnPaB2bUtils {
             try {
                 Thread.sleep(this.random.nextInt(350));
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                //Thread.currentThread().interrupt(); TODO: VERIFICARE E RIMUOVERE
                 throw new PnB2bException(e.getMessage());
             }
             if (paymentInfo.getPagoPa()!= null) {
@@ -261,11 +260,7 @@ public class PnPaB2bUtils {
         NewNotificationResponse response = client.sendNewNotification(request);
         log.info(NEW_NOTIFICATION_REQUEST_RESPONSE, response);
         if (response != null) {
-            try {
-                log.info(NEW_NOTIFICATION_IUN, new String(Base64Utils.decodeFromString(response.getNotificationRequestId())));
-            } catch (Exception e) {
-                throw new PnB2bException(e.getMessage());
-            }
+            log.info(NEW_NOTIFICATION_IUN, new String(Base64Utils.decodeFromString(response.getNotificationRequestId())));
         }
         return response;
     }
@@ -535,7 +530,7 @@ public class PnPaB2bUtils {
                     Thread.sleep(resp.getRetryAfter() * 3L);
                     client.getSentNotificationAttachment(fsn.getIun(), fsn.getRecipients().indexOf(recipient), "F24", 0);
                 } catch (InterruptedException exc) {
-                    Thread.currentThread().interrupt();
+                    //Thread.currentThread().interrupt(); TODO: VERIFICARE E RIMUOVERE
                     throw new PnB2bException(exc.getMessage());
                 }
             }
@@ -787,7 +782,8 @@ public class PnPaB2bUtils {
     }
 
     public NotificationDocument preloadDocument(NotificationDocument document) throws IOException {
-        Pair<String, String> preloadDocument = preloadGeneric(document.getRef().getKey(), LOAD_TO_PRESIGNED);
+        //PUNTO 3
+        Pair<String, String> preloadDocument = preloadGeneric(document.getRef().getKey(),document.getDocIdx(), LOAD_TO_PRESIGNED);
         documentSetKey(document, preloadDocument.getValue1());
         documentSetVersionToken(document, "v1");
         documentSetDigests(document, preloadDocument.getValue2());
@@ -939,21 +935,25 @@ public class PnPaB2bUtils {
                 Thread.sleep(2000);
                 log.error("[THREAD IN SLEEP PRELOAD] id: {} , attempt: {} , url: {}, secret: {}, sha256: {}, resourceType: {}", Thread.currentThread().getId(), depth, url, secret, sha256, resourceType);
             } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
+                //Thread.currentThread().interrupt(); TODO: VERIFICARE E RIMUOVERE
                 throw new PnB2bException(ex.getMessage());
             }
             loadToPresigned(url, secret, sha256, resource, resourceType, depth + 1);
         }
     }
 
-    private PreLoadResponse getPreLoadResponse(String sha256) {
+    private PreLoadResponse getPreLoadResponse(String sha256, String idx) {
         PreLoadRequest preLoadRequest = new PreLoadRequest()
-                .preloadIdx("0")
+                .preloadIdx(idx)
                 .sha256(sha256)
                 .contentType(APPLICATION_PDF);
         return client.presignedUploadRequest(
                 Collections.singletonList(preLoadRequest)
         ).get(0);
+    }
+
+    private PreLoadResponse getPreLoadResponse(String sha256) {
+        return getPreLoadResponse(sha256,"0");
     }
 
     private PreLoadResponse getPreLoadMetaDatiResponse(String sha256) {
@@ -985,14 +985,15 @@ public class PnPaB2bUtils {
         }
     }
 
-    private Pair<String, String> preloadGeneric(String resourceName, String loadToMetadata) throws IOException {
+    private Pair<String, String> preloadGeneric(String resourceName, String docIdx, String loadToMetadata) throws IOException {
+        //PUNTO 4
         String sha256 = computeSha256(resourceName);
         PreLoadResponse preLoadResponse;
 
         if (loadToMetadata.equals(LOAD_TO_PRESIGNED_METADATI)) {
             preLoadResponse = getPreLoadMetaDatiResponse(sha256);
         } else {
-            preLoadResponse = getPreLoadResponse(sha256);
+            preLoadResponse = getPreLoadResponse(sha256,docIdx);
         }
 
         String key = preLoadResponse.getKey();
@@ -1006,6 +1007,10 @@ public class PnPaB2bUtils {
             loadToPresigned(url, secret, sha256, resourceName);
         }
         return new Pair<>(key, sha256);
+    }
+
+    private Pair<String, String> preloadGeneric(String resourceName, String loadToMetadata) throws IOException {
+      return preloadGeneric(resourceName,"0",loadToMetadata);
     }
 
     public byte[] downloadFile(String downloadUrl) {

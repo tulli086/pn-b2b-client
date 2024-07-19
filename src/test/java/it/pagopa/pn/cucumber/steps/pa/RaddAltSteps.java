@@ -10,6 +10,7 @@ import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnRaddAlternativeClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableAuthTokenRadd;
+import it.pagopa.pn.client.b2b.pa.utils.Pair;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.Compress;
@@ -57,7 +58,7 @@ public class RaddAltSteps {
     private final String uid = "1234556";
     private AORInquiryResponse aorInquiryResponse;
     private CompleteTransactionResponse completeTransactionResponse;
-    private PnPaB2bUtils.Pair<String, String> documentUploadResponse;
+    private Pair<String, String> documentUploadResponse;
     private AbortTransactionResponse abortActTransaction;
     private HttpStatusCodeException documentUploadError;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -210,7 +211,7 @@ public class RaddAltSteps {
     private void uploadDocumentRaddAlternative(boolean usePresignedUrl) {
         try {
             creazioneZip();
-            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddAlternativeDocument("classpath:/"+this.fileZip, usePresignedUrl,this.operationid);
+            Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddAlternativeDocument("classpath:/"+this.fileZip, usePresignedUrl,this.operationid);
             Assertions.assertNotNull(uploadResponse);
             this.documentUploadResponse = uploadResponse;
             log.info("documentUploadResponse: {}", documentUploadResponse);

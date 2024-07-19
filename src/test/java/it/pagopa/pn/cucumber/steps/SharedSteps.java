@@ -1108,6 +1108,7 @@ public class SharedSteps {
 
     private void sendNotification(int wait) {
         try {
+            //PUNTO 1
             Assertions.assertDoesNotThrow(() -> {
                 notificationCreationDate = OffsetDateTime.now();
                 newNotificationResponse = b2bUtils.uploadNotification(notificationRequest);

@@ -7,6 +7,7 @@ import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddFsuClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
+import it.pagopa.pn.client.b2b.pa.utils.Pair;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class RaddFsuSteps {
     private final String uid = "1234556";
     private AORInquiryResponse aorInquiryResponse;
     private CompleteTransactionResponse completeTransactionResponse;
-    private PnPaB2bUtils.Pair<String,String> documentUploadResponse;
+    private Pair<String,String> documentUploadResponse;
     private AbortTransactionResponse abortActTransaction;
     private HttpStatusCodeException documentUploadError;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -173,7 +174,7 @@ public class RaddFsuSteps {
 
     private void uploadDocument(boolean usePresignedUrl){
         try {
-            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRadFsuDocument("classpath:/sample.pdf",usePresignedUrl);
+            Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRadFsuDocument("classpath:/sample.pdf",usePresignedUrl);
             Assertions.assertNotNull(uploadResponse);
             this.documentUploadResponse = uploadResponse;
             log.info("documentUploadResponse: {}",documentUploadResponse);

@@ -150,7 +150,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 //            while(iteratorStreamIdForPaAndVersion.hasNext()){
 //                UUID streamId = iteratorStreamIdForPaAndVersion.next();
 //                log.info("removeStream phase start for id {}",streamId);
-//                PnPaB2bUtils.Pair<String, StreamVersion> paAndVersion = streamIdForPaAndVersion.get(streamId);
+//                Pair<String, StreamVersion> paAndVersion = streamIdForPaAndVersion.get(streamId);
 //                log.info("removeStream id {} for pa {} with version {}",streamId,paAndVersion.getValue1(),paAndVersion.getValue2());
 //                setPaWebhook(paAndVersion.getValue1());
 //                deleteStreamWrapper(paAndVersion.getValue2(),paAndVersion.getValue1(),streamId);
@@ -164,7 +164,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 //        while(iteratorNumberOfStreamSlotAcquiredForPa.hasNext()){
 //            String pa = iteratorNumberOfStreamSlotAcquiredForPa.next();
 //            log.info("releaseStreamCreationSlot phase start for pa {}",pa);
-//            PnPaB2bUtils.Pair<Boolean, Integer> isAcquireNumberOfStramSlot = numberOfStreamSlotAcquiredForPa.get(pa);
+//            Pair<Boolean, Integer> isAcquireNumberOfStramSlot = numberOfStreamSlotAcquiredForPa.get(pa);
 //            if(isAcquireNumberOfStramSlot.getValue1() && isAcquireNumberOfStramSlot.getValue2() > 0){
 //                log.info("release n.{} of streamCreationSlot for pa {}",isAcquireNumberOfStramSlot.getValue2(),pa);
 //                WEBHOOKSYNCHRONIZER.releaseStreamCreationSlot(isAcquireNumberOfStramSlot.getValue2(),pa);
@@ -1680,7 +1680,7 @@ public class AvanzamentoNotificheWebhookB2bSteps {
     }
 
     private void addStreamId(String pa, UUID streamId, StreamVersion version) {
-        //streamIdForPaAndVersion.put(streamId,new PnPaB2bUtils.Pair<>(pa,version));
+        //streamIdForPaAndVersion.put(streamId,new Pair<>(pa,version));
         paStreamOwner.add(pa);
     }
 
@@ -1737,11 +1737,11 @@ public class AvanzamentoNotificheWebhookB2bSteps {
 //    private void acquireStreamCreationSlotInternal(String pa,int numberOfStream){
 //        try{
 //            if(!numberOfStreamSlotAcquiredForPa.containsKey(pa)){
-//                this.numberOfStreamSlotAcquiredForPa.put(pa,new PnPaB2bUtils.Pair<>(
+//                this.numberOfStreamSlotAcquiredForPa.put(pa,new Pair<>(
 //                        WEBHOOKSYNCHRONIZER.acquireStreamCreationSlot(numberOfStream, pa),numberOfStream));
 //            }else{
 //                if(WEBHOOKSYNCHRONIZER.acquireStreamCreationSlot(numberOfStream, pa)){
-//                    PnPaB2bUtils.Pair<Boolean, Integer> numberOfStreamPa = numberOfStreamSlotAcquiredForPa.get(pa);
+//                    Pair<Boolean, Integer> numberOfStreamPa = numberOfStreamSlotAcquiredForPa.get(pa);
 //                    numberOfStreamPa.setValue2(numberOfStreamPa.getValue2()+numberOfStream);
 //                    numberOfStreamSlotAcquiredForPa.put(pa,numberOfStreamPa);
 //                }

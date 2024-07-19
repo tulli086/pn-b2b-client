@@ -12,6 +12,7 @@ import it.pagopa.pn.client.b2b.pa.service.IPnWebRecipientClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnWebUserAttributesClient;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnExternalServiceClientImpl;
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableBearerToken;
+import it.pagopa.pn.client.b2b.pa.utils.Pair;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.AddressVerification;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.CourtesyChannelType;
 import it.pagopa.pn.client.web.generated.openapi.clients.externalUserAttributes.addressBook.model.LegalChannelType;
@@ -298,7 +299,7 @@ public class RicezioneNotificheWebSteps {
     public NotificationSearchParam convertNotificationSearchParam(Map<String, String> data) {
         NotificationSearchParam searchParam = new NotificationSearchParam();
 
-        PnPaB2bUtils.Pair<OffsetDateTime, OffsetDateTime> dates =  getStartDateAndEndDate(data);
+        Pair<OffsetDateTime, OffsetDateTime> dates =  getStartDateAndEndDate(data);
 
         searchParam.startDate = dates.getValue1();
         searchParam.endDate = dates.getValue2();
@@ -313,7 +314,7 @@ public class RicezioneNotificheWebSteps {
     public NotificationSearchParamWebPA convertNotificationSearchParamWebPA(Map<String, String> data) {
         NotificationSearchParamWebPA searchParam = new NotificationSearchParamWebPA();
 
-        PnPaB2bUtils.Pair<OffsetDateTime, OffsetDateTime> dates =  getStartDateAndEndDate(data);
+        Pair<OffsetDateTime, OffsetDateTime> dates =  getStartDateAndEndDate(data);
 
         searchParam.startDate = dates.getValue1();
         searchParam.endDate = dates.getValue2();
@@ -324,7 +325,7 @@ public class RicezioneNotificheWebSteps {
         return searchParam;
     }
 
-    private PnPaB2bUtils.Pair<OffsetDateTime, OffsetDateTime> getStartDateAndEndDate (Map<String, String> data){
+    private Pair<OffsetDateTime, OffsetDateTime> getStartDateAndEndDate (Map<String, String> data){
 
         Calendar now = Calendar.getInstance();
         int month = now.get(Calendar.MONTH);
@@ -346,7 +347,7 @@ public class RicezioneNotificheWebSteps {
             endDate = sentAt;
         }
 
-        return new PnPaB2bUtils.Pair<>(startDate, endDate);
+        return new Pair<>(startDate, endDate);
     }
 
     private boolean searchNotification(NotificationSearchParam searchParam) {
