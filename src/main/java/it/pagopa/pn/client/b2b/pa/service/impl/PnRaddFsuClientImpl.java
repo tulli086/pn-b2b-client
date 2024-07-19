@@ -5,12 +5,15 @@ import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.Ap
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.api.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 
 @Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnRaddFsuClientImpl implements IPnRaddFsuClient {
     private final ActDocumentInquiryApi actDocumentInquiryApi;
     private final ActTransactionManagementApi actTransactionManagementApi;

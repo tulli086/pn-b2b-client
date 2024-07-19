@@ -5,6 +5,8 @@ import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.ApiCli
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.api.PaymentInfoApi;
 import it.pagopa.pn.client.b2b.web.generated.openapi.clients.payment_info.model.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +14,7 @@ import java.util.List;
 
 
 @Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnPaymentInfoClientImpl implements IPnPaymentInfoClient {
     private final PaymentInfoApi paymentInfoApi;
 
