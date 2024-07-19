@@ -28,15 +28,14 @@ public class RestTemplateConfiguration {
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(990_000);
-        requestFactory.setReadTimeout(990_000);
-        requestFactory.setConnectionRequestTimeout(990_000);
-        requestFactory.setBufferRequestBody(false);
-        restTemplate.setRequestFactory(requestFactory);
+//        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+//        requestFactory.setConnectTimeout(240);
+//        requestFactory.setReadTimeout(240);
+//        requestFactory.setConnectionRequestTimeout(240);
+//        requestFactory.setBufferRequestBody(false);
+//        restTemplate.setRequestFactory(requestFactory);
 
-        List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
-        interceptors.add(new RequestAndTraceIdInterceptor());
+        restTemplate.getInterceptors().add(new RequestAndTraceIdInterceptor());
 
         return restTemplate;
     }
