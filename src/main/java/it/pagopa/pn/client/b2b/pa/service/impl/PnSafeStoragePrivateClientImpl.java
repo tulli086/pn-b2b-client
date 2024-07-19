@@ -1,7 +1,6 @@
 package it.pagopa.pn.client.b2b.pa.service.impl;
 
 
-
 import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.ApiClient;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.api.AdditionalFileTagsApi;
@@ -26,72 +25,103 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
     private final FileDownloadApi fileDownloadApi;
     private final FileMetadataUpdateApi fileMetadataUpdateApi;
     private final AdditionalFileTagsApi additionalFileTagsApi;
-
     private final String clientIdSafeStorage;
     private final String apiKeySafeStorage;
+    private final RestTemplate restTemplate;
+    private final String safeStorageBaseUrl;
 
     public PnSafeStoragePrivateClientImpl(RestTemplate restTemplate,
-                                          @Value("${pn.safeStorage.base-url}")String safeStorageBaseUrl,
-                                          @Value("${pn.safeStorage.apikey}")String apiKeySafeStorage,
-                                          @Value("${pn.safeStorage.clientId}")String clientIdSafeStorage) {
+                                          @Value("${pn.safeStorage.base-url}") String safeStorageBaseUrl,
+                                          @Value("${pn.safeStorage.apikey}") String apiKeySafeStorage,
+                                          @Value("${pn.safeStorage.clientId}") String clientIdSafeStorage) {
 
         this.apiKeySafeStorage = apiKeySafeStorage;
         this.clientIdSafeStorage = clientIdSafeStorage;
+        this.restTemplate = restTemplate;
+        this.safeStorageBaseUrl = safeStorageBaseUrl;
 
-        fileUploadApi = new FileUploadApi(newApiClient(restTemplate,safeStorageBaseUrl,apiKeySafeStorage));
-        fileMetadataUpdateApi = new FileMetadataUpdateApi(newApiClient(restTemplate,safeStorageBaseUrl,apiKeySafeStorage));
-        additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate,safeStorageBaseUrl,apiKeySafeStorage));
-        fileDownloadApi = new FileDownloadApi(newApiClient(restTemplate,safeStorageBaseUrl,apiKeySafeStorage));
+        fileUploadApi = new FileUploadApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
+        fileMetadataUpdateApi = new FileMetadataUpdateApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
+        additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
+        fileDownloadApi = new FileDownloadApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
     }
 
-    private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apiKey ) {
-        ApiClient newApiClient = new ApiClient( restTemplate );
-        newApiClient.setBasePath( basePath );
-        newApiClient.addDefaultHeader("x-api-key", apiKey );
+    private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apiKey) {
+        ApiClient newApiClient = new ApiClient(restTemplate);
+        newApiClient.setBasePath(basePath);
+        newApiClient.addDefaultHeader("x-api-key", apiKey);
         return newApiClient;
     }
 
+    /**
+     * Metodi ereditati da SettableApiKey
+     */
+    @Override
+    public boolean setApiKeys(ApiKeyType apiKey) {
+        return false;
+    }
+
+    @Override
+    public void setApiKey(String apiKey) {
+        this.additionalFileTagsApi.setApiClient(newApiClient(restTemplate, safeStorageBaseUrl, apiKey));
+    }
+
+    @Override
+    public ApiKeyType getApiKeySetted() {
+        return null;
+    }
+
+    /**
+     * Metodi ereditati da IPnSafeStoragePrivateClient
+     */
 
     public FileCreationResponse createFile(FileCreationRequest fileCreationRequest) throws RestClientException {
-        return createFileWithHttpInfo(clientIdSafeStorage, fileCreationRequest).getBody();
+        return this.fileUploadApi.createFile(clientIdSafeStorage, fileCreationRequest);
     }
 
     public ResponseEntity<FileCreationResponse> createFileWithHttpInfo(String cxId, FileCreationRequest fileCreationRequest) throws RestClientException {
-        return this.fileUploadApi.createFileWithHttpInfo(cxId,fileCreationRequest);
+        return this.fileUploadApi.createFileWithHttpInfo(cxId, fileCreationRequest);
     }
-
 
     public FileDownloadResponse getFile(String fileKey, Boolean metadataOnly, Boolean tags) throws RestClientException {
-        return getFileWithHttpInfo(fileKey, clientIdSafeStorage, metadataOnly, tags).getBody();
+        return this.fileDownloadApi.getFile(fileKey, clientIdSafeStorage, metadataOnly, tags);
     }
-
 
     public ResponseEntity<FileDownloadResponse> getFileWithHttpInfo(String fileKey, String cxId, Boolean metadataOnly, Boolean tags) throws RestClientException {
         return this.fileDownloadApi.getFileWithHttpInfo(fileKey, cxId, metadataOnly, tags);
     }
 
     public OperationResultCodeResponse updateFileMetadata(String fileKey, UpdateFileMetadataRequest updateFileMetadataRequest) throws RestClientException {
-        return updateFileMetadataWithHttpInfo(fileKey, clientIdSafeStorage, updateFileMetadataRequest).getBody();
+        return this.fileMetadataUpdateApi.updateFileMetadata(fileKey, clientIdSafeStorage, updateFileMetadataRequest);
     }
 
     public ResponseEntity<OperationResultCodeResponse> updateFileMetadataWithHttpInfo(String fileKey, String cxId, UpdateFileMetadataRequest updateFileMetadataRequest) throws RestClientException {
         return this.fileMetadataUpdateApi.updateFileMetadataWithHttpInfo(fileKey, cxId, updateFileMetadataRequest);
     }
 
-
-    public AdditionalFileTagsGetResponse additionalFileTagsGet(String fileKey, String xPagopaSafestorageCxId) throws RestClientException {
-        return this.additionalFileTagsApi.additionalFileTagsGet(fileKey, xPagopaSafestorageCxId);
+    public AdditionalFileTagsGetResponse additionalFileTagsGet(String fileKey) throws RestClientException {
+        return this.additionalFileTagsApi.additionalFileTagsGet(fileKey, clientIdSafeStorage);
     }
 
-
-    public AdditionalFileTagsSearchResponse additionalFileTagsSearch(String xPagopaSafestorageCxId, String logic, Boolean tags) throws RestClientException {
-        return this.additionalFileTagsApi.additionalFileTagsSearch(xPagopaSafestorageCxId, logic, tags);
+    public ResponseEntity<AdditionalFileTagsGetResponse> additionalFileTagsGetWithHttpInfo(String fileKey, String cxId) throws RestClientException {
+        return this.additionalFileTagsApi.additionalFileTagsGetWithHttpInfo(fileKey, cxId);
     }
 
-    public AdditionalFileTagsUpdateResponse additionalFileTagsUpdate(String fileKey, String xPagopaSafestorageCxId, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) throws RestClientException {
-        return this.additionalFileTagsApi.additionalFileTagsUpdate(fileKey, xPagopaSafestorageCxId, additionalFileTagsUpdateRequest);
+    public AdditionalFileTagsSearchResponse additionalFileTagsSearch(String logic, Boolean tags) throws RestClientException {
+        return this.additionalFileTagsApi.additionalFileTagsSearch(clientIdSafeStorage, logic, tags);
     }
 
+    public ResponseEntity<AdditionalFileTagsSearchResponse> additionalFileTagsSearchWithHttpInfo(String cxId, String logic, Boolean tags) throws RestClientException {
+        return this.additionalFileTagsApi.additionalFileTagsSearchWithHttpInfo(cxId, logic, tags);
+    }
+
+    public AdditionalFileTagsUpdateResponse additionalFileTagsUpdate(String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) throws RestClientException {
+        return this.additionalFileTagsApi.additionalFileTagsUpdate(fileKey, clientIdSafeStorage, additionalFileTagsUpdateRequest);
+    }
+
+    public ResponseEntity<AdditionalFileTagsUpdateResponse> additionalFileTagsUpdateWithHttpInfo(String fileKey, String cxId, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) throws RestClientException {
+        return this.additionalFileTagsApi.additionalFileTagsUpdateWithHttpInfo(fileKey, cxId, additionalFileTagsUpdateRequest);
+    }
 
 
 }
