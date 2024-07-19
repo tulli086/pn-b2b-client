@@ -3,7 +3,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
   #Background:
    # Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-20GR_1] Invio notifica e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -33,7 +33,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 978   | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-21GR_2] Invio notifica e verifica calcolo del costo su raccomandata con peso = 21gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -63,7 +63,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1153  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-50GR_3] Invio notifica e verifica calcolo del costo su raccomandata con peso = 50gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -92,7 +92,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 10010 | 1103  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1168     | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-51GR_4] Invio notifica e verifica calcolo del costo su raccomandata con peso = 51gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -122,7 +122,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1171  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-100GR_5] Invio notifica e verifica calcolo del costo su raccomandata con peso = 100gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -152,7 +152,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1198     | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-101GR_6] Invio notifica e verifica calcolo del costo su raccomandata con peso = 101gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -182,7 +182,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1284  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-250GR_7] Invio notifica e verifica calcolo del costo su raccomandata con peso = 250gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -212,7 +212,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1371     | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-251GR_8] Invio notifica e verifica calcolo del costo su raccomandata con peso = 251gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -242,7 +242,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1374     | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-350GR_9] Invio notifica e verifica calcolo del costo su raccomandata con peso = 350gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -272,7 +272,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1431     | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-351GR_10] Invio notifica e verifica calcolo del costo su raccomandata con peso = 351gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -302,7 +302,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1541  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-1000GR_11] Invio notifica e verifica calcolo del costo su raccomandata con peso = 1000gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -332,7 +332,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1928  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-1001GR_12] Invio notifica e verifica calcolo del costo su raccomandata con peso = 1001gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
@@ -362,7 +362,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1931  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoComplete890
   Scenario Outline: [CALCOLO-COSTO_890-2000GR_13] Invio notifica e verifica calcolo del costo su raccomandata con peso = 2000gr
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
     Given viene generata una nuova notifica
