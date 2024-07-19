@@ -8,8 +8,11 @@ import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileC
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -18,10 +21,15 @@ public class SafeStorageSteps {
     private final PnPaB2bUtils b2bUtils;
     private String sha256;
 
+    private final List<String> tagsName;
+
     @Autowired
-    public SafeStorageSteps(IPnSafeStoragePrivateClient safeStorageClient, PnPaB2bUtils b2bUtils) {
+    public SafeStorageSteps(IPnSafeStoragePrivateClient safeStorageClient,
+                            PnPaB2bUtils b2bUtils,
+                            @Value("${pn.safeStorage.tagsName}") List<String> tagsName) {
         this.safeStorageClient = safeStorageClient;
         this.b2bUtils = b2bUtils;
+        this.tagsName = tagsName;
     }
 
     private String computeSha(String resourceName) {
@@ -73,4 +81,15 @@ public class SafeStorageSteps {
         System.out.println("FILEKEY: " + fileKey);
     }
 
+    //TODO: REMOVE ONLY EXAMPLE
+    @Given("prova mappa")
+    public void provoMappaDiMappa(Map<String, String> values) {
+        System.out.println("Ho ricevuto i valore");
+        System.out.println("Valori: "+values.get("SET"));
+    }
+
+    @And("verifico i valori della mappa")
+    public void verificoIValoriDellaMappa() {
+        log.error("Valori nella mappa: "+tagsName.toString());
+    }
 }
