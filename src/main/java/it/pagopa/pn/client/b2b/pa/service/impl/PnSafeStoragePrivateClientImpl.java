@@ -27,8 +27,6 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
     private final AdditionalFileTagsApi additionalFileTagsApi;
     private final String clientIdSafeStorage;
     private final String apiKeySafeStorage;
-    private final RestTemplate restTemplate;
-    private final String safeStorageBaseUrl;
 
     public PnSafeStoragePrivateClientImpl(RestTemplate restTemplate,
                                           @Value("${pn.safeStorage.base-url}") String safeStorageBaseUrl,
@@ -37,8 +35,6 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
 
         this.apiKeySafeStorage = apiKeySafeStorage;
         this.clientIdSafeStorage = clientIdSafeStorage;
-        this.restTemplate = restTemplate;
-        this.safeStorageBaseUrl = safeStorageBaseUrl;
 
         fileUploadApi = new FileUploadApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
         fileMetadataUpdateApi = new FileMetadataUpdateApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
@@ -54,27 +50,8 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
     }
 
     /**
-     * Metodi ereditati da SettableApiKey
-     */
-    @Override
-    public boolean setApiKeys(ApiKeyType apiKey) {
-        return false;
-    }
-
-    @Override
-    public void setApiKey(String apiKey) {
-        this.additionalFileTagsApi.setApiClient(newApiClient(restTemplate, safeStorageBaseUrl, apiKey));
-    }
-
-    @Override
-    public ApiKeyType getApiKeySetted() {
-        return null;
-    }
-
-    /**
      * Metodi ereditati da IPnSafeStoragePrivateClient
      */
-
     public FileCreationResponse createFile(FileCreationRequest fileCreationRequest) throws RestClientException {
         return this.fileUploadApi.createFile(clientIdSafeStorage, fileCreationRequest);
     }

@@ -1,24 +1,15 @@
 package it.pagopa.pn.cucumber.steps.microservice;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -82,66 +73,4 @@ public class SafeStorageSteps {
         System.out.println("FILEKEY: " + fileKey);
     }
 
-    @When("L'utente chiama l'endpoint senza essere autorizzato ad accedervi")
-    public void utenteNonAutorizzato() {
-        safeStorageClient.setApiKey("api-key-non-autorizzata");
-    }
-
-    @Then("La chiamata restituisce 403")
-    public void chiamataEndpoint(DataTable dataTable) {
-        Map<String, String> data = dataTable.asMap(String.class, String.class);
-        switch (data.get("endpoint")) {
-//            case "getFileWithTagsByFileKey" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-//                    safeStorageClient.getFile("test", true, true));
-//            case "createFileWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-//                    safeStorageClient.createFile(null));
-            case "updateSingleWithTags" -> {
-                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
-                        safeStorageClient.additionalFileTagsUpdate("test", new AdditionalFileTagsUpdateRequest())).getStatusText();
-                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
-            }
-//            case "updateMassiveWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-//                    safeStorageClient.());
-            case "getTagsByFileKey" -> {
-                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
-                        safeStorageClient.additionalFileTagsGet("test")).getStatusText();
-                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
-            }
-            case "searchFileKeyWithTags" -> {
-                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
-                        safeStorageClient.additionalFileTagsSearch("", true)).getStatusText();
-                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
-            }
-            default -> Assertions.fail("Endpoint non riconosciuto");
-        }
-    }
-
-    private AdditionalFileTagsUpdateRequest createRequest(String requestType) {
-        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-        List<String> setOperations = new LinkedList<>();
-        List<String> deleteOperations = new LinkedList<>();
-        switch (requestType) {
-            case "ONLY_SET_OPERATIONS" -> {
-                setOperations.addAll(List.of("test1", "test2", "test3"));
-                request.putSETItem("TODO", setOperations);
-            }
-            case "ONLY_DELETE_OPERATIONS" -> {
-                deleteOperations.addAll(List.of("test1", "test2", "test3"));
-                request.putDELETEItem("TODO", setOperations);
-            }
-            case "SET_AND_DELETE_OPERATIONS" -> {
-                setOperations.addAll(List.of("test1", "test2", "test3"));
-                deleteOperations.addAll(List.of("test1", "test2", "test3"));
-                request.putSETItem("TODO1", setOperations);
-                request.putDELETEItem("TODO2", setOperations);
-            }
-            case "SET_AND_DELETE_ON_SAME_TAG" -> {
-                setOperations.addAll(List.of("test1", "test2", "test3"));
-                deleteOperations.addAll(List.of("test1", "test2", "test3"));
-                request.putSETItem("TODO", setOperations);
-                request.putDELETEItem("TODO", setOperations);
-            }
-        }
-        return request;
-    }
 }
