@@ -42,3 +42,9 @@ Feature: test preliminari indicizzazione File safeStorage
     When lo si prova a modificare passando una request che contiene uno o più tag con valori associati in numero superiore al limite consentito
     And viene invocato l'update passando il suddetto bodyRequest
     Then la chiamata genera un errore con status code 400
+
+  Scenario: Esempio mappa
+    Given prova mappa
+      | SET  | 10 TAG|
+    And verifico i valori della mappa
+

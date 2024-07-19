@@ -16,9 +16,12 @@ import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +35,15 @@ public class SafeStorageSteps {
     private AdditionalFileTagsUpdateRequest updateRequest;
     private ResponseEntity<AdditionalFileTagsUpdateResponse> updateResponseEntity;
 
+    private final List<String> tagsName;
+
     @Autowired
-    public SafeStorageSteps(IPnSafeStoragePrivateClient safeStorageClient, PnPaB2bUtils b2bUtils) {
+    public SafeStorageSteps(IPnSafeStoragePrivateClient safeStorageClient,
+                            PnPaB2bUtils b2bUtils,
+                            @Value("${pn.safeStorage.tagsName}") List<String> tagsName) {
         this.safeStorageClient = safeStorageClient;
         this.b2bUtils = b2bUtils;
+        this.tagsName = tagsName;
 
         createdFiles = new ArrayList<>();
     }
