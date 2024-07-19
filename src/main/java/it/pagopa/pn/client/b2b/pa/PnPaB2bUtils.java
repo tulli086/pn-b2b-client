@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -83,8 +84,13 @@ public class PnPaB2bUtils {
 
 
     @Autowired
-    public PnPaB2bUtils(ApplicationContext ctx, IPnPaB2bClient client, RestTemplate restTemplate, IPnRaddFsuClient raddFsuClient,
-                        IPnRaddAlternativeClient raddAltClient, PnPollingFactory pollingFactory) {
+    public PnPaB2bUtils(ApplicationContext ctx,
+                        IPnPaB2bClient client,
+                        @Qualifier("defaultRestTemplate") RestTemplate restTemplate,
+                        IPnRaddFsuClient raddFsuClient,
+                        IPnRaddAlternativeClient raddAltClient,
+                        PnPollingFactory pollingFactory) {
+
         this.restTemplate = restTemplate;
         this.ctx = ctx;
         this.client = client;
