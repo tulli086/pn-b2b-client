@@ -1094,6 +1094,12 @@ public class SharedSteps {
     }
 
     private void sendNotification() {
+        try{
+            Thread.sleep(Thread.currentThread().getId()+(Math.round(Math.random()*100)));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } //TODO: REMOVE RANDOM SLEEP
+
         sendNotification(getWorkFlowWait());
     }
 
