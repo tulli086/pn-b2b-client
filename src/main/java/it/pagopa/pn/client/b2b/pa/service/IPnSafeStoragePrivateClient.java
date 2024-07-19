@@ -7,9 +7,9 @@ import org.springframework.web.client.RestClientException;
 
 public interface IPnSafeStoragePrivateClient extends SettableApiKey {
 
-    FileCreationResponse createFile(FileCreationRequest fileCreationRequest) throws RestClientException;
+    FileCreationResponse createFile(String xChecksumValue, String xChecksum, FileCreationRequest fileCreationRequest) throws RestClientException;
 
-    ResponseEntity<FileCreationResponse> createFileWithHttpInfo(String cxId, FileCreationRequest fileCreationRequest) throws RestClientException;
+    ResponseEntity<FileCreationResponse> createFileWithHttpInfo(String xPagopaSafestorageCxId, String xChecksumValue, String xChecksum, FileCreationRequest fileCreationRequest) throws RestClientException;
 
     FileDownloadResponse getFile(String fileKey, Boolean metadataOnly, Boolean tags) throws RestClientException;
 

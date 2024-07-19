@@ -56,12 +56,12 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
     /**
      * Metodi ereditati da IPnSafeStoragePrivateClient
      */
-    public FileCreationResponse createFile(FileCreationRequest fileCreationRequest) throws RestClientException {
-        return this.fileUploadApi.createFile(clientIdSafeStorage, fileCreationRequest);
+    public FileCreationResponse createFile(String xChecksumValue, String xChecksum, FileCreationRequest fileCreationRequest) throws RestClientException {
+        return this.fileUploadApi.createFile(clientIdSafeStorage, xChecksumValue, xChecksum, fileCreationRequest);
     }
 
-    public ResponseEntity<FileCreationResponse> createFileWithHttpInfo(String cxId, FileCreationRequest fileCreationRequest) throws RestClientException {
-        return this.fileUploadApi.createFileWithHttpInfo(cxId, fileCreationRequest);
+    public ResponseEntity<FileCreationResponse> createFileWithHttpInfo(String cxId, String xChecksumValue, String xChecksum, FileCreationRequest fileCreationRequest) throws RestClientException {
+        return this.fileUploadApi.createFileWithHttpInfo(cxId, xChecksumValue, xChecksum, fileCreationRequest);
     }
 
     public FileDownloadResponse getFile(String fileKey, Boolean metadataOnly, Boolean tags) throws RestClientException {

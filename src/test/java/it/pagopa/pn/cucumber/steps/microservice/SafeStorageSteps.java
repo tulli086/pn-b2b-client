@@ -14,14 +14,11 @@ import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileC
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +31,7 @@ public class SafeStorageSteps {
     private List<FileCreationResponse> createdFiles;
     private AdditionalFileTagsUpdateRequest updateRequest;
     private ResponseEntity<AdditionalFileTagsUpdateResponse> updateResponseEntity;
-
+    private ResponseEntity genericResponseEntity;
     private final List<String> tagsName;
 
     @Autowired
@@ -92,8 +89,12 @@ public class SafeStorageSteps {
         request.setStatus("SAVED");
         request.setDocumentType("PN_NOTIFICATION_ATTACHMENTS");
 
-        FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(request);
+        FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(sha256, "SHA256", request);
 
+        loadToPresignedUrl(fileCreationResponse, sha256, resourcePath);
+    }
+
+    private void loadToPresignedUrl(FileCreationResponse fileCreationResponse, String sha256, String resourcePath) {
         String fileKey = fileCreationResponse.getKey();
         String secret = fileCreationResponse.getSecret();
         String url = fileCreationResponse.getUploadUrl();
@@ -104,43 +105,29 @@ public class SafeStorageSteps {
         this.createdFiles.add(fileCreationResponse);
     }
 
-    //TODO fare metodo separato per caricare il file tramite presigned url
-//    private void loadToPresignedUrl(String url, String secret, String sha256, )
-
-    @When("L'utente chiama l'endpoint senza essere autorizzato ad accedervi")
-    public void utenteNonAutorizzato() {
-        safeStorageClient.setApiKey("api-key-non-autorizzata");
-    }
+//    @When("L'utente effettua un'operazione {String} senza essere autorizzato ad accedervi")
+//    public void utenteNonAutorizzato(String operation) {
+////        safeStorageClient.setApiKey("api-key-non-autorizzata");
+//        ResponseEntity responseEntity = null;
+//        switch (operation) {
+//            case "CREATE_FILE" ->
+//                    responseEntity = safeStorageClient.createFileWithHttpInfo("api-key-non-autorizzata", "", "", new FileCreationRequest());
+//            case "GET_FILE" ->
+//                    responseEntity = safeStorageClient.getFileWithHttpInfo("test", "api-key-non-autorizzata", true, true);
+//            case "UPDATE_SINGLE" ->
+//                    responseEntity = safeStorageClient.additionalFileTagsUpdateWithHttpInfo("test", "api-key-non-autorizzata", new AdditionalFileTagsUpdateRequest());
+////            case "UPDATE_MASSIVE" -> TODO;
+//            case "SEARCH" ->
+//                    responseEntity = safeStorageClient.additionalFileTagsSearchWithHttpInfo("api-key-non-autorizzata", "AND", true);
+////            case "GET_TAGS" -> TODO;
+//        }
+//        this.genericResponseEntity = responseEntity;
+//    }
 
     @Then("La chiamata restituisce 403")
     public void chiamataEndpoint(DataTable dataTable) {
-        Map<String, String> data = dataTable.asMap(String.class, String.class);
-
-        //TODO: modificare il controllo il base alla risposta effettiva, dobbiamo utilizzare il resultCode?
-        switch (data.get("endpoint")) {
-            case "getFileWithTagsByFileKey" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-                    safeStorageClient.getFile("test", true, true));
-            case "createFileWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-                    safeStorageClient.createFile(new FileCreationRequest()));
-            case "updateSingleWithTags" -> {
-                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
-                        safeStorageClient.additionalFileTagsUpdate("test", new AdditionalFileTagsUpdateRequest())).getStatusText();
-                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
-            }
-//            case "updateMassiveWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-//                    safeStorageClient.updateMassiveWithTags());
-            case "getTagsByFileKey" -> {
-                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
-                        safeStorageClient.additionalFileTagsGet("test")).getStatusText();
-                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
-            }
-            case "searchFileKeyWithTags" -> {
-                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
-                        safeStorageClient.additionalFileTagsSearch("test-id", true)).getStatusText();
-                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
-            }
-            default -> Assertions.fail("Endpoint non riconosciuto");
-        }
+        Assertions.assertNotNull(this.genericResponseEntity);
+        Assertions.assertEquals(403, this.genericResponseEntity.getStatusCodeValue());
     }
 
     @When("lo si prova a modificare passando una request che presenta elementi con operazioni SET e DELETE sullo stesso tag")
@@ -151,26 +138,26 @@ public class SafeStorageSteps {
         this.updateRequest = request;
     }
 
-    @When("lo si prova a modificare associandogli nella request uno o più tag che sono già associati al numero massimo di file key consentite")
-    public void createRequestWithMaxFileKeys() {
-        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-        //TODO
-        this.updateRequest = request;
-    }
-
-    @When("lo si prova a modificare passando una request che contiene un numero di operazioni su uno stesso tag superiore al limite consentito")
-    public void createRequestWithMaxOperationsOnTag() {
-        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-        //TODO
-        this.updateRequest = request;
-    }
-
-    @When("lo si prova a modificare passando una request che contiene uno o più tag con valori associati in numero superiore al limite consentito")
-    public void createRequestMaxValuesPerTagDocument() {
-        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-        //TODO
-        this.updateRequest = request;
-    }
+//    @When("lo si prova a modificare associandogli nella request uno o più tag che sono già associati al numero massimo di file key consentite")
+//    public void createRequestWithMaxFileKeys() {
+//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
+//        //TODO
+//        this.updateRequest = request;
+//    }
+//
+//    @When("lo si prova a modificare passando una request che contiene un numero di operazioni su uno stesso tag superiore al limite consentito")
+//    public void createRequestWithMaxOperationsOnTag() {
+//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
+//        //TODO
+//        this.updateRequest = request;
+//    }
+//
+//    @When("lo si prova a modificare passando una request che contiene uno o più tag con valori associati in numero superiore al limite consentito")
+//    public void createRequestMaxValuesPerTagDocument() {
+//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
+//        //TODO
+//        this.updateRequest = request;
+//    }
 
     @And("viene invocato l'update passando il suddetto bodyRequest")
     public void callUpdateWithRequestBody() {
