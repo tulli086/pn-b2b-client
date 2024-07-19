@@ -1,17 +1,16 @@
 Feature: test preliminari indicizzazione File safeStorage
 
   Scenario Outline: FAILED AUTHORIZATION
-    When L'utente chiama l'endpoint senza essere autorizzato ad accedervi
+    When L'utente tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
     Then La chiamata restituisce 403
-      | endpoint | <endpoint> |
     Examples:
-      | endpoint              |
-#      | getFileWithTagsByFileKey |
-#      | createFileWithTags       |
-      | updateSingleWithTags  |
-#      | updateMassiveWithTags    |
-      | getTagsByFileKey      |
-      | searchFileKeyWithTags |
+      | operation     |
+      | CREATE_FILE   |
+      | GET_FILE      |
+      | UPDATE_SINGLE |
+#      | UPDATE_MASSIVE    |
+      | GET_TAGS      |
+      | SEARCH_FILE   |
 
   Scenario: UpdateSingle SUCCESS - solo operazioni SET
     Given Viene caricato un nuovo documento pdf
@@ -19,7 +18,6 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_indexed_multivalue:test | SET |
     Then Il documento è stato correttamente modificato con la seguente lista di tag
       | global_indexed_multivalue:test |
-
 
   #Scenario: UpdateSingle ERROR - Set+Delete sullo stesso tag
   #  Given Viene caricato un nuovo documento pdf
