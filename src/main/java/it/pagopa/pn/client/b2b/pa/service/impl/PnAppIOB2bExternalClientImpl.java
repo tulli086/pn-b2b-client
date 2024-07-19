@@ -8,8 +8,6 @@ import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.mod
 import it.pagopa.pn.client.b2b.appIo.generated.openapi.clients.externalAppIO.model.ThirdPartyMessage;
 import it.pagopa.pn.client.b2b.pa.service.IPnAppIOB2bClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,7 +25,6 @@ import java.util.Map;
 
 
 @Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnAppIOB2bExternalClientImpl implements IPnAppIOB2bClient {
     private final AppIoPnDocumentsApi appIoPnDocumentsApi;
     private final AppIoPnNotificationApi appIoPnNotificationApi;
