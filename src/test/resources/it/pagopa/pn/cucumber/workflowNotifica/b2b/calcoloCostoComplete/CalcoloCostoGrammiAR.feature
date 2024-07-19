@@ -3,7 +3,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
   Background:
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-20GR_1] Invio notifica e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>            |
@@ -34,7 +34,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 457   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 484     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-21GR_2] Invio notifica e verifica calcolo del costo su raccomandata con peso = 21gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>            |
@@ -65,7 +65,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 447   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 475   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-50GR_3] Invio notifica e verifica calcolo del costo su raccomandata con peso = 50gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>            |
@@ -97,7 +97,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 490     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-51GR_4] Invio notifica e verifica calcolo del costo su raccomandata con peso = 51gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                   |
@@ -128,7 +128,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 502   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 530     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-100GR_5] Invio notifica e verifica calcolo del costo su raccomandata con peso = 100gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                                     |
@@ -159,7 +159,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 529   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 557     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-101GR_6] Invio notifica e verifica calcolo del costo su raccomandata con peso = 101gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                                    |
@@ -191,7 +191,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 601     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-250GR_7] Invio notifica e verifica calcolo del costo su raccomandata con peso = 250gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                                                       |
@@ -223,7 +223,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 688     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-251GR_8] Invio notifica e verifica calcolo del costo su raccomandata con peso = 251gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                                                       |
@@ -255,7 +255,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 728   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-350GR_9] Invio notifica e verifica calcolo del costo su raccomandata con peso = 350gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                                                        |
@@ -287,7 +287,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 785     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-351GR_10] Invio notifica e verifica calcolo del costo su raccomandata con peso = 351gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                                                        |
@@ -319,7 +319,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 858     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-1000GR_11] Invio notifica e verifica calcolo del costo su raccomandata con peso = 1000gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                                                                                        |
@@ -351,7 +351,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 1245     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-1001GR_12] Invio notifica e verifica calcolo del costo su raccomandata con peso = 1001gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                                                                                        |
@@ -383,7 +383,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 1336  | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-2000GR_13] Invio notifica e verifica calcolo del costo su raccomandata con peso = 2000gr
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>                                                                                        |
@@ -415,7 +415,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 1933     | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-20GR_14] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -433,7 +433,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1036" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-21GR_15] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 21gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -451,7 +451,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1154" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-50GR_16] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 50gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -469,7 +469,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1169" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-51GR_17] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 51gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -487,7 +487,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1273" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-100GR_18] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 100gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber               |
@@ -505,7 +505,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1300" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-101GR_19] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 101gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber              |
@@ -523,7 +523,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1700" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-250GR_20] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 250gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                 |
@@ -541,7 +541,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1787" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-251GR_21] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 251gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                 |
@@ -559,7 +559,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1980" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-350GR_22] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 350gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                  |
@@ -577,7 +577,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "2037" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-351GR_23] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 351gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                  |
@@ -595,7 +595,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "2768" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-1000GR_24] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 1000gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                                                  |
@@ -613,7 +613,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "3155" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-1001GR_25] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 1001gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                                                  |
@@ -631,7 +631,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "4340" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-2000GR_26] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 2000gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                                                  |
@@ -649,7 +649,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "4937" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-20GR_27] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -667,7 +667,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "921" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-21GR_28] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 21gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -685,7 +685,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1034" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-50GR_29] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 50gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -703,7 +703,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1049" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-51GR_30] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 51gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -721,7 +721,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1144" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-100GR_31] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 100gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber               |
@@ -739,7 +739,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1171" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-101GR_32] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 101gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber              |
@@ -757,7 +757,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1364" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-250GR_33] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 250gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                 |
@@ -775,7 +775,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1451" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-251GR_34] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 251gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                 |
@@ -793,7 +793,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1591" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-350GR_35] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 350gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                  |
@@ -811,7 +811,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1648" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-351GR_36] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 351gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                  |
@@ -829,7 +829,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "2100" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-1000GR_37] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 1000gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                                                  |
@@ -847,7 +847,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "2487" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-1001GR_38] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 1001gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                                                  |
@@ -865,7 +865,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "3292" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-2000GR_39] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 2000gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                                                  |
@@ -883,7 +883,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "3889" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-20GR_40] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -901,7 +901,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1093" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-21GR_41] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 21gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -919,7 +919,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1246" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-50GR_42] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 50gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -937,7 +937,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1261" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-51GR_43] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 51gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
@@ -955,7 +955,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1410" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-100GR_44] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 100gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber               |
@@ -973,7 +973,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1437" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-101GR_45] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 101gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber              |
@@ -991,7 +991,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1828" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-250GR_46] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 250gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                 |
@@ -1009,7 +1009,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "1915" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-251GR_47] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 251gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                 |
@@ -1027,7 +1027,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "2442" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-350GR_48] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 350gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                  |
@@ -1045,7 +1045,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "2499" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-351GR_49] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 351gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                  |
@@ -1063,7 +1063,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "3561" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-1000GR_50] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 1000gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                                                  |
@@ -1081,7 +1081,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "3948" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-1001GR_51] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 1001gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                                                  |
@@ -1099,7 +1099,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
     And viene verificato il costo = "5273" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-2000GR_52] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso = 2000gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber                                                                  |
@@ -1119,7 +1119,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
 
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario Outline: [CALCOLO-COSTO_AR-50GR-F24_53] Invio notifica e verifica calcolo del costo su raccomandata con peso = 50gr e con un f24
     Given viene generata una nuova notifica
       | subject               | <SUBJECT>            |
@@ -1147,7 +1147,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
 
 
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteAR
   Scenario: [CALCOLO-COSTO_AR-50GR-F24_54] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso = 50gr e con un f24
     Given viene generata una nuova notifica
       | subject               | notifica analogica ZONA 1 |

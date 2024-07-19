@@ -3,7 +3,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
   Background:
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteRS
   Scenario Outline: [CALCOLO-COSTO_RS-20GR_1] Invio notifica e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | <SUBJECT>         |
@@ -33,7 +33,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
       | 84124 | 294   | SALERNO      | SA       | notifica analogica RECAPITISTA |
       | 80129 | 274     | NAPOLI       | NA       | notifica analogica RECAPITISTA |
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteRS
   Scenario: [CALCOLO-COSTO_RS-20GR_2] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -50,7 +50,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And viene verificato il costo = "737" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteRS
   Scenario: [CALCOLO-COSTO_RS-20GR_3] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -67,7 +67,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And viene verificato il costo = "852" della notifica
 
-  @CostoCartaceoComplete
+  @CostoCartaceoCompleteRS
   Scenario: [CALCOLO-COSTO_RS-20GR_4] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
