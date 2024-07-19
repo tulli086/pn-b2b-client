@@ -13,7 +13,7 @@ Feature: Gestione Feedback Analogici Duplicati
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
 
-  @workflowAnalogic
+  @workflowAnalogico
   Scenario: [B2B_FEEDBACK_ANALOG_2] Invio notifica Analogica - Caso avanzamento spedizione e ricezione eventi di PROGRESS
     Given viene generata una nuova notifica
       | subject               | invio notifica con cucumber |
