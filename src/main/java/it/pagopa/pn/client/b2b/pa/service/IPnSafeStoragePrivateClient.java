@@ -1,10 +1,11 @@
 package it.pagopa.pn.client.b2b.pa.service;
 
+import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 
-public interface IPnSafeStoragePrivateClient {
+public interface IPnSafeStoragePrivateClient extends SettableApiKey {
 
     FileCreationResponse createFile(FileCreationRequest fileCreationRequest) throws RestClientException;
 
