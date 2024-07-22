@@ -92,11 +92,11 @@ Feature: test preliminari indicizzazione File safeStorage
 
   Scenario: UpdateSingle ERROR - MaxValuesPerTagDocument
     Given Viene caricato un nuovo documento pdf
-    When Si modifica il documento creato secondo le seguenti operazioni
+    When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1 | SET |
       | global_multivalue:test2 | SET |
       | global_multivalue:test3 | SET |
-    And Si modifica il documento creato secondo le seguenti operazioni
+    And Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test4 | SET |
       | global_multivalue:test5 | SET |
       | global_multivalue:test6 | SET |
@@ -104,7 +104,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   Scenario: UpdateSingle ERROR - MaxTagsPerDocument
     Given Viene caricato un nuovo documento pdf
-    When Si modifica il documento creato secondo le seguenti operazioni
+    When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1 | SET |
       | global_indexed_multivalue:test2 | SET |
       | global_indexed_singlevalue:test4 | SET |
@@ -112,7 +112,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   Scenario UpdateSingle ERROR - MaxValuesPerTagPerRequest
     Given Viene caricato un nuovo documento pdf
-    When Si modifica il documento creato secondo le seguenti operazioni
+    When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2,test3,test4,test5,test6 | SET |
     Then La chiamata genera un errore con status code 400
 
