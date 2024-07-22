@@ -13,15 +13,14 @@ import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Addit
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.HttpClientErrorException;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -158,6 +157,7 @@ public class SafeStorageSteps {
 
     @Then("La chiamata genera un errore con status code {int}")
     public void checkForStatusCode(Integer statusCode) {
+        Assertions.assertNotNull(this.indicizzazioneStepsPojo.getHttpException());
         Assertions.assertEquals(this.indicizzazioneStepsPojo.getHttpException().getRawStatusCode(), statusCode);
     }
 
@@ -229,13 +229,18 @@ public class SafeStorageSteps {
     public void cleanDocuments() {
         this.indicizzazioneStepsPojo.getCreatedFiles().forEach(file -> {
 
-            log.info("PRE-CANCELLAZIONE:" + safeStorageClient.additionalFileTagsGet(file.getKey()).toString());
+            log.info("PRE-CANCELLAZIONE:");
 
             AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-            request.DELETE(safeStorageClient.additionalFileTagsGet(file.getKey()).getTags());
-            safeStorageClient.additionalFileTagsUpdate(file.getKey(), request);
+            Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(
+                file.getKey()).getTags();
+            if (!(tagMap == null) && !tagMap.isEmpty()) {
+                request.DELETE(tagMap);
+                safeStorageClient.additionalFileTagsUpdate(file.getKey(), request);
 
-            log.info("POST-CANCELLAZIONE:" + safeStorageClient.additionalFileTagsGet(file.getKey()).toString());
+                log.info(
+                    "POST-CANCELLAZIONE");
+            }
         });
     }
 }

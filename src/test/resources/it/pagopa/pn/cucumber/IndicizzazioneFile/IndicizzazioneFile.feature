@@ -104,20 +104,21 @@ Feature: test preliminari indicizzazione File safeStorage
     And Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test4,test5,test6 | SET |
     Then La chiamata genera un errore con status code 400
-    And Il messaggio di errore riporta la dicitura "Number of values for tag global_multivalue exceeds maxValues limit"
+    #And Il messaggio di errore riporta la dicitura ""
 
   Scenario: UpdateSingle ERROR - MaxTagsPerDocument
     Given Viene caricato un nuovo documento pdf
     When Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1 | SET |
-      | global_indexed_multivalue:test2 | SET |
+      | global_multivalue:test1          | SET |
+      | global_indexed_multivalue:test2  | SET |
       | global_indexed_singlevalue:test4 | SET |
     Then La chiamata genera un errore con status code 400
+    #And Il messaggio di errore riporta la dicitura ""
 
   Scenario: UpdateSingle ERROR - MaxValuesPerTagPerRequest
     Given Viene caricato un nuovo documento pdf
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2,test3,test4,test5,test6 | SET |
     Then La chiamata genera un errore con status code 400
-
+    And Il messaggio di errore riporta la dicitura "Number of values for tag global_multivalue exceeds maxValues limit"
 
