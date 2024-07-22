@@ -111,6 +111,10 @@ public class SafeStorageSteps {
                         "test", wrongApiKey, new AdditionalFileTagsUpdateRequest());
                 case "UPDATE_MASSIVE" -> this.safeStorageClient.additionalFileTagsMassiveUpdateWithHttpInfo(
                         new AdditionalFileTagsMassiveUpdateRequest());
+                case "GET_TAGS" -> this.safeStorageClient.additionalFileTagsGetWithHttpInfo(
+                        "PN_NOTIFICATION_ATTACHMENTS-eabd62ef59444526beeab293b2255ace.pdf", wrongApiKey);
+                case "SEARCH_FILE" -> this.safeStorageClient.additionalFileTagsSearchWithHttpInfo(
+                        wrongApiKey, "AND", true);
             }
         } catch (HttpClientErrorException httpExc) {
             this.indicizzazioneStepsPojo.setHttpException(httpExc);
