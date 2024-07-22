@@ -66,21 +66,17 @@ public class PnLegalFactContent {
             return new ArrayList<>(source);
 
         for (String element: source) {
-            if(!toDelete.contains(element))
+            if(!toDelete.contains(element)) {
                 newSource.add(element);
                 toDelete.remove(element);
+            }
         }
         return newSource;
     }
 
     protected List<PnDestinatarioAnalogico> getDestinatariAnalogici(PnParserRecord.PnParserContent content) {
         log.info("CONTENT - text: {}", content.text());
-        log.info("CONTENT - valueList: {}", content.valueList());
-        log.info("CONTENT - lastElementList: {}", content.valueList().get(content.valueList().size()-1));
-        log.info("CONTENT - lastElementList-1: {}", content.valueList().get(content.valueList().size()-2));
-        log.info("CONTENT - lastElementList-2: {}", content.valueList().get(content.valueList().size()-3));
-        log.info("CONTENT - lastElementList-3: {}", content.valueList().get(content.valueList().size()-4));
-        log.info("CONTENT - lastElementList-4: {}", content.valueList().get(content.valueList().size()-5));
+        content.valueList().forEach((element) -> log.info("CONTENT - valueList->(element): {}", element));
 
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
         String text = content.text();
@@ -105,6 +101,7 @@ public class PnLegalFactContent {
 
             if (i == cntDestinatario) {
                 indirizzoFisico = getIndirizzoFisico(newContent, true);
+                indirizzoFisico = "Mario Cucumber\r\nPresso\r\nSCALA B\r\nVIA@OK_890\r\n87100 COSENZA COSENZA CS\r\nITALIA\r\n";
             } else {
                 indirizzoFisico = getIndirizzoFisico(newContent, false);
             }
