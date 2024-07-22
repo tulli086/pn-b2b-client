@@ -85,4 +85,10 @@ Feature: test preliminari indicizzazione File safeStorage
       | pn-test~local_multivalue:test5   | SET    |
     Then La chiamata genera un errore con status code 400
 
+  Scenario UpdateSingle ERROR - MaxValuesPerTagDocument
+
+  Scenario UpdateSingle ERROR - MaxTagsPerDocument
+
+  Scenario UpdateSingle ERROR - MaxValuesPerTagPerRequest
+
 
