@@ -104,6 +104,16 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
         return this.additionalFileTagsApi.additionalFileTagsUpdateWithHttpInfo(fileKey, cxId, additionalFileTagsUpdateRequest);
     }
 
+    @Override
+    public AdditionalFileTagsMassiveUpdateResponse additionalFileTagsMassiveUpdate(AdditionalFileTagsMassiveUpdateRequest additionalFileTagsMassiveUpdateRequest) throws RestClientException {
+        return this.additionalFileTagsApi.additionalFileTagsMassiveUpdate(additionalFileTagsMassiveUpdateRequest);
+    }
+
+    @Override
+    public ResponseEntity<AdditionalFileTagsMassiveUpdateResponse> additionalFileTagsMassiveUpdateWithHttpInfo(AdditionalFileTagsMassiveUpdateRequest additionalFileTagsMassiveUpdateRequest) throws RestClientException {
+        return this.additionalFileTagsApi.additionalFileTagsMassiveUpdateWithHttpInfo(additionalFileTagsMassiveUpdateRequest);
+    }
+
     /**
      * Metodi ereditati da SettableApiKey
      */

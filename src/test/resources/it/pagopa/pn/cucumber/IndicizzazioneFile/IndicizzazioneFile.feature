@@ -4,11 +4,11 @@ Feature: test preliminari indicizzazione File safeStorage
     When L'utente tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
     Then La chiamata restituisce 403
     Examples:
-      | operation     |
-      | CREATE_FILE   |
-      | GET_FILE      |
-      | UPDATE_SINGLE |
-#      | UPDATE_MASSIVE    |
+      | operation      |
+      | CREATE_FILE    |
+      | GET_FILE       |
+      | UPDATE_SINGLE  |
+      | UPDATE_MASSIVE |
 #      | GET_TAGS      |
 #      | SEARCH_FILE   |
 
@@ -100,14 +100,11 @@ Feature: test preliminari indicizzazione File safeStorage
   Scenario: UpdateSingle ERROR - MaxValuesPerTagDocument
     Given Viene caricato un nuovo documento pdf
     When Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1 | SET |
-      | global_multivalue:test2 | SET |
-      | global_multivalue:test3 | SET |
+      | global_multivalue:test1,test2,test3 | SET |
     And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test4 | SET |
-      | global_multivalue:test5 | SET |
-      | global_multivalue:test6 | SET |
+      | global_multivalue:test4,test5,test6 | SET |
     Then La chiamata genera un errore con status code 400
+    And Il messaggio di errore riporta la dicitura "Number of values for tag global_multivalue exceeds maxValues limit"
 
   Scenario: UpdateSingle ERROR - MaxTagsPerDocument
     Given Viene caricato un nuovo documento pdf
@@ -117,7 +114,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_indexed_singlevalue:test4 | SET |
     Then La chiamata genera un errore con status code 400
 
-  Scenario UpdateSingle ERROR - MaxValuesPerTagPerRequest
+  Scenario: UpdateSingle ERROR - MaxValuesPerTagPerRequest
     Given Viene caricato un nuovo documento pdf
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2,test3,test4,test5,test6 | SET |
