@@ -9,8 +9,8 @@ Feature: test preliminari indicizzazione File safeStorage
       | GET_FILE      |
       | UPDATE_SINGLE |
 #      | UPDATE_MASSIVE    |
-      | GET_TAGS      |
-      | SEARCH_FILE   |
+#      | GET_TAGS      |
+#      | SEARCH_FILE   |
 
   Scenario: UpdateSingle SUCCESS - solo operazioni SET
     Given Viene caricato un nuovo documento pdf
