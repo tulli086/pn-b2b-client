@@ -1,6 +1,7 @@
 package it.pagopa.pn.cucumber.steps.microservice;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -11,15 +12,15 @@ import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Addit
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.HttpClientErrorException;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -104,7 +105,7 @@ public class SafeStorageSteps {
                 case "CREATE_FILE" -> this.safeStorageClient.createFileWithHttpInfo(
                         wrongApiKey, "", "", new FileCreationRequest());
                 case "GET_FILE" -> this.safeStorageClient.getFileWithHttpInfo(
-                        wrongApiKey, "pn-test", true, true);
+                        "test", wrongApiKey, true, true);
                 case "UPDATE_SINGLE" -> this.safeStorageClient.additionalFileTagsUpdateWithHttpInfo(
                         "test", wrongApiKey, new AdditionalFileTagsUpdateRequest());
             }
@@ -150,20 +151,33 @@ public class SafeStorageSteps {
 
     @Then("La chiamata genera un errore con status code {int}")
     public void checkForStatusCode(Integer statusCode) {
-        Assertions.assertEquals(this.indicizzazioneStepsPojo.getUpdateResponseEntity().getStatusCodeValue(), statusCode);
+        Assertions.assertEquals(this.indicizzazioneStepsPojo.getHttpException().getRawStatusCode(), statusCode);
     }
 
-    @When("Si modifica il documento creato secondo le seguenti operazioni")
-    public void updateDocument(DataTable dataTable) {
+    @And("Il messaggio di errore riporta la dicitura {string}")
+    public void checkForStatusCode(String errorMessage) {
+        Assertions.assertTrue(this.indicizzazioneStepsPojo.getHttpException().getMessage().contains(errorMessage));
+    }
+
+
+    @When("Si modifica il documento {int} secondo le seguenti operazioni")
+    public void updateDocument(Integer documentIndex, DataTable dataTable) {
         Map<String, String> data = dataTable.asMap(String.class, String.class);
 
-        String fileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(0).getKey();
+        String fileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey();
         System.out.println(fileKey);
         try {
             safeStorageClient.additionalFileTagsUpdate(fileKey, createUpdateRequest(data));
         } catch (HttpClientErrorException e) {
             log.info("Errore durante l'aggiornamento del documento: {}", e.getMessage());
             this.indicizzazioneStepsPojo.setHttpException(e);
+        }
+    }
+
+    @And("I primi {int} documenti vengono modificati secondo le sequenti operazioni")
+    public void updateNDocuments(Integer documentIndex, DataTable dataTable) {
+        for (int i = 1; i <= documentIndex; i++) {
+            updateDocument(i, dataTable);
         }
     }
 
@@ -204,12 +218,17 @@ public class SafeStorageSteps {
         return request;
     }
 
-    @AfterEach
+    @After
     public void cleanDocuments() {
         this.indicizzazioneStepsPojo.getCreatedFiles().forEach(file -> {
+
+            log.info("PRE-CANCELLAZIONE:" + safeStorageClient.additionalFileTagsGet(file.getKey()).toString());
+
             AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
             request.DELETE(safeStorageClient.additionalFileTagsGet(file.getKey()).getTags());
             safeStorageClient.additionalFileTagsUpdate(file.getKey(), request);
+
+            log.info("POST-CANCELLAZIONE:" + safeStorageClient.additionalFileTagsGet(file.getKey()).toString());
         });
     }
 }
