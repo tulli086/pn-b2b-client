@@ -78,6 +78,10 @@ public class PnLegalFactContent {
         log.info("CONTENT - text: {}", content.text());
         content.valueList().forEach((element) -> log.info("CONTENT - valueList->(element): {}", element));
 
+        int size = content.valueList().size();
+        log.info("CONTENT - DESTINATARIO 1: {}", new PnDestinatarioAnalogico(content.valueList().get(size-1), content.valueList().get(size-2), content.valueList().get(size-3), content.valueList().get(size-4), content.valueList().get(size-5)));
+        log.info("CONTENT - DESTINATARIO 2: {}", new PnDestinatarioAnalogico(content.valueList().get(size-6), content.valueList().get(size-7), content.valueList().get(size-8), content.valueList().get(size-9), content.valueList().get(size-10)));
+
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
         String text = content.text();
         String newText = new String(text);
@@ -90,8 +94,6 @@ public class PnLegalFactContent {
             List<String> currentValueList = getNewValueList(newValueList, valueToDeleteList);
             PnParserRecord.PnParserContent newContent = new PnParserRecord.PnParserContent(currentText, currentValueList);
             newValueList = new ArrayList<>(currentValueList);
-//            log.info("CONTENT - newValueList: {}", newValueList);
-//            log.info("CONTENT - currentValueList: {}", currentValueList);
 
             String nomeCognomeRagioneSociale = getNomeCognomeRagioneSociale(newContent, true);
             String codiceFiscale = getCodiceFiscale(newContent, false, true);
@@ -101,7 +103,7 @@ public class PnLegalFactContent {
 
             if (i == cntDestinatario) {
                 indirizzoFisico = getIndirizzoFisico(newContent, true);
-                indirizzoFisico = "Mario Cucumber\r\nPresso\r\nSCALA B\r\nVIA@OK_890\r\n87100 COSENZA COSENZA CS\r\nITALIA\r\n";
+                indirizzoFisico = "Mario Cucumber\r\nPresso\r\nSCALA B\r\nVIA@OK_890\r\n87100 COSENZA COSENZA CS\r\nITALIA";
             } else {
                 indirizzoFisico = getIndirizzoFisico(newContent, false);
             }

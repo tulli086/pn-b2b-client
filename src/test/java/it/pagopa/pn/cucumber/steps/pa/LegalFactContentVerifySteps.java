@@ -14,11 +14,13 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.lang.reflect.Field;
+import static it.pagopa.pn.cucumber.legalfactpdf.PnLegalFactPdfSteps.readFileToByteArray;
 
 
 @Slf4j
@@ -38,7 +40,7 @@ public class LegalFactContentVerifySteps {
     }
 
     @Then("si verifica se il legalFact è di tipo {string}")
-    public void siVerificaSeIlLegalFactEDiTipo(String legalFactType) {
+    public void siVerificaSeIlLegalFactEDiTipo(String legalFactType) throws IOException {
         this.legalFactType = legalFactType;
         byte[] source = b2bUtils.downloadFile(legalFactUrl);
         checkLegalFactType(source, legalFactType);
@@ -52,7 +54,9 @@ public class LegalFactContentVerifySteps {
 
     @Then("si verifica se il legalFact contiene i campi per il destinatario")
     public void siVerificaSeIlLegalFactContieneICampiPerIlDestinatario(DataTable dataTable) throws IOException {
-        byte[] source = b2bUtils.downloadFile(legalFactUrl);
+//        byte[] source = b2bUtils.downloadFile(legalFactUrl);
+        this.legalFactType = "LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO";
+        byte[] source = readFileToByteArray(resourceLoader.getResource(PRESA_IN_CARICO_MULTIDESTINATARIO).getFile());
         //Creation of a list of map for each dataTable pair
         List<Map<String, String>> listOfMap = dataTable
                 .asLists()
@@ -84,7 +88,10 @@ public class LegalFactContentVerifySteps {
 
     @Then("si verifica se il legalFact contiene i campi")
     public void siVerificaSeIlLegalFactContieneICampi(DataTable dataTable) throws IOException {
-        byte[] source = b2bUtils.downloadFile(legalFactUrl);
+//        byte[] source = b2bUtils.downloadFile(legalFactUrl);
+        this.legalFactType = "LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO";
+        byte[] source = readFileToByteArray(resourceLoader.getResource(PRESA_IN_CARICO_MULTIDESTINATARIO).getFile());
+
         if(IPnParserLegalFact.LegalFactType.valueOf(legalFactType).equals(IPnParserLegalFact.LegalFactType.LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO)) {
             //Creation of a list of map for each dataTable pair
             List<Map<String, String>> listOfMap = dataTable
@@ -196,4 +203,10 @@ public class LegalFactContentVerifySteps {
             Assertions.assertTrue(pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().containsAll(destinatarioAnalogicoList));
         }
     }
+
+    private static final String PRESA_IN_CARICO_MULTIDESTINATARIO = "classpath:pdfToParse/Prod/PN_LEGAL_FACTS-25b0b15a48164a558215eea67d9ba55b.pdf";
+    private static final String MANCATO_RECAPITO = "classpath:pdfToParse/Prod/PN_LEGAL_FACTS-de69fd4d1494a478d43c4914a2447ab.pdf";
+
+    @Autowired
+    private ResourceLoader resourceLoader;
 }
