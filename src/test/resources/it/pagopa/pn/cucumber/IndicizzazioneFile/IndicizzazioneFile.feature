@@ -97,10 +97,30 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Number of tags to update exceeds maxOperationsOnTags limit"
 
-#  Scenario UpdateSingle ERROR - MaxValuesPerTagDocument
-#
-#  Scenario UpdateSingle ERROR - MaxTagsPerDocument
-#
-#  Scenario UpdateSingle ERROR - MaxValuesPerTagPerRequest
+  Scenario: UpdateSingle ERROR - MaxValuesPerTagDocument
+    Given Viene caricato un nuovo documento pdf
+    When Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1 | SET |
+      | global_multivalue:test2 | SET |
+      | global_multivalue:test3 | SET |
+    And Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test4 | SET |
+      | global_multivalue:test5 | SET |
+      | global_multivalue:test6 | SET |
+    Then La chiamata genera un errore con status code 400
+
+  Scenario: UpdateSingle ERROR - MaxTagsPerDocument
+    Given Viene caricato un nuovo documento pdf
+    When Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1 | SET |
+      | global_indexed_multivalue:test2 | SET |
+      | global_indexed_singlevalue:test4 | SET |
+    Then La chiamata genera un errore con status code 400
+
+  Scenario UpdateSingle ERROR - MaxValuesPerTagPerRequest
+    Given Viene caricato un nuovo documento pdf
+    When Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1,test2,test3,test4,test5,test6 | SET |
+    Then La chiamata genera un errore con status code 400
 
 
