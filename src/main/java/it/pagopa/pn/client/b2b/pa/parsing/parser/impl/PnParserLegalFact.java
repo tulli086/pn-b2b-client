@@ -89,8 +89,7 @@ public class PnParserLegalFact extends PnLegalFactContent implements IPnParserLe
 
     @Override
     public IPnLegalFact getLegalFactNotificaPresaInCaricoMultiDestinatario(PnParserRecord.PnParserContent content) {
-        log.info("PnParserContent.text: {}", content.text());
-        log.info("PnParserContent.valueList: {}", content.valueList().toString());
+        log.info("PnParserContent: {}", content);
         return PnLegalFactNotificaPresaInCaricoMultiDestinatario.builder()
                 .title(getTitle(content))
                 .dataAttestazioneOpponibile(getDataAttestazioneOpponibile(content, false, false, true, false, false))
