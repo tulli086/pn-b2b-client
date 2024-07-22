@@ -12,6 +12,7 @@ Feature: test preliminari indicizzazione File safeStorage
 #      | GET_TAGS      |
 #      | SEARCH_FILE   |
 
+  @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni SET
     Given Viene caricato un nuovo documento pdf
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -19,6 +20,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Then Il documento è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test |
 
+  @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 1
     Given Viene caricato un nuovo documento pdf
     And Si modifica il documento 1 secondo le seguenti operazioni
@@ -28,6 +30,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Then Il documento è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test2 |
 
+  @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 2
     Given Viene caricato un nuovo documento pdf
     And Si modifica il documento 1 secondo le seguenti operazioni
@@ -38,6 +41,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Then Il documento è stato correttamente modificato con la seguente lista di tag
       | global_singlevalue:test1 |
 
+  @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 3
     Given Viene caricato un nuovo documento pdf
     And Si modifica il documento 1 secondo le seguenti operazioni
@@ -47,6 +51,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Then Il documento è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1 |
 
+  @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - operazioni SET+DELETE
     Given Viene caricato un nuovo documento pdf
     And Si modifica il documento 1 secondo le seguenti operazioni
@@ -57,7 +62,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Then Il documento è stato correttamente modificato con la seguente lista di tag
       | global_singlevalue:test |
 
-
+  @aggiuntaTag
   Scenario: UpdateSingle ERROR - Set+Delete sullo stesso tag
     Given Viene caricato un nuovo documento pdf
     And Si modifica il documento 1 secondo le seguenti operazioni
@@ -68,6 +73,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "SET and DELETE cannot contain the same tags: [global_multivalue]"
 
+  @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxFileKeys
     Given Vengono caricati 6 nuovi documenti pdf
     And I primi 5 documenti vengono modificati secondo le sequenti operazioni
@@ -77,6 +83,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
 #    And Il messaggio di errore riporta la dicitura "Number of tags to update exceeds maxOperationsOnTags limit"
 
+  @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxOperationsOnTagsPerRequest
     Given Viene caricato un nuovo documento pdf
     And Si modifica il documento 1 secondo le seguenti operazioni

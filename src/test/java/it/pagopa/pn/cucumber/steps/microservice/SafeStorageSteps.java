@@ -162,10 +162,9 @@ public class SafeStorageSteps {
 
     @When("Si modifica il documento {int} secondo le seguenti operazioni")
     public void updateDocument(Integer documentIndex, DataTable dataTable) {
+        Assertions.assertTrue(documentIndex <= this.indicizzazioneStepsPojo.getCreatedFiles().size());
         Map<String, String> data = dataTable.asMap(String.class, String.class);
-
         String fileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey();
-        System.out.println(fileKey);
         try {
             safeStorageClient.additionalFileTagsUpdate(fileKey, createUpdateRequest(data));
         } catch (HttpClientErrorException e) {
@@ -176,6 +175,7 @@ public class SafeStorageSteps {
 
     @And("I primi {int} documenti vengono modificati secondo le sequenti operazioni")
     public void updateNDocuments(Integer documentIndex, DataTable dataTable) {
+        Assertions.assertTrue(documentIndex <= this.indicizzazioneStepsPojo.getCreatedFiles().size());
         for (int i = 1; i <= documentIndex; i++) {
             updateDocument(i, dataTable);
         }
@@ -218,7 +218,7 @@ public class SafeStorageSteps {
         return request;
     }
 
-    @After
+    @After("@aggiuntaTag")
     public void cleanDocuments() {
         this.indicizzazioneStepsPojo.getCreatedFiles().forEach(file -> {
 
