@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpClientErrorException;
@@ -110,7 +111,6 @@ public class SafeStorageSteps {
         } catch (HttpClientErrorException httpExc) {
             this.indicizzazioneStepsPojo.setHttpException(httpExc);
         }
-//        safeStorageClient.setApiKey("api-key-non-autorizzata");
     }
 
     @Then("La chiamata restituisce {int}")
@@ -147,42 +147,8 @@ public class SafeStorageSteps {
 //        }
     }
 
-//    @When("lo si prova a modificare passando una request che presenta elementi con operazioni SET e DELETE sullo stesso tag")
-//    public void createRequestWithSameAndDeleteOnSameTag() {
-//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-//        request.putSETItem("TODOtag", List.of("test1", "test2", "test3"));
-//        request.putDELETEItem("TODOtag", List.of("test1", "test2", "test3"));
-//        this.updateRequest = request;
-//    }
-//
-//    @When("lo si prova a modificare associandogli nella request uno o più tag che sono già associati al numero massimo di file key consentite")
-//    public void createRequestWithMaxFileKeys() {
-//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-//        //TODO
-//        this.updateRequest = request;
-//    }
-//
-//    @When("lo si prova a modificare passando una request che contiene un numero di operazioni su uno stesso tag superiore al limite consentito")
-//    public void createRequestWithMaxOperationsOnTag() {
-//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-//        //TODO
-//        this.updateRequest = request;
-//    }
-//
-//    @When("lo si prova a modificare passando una request che contiene uno o più tag con valori associati in numero superiore al limite consentito")
-//    public void createRequestMaxValuesPerTagDocument() {
-//        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-//        //TODO
-//        this.updateRequest = request;
-//    }
-//
-//    @And("viene invocato l'update passando il suddetto bodyRequest")
-//    public void callUpdateWithRequestBody() {
-//        this.updateResponseEntity = this.safeStorageClient.additionalFileTagsUpdateWithHttpInfo(
-//                "TODOfileKey", "pn-test", updateRequest);
-//    }
 
-    @Then("la chiamata genera un errore con status code {int}")
+    @Then("La chiamata genera un errore con status code {int}")
     public void checkForStatusCode(Integer statusCode) {
         Assertions.assertEquals(this.indicizzazioneStepsPojo.getUpdateResponseEntity().getStatusCodeValue(), statusCode);
     }
@@ -193,11 +159,17 @@ public class SafeStorageSteps {
 
         String fileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(0).getKey();
         System.out.println(fileKey);
-        safeStorageClient.additionalFileTagsUpdate(fileKey, createUpdateRequest(data));
+        try {
+            safeStorageClient.additionalFileTagsUpdate(fileKey, createUpdateRequest(data));
+        } catch (HttpClientErrorException e) {
+            log.info("Errore durante l'aggiornamento del documento: {}", e.getMessage());
+            this.indicizzazioneStepsPojo.setHttpException(e);
+        }
     }
 
     @Then("Il documento è stato correttamente modificato con la seguente lista di tag")
     public void checkDocument(DataTable dataTable) {
+        Assertions.assertNotNull(dataTable);
         Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(
                 this.indicizzazioneStepsPojo.getCreatedFiles().get(0).getKey()).getTags();
         List<String> expectedTags = dataTable.asList();
@@ -230,5 +202,14 @@ public class SafeStorageSteps {
             }
         });
         return request;
+    }
+
+    @AfterEach
+    public void cleanDocuments() {
+        this.indicizzazioneStepsPojo.getCreatedFiles().forEach(file -> {
+            AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
+            request.DELETE(safeStorageClient.additionalFileTagsGet(file.getKey()).getTags());
+            safeStorageClient.additionalFileTagsUpdate(file.getKey(), request);
+        });
     }
 }
