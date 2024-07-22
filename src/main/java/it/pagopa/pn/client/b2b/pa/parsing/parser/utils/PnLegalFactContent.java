@@ -13,6 +13,7 @@ import it.pagopa.pn.client.b2b.pa.parsing.parser.IPnParserLegalFact;
 import it.pagopa.pn.client.b2b.pa.parsing.parser.impl.PnContentExtractor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -62,6 +63,7 @@ public class PnLegalFactContent {
     protected List<PnDestinatarioAnalogico> getDestinatariAnalogici(PnParserRecord.PnParserContent content) {
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
         String text = content.text();
+        List<String> referenceList = content.valueList();
         int cntDestinatario = countDuplicates(text, tokenProperty.getNomeCognomeRagioneSocialeStart1());
 
         for(int i = 1; i <= cntDestinatario; i++) {
@@ -70,8 +72,10 @@ public class PnLegalFactContent {
             String domicilioDigitale = getDomicilioDigitale(content);
             String tipologiaDomicilio = getTipologiaDomicilioDigitale(content, true, false);
             String indirizzoFisico;
+
             if (i == cntDestinatario) {
-                indirizzoFisico = getIndirizzoFisico(content, true);
+                String lastValue = referenceList.get(referenceList.size()-1);
+                indirizzoFisico = contentExtractor.cleanUp(lastValue, true);
             } else {
                 indirizzoFisico = getIndirizzoFisico(content, false);
             }
@@ -81,6 +85,11 @@ public class PnLegalFactContent {
                             domicilioDigitale,
                             contentExtractor.cleanUp(tipologiaDomicilio, true),
                             contentExtractor.cleanUp(indirizzoFisico, true)));
+            int slidingIndex = text.indexOf(indirizzoFisico) + indirizzoFisico.length();
+            text = text.substring(slidingIndex);
+            for (String element : Arrays.asList(nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipologiaDomicilio, indirizzoFisico)) {
+                referenceList.remove(element);
+            }
         }
         log.info("CONTENT - getDestinatariAnalogici: {}", pnDestinatarioAnalogicoList);
         return pnDestinatarioAnalogicoList;
@@ -264,27 +273,13 @@ public class PnLegalFactContent {
                     .tokenEnd(tokenProperty.getIndirizzoFisicoEnd1())
                     .build(), content.valueList()), true);
         } else {
-            String result = contentExtractor.cleanUp(
+            return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
                             .originalText(content.text())
                             .slidedText(content.text())
                             .tokenStart(tokenProperty.getIndirizzoFisicoStart())
-                            .tokenEnd(tokenProperty.getIndirizzoFisicoEnd3())
+                            .tokenEnd(tokenProperty.getIndirizzoFisicoEnd2())
                             .build(), content.valueList()), true);
-            log.info("CONTENT - getIndirizzoFisico.result1: {}", result);
-            if(result == null) {
-                result = contentExtractor.cleanUp(
-                        contentExtractor.getField(PnTextSlidingWindow.builder()
-                                .originalText(content.text())
-                                .slidedText(content.text())
-                                .tokenStart(tokenProperty.getIndirizzoFisicoStart())
-                                .tokenEnd(tokenProperty.getIndirizzoFisicoEnd2())
-                                .build(), content.valueList()), true);
-            }
-            log.info("CONTENT - getIndirizzoFisico.result2: {}", result);
-            log.info("CONTENT - getIndirizzoFisico.content.contains(): {}", content.text().contains(tokenProperty.getCleanupFooter()));
-            log.info("CONTENT - getIndirizzoFisico.result.contains(): {}", result.contains(tokenProperty.getCleanupFooter()));
-            return result.replace(tokenProperty.getCleanupFooter().replaceAll(tokenProperty.getRegexCarriageNewline(), " ").trim(), "");
         }
     }
 

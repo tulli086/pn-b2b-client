@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class PnContentExtractorUtils {
-
     private PnContentExtractorUtils() {}
 
     public static String getFieldByToken(PnTextSlidingWindow pnTextSlidingWindow, String value) {
@@ -179,13 +178,14 @@ public class PnContentExtractorUtils {
         log.info("PnParserContent.footer: {}", tokenProps.getCleanupFooter());
         String cleanedText = text.replaceAll(tokenProps.getCleanupFooter(), "");
         cleanedText = cleanedText.replaceAll(tokenProps.getRegexCleanupNsbp(), "");
+        cleanedText = removeHash(cleanedText);
         cleanedText = normalizeLineEndings(cleanedText);
         return cleanedText.trim();
     }
 
-    public static List<String> cleanUpList(String text, List<String> boldValueList, PnLegalFactTokenProperty tokenProps) {
+    public static List<String> cleanUpList(List<String> boldValueList, PnLegalFactTokenProperty tokenProps) {
         List<String> cleanedList = removeUselessValues(boldValueList, Arrays.asList(tokenProps.getCleanupDestinatario(), tokenProps.getCleanupDelegato()));
-        return removeHashValues(text, cleanedList, tokenProps);
+        return removeHash(cleanedList);
     }
 
     public static String normalizeLineEndings(String text) {
@@ -209,11 +209,21 @@ public class PnContentExtractorUtils {
         return cleanedList;
     }
 
-    public static List<String> removeHashValues(String text, List<String> boldValueList, PnLegalFactTokenProperty tokenProps) {
-        List<String> cleanedList = new ArrayList<>(boldValueList);
-        if(text.contains(tokenProps.getHashStart())) {
-            cleanedList.removeIf(value -> isValueBetweenTokens(text, value, tokenProps.getHashStart(), tokenProps.getHashEnd()));
-        }
+    public static String removeHash(String text) {
+        // Regex per trovare stringhe di 64 o 128 caratteri
+        String regex = "\\b[a-fA-F0-9]{64}\\b|\\b[a-fA-F0-9]{128}\\b";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        // Sostituisce tutte le occorrenze che corrispondono alla regex con una stringa vuota
+       return matcher.replaceAll("");
+    }
+
+    public static List<String> removeHash(List<String> valueList) {
+        List<String> cleanedList = new ArrayList<>(valueList);
+        // Regex per trovare stringhe di 64 o 128 caratteri
+        String regex = "\\b[a-fA-F0-9]{64}\\b|\\b[a-fA-F0-9]{128}\\b";
+        // Rimuove gli elementi dalla lista che corrispondono alla regex
+        cleanedList.removeIf(hash -> hash.matches(regex));
         return cleanedList;
     }
 

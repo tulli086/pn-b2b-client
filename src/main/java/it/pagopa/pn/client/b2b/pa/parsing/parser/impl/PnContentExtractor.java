@@ -54,7 +54,7 @@ public class PnContentExtractor implements IPnContentExtractor {
     @Override
     public PnParserRecord.PnParserContent getContent(String text, List<String> valuesList, IPnParserLegalFact.LegalFactType legalFactType) {
         String cleanedText = cleanUpText(text, pnLegalFactTokens.getTokenProps());
-        List<String> cleanedList = cleanUpList(cleanedText, valuesList, pnLegalFactTokens.getTokenProps());
+        List<String> cleanedList = cleanUpList(valuesList, pnLegalFactTokens.getTokenProps());
         return new PnParserRecord.PnParserContent(cleanedText, composeBrokenValue(cleanedText, cleanedList, legalFactType));
     }
 
