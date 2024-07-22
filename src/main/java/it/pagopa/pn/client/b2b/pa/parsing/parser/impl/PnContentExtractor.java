@@ -105,6 +105,7 @@ public class PnContentExtractor implements IPnContentExtractor {
             }
             pnTextSlidingWindow.slideWindow(value);
         }
+        log.info("CONTENT - composedList: {}", composeList);
         return composeList;
     }
 

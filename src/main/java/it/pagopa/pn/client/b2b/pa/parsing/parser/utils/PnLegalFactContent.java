@@ -76,6 +76,12 @@ public class PnLegalFactContent {
     protected List<PnDestinatarioAnalogico> getDestinatariAnalogici(PnParserRecord.PnParserContent content) {
         log.info("CONTENT - text: {}", content.text());
         log.info("CONTENT - valueList: {}", content.valueList());
+        log.info("CONTENT - lastElementList: {}", content.valueList().get(content.valueList().size()-1));
+        log.info("CONTENT - lastElementList-1: {}", content.valueList().get(content.valueList().size()-2));
+        log.info("CONTENT - lastElementList-2: {}", content.valueList().get(content.valueList().size()-3));
+        log.info("CONTENT - lastElementList-3: {}", content.valueList().get(content.valueList().size()-4));
+        log.info("CONTENT - lastElementList-4: {}", content.valueList().get(content.valueList().size()-5));
+
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
         String text = content.text();
         String newText = new String(text);
@@ -88,8 +94,8 @@ public class PnLegalFactContent {
             List<String> currentValueList = getNewValueList(newValueList, valueToDeleteList);
             PnParserRecord.PnParserContent newContent = new PnParserRecord.PnParserContent(currentText, currentValueList);
             newValueList = new ArrayList<>(currentValueList);
-            log.info("CONTENT - newValueList: {}", newValueList);
-            log.info("CONTENT - currentValueList: {}", currentValueList);
+//            log.info("CONTENT - newValueList: {}", newValueList);
+//            log.info("CONTENT - currentValueList: {}", currentValueList);
 
             String nomeCognomeRagioneSociale = getNomeCognomeRagioneSociale(newContent, true);
             String codiceFiscale = getCodiceFiscale(newContent, false, true);
