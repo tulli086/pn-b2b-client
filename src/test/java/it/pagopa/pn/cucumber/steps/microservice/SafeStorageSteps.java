@@ -11,15 +11,14 @@ import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Addit
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.HttpClientErrorException;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -202,12 +201,15 @@ public class SafeStorageSteps {
         Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(
                 this.indicizzazioneStepsPojo.getCreatedFiles().get(0).getKey()).getTags();
         List<String> expectedTags = dataTable.asList();
+
+        assert tagMap != null;
+        Assertions.assertEquals(expectedTags.size(), tagMap.size());
+
         expectedTags.forEach(tag -> {
             String[] splittedTags = tag.split(":");
             String tagName = splittedTags[0];
             List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
 
-            assert tagMap != null;
             Assertions.assertTrue(tagMap.containsKey(tagName));
             Assertions.assertEquals(tagValues, tagMap.get(tagName));
         });

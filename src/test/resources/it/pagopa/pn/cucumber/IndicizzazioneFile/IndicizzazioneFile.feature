@@ -19,6 +19,41 @@ Feature: test preliminari indicizzazione File safeStorage
     Then Il documento è stato correttamente modificato con la seguente lista di tag
       | global_indexed_multivalue:test |
 
+  Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 1
+    Given Viene caricato un nuovo documento pdf
+    And Si modifica il documento creato secondo le seguenti operazioni
+      | global_indexed_multivalue:test1,test2 | SET |
+    When Si modifica il documento creato secondo le seguenti operazioni
+      | global_indexed_multivalue:test1 | DELETE |
+    Then Il documento è stato correttamente modificato con la seguente lista di tag
+      | global_indexed_multivalue:test2 |
+
+  Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 2
+    Given Viene caricato un nuovo documento pdf
+    And Si modifica il documento creato secondo le seguenti operazioni
+      | global_indexed_multivalue:test1 | SET |
+    When Si modifica il documento creato secondo le seguenti operazioni
+      | global_indexed_multivalue:test1 | DELETE |
+    Then Il documento è stato correttamente modificato con la seguente lista di tag
+
+  Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 3
+    Given Viene caricato un nuovo documento pdf
+    And Si modifica il documento creato secondo le seguenti operazioni
+      | global_indexed_multivalue:test1 | SET |
+    When Si modifica il documento creato secondo le seguenti operazioni
+      | global_indexed_multivalue:test2 | DELETE |
+    Then Il documento è stato correttamente modificato con la seguente lista di tag
+      | global_indexed_multivalue:test1 |
+
+  Scenario: UpdateSingle SUCCESS - operazioni SET+DELETE
+    Given Viene caricato un nuovo documento pdf
+    When Si modifica il documento creato secondo le seguenti operazioni
+      | global_indexed_multivalue:test | SET |
+    Then Il documento è stato correttamente modificato con la seguente lista di tag
+      | global_indexed_multivalue:test  | DELETE |
+      | global_indexed_singlevalue:test | DELETE |
+
+
   #Scenario: UpdateSingle ERROR - Set+Delete sullo stesso tag
   #  Given Viene caricato un nuovo documento pdf
   #  When lo si prova a modificare passando una request che presenta elementi con operazioni SET e DELETE sullo stesso tag
