@@ -787,7 +787,8 @@ public class RaddAltSteps {
         IntStream.range(0, maxPrintRequest).forEach(i -> {
             lOperatoreScansioneIlQrCodePerRecuperariGliAtti();
             laScansioneSiConcludeCorrettamenteAlternative();
-            vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeDallOperatoreRADD("");
+            vengonoCaricatiIDocumentoDiIdentitaDelCittadino();
+            //vengonoCaricatiIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeDallOperatoreRADD("STANDARD");
             vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAAR();
             lOperazioneDiDownloadDegliAttiSiConcludeCorrettamente();
             vieneConclusaLaVisualizzatiDiAttiEdAttestazioniDellaNotifica();

@@ -1,5 +1,6 @@
 Feature: Radd Alternative Anagrafica Sportelli
 
+  # [ADEG-RADD-VAL-FIELD-1]
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_1] caricamento CSV con 2 sportelli
     When viene cambiato raddista con "issuer_2"
@@ -8,56 +9,56 @@ Feature: Radd Alternative Anagrafica Sportelli
       | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | 01/5410951       | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
       | vai posto2       | 30023            | VE                    | CONCORDIA SAGITTARIA | ITALIA               | test sportelli   | 01/5245951       | 11.0000                     | 32.1245                      | lun=9:00-10:00#  | now                 | +10g              | 22            | testRadd          |
     Then viene controllato lo stato di caricamento del csv a "DONE"
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
 
 
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_2] caricamento 2 volte stesso checksum del CSV
     When viene cambiato raddista con "issuer_2"
     Then viene caricato il csv 2 volte con dati:
-      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
-      | via posto        | 30020            | VE                    | PONTE CREPALDO    | ITALIA               |
-      | vai posto2       | 30020            | VE                    | PORTEGRANDI       | ITALIA               |
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_description | radd_phoneNumber |
+      | via posto        | 30020            | VE                    | PONTE CREPALDO    | ITALIA               | test sportelli   | 01/5410951       |
+      | vai posto2       | 30020            | VE                    | PORTEGRANDI       | ITALIA               | test sportelli   | 01/5245951       |
     And l'operazione ha prodotto un errore con status code "409"
     Then viene controllato lo stato di caricamento del csv a "DONE"
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
 
 
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_3] caricamento 2 CSV con il primo CSV con un record in stato PENDING
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
-      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
-      | via posto        | 74022            | TA                    | FRAGAGNANO        | ITALIA               |
-      | vai posto2       | 74025            | TA                    | MARINA DI GINOSA  | ITALIA               |
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_description | radd_phoneNumber |
+      | via posto        | 74022            | TA                    | FRAGAGNANO        | ITALIA               | test sportelli   | 01/5410951       |
+      | vai posto2       | 74025            | TA                    | MARINA DI GINOSA  | ITALIA               | test sportelli   | 01/5245951       |
     Then viene controllato lo stato di caricamento del csv a "PENDING"
     Then viene caricato il csv con formatto "corretto" con restituzione errore con dati:
-      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
-      | via posto3       | 74022            | TA                    | FRAGAGNANO        | ITALIA               |
-      | vai posto4       | 74025            | TA                    | MARINA DI GINOSA  | ITALIA               |
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_description | radd_phoneNumber |
+      | via posto3       | 74022            | TA                    | FRAGAGNANO        | ITALIA               | test sportelli   | 01/5410951       |
+      | vai posto4       | 74025            | TA                    | MARINA DI GINOSA  | ITALIA               | test sportelli   | 01/5245951       |
     And l'operazione ha prodotto un errore con status code "400"
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
 
 
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_1] caricamento CSV verifica stato PENDING
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
-      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
-      | via posto        | 75010            | MT                    | ALIANO            | ITALIA               |
-      | vai posto2       | 75010            | MT                    | CALCIANO          | ITALIA               |
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_description | radd_phoneNumber |
+      | via posto        | 75010            | MT                    | ALIANO            | ITALIA               | test sportelli   | 01/5245951       |
+      | vai posto2       | 75010            | MT                    | CALCIANO          | ITALIA               | test sportelli   | 01/5410951       |
     Then viene controllato lo stato di caricamento del csv a "PENDING"
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
 
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato DONE
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
-      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
-      | via posto        | 75010            | MT                    | CIRIGLIANO        | ITALIA               |
-      | vai posto2       | 75010            | MT                    | CRACO             | ITALIA               |
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_description | radd_phoneNumber |
+      | via posto        | 75010            | MT                    | CIRIGLIANO        | ITALIA               | test sportelli   | 01/5410951       |
+      | vai posto2       | 75010            | MT                    | CRACO             | ITALIA               | test sportelli   | 01/5245951       |
     Then viene controllato lo stato di caricamento del csv a "DONE"
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
 
 
   @raddAnagrafica @raddAlternativeCsv
@@ -68,18 +69,18 @@ Feature: Radd Alternative Anagrafica Sportelli
       | via posto        | 75010            | MT                    | GARAGUSO          | ITALIA               |
       | vai posto2       | 75010            | MT                    | GORGOGLIONE       | ITALIA               |
     Then viene controllato lo stato di caricamento del csv a "DONE"
-    Then si controlla che il sporetello sia in stato "REJECTED"
+    Then si controlla che il sportello sia in stato "REJECTED"
 
 
   @raddAnagrafica @raddAlternativeCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_4] caricamento CSV con campi a null dove c'è obbligatorietà verifica stato a REJECTED
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
-      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_geoLocation_latitudine | radd_geoLocation_longitudine |
-      | NULL             | NULL             | NULL                  | NULL              | NULL                 | NULL                        | 45.0000                      |
-      | NULL             | NULL             | NULL                  | NULL              | NULL                 | 42.0000                     | NULL                         |
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_description | radd_phoneNumber |
+      | NULL             | NULL             | NULL                  | NULL              | NULL                 | NULL                        | 45.0000                      |  test sportelli  | 01/5245951       |
+      | NULL             | NULL             | NULL                  | NULL              | NULL                 | 42.0000                     | NULL                         |  test sportelli  | 01/5410951       |
     Then viene controllato lo stato di caricamento del csv a "DONE"
-    Then si controlla che il sporetello sia in stato "REJECTED"
+    Then si controlla che il sportello sia in stato "REJECTED"
 
 
   @raddAnagrafica @raddAlternativeCsv
@@ -90,8 +91,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠŞŤŹŽż            | ĄŁĽŚŠŞŤŹŽż        | ĄŁĽŚAFŠŞŤŹŽż         | ĄŁĽŚFAŠŞŤŹŽż     | ĄŁĽŚŠŞAFŤŹŽż     | ĄŁĽŚŠŞAFSŤŹŽż               | ĄŁĽŚŠŞŤŹŽż                   | ĄŁĽŚŠŞŤŹŽż       | formato errato      | formato errato    | ĄŁĽŚŠŞŤŹŽż    | ĄŁĽŚŠŞŤŹŽż        |
       | ĄŁ43ŞŤŹŽż        | ĄŁ43ŞŤŹŽż        | ĄŁĽŚWERŹŽż            | 53teŞŤŹŽż         | ĄŁĽFAŚŠŞŤŹŽż         | ĄŁĽŚŠŞŤFŹŽż      | ĄŁĽŚŠŞŤŹŽż       | ĄŁĽŚŠAŞŤŹŽż                 | ĄŁĽŚŠŞŤŹŽż                   | ĄŁĽŚŠŞŤŹŽż       | formato errato      | formato errato    | ĄŁĽŚŠŞŤŹŽż    | ĄŁĽŚŠŞŤŹŽż        |
     Then viene controllato lo stato di caricamento del csv a "DONE"
-    Then si controlla che il sporetello sia in stato "REJECTED"
-
+    Then si controlla che il sportello sia in stato "REJECTED"
 
   @raddAnagrafica
   Scenario Outline: [RADD_ANAGRAFICA_CSV_STATO_6] caricamento CSV verifica stato con requestId non esistente
@@ -105,6 +105,47 @@ Feature: Radd Alternative Anagrafica Sportelli
 
 
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
+  Scenario Outline: [ADEG-RADD-VAL-FIELD-2] caricamento CSV contiene solo il campo description o il campo telefono vuoto
+    When viene cambiato raddista con "issuer_2"
+    When viene caricato il csv con dati:
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber  | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
+      | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | RADD_DESCRIPTION | RADD_PHONE_NUMBER | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
+    Then viene controllato lo stato di caricamento del csv a "DONE"
+    Then si controlla che il sportello sia in stato "REJECTED" con il messaggio "messaggio di errore specifico"
+    #Then si controlla che lo sportello abbia ricevuto i seguenti stati con i seguenti messaggi:
+    #| REJECTED | "Il campo telefono è obbligatorio"       |
+    #| REJECTED | "Il campo descrizione è obbligatorio"    |
+    #| ACCEPETD | null                                     |
+    Examples:
+      | RADD_DESCRIPTION | RADD_PHONE_NUMBER |
+      | null             | 01/5410951        |
+      | test sportelli   | null              |
+    #controllare il messaggio specifico dal requestId
+
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
+  Scenario: [ADEG-RADD-VAL-FIELD-2] caricamento CSV contiene solo il campo telefono compilato erroneamente
+    When viene cambiato raddista con "issuer_2"
+    When viene caricato il csv con dati:
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber  | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
+      | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | ĄŁĽŚŠŞŤŹŽż        | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
+    Then viene controllato lo stato di caricamento del csv a "DONE"
+    Then si controlla che il sportello sia in stato "REJECTED" con il messaggio "Il campo telefono non rispetta il formato definito"
+    #controllare il messaggio specifico dal requestId
+
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
+  Scenario: [ADEG-RADD-VAL-FIELD-3] caricamento CSV con uno sportello con campi telefono e descrizione vuoti, uno sportello con telefono compilato correttamente e uno sportello compilato correttamente
+    When viene cambiato raddista con "issuer_2"
+    When viene caricato il csv con dati:
+      | address_radd_row | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber  | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
+      | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | NULL             | NULL              | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
+      | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | ĄŁĽŚŠŞŤŹŽż        | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
+      | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | 01/5410951        | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
+    Then viene controllato lo stato di caricamento del csv a "DONE"
+    #creare metodo che controlla per ogni singola riga per ogni singolo sportello l errore specifico
+    Then si controlla che il sportello sia in stato "REJECTED"
+    #controllare il messaggio specifico dal requestId
+
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_LISTA_1] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
@@ -115,7 +156,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene richiesta la lista degli sportelli caricati dal csv:
       | radd_requestId    | corretto |
       | radd_filter_limit | 10       |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
 
 
   @raddAnagrafica
@@ -131,7 +172,6 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_requestId    | NULL |
       | radd_filter_limit | 10   |
     Then l'operazione ha prodotto un errore con status code "400"
-
 
 
   @raddAnagrafica @puliziaSportelli
@@ -151,7 +191,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_end_validity            | +10g            |
       | radd_externalCode            | testRadd        |
       | radd_capacity                | 100             |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
 
 
   @raddAnagrafica
@@ -227,7 +267,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY           |
       | radd_start_validity   | now             |
       | radd_end_validity     | NULL            |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -252,7 +292,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY       |
       | radd_start_validity   | +10g        |
       | radd_end_validity     | NULL        |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -279,7 +319,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_description      | descrizione    |
       | radd_phoneNumber      | +39 2445356789 |
       | radd_openingTime      | tue=1:00-2:00# |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene modificato uno sportello Radd con dati:
       | radd_description | descrizione modificata |
       | radd_openingTime | tue=10:00-20:00#       |
@@ -297,7 +337,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_description      | descrizione      |
       | radd_phoneNumber      | +39 2445356789   |
       | radd_openingTime      | tue=1:00-2:00#   |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene modificato uno sportello Radd con dati:
       | radd_description | NULL |
       | radd_openingTime | NULL |
@@ -315,7 +355,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_description      | descrizione    |
       | radd_phoneNumber      | +39 2445356789 |
       | radd_openingTime      | tue=1:00-2:00# |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene modificato uno sportello Radd con dati errati:
       | radd_openingTime | !!"$%&/ASgSG(£%%£%'?^\s# |
       | radd_phoneNumber | !!"$%&/(AGSS£%%£%'?^\s#  |
@@ -345,7 +385,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_description      | descrizione    |
       | radd_phoneNumber      | +39 2445356789 |
       | radd_openingTime      | tue=1:00-2:00# |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene modificato uno sportello Radd con dati errati:
       | radd_registryId | corretto      |
       | radd_uid        | AJFSAJFOSIJFO |
@@ -369,7 +409,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_description      | descrizione         |
       | radd_phoneNumber      | +39 012643742556789 |
       | radd_openingTime      | mon=10:00-13:00#    |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     And viene cambiato raddista con "issuer_2"
     Then viene modificato uno sportello Radd con dati errati:
       | radd_description | descrizione modificata |
@@ -387,7 +427,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_city     | MELITO DI NAPOLI |
       | address_radd_country  | ITALY            |
       | radd_start_validity   | now              |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene cancellato uno sportello Radd con dati:
       | radd_end_validity | now |
 
@@ -402,7 +442,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY             |
       | radd_start_validity   | now               |
       | radd_end_validity     | +10g              |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene cancellato uno sportello Radd con dati:
       | radd_end_validity | -10g |
 
@@ -417,7 +457,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_country  | ITALY     |
       | radd_start_validity   | now       |
       | radd_end_validity     | +1g       |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     And viene cancellato uno sportello Radd con dati:
       | radd_end_validity | +10g |
     Given viene generata una nuova notifica
@@ -442,7 +482,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NA         |
       | address_radd_city     | CASAVATORE |
       | address_radd_country  | ITALY      |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_registryId | 0_CHAR |
     And l'operazione ha prodotto un errore con status code "400"
@@ -455,7 +495,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NA         |
       | address_radd_city     | CASAVATORE |
       | address_radd_country  | ITALY      |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | <endValidity> |
       | radd_registryId   | <registryId>  |
@@ -476,7 +516,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NA        |
       | address_radd_city     | CRISPANO  |
       | address_radd_country  | ITALY     |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene cambiato raddista con "issuer_2"
     Then viene cancellato uno sportello Radd con dati errati:
       | radd_end_validity | now |
@@ -493,7 +533,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_city     | FRATTAMINORE |
       | address_radd_country  | ITALY        |
       | radd_externalCode     | testRadd     |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene richiesta la lista degli sportelli con dati:
       | radd_filter_limit     | 10           |
       | radd_filter_lastKey   | NULL         |
@@ -512,7 +552,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_province | NA        |
       | address_radd_city     | CRISPANO  |
       | address_radd_country  | ITALY     |
-    Then si controlla che il sporetello sia in stato "ACCEPTED"
+    Then si controlla che il sportello sia in stato "ACCEPTED"
     Then viene richiesta la lista degli sportelli con dati:
       | radd_filter_limit     | NULL     |
       | radd_filter_lastKey   | NULL     |
