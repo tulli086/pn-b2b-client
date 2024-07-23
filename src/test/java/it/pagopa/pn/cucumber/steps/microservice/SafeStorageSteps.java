@@ -8,17 +8,24 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Tags;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -66,6 +73,28 @@ public class SafeStorageSteps {
     @Given("Viene caricato un nuovo documento pdf")
     public void uploadNewPdfDocument() {
         uploadNewDocumentWithDocumentType("PDF");
+    }
+
+    @Given("Viene caricato un nuovo documento {string} con tag associati")
+    public void uploadNewDocumentWithTags(String fileType, List<String> tagList) {
+        String resourcePath = getFileByType(fileType.toUpperCase());
+        String sha256 = computeSha(resourcePath);
+
+        FileCreationRequest request = new FileCreationRequest();
+        request.setContentType("application/pdf");
+        request.setStatus("SAVED");
+        request.setDocumentType("PN_NOTIFICATION_ATTACHMENTS");
+        request.setTags(tagList.stream().collect(Collectors.toMap(
+            tag -> tag.split(":")[0], tag -> Arrays.asList(tag.split(":")[1].split(",")))));
+
+        try {
+            FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(sha256,
+                "SHA256", request);
+
+            loadToPresignedUrl(fileCreationResponse, sha256, resourcePath);
+        } catch (HttpClientErrorException httpExc) {
+            this.indicizzazioneStepsPojo.setHttpException(httpExc);
+        }
     }
 
     @Given("Viene caricato un nuovo documento {string}")
@@ -235,6 +264,28 @@ public class SafeStorageSteps {
                 Assertions.assertNotEquals(tagValues, tagMap.get(tagName));
             }
         });
+    }
+
+    @Then("Il documento {int} è correttamente formato con la seguente lista di tag")
+    public void getAndCheckFile(Integer documentIndex, List<String> expectedTags) {
+
+        Map<String, List<String>> tagMap = safeStorageClient.getFile(
+            this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey(), false,
+            true).getTags();
+
+        assert tagMap != null;
+        Assertions.assertEquals(expectedTags.size(), tagMap.size());
+
+        expectedTags.forEach(tag -> {
+            String[] splittedTags = tag.split(":");
+            String tagName = splittedTags[0];
+            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+
+            Assertions.assertTrue(tagMap.containsKey(tagName));
+            Assertions.assertEquals(tagValues.size(), tagMap.get(tagName).size());
+            tagValues.forEach(t -> Assertions.assertTrue(tagMap.get(tagName).contains(t)));
+        });
+
     }
 
     private AdditionalFileTagsUpdateRequest createUpdateRequest(Map<String, String> specificationsMap) {
