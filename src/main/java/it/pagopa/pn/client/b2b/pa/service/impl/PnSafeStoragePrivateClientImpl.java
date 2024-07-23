@@ -106,12 +106,12 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
 
     @Override
     public AdditionalFileTagsMassiveUpdateResponse additionalFileTagsMassiveUpdate(AdditionalFileTagsMassiveUpdateRequest additionalFileTagsMassiveUpdateRequest) throws RestClientException {
-        return this.additionalFileTagsApi.additionalFileTagsMassiveUpdate(additionalFileTagsMassiveUpdateRequest);
+        return this.additionalFileTagsApi.additionalFileTagsMassiveUpdate(clientIdSafeStorage, additionalFileTagsMassiveUpdateRequest);
     }
 
     @Override
-    public ResponseEntity<AdditionalFileTagsMassiveUpdateResponse> additionalFileTagsMassiveUpdateWithHttpInfo(AdditionalFileTagsMassiveUpdateRequest additionalFileTagsMassiveUpdateRequest) throws RestClientException {
-        return this.additionalFileTagsApi.additionalFileTagsMassiveUpdateWithHttpInfo(additionalFileTagsMassiveUpdateRequest);
+    public ResponseEntity<AdditionalFileTagsMassiveUpdateResponse> additionalFileTagsMassiveUpdateWithHttpInfo(String cxId, AdditionalFileTagsMassiveUpdateRequest additionalFileTagsMassiveUpdateRequest) throws RestClientException {
+        return this.additionalFileTagsApi.additionalFileTagsMassiveUpdateWithHttpInfo(cxId, additionalFileTagsMassiveUpdateRequest);
     }
 
     /**

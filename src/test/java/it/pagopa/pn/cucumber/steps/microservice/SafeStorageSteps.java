@@ -109,7 +109,7 @@ public class SafeStorageSteps {
                         "test", wrongApiKey, true, true);
                 case "UPDATE_SINGLE" -> this.safeStorageClient.additionalFileTagsUpdateWithHttpInfo(
                         "test", wrongApiKey, new AdditionalFileTagsUpdateRequest());
-                case "UPDATE_MASSIVE" -> this.safeStorageClient.additionalFileTagsMassiveUpdateWithHttpInfo(
+                case "UPDATE_MASSIVE" -> this.safeStorageClient.additionalFileTagsMassiveUpdateWithHttpInfo(wrongApiKey,
                         new AdditionalFileTagsMassiveUpdateRequest());
                 case "GET_TAGS" -> this.safeStorageClient.additionalFileTagsGetWithHttpInfo(
                         "PN_NOTIFICATION_ATTACHMENTS-eabd62ef59444526beeab293b2255ace.pdf", wrongApiKey);
