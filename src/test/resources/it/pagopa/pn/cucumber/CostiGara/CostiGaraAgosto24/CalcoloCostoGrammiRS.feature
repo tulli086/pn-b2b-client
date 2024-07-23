@@ -23,15 +23,15 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
     Examples:
       | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
       | 60010 | 402   | OSTRA        | AN       | notifica analogica FSU         |
-      | 04100 | 340   | LE FERRIERE  | LT       | notifica analogica RECAPITISTA |
-      | 00123 | 313   | ROMA         | RM       | notifica analogica RECAPITISTA |
+      | 04100 | 341   | LE FERRIERE  | LT       | notifica analogica RECAPITISTA |
+      | 00123 | 314   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 00018 | 402   | CRETONE      | RM       | notifica analogica RECAPITISTA |
       | 70124 | 274   | BARI         | BA       | notifica analogica RECAPITISTA |
       | 60012 | 344   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
-      | 60126 | 294   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 60126 | 295   | ANCONA       | AN       | notifica analogica RECAPITISTA |
       | 80022 | 344   | ARZANO       | NA       | notifica analogica RECAPITISTA |
-      | 84124 | 294   | SALERNO      | SA       | notifica analogica RECAPITISTA |
-      | 80129 | 274     | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 84124 | 295   | SALERNO      | SA       | notifica analogica RECAPITISTA |
+      | 80129 | 274   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
 
   @costoAnalogicoAgosto24
   Scenario: [CALCOLO-COSTO_RS-20GR_2] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso <= 20gr
