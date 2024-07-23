@@ -2,7 +2,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   Scenario Outline: FAILED AUTHORIZATION
     When L'utente tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
-    Then La chiamata restituisce 403
+    Then La chiamata genera un errore con status code 403
     Examples:
       | operation      |
       | CREATE_FILE    |
@@ -81,7 +81,7 @@ Feature: test preliminari indicizzazione File safeStorage
     When Si modifica il documento 6 secondo le seguenti operazioni
       | global_indexed_multivalue:test | SET |
     Then La chiamata genera un errore con status code 400
-#    And Il messaggio di errore riporta la dicitura "Number of tags to update exceeds maxOperationsOnTags limit"
+#    And Il messaggio di errore riporta la dicitura "TODO"
 
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxOperationsOnTagsPerRequest
@@ -97,6 +97,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Number of tags to update exceeds maxOperationsOnTags limit"
 
+  @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxValuesPerTagDocument
     Given Viene caricato un nuovo documento pdf
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -104,17 +105,19 @@ Feature: test preliminari indicizzazione File safeStorage
     And Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test4,test5,test6 | SET |
     Then La chiamata genera un errore con status code 400
-    #And Il messaggio di errore riporta la dicitura ""
+    #And Il messaggio di errore riporta la dicitura "TODO"
 
+  @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxTagsPerDocument
     Given Viene caricato un nuovo documento pdf
     When Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1          | SET |
-      | global_indexed_multivalue:test2  | SET |
-      | global_indexed_singlevalue:test4 | SET |
+      | global_multivalue:test1        | SET |
+      | global_singlevalue:test1       | SET |
+      | pn-test~local_multivalue:test1 | SET |
     Then La chiamata genera un errore con status code 400
     #And Il messaggio di errore riporta la dicitura ""
 
+  @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxValuesPerTagPerRequest
     Given Viene caricato un nuovo documento pdf
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -122,3 +125,26 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Number of values for tag global_multivalue exceeds maxValues limit"
 
+#  Scenario: Search ERROR - MaxMapValuesForSearch
+#    Given Viene caricato un nuovo documento pdf
+#    And Si modifica il documento 1 secondo le seguenti operazioni
+#      | global_multivalue:test1,test2,test3,test4,test5 | SET |
+#    When Si effettua una ricerca passando 6 filtri di ricerca
+#    Then La chiamata genera un errore con status code 400
+#    And Il messaggio di errore riporta la dicitura "TODO"
+
+  @aggiuntaTag
+  Scenario: GetTags SUCCESS
+    Given Viene caricato un nuovo documento pdf
+    When Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1,test2,test3 | SET |
+      | global_singlevalue:test1            | SET |
+    Then Il documento è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1,test2,test3 |
+      | global_singlevalue:test1            |
+
+#    Todo otteniamo 500
+  Scenario: GetTags SUCCESS Empty Result
+    Given Viene caricato un nuovo documento pdf
+    Then Il documento è stato correttamente modificato con la seguente lista di tag
+      | null |

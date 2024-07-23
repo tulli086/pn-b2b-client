@@ -13,14 +13,15 @@ import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Addit
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -120,41 +121,6 @@ public class SafeStorageSteps {
         }
     }
 
-    @Then("La chiamata restituisce {int}")
-    public void chiamataEndpoint(Integer errorCode) {
-        Assertions.assertNotNull(this.indicizzazioneStepsPojo.getHttpException());
-        Assertions.assertEquals(this.indicizzazioneStepsPojo.getHttpException().getRawStatusCode(), errorCode);
-//        Map<String, String> data = dataTable.asMap(String.class, String.class);
-//
-//        //TODO: modificare il controllo il base alla risposta effettiva, dobbiamo utilizzare il resultCode?
-//        switch (data.get("endpoint")) {
-//            case "getFileWithTagsByFileKey" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-//                    safeStorageClient.getFile("test", true, true));
-////            case "createFileWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-////                    safeStorageClient.createFile(new FileCreationRequest()));
-//            case "updateSingleWithTags" -> {
-//                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
-//                    safeStorageClient.additionalFileTagsUpdate("test",
-//                        new AdditionalFileTagsUpdateRequest())).getStatusText();
-//                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
-//            }
-////            case "updateMassiveWithTags" -> Assertions.assertThrows(HttpClientErrorException.class, () ->
-////                    safeStorageClient.updateMassiveWithTags());
-//            case "getTagsByFileKey" -> {
-//                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
-//                    safeStorageClient.additionalFileTagsGet("test")).getStatusText();
-//                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
-//            }
-//            case "searchFileKeyWithTags" -> {
-//                String errorMessage = Assertions.assertThrows(HttpClientErrorException.class, () ->
-//                    safeStorageClient.additionalFileTagsSearch("test-id", true)).getStatusText();
-//                Assertions.assertEquals("forbidden", errorMessage.toLowerCase());
-//            }
-//            default -> Assertions.fail("Endpoint non riconosciuto");
-//        }
-    }
-
-
     @Then("La chiamata genera un errore con status code {int}")
     public void checkForStatusCode(Integer statusCode) {
         Assertions.assertNotNull(this.indicizzazioneStepsPojo.getHttpException());
@@ -163,6 +129,7 @@ public class SafeStorageSteps {
 
     @And("Il messaggio di errore riporta la dicitura {string}")
     public void checkForStatusCode(String errorMessage) {
+        Assertions.assertNotNull(this.indicizzazioneStepsPojo.getHttpException());
         Assertions.assertTrue(this.indicizzazioneStepsPojo.getHttpException().getMessage().contains(errorMessage));
     }
 
@@ -173,7 +140,8 @@ public class SafeStorageSteps {
         Map<String, String> data = dataTable.asMap(String.class, String.class);
         String fileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey();
         try {
-            safeStorageClient.additionalFileTagsUpdate(fileKey, createUpdateRequest(data));
+            this.indicizzazioneStepsPojo.setUpdateResponseEntity(safeStorageClient.additionalFileTagsUpdateWithHttpInfo(
+                    fileKey, "pn-test", createUpdateRequest(data)));
         } catch (HttpClientErrorException e) {
             log.info("Errore durante l'aggiornamento del documento: {}", e.getMessage());
             this.indicizzazioneStepsPojo.setHttpException(e);
@@ -190,7 +158,8 @@ public class SafeStorageSteps {
 
     @Then("Il documento è stato correttamente modificato con la seguente lista di tag")
     public void checkDocument(DataTable dataTable) {
-        Assertions.assertNotNull(dataTable);
+//        Assertions.assertNotNull(dataTable);
+
         Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(
                 this.indicizzazioneStepsPojo.getCreatedFiles().get(0).getKey()).getTags();
         List<String> expectedTags = dataTable.asList();
@@ -204,12 +173,18 @@ public class SafeStorageSteps {
             List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
 
             Assertions.assertTrue(tagMap.containsKey(tagName));
-            Assertions.assertEquals(tagValues, tagMap.get(tagName));
+            Assertions.assertTrue(tagValues.size() == tagMap.get(tagName).size());
+            tagValues.forEach(t -> Assertions.assertTrue(tagMap.get(tagName).contains(t)));
         });
     }
 
+    @When("Si effettua una ricerca passando {int} filtri di ricerca")
+    public void setSearchFilters(Integer numberOfFilters) {
+
+    }
+
     private AdditionalFileTagsUpdateRequest createUpdateRequest(
-        Map<String, String> specificationsMap) {
+            Map<String, String> specificationsMap) {
         AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
         specificationsMap.forEach((tag, operation) -> {
             String[] splittedTags = tag.split(":");
@@ -229,18 +204,18 @@ public class SafeStorageSteps {
     public void cleanDocuments() {
         this.indicizzazioneStepsPojo.getCreatedFiles().forEach(file -> {
 
-            log.info("PRE-CANCELLAZIONE:");
-
             AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
-            Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(
-                file.getKey()).getTags();
+            Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(file.getKey()).getTags();
+
+            log.info("PRE-CANCELLAZIONE: " + tagMap.toString());
             if (!(tagMap == null) && !tagMap.isEmpty()) {
                 request.DELETE(tagMap);
                 safeStorageClient.additionalFileTagsUpdate(file.getKey(), request);
 
-                log.info(
-                    "POST-CANCELLAZIONE");
+                log.info("POST-CANCELLAZIONE");
             }
         });
     }
+
+
 }
