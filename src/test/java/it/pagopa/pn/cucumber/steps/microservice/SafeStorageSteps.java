@@ -145,7 +145,6 @@ public class SafeStorageSteps {
         }
     }
 
-    @And("I primi {int} documenti vengono modificati secondo le seguenti operazioni")
     @When("Si modificano i documenti secondo le seguenti operazioni")
     public void updateDocuments(DataTable dataTable) {
         List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
@@ -168,8 +167,8 @@ public class SafeStorageSteps {
     }
 
     private Tags populateTag(Tags tags, String tag, Integer documentIndex, String operation) {
-        Assertions.assertTrue(documentIndex > 0 && documentIndex <= indicizzazioneStepsPojo.getCreatedFiles().size() );
-        tags.setFileKey(this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex -1 ).getKey());
+        Assertions.assertTrue(documentIndex > 0 && documentIndex <= indicizzazioneStepsPojo.getCreatedFiles().size());
+        tags.setFileKey(this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey());
         String[] splittedTags = tag.split(":");
         String tagName = splittedTags[0];
         List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
@@ -181,7 +180,7 @@ public class SafeStorageSteps {
         return tags;
     }
 
-    @And("I primi {int} documenti vengono modificati secondo le sequenti operazioni")
+    @And("I primi {int} documenti vengono modificati secondo le seguenti operazioni")
     public void updateNDocuments(Integer documentIndex, DataTable dataTable) {
         Assertions.assertTrue(documentIndex <= this.indicizzazioneStepsPojo.getCreatedFiles().size());
         for (int i = 1; i <= documentIndex; i++) {
@@ -189,12 +188,10 @@ public class SafeStorageSteps {
         }
     }
 
-    @Then("Il documento è stato correttamente modificato con la seguente lista di tag")
-    public void checkDocument(DataTable dataTable) {
-//        Assertions.assertNotNull(dataTable);
-
-        Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(
-                this.indicizzazioneStepsPojo.getCreatedFiles().get(0).getKey()).getTags();
+    @Then("Il documento {int} è stato correttamente modificato con la seguente lista di tag")
+    public void checkDocument(Integer documentIndex, DataTable dataTable) {
+        Assertions.assertNotNull(dataTable);
+        Map<String, List<String>> tagMap = retrieveDocumentTags(documentIndex);
         List<String> expectedTags = dataTable.asList();
 
         assert tagMap != null;
@@ -211,14 +208,41 @@ public class SafeStorageSteps {
         });
     }
 
-    @When("Si effettua una ricerca passando {int} filtri di ricerca")
-    public void setSearchFilters(Integer numberOfFilters) {
-
-    }
-
     @Then("Il documento è stato correttamente modificato con la seguente lista di tag")
     public void checkDocument(DataTable dataTable) {
         checkDocument(0, dataTable);
+    }
+
+//    @Then("Il documento {int} è stato correttamente modificato con la seguente lista di tag")
+//    public void checkDocument(DataTable dataTable) {
+////        Assertions.assertNotNull(dataTable);
+//
+//        Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(
+//                this.indicizzazioneStepsPojo.getCreatedFiles().get(0).getKey()).getTags();
+//        List<String> expectedTags = dataTable.asList();
+//
+//        assert tagMap != null;
+//        Assertions.assertEquals(expectedTags.size(), tagMap.size());
+//
+//        expectedTags.forEach(tag -> {
+//            String[] splittedTags = tag.split(":");
+//            String tagName = splittedTags[0];
+//            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+//
+//            Assertions.assertTrue(tagMap.containsKey(tagName));
+//            Assertions.assertTrue(tagValues.size() == tagMap.get(tagName).size());
+//            tagValues.forEach(t -> Assertions.assertTrue(tagMap.get(tagName).contains(t)));
+//        });
+//    }
+//
+//    @Then("Il documento è stato correttamente modificato con la seguente lista di tag")
+//    public void checkDocument(DataTable dataTable) {
+//        checkDocument(0, dataTable);
+//    }
+
+    @When("Si effettua una ricerca passando {int} filtri di ricerca")
+    public void setSearchFilters(Integer numberOfFilters) {
+
     }
 
     @Then("Il documento {int} non contiene la seguente lista di tag")
