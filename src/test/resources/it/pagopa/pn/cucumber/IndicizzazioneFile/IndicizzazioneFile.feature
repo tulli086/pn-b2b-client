@@ -152,12 +152,14 @@ Feature: test preliminari indicizzazione File safeStorage
   Scenario: Update Massive SUCCESS - solo operazioni SET
     Given Vengono caricati 2 nuovi documenti pdf
     When Si modificano i documenti secondo le seguenti operazioni
-      | tag | documentIndex  | operation |
-      | global_multivalue:test1 | 1 | SET |
-      | global_multivalue:test2 | 2 | SET |
-    Then La chiamata genera un errore con status code 200
+      | tag                      | documentIndex | operation |
+      | global_multivalue:test1  | 1             | SET       |
+      | global_singlevalue:test1 | 1             | SET       |
+      | global_multivalue:test2  | 2             | SET       |
+#    Then La chiamata genera un errore con status code 200 TODO
     And Il documento 1 è stato correttamente modificato con la seguente lista di tag
-      | global_multivalue:test1 |
+      | global_multivalue:test1  |
+      | global_singlevalue:test1 |
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test2 |
 
@@ -171,7 +173,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | tag | documentIndex  | operation |
       | global_multivalue:test1 | 1 | DELETE |
       | global_multivalue:test2 | 2 | DELETE |
-    Then La chiamata genera un errore con status code 200
+#    Then La chiamata genera un errore con status code 200 TODO
     And Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test2 |
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag

@@ -16,9 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -158,26 +157,34 @@ public class SafeStorageSteps {
 
     private AdditionalFileTagsMassiveUpdateRequest createMassiveRequest(List<Map<String, String>> data) {
         AdditionalFileTagsMassiveUpdateRequest request = new AdditionalFileTagsMassiveUpdateRequest();
-        Tags tags = new Tags();
-        List<Tags> tagsList = data.stream()
-                .map(d -> populateTag(tags, d.get("tag"), Integer.parseInt(d.get("documentIndex")), d.get("operation")))
-                .toList();
+
+        List<Tags> tagsList = new LinkedList<>();
+        Set<Integer> indexes = data.stream().map(x -> Integer.valueOf(x.get("documentIndex"))).collect(Collectors.toSet());
+        indexes.forEach(i -> {
+            Tags newTag = new Tags();
+            newTag.setFileKey(this.indicizzazioneStepsPojo.getCreatedFiles().get(i - 1).getKey());
+            List<Map<String, String>> documentMaps = data.stream().filter(map -> Integer.valueOf(map.get("documentIndex")).equals(i)).toList();
+            populateTag(newTag, documentMaps);
+            tagsList.add(newTag);
+        });
         request.setTags(tagsList);
         return request;
     }
 
-    private Tags populateTag(Tags tags, String tag, Integer documentIndex, String operation) {
-        Assertions.assertTrue(documentIndex > 0 && documentIndex <= indicizzazioneStepsPojo.getCreatedFiles().size());
-        tags.setFileKey(this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey());
-        String[] splittedTags = tag.split(":");
-        String tagName = splittedTags[0];
-        List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
-        if (operation.equals("SET")) {
-            tags.putSETItem(tagName, tagValues);
-        } else if (operation.equals("DELETE")) {
-            tags.putDELETEItem(tagName, tagValues);
-        }
-        return tags;
+    private void populateTag(Tags newTag, List<Map<String, String>> maps) {
+
+        maps.forEach(map -> {
+            String tag = map.get("tag");
+            String operation = map.get("operation");
+            String[] splittedTags = tag.split(":");
+            String tagName = splittedTags[0];
+            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+            if (operation.equals("SET")) {
+                newTag.putSETItem(tagName, tagValues);
+            } else if (operation.equals("DELETE")) {
+                newTag.putDELETEItem(tagName, tagValues);
+            }
+        });
     }
 
     @And("I primi {int} documenti vengono modificati secondo le seguenti operazioni")
@@ -213,33 +220,6 @@ public class SafeStorageSteps {
         checkDocument(0, dataTable);
     }
 
-//    @Then("Il documento {int} è stato correttamente modificato con la seguente lista di tag")
-//    public void checkDocument(DataTable dataTable) {
-////        Assertions.assertNotNull(dataTable);
-//
-//        Map<String, List<String>> tagMap = safeStorageClient.additionalFileTagsGet(
-//                this.indicizzazioneStepsPojo.getCreatedFiles().get(0).getKey()).getTags();
-//        List<String> expectedTags = dataTable.asList();
-//
-//        assert tagMap != null;
-//        Assertions.assertEquals(expectedTags.size(), tagMap.size());
-//
-//        expectedTags.forEach(tag -> {
-//            String[] splittedTags = tag.split(":");
-//            String tagName = splittedTags[0];
-//            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
-//
-//            Assertions.assertTrue(tagMap.containsKey(tagName));
-//            Assertions.assertTrue(tagValues.size() == tagMap.get(tagName).size());
-//            tagValues.forEach(t -> Assertions.assertTrue(tagMap.get(tagName).contains(t)));
-//        });
-//    }
-//
-//    @Then("Il documento è stato correttamente modificato con la seguente lista di tag")
-//    public void checkDocument(DataTable dataTable) {
-//        checkDocument(0, dataTable);
-//    }
-
     @When("Si effettua una ricerca passando {int} filtri di ricerca")
     public void setSearchFilters(Integer numberOfFilters) {
 
@@ -265,6 +245,11 @@ public class SafeStorageSteps {
             Map<String, String> specificationsMap) {
         AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
         specificationsMap.forEach((tag, operation) -> {
+
+//            request.setSET(new HashMap<>());
+//            request.setDELETE(new HashMap<>());
+//            setOperations(request.getSET(), request.getDELETE(), tag, operation);
+
             String[] splittedTags = tag.split(":");
             String tagName = splittedTags[0];
             List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
@@ -274,12 +259,36 @@ public class SafeStorageSteps {
             } else if (operation.equals("DELETE")) {
                 request.putDELETEItem(tagName, tagValues);
             }
+
+//            if (request.getSET().isEmpty()) {
+//                request.setSET(null);
+//            }
+//            if (request.getDELETE().isEmpty()) {
+//                request.setDELETE(null);
+//            }
         });
         return request;
     }
 
+    private void setOperations(
+            Map<String, List<String>> setMap,
+            Map<String, List<String>> deleteMap,
+            String tag,
+            String operation) {
+
+        String[] splittedTags = tag.split(":");
+        String tagName = splittedTags[0];
+        List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+
+        if (operation.equals("SET")) {
+            setMap.put(tagName, tagValues);
+        } else if (operation.equals("DELETE")) {
+            deleteMap.put(tagName, tagValues);
+        }
+    }
+
     private Map<String, List<String>> retrieveDocumentTags(Integer documentIndex) {
-        return safeStorageClient.additionalFileTagsGet(indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex).getKey()).getTags();
+        return safeStorageClient.additionalFileTagsGet(indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey()).getTags();
     }
 
     @After("@aggiuntaTag")
