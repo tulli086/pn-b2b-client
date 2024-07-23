@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public enum RaddOperator {
 
-    RADD_UPLOADER("UPLOADER", "", SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_UPLOADER),
-    RADD_STANDARD("STANDARD", "", SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_STANDARD),
-    RADD_WITHOUT_ROLE("WITHOUT_ROLE", "1234556", SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_WITHOUT_ROLE);
+    RADD_UPLOADER("UPLOADER", "1234556", SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_1),
+    RADD_STANDARD("STANDARD", "1234556", SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_2),
+    RADD_WITHOUT_ROLE("WITHOUT_ROLE", "1234556", SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_3);
 
     private final String name;
     private final String uid;

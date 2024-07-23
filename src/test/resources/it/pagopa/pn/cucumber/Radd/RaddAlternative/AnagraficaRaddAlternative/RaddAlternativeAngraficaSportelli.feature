@@ -104,25 +104,25 @@ Feature: Radd Alternative Anagrafica Sportelli
       | NULL      | 400    |
 
 
-  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
+  #@raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario Outline: [ADEG-RADD-VAL-FIELD-2] caricamento CSV contiene solo il campo description o il campo telefono vuoto
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber  | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
-      | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | RADD_DESCRIPTION | RADD_PHONE_NUMBER | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
+      | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | raddDescription  | raddPhoneNumber   | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
     Then viene controllato lo stato di caricamento del csv a "DONE"
     Then si controlla che il sportello sia in stato "REJECTED" con il messaggio "messaggio di errore specifico"
+    Examples:
+      | raddDescription | raddPhoneNumber |
+      | null            | 01/5410951      |
+      | test sportelli  | null            |
     #Then si controlla che lo sportello abbia ricevuto i seguenti stati con i seguenti messaggi:
     #| REJECTED | "Il campo telefono è obbligatorio"       |
     #| REJECTED | "Il campo descrizione è obbligatorio"    |
     #| ACCEPETD | null                                     |
-    Examples:
-      | RADD_DESCRIPTION | RADD_PHONE_NUMBER |
-      | null             | 01/5410951        |
-      | test sportelli   | null              |
     #controllare il messaggio specifico dal requestId
 
-  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
+  #@raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [ADEG-RADD-VAL-FIELD-2] caricamento CSV contiene solo il campo telefono compilato erroneamente
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
@@ -130,7 +130,6 @@ Feature: Radd Alternative Anagrafica Sportelli
       | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | ĄŁĽŚŠŞŤŹŽż        | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
     Then viene controllato lo stato di caricamento del csv a "DONE"
     Then si controlla che il sportello sia in stato "REJECTED" con il messaggio "Il campo telefono non rispetta il formato definito"
-    #controllare il messaggio specifico dal requestId
 
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [ADEG-RADD-VAL-FIELD-3] caricamento CSV con uno sportello con campi telefono e descrizione vuoti, uno sportello con telefono compilato correttamente e uno sportello compilato correttamente

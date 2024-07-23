@@ -5,9 +5,7 @@ public interface SettableAuthTokenRadd {
     enum AuthTokenRaddType {
         ISSUER_1,
         ISSUER_2,
-        ISSUER_UPLOADER,
-        ISSUER_STANDARD,
-        ISSUER_WITHOUT_ROLE,
+        ISSUER_3,
         ISSUER_NON_CENSITO,
         DATI_ERRATI,
         ISSUER_SCADUTO,
