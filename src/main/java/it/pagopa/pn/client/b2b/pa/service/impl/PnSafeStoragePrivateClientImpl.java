@@ -7,18 +7,7 @@ import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.api.Additio
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.api.FileDownloadApi;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.api.FileMetadataUpdateApi;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.api.FileUploadApi;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsGetResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsSearchResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileDownloadResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.OperationResultCodeResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.UpdateFileMetadataRequest;
-import java.util.Map;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -26,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -101,15 +92,13 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
 
     public AdditionalFileTagsSearchResponse additionalFileTagsSearch(String logic, Boolean tags,
         Map<String, String> tagParams) throws RestClientException {
-        return this.additionalFileTagsApi.additionalFileTagsSearch(clientIdSafeStorage, logic, tags,
-            tagParams);
+        return this.additionalFileTagsApi.additionalFileTagsSearch(clientIdSafeStorage, logic, tags, tagParams);
     }
 
     public ResponseEntity<AdditionalFileTagsSearchResponse> additionalFileTagsSearchWithHttpInfo(
         String cxId, String logic, Boolean tags, Map<String, String> tagParams)
         throws RestClientException {
-        return this.additionalFileTagsApi.additionalFileTagsSearchWithHttpInfo(cxId, logic, tags,
-            tagParams);
+        return this.additionalFileTagsApi.additionalFileTagsSearchWithHttpInfo(cxId, logic, tags, tagParams);
     }
 
     public AdditionalFileTagsUpdateResponse additionalFileTagsUpdate(String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) throws RestClientException {

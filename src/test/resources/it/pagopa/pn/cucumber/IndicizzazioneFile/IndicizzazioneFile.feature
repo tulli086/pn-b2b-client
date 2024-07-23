@@ -14,10 +14,9 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: GetFile - SUCCESS
-    Given Viene caricato un nuovo documento pdf
-    When Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1      | SET |
+    Given Viene caricato un nuovo documento "pdf" con tag associati
+      | global_multivalue:test1,test2 |
+      | global_singlevalue:test1      |
     Then Il documento 1 è correttamente formato con la seguente lista di tag
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
@@ -90,20 +89,18 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 1
-    Given Viene caricato un nuovo documento pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
+    Given Viene caricato un nuovo documento "pdf" con tag associati
+      | global_multivalue:test1,test2 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1 | DELETE |
     Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
-      | global_multivalue:test2 |
+      | global_singlevalue:test1 |
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 2
-    Given Viene caricato un nuovo documento pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1 | SET |
+    Given Viene caricato un nuovo documento "pdf" con tag associati
+      | global_multivalue:test1,test2 |
+      | global_singlevalue:test1      |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2 | DELETE |
     Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
@@ -111,9 +108,8 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 3
-    Given Viene caricato un nuovo documento pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1 | SET |
+    Given Viene caricato un nuovo documento "pdf" con tag associati
+      | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test2 | DELETE |
     Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
@@ -121,9 +117,8 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - operazioni SET+DELETE
-    Given Viene caricato un nuovo documento pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test | SET |
+    Given Viene caricato un nuovo documento "pdf" con tag associati
+      | global_multivalue:test |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test  | DELETE |
       | global_singlevalue:test | SET    |
@@ -132,9 +127,8 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - Set+Delete sullo stesso tag
-    Given Viene caricato un nuovo documento pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1 | SET |
+    Given Viene caricato un nuovo documento "pdf" con tag associati
+      | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test2 | SET    |
       | global_multivalue:test1 | DELETE |
@@ -153,9 +147,8 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxOperationsOnTagsPerRequest
-    Given Viene caricato un nuovo documento pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1 | SET |
+    Given Viene caricato un nuovo documento "pdf" con tag associati
+      | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1          | DELETE |
       | global_indexed_multivalue:test2  | SET    |
@@ -167,10 +160,9 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxValuesPerTagDocument
-    Given Viene caricato un nuovo documento pdf
+    Given Viene caricato un nuovo documento "pdf" con tag associati
+      | global_multivalue:test1,test2,test3 |
     When Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2,test3 | SET |
-    And Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test4,test5,test6 | SET |
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagDocument' reached. Current value: 6. Max value: 5"
@@ -233,11 +225,8 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: Update Massive SUCCESS - solo operazioni DELETE 1
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_multivalue:test1,test2 |
     When Si modificano i documenti secondo le seguenti operazioni
       | tag                     | documentIndex | operation |
       | global_multivalue:test1 | 1             | DELETE    |
@@ -254,13 +243,9 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: Update Massive SUCCESS - solo operazioni DELETE 2
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1      | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1      | SET |
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_multivalue:test1,test2 |
+      | global_singlevalue:test1      |
     When Si modificano i documenti secondo le seguenti operazioni
       | tag                           | documentIndex | operation |
       | global_multivalue:test1,test2 | 1             | DELETE    |
@@ -277,11 +262,8 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: Update Massive SUCCESS - solo operazioni DELETE 3
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_multivalue:test1,test2 |
     When Si modificano i documenti secondo le seguenti operazioni
       | tag                     | documentIndex | operation |
       | global_multivalue:test3 | 1             | DELETE    |
@@ -294,13 +276,9 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: Update Massive SUCCESS - operazioni SET+DELETE
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1      | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1      | SET |
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_multivalue:test1,test2 |
+      | global_singlevalue:test1      |
     When Si modificano i documenti secondo le seguenti operazioni
       | operation | tag                     | documentIndex |
       | DELETE    | global_multivalue:test2 | 1             |
@@ -315,13 +293,9 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: Update Massive ERROR - File key ripetuta
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1      | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1      | SET |
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_multivalue:test1,test2 |
+      | global_singlevalue:test1      |
     When La request presenta una ripetizione della stessa fileKey
       | operation | tag                      | documentIndex |
       | SET       | global_multivalue:test3  | 1             |
@@ -332,13 +306,9 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: Update Massive ERROR - Set+Delete sullo stesso tag
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1      | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_multivalue:test1,test2 | SET |
-      | global_singlevalue:test1      | SET |
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_multivalue:test1,test2 |
+      | global_singlevalue:test1      |
     When Si modificano i documenti secondo le seguenti operazioni
       | operation | tag                     | documentIndex |
       | SET       | global_multivalue:test3 | 1             |
@@ -350,32 +320,6 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
 
-  @aggiuntaTag
-  Scenario: SEARCH SUCCESS: Empty Result - NO parametro logic
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_indexed_multivalue:test1,test2 | SET |
-      | global_indexed_singlevalue:test1      | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_indexed_multivalue:test3,test4 | SET |
-      | global_indexed_singlevalue:test1      | SET |
-    When Vengono ricercate con logica "" le fileKey aventi i seguenti tag
-      | global_indexed_multivalue:test5  |
-      | global_indexed_singlevalue:test6 |
-    #Then Il risultato della ricerca è vuoto
-
-  @aggiuntaTag
-  Scenario: SEARCH SUCCESS: Empty Result - NO parametro logic - 1 parametro tag
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_indexed_multivalue:test1,test2 | SET |
-      | global_indexed_singlevalue:test1      | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_indexed_multivalue:test3,test4 | SET |
-      | global_indexed_singlevalue:test1      | SET |
-    When Vengono ricercate con logica "" le fileKey aventi i seguenti tag
-      | global_indexed_multivalue:test1 |
-    #Then Il risultato della ricerca non è vuoto
   @aggiuntaTag
   Scenario: Update Massive ERROR - MaxFileKeysUpdateMassivePerRequest
     Given Vengono caricati 6 nuovi documenti pdf
@@ -391,11 +335,8 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "Number of documents to update exceeds MaxFileKeysUpdateMassivePerRequest limit."
 
   Scenario: Update Massive ERROR - MaxOperationsOnTagsPerRequest
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1 | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_multivalue:test1 | SET |
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_multivalue:test1 |
     When Si modificano i documenti secondo le seguenti operazioni
       | operation | tag                              | documentIndex |
       | DELETE    | global_multivalue:test1          | 1             |
@@ -444,18 +385,42 @@ Feature: test preliminari indicizzazione File safeStorage
 
 #  TODO Matteo non va
   Scenario: Update Massive ERROR - MaxTagsPerDocument
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1 | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_multivalue:test2 | SET |
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_multivalue:test1 |
     When Si modificano i documenti secondo le seguenti operazioni
       | operation | tag                            | documentIndex |
       | SET       | global_singlevalue:test1       | 1             |
       | SET       | pn-test~local_multivalue:test1 | 1             |
-      | SET       | global_singlevalue:test2       | 2             |
+      | SET       | global_singlevalue:test1       | 2             |
     Then La chiamata va in successo con stato 200
     And La response contiene uno o più errori riportanti la dicitura "Number of tags to update exceeds maxOperationsOnTags limit" riguardanti il documento 1
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
-      | global_multivalue:test2  |
-      | global_singlevalue:test2 |
+      | global_multivalue:test1  |
+      | global_singlevalue:test1 |
+
+  @aggiuntaTag
+  Scenario: SEARCH SUCCESS: Empty Result - NO parametro logic
+    Given Vengono caricati 2 nuovi documenti pdf
+    And Si modifica il documento 1 secondo le seguenti operazioni
+      | global_indexed_multivalue:test1,test2 | SET |
+      | global_indexed_singlevalue:test1      | SET |
+    And Si modifica il documento 2 secondo le seguenti operazioni
+      | global_indexed_multivalue:test3,test4 | SET |
+      | global_indexed_singlevalue:test1      | SET |
+    When Vengono ricercate con logica "" le fileKey aventi i seguenti tag
+      | global_indexed_multivalue:test5  |
+      | global_indexed_singlevalue:test6 |
+    #Then Il risultato della ricerca è vuoto
+
+  @aggiuntaTag
+  Scenario: SEARCH SUCCESS: Empty Result - NO parametro logic - 1 parametro tag
+    Given Vengono caricati 2 nuovi documenti pdf
+    And Si modifica il documento 1 secondo le seguenti operazioni
+      | global_indexed_multivalue:test1,test2 | SET |
+      | global_indexed_singlevalue:test1      | SET |
+    And Si modifica il documento 2 secondo le seguenti operazioni
+      | global_indexed_multivalue:test3,test4 | SET |
+      | global_indexed_singlevalue:test1      | SET |
+    When Vengono ricercate con logica "" le fileKey aventi i seguenti tag
+      | global_indexed_multivalue:test1 |
+    #Then Il risultato della ricerca non è vuoto
