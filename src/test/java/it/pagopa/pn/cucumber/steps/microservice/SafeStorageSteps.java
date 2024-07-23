@@ -130,6 +130,46 @@ public class SafeStorageSteps {
         Assertions.assertTrue(this.indicizzazioneStepsPojo.getHttpException().getMessage().contains(errorMessage));
     }
 
+    @And("Il messaggio di errore riporta la dicitura {string} {int}")
+    public void checkForStatusCodeAndFileKey(String errorMessage, Integer documentIndex) {
+        Assertions.assertNotNull(this.indicizzazioneStepsPojo.getHttpException());
+        String fileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey();
+        Assertions.assertTrue(this.indicizzazioneStepsPojo.getHttpException().getMessage().contains(errorMessage + fileKey));
+    }
+
+    @When("La request presenta una ripetizione della stessa fileKey")
+    public void updateDocumentsWrongRequest(DataTable dataTable) {
+        List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+        try {
+            ResponseEntity<AdditionalFileTagsMassiveUpdateResponse> response = safeStorageClient.additionalFileTagsMassiveUpdateWithHttpInfo(
+                    "pn-test", createWrongMassiveRequest(data));
+            this.indicizzazioneStepsPojo.setUpdateMassiveResponseEntity(response);
+        } catch (HttpClientErrorException e) {
+            log.info("Errore durante l'aggiornamento del documento: {}", e.getMessage());
+            this.indicizzazioneStepsPojo.setHttpException(e);
+        }
+    }
+
+    private AdditionalFileTagsMassiveUpdateRequest createWrongMassiveRequest(List<Map<String, String>> data) {
+        AdditionalFileTagsMassiveUpdateRequest request = new AdditionalFileTagsMassiveUpdateRequest();
+        List<Tags> tagsList = new LinkedList<>();
+        data.forEach(d -> {
+            Tags newTag = new Tags();
+            Integer documentIndex = Integer.valueOf(d.get("documentIndex"));
+            newTag.setFileKey(this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey());
+            if (d.get("operation").equals("SET")) {
+                newTag.putSETItem(d.get("tag").split(":")[0],
+                        Arrays.stream(d.get("tag").split(":")[1].split(",")).toList());
+            } else if (d.get("operation").equals("DELETE")) {
+                newTag.putDELETEItem(d.get("tag").split(":")[0],
+                        Arrays.stream(d.get("tag").split(":")[1].split(",")).toList());
+            }
+            tagsList.add(newTag);
+        });
+        request.setTags(tagsList);
+        return request;
+    }
+
 
     @When("Si modifica il documento {int} secondo le seguenti operazioni")
     public void updateDocument(Integer documentIndex, DataTable dataTable) {
@@ -202,18 +242,22 @@ public class SafeStorageSteps {
         Map<String, List<String>> tagMap = retrieveDocumentTags(documentIndex);
         List<String> expectedTags = dataTable.asList();
 
-        assert tagMap != null;
-        Assertions.assertEquals(expectedTags.size(), tagMap.size());
+        if (expectedTags.contains("null")) {
+            Assertions.assertTrue(tagMap.isEmpty());
+        } else {
+            assert tagMap != null;
+            Assertions.assertEquals(expectedTags.size(), tagMap.size());
 
-        expectedTags.forEach(tag -> {
-            String[] splittedTags = tag.split(":");
-            String tagName = splittedTags[0];
-            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+            expectedTags.forEach(tag -> {
+                String[] splittedTags = tag.split(":");
+                String tagName = splittedTags[0];
+                List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
 
-            Assertions.assertTrue(tagMap.containsKey(tagName));
-            Assertions.assertTrue(tagValues.size() == tagMap.get(tagName).size());
-            tagValues.forEach(t -> Assertions.assertTrue(tagMap.get(tagName).contains(t)));
-        });
+                Assertions.assertTrue(tagMap.containsKey(tagName));
+                Assertions.assertTrue(tagValues.size() == tagMap.get(tagName).size());
+                tagValues.forEach(t -> Assertions.assertTrue(tagMap.get(tagName).contains(t)));
+            });
+        }
     }
 
     @When("Si effettua una ricerca passando {int} filtri di ricerca")
@@ -257,6 +301,18 @@ public class SafeStorageSteps {
     public void checkUpdateMassiveStatusCode(Integer statusCode) {
         Assertions.assertNotNull(this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity());
         Assertions.assertEquals(this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity().getStatusCodeValue(), statusCode);
+    }
+
+    @And("La response contiene uno o più errori riportanti la dicitura {string} riguardanti il documento {int}")
+    public void checkUpdateMassiveErros(String errorMessage, Integer documentIndex) {
+        Assertions.assertNotNull(this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity());
+        Assertions.assertNotNull(this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity().getBody());
+        String faultyFileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey();
+        ErrorDetail fileKeyError = this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity().getBody().getErrors()
+                .stream().filter(x -> x.getFileKey().contains(faultyFileKey)).findFirst().orElse(null);
+        Assertions.assertNotNull(fileKeyError);
+        Assertions.assertEquals("400.00", fileKeyError.getResultCode());
+        Assertions.assertTrue(fileKeyError.getResultDescription().contains(errorMessage));
     }
 
     @After("@aggiuntaTag")
