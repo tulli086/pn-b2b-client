@@ -122,3 +122,34 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Number of values for tag global_multivalue exceeds maxValues limit"
 
+  Scenario: Update Massive SUCCESS - solo operazioni SET
+    Given Vengono caricati 2 nuovi documenti pdf
+    When Si modificano i documenti secondo le seguenti operazioni
+      | tag | documentIndex  | operation |
+      | global_multivalue:test1 | 1 | SET |
+      | global_multivalue:test2 | 2 | SET |
+    Then La chiamata genera un errore con status code 200
+    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1 |
+    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test2 |
+
+  Scenario: Update Massive SUCCESS - solo operazioni DELETE
+    Given Vengono caricati 2 nuovi documenti pdf
+    And Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1,test2 | SET |
+    And Si modifica il documento 2 secondo le seguenti operazioni
+      | global_multivalue:test1,test2 | SET |
+    When Si modificano i documenti secondo le seguenti operazioni
+      | tag | documentIndex  | operation |
+      | global_multivalue:test1 | 1 | DELETE |
+      | global_multivalue:test2 | 2 | DELETE |
+    Then La chiamata genera un errore con status code 200
+    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test2 |
+    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1 |
+    And Il documento 1 non contiene la seguente lista di tag
+      | global_multivalue:test1 |
+    And Il documento 2 non contiene la seguente lista di tag
+      | global_multivalue:test2 |
