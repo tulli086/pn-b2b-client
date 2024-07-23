@@ -190,16 +190,16 @@ public class SafeStorageSteps {
 
     private AdditionalFileTagsMassiveUpdateRequest createMassiveRequest(List<Map<String, String>> data) {
         AdditionalFileTagsMassiveUpdateRequest request = new AdditionalFileTagsMassiveUpdateRequest();
+        Tags tags = new Tags();
         List<Tags> tagsList = data.stream()
-                .map(d -> createTag(d.get("tag"), Integer.parseInt(d.get("documentIndex")), d.get("operation")))
+                .map(d -> populateTag(tags, d.get("tag"), Integer.parseInt(d.get("documentIndex")), d.get("operation")))
                 .toList();
         request.setTags(tagsList);
         return request;
     }
 
-    private Tags createTag(String tag, Integer documentIndex, String operation) {
+    private Tags populateTag(Tags tags, String tag, Integer documentIndex, String operation) {
         Assertions.assertTrue(documentIndex > 0 && documentIndex <= indicizzazioneStepsPojo.getCreatedFiles().size() );
-        Tags tags = new Tags();
         tags.setFileKey(this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex -1 ).getKey());
         String[] splittedTags = tag.split(":");
         String tagName = splittedTags[0];
