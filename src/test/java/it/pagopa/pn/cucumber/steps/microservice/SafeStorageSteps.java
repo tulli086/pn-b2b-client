@@ -8,10 +8,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -149,6 +146,42 @@ public class SafeStorageSteps {
     }
 
     @And("I primi {int} documenti vengono modificati secondo le seguenti operazioni")
+    @When("Si modificano i documenti secondo le seguenti operazioni")
+    public void updateDocuments(DataTable dataTable) {
+        List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+        try {
+            safeStorageClient.additionalFileTagsMassiveUpdate(createMassiveRequest(data));
+        } catch (HttpClientErrorException e) {
+            log.info("Errore durante l'aggiornamento del documento: {}", e.getMessage());
+            this.indicizzazioneStepsPojo.setHttpException(e);
+        }
+    }
+
+    private AdditionalFileTagsMassiveUpdateRequest createMassiveRequest(List<Map<String, String>> data) {
+        AdditionalFileTagsMassiveUpdateRequest request = new AdditionalFileTagsMassiveUpdateRequest();
+        Tags tags = new Tags();
+        List<Tags> tagsList = data.stream()
+                .map(d -> populateTag(tags, d.get("tag"), Integer.parseInt(d.get("documentIndex")), d.get("operation")))
+                .toList();
+        request.setTags(tagsList);
+        return request;
+    }
+
+    private Tags populateTag(Tags tags, String tag, Integer documentIndex, String operation) {
+        Assertions.assertTrue(documentIndex > 0 && documentIndex <= indicizzazioneStepsPojo.getCreatedFiles().size() );
+        tags.setFileKey(this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex -1 ).getKey());
+        String[] splittedTags = tag.split(":");
+        String tagName = splittedTags[0];
+        List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+        if (operation.equals("SET")) {
+            tags.putSETItem(tagName, tagValues);
+        } else if (operation.equals("DELETE")) {
+            tags.putDELETEItem(tagName, tagValues);
+        }
+        return tags;
+    }
+
+    @And("I primi {int} documenti vengono modificati secondo le sequenti operazioni")
     public void updateNDocuments(Integer documentIndex, DataTable dataTable) {
         Assertions.assertTrue(documentIndex <= this.indicizzazioneStepsPojo.getCreatedFiles().size());
         for (int i = 1; i <= documentIndex; i++) {
@@ -183,6 +216,27 @@ public class SafeStorageSteps {
 
     }
 
+    @Then("Il documento è stato correttamente modificato con la seguente lista di tag")
+    public void checkDocument(DataTable dataTable) {
+        checkDocument(0, dataTable);
+    }
+
+    @Then("Il documento {int} non contiene la seguente lista di tag")
+    public void checkTagsNotPresent(Integer documentIndex, DataTable dataTable) {
+        Assertions.assertNotNull(dataTable);
+        Map<String, List<String>> tagMap = retrieveDocumentTags(documentIndex);
+        List<String> expectedTags = dataTable.asList();
+
+        expectedTags.forEach(tag -> {
+            String[] splittedTags = tag.split(":");
+            String tagName = splittedTags[0];
+            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+            if (tagMap.containsKey(tagName)) {
+                Assertions.assertNotEquals(tagValues, tagMap.get(tagName));
+            }
+        });
+    }
+
     private AdditionalFileTagsUpdateRequest createUpdateRequest(
             Map<String, String> specificationsMap) {
         AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
@@ -198,6 +252,10 @@ public class SafeStorageSteps {
             }
         });
         return request;
+    }
+
+    private Map<String, List<String>> retrieveDocumentTags(Integer documentIndex) {
+        return safeStorageClient.additionalFileTagsGet(indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex).getKey()).getTags();
     }
 
     @After("@aggiuntaTag")
