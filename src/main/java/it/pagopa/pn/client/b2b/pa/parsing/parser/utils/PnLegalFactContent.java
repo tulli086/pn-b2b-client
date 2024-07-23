@@ -60,69 +60,36 @@ public class PnLegalFactContent {
                 getCodiceFiscale(content, false, false));
     }
 
-    private List<String> getNewValueList(List<String> source, List<String> toDelete) {
-        List<String> newSource = new ArrayList<>();
-        if(toDelete == null)
-            return new ArrayList<>(source);
-
-        for (String element: source) {
-            if(!toDelete.contains(element)) {
-                newSource.add(element);
-                toDelete.remove(element);
-            }
-        }
-        return newSource;
-    }
-
     protected List<PnDestinatarioAnalogico> getDestinatariAnalogici(PnParserRecord.PnParserContent content) {
-        log.info("CONTENT - text: {}", content.text());
-        content.valueList().forEach((element) -> log.info("CONTENT - valueList->(element): {}", element));
-
-        int size = content.valueList().size();
-        log.info("CONTENT - DESTINATARIO 1: {}", new PnDestinatarioAnalogico(content.valueList().get(size-1), content.valueList().get(size-2), content.valueList().get(size-3), content.valueList().get(size-4), content.valueList().get(size-5)));
-        log.info("CONTENT - DESTINATARIO 2: {}", new PnDestinatarioAnalogico(content.valueList().get(size-6), content.valueList().get(size-7), content.valueList().get(size-8), content.valueList().get(size-9), content.valueList().get(size-10)));
-
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
         String text = content.text();
-        String newText = new String(text);
-        List<String> newValueList = getNewValueList(content.valueList(), null);
-        List<String> valueToDeleteList = null;
+        List<String> referenceList = content.valueList();
         int cntDestinatario = countDuplicates(text, tokenProperty.getNomeCognomeRagioneSocialeStart1());
 
         for(int i = 1; i <= cntDestinatario; i++) {
-            String currentText = new String(newText);
-            List<String> currentValueList = getNewValueList(newValueList, valueToDeleteList);
-            PnParserRecord.PnParserContent newContent = new PnParserRecord.PnParserContent(currentText, currentValueList);
-            newValueList = new ArrayList<>(currentValueList);
-
-            String nomeCognomeRagioneSociale = getNomeCognomeRagioneSociale(newContent, true);
-            String codiceFiscale = getCodiceFiscale(newContent, false, true);
-            String domicilioDigitale = getDomicilioDigitale(newContent);
-            String tipologiaDomicilio = getTipologiaDomicilioDigitale(newContent, true, false);
+            String nomeCognomeRagioneSociale = getNomeCognomeRagioneSociale(content, true);
+            String codiceFiscale = getCodiceFiscale(content, false, true);
+            String domicilioDigitale = getDomicilioDigitale(content);
+            String tipologiaDomicilio = getTipologiaDomicilioDigitale(content, true, false);
             String indirizzoFisico;
 
             if (i == cntDestinatario) {
-                indirizzoFisico = getIndirizzoFisico(newContent, true);
-                indirizzoFisico = "Mario Cucumber\r\nPresso\r\nSCALA B\r\nVIA@OK_890\r\n87100 COSENZA COSENZA CS\r\nITALIA";
+                indirizzoFisico = getIndirizzoFisico(content, true);
+//                String lastValue = referenceList.get(referenceList.size()-1);
             } else {
-                indirizzoFisico = getIndirizzoFisico(newContent, false);
+                indirizzoFisico = getIndirizzoFisico(content, false);
             }
-
-            valueToDeleteList = new ArrayList<>();
-            valueToDeleteList.add(nomeCognomeRagioneSociale);
-            valueToDeleteList.add(codiceFiscale);
-            valueToDeleteList.add(domicilioDigitale);
-            valueToDeleteList.add(tipologiaDomicilio);
-            valueToDeleteList.add(indirizzoFisico);
-
             pnDestinatarioAnalogicoList.add(
                     new PnDestinatarioAnalogico(nomeCognomeRagioneSociale,
                             codiceFiscale,
                             domicilioDigitale,
-                            contentExtractor.cleanUp(tipologiaDomicilio, true),
+                            tipologiaDomicilio,
                             contentExtractor.cleanUp(indirizzoFisico, true)));
-            int slidingIndex = newText.indexOf(indirizzoFisico) + indirizzoFisico.length();
-            newText = newText.substring(slidingIndex);
+            int slidingIndex = text.indexOf(indirizzoFisico) + indirizzoFisico.length();
+            text = text.substring(slidingIndex);
+            for (String element : Arrays.asList(nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipologiaDomicilio, indirizzoFisico)) {
+                referenceList.remove(element);
+            }
         }
         log.info("CONTENT - getDestinatariAnalogici: {}", pnDestinatarioAnalogicoList);
         return pnDestinatarioAnalogicoList;
@@ -270,29 +237,29 @@ public class PnLegalFactContent {
 
     protected String getTipologiaDomicilioDigitale(PnParserRecord.PnParserContent content, boolean isDestinatarioAnalogico, boolean isDestinatarioDigitale) {
         if(isDestinatarioAnalogico) {
-            return
+            return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
-                    .originalText(content.text())
-                    .slidedText(content.text())
-                    .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
-                    .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd1())
-                    .build(), content.valueList());
+                            .originalText(content.text())
+                            .slidedText(content.text())
+                            .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
+                            .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd1())
+                            .build(), content.valueList()), true);
         } else if(isDestinatarioDigitale) {
-            return
+            return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
-                    .originalText(content.text())
-                    .slidedText(content.text())
-                    .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
-                    .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd2())
-                    .build(), content.valueList());
+                            .originalText(content.text())
+                            .slidedText(content.text())
+                            .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
+                            .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd2())
+                            .build(), content.valueList()), true);
         } else {
-            return
+            return contentExtractor.cleanUp(
                     contentExtractor.getField(PnTextSlidingWindow.builder()
-                    .originalText(content.text())
-                    .slidedText(content.text())
-                    .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
-                    .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd3())
-                    .build(), content.valueList());
+                            .originalText(content.text())
+                            .slidedText(content.text())
+                            .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
+                            .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd3())
+                            .build(), content.valueList()), true);
         }
     }
 
