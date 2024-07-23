@@ -76,7 +76,7 @@ Feature: test preliminari indicizzazione File safeStorage
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxFileKeys
     Given Vengono caricati 6 nuovi documenti pdf
-    And I primi 5 documenti vengono modificati secondo le sequenti operazioni
+    And I primi 5 documenti vengono modificati secondo le seguenti operazioni
       | global_indexed_multivalue:test | SET |
     When Si modifica il documento 6 secondo le seguenti operazioni
       | global_indexed_multivalue:test | SET |

@@ -148,7 +148,7 @@ public class SafeStorageSteps {
         }
     }
 
-    @And("I primi {int} documenti vengono modificati secondo le sequenti operazioni")
+    @And("I primi {int} documenti vengono modificati secondo le seguenti operazioni")
     public void updateNDocuments(Integer documentIndex, DataTable dataTable) {
         Assertions.assertTrue(documentIndex <= this.indicizzazioneStepsPojo.getCreatedFiles().size());
         for (int i = 1; i <= documentIndex; i++) {
