@@ -1,7 +1,18 @@
 package it.pagopa.pn.client.b2b.pa.service;
 
 import it.pagopa.pn.client.b2b.pa.service.utils.SettableApiKey;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsGetResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsSearchResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileDownloadResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.OperationResultCodeResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.UpdateFileMetadataRequest;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 
@@ -23,9 +34,12 @@ public interface IPnSafeStoragePrivateClient extends SettableApiKey {
 
     ResponseEntity<AdditionalFileTagsGetResponse> additionalFileTagsGetWithHttpInfo(String fileKey, String cxId) throws RestClientException;
 
-    AdditionalFileTagsSearchResponse additionalFileTagsSearch(String logic, Boolean tags) throws RestClientException;
+    AdditionalFileTagsSearchResponse additionalFileTagsSearch(String logic, Boolean tags,
+        Map<String, String> tagParams) throws RestClientException;
 
-    ResponseEntity<AdditionalFileTagsSearchResponse> additionalFileTagsSearchWithHttpInfo(String cxId, String logic, Boolean tags) throws RestClientException;
+    ResponseEntity<AdditionalFileTagsSearchResponse> additionalFileTagsSearchWithHttpInfo(
+        String cxId, String logic, Boolean tags, Map<String, String> tagParams)
+        throws RestClientException;
 
     AdditionalFileTagsUpdateResponse additionalFileTagsUpdate(String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) throws RestClientException;
 

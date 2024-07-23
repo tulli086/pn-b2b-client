@@ -8,17 +8,28 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsSearchResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.ErrorDetail;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Tags;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -133,7 +144,7 @@ public class SafeStorageSteps {
                 case "GET_TAGS" -> this.safeStorageClient.additionalFileTagsGetWithHttpInfo(
                         "PN_NOTIFICATION_ATTACHMENTS-eabd62ef59444526beeab293b2255ace.pdf", wrongApiKey);
                 case "SEARCH_FILE" -> this.safeStorageClient.additionalFileTagsSearchWithHttpInfo(
-                        wrongApiKey, "AND", true);
+                    wrongApiKey, "AND", true, new HashMap<>());
             }
         } catch (HttpClientErrorException httpExc) {
             this.indicizzazioneStepsPojo.setHttpException(httpExc);
@@ -345,6 +356,20 @@ public class SafeStorageSteps {
     public void checkUpdateMassiveStatusCode(Integer statusCode) {
         Assertions.assertNotNull(this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity());
         Assertions.assertEquals(this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity().getStatusCodeValue(), statusCode);
+    }
+
+    @When("Vengono ricercate con logica {string} le fileKey aventi i seguenti tag")
+    public void searchWithTags(String logic, List<String> tags) {
+        if (logic.isEmpty()) {
+            logic = null;
+        }
+
+        Map<String, String> tagMap = tags.stream().collect(Collectors.toMap(
+            tag -> tag.split(":")[0], tag -> tag.split(":")[1].split(",")[0]));
+        ResponseEntity<AdditionalFileTagsSearchResponse> response = safeStorageClient.additionalFileTagsSearchWithHttpInfo(
+            "pn-test", logic, true, tagMap);
+
+        indicizzazioneStepsPojo.setAdditionalFileTagsSearchResponseResponseEntity(response);
     }
 
     @And("La response contiene uno o più errori riportanti la dicitura {string} riguardanti il documento {int}")

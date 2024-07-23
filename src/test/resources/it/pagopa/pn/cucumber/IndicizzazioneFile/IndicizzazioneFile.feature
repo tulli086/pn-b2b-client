@@ -351,6 +351,32 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1 |
 
   @aggiuntaTag
+  Scenario: SEARCH SUCCESS: Empty Result - NO parametro logic
+    Given Vengono caricati 2 nuovi documenti pdf
+    And Si modifica il documento 1 secondo le seguenti operazioni
+      | global_indexed_multivalue:test1,test2 | SET |
+      | global_indexed_singlevalue:test1      | SET |
+    And Si modifica il documento 2 secondo le seguenti operazioni
+      | global_indexed_multivalue:test3,test4 | SET |
+      | global_indexed_singlevalue:test1      | SET |
+    When Vengono ricercate con logica "" le fileKey aventi i seguenti tag
+      | global_indexed_multivalue:test5  |
+      | global_indexed_singlevalue:test6 |
+    #Then Il risultato della ricerca è vuoto
+
+  @aggiuntaTag
+  Scenario: SEARCH SUCCESS: Empty Result - NO parametro logic - 1 parametro tag
+    Given Vengono caricati 2 nuovi documenti pdf
+    And Si modifica il documento 1 secondo le seguenti operazioni
+      | global_indexed_multivalue:test1,test2 | SET |
+      | global_indexed_singlevalue:test1      | SET |
+    And Si modifica il documento 2 secondo le seguenti operazioni
+      | global_indexed_multivalue:test3,test4 | SET |
+      | global_indexed_singlevalue:test1      | SET |
+    When Vengono ricercate con logica "" le fileKey aventi i seguenti tag
+      | global_indexed_multivalue:test1 |
+    #Then Il risultato della ricerca non è vuoto
+  @aggiuntaTag
   Scenario: Update Massive ERROR - MaxFileKeysUpdateMassivePerRequest
     Given Vengono caricati 6 nuovi documenti pdf
     When Si modificano i documenti secondo le seguenti operazioni
