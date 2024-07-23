@@ -81,7 +81,7 @@ Feature: test preliminari indicizzazione File safeStorage
     When Si modifica il documento 6 secondo le seguenti operazioni
       | global_indexed_multivalue:test | SET |
     Then La chiamata genera un errore con status code 400
-#    And Il messaggio di errore riporta la dicitura "TODO"
+    And Il messaggio di errore riporta la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5"
 
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxOperationsOnTagsPerRequest
