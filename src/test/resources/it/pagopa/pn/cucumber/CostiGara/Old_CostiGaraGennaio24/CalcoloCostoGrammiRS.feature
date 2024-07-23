@@ -4,7 +4,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
 
   @costoAnalogicoGennaio24
-  Scenario Outline: [CALCOLO-COSTO_RS-20GR_1] Invio notifica e verifica calcolo del costo su raccomandata con peso <= 20gr
+  Scenario Outline: [CALCOLO-COSTO_OLD_RS-20GR_1] Invio notifica e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | <SUBJECT>         |
       | senderDenomination | Comune di palermo |
@@ -34,7 +34,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
       | 80129 | 274     | NAPOLI       | NA       | notifica analogica RECAPITISTA |
 
   @costoAnalogicoGennaio24
-  Scenario: [CALCOLO-COSTO_RS-20GR_2] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso <= 20gr
+  Scenario: [CALCOLO-COSTO_OLD_RS-20GR_2] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -51,7 +51,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
     And viene verificato il costo = "737" della notifica
 
   @costoAnalogicoGennaio24
-  Scenario: [CALCOLO-COSTO_RS-20GR_3] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso <= 20gr
+  Scenario: [CALCOLO-COSTO_OLD_RS-20GR_3] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
@@ -68,7 +68,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
     And viene verificato il costo = "852" della notifica
 
   @costoAnalogicoGennaio24
-  Scenario: [CALCOLO-COSTO_RS-20GR_4] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso <= 20gr
+  Scenario: [CALCOLO-COSTO_OLD_RS-20GR_4] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
       | senderDenomination | Comune di palermo               |
