@@ -91,7 +91,7 @@ public class SafeStorageSteps {
         log.info("FILEKEY: " + fileKey);
 
         this.indicizzazioneStepsPojo.getCreatedFiles().add(fileCreationResponse);
-        log.info("File successfully create");
+        log.info("File successfully created");
     }
 
     @When("L'utente tenta di effettuare l'operazione {string} senza essere autorizzato ad accedervi")
@@ -157,7 +157,6 @@ public class SafeStorageSteps {
 
     private AdditionalFileTagsMassiveUpdateRequest createMassiveRequest(List<Map<String, String>> data) {
         AdditionalFileTagsMassiveUpdateRequest request = new AdditionalFileTagsMassiveUpdateRequest();
-
         List<Tags> tagsList = new LinkedList<>();
         Set<Integer> indexes = data.stream().map(x -> Integer.valueOf(x.get("documentIndex"))).collect(Collectors.toSet());
         indexes.forEach(i -> {
@@ -172,7 +171,6 @@ public class SafeStorageSteps {
     }
 
     private void populateTag(Tags newTag, List<Map<String, String>> maps) {
-
         maps.forEach(map -> {
             String tag = map.get("tag");
             String operation = map.get("operation");
@@ -215,11 +213,6 @@ public class SafeStorageSteps {
         });
     }
 
-    @Then("Il documento è stato correttamente modificato con la seguente lista di tag")
-    public void checkDocument(DataTable dataTable) {
-        checkDocument(0, dataTable);
-    }
-
     @When("Si effettua una ricerca passando {int} filtri di ricerca")
     public void setSearchFilters(Integer numberOfFilters) {
 
@@ -241,51 +234,25 @@ public class SafeStorageSteps {
         });
     }
 
-    private AdditionalFileTagsUpdateRequest createUpdateRequest(
-            Map<String, String> specificationsMap) {
+    private AdditionalFileTagsUpdateRequest createUpdateRequest(Map<String, String> specificationsMap) {
         AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
         specificationsMap.forEach((tag, operation) -> {
-
-//            request.setSET(new HashMap<>());
-//            request.setDELETE(new HashMap<>());
-//            setOperations(request.getSET(), request.getDELETE(), tag, operation);
-
-            String[] splittedTags = tag.split(":");
-            String tagName = splittedTags[0];
-            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
-
             if (operation.equals("SET")) {
-                request.putSETItem(tagName, tagValues);
+                request.putSETItem(tag.split(":")[0], Arrays.stream(tag.split(":")[1].split(",")).toList());
             } else if (operation.equals("DELETE")) {
-                request.putDELETEItem(tagName, tagValues);
+                request.putDELETEItem(tag.split(":")[0], Arrays.stream(tag.split(":")[1].split(",")).toList());
             }
-
-//            if (request.getSET().isEmpty()) {
-//                request.setSET(null);
-//            }
-//            if (request.getDELETE().isEmpty()) {
-//                request.setDELETE(null);
+//            String[] splittedTags = tag.split(":");
+//            String tagName = splittedTags[0];
+//            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
+//
+//            if (operation.equals("SET")) {
+//                request.putSETItem(tagName, tagValues);
+//            } else if (operation.equals("DELETE")) {
+//                request.putDELETEItem(tagName, tagValues);
 //            }
         });
         return request;
-    }
-
-    //TODO Fix or remove
-    private void setOperations(
-            Map<String, List<String>> setMap,
-            Map<String, List<String>> deleteMap,
-            String tag,
-            String operation) {
-
-        String[] splittedTags = tag.split(":");
-        String tagName = splittedTags[0];
-        List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
-
-        if (operation.equals("SET")) {
-            setMap.put(tagName, tagValues);
-        } else if (operation.equals("DELETE")) {
-            deleteMap.put(tagName, tagValues);
-        }
     }
 
     private Map<String, List<String>> retrieveDocumentTags(Integer documentIndex) {

@@ -17,7 +17,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Given Viene caricato un nuovo documento pdf
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test | SET |
-    Then Il documento è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test |
 
   @aggiuntaTag
@@ -27,7 +27,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1,test2 | SET |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1 | DELETE |
-    Then Il documento è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test2 |
 
   @aggiuntaTag
@@ -38,7 +38,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1 | SET |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1 | DELETE |
-    Then Il documento è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_singlevalue:test1 |
 
   @aggiuntaTag
@@ -48,7 +48,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1 | SET |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test2 | DELETE |
-    Then Il documento è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1 |
 
   @aggiuntaTag
@@ -59,7 +59,7 @@ Feature: test preliminari indicizzazione File safeStorage
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test  | DELETE |
       | global_singlevalue:test | SET    |
-    Then Il documento è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_singlevalue:test |
 
   @aggiuntaTag
@@ -115,7 +115,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1       | SET |
       | pn-test~local_multivalue:test1 | SET |
     Then La chiamata genera un errore con status code 400
-    #And Il messaggio di errore riporta la dicitura ""
+    #And Il messaggio di errore riporta la dicitura "TODO"
 
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxValuesPerTagPerRequest
@@ -139,16 +139,17 @@ Feature: test preliminari indicizzazione File safeStorage
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2,test3 | SET |
       | global_singlevalue:test1            | SET |
-    Then Il documento è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1,test2,test3 |
       | global_singlevalue:test1            |
 
 #    Todo otteniamo 500
   Scenario: GetTags SUCCESS Empty Result
     Given Viene caricato un nuovo documento pdf
-    Then Il documento è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | null |
 
+  @aggiuntaTag
   Scenario: Update Massive SUCCESS - solo operazioni SET
     Given Vengono caricati 2 nuovi documenti pdf
     When Si modificano i documenti secondo le seguenti operazioni
@@ -163,6 +164,7 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test2 |
 
+  @aggiuntaTag
   Scenario: Update Massive SUCCESS - solo operazioni DELETE
     Given Vengono caricati 2 nuovi documenti pdf
     And Si modifica il documento 1 secondo le seguenti operazioni
