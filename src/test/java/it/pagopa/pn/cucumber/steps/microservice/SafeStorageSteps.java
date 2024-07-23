@@ -13,6 +13,7 @@ import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
@@ -136,7 +137,7 @@ public class SafeStorageSteps {
         Map<String, String> data = dataTable.asMap(String.class, String.class);
         String fileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey();
         try {
-            this.indicizzazioneStepsPojo.setUpdateResponseEntity(safeStorageClient.additionalFileTagsUpdateWithHttpInfo(
+            this.indicizzazioneStepsPojo.setUpdateSingleResponseEntity(safeStorageClient.additionalFileTagsUpdateWithHttpInfo(
                     fileKey, "pn-test", createUpdateRequest(data)));
         } catch (HttpClientErrorException e) {
             log.info("Errore durante l'aggiornamento del documento: {}", e.getMessage());
@@ -148,7 +149,9 @@ public class SafeStorageSteps {
     public void updateDocuments(DataTable dataTable) {
         List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
         try {
-            safeStorageClient.additionalFileTagsMassiveUpdate(createMassiveRequest(data));
+            ResponseEntity<AdditionalFileTagsMassiveUpdateResponse> response = safeStorageClient.additionalFileTagsMassiveUpdateWithHttpInfo(
+                    "pn-test", createMassiveRequest(data));
+            this.indicizzazioneStepsPojo.setUpdateMassiveResponseEntity(response);
         } catch (HttpClientErrorException e) {
             log.info("Errore durante l'aggiornamento del documento: {}", e.getMessage());
             this.indicizzazioneStepsPojo.setHttpException(e);
@@ -242,21 +245,18 @@ public class SafeStorageSteps {
             } else if (operation.equals("DELETE")) {
                 request.putDELETEItem(tag.split(":")[0], Arrays.stream(tag.split(":")[1].split(",")).toList());
             }
-//            String[] splittedTags = tag.split(":");
-//            String tagName = splittedTags[0];
-//            List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
-//
-//            if (operation.equals("SET")) {
-//                request.putSETItem(tagName, tagValues);
-//            } else if (operation.equals("DELETE")) {
-//                request.putDELETEItem(tagName, tagValues);
-//            }
         });
         return request;
     }
 
     private Map<String, List<String>> retrieveDocumentTags(Integer documentIndex) {
         return safeStorageClient.additionalFileTagsGet(indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey()).getTags();
+    }
+
+    @Then("La chiamata va in successo con stato {int}")
+    public void checkUpdateMassiveStatusCode(Integer statusCode) {
+        Assertions.assertNotNull(this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity());
+        Assertions.assertEquals(this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity().getStatusCodeValue(), statusCode);
     }
 
     @After("@aggiuntaTag")

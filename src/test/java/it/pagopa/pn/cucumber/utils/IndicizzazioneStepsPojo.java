@@ -1,5 +1,6 @@
 package it.pagopa.pn.cucumber.utils;
 
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateResponse;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateResponse;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
@@ -22,6 +23,7 @@ public class IndicizzazioneStepsPojo {
     private String sha256;
     private List<FileCreationResponse> createdFiles;
     private AdditionalFileTagsUpdateRequest updateRequest;
-    private ResponseEntity<AdditionalFileTagsUpdateResponse> updateResponseEntity;
+    private ResponseEntity<AdditionalFileTagsUpdateResponse> updateSingleResponseEntity;
+    private ResponseEntity<AdditionalFileTagsMassiveUpdateResponse> updateMassiveResponseEntity;
     private HttpClientErrorException httpException;
 }

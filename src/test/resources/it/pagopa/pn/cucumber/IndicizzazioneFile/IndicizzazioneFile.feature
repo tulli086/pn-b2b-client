@@ -34,10 +34,10 @@ Feature: test preliminari indicizzazione File safeStorage
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 2
     Given Viene caricato un nuovo documento pdf
     And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1  | SET |
+      | global_multivalue:test1,test2 | SET |
       | global_singlevalue:test1 | SET |
     When Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1 | DELETE |
+      | global_multivalue:test1,test2 | DELETE |
     Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_singlevalue:test1 |
 
@@ -157,7 +157,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1  | 1             | SET       |
       | global_singlevalue:test1 | 1             | SET       |
       | global_multivalue:test2  | 2             | SET       |
-#    Then La chiamata genera un errore con status code 200 TODO
+    Then La chiamata va in successo con stato 200
     And Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
@@ -165,17 +165,17 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test2 |
 
   @aggiuntaTag
-  Scenario: Update Massive SUCCESS - solo operazioni DELETE
+  Scenario: Update Massive SUCCESS - solo operazioni DELETE 1
     Given Vengono caricati 2 nuovi documenti pdf
     And Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2 | SET |
     And Si modifica il documento 2 secondo le seguenti operazioni
       | global_multivalue:test1,test2 | SET |
     When Si modificano i documenti secondo le seguenti operazioni
-      | tag | documentIndex  | operation |
-      | global_multivalue:test1 | 1 | DELETE |
-      | global_multivalue:test2 | 2 | DELETE |
-#    Then La chiamata genera un errore con status code 200 TODO
+      | tag                     | documentIndex | operation |
+      | global_multivalue:test1 | 1             | DELETE    |
+      | global_multivalue:test2 | 2             | DELETE    |
+    Then La chiamata va in successo con stato 200
     And Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test2 |
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
@@ -184,3 +184,65 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1 |
     And Il documento 2 non contiene la seguente lista di tag
       | global_multivalue:test2 |
+
+  @aggiuntaTag
+  Scenario: Update Massive SUCCESS - solo operazioni DELETE 2
+    Given Vengono caricati 2 nuovi documenti pdf
+    And Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1,test2 | SET |
+      | global_singlevalue:test1      | SET |
+    And Si modifica il documento 2 secondo le seguenti operazioni
+      | global_multivalue:test1,test2 | SET |
+      | global_singlevalue:test1      | SET |
+    When Si modificano i documenti secondo le seguenti operazioni
+      | tag                           | documentIndex | operation |
+      | global_multivalue:test1,test2 | 1             | DELETE    |
+      | global_multivalue:test1,test2 | 2             | DELETE    |
+    Then La chiamata va in successo con stato 200
+    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+      | global_singlevalue:test1 |
+    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+      | global_singlevalue:test1 |
+    And Il documento 1 non contiene la seguente lista di tag
+      | global_multivalue:test1,test2 |
+    And Il documento 2 non contiene la seguente lista di tag
+      | global_multivalue:test1,test2 |
+
+  @aggiuntaTag
+  Scenario: Update Massive SUCCESS - solo operazioni DELETE 3
+    Given Vengono caricati 2 nuovi documenti pdf
+    And Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1,test2 | SET |
+    And Si modifica il documento 2 secondo le seguenti operazioni
+      | global_multivalue:test1,test2 | SET |
+    When Si modificano i documenti secondo le seguenti operazioni
+      | tag                     | documentIndex | operation |
+      | global_multivalue:test3 | 1             | DELETE    |
+      | global_multivalue:test3 | 2             | DELETE    |
+    Then La chiamata va in successo con stato 200
+    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1,test2 |
+    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1,test2 |
+
+  @aggiuntaTag
+  Scenario: Update Massive SUCCESS - operazioni SET+DELETE
+    Given Vengono caricati 2 nuovi documenti pdf
+    And Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1,test2 | SET |
+      | global_singlevalue:test1      | SET |
+    And Si modifica il documento 2 secondo le seguenti operazioni
+      | global_multivalue:test1,test2 | SET |
+      | global_singlevalue:test1      | SET |
+    When Si modificano i documenti secondo le seguenti operazioni
+      | operation | tag                     | documentIndex |
+      | DELETE    | global_multivalue:test2 | 1             |
+      | DELETE    | global_multivalue:test2 | 2             |
+    Then La chiamata va in successo con stato 200
+    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1  |
+      | global_singlevalue:test1 |
+    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1  |
+      | global_singlevalue:test1 |
+
