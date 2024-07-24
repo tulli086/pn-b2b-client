@@ -14,7 +14,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: GetFile - SUCCESS
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
     Then Il documento 1 è correttamente formato con la seguente lista di tag
@@ -23,7 +23,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: Create - SUCCESS
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
     Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
@@ -31,8 +31,15 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1      |
 
   @aggiuntaTag
+  Scenario: Create - ERROR Trasformazione
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_LEGAL_FACTS_ST" con tag associati
+      | global_multivalue:test1 |
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1 |
+
+  @aggiuntaTag
   Scenario: Create ERROR - MaxTagsPerRequest
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2           |
       | global_indexed_multivalue:test1,test2   |
       | global_singlevalue:test1                |
@@ -48,21 +55,21 @@ Feature: test preliminari indicizzazione File safeStorage
     Given Vengono caricati 5 nuovi documenti pdf
     And I primi 5 documenti vengono modificati secondo le seguenti operazioni
       | global_indexed_multivalue:test | SET |
-    When Viene caricato un nuovo documento "pdf" con tag associati
+    When Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_indexed_multivalue:test |
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5"
 
   @aggiuntaTag
   Scenario: Create ERROR - MaxValuesPerTagDocument
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2,test3,test4,test5,test6 |
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagPerDocument' reached"
 
   @aggiuntaTag
   Scenario: Create ERROR - MaxTagsPerDocument
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2         |
       | global_indexed_multivalue:test1,test2 |
       | global_singlevalue:test1              |
@@ -74,7 +81,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: Create ERROR - MaxValuesPerTagPerRequest
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2,test3,test4,test5,test6, test7 |
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagPerRequest' reached"
@@ -89,7 +96,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 1
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test2 | DELETE |
@@ -98,7 +105,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 2
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2 | DELETE |
@@ -107,7 +114,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 3
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test2 | DELETE |
@@ -116,7 +123,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - operazioni SET+DELETE
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test  | DELETE |
@@ -126,7 +133,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - Set+Delete sullo stesso tag
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test2 | SET    |
@@ -146,7 +153,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxOperationsOnTagsPerRequest
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1          | DELETE |
@@ -159,7 +166,7 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: UpdateSingle ERROR - MaxValuesPerTagDocument
-    Given Viene caricato un nuovo documento "pdf" con tag associati
+    Given Viene caricato un nuovo documento "pdf" di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2,test3 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test4,test5,test6 | SET |
