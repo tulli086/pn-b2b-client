@@ -94,9 +94,7 @@ public class PnLegalFactContent {
         }
         log.info("CONTENT - getDestinatariAnalogici: {}", pnDestinatarioAnalogicoList);
         log.info("CONTENT - content.valueList(log): {}", content.valueList());
-        System.out.println("CONTENT - content.valueList(syso): " + content.valueList());
         content.valueList().forEach((element) -> System.out.println("CONTENT - content.valueList -> " + element));
-        System.out.println("CONTENT - content.valueList()-1: " + content.valueList().get(content.valueList().size()-1));
         return pnDestinatarioAnalogicoList;
     }
 

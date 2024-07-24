@@ -42,6 +42,12 @@ public class PnContentExtractor implements IPnContentExtractor {
             if(boldValueList.isEmpty())
                 throw new PnParserException("PDF not valid: document did not contain bold words!!!");
 
+            log.info("contentExtractor");
+            boldValueList.forEach(element -> {
+                log.info(element);
+                System.out.println(element);
+            });
+
             return getContent(pdfTextStripper.getText(document), boldValueList, legalFactType);
         } catch (IOException exception) {
             log.error("PdfBox error: {}", exception.getMessage());

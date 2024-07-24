@@ -69,7 +69,7 @@ Feature: Verifica del contenuto dei differenti tipi di legalFact prodotti nei wo
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REQUEST_ACCEPTED"
     And ricerca ed effettua download del legalFact con la categoria "SENDER_ACK"
     Then si verifica se il legalFact è di tipo "LEGALFACT_NOTIFICA_PRESA_IN_CARICO_MULTIDESTINATARIO"
-    #Si verifica la presenza di un DESTINATARIO in una specifica posizione di ordinamento
+    # Si verifica la presenza di un DESTINATARIO in una specifica posizione di ordinamento
     Then si verifica se il legalFact contiene i campi per il destinatario
       | TITLE                                     | Attestazione opponibile a terzi: notifica presa in carico                |
       | MITTENTE                                  | Comune di palermo                                                        |
@@ -109,7 +109,7 @@ Feature: Verifica del contenuto dei differenti tipi di legalFact prodotti nei wo
     And "Mario Cucumber" legge la notifica ricevuta
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_VIEWED"
     And "Mario Cucumber" richiede il download dell'attestazione opponibile "RECIPIENT_ACCESS"
-    #Si verifica in un unico step: il TIPO di legalFact, la presenza di un determinato CAMPO ed il VALUE di quest'ultimo
+    # Si verifica in un unico step: il TIPO di legalFact, la presenza di un determinato CAMPO ed il VALUE di quest'ultimo
     Then si verifica se il legalFact è di tipo "LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO" e contiene il campo "TITLE" con value "Attestazione opponibile a terzi: avvenuto accesso"
     Then si verifica se il legalFact è di tipo "LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO" e contiene il campo "DESTINATARIO_NOME_COGNOME_RAGIONE_SOCIALE" con value "Mario Cucumber"
     Then si verifica se il legalFact è di tipo "LEGALFACT_NOTIFICA_AVVENUTO_ACCESSO" e contiene il campo "DESTINATARIO_CODICE_FISCALE" con value "FRMTTR76M06B715E"
@@ -155,18 +155,18 @@ Feature: Verifica del contenuto dei differenti tipi di legalFact prodotti nei wo
 
   @legalFactContent
   Scenario: [B2B-LEGALFACT_CONTENT_VERIFY_8] In seguito ad un disservizio verificatosi in piattaforma durante la creazione di una notifica, si verifica l'esistenza del legalFact generato se sia di tipo DOWNTIME
-    Given vengono letti gli eventi di disservizio degli ultimi 30 giorni relativi alla "creazione notifiche"
+    Given vengono letti gli eventi di disservizio degli ultimi 60 giorni relativi alla "creazione notifiche"
     When viene individuato se presente l'evento più recente
     Then si effettua download della relativa attestazione opponibile e si verifica se il legalFact è di tipo "LEGALFACT_NOTIFICA_DOWNTIME"
 
   @legalFactContent
   Scenario: [B2B-LEGALFACT_CONTENT_VERIFY_9] In seguito ad un disservizio verificatosi in piattaforma durante la visualizzazione di una notifica, si verifica l'esistenza del legalFact generato se sia di tipo DOWNTIME
-    Given vengono letti gli eventi di disservizio degli ultimi 30 giorni relativi alla "visualizzazione notifiche"
+    Given vengono letti gli eventi di disservizio degli ultimi 60 giorni relativi alla "visualizzazione notifiche"
     When viene individuato se presente l'evento più recente
     Then si effettua download della relativa attestazione opponibile e si verifica se il legalFact è di tipo "LEGALFACT_NOTIFICA_DOWNTIME"
 
   @legalFactContent
   Scenario: [B2B-LEGALFACT_CONTENT_VERIFY_10] In seguito ad un disservizio verificatosi in piattaforma durante il workflow di una notifica, si verifica l'esistenza del legalFact generato se sia di tipo DOWNTIME
-    Given vengono letti gli eventi di disservizio degli ultimi 30 giorni relativi al "workflow notifiche"
+    Given vengono letti gli eventi di disservizio degli ultimi 60 giorni relativi al "workflow notifiche"
     When viene individuato se presente l'evento più recente
     Then si effettua download della relativa attestazione opponibile e si verifica se il legalFact è di tipo "LEGALFACT_NOTIFICA_DOWNTIME"
