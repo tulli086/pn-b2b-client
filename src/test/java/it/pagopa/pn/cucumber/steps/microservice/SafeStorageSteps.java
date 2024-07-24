@@ -75,8 +75,7 @@ public class SafeStorageSteps {
         request.setTags(tagList.stream().collect(Collectors.toMap(
                 tag -> tag.split(":")[0], tag -> Arrays.asList(tag.split(":")[1].split(",")))));
         try {
-            FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(
-                    sha256, "SHA256", request);
+            FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(sha256, "SHA256", request);
             loadToPresignedUrl(fileCreationResponse, sha256, resourcePath);
         } catch (HttpClientErrorException httpExc) {
             this.indicizzazioneStepsPojo.setHttpException(httpExc);
@@ -373,6 +372,29 @@ public class SafeStorageSteps {
         getAndCheckFile(documentIndex, expectedTags);
         if (indicizzazioneStepsPojo.getHttpException() != null) {
             throw indicizzazioneStepsPojo.getHttpException();
+        }
+    }
+
+    @Given("Sul DB non è presente nessun documento con associato il tag {string}")
+    public void disassociaTag(String tagString) {
+        Map<String, String> tagMap = new HashMap<>();
+        String tagName = tagString.split(":")[0];
+        String tagValue = tagString.split(":")[1];
+        tagMap.put(tagName, tagValue);
+        AdditionalFileTagsSearchResponse searchResponse = this.safeStorageClient.additionalFileTagsSearch("or", true, tagMap);
+        List<String> fileKeys = searchResponse.getFileKeys().stream().map(x -> x.getFileKey()).toList();
+
+        if (!fileKeys.isEmpty()) {
+            AdditionalFileTagsMassiveUpdateRequest massiveUpdateRequest = new AdditionalFileTagsMassiveUpdateRequest();
+            fileKeys.forEach(fk -> {
+                Tags newTag = new Tags();
+                newTag.setFileKey(fk);
+                newTag.putDELETEItem(tagName, List.of(tagValue));
+                massiveUpdateRequest.addTagsItem(newTag);
+            });
+
+            AdditionalFileTagsMassiveUpdateResponse massiveUpdateResponse = this.safeStorageClient.additionalFileTagsMassiveUpdate(massiveUpdateRequest);
+            log.info(massiveUpdateResponse.toString());
         }
     }
 

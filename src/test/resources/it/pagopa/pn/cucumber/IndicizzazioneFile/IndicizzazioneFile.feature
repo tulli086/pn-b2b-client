@@ -366,16 +366,19 @@ Feature: test preliminari indicizzazione File safeStorage
 
   @aggiuntaTag
   Scenario: [INDEX_SS_UPDATE_MASSIVE_10] Update Massive ERROR - MaxFileKeys
-    Given Vengono caricati 5 nuovi documenti
-    And I primi 5 documenti vengono modificati secondo le seguenti operazioni
-      | global_indexed_multivalue:test | SET |
+    Given Sul DB non è presente nessun documento con associato il tag "global_indexed_multivalue:test"
+    And Vengono caricati 5 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
+      | global_indexed_multivalue:test |
     And Viene caricato un nuovo documento
     When Si modificano i documenti secondo le seguenti operazioni
       | operation | tag                            | documentIndex |
       | SET       | global_indexed_multivalue:test | 6             |
       | SET       | global_multivalue:test1        | 1             |
-    Then La chiamata genera un errore con status code 400
-    And Il messaggio di errore riporta la dicitura "Limit 'MaxFileKeys' reached"
+    Then L'update massivo va in successo con stato 200
+    And La response contiene uno o più errori riportanti la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5" riguardanti il documento 6
+    And Il documento 1 è associato alla seguente lista di tag
+      | global_indexed_multivalue:test |
+      | global_multivalue:test1        |
 
   Scenario: [INDEX_SS_UPDATE_MASSIVE_11] Update Massive ERROR - MaxValuesPerTagDocument
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
@@ -387,7 +390,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Then L'update massivo va in successo con stato 200
     And La response contiene uno o più errori riportanti la dicitura "Limit 'MaxValuesPerTagDocument' reached. Current value: 6. Max value: 5" riguardanti il documento 2
     And Il documento 1 è associato alla seguente lista di tag
-      | global_indexed_multivalue:test1,test2,test3,test4,test5 |
+      | global_multivalue:test1,test2,test3,test4,test5 |
 
   @aggiuntaTag
   Scenario: [INDEX_SS_UPDATE_MASSIVE_12] Update Massive ERROR - MaxTagsPerDocument
@@ -417,8 +420,6 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1 |
 
   ########################################################### SEARCH FILE-KEY ###################################################################
-
-  #TODO aggiungere MaxMapValuesForSearch
 
   @aggiuntaTag
   Scenario Outline: [INDEX_SS_SEARCH_2] SEARCH SUCCESS: Empty Result
