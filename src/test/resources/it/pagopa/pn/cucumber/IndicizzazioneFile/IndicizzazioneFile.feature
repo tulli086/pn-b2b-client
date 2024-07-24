@@ -374,8 +374,11 @@ Feature: test preliminari indicizzazione File safeStorage
       | operation | tag                            | documentIndex |
       | SET       | global_indexed_multivalue:test | 6             |
       | SET       | global_multivalue:test1        | 1             |
-    Then La chiamata genera un errore con status code 400
-    And Il messaggio di errore riporta la dicitura "Limit 'MaxFileKeys' reached"
+    Then L'update massivo va in successo con stato 200
+    And La response contiene uno o più errori riportanti la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5" riguardanti il documento 6
+    And Il documento 1 è associato alla seguente lista di tag
+      | global_indexed_multivalue:test |
+      | global_multivalue:test1        |
 
     #TODO aggiungere MaxValuesPerTagDocument
 
@@ -408,7 +411,20 @@ Feature: test preliminari indicizzazione File safeStorage
 
   ########################################################### SEARCH FILE-KEY ###################################################################
 
-  #TODO aggiungere MaxMapValuesForSearch
+  @aggiuntaTag
+  Scenario: [INDEX_SS_SEARCH_1] SEARCH ERROR - MaxMapValuesForSearch
+    Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
+      | global_indexed_multivalue:test1,test2 |
+      | global_indexed_singlevalue:test1      |
+    When Vengono ricercate con logica "" le fileKey aventi i seguenti tag
+      | global_indexed_multivalue:testEmpty         |
+      | global_multivalue:testEmpty                 |
+      | global_indexed_singlevalue:testEmpty        |
+      | global_singlevalue:testEmpty                |
+      | pn-test~local_indexed_multivalue:testEmpty  |
+      | pn-test~local_indexed_singlevalue:testEmpty |
+    Then La chiamata genera un errore con status code 400
+    And Il messaggio di errore riporta la dicitura "Limit 'MaxMapValuesForSearch' reached"
 
   @aggiuntaTag
   Scenario Outline: [INDEX_SS_SEARCH_2] SEARCH SUCCESS: Empty Result
