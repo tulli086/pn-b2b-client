@@ -8,28 +8,17 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsSearchResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.ErrorDetail;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Tags;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -54,8 +43,8 @@ public class SafeStorageSteps {
         }
     }
 
-    @Given("Viene caricato un nuovo documento {string}")
-    public void uploadNewDocumentWithDocumentType(String fileType) {
+    @Given("Viene caricato un nuovo documento")
+    public void uploadNewDocument() {
         String resourcePath = "classpath:/multa.pdf";//getFileByType(fileType);
         String sha256 = computeSha(resourcePath);
 
@@ -68,31 +57,23 @@ public class SafeStorageSteps {
         loadToPresignedUrl(fileCreationResponse, sha256, resourcePath);
     }
 
-    @Given("Viene caricato un nuovo documento pdf")
-    public void uploadNewPdfDocument() {
-        uploadNewDocumentWithDocumentType("PDF");
-    }
-
-    @Given("Vengono caricati {int} nuovi documenti pdf")
+    @Given("Vengono caricati {int} nuovi documenti")
     public void uploadNewPdfDocument(Integer times) {
         for (int i = 0; i < times; i++) {
-            uploadNewDocumentWithDocumentType("PDF");
+            uploadNewDocument();
         }
     }
 
-    @Given("Viene caricato un nuovo documento {string} di tipo {string} con tag associati")
-    public void uploadNewDocumentWithTags(String fileType, String type, List<String> tagList) {
-        String resourcePath = "classpath:/multa.pdf";
-        if (type.equals("PN_LEGAL_FACTS_ST")) {
-            resourcePath = "classpath:/long_file.pdf";
-        }
+    @Given("Viene caricato un nuovo documento di tipo {string} con tag associati")
+    public void uploadNewDocumentWithTags(String type, List<String> tagList) {
+        String resourcePath = type.equals("PN_LEGAL_FACTS_ST") ? "classpath:/long_file.pdf" : "classpath:/multa.pdf";
         String sha256 = computeSha(resourcePath);
         FileCreationRequest request = new FileCreationRequest();
         request.setContentType("application/pdf");
         request.setStatus("SAVED");
         request.setDocumentType(type);
         request.setTags(tagList.stream().collect(Collectors.toMap(
-            tag -> tag.split(":")[0], tag -> Arrays.asList(tag.split(":")[1].split(",")))));
+                tag -> tag.split(":")[0], tag -> Arrays.asList(tag.split(":")[1].split(",")))));
         try {
             FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(
                     sha256, "SHA256", request);
@@ -102,11 +83,10 @@ public class SafeStorageSteps {
         }
     }
 
-    @Given("Vengono caricati {int} nuovi documenti {string} di tipo {} con tag associati")
-    public void uploadManyNewDocumentsWithTags(Integer documentIndex, String fileType, String type,
-        List<String> tagList) {
+    @Given("Vengono caricati {int} nuovi documenti di tipo {string} con tag associati")
+    public void uploadManyNewDocumentsWithTags(Integer documentIndex, String type, List<String> tagList) {
         for (int i = 0; i < documentIndex; i++) {
-            uploadNewDocumentWithTags(fileType, type, tagList);
+            uploadNewDocumentWithTags(type, tagList);
         }
     }
 
