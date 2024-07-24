@@ -374,11 +374,8 @@ Feature: test preliminari indicizzazione File safeStorage
       | operation | tag                            | documentIndex |
       | SET       | global_indexed_multivalue:test | 6             |
       | SET       | global_multivalue:test1        | 1             |
-    Then L'update massivo va in successo con stato 200
-    And La response contiene uno o più errori riportanti la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5" riguardanti il documento 6
-    And Il documento 1 è associato alla seguente lista di tag
-      | global_indexed_multivalue:test |
-      | global_multivalue:test1        |
+    Then La chiamata genera un errore con status code 400
+    And Il messaggio di errore riporta la dicitura "Limit 'MaxFileKeys' reached"
 
   Scenario: [INDEX_SS_UPDATE_MASSIVE_11] Update Massive ERROR - MaxValuesPerTagDocument
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
