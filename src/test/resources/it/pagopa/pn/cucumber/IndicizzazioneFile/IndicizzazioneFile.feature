@@ -1,6 +1,6 @@
 Feature: test preliminari indicizzazione File safeStorage
 
-  Scenario Outline: FAILED AUTHORIZATION
+  Scenario Outline: [INDEX_SS_FAIL_AUTH] FAILED AUTHORIZATION
     When L'utente tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
     Then La chiamata genera un errore con status code 403
     Examples:
@@ -12,8 +12,10 @@ Feature: test preliminari indicizzazione File safeStorage
       | GET_TAGS       |
       | SEARCH_FILE    |
 
+  ########################################################### GET FILE ###################################################################
+
   @aggiuntaTag
-  Scenario: GetFile - SUCCESS
+  Scenario: [INDEX_SS_GET_FILE_1] GetFile - SUCCESS
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
@@ -21,8 +23,27 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
 
+  ########################################################### GET TAGS ###################################################################
+
   @aggiuntaTag
-  Scenario: Create - SUCCESS
+  Scenario: [INDEX_SS_GET_TAGS_1] GetTags SUCCESS
+    Given Viene caricato un nuovo documento
+    When Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1,test2,test3 | SET |
+      | global_singlevalue:test1            | SET |
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1,test2,test3 |
+      | global_singlevalue:test1            |
+
+  Scenario: [INDEX_SS_GET_TAGS_2] GetTags SUCCESS Empty Result
+    Given Viene caricato un nuovo documento
+    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
+      | null |
+
+  ########################################################### CREATE FILE ###################################################################
+
+  @aggiuntaTag
+  Scenario: [INDEX_SS_CREATE_1] Create - SUCCESS
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
@@ -31,14 +52,14 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1      |
 
   @aggiuntaTag
-  Scenario: Create - ERROR Trasformazione
+  Scenario: [INDEX_SS_CREATE_2] Create - ERROR Trasformazione
     Given Viene caricato un nuovo documento di tipo "PN_LEGAL_FACTS_ST" con tag associati
       | global_multivalue:test1 |
     Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1 |
 
   @aggiuntaTag
-  Scenario: Create ERROR - MaxTagsPerRequest
+  Scenario: [INDEX_SS_CREATE_3] Create ERROR - MaxTagsPerRequest
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2           |
       | global_indexed_multivalue:test1,test2   |
@@ -51,7 +72,7 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "Limit 'MaxTagsPerRequest' reached"
 
   @aggiuntaTag
-  Scenario: Create ERROR - MaxFileKeys
+  Scenario: [INDEX_SS_CREATE_4] Create ERROR - MaxFileKeys
     Given Vengono caricati 5 nuovi documenti
     And I primi 5 documenti vengono modificati secondo le seguenti operazioni
       | global_indexed_multivalue:test | SET |
@@ -61,14 +82,14 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5"
 
   @aggiuntaTag
-  Scenario: Create ERROR - MaxValuesPerTagDocument
+  Scenario: [INDEX_SS_CREATE_5] Create ERROR - MaxValuesPerTagDocument
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2,test3,test4,test5,test6 |
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagDocument' reached."
 
   @aggiuntaTag
-  Scenario: Create ERROR - MaxTagsPerDocument
+  Scenario: [INDEX_SS_CREATE_6] Create ERROR - MaxTagsPerDocument
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2         |
       | global_indexed_multivalue:test1,test2 |
@@ -80,14 +101,16 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "Limit 'MaxTagsPerDocument' reached"
 
   @aggiuntaTag
-  Scenario: Create ERROR - MaxValuesPerTagPerRequest
+  Scenario: [INDEX_SS_CREATE_7] Create ERROR - MaxValuesPerTagPerRequest
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2,test3,test4,test5,test6, test7 |
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagPerRequest' reached"
 
+  ########################################################### UPDATE SINGLE ###################################################################
+
   @aggiuntaTag
-  Scenario: UpdateSingle SUCCESS - solo operazioni SET
+  Scenario: [INDEX_SS_UPDATE_SINGLE_1] UpdateSingle SUCCESS - solo operazioni SET
     Given Viene caricato un nuovo documento
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test | SET |
@@ -95,7 +118,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test |
 
   @aggiuntaTag
-  Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 1
+  Scenario: [INDEX_SS_UPDATE_SINGLE_2] UpdateSingle SUCCESS - solo operazioni DELETE (PARZIALE)
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -104,7 +127,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1 |
 
   @aggiuntaTag
-  Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 2
+  Scenario: [INDEX_SS_UPDATE_SINGLE_3] UpdateSingle SUCCESS - solo operazioni DELETE (TOTALE)
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -113,7 +136,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | null |
 
   @aggiuntaTag
-  Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 3
+  Scenario: [INDEX_SS_UPDATE_SINGLE_4] UpdateSingle SUCCESS - solo operazioni DELETE (ININFLUENTE)
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -122,7 +145,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1 |
 
   @aggiuntaTag
-  Scenario: UpdateSingle SUCCESS - operazioni SET+DELETE
+  Scenario: [INDEX_SS_UPDATE_SINGLE_5] UpdateSingle SUCCESS - operazioni SET+DELETE
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test |
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -132,7 +155,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test |
 
   @aggiuntaTag
-  Scenario: UpdateSingle ERROR - Set+Delete sullo stesso tag
+  Scenario: [INDEX_SS_UPDATE_SINGLE_6] UpdateSingle ERROR - Set+Delete sullo stesso tag
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -142,7 +165,7 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "SET and DELETE cannot contain the same tags: [global_multivalue]"
 
   @aggiuntaTag
-  Scenario: UpdateSingle ERROR - MaxFileKeys
+  Scenario: [INDEX_SS_UPDATE_SINGLE_7] UpdateSingle ERROR - MaxFileKeys
     Given Vengono caricati 6 nuovi documenti
     And I primi 5 documenti vengono modificati secondo le seguenti operazioni
       | global_indexed_multivalue:test | SET |
@@ -152,7 +175,7 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5"
 
   @aggiuntaTag
-  Scenario: UpdateSingle ERROR - MaxOperationsOnTagsPerRequest
+  Scenario: [INDEX_SS_UPDATE_SINGLE_8] UpdateSingle ERROR - MaxOperationsOnTagsPerRequest
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -165,7 +188,7 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "Number of tags to update exceeds maxOperationsOnTags limit"
 
   @aggiuntaTag
-  Scenario: UpdateSingle ERROR - MaxValuesPerTagDocument
+  Scenario: [INDEX_SS_UPDATE_SINGLE_9] UpdateSingle ERROR - MaxValuesPerTagDocument
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2,test3 |
     When Si modifica il documento 1 secondo le seguenti operazioni
@@ -174,7 +197,7 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagDocument' reached. Current value: 6. Max value: 5"
 
   @aggiuntaTag
-  Scenario: UpdateSingle ERROR - MaxTagsPerDocument
+  Scenario: [INDEX_SS_UPDATE_SINGLE_10] UpdateSingle ERROR - MaxTagsPerDocument
     Given Viene caricato un nuovo documento
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1        | SET |
@@ -184,30 +207,17 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "Limit 'MaxTagsPerDocument' reached. Current value: 3. Max value: 2"
 
   @aggiuntaTag
-  Scenario: UpdateSingle ERROR - MaxValuesPerTagPerRequest
+  Scenario: [INDEX_SS_UPDATE_SINGLE_11] UpdateSingle ERROR - MaxValuesPerTagPerRequest
     Given Viene caricato un nuovo documento
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2,test3,test4,test5,test6, test7 | SET |
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Number of values for tag global_multivalue exceeds maxValues limit"
 
-  @aggiuntaTag
-  Scenario: GetTags SUCCESS
-    Given Viene caricato un nuovo documento
-    When Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1,test2,test3 | SET |
-      | global_singlevalue:test1            | SET |
-    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
-      | global_multivalue:test1,test2,test3 |
-      | global_singlevalue:test1            |
-    
-  Scenario: GetTags SUCCESS Empty Result
-    Given Viene caricato un nuovo documento
-    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
-      | null |
+  ########################################################### UPDATE MASSIVE ###################################################################
 
   @aggiuntaTag
-  Scenario: Update Massive SUCCESS - solo operazioni SET
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_1] Update Massive SUCCESS - solo operazioni SET
     Given Vengono caricati 2 nuovi documenti
     When Si modificano i documenti secondo le seguenti operazioni
       | tag                      | documentIndex | operation |
@@ -222,7 +232,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test2 |
 
   @aggiuntaTag
-  Scenario: Update Massive SUCCESS - solo operazioni DELETE 1
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_2] Update Massive SUCCESS - solo operazioni DELETE (PARZIALE)
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
     When Si modificano i documenti secondo le seguenti operazioni
@@ -240,7 +250,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test2 |
 
   @aggiuntaTag
-  Scenario: Update Massive SUCCESS - solo operazioni DELETE 2
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_3] Update Massive SUCCESS - solo operazioni DELETE (TOTALE)
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
@@ -259,7 +269,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1,test2 |
 
   @aggiuntaTag
-  Scenario: Update Massive SUCCESS - solo operazioni DELETE 3
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_4] Update Massive SUCCESS - solo operazioni DELETE (ININFLUENTE)
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
     When Si modificano i documenti secondo le seguenti operazioni
@@ -273,7 +283,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1,test2 |
 
   @aggiuntaTag
-  Scenario: Update Massive SUCCESS - operazioni SET+DELETE
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_5] Update Massive SUCCESS - operazioni SET+DELETE
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
@@ -290,7 +300,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1 |
 
   @aggiuntaTag
-  Scenario: Update Massive ERROR - File key ripetuta
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_6] Update Massive ERROR - File key ripetuta
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
@@ -303,7 +313,7 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il messaggio di errore riporta la dicitura "Duplicate fileKey found:"
 
   @aggiuntaTag
-  Scenario: Update Massive ERROR - Set+Delete sullo stesso tag
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_7] Update Massive ERROR - Set+Delete sullo stesso tag
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
@@ -319,7 +329,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1 |
 
   @aggiuntaTag
-  Scenario: Update Massive ERROR - MaxFileKeysUpdateMassivePerRequest
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_8] Update Massive ERROR - MaxFileKeysUpdateMassivePerRequest
     Given Vengono caricati 6 nuovi documenti
     When Si modificano i documenti secondo le seguenti operazioni
       | operation | tag                     | documentIndex |
@@ -332,7 +342,8 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Number of documents to update exceeds MaxFileKeysUpdateMassivePerRequest limit."
 
-  Scenario: Update Massive ERROR - MaxOperationsOnTagsPerRequest
+  @aggiuntaTag
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_9] Update Massive ERROR - MaxOperationsOnTagsPerRequest
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1 |
     When Si modificano i documenti secondo le seguenti operazioni
@@ -350,7 +361,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test6 |
 
   @aggiuntaTag
-  Scenario: Update Massive ERROR - MaxFileKeys
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_10] Update Massive ERROR - MaxFileKeys
     Given Vengono caricati 5 nuovi documenti
     And I primi 5 documenti vengono modificati secondo le seguenti operazioni
       | global_indexed_multivalue:test | SET |
@@ -365,7 +376,10 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_indexed_multivalue:test |
       | global_multivalue:test1        |
 
-  Scenario: Update Massive ERROR - MaxTagsPerDocument
+    #TODO aggiungere MaxValuesPerTagDocument
+
+  @aggiuntaTag
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_12] Update Massive ERROR - MaxTagsPerDocument
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1 |
     When Si modificano i documenti secondo le seguenti operazioni
@@ -379,6 +393,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
 
+  @aggiuntaTag
   Scenario: Update Massive ERROR - MaxValuesPerTagPerRequest
     Given Vengono caricati 2 nuovi documenti
     When Si modificano i documenti secondo le seguenti operazioni
@@ -390,8 +405,12 @@ Feature: test preliminari indicizzazione File safeStorage
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1 |
 
+  ########################################################### SEARCH FILE-KEY ###################################################################
+
+  #TODO aggiungere MaxMapValuesForSearch
+
   @aggiuntaTag
-  Scenario Outline: SEARCH SUCCESS: Empty Result
+  Scenario Outline: [INDEX_SS_SEARCH_2] SEARCH SUCCESS: Empty Result
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_indexed_multivalue:test1,test2 |
       | global_indexed_singlevalue:test1      |
@@ -407,7 +426,7 @@ Feature: test preliminari indicizzazione File safeStorage
       |       |
 
   @aggiuntaTag
-  Scenario Outline: SEARCH ERROR: 0 parametri tag
+  Scenario Outline: [INDEX_SS_SEARCH_3] SEARCH ERROR: 0 parametri tag
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_indexed_multivalue:test1,test2 |
       | global_indexed_singlevalue:test1      |
@@ -422,7 +441,7 @@ Feature: test preliminari indicizzazione File safeStorage
       |       |
 
   @aggiuntaTag
-  Scenario Outline: SEARCH SUCCESS: 1 parametro tag
+  Scenario Outline: [INDEX_SS_SEARCH_4] SEARCH SUCCESS: 1 parametro tag
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_indexed_multivalue:test1param,test2param |
       | global_indexed_singlevalue:test1param           |
@@ -438,7 +457,7 @@ Feature: test preliminari indicizzazione File safeStorage
       |       |
 
   @aggiuntaTag
-  Scenario Outline: SEARCH SUCCESS: multipli parametri tag (logic and o null)
+  Scenario Outline: [INDEX_SS_SEARCH_5] SEARCH SUCCESS: multipli parametri tag (logic and o null)
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_indexed_multivalue:test1param,test2param |
       | global_indexed_singlevalue:test1param           |
@@ -454,7 +473,7 @@ Feature: test preliminari indicizzazione File safeStorage
       |       |
 
   @aggiuntaTag
-  Scenario: SEARCH SUCCESS: multipli parametri tag (logic or)
+  Scenario: [INDEX_SS_SEARCH_6] SEARCH SUCCESS: multipli parametri tag (logic or)
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_indexed_multivalue:test1paramOR,test2paramOR |
     And Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
