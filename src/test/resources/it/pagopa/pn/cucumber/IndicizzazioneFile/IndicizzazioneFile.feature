@@ -65,7 +65,7 @@ Feature: test preliminari indicizzazione File safeStorage
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2,test3,test4,test5,test6 |
     Then La chiamata genera un errore con status code 400
-    And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagPerDocument' reached"
+    And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagDocument' reached."
 
   @aggiuntaTag
   Scenario: Create ERROR - MaxTagsPerDocument
