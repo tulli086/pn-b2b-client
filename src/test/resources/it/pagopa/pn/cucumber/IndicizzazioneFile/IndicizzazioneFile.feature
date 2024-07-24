@@ -380,7 +380,17 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_indexed_multivalue:test |
       | global_multivalue:test1        |
 
-    #TODO aggiungere MaxValuesPerTagDocument
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_11] Update Massive ERROR - MaxValuesPerTagDocument
+    Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
+      | global_multivalue:test1,test2,test3,test4 |
+    When Si modificano i documenti secondo le seguenti operazioni
+      | operation | tag                           | documentIndex |
+      | SET       | global_multivalue:test5       | 1             |
+      | SET       | global_multivalue:test5,test6 | 2             |
+    Then L'update massivo va in successo con stato 200
+    And La response contiene uno o più errori riportanti la dicitura "Limit 'MaxValuesPerTagDocument' reached. Current value: 6. Max value: 5" riguardanti il documento 2
+    And Il documento 1 è associato alla seguente lista di tag
+      | global_indexed_multivalue:test1,test2,test3,test4,test5 |
 
   @aggiuntaTag
   Scenario: [INDEX_SS_UPDATE_MASSIVE_12] Update Massive ERROR - MaxTagsPerDocument
