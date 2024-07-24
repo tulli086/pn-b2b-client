@@ -184,14 +184,6 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Number of values for tag global_multivalue exceeds maxValues limit"
 
-#  Scenario: Search ERROR - MaxMapValuesForSearch
-#    Given Viene caricato un nuovo documento pdf
-#    And Si modifica il documento 1 secondo le seguenti operazioni
-#      | global_multivalue:test1,test2,test3,test4,test5 | SET |
-#    When Si effettua una ricerca passando 6 filtri di ricerca
-#    Then La chiamata genera un errore con status code 400
-#    And Il messaggio di errore riporta la dicitura "TODO"
-
   @aggiuntaTag
   Scenario: GetTags SUCCESS
     Given Viene caricato un nuovo documento pdf
@@ -215,7 +207,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1  | 1             | SET       |
       | global_singlevalue:test1 | 1             | SET       |
       | global_multivalue:test2  | 2             | SET       |
-    Then La chiamata va in successo con stato 200
+    Then L'update massivo va in successo con stato 200
     And Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
@@ -230,7 +222,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | tag                     | documentIndex | operation |
       | global_multivalue:test1 | 1             | DELETE    |
       | global_multivalue:test2 | 2             | DELETE    |
-    Then La chiamata va in successo con stato 200
+    Then L'update massivo va in successo con stato 200
     And Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test2 |
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
@@ -249,7 +241,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | tag                           | documentIndex | operation |
       | global_multivalue:test1,test2 | 1             | DELETE    |
       | global_multivalue:test1,test2 | 2             | DELETE    |
-    Then La chiamata va in successo con stato 200
+    Then L'update massivo va in successo con stato 200
     And Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_singlevalue:test1 |
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
@@ -267,7 +259,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | tag                     | documentIndex | operation |
       | global_multivalue:test3 | 1             | DELETE    |
       | global_multivalue:test3 | 2             | DELETE    |
-    Then La chiamata va in successo con stato 200
+    Then L'update massivo va in successo con stato 200
     And Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1,test2 |
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
@@ -282,7 +274,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | operation | tag                     | documentIndex |
       | DELETE    | global_multivalue:test2 | 1             |
       | DELETE    | global_multivalue:test2 | 2             |
-    Then La chiamata va in successo con stato 200
+    Then L'update massivo va in successo con stato 200
     And Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
@@ -301,7 +293,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | DELETE    | global_singlevalue:test1 | 1             |
       | DELETE    | global_multivalue:test2  | 2             |
     Then La chiamata genera un errore con status code 400
-    And Il messaggio di errore riporta la dicitura "Duplicate fileKey found: " 1
+    And Il messaggio di errore riporta la dicitura "Duplicate fileKey found:"
 
   @aggiuntaTag
   Scenario: Update Massive ERROR - Set+Delete sullo stesso tag
@@ -313,7 +305,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | SET       | global_multivalue:test3 | 1             |
       | DELETE    | global_multivalue:test2 | 1             |
       | DELETE    | global_multivalue:test2 | 2             |
-    Then La chiamata va in successo con stato 200
+    Then L'update massivo va in successo con stato 200
     And La response contiene uno o più errori riportanti la dicitura "SET and DELETE cannot contain the same tags: [global_multivalue]" riguardanti il documento 1
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1  |
@@ -330,7 +322,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | SET       | global_multivalue:test1 | 4             |
       | SET       | global_multivalue:test1 | 5             |
       | SET       | global_multivalue:test1 | 6             |
-    Then La chiamata genera un errore con status code 400
+    Then L'update massivo va in successo con stato 200
     And Il messaggio di errore riporta la dicitura "Number of documents to update exceeds MaxFileKeysUpdateMassivePerRequest limit."
 
   Scenario: Update Massive ERROR - MaxOperationsOnTagsPerRequest
@@ -344,7 +336,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | SET       | global_indexed_singlevalue:test4 | 1             |
       | SET       | pn-test~local_multivalue:test5   | 1             |
       | SET       | global_singlevalue:test6         | 2             |
-    Then La chiamata va in successo con stato 200
+    Then L'update massivo va in successo con stato 200
     And La response contiene uno o più errori riportanti la dicitura "Number of tags to update exceeds maxOperationsOnTags limit" riguardanti il documento 1
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1  |
@@ -365,7 +357,7 @@ Feature: test preliminari indicizzazione File safeStorage
 #      | SET       | global_multivalue:test3 | 1             |
 #      | DELETE    | global_multivalue:test2 | 1             |
 #      | DELETE    | global_multivalue:test2 | 2             |
-#    Then La chiamata va in successo con stato 200
+#    TThen L'update massivo va in successo con stato 200
 #    And La response contiene uno o più errori riportanti la dicitura "SET and DELETE cannot contain the same tags: [global_multivalue]" riguardanti il documento 1
 #    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
 #      | global_multivalue:test1  |
@@ -382,7 +374,6 @@ Feature: test preliminari indicizzazione File safeStorage
 #    Then La chiamata genera un errore con status code 400
 #    And Il messaggio di errore riporta la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5"
 
-#  TODO Matteo non va
   Scenario: Update Massive ERROR - MaxTagsPerDocument
     Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
       | global_multivalue:test1 |
@@ -391,11 +382,22 @@ Feature: test preliminari indicizzazione File safeStorage
       | SET       | global_singlevalue:test1       | 1             |
       | SET       | pn-test~local_multivalue:test1 | 1             |
       | SET       | global_singlevalue:test1       | 2             |
-    Then La chiamata va in successo con stato 200
-    And La response contiene uno o più errori riportanti la dicitura "Number of tags to update exceeds maxOperationsOnTags limit" riguardanti il documento 1
+    Then L'update massivo va in successo con stato 200
+    And La response contiene uno o più errori riportanti la dicitura "Limit 'MaxTagsPerDocument' reached. Current value: 3. Max value: 2" riguardanti il documento 1
     And Il documento 2 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
+
+  Scenario: Update Massive ERROR - MaxValuesPerTagPerRequest
+    Given Vengono caricati 2 nuovi documenti pdf
+    When Si modificano i documenti secondo le seguenti operazioni
+      | operation | tag                                                         | documentIndex |
+      | SET       | global_multivalue:test1,test2,test3,test4,test5,test6,test7 | 1             |
+      | SET       | global_multivalue:test1                                     | 2             |
+    Then L'update massivo va in successo con stato 200
+    And La response contiene uno o più errori riportanti la dicitura "Number of values for tag global_multivalue exceeds maxValues limit" riguardanti il documento 1
+    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+      | global_multivalue:test1 |
 
   @aggiuntaTag
   Scenario: SEARCH SUCCESS: Empty Result - NO parametro logic
