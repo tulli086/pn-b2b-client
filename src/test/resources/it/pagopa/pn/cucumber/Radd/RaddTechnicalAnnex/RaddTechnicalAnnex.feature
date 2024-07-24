@@ -92,7 +92,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     #capire il codice errore se c'è
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-3] PF - Operatore RADD_UPLOADER - Start di una ACT transaction con fileKey presente - ricezione OK
+  Scenario: [ADEG-RADD-TRANS_ACT-1] PF - Operatore RADD_UPLOADER - Start di una ACT transaction con fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
@@ -108,7 +108,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-4] Operatore RADD_UPLOADER - Start di una ACT transaction senza fileKey presente - ricezione Errore
+  Scenario: [ADEG-RADD-TRANS_ACT-2] Operatore RADD_UPLOADER - Start di una ACT transaction senza fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
@@ -126,7 +126,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
   # OPERATORE STANDARD
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_AOR-5] Operatore RADD_STANDARD - Start di una AOR transaction senza fileKey presente - ricezione OK
+  Scenario: [ADEG-RADD-TRANS_AOR-3] Operatore RADD_STANDARD - Start di una AOR transaction senza fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -142,7 +142,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_AOR-6] Operatore RADD_STANDARD - Start di una AOR transaction senza fileKey presente - ricezione Errore
+  Scenario: [ADEG-RADD-TRANS_AOR-4] Operatore RADD_STANDARD - Start di una AOR transaction senza fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -161,7 +161,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     #capire il codice errore se c'è
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-7] Operatore RADD_STANDARD - Start di una ACT transaction senza fileKey presente - ricezione OK
+  Scenario: [ADEG-RADD-TRANS_ACT-3] Operatore RADD_STANDARD - Start di una ACT transaction senza fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
@@ -176,7 +176,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-8] Operatore RADD_STANDARD - Start di una ACT transaction con fileKey presente - ricezione Errore
+  Scenario: [ADEG-RADD-TRANS_ACT-4] Operatore RADD_STANDARD - Start di una ACT transaction con fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
@@ -193,7 +193,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     #capire il codice errore se c'è
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-8] Operatore RADD_STANDARD - Tentativo di eseguire documentUpload - ricezione Errore
+  Scenario: [ADEG-RADD-TRANS_ACT-5] Operatore RADD_STANDARD - Tentativo di eseguire documentUpload - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
@@ -243,7 +243,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     #capire il codice errore se c'è
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-7] Operatore senza ruolo - Start di una ACT transaction senza fileKey presente - ricezione OK
+  Scenario: [ADEG-RADD-TRANS_ACT-6] Operatore senza ruolo - Start di una ACT transaction senza fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
@@ -258,7 +258,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And l'operazione di download degli atti si conclude correttamente su radd alternative
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-8] Operatore senza ruolo - Start di una ACT transaction con fileKey presente - ricezione Errore
+  Scenario: [ADEG-RADD-TRANS_ACT-7] Operatore senza ruolo - Start di una ACT transaction con fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
