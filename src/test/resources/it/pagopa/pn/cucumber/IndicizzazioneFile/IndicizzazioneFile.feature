@@ -92,19 +92,18 @@ Feature: test preliminari indicizzazione File safeStorage
     Given Viene caricato un nuovo documento "pdf" con tag associati
       | global_multivalue:test1,test2 |
     When Si modifica il documento 1 secondo le seguenti operazioni
-      | global_multivalue:test1 | DELETE |
+      | global_multivalue:test2 | DELETE |
     Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
-      | global_singlevalue:test1 |
+      | global_multivalue:test1 |
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 2
     Given Viene caricato un nuovo documento "pdf" con tag associati
       | global_multivalue:test1,test2 |
-      | global_singlevalue:test1      |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2 | DELETE |
     Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
-      | global_singlevalue:test1 |
+      | null |
 
   @aggiuntaTag
   Scenario: UpdateSingle SUCCESS - solo operazioni DELETE 3
