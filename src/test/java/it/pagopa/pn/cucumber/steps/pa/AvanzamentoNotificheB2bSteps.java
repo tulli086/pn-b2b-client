@@ -487,12 +487,12 @@ public class AvanzamentoNotificheB2bSteps {
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string}")
     public void readingEventUpToTheTimelineElementOfNotification(String timelineEventCategory) {
-        stepSharedContext.setResponse(readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory));
+        stepSharedContext.setPnPollingResponse(readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory));
     }
 
     @Then("gli eventi di timeline ricevuti sono i seguenti$")
     public void verifyTimelineEventsAreTheOnesExpected(List<String> expectedEvents) {
-        PnPollingResponseV23 timelineElementV23 = stepSharedContext.getResponse();
+        PnPollingResponseV23 timelineElementV23 = stepSharedContext.getPnPollingResponse();
         List<String> actualTimeline = Optional.ofNullable(timelineElementV23)
                 .map(PnPollingResponseV23::getNotification)
                 .map(FullSentNotificationV23::getTimeline)
