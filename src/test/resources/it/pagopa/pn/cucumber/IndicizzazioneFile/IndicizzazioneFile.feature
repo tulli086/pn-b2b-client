@@ -380,6 +380,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_indexed_multivalue:test |
       | global_multivalue:test1        |
 
+  @aggiuntaTag
   Scenario: [INDEX_SS_UPDATE_MASSIVE_11] Update Massive ERROR - MaxValuesPerTagDocument
     Given Vengono caricati 2 nuovi documenti di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2,test3,test4 |
