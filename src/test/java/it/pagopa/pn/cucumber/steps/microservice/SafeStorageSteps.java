@@ -363,7 +363,7 @@ public class SafeStorageSteps {
         ErrorDetail fileKeyError = this.indicizzazioneStepsPojo.getUpdateMassiveResponseEntity().getBody().getErrors()
                 .stream().filter(x -> x.getFileKey().contains(faultyFileKey)).findFirst().orElse(null);
         Assertions.assertNotNull(fileKeyError);
-//        Assertions.assertEquals("400.00", fileKeyError.getResultCode());//TODO scommentare appena fixano
+        Assertions.assertEquals("400.00", fileKeyError.getResultCode());
         Assertions.assertTrue(fileKeyError.getResultDescription().contains(errorMessage));
     }
 
