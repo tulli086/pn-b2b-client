@@ -26,17 +26,21 @@ Feature: test preliminari indicizzazione File safeStorage
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
-    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è associato alla seguente lista di tag
       | global_multivalue:test1,test2 |
       | global_singlevalue:test1      |
 
   @aggiuntaTag
   Scenario: Create - ERROR Trasformazione
-    Given Viene caricato un nuovo documento di tipo "PN_LEGAL_FACTS_ST" con tag associati
+    When Viene caricato un nuovo documento di tipo "PN_LEGAL_FACTS_ST" con tag associati
       | global_multivalue:test1 |
     Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
       | global_multivalue:test1 |
-
+    And Il documento 1 è correttamente formato con la seguente lista di tag
+      | global_multivalue:test1 |
+    And La chiamata genera un errore con status code 404
+    And Il messaggio di errore riporta la dicitura "Document is missing from bucket"
+ 
   @aggiuntaTag
   Scenario: Create ERROR - MaxTagsPerRequest
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con tag associati
@@ -100,7 +104,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1,test2 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test2 | DELETE |
-    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è associato alla seguente lista di tag
       | global_multivalue:test1 |
 
   @aggiuntaTag
@@ -109,7 +113,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1,test2 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2 | DELETE |
-    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è associato alla seguente lista di tag
       | null |
 
   @aggiuntaTag
@@ -118,7 +122,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1 |
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test2 | DELETE |
-    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è associato alla seguente lista di tag
       | global_multivalue:test1 |
 
   @aggiuntaTag
@@ -128,7 +132,7 @@ Feature: test preliminari indicizzazione File safeStorage
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test  | DELETE |
       | global_singlevalue:test | SET    |
-    Then Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    Then Il documento 1 è associato alla seguente lista di tag
       | global_singlevalue:test |
 
   @aggiuntaTag
@@ -215,10 +219,10 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1 | 1             | SET       |
       | global_multivalue:test2  | 2             | SET       |
     Then L'update massivo va in successo con stato 200
-    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 1 è associato alla seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
-    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 2 è associato alla seguente lista di tag
       | global_multivalue:test2 |
 
   @aggiuntaTag
@@ -230,9 +234,9 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1 | 1             | DELETE    |
       | global_multivalue:test2 | 2             | DELETE    |
     Then L'update massivo va in successo con stato 200
-    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 1 è associato alla seguente lista di tag
       | global_multivalue:test2 |
-    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 2 è associato alla seguente lista di tag
       | global_multivalue:test1 |
     And Il documento 1 non contiene la seguente lista di tag
       | global_multivalue:test1 |
@@ -249,9 +253,9 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1,test2 | 1             | DELETE    |
       | global_multivalue:test1,test2 | 2             | DELETE    |
     Then L'update massivo va in successo con stato 200
-    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 1 è associato alla seguente lista di tag
       | global_singlevalue:test1 |
-    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 2 è associato alla seguente lista di tag
       | global_singlevalue:test1 |
     And Il documento 1 non contiene la seguente lista di tag
       | global_multivalue:test1,test2 |
@@ -267,9 +271,9 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test3 | 1             | DELETE    |
       | global_multivalue:test3 | 2             | DELETE    |
     Then L'update massivo va in successo con stato 200
-    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 1 è associato alla seguente lista di tag
       | global_multivalue:test1,test2 |
-    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 2 è associato alla seguente lista di tag
       | global_multivalue:test1,test2 |
 
   @aggiuntaTag
@@ -282,10 +286,10 @@ Feature: test preliminari indicizzazione File safeStorage
       | DELETE    | global_multivalue:test2 | 1             |
       | DELETE    | global_multivalue:test2 | 2             |
     Then L'update massivo va in successo con stato 200
-    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 1 è associato alla seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
-    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 2 è associato alla seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
 
@@ -314,7 +318,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | DELETE    | global_multivalue:test2 | 2             |
     Then L'update massivo va in successo con stato 200
     And La response contiene uno o più errori riportanti la dicitura "SET and DELETE cannot contain the same tags: [global_multivalue]" riguardanti il documento 1
-    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 2 è associato alla seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
 
@@ -345,7 +349,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | SET       | global_singlevalue:test6         | 2             |
     Then L'update massivo va in successo con stato 200
     And La response contiene uno o più errori riportanti la dicitura "Number of tags to update exceeds maxOperationsOnTags limit" riguardanti il documento 1
-    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 2 è associato alla seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test6 |
 
@@ -361,7 +365,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | SET       | global_multivalue:test1        | 1             |
     Then L'update massivo va in successo con stato 200
     And La response contiene uno o più errori riportanti la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5" riguardanti il documento 6
-    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 1 è associato alla seguente lista di tag
       | global_indexed_multivalue:test |
       | global_multivalue:test1        |
 
@@ -375,7 +379,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | SET       | global_singlevalue:test1       | 2             |
     Then L'update massivo va in successo con stato 200
     And La response contiene uno o più errori riportanti la dicitura "Limit 'MaxTagsPerDocument' reached. Current value: 3. Max value: 2" riguardanti il documento 1
-    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 2 è associato alla seguente lista di tag
       | global_multivalue:test1  |
       | global_singlevalue:test1 |
 
@@ -387,7 +391,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | SET       | global_multivalue:test1                                     | 2             |
     Then L'update massivo va in successo con stato 200
     And La response contiene uno o più errori riportanti la dicitura "Number of values for tag global_multivalue exceeds maxValues limit" riguardanti il documento 1
-    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
+    And Il documento 2 è associato alla seguente lista di tag
       | global_multivalue:test1 |
 
   @aggiuntaTag
