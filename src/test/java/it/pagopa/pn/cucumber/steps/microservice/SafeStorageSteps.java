@@ -43,24 +43,24 @@ public class SafeStorageSteps {
         }
     }
 
-    @Given("Viene caricato un nuovo documento")
-    public void uploadNewDocument() {
-        String resourcePath = "classpath:/multa.pdf";//getFileByType(fileType);
+    @Given("Viene caricato un nuovo documento di tipo {string}")
+    public void uploadNewDocument(String type) {
+        String resourcePath = "classpath:/multa.pdf";
         String sha256 = computeSha(resourcePath);
 
         FileCreationRequest request = new FileCreationRequest();
         request.setContentType("application/pdf");
         request.setStatus("SAVED");
-        request.setDocumentType("PN_NOTIFICATION_ATTACHMENTS");
+        request.setDocumentType(type);
 
         FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(sha256, "SHA256", request);
         loadToPresignedUrl(fileCreationResponse, sha256, resourcePath);
     }
 
-    @Given("Vengono caricati {int} nuovi documenti")
-    public void uploadNewPdfDocument(Integer times) {
+    @Given("Vengono caricati {int} nuovi documenti di tipo {string}")
+    public void uploadNewPdfDocument(Integer times, String type) {
         for (int i = 0; i < times; i++) {
-            uploadNewDocument();
+            uploadNewDocument(type);
         }
     }
 
@@ -300,14 +300,13 @@ public class SafeStorageSteps {
     @Then("Il risultato della search contiene le fileKey relative ai seguenti documenti")
     public void checkSearchResult(DataTable dataTable) {
         List<String> searchResult = this.indicizzazioneStepsPojo.getAdditionalFileTagsSearchResponseResponseEntity().getBody().getFileKeys()
-                .stream().map(x -> x.getFileKey()).toList();
+                .stream().map(AdditionalFileTagsSearchResponseFileKeys::getFileKey).toList();
         List<String> documentIndexes = dataTable.asList();
         if (documentIndexes.contains("null")) {
             Assertions.assertTrue(searchResult.isEmpty());
         } else {
             List<String> expectedFileKeys = new LinkedList<>();
-            documentIndexes.forEach(x -> expectedFileKeys.add(this.indicizzazioneStepsPojo.getCreatedFiles().get(Integer.valueOf(x) - 1).getKey()));
-            assert searchResult != null;
+            documentIndexes.forEach(x -> expectedFileKeys.add(this.indicizzazioneStepsPojo.getCreatedFiles().get(Integer.parseInt(x) - 1).getKey()));
             Assertions.assertEquals(searchResult.size(), expectedFileKeys.size());
             searchResult.forEach(x -> Assertions.assertTrue(expectedFileKeys.contains(x)));
         }
@@ -382,7 +381,7 @@ public class SafeStorageSteps {
         String tagValue = tagString.split(":")[1];
         tagMap.put(tagName, tagValue);
         AdditionalFileTagsSearchResponse searchResponse = this.safeStorageClient.additionalFileTagsSearch("or", true, tagMap);
-        List<String> fileKeys = searchResponse.getFileKeys().stream().map(x -> x.getFileKey()).toList();
+        List<String> fileKeys = searchResponse.getFileKeys().stream().map(AdditionalFileTagsSearchResponseFileKeys::getFileKey).toList();
 
         if (!fileKeys.isEmpty()) {
             AdditionalFileTagsMassiveUpdateRequest massiveUpdateRequest = new AdditionalFileTagsMassiveUpdateRequest();

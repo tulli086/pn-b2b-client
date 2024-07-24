@@ -20,29 +20,21 @@ import java.util.Map;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClient {
-
-
+    private final String clientIdSafeStorage;
     private final FileUploadApi fileUploadApi;
     private final FileDownloadApi fileDownloadApi;
     private final AdditionalFileTagsApi additionalFileTagsApi;
-    private final String clientIdSafeStorage;
-    private final String apiKeySafeStorage;
-    private final RestTemplate restTemplate;
-    private final String safeStorageBaseUrl;
 
     public PnSafeStoragePrivateClientImpl(RestTemplate restTemplate,
                                           @Value("${pn.safeStorage.base-url}") String safeStorageBaseUrl,
                                           @Value("${pn.safeStorage.apikey}") String apiKeySafeStorage,
                                           @Value("${pn.safeStorage.clientId}") String clientIdSafeStorage) {
 
-        this.apiKeySafeStorage = apiKeySafeStorage;
         this.clientIdSafeStorage = clientIdSafeStorage;
-        this.restTemplate = restTemplate;
-        this.safeStorageBaseUrl = safeStorageBaseUrl;
 
         fileUploadApi = new FileUploadApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
-        additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
         fileDownloadApi = new FileDownloadApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
+        additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
     }
 
     private static ApiClient newApiClient(RestTemplate restTemplate, String basePath, String apiKey) {
@@ -52,14 +44,13 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
         return newApiClient;
     }
 
-    /**
-     * Metodi ereditati da IPnSafeStoragePrivateClient
-     */
-    public FileCreationResponse createFile(String xChecksumValue, String xChecksum, FileCreationRequest fileCreationRequest) throws RestClientException {
+    public FileCreationResponse createFile(
+            String xChecksumValue, String xChecksum, FileCreationRequest fileCreationRequest) throws RestClientException {
         return this.fileUploadApi.createFile(clientIdSafeStorage, xChecksumValue, xChecksum, fileCreationRequest);
     }
 
-    public ResponseEntity<FileCreationResponse> createFileWithHttpInfo(String cxId, String xChecksumValue, String xChecksum, FileCreationRequest fileCreationRequest) throws RestClientException {
+    public ResponseEntity<FileCreationResponse> createFileWithHttpInfo(
+            String cxId, String xChecksumValue, String xChecksum, FileCreationRequest fileCreationRequest) throws RestClientException {
         return this.fileUploadApi.createFileWithHttpInfo(cxId, xChecksumValue, xChecksum, fileCreationRequest);
     }
 
@@ -67,7 +58,8 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
         return this.fileDownloadApi.getFile(fileKey, clientIdSafeStorage, metadataOnly, tags);
     }
 
-    public ResponseEntity<FileDownloadResponse> getFileWithHttpInfo(String fileKey, String cxId, Boolean metadataOnly, Boolean tags) throws RestClientException {
+    public ResponseEntity<FileDownloadResponse> getFileWithHttpInfo(
+            String fileKey, String cxId, Boolean metadataOnly, Boolean tags) throws RestClientException {
         return this.fileDownloadApi.getFileWithHttpInfo(fileKey, cxId, metadataOnly, tags);
     }
 
@@ -75,54 +67,40 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
         return this.additionalFileTagsApi.additionalFileTagsGet(fileKey, clientIdSafeStorage);
     }
 
-    public ResponseEntity<AdditionalFileTagsGetResponse> additionalFileTagsGetWithHttpInfo(String fileKey, String cxId) throws RestClientException {
+    public ResponseEntity<AdditionalFileTagsGetResponse> additionalFileTagsGetWithHttpInfo(
+            String fileKey, String cxId) throws RestClientException {
         return this.additionalFileTagsApi.additionalFileTagsGetWithHttpInfo(fileKey, cxId);
     }
 
-    public AdditionalFileTagsSearchResponse additionalFileTagsSearch(String logic, Boolean tags,
-        Map<String, String> tagParams) throws RestClientException {
+    public AdditionalFileTagsSearchResponse additionalFileTagsSearch(
+            String logic, Boolean tags, Map<String, String> tagParams) throws RestClientException {
         return this.additionalFileTagsApi.additionalFileTagsSearch(clientIdSafeStorage, logic, tags, tagParams);
     }
 
     public ResponseEntity<AdditionalFileTagsSearchResponse> additionalFileTagsSearchWithHttpInfo(
-        String cxId, String logic, Boolean tags, Map<String, String> tagParams)
-        throws RestClientException {
+            String cxId, String logic, Boolean tags, Map<String, String> tagParams) throws RestClientException {
         return this.additionalFileTagsApi.additionalFileTagsSearchWithHttpInfo(cxId, logic, tags, tagParams);
     }
 
-    public AdditionalFileTagsUpdateResponse additionalFileTagsUpdate(String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) throws RestClientException {
+    public AdditionalFileTagsUpdateResponse additionalFileTagsUpdate(
+            String fileKey, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) throws RestClientException {
         return this.additionalFileTagsApi.additionalFileTagsUpdate(fileKey, clientIdSafeStorage, additionalFileTagsUpdateRequest);
     }
 
-    public ResponseEntity<AdditionalFileTagsUpdateResponse> additionalFileTagsUpdateWithHttpInfo(String fileKey, String cxId, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) throws RestClientException {
+    public ResponseEntity<AdditionalFileTagsUpdateResponse> additionalFileTagsUpdateWithHttpInfo(
+            String fileKey, String cxId, AdditionalFileTagsUpdateRequest additionalFileTagsUpdateRequest) throws RestClientException {
         return this.additionalFileTagsApi.additionalFileTagsUpdateWithHttpInfo(fileKey, cxId, additionalFileTagsUpdateRequest);
     }
 
     @Override
-    public AdditionalFileTagsMassiveUpdateResponse additionalFileTagsMassiveUpdate(AdditionalFileTagsMassiveUpdateRequest additionalFileTagsMassiveUpdateRequest) throws RestClientException {
+    public AdditionalFileTagsMassiveUpdateResponse additionalFileTagsMassiveUpdate(
+            AdditionalFileTagsMassiveUpdateRequest additionalFileTagsMassiveUpdateRequest) throws RestClientException {
         return this.additionalFileTagsApi.additionalFileTagsMassiveUpdate(clientIdSafeStorage, additionalFileTagsMassiveUpdateRequest);
     }
 
     @Override
-    public ResponseEntity<AdditionalFileTagsMassiveUpdateResponse> additionalFileTagsMassiveUpdateWithHttpInfo(String cxId, AdditionalFileTagsMassiveUpdateRequest additionalFileTagsMassiveUpdateRequest) throws RestClientException {
+    public ResponseEntity<AdditionalFileTagsMassiveUpdateResponse> additionalFileTagsMassiveUpdateWithHttpInfo(
+            String cxId, AdditionalFileTagsMassiveUpdateRequest additionalFileTagsMassiveUpdateRequest) throws RestClientException {
         return this.additionalFileTagsApi.additionalFileTagsMassiveUpdateWithHttpInfo(cxId, additionalFileTagsMassiveUpdateRequest);
-    }
-
-    /**
-     * Metodi ereditati da SettableApiKey
-     */
-    @Override
-    public boolean setApiKeys(ApiKeyType apiKey) {
-        return false;
-    }
-
-    @Override
-    public void setApiKey(String apiKey) {
-        this.additionalFileTagsApi.setApiClient(newApiClient(restTemplate, safeStorageBaseUrl, apiKey));
-    }
-
-    @Override
-    public ApiKeyType getApiKeySetted() {
-        return null;
     }
 }
