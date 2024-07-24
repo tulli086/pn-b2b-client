@@ -52,8 +52,6 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1      |
 
   @aggiuntaTag
-  Scenario: Create - ERROR Trasformazione
-    When Viene caricato un nuovo documento di tipo "PN_LEGAL_FACTS_ST" con tag associati
   Scenario: [INDEX_SS_CREATE_2] Create - ERROR Trasformazione
     Given Viene caricato un nuovo documento di tipo "PN_LEGAL_FACTS_ST" con tag associati
       | global_multivalue:test1 |
@@ -400,7 +398,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_singlevalue:test1 |
 
   @aggiuntaTag
-  Scenario: Update Massive ERROR - MaxValuesPerTagPerRequest
+  Scenario: [INDEX_SS_UPDATE_MASSIVE_13] Update Massive ERROR - MaxValuesPerTagPerRequest
     Given Vengono caricati 2 nuovi documenti
     When Si modificano i documenti secondo le seguenti operazioni
       | operation | tag                                                         | documentIndex |
@@ -439,7 +437,7 @@ Feature: test preliminari indicizzazione File safeStorage
     When Vengono ricercate con logica "<logic>" le fileKey aventi i seguenti tag
       | null |
     Then La chiamata genera un errore con status code 400
-#    And Il messaggio di errore riporta la dicitura "Limit 'MaxTagsPerRequest' reached"
+    And Il messaggio di errore riporta la dicitura "No tag params provided. At least one tag key-value pair is required"
     Examples:
       | logic |
       | and   |

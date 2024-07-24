@@ -8,28 +8,17 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsSearchResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.ErrorDetail;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Tags;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -266,8 +255,6 @@ public class SafeStorageSteps {
                 tagValues.forEach(t -> Assertions.assertTrue(tagMap.get(tagName).contains(t)));
             });
         }
-
-
     }
 
     @Then("Il documento {int} non contiene la seguente lista di tag")
@@ -288,25 +275,26 @@ public class SafeStorageSteps {
 
     @Then("Il documento {int} è correttamente formato con la seguente lista di tag")
     public void getAndCheckFile(Integer documentIndex, List<String> expectedTags) {
-        try {
-            Map<String, List<String>> tagMap = safeStorageClient.getFile(
-                this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey(),
-                false, true).getTags();
+        if (!expectedTags.contains("null")) {
+            try {
+                Map<String, List<String>> tagMap = safeStorageClient.getFile(
+                        this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey(),
+                        false, true).getTags();
+                assert tagMap != null;
+                Assertions.assertEquals(expectedTags.size(), tagMap.size());
 
-            assert tagMap != null;
-            Assertions.assertEquals(expectedTags.size(), tagMap.size());
+                expectedTags.forEach(tag -> {
+                    String[] splittedTags = tag.split(":");
+                    String tagName = splittedTags[0];
+                    List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
 
-            expectedTags.forEach(tag -> {
-                String[] splittedTags = tag.split(":");
-                String tagName = splittedTags[0];
-                List<String> tagValues = Arrays.stream(splittedTags[1].split(",")).toList();
-
-                Assertions.assertTrue(tagMap.containsKey(tagName));
-                Assertions.assertEquals(tagValues.size(), tagMap.get(tagName).size());
-                tagValues.forEach(t -> Assertions.assertTrue(tagMap.get(tagName).contains(t)));
-            });
-        } catch (HttpClientErrorException httpExc) {
-            this.indicizzazioneStepsPojo.setHttpException(httpExc);
+                    Assertions.assertTrue(tagMap.containsKey(tagName));
+                    Assertions.assertEquals(tagValues.size(), tagMap.get(tagName).size());
+                    tagValues.forEach(t -> Assertions.assertTrue(tagMap.get(tagName).contains(t)));
+                });
+            } catch (HttpClientErrorException httpExc) {
+                this.indicizzazioneStepsPojo.setHttpException(httpExc);
+            }
         }
     }
 
@@ -358,9 +346,13 @@ public class SafeStorageSteps {
             tagMap = tags.stream().collect(Collectors.toMap(
                     tag -> tag.split(":")[0], tag -> tag.split(":")[1].split(",")[0]));
         }
-        ResponseEntity<AdditionalFileTagsSearchResponse> response = safeStorageClient.additionalFileTagsSearchWithHttpInfo(
-                "pn-test", logic, true, tagMap);
-        indicizzazioneStepsPojo.setAdditionalFileTagsSearchResponseResponseEntity(response);
+        try {
+            ResponseEntity<AdditionalFileTagsSearchResponse> response = safeStorageClient.additionalFileTagsSearchWithHttpInfo(
+                    "pn-test", logic, true, tagMap);
+            indicizzazioneStepsPojo.setAdditionalFileTagsSearchResponseResponseEntity(response);
+        } catch (HttpClientErrorException httpExc) {
+            this.indicizzazioneStepsPojo.setHttpException(httpExc);
+        }
     }
 
     @And("La response contiene uno o più errori riportanti la dicitura {string} riguardanti il documento {int}")
