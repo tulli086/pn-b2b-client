@@ -54,7 +54,6 @@ public class SafeStorageSteps {
         request.setDocumentType("PN_NOTIFICATION_ATTACHMENTS");
 
         FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(sha256, "SHA256", request);
-
         loadToPresignedUrl(fileCreationResponse, sha256, resourcePath);
     }
 
@@ -301,6 +300,22 @@ public class SafeStorageSteps {
         });
     }
 
+    @Then("Il risultato della search contiene le fileKey relative ai seguenti documenti")
+    public void checkSearchResult(DataTable dataTable) {
+        List<String> searchResult = this.indicizzazioneStepsPojo.getAdditionalFileTagsSearchResponseResponseEntity().getBody().getFileKeys()
+                .stream().map(x -> x.getFileKey()).toList();
+        List<String> documentIndexes = dataTable.asList();
+        if (documentIndexes.contains("null")) {
+            Assertions.assertTrue(searchResult.isEmpty());
+        } else {
+            List<String> expectedFileKeys = new LinkedList<>();
+            documentIndexes.forEach(x -> expectedFileKeys.add(this.indicizzazioneStepsPojo.getCreatedFiles().get(Integer.valueOf(x) - 1).getKey()));
+            assert searchResult != null;
+            Assertions.assertEquals(searchResult.size(), expectedFileKeys.size());
+            searchResult.forEach(x -> Assertions.assertTrue(expectedFileKeys.contains(x)));
+        }
+    }
+
     private AdditionalFileTagsUpdateRequest createUpdateRequest(Map<String, String> specificationsMap) {
         AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
         specificationsMap.forEach((tag, operation) -> {
@@ -328,10 +343,13 @@ public class SafeStorageSteps {
         if (logic.isEmpty()) {
             logic = null;
         }
-        Map<String, String> tagMap = tags.stream().collect(Collectors.toMap(
-            tag -> tag.split(":")[0], tag -> tag.split(":")[1].split(",")[0]));
+        Map<String, String> tagMap = new HashMap<>();
+        if (!tags.contains("null")) {
+            tagMap = tags.stream().collect(Collectors.toMap(
+                    tag -> tag.split(":")[0], tag -> tag.split(":")[1].split(",")[0]));
+        }
         ResponseEntity<AdditionalFileTagsSearchResponse> response = safeStorageClient.additionalFileTagsSearchWithHttpInfo(
-            "pn-test", logic, true, tagMap);
+                "pn-test", logic, true, tagMap);
         indicizzazioneStepsPojo.setAdditionalFileTagsSearchResponseResponseEntity(response);
     }
 

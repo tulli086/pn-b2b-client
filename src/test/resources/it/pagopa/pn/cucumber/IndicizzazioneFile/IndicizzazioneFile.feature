@@ -322,7 +322,7 @@ Feature: test preliminari indicizzazione File safeStorage
       | SET       | global_multivalue:test1 | 4             |
       | SET       | global_multivalue:test1 | 5             |
       | SET       | global_multivalue:test1 | 6             |
-    Then L'update massivo va in successo con stato 200
+    Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Number of documents to update exceeds MaxFileKeysUpdateMassivePerRequest limit."
 
   Scenario: Update Massive ERROR - MaxOperationsOnTagsPerRequest
@@ -342,37 +342,21 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1  |
       | global_singlevalue:test6 |
 
-
-#  @aggiuntaTag
-#  Scenario: Update Massive ERROR - MaxFileKeys
-#    Given Vengono caricati 6 nuovi documenti pdf
-#    And Si modifica il documento 1 secondo le seguenti operazioni
-#      | global_multivalue:test1,test2 | SET |
-#      | global_singlevalue:test1      | SET |
-#    And Si modifica il documento 2 secondo le seguenti operazioni
-#      | global_multivalue:test1,test2 | SET |
-#      | global_singlevalue:test1      | SET |
-#    When Si modificano i documenti secondo le seguenti operazioni
-#      | operation | tag                     | documentIndex |
-#      | SET       | global_multivalue:test3 | 1             |
-#      | DELETE    | global_multivalue:test2 | 1             |
-#      | DELETE    | global_multivalue:test2 | 2             |
-#    TThen L'update massivo va in successo con stato 200
-#    And La response contiene uno o più errori riportanti la dicitura "SET and DELETE cannot contain the same tags: [global_multivalue]" riguardanti il documento 1
-#    And Il documento 2 è stato correttamente modificato con la seguente lista di tag
-#      | global_multivalue:test1  |
-#      | global_singlevalue:test1 |
-#
-#
-#  @aggiuntaTag
-#  Scenario: UpdateSingle ERROR - MaxFileKeys
-#    Given Vengono caricati 6 nuovi documenti pdf
-#    And I primi 5 documenti vengono modificati secondo le seguenti operazioni
-#      | global_indexed_multivalue:test | SET |
-#    When Si modifica il documento 6 secondo le seguenti operazioni
-#      | global_indexed_multivalue:test | SET |
-#    Then La chiamata genera un errore con status code 400
-#    And Il messaggio di errore riporta la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5"
+  @aggiuntaTag
+  Scenario: Update Massive ERROR - MaxFileKeys
+    Given Vengono caricati 5 nuovi documenti pdf
+    And I primi 5 documenti vengono modificati secondo le seguenti operazioni
+      | global_indexed_multivalue:test | SET |
+    And Viene caricato un nuovo documento pdf
+    When Si modificano i documenti secondo le seguenti operazioni
+      | operation | tag                            | documentIndex |
+      | SET       | global_indexed_multivalue:test | 6             |
+      | SET       | global_multivalue:test1        | 1             |
+    Then L'update massivo va in successo con stato 200
+    And La response contiene uno o più errori riportanti la dicitura "Limit 'MaxFileKeys' reached. Current value: 6. Max value: 5" riguardanti il documento 6
+    And Il documento 1 è stato correttamente modificato con la seguente lista di tag
+      | global_indexed_multivalue:test |
+      | global_multivalue:test1        |
 
   Scenario: Update Massive ERROR - MaxTagsPerDocument
     Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
@@ -400,28 +384,77 @@ Feature: test preliminari indicizzazione File safeStorage
       | global_multivalue:test1 |
 
   @aggiuntaTag
-  Scenario: SEARCH SUCCESS: Empty Result - NO parametro logic
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_indexed_multivalue:test1,test2 | SET |
-      | global_indexed_singlevalue:test1      | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_indexed_multivalue:test3,test4 | SET |
-      | global_indexed_singlevalue:test1      | SET |
-    When Vengono ricercate con logica "" le fileKey aventi i seguenti tag
-      | global_indexed_multivalue:test5  |
-      | global_indexed_singlevalue:test6 |
-    #Then Il risultato della ricerca è vuoto
+  Scenario Outline: SEARCH SUCCESS: Empty Result
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_indexed_multivalue:test1,test2 |
+      | global_indexed_singlevalue:test1      |
+    When Vengono ricercate con logica "<logic>" le fileKey aventi i seguenti tag
+      | global_indexed_multivalue:testEmpty  |
+      | global_indexed_singlevalue:testEmpty |
+    Then Il risultato della search contiene le fileKey relative ai seguenti documenti
+      | null |
+    Examples:
+      | logic |
+      | and   |
+      | or    |
+      |       |
 
   @aggiuntaTag
-  Scenario: SEARCH SUCCESS: Empty Result - NO parametro logic - 1 parametro tag
-    Given Vengono caricati 2 nuovi documenti pdf
-    And Si modifica il documento 1 secondo le seguenti operazioni
-      | global_indexed_multivalue:test1,test2 | SET |
-      | global_indexed_singlevalue:test1      | SET |
-    And Si modifica il documento 2 secondo le seguenti operazioni
-      | global_indexed_multivalue:test3,test4 | SET |
-      | global_indexed_singlevalue:test1      | SET |
-    When Vengono ricercate con logica "" le fileKey aventi i seguenti tag
-      | global_indexed_multivalue:test1 |
-    #Then Il risultato della ricerca non è vuoto
+  Scenario Outline: SEARCH ERROR: 0 parametri tag
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_indexed_multivalue:test1,test2 |
+      | global_indexed_singlevalue:test1      |
+    When Vengono ricercate con logica "<logic>" le fileKey aventi i seguenti tag
+      | null |
+    Then La chiamata genera un errore con status code 400
+#    And Il messaggio di errore riporta la dicitura "Limit 'MaxTagsPerRequest' reached"
+    Examples:
+      | logic |
+      | and   |
+      | or    |
+      |       |
+
+  @aggiuntaTag
+  Scenario Outline: SEARCH SUCCESS: 1 parametro tag
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_indexed_multivalue:test1param,test2param |
+      | global_indexed_singlevalue:test1param           |
+    When Vengono ricercate con logica "<logic>" le fileKey aventi i seguenti tag
+      | global_indexed_multivalue:test1param |
+    Then Il risultato della search contiene le fileKey relative ai seguenti documenti
+      | 1 |
+      | 2 |
+    Examples:
+      | logic |
+      | and   |
+      | or    |
+      |       |
+
+  @aggiuntaTag
+  Scenario Outline: SEARCH SUCCESS: multipli parametri tag (logic and o null)
+    Given Vengono caricati 2 nuovi documenti "pdf" con tag associati
+      | global_indexed_multivalue:test1param,test2param |
+      | global_indexed_singlevalue:test1param           |
+    When Vengono ricercate con logica "<logic>" le fileKey aventi i seguenti tag
+      | global_indexed_multivalue:test1param  |
+      | global_indexed_singlevalue:test1param |
+    Then Il risultato della search contiene le fileKey relative ai seguenti documenti
+      | 1 |
+      | 2 |
+    Examples:
+      | logic |
+      | and   |
+      |       |
+
+  @aggiuntaTag
+  Scenario: SEARCH SUCCESS: multipli parametri tag (logic or)
+    Given Viene caricato un nuovo documento "pdf" con tag associati
+      | global_indexed_multivalue:test1paramOR,test2paramOR |
+    And Viene caricato un nuovo documento "pdf" con tag associati
+      | global_indexed_singlevalue:test1paramOR |
+    When Vengono ricercate con logica "or" le fileKey aventi i seguenti tag
+      | global_indexed_multivalue:test1paramOR  |
+      | global_indexed_singlevalue:test1paramOR |
+    Then Il risultato della search contiene le fileKey relative ai seguenti documenti
+      | 1 |
+      | 2 |
