@@ -62,9 +62,9 @@ public class PnLegalFactContent {
 
     protected List<PnDestinatarioAnalogico> getDestinatariAnalogici(PnParserRecord.PnParserContent content) {
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
-        String text = content.text();
+        String referenceText = content.text();
         List<String> referenceList = content.valueList();
-        int cntDestinatario = countDuplicates(text, tokenProperty.getNomeCognomeRagioneSocialeStart1());
+        int cntDestinatario = countDuplicates(content.text(), tokenProperty.getNomeCognomeRagioneSocialeStart1());
 
         for(int i = 1; i <= cntDestinatario; i++) {
             String nomeCognomeRagioneSociale = getNomeCognomeRagioneSociale(content, true);
@@ -75,23 +75,28 @@ public class PnLegalFactContent {
 
             if (i == cntDestinatario) {
                 indirizzoFisico = getIndirizzoFisico(content, true);
-//                String lastValue = referenceList.get(referenceList.size()-1);
             } else {
                 indirizzoFisico = getIndirizzoFisico(content, false);
             }
+
             pnDestinatarioAnalogicoList.add(
                     new PnDestinatarioAnalogico(nomeCognomeRagioneSociale,
                             codiceFiscale,
                             domicilioDigitale,
-                            tipologiaDomicilio,
+                            contentExtractor.cleanUp(tipologiaDomicilio, true),
                             contentExtractor.cleanUp(indirizzoFisico, true)));
-            int slidingIndex = text.indexOf(indirizzoFisico) + indirizzoFisico.length();
-            text = text.substring(slidingIndex);
+
+            int slidingIndex = referenceText.indexOf(indirizzoFisico) + indirizzoFisico.length();
+            referenceText = referenceText.substring(slidingIndex);
             for (String element : Arrays.asList(nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipologiaDomicilio, indirizzoFisico)) {
                 referenceList.remove(element);
             }
         }
         log.info("CONTENT - getDestinatariAnalogici: {}", pnDestinatarioAnalogicoList);
+        log.info("CONTENT - content.valueList(log): {}", content.valueList());
+        System.out.println("CONTENT - content.valueList(syso): " + content.valueList());
+        content.valueList().forEach((element) -> System.out.println("CONTENT - content.valueList -> " + element));
+        System.out.println("CONTENT - content.valueList()-1: " + content.valueList().get(content.valueList().size()-1));
         return pnDestinatarioAnalogicoList;
     }
 
@@ -237,44 +242,39 @@ public class PnLegalFactContent {
 
     protected String getTipologiaDomicilioDigitale(PnParserRecord.PnParserContent content, boolean isDestinatarioAnalogico, boolean isDestinatarioDigitale) {
         if(isDestinatarioAnalogico) {
-            return contentExtractor.cleanUp(
-                    contentExtractor.getField(PnTextSlidingWindow.builder()
+            return contentExtractor.getField(PnTextSlidingWindow.builder()
                             .originalText(content.text())
                             .slidedText(content.text())
                             .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
                             .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd1())
-                            .build(), content.valueList()), true);
+                            .build(), content.valueList());
         } else if(isDestinatarioDigitale) {
-            return contentExtractor.cleanUp(
-                    contentExtractor.getField(PnTextSlidingWindow.builder()
+            return contentExtractor.getField(PnTextSlidingWindow.builder()
                             .originalText(content.text())
                             .slidedText(content.text())
                             .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
                             .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd2())
-                            .build(), content.valueList()), true);
+                            .build(), content.valueList());
         } else {
-            return contentExtractor.cleanUp(
-                    contentExtractor.getField(PnTextSlidingWindow.builder()
+            return contentExtractor.getField(PnTextSlidingWindow.builder()
                             .originalText(content.text())
                             .slidedText(content.text())
                             .tokenStart(tokenProperty.getTipologiaDomicilioDigitaleStart())
                             .tokenEnd(tokenProperty.getTipologiaDomicilioDigitaleEnd3())
-                            .build(), content.valueList()), true);
+                            .build(), content.valueList());
         }
     }
 
     protected String getIndirizzoFisico(PnParserRecord.PnParserContent content, boolean isLastDestinatarioAnalogico) {
         if(!isLastDestinatarioAnalogico) {
-            return
-                    contentExtractor.getField(PnTextSlidingWindow.builder()
+            return contentExtractor.getField(PnTextSlidingWindow.builder()
                     .originalText(content.text())
                     .slidedText(content.text())
                     .tokenStart(tokenProperty.getIndirizzoFisicoStart())
                     .tokenEnd(tokenProperty.getIndirizzoFisicoEnd1())
                     .build(), content.valueList());
         } else {
-            return
-                    contentExtractor.getField(PnTextSlidingWindow.builder()
+            return contentExtractor.getField(PnTextSlidingWindow.builder()
                             .originalText(content.text())
                             .slidedText(content.text())
                             .tokenStart(tokenProperty.getIndirizzoFisicoStart())
