@@ -5,7 +5,6 @@ import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.ApiClient;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.api.AdditionalFileTagsApi;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.api.FileDownloadApi;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.api.FileMetadataUpdateApi;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.api.FileUploadApi;
 import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +24,6 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
 
     private final FileUploadApi fileUploadApi;
     private final FileDownloadApi fileDownloadApi;
-    private final FileMetadataUpdateApi fileMetadataUpdateApi;
     private final AdditionalFileTagsApi additionalFileTagsApi;
     private final String clientIdSafeStorage;
     private final String apiKeySafeStorage;
@@ -43,7 +41,6 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
         this.safeStorageBaseUrl = safeStorageBaseUrl;
 
         fileUploadApi = new FileUploadApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
-        fileMetadataUpdateApi = new FileMetadataUpdateApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
         additionalFileTagsApi = new AdditionalFileTagsApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
         fileDownloadApi = new FileDownloadApi(newApiClient(restTemplate, safeStorageBaseUrl, apiKeySafeStorage));
     }
@@ -72,14 +69,6 @@ public class PnSafeStoragePrivateClientImpl implements IPnSafeStoragePrivateClie
 
     public ResponseEntity<FileDownloadResponse> getFileWithHttpInfo(String fileKey, String cxId, Boolean metadataOnly, Boolean tags) throws RestClientException {
         return this.fileDownloadApi.getFileWithHttpInfo(fileKey, cxId, metadataOnly, tags);
-    }
-
-    public OperationResultCodeResponse updateFileMetadata(String fileKey, UpdateFileMetadataRequest updateFileMetadataRequest) throws RestClientException {
-        return this.fileMetadataUpdateApi.updateFileMetadata(fileKey, clientIdSafeStorage, updateFileMetadataRequest);
-    }
-
-    public ResponseEntity<OperationResultCodeResponse> updateFileMetadataWithHttpInfo(String fileKey, String cxId, UpdateFileMetadataRequest updateFileMetadataRequest) throws RestClientException {
-        return this.fileMetadataUpdateApi.updateFileMetadataWithHttpInfo(fileKey, cxId, updateFileMetadataRequest);
     }
 
     public AdditionalFileTagsGetResponse additionalFileTagsGet(String fileKey) throws RestClientException {
