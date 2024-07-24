@@ -5,23 +5,20 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StepSharedContext {
+    private PnPollingResponseV23 pnPollingResponse;
 
-    private static final String RESPONSE = "RESPONSE";
-    private final ThreadLocal<Map<String, PnPollingResponseV23>> sharedContext = ThreadLocal.withInitial(HashMap::new);
-
-    public PnPollingResponseV23 getResponse() {
-        return sharedContext.get().get(RESPONSE);
+    public StepSharedContext(PnPollingResponseV23 pnPollingResponse) {
+        this.pnPollingResponse = pnPollingResponse;
     }
 
-    public void setResponse(PnPollingResponseV23 response) {
-        sharedContext.get().put(RESPONSE, response);
+    public PnPollingResponseV23 getPnPollingResponse() {
+        return pnPollingResponse;
     }
 
-
+    public void setPnPollingResponse(PnPollingResponseV23 pnPollingResponse) {
+        this.pnPollingResponse = pnPollingResponse;
+    }
 }
