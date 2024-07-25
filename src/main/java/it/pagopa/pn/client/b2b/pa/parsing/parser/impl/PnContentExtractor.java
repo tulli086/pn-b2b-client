@@ -11,10 +11,15 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.pdfbox.text.TextPosition;
+import java.awt.*;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 
 @Slf4j
@@ -32,23 +37,39 @@ public class PnContentExtractor implements IPnContentExtractor {
             PnBoldWordExtractor boldWordExtractor = new PnBoldWordExtractor();
             boldWordExtractor.setSortByPosition(true);
             boldWordExtractor.getText(document);
-
-            PDFTextStripper pdfTextStripper = new PDFTextStripper();
-            pdfTextStripper.setSortByPosition(true);
-            pdfTextStripper.setStartPage(0);
-            pdfTextStripper.setEndPage(document.getNumberOfPages());
-
             List<String> boldValueList = boldWordExtractor.getBoldWordList();
-            if(boldValueList.isEmpty())
-                throw new PnParserException("PDF not valid: document did not contain bold words!!!");
 
-            log.info("contentExtractor");
-            boldValueList.forEach(element -> {
-                log.info(element);
-                System.out.println(element);
-            });
+            PDFTextStripperByArea stripper;
+            String extractedText = null;
+            try {
+                stripper = new PDFTextStripperByArea();
+                stripper.setSortByPosition(true);
+                StringBuilder textToExtract = new StringBuilder();
 
-            return getContent(pdfTextStripper.getText(document), boldValueList, legalFactType);
+                for (PDPage page : document.getPages()) {
+                    PDRectangle mediaBox = page.getMediaBox();
+                    float height = mediaBox.getHeight();
+                    float width = mediaBox.getWidth();
+                    float footerHeight = 100; // Altezza del footer da escludere
+                    Rectangle region = new Rectangle(0, 0, (int) width, (int) (height - footerHeight));
+
+                    stripper.addRegion("contentRegion", region);
+                    stripper.extractRegions(page);
+
+                    String text = stripper.getTextForRegion("contentRegion");
+                    textToExtract.append(text).append(System.lineSeparator());
+
+                    stripper.removeRegion("contentRegion");
+                    extractedText = textToExtract.toString();
+                }
+            } catch(IOException e){
+                throw new RuntimeException(e);
+            }
+
+            if(boldValueList.isEmpty()) throw new PnParserException("PDF not valid: document did not contain bold words.");
+            if(extractedText == null) throw new PnParserException("PDF error: some problems on extracting text.");
+
+            return getContent(extractedText, boldValueList, legalFactType);
         } catch (IOException exception) {
             log.error("PdfBox error: {}", exception.getMessage());
         } catch (RuntimeException exception) {

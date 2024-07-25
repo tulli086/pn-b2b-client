@@ -174,10 +174,7 @@ public class PnContentExtractorUtils {
     }
 
     public static String cleanUpText(String text, PnLegalFactTokenProperty tokenProps) {
-        log.info("PnParserContent.originalText: {}", text);
-        log.info("PnParserContent.footer: {}", tokenProps.getCleanupFooter());
-        String cleanedText = text.replaceAll(tokenProps.getCleanupFooter(), "");
-        cleanedText = cleanedText.replaceAll(tokenProps.getRegexCleanupNsbp(), "");
+        String cleanedText = text.replaceAll(tokenProps.getRegexCleanupNsbp(), "");
         cleanedText = removeHash(cleanedText);
         cleanedText = normalizeLineEndings(cleanedText);
         return cleanedText.trim();

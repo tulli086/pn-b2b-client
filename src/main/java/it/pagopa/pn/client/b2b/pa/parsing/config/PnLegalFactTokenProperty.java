@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "pn.parser.legalfact.config.token", ignoreUnknownFields = false)
 public class PnLegalFactTokenProperty {
-    @Value("${pn.parser.legalfact.config.cleanup-footer}")
-    private String cleanupFooter;
     @Value("${pn.parser.legalfact.config.cleanup-delegato}")
     private String cleanupDelegato;
     @Value("${pn.parser.legalfact.config.cleanup-destinatario}")

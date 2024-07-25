@@ -62,7 +62,6 @@ public class PnLegalFactContent {
 
     protected List<PnDestinatarioAnalogico> getDestinatariAnalogici(PnParserRecord.PnParserContent content) {
         List<PnDestinatarioAnalogico> pnDestinatarioAnalogicoList = new ArrayList<>();
-        String referenceText = content.text();
         List<String> referenceList = content.valueList();
         int cntDestinatario = countDuplicates(content.text(), tokenProperty.getNomeCognomeRagioneSocialeStart1());
 
@@ -86,15 +85,10 @@ public class PnLegalFactContent {
                             contentExtractor.cleanUp(tipologiaDomicilio, true),
                             contentExtractor.cleanUp(indirizzoFisico, true)));
 
-            int slidingIndex = referenceText.indexOf(indirizzoFisico) + indirizzoFisico.length();
-            referenceText = referenceText.substring(slidingIndex);
             for (String element : Arrays.asList(nomeCognomeRagioneSociale, codiceFiscale, domicilioDigitale, tipologiaDomicilio, indirizzoFisico)) {
                 referenceList.remove(element);
             }
         }
-        log.info("CONTENT - getDestinatariAnalogici: {}", pnDestinatarioAnalogicoList);
-        log.info("CONTENT - content.valueList(log): {}", content.valueList());
-        content.valueList().forEach((element) -> System.out.println("CONTENT - content.valueList -> " + element));
         return pnDestinatarioAnalogicoList;
     }
 
