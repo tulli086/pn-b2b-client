@@ -1,8 +1,21 @@
 Feature: test preliminari indicizzazione File safeStorage
 
   @indicizzazioneSafeStorage
-  Scenario Outline: [INDEX_SS_FAIL_AUTH] FAILED AUTHORIZATION
-    When L'utente tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
+  Scenario Outline: [INDEX_SS_FAIL_AUTH1] FAILED AUTHORIZATION - client fitizio
+    When Il client "api-key-non-autorizzata" tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
+    Then La chiamata genera un errore con status code 403
+    Examples:
+      | operation      |
+      | CREATE_FILE    |
+      | GET_FILE       |
+      | UPDATE_SINGLE  |
+      | UPDATE_MASSIVE |
+      | GET_TAGS       |
+      | SEARCH_FILE    |
+
+  @indicizzazioneSafeStorage
+  Scenario Outline: [INDEX_SS_FAIL_AUTH2] FAILED AUTHORIZATION - client reale
+    When Il client "internal" tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
     Then La chiamata genera un errore con status code 403
     Examples:
       | operation      |
