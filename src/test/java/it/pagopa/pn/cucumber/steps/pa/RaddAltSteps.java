@@ -329,12 +329,12 @@ public class RaddAltSteps {
                         .recipientTaxId(this.currentUserCf)
                         .recipientType(this.recipientType.equalsIgnoreCase("PF")? ActStartTransactionRequest.RecipientTypeEnum.PF:
                                 ActStartTransactionRequest.RecipientTypeEnum.PG)
-                        .iun(uidRaddOperator)
+                        .iun(this.iun)
                         .operationDate(dateTimeFormatter.format(OffsetDateTime.now()))
                         .checksum(this.documentUploadResponse != null ? this.documentUploadResponse.getValue2() : null);
 
         System.out.println("actStartTransactionRequest: " + actStartTransactionRequest);
-        this.startTransactionResponse = raddAltClient.startActTransaction(uid, actStartTransactionRequest);
+        this.startTransactionResponse = raddAltClient.startActTransaction(uidRaddOperator, actStartTransactionRequest);
 
         if(this.startTransactionResponse.getStatus().getCode().equals(StartTransactionResponseStatus.CodeEnum.NUMBER_2) && retry){
             try {

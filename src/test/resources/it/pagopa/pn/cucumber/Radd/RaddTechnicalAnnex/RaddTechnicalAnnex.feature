@@ -121,7 +121,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And la scansione si conclude correttamente su radd alternative
     And si inizia il processo di caricamento per radd "UPLOADER" dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "UPLOADER"
-    And il recupero degli aar genera un errore "Campo fileKey obbligatorio mancante" con codice 5 su radd alternative
+    And l'operazione di download degli atti genera un errore "Campo fileKey obbligatorio mancante" con codice 4 su radd alternative
 
   # OPERATORE STANDARD
 
@@ -189,7 +189,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative per errore
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "STANDARD"
-    And il recupero degli aar genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
+    And l'operazione di download degli atti genera un errore "Campo fileKey inaspettato" con codice 4 su radd alternative
     #capire il codice errore se c'è
 
   @raddTechnicalAnnex
@@ -271,7 +271,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative per errore
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "WITHOUT_ROLE"
-    And il recupero degli aar genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
+    And l'operazione di download degli atti genera un errore "Campo fileKey inaspettato" con codice 4 su radd alternative
     #capire il codice errore se c'è
 
   @raddTechnicalAnnex
