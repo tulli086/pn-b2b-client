@@ -101,7 +101,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 04100 | 551   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
       | 91030 | 540   | SAN VITO LO CAPO  | TP       | notifica analogica RECAPITISTA |
-      | 36049 | 573  | SOVIZZO            | VI       | notifica analogica RECAPITISTA |
+      | 36049 | 635  | SOVIZZO            | VI       | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
@@ -327,9 +327,9 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 80013 | 871   | CASAREA      | NA       | notifica analogica RECAPITISTA |
       | 80123 | 783   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
       | 83100 | 803   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
-      | 00012 | 1003   | ALBUCCIONE   | RM       | notifica analogica RECAPITISTA |
+      | 00012 | 1003  | ALBUCCIONE  | RM       | notifica analogica RECAPITISTA |
       | 00118 | 891   | ROMA         | RM       | notifica analogica RECAPITISTA |
-      | 04100 | 902   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
+      | 04100 | 920   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
@@ -450,7 +450,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
     Examples:
       | COSTO | STATE   |
       | 1036  | MESSICO |
-      | 1009  | SUD AFRICA |
+      | 1036  | SUD AFRICA |
 
   @costoAnalogicoAgosto24
   Scenario: [CALCOLO-COSTO_AR-21GR_15] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 21gr
