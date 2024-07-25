@@ -52,6 +52,7 @@ public class LegalFactContentVerifySteps {
     @Then("si verifica se il legalFact contiene i campi per il destinatario")
     public void siVerificaSeIlLegalFactContieneICampiPerIlDestinatario(DataTable dataTable) {
         byte[] source = b2bUtils.downloadFile(legalFactUrl);
+
         //Creation of a list of map for each dataTable pair
         List<Map<String, String>> listOfMap = dataTable
                 .asLists()
@@ -183,8 +184,6 @@ public class LegalFactContentVerifySteps {
     private void assertLegalFactDestinatario(PnParserLegalFactResponse pnParserLegalFactResponse, List<PnDestinatarioAnalogico> destinatarioAnalogicoList, int multiDestinatarioPosition) {
         assertLegalFactParserResponse(pnParserLegalFactResponse);
         PnLegalFactNotificaPresaInCaricoMultiDestinatario pnLegalFactNotificaPresaInCaricoMultiDestinatario = (PnLegalFactNotificaPresaInCaricoMultiDestinatario) pnParserLegalFactResponse.getResponse().getPnLegalFact();
-        log.info("PN_LEGAL_FACT listToCompare: {}", destinatarioAnalogicoList);
-        log.info("PN_LEGAL_FACT listComposed: {}", pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici());
 
         if(multiDestinatarioPosition == 0) {
             Assertions.assertEquals(destinatarioAnalogicoList.size(), pnLegalFactNotificaPresaInCaricoMultiDestinatario.getDestinatariAnalogici().size());
