@@ -34,7 +34,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 458   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 485   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
-      | 90088 | 467   | SAN CIPIRELLO | TP       | notifica analogica RECAPITISTA |
+      | 90088 | 467   | SAN CIPIRELLO | PA       | notifica analogica RECAPITISTA |
       | 84022 | 467   | CAMPAGNA      | SA       | notifica analogica RECAPITISTA |
 
 
@@ -100,8 +100,8 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 523   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 551   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
-      | 91030 | 54   | SAN VITO LO CAPO  | AG       | notifica analogica RECAPITISTA |
-      | 36049 | 573  | GAMBUGLIANO       | PA       | notifica analogica RECAPITISTA |
+      | 91030 | 54   | SAN VITO LO CAPO  | TP       | notifica analogica RECAPITISTA |
+      | 36049 | 573  | SOVIZZO       | VI       | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
@@ -166,7 +166,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 590   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 618    | FOGLIANO    | LT       | notifica analogica RECAPITISTA |
 
-      | 91032 | 599    | PETROSINO   | AG       | notifica analogica RECAPITISTA |
+      | 91032 | 599    | PETROSINO   | TP       | notifica analogica RECAPITISTA |
 
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_AR-101GR_6] Invio notifica e verifica calcolo del costo su raccomandata con peso = 101gr

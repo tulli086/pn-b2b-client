@@ -31,11 +31,11 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 10010 | 924   | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 978   | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
-      | 35049 | 924   | SANTA CATERINA D'ESTE     | PA       | notifica analogica RECAPITISTA |
+      | 35049 | 924   | SANTA CATERINA D'ESTE     | PD       | notifica analogica RECAPITISTA |
       | 90052 | 861   | CERDA                     | PA       | notifica analogica RECAPITISTA |
-      | 06012 | 957   | CITTÀ DI CASTELLO         | PG       | notifica analogica RECAPITISTA |
-      | 17011 | 1103  | ALBISOLA SUPERIORE        | SV       | notifica analogica RECAPITISTA |
-      | 87020 | 957   | ACQUAPPESA                | PA       | notifica analogica RECAPITISTA |
+      | 06012 | 957   | CERBARA                   | PG       | notifica analogica RECAPITISTA |
+      | 17011 | 1103  | ALBISOLA CAPO             | SV       | notifica analogica RECAPITISTA |
+      | 87020 | 957   | ACQUAPPESA                | CS       | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
@@ -214,7 +214,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 10010 | 1301  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1371  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
-      | 90082 | 1218  | SANTA CRISTINA GELA       | TP  | notifica analogica RECAPITISTA |
+      | 90082 | 1218  | SANTA CRISTINA GELA      | PA  | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
