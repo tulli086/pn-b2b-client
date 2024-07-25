@@ -100,8 +100,8 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 523   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 551   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
-      | 91030 | 54   | SAN VITO LO CAPO  | TP       | notifica analogica RECAPITISTA |
-      | 36049 | 573  | SOVIZZO       | VI       | notifica analogica RECAPITISTA |
+      | 91030 | 540   | SAN VITO LO CAPO  | TP       | notifica analogica RECAPITISTA |
+      | 36049 | 573  | SOVIZZO            | VI       | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
