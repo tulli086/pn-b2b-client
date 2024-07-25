@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static it.pagopa.pn.cucumber.utils.NotificationValue.generateRandomNumber;
@@ -324,6 +325,41 @@ public class AnagraficaRaddAltSteps {
 
         } catch (AssertionFailedError assertionFailedError) {
             throwAssertFailerForSportelloIssue(assertionFailedError, dato);
+        }
+    }
+
+    @When("si controlla che il sportello sia in stato {string} con il messaggio:")
+    public void vieneCercatoloSportelloEControlloStatoConMessaggio(String status, List<String> errorMessages) {
+
+        List<RegistryRequestResponse> dato = IntStream.range(0, NUM_CHECK_STATE_CSV)
+                .mapToObj(numCheck -> {
+                    waitFor(WAITING_STATE_CSV);
+                    RegistryRequestResponse registryRequestResponse = getRegistryRequestResponse(status);
+                    if (status.equalsIgnoreCase(ACCEPTED)) waitFor(WAITING_ACCEPTED_STATE);
+                    return registryRequestResponse;
+                })
+                .filter(Objects::nonNull)
+                .filter(data -> data.getStatus() != null && data.getStatus().equalsIgnoreCase(status))
+                .limit(errorMessages.size())
+                .collect(Collectors.toList());
+
+        try {
+            Assertions.assertNotNull(dato);
+            Assertions.assertFalse(dato.isEmpty());
+            Assertions.assertTrue(dato.size() == errorMessages.size());
+            log.info("sportello status corretto: '{}'", dato);
+
+            dato.stream()
+                    .forEach(sportello -> {
+                        Assertions.assertEquals(status, sportello.getStatus());
+                        Assertions.assertTrue(errorMessages.contains(sportello.getError()));
+                    });
+            Assertions.assertNotNull(dato);
+            this.requestid = dato.get(0).getRequestId();
+            this.registryId = dato.get(0).getRegistryId();
+
+        } catch (AssertionFailedError assertionFailedError) {
+            throwAssertFailerForSportelloIssue(assertionFailedError, dato.get(0));
         }
     }
 

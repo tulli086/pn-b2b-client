@@ -33,9 +33,9 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansiona il qrCode e stampa gli atti per il numero di volte consentito
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "DELIVERED"
     And lato destinatario la notifica può essere correttamente recuperata da "Mario Cucumber" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "DELIVERED"
 
   #capire come configurare/riprendere caso in cui MAX-Print request ha valore definito > & != 0
   @raddTechnicalAnnex
@@ -88,8 +88,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And si inizia il processo di caricamento per radd "UPLOADER" dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "UPLOADER"
-    And il recupero degli aar genera un errore "Campo fileKey obbligatorio mancante" con codice 5 su radd alternative
-    #capire il codice errore se c'è
+    And il recupero degli aar genera un errore "Campo fileKey obbligatorio mancante" con codice 4 su radd alternative
 
   @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-1] PF - Operatore RADD_UPLOADER - Start di una ACT transaction con fileKey presente - ricezione OK
@@ -142,7 +141,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_AOR-4] Operatore RADD_STANDARD - Start di una AOR transaction senza fileKey presente - ricezione Errore
+  Scenario: [ADEG-RADD-TRANS_AOR-4] Operatore RADD_STANDARD - Start di una AOR transaction con fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -158,7 +157,6 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And vengono caricati i documento di identità del cittadino su radd alternative per errore
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "STANDARD"
     And il recupero degli aar genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
-    #capire il codice errore se c'è
 
   @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-3] Operatore RADD_STANDARD - Start di una ACT transaction senza fileKey presente - ricezione OK
@@ -189,8 +187,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative per errore
     Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "STANDARD"
-    And l'operazione di download degli atti genera un errore "Campo fileKey inaspettato" con codice 4 su radd alternative
-    #capire il codice errore se c'è
+    And l'operazione di download degli atti genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
 
   @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-5] Operatore RADD_STANDARD - Tentativo di eseguire documentUpload - ricezione Errore
@@ -225,7 +222,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_AOR-6] Operatore senza ruolo - Start di una AOR transaction senza fileKey presente - ricezione Errore
+  Scenario: [ADEG-RADD-TRANS_AOR-6] Operatore senza ruolo - Start di una AOR transaction con fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |

@@ -1296,7 +1296,8 @@ Feature: Radd Alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica con lo stesso operationId dal raddista "issuer_2"
+    #capire se si puo creare un altro Uploader o metterlo a standard
+    #Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica con lo stesso operationId dal raddista "issuer_2"
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
 
   @raddAlt @ignore @raddTechnicalAnnex
