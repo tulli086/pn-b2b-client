@@ -33,6 +33,10 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
       | 84124 | 295   | SALERNO      | SA       | notifica analogica RECAPITISTA |
       | 80129 | 274   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
 
+      | 27062 | 402   | CAMPOSPINOSO ALBAREDO   | PV       | notifica analogica RECAPITISTA |
+      | 92038 | 344   | MONTEVAGO               | PD       | notifica analogica RECAPITISTA |
+      | 92044 | 344   | PALMA DI MONTECHIARO    | VI       | notifica analogica RECAPITISTA |
+
   @costoAnalogicoAgosto24
   Scenario: [CALCOLO-COSTO_RS-20GR_2] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica

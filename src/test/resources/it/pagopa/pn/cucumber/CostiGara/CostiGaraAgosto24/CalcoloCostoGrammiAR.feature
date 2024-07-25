@@ -34,6 +34,10 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 458   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 485   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
+      | 90088 | 467   | SAN CIPIRELLO | TP       | notifica analogica RECAPITISTA |
+      | 84022 | 467   | CAMPAGNA      | SA       | notifica analogica RECAPITISTA |
+
+
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_AR-21GR_2] Invio notifica e verifica calcolo del costo su raccomandata con peso = 21gr
     Given viene generata una nuova notifica
@@ -96,6 +100,9 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 523   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 551   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
+      | 91030 | 54   | SAN VITO LO CAPO  | AG       | notifica analogica RECAPITISTA |
+      | 36049 | 573  | GAMBUGLIANO       | PA       | notifica analogica RECAPITISTA |
+
 
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_AR-51GR_4] Invio notifica e verifica calcolo del costo su raccomandata con peso = 51gr
@@ -157,7 +164,9 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 83100 | 532   | AVELLINO     | AV       | notifica analogica RECAPITISTA |
       | 00012 | 702   | ALBUCCIONE   | RM       | notifica analogica RECAPITISTA |
       | 00118 | 590   | ROMA         | RM       | notifica analogica RECAPITISTA |
-      | 04100 | 618    | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
+      | 04100 | 618    | FOGLIANO    | LT       | notifica analogica RECAPITISTA |
+
+      | 91032 | 599    | PETROSINO   | AG       | notifica analogica RECAPITISTA |
 
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_AR-101GR_6] Invio notifica e verifica calcolo del costo su raccomandata con peso = 101gr
@@ -221,6 +230,8 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00012 | 833   | ALBUCCIONE   | RM       | notifica analogica RECAPITISTA |
       | 00118 | 722   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 750   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
+
+      | 92035 | 722   | JOPPOLO GIANCAXIO | AG  | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
@@ -286,6 +297,8 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 814   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 847   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
+      | 95058 | 809   | CAMPOROTONDO ETNEO      | CT       | notifica analogica RECAPITISTA |
+
 
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_AR-351GR_10] Invio notifica e verifica calcolo del costo su raccomandata con peso = 351gr
@@ -349,6 +362,8 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00012 | 1390  | ALBUCCIONE   | RM       | notifica analogica RECAPITISTA |
       | 00118 | 1278  | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 1307  | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
+
+      | 96026 | 1258  | PORTOPALO DI CAPO PASSERO | SR  | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
@@ -416,7 +431,7 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
 
 
   @costoAnalogicoAgosto24
-  Scenario: [CALCOLO-COSTO_AR-20GR_14] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso <= 20gr
+  Scenario Outline: [CALCOLO-COSTO_AR-20GR_14] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -425,13 +440,17 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | document              | DOC_4_PG;                       |
     And destinatario Mario Gherkin e:
       | digitalDomicile         | NULL       |
-      | physicalAddress_State   | MESSICO    |
+      | physicalAddress_State   | <STATE>    |
       | physicalAddress_zip     | ZONE_2     |
       | physicalAddress_address | Via@ok_RIR |
       | payment_pagoPaForm      | NOALLEGATO |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo = "1036" della notifica
+    And viene verificato il costo = "<COSTO>" della notifica
+    Examples:
+      | COSTO | STATE   |
+      | 1036  | MESSICO |
+      | 1009  | SUD AFRICA |
 
   @costoAnalogicoAgosto24
   Scenario: [CALCOLO-COSTO_AR-21GR_15] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso = 21gr

@@ -31,6 +31,12 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 10010 | 924   | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 978   | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
+      | 35049 | 924   | SANTA CATERINA D'ESTE     | PA       | notifica analogica RECAPITISTA |
+      | 90052 | 861   | CERDA                     | PA       | notifica analogica RECAPITISTA |
+      | 06012 | 957   | CITTÀ DI CASTELLO         | PG       | notifica analogica RECAPITISTA |
+      | 17011 | 1103  | ALBISOLA SUPERIORE        | SV       | notifica analogica RECAPITISTA |
+      | 87020 | 957   | ACQUAPPESA                | PA       | notifica analogica RECAPITISTA |
+
 
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_890-21GR_2] Invio notifica e verifica calcolo del costo su raccomandata con peso = 21gr
@@ -89,6 +95,8 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 10010 | 1104  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1169  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
+      | 90054 | 1027  | GERACI SICULO  | PA       | notifica analogica RECAPITISTA |
+
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_890-51GR_4] Invio notifica e verifica calcolo del costo su raccomandata con peso = 51gr
     Given viene generata una nuova notifica
@@ -145,6 +153,8 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 70010 | 1057  | ADELFIA        | BA       | notifica analogica RECAPITISTA |
       | 10010 | 1134  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1199  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
+
+      | 90072 | 1057  | ALTOFONTE      | PA       | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
@@ -204,6 +214,8 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 10010 | 1301  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1371  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
+      | 90082 | 1218  | SANTA CRISTINA GELA       | TP  | notifica analogica RECAPITISTA |
+
 
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_890-251GR_8] Invio notifica e verifica calcolo del costo su raccomandata con peso = 251gr
@@ -262,6 +274,8 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 10010 | 1361  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1431  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
+      | 94028 | 1278  | VILLAROSA      | EN       | notifica analogica RECAPITISTA |
+
 
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_890-351GR_10] Invio notifica e verifica calcolo del costo su raccomandata con peso = 351gr
@@ -319,6 +333,8 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 70010 | 1759  | ADELFIA        | BA       | notifica analogica RECAPITISTA |
       | 10010 | 1851  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1928  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
+
+      | 95055 | 1759  | SAN PIETRO CLARENZA       | CT       | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
