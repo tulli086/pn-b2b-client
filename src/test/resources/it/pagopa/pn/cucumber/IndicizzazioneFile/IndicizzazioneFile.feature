@@ -1,7 +1,7 @@
 Feature: test preliminari indicizzazione File safeStorage
 
   @indicizzazioneSafeStorage
-  Scenario Outline: [INDEX_SS_FAIL_AUTH] FAILED AUTHORIZATION - client fitizio e client reale
+  Scenario Outline: [INDEX_SS_FAIL_AUTH] FAILED AUTHORIZATION - client fittizio e client reale
     When Il client "<client>" tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
     Then La chiamata genera un errore con status code 403
     Examples:
