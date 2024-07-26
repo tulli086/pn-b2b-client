@@ -65,6 +65,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 70010 | 1012  | ADELFIA        | BA       | notifica analogica RECAPITISTA |
       | 10010 | 1089  | ANDRATE        | TO       | notifica analogica RECAPITISTA |
       | 60012 | 1154  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
+    
 
 
   @costoAnalogicoAgosto24
@@ -96,6 +97,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche 890
       | 60012 | 1169  | MONTERADO      | AN       | notifica analogica RECAPITISTA |
 
       | 90054 | 1027  | GERACI SICULO  | PA       | notifica analogica RECAPITISTA |
+      | 88071 | 1059  | STALETTI       | CZ       | notifica analogica RECAPITISTA |
 
   @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_890-51GR_4] Invio notifica e verifica calcolo del costo su raccomandata con peso = 51gr

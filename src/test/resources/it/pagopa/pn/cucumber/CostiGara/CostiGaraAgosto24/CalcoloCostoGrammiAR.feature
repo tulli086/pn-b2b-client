@@ -34,8 +34,9 @@ Feature: calcolo costo notifica in base hai grammi con notfiche AR
       | 00118 | 458   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 04100 | 485   | FOGLIANO     | LT       | notifica analogica RECAPITISTA |
 
-      | 90088 | 467   | SAN CIPIRELLO | PA       | notifica analogica RECAPITISTA |
-      | 84022 | 467   | CAMPAGNA      | SA       | notifica analogica RECAPITISTA |
+      | 90088 | 467   | SAN CIPIRELLO   | PA       | notifica analogica RECAPITISTA |
+      | 84022 | 467   | CAMPAGNA        | SA       | notifica analogica RECAPITISTA |
+      | 88071 | 467   | STALETTI        | CZ       | notifica analogica RECAPITISTA |
 
 
   @costoAnalogicoAgosto24
