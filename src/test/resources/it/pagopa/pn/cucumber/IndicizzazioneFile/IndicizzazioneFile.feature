@@ -1,30 +1,23 @@
 Feature: test preliminari indicizzazione File safeStorage
 
   @indicizzazioneSafeStorage
-  Scenario Outline: [INDEX_SS_FAIL_AUTH1] FAILED AUTHORIZATION - client fitizio
-    When Il client "api-key-non-autorizzata" tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
+  Scenario Outline: [INDEX_SS_FAIL_AUTH] FAILED AUTHORIZATION - client fitizio e client reale
+    When Il client "<client>" tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
     Then La chiamata genera un errore con status code 403
     Examples:
-      | operation      |
-      | CREATE_FILE    |
-      | GET_FILE       |
-      | UPDATE_SINGLE  |
-      | UPDATE_MASSIVE |
-      | GET_TAGS       |
-      | SEARCH_FILE    |
-
-  @indicizzazioneSafeStorage
-  Scenario Outline: [INDEX_SS_FAIL_AUTH2] FAILED AUTHORIZATION - client reale
-    When Il client "internal" tenta di effettuare l'operazione "<operation>" senza essere autorizzato ad accedervi
-    Then La chiamata genera un errore con status code 403
-    Examples:
-      | operation      |
-      | CREATE_FILE    |
-      | GET_FILE       |
-      | UPDATE_SINGLE  |
-      | UPDATE_MASSIVE |
-      | GET_TAGS       |
-      | SEARCH_FILE    |
+      | operation      | client                  |
+      | CREATE_FILE    | api-key-non-autorizzata |
+      | GET_FILE       | api-key-non-autorizzata |
+      | UPDATE_SINGLE  | api-key-non-autorizzata |
+      | UPDATE_MASSIVE | api-key-non-autorizzata |
+      | GET_TAGS       | api-key-non-autorizzata |
+      | SEARCH_FILE    | api-key-non-autorizzata |
+      | CREATE_FILE    | internal                |
+      | GET_FILE       | internal                |
+      | UPDATE_SINGLE  | internal                |
+      | UPDATE_MASSIVE | internal                |
+      | GET_TAGS       | internal                |
+      | SEARCH_FILE    | internal                |
 
   ########################################################### GET FILE ###################################################################
 
