@@ -1065,7 +1065,7 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
     @And("si verifica il contenuto degli attachments da inviare in via cartacea al destinatario {int} con {int} allegati")
     public void checkDocumentInviatiPaper(Integer destinatario, Integer allegati) {
         try {
-            this.documentiPec = pnExternalChannelsServiceClientImpl.getReceivedMessages(sharedSteps.getIunVersionamento(), destinatario);
+            this.documentiPec = pnExternalChannelsServiceClientImpl.getReceivedMessagesAnalogico(sharedSteps.getIunVersionamento(), destinatario);
             Assertions.assertNotNull(documentiPec);
             log.info("documenti analogici : {}", documentiPec);
             Assertions.assertEquals(allegati, documentiPec.get(0).getPaperEngageRequest().getAttachments().size());
