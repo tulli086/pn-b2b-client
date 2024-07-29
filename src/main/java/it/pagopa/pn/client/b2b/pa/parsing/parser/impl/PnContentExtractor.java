@@ -34,46 +34,21 @@ public class PnContentExtractor implements IPnContentExtractor {
     @Override
     public PnParserRecord.PnParserContent extractContent(byte[] source, IPnParserLegalFact.LegalFactType legalFactType) {
         try (final PDDocument document = Loader.loadPDF(source)) {
+
             PnBoldWordExtractor boldWordExtractor = new PnBoldWordExtractor();
             boldWordExtractor.setSortByPosition(true);
             boldWordExtractor.getText(document);
             List<String> boldValueList = boldWordExtractor.getBoldWordList();
+            if(boldValueList.isEmpty()) throw new PnParserException("pdf provided is not valid document because did not contain bold words.");
 
-            PDFTextStripperByArea stripper;
-            String extractedText = null;
-            try {
-                stripper = new PDFTextStripperByArea();
-                stripper.setSortByPosition(true);
-                StringBuilder textToExtract = new StringBuilder();
-
-                for (PDPage page : document.getPages()) {
-                    PDRectangle mediaBox = page.getMediaBox();
-                    float height = mediaBox.getHeight();
-                    float width = mediaBox.getWidth();
-                    float footerHeight = 100; // Altezza del footer da escludere
-                    Rectangle region = new Rectangle(0, 0, (int) width, (int) (height - footerHeight));
-
-                    stripper.addRegion("contentRegion", region);
-                    stripper.extractRegions(page);
-
-                    String text = stripper.getTextForRegion("contentRegion");
-                    textToExtract.append(text).append(System.lineSeparator());
-
-                    stripper.removeRegion("contentRegion");
-                    extractedText = textToExtract.toString();
-                }
-            } catch(IOException e){
-                throw new RuntimeException(e);
-            }
-
-            if(boldValueList.isEmpty()) throw new PnParserException("PDF not valid: document did not contain bold words.");
-            if(extractedText == null) throw new PnParserException("PDF error: some problems on extracting text.");
+            PnTextExtractor pnTextExtractor = new PnTextExtractor();
+            pnTextExtractor.getPdfTextStripperByArea().setSortByPosition(true);
+            String extractedText = pnTextExtractor.extractByArea(document);
+            if(extractedText == null) throw new PnParserException("some problems on extracting text by area.");
 
             return getContent(extractedText, boldValueList, legalFactType);
-        } catch (IOException exception) {
-            log.error("PdfBox error: {}", exception.getMessage());
-        } catch (RuntimeException exception) {
-            log.error("Error during parsing: {}", exception.getMessage());
+        } catch (IOException | RuntimeException exception) {
+            log.error("PdfBox error during parsing phase: {}", exception.getMessage());
         }
         return null;
     }
@@ -135,6 +110,36 @@ public class PnContentExtractor implements IPnContentExtractor {
         return composeList;
     }
 
+    @Getter
+    private class PnTextExtractor {
+        private final PDFTextStripperByArea pdfTextStripperByArea;
+
+        public PnTextExtractor() throws IOException {
+            pdfTextStripperByArea = new PDFTextStripperByArea();
+        }
+
+        public String extractByArea(PDDocument document) throws IOException {
+            String extractedText = null;
+            StringBuilder textToExtract = new StringBuilder();
+            for(PDPage page : document.getPages()) {
+                PDRectangle mediaBox = page.getMediaBox();
+                float height = mediaBox.getHeight();
+                float width = mediaBox.getWidth();
+                float footerHeight = 100; // Altezza del footer da escludere
+                Rectangle region = new Rectangle(0, 0, (int) width, (int) (height - footerHeight));
+
+                pdfTextStripperByArea.addRegion("contentRegion", region);
+                pdfTextStripperByArea.extractRegions(page);
+
+                String text = pdfTextStripperByArea.getTextForRegion("contentRegion");
+                textToExtract.append(text).append(System.lineSeparator());
+
+                pdfTextStripperByArea.removeRegion("contentRegion");
+                extractedText = textToExtract.toString();
+            }
+            return extractedText;
+        }
+    }
 
     @Getter
     private class PnBoldWordExtractor extends PDFTextStripper {
