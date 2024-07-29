@@ -46,6 +46,7 @@ public class PnDestinatarioDigitale extends PnDestinatario {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
         PnDestinatarioDigitale that = (PnDestinatarioDigitale) object;
         return Objects.equals(domicilioDigitale, that.domicilioDigitale)
                 && Objects.equals(tipoDomicilioDigitale, that.tipoDomicilioDigitale);
@@ -53,6 +54,6 @@ public class PnDestinatarioDigitale extends PnDestinatario {
 
     @Override
     public int hashCode() {
-        return Objects.hash(domicilioDigitale, tipoDomicilioDigitale);
+        return Objects.hash(super.hashCode(), domicilioDigitale, tipoDomicilioDigitale);
     }
 }

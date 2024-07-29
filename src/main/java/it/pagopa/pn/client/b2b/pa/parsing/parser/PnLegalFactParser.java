@@ -121,7 +121,7 @@ public class PnLegalFactParser extends PnCoreTokens implements IPnParserService 
             pdfStripper.setSortByPosition(true);
             return pdfStripper.getText(document);
         } catch (Exception exception) {
-            log.error("Error parsing PDF {}", exception);
+            log.error("Error parsing PDF: {}", exception.getMessage());
         }
         return null;
     }

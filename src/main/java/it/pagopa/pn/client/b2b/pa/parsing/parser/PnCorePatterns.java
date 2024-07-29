@@ -7,10 +7,8 @@ import java.util.regex.Pattern;
 
 
 public class PnCorePatterns {
-    //    private static final String REGEX_CLEANUP_MATCHER_PATTERN = "[^*\\s]\\r\\n";
     private static final String REGEX_CLEANUP_MATCHER_PATTERN = "[^-\\s]\\r\\n";
     private static final String STRING_CLEANUP_PATTERN = " \r\n";
-    //    private static final String REGEX_CLEANUP_RETURN_NEWLINE = "\\s\\r\\n";
     private static final String REGEX_CLEANUP_RETURN_NEWLINE = "\\r\\n";
     private static final String REGEX_CLEANUP_NSBP = "\\u00a0";
     private static final String REGEX_CLEANUP_DOUBLE_WHITESPACE = "\\s{2,}";
