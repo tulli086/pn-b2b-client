@@ -31,7 +31,6 @@ import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.ByteArrayInputStream;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -1083,19 +1082,6 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
         Assertions.assertNotNull(firstDocumentReceived.getPaperEngageRequest().getAttachments());
         Assertions.assertTrue(firstDocumentReceived.getPaperEngageRequest().getAttachments().get(documentIndex - 1).getDocumentType().equals(tipologia));
         log.info(firstDocumentReceived.toString());
-    }
-
-    //TODO Matteo remove
-    @And("si verifica che i restanti documenti siano nell'ordine giusto")
-    public void checkOrderRemainingDocuments() {
-        ReceivedMessage firstDocumentReceived = documentiPec.get(0);
-        Assertions.assertNotNull(firstDocumentReceived.getPaperEngageRequest());
-        Assertions.assertNotNull(firstDocumentReceived.getPaperEngageRequest().getAttachments());
-        for (int i = 1; i < firstDocumentReceived.getPaperEngageRequest().getAttachments().size() - 1; i++) {
-            PaperEngageRequestAttachments attachment = firstDocumentReceived.getPaperEngageRequest().getAttachments().get(i);
-            log.info(attachment.toString());
-            Assertions.assertTrue(documentiPec.get(0).getPaperEngageRequest().getAttachments().get(i).getOrder().equals(new BigDecimal(i)));
-        }
     }
 
     @Value("${b2b.sender.mail}")
