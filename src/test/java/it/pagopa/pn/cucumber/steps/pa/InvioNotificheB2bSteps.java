@@ -1049,28 +1049,20 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
         }
     }
 
-
-
     @And("si verifica il contenuto della pec abbia {int} attachment di tipo {string}")
     public void presenzaAttachment(Integer numeroDocumenti, String tipologia) {
-
         Integer contoDocumento = 0;
-
         for (String attachmentUrl : documentiPec.get(0).getDigitalNotificationRequest().getAttachmentUrls()) {
             contoDocumento += attachmentUrl.contains(tipologia) ? 1 : 0;
         }
-
         try {
-
             Assertions.assertTrue(numeroDocumenti == contoDocumento);
         } catch (AssertionFailedError assertionFailedError) {
-            String message = assertionFailedError.getMessage() +
-                    "Verifica Allegati pec in errore ";
+            String message = assertionFailedError.getMessage() + "Verifica Allegati pec in errore ";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }
 
-    //TODO Matteo
     @And("si verifica il contenuto degli attachments da inviare in via cartacea al destinatario {int} con {int} allegati")
     public void checkDocumentInviatiPaper(Integer destinatario, Integer allegati) {
         try {
@@ -1093,6 +1085,7 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
         log.info(firstDocumentReceived.toString());
     }
 
+    //TODO Matteo remove
     @And("si verifica che i restanti documenti siano nell'ordine giusto")
     public void checkOrderRemainingDocuments() {
         ReceivedMessage firstDocumentReceived = documentiPec.get(0);
@@ -1104,8 +1097,6 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
             Assertions.assertTrue(documentiPec.get(0).getPaperEngageRequest().getAttachments().get(i).getOrder().equals(new BigDecimal(i)));
         }
     }
-    //TODO fine Matteo
-
 
     @Value("${b2b.sender.mail}")
     private String senderEmail;
