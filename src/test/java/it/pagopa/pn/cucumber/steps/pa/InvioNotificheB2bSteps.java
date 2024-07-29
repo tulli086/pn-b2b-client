@@ -1070,7 +1070,7 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
     }
 
     //TODO Matteo
-    @And("si verifica il contenuto degli attachments da inviare al destinatario {int} con {int} allegati")
+    @And("si verifica il contenuto degli attachments da inviare in via cartacea al destinatario {int} con {int} allegati")
     public void checkDocumentInviatiPaper(Integer destinatario, Integer allegati) {
         try {
             this.documentiPec = pnExternalChannelsServiceClientImpl.getReceivedMessages(sharedSteps.getIunVersionamento(), destinatario);
