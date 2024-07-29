@@ -50,6 +50,7 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene controllato lo stato di caricamento del csv a "PENDING"
     Then si controlla che il sportello sia in stato "ACCEPTED"
 
+
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_2] caricamento CSV verifica stato DONE
     When viene cambiato raddista con "issuer_2"
@@ -103,7 +104,6 @@ Feature: Radd Alternative Anagrafica Sportelli
       | nonEsiste | 404    |
       | NULL      | 400    |
 
-
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario Outline: [ADEG-RADD-VAL-FIELD-2] caricamento CSV contiene solo il campo description o il campo telefono vuoto
     When viene cambiato raddista con "issuer_2"
@@ -126,20 +126,19 @@ Feature: Radd Alternative Anagrafica Sportelli
     Then viene controllato lo stato di caricamento del csv a "DONE"
     Then si controlla che il sportello sia in stato "REJECTED" con il messaggio "Il campo telefono non rispetta il formato definito"
 
-  #@raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
-  @puliziaSportelliCsv
+  @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [ADEG-RADD-VAL-FIELD-3] caricamento CSV con uno sportello con campi telefono e descrizione vuoti, uno sportello con telefono compilato correttamente e uno sportello compilato correttamente
     When viene cambiato raddista con "issuer_2"
     When viene caricato il csv con dati:
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city    | address_radd_country | radd_description | radd_phoneNumber  | radd_geoLocation_latitudine | radd_geoLocation_longitudine | radd_openingTime | radd_start_validity | radd_end_validity | radd_capacity | radd_externalCode |
       | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | NULL             | NULL              | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
-      | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | ĄŁĽŚŠŞŤŹŽż        | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
-      | via posto        | 30022            | VE                    | CEGGIA               | ITALIA               | test sportelli   | 01/5410951        | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
+      | via posto2       | 30022            | VE                    | GORGOGLIONE          | ITALIA               | test sportelli   | ĄŁĽŚŠŞŤŹŽż        | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
+      | via posto3       | 30023            | VE                    | CONCORDIA SAGITTARIA | ITALIA               | test sportelli   | 01/5410951        | 45.0000                     | 42.2412                      | lun=9:00-10:00#  | now                 | +10g              | 10            | testRadd          |
     Then viene controllato lo stato di caricamento del csv a "DONE"
     #creare metodo che controlla per ogni singola riga per ogni singolo sportello l errore specifico
     Then si controlla che il sportello sia in stato "REJECTED" con il messaggio:
     | Il campo telefono non rispetta il formato definito |
-    | Il campo telefono è obbligatorio |
+    | Il campo descrizione è obbligatorio, Il campo telefono è obbligatorio |
 
   @raddAnagrafica @raddAlternativeCsv @puliziaSportelliCsv
   Scenario: [RADD_ANAGRAFICA_CSV_LISTA_1] caricamento CSV verifica il ricevimento della lista dei sportelli RADD
@@ -249,6 +248,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | radd_openingTime             | NULL        |
       | radd_start_validity          | now         |
       | radd_end_validity            | -20g        |
+      | radd_phoneNumber             | 01/5245951  |
     Then l'operazione ha prodotto un errore con status code "400" con messaggio di errore "La data di fine validità non può essere precedente alla data di inizio validità"
 
 

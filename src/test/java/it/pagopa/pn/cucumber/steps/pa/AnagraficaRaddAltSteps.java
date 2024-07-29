@@ -273,30 +273,7 @@ public class AnagraficaRaddAltSteps {
 
     @When("si controlla che il sportello sia in stato {string}")
     public void vieneCercatoloSportelloEControlloStato(String status) {
-
-        RegistryRequestResponse dato = IntStream.range(0, NUM_CHECK_STATE_CSV)
-                .mapToObj(numCheck -> {
-                    waitFor(WAITING_STATE_CSV);
-                    RegistryRequestResponse registryRequestResponse = getRegistryRequestResponse(status);
-                    if (status.equalsIgnoreCase(ACCEPTED)) waitFor(WAITING_ACCEPTED_STATE);
-                    return registryRequestResponse;
-                })
-                .filter(Objects::nonNull)
-                .filter(data -> data.getStatus() != null && data.getStatus().equalsIgnoreCase(status))
-                .findFirst()
-                .orElse(null);
-
-        if (dato != null) log.info("sportello status corretto: '{}'", dato);
-
-        try {
-            Assertions.assertNotNull(dato);
-            Assertions.assertEquals(status, dato.getStatus());
-            this.requestid = dato.getRequestId();
-            this.registryId = dato.getRegistryId();
-
-        } catch (AssertionFailedError assertionFailedError) {
-            throwAssertFailerForSportelloIssue(assertionFailedError, dato);
-        }
+        vieneCercatoloSportelloEControlloStatoConMessaggio(status, null);
     }
 
     @When("si controlla che il sportello sia in stato {string} con il messaggio {string}")
@@ -304,10 +281,7 @@ public class AnagraficaRaddAltSteps {
 
         RegistryRequestResponse dato = IntStream.range(0, NUM_CHECK_STATE_CSV)
                 .mapToObj(numCheck -> {
-                    waitFor(WAITING_STATE_CSV);
-                    RegistryRequestResponse registryRequestResponse = getRegistryRequestResponse(status);
-                    if (status.equalsIgnoreCase(ACCEPTED)) waitFor(WAITING_ACCEPTED_STATE);
-                    return registryRequestResponse;
+                    return getRequestResponse(status);
                 })
                 .filter(Objects::nonNull)
                 .filter(data -> data.getStatus() != null && data.getStatus().equalsIgnoreCase(status))
@@ -319,7 +293,7 @@ public class AnagraficaRaddAltSteps {
         try {
             Assertions.assertNotNull(dato);
             Assertions.assertEquals(status, dato.getStatus());
-            Assertions.assertTrue(dato.getError().contains(message));
+            if (message != null) Assertions.assertTrue(dato.getError().contains(message));
             this.requestid = dato.getRequestId();
             this.registryId = dato.getRegistryId();
 
@@ -332,12 +306,7 @@ public class AnagraficaRaddAltSteps {
     public void vieneCercatoloSportelloEControlloStatoConMessaggio(String status, List<String> errorMessages) {
 
         List<RegistryRequestResponse> dato = IntStream.range(0, NUM_CHECK_STATE_CSV)
-                .mapToObj(numCheck -> {
-                    waitFor(WAITING_STATE_CSV);
-                    RegistryRequestResponse registryRequestResponse = getRegistryRequestResponse(status);
-                    if (status.equalsIgnoreCase(ACCEPTED)) waitFor(WAITING_ACCEPTED_STATE);
-                    return registryRequestResponse;
-                })
+                .mapToObj(numCheck -> getRequestResponse(status))
                 .filter(Objects::nonNull)
                 .filter(data -> data.getStatus() != null && data.getStatus().equalsIgnoreCase(status))
                 .limit(errorMessages.size())
@@ -361,6 +330,13 @@ public class AnagraficaRaddAltSteps {
         } catch (AssertionFailedError assertionFailedError) {
             throwAssertFailerForSportelloIssue(assertionFailedError, dato.get(0));
         }
+    }
+
+    private RegistryRequestResponse getRequestResponse(String status) {
+        waitFor(WAITING_STATE_CSV);
+        RegistryRequestResponse registryRequestResponse = getRegistryRequestResponse(status);
+        if (status.equalsIgnoreCase(ACCEPTED)) waitFor(WAITING_ACCEPTED_STATE);
+        return registryRequestResponse;
     }
 
     private RegistryRequestResponse getRegistryRequestResponse(String status) {

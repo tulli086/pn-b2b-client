@@ -1,6 +1,5 @@
-package it.pagopa.pn.cucumber.utils;
+package it.pagopa.pn.client.b2b.pa.service.utils;
 
-import it.pagopa.pn.client.b2b.pa.service.utils.SettableAuthTokenRadd;
 import lombok.Getter;
 
 @Getter

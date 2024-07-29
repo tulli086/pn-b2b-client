@@ -13,7 +13,7 @@ import it.pagopa.pn.client.b2b.pa.service.utils.SettableAuthTokenRadd;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.*;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
 import it.pagopa.pn.cucumber.utils.Compress;
-import it.pagopa.pn.cucumber.utils.RaddOperator;
+import it.pagopa.pn.client.b2b.pa.service.utils.RaddOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -68,6 +69,7 @@ public class RaddAltSteps {
     private PnPaB2bUtils.Pair<String, String> documentUploadResponse;
     private AbortTransactionResponse abortActTransaction;
     private HttpStatusCodeException documentUploadError;
+    private HttpStatusCodeException expectedStartTransactionException;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
 
@@ -177,12 +179,18 @@ public class RaddAltSteps {
         errorType = errorType.toLowerCase();
         ActInquiryResponseStatus.CodeEnum error = getErrorCodeRaddAlternative(errorCode);
         switch (errorType) {
-            case "qrcode non valido", "cf non valido" -> {
+            case "qrcode non valido",
+                 "cf non valido" -> {
                 Assertions.assertEquals(false, actInquiryResponse.getResult());
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertEquals(error, actInquiryResponse.getStatus().getCode());
             }
-            case "stampa già eseguita","questa notifica è stata annullata dall’ente mittente","documenti non più disponibili","ko generico", "input non valido" -> {
+            case "stampa già eseguita",
+                 "questa notifica è stata annullata dall’ente mittente",
+                 "documenti non più disponibili",
+                 "ko generico",
+                 "input non valido",
+                 "limite di 10 stampe superato" -> {
                 Assertions.assertEquals(false, actInquiryResponse.getResult());
                 Assertions.assertNotNull(actInquiryResponse.getStatus());
                 Assertions.assertNotNull(actInquiryResponse.getStatus().getMessage());
@@ -210,7 +218,7 @@ public class RaddAltSteps {
     @And("vengono caricati i documento di identità del cittadino su radd alternative per errore")
     public void vengonoCaricatiIDocumentoDiIdentitaDelCittadinoPerErrore() {
         this.operationid = generateRandomNumber();
-        uploadDocumentRaddOperatorAlternative(true, this.uid);
+        uploadDocumentRaddOperatorAlternative(true, RaddOperator.UPLOADER);
     }
 
     @And("vengono caricati i documento di identità del cittadino su radd alternative dall'operatore RADD {string}")
@@ -218,14 +226,15 @@ public class RaddAltSteps {
         RaddOperator raddOperator = setOperatorRaddJWT(raddOperatorType);
         this.operationid = generateRandomNumber();
         Assertions.assertDoesNotThrow(()->
-                uploadDocumentRaddOperatorAlternative(true, raddOperator.getUid()));
+                uploadDocumentRaddOperatorAlternative(true, raddOperator));
     }
 
     @And("l'operatore {string} tenta di caricare i documento di identità del cittadino su radd alternative senza successo")
     public void lOperatoreTentaDiCaricareIDocumentoDiIdentitàDelCittadinoSuRaddAlternativeSenzaSuccesso(String raddOperatorType) {
         RaddOperator raddOperator = setOperatorRaddJWT(raddOperatorType);
         this.operationid = generateRandomNumber();
-        Assertions.assertThrows(RuntimeException.class, () ->  uploadDocumentRaddOperatorAlternative(true, raddOperator.getUid()));
+        documentUploadError = Assertions.assertThrows(HttpStatusCodeException.class,
+                () ->  uploadDocumentRaddOperatorAlternative(true, raddOperator));
     }
 
     @And("si inizia il processo di caricamento dei documento di identità del cittadino ma non si porta a conclusione su radd alternative")
@@ -238,7 +247,7 @@ public class RaddAltSteps {
     public void siIniziaIlProcessoDiCaricamentoPerRaddStandardDeiDocumentoDiIdentitàDelCittadinoMaNonSiPortaAConclusione(String raddOperatorType) {
         RaddOperator raddOperator = setOperatorRaddJWT(raddOperatorType);
         this.operationid = generateRandomNumber();
-        uploadDocumentRaddOperatorAlternative(false, raddOperator.getUid());
+        uploadDocumentRaddOperatorAlternative(false, raddOperator);
     }
 
     private void uploadDocumentRaddAlternative(boolean usePresignedUrl) {
@@ -253,10 +262,10 @@ public class RaddAltSteps {
         }
     }
 
-    private void uploadDocumentRaddOperatorAlternative(boolean usePresignedUrl, String uidRaddOperator) {
+    private void uploadDocumentRaddOperatorAlternative(boolean usePresignedUrl, RaddOperator raddOperator) {
         try {
             creazioneZip();
-            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddOperatoreAlternativeDocument("classpath:/"+this.fileZip, usePresignedUrl,this.operationid, uidRaddOperator);
+            PnPaB2bUtils.Pair<String, String> uploadResponse = pnPaB2bUtils.preloadRaddOperatoreAlternativeDocument("classpath:/"+this.fileZip, usePresignedUrl, this.operationid, raddOperator);
             Assertions.assertNotNull(uploadResponse);
             this.documentUploadResponse = uploadResponse;
             log.info("documentUploadResponse: {}", documentUploadResponse);
@@ -276,6 +285,13 @@ public class RaddAltSteps {
         this.operationid = this.operationid == null ? generateRandomNumber() : this.operationid;
         raddAltClient.setAuthTokenRadd(raddOperator.getIssuerType());
         startTransactionActRaddAlternativeForOperator(this.operationid,true, raddOperator.getUid());
+    }
+
+
+    @When("tentativo di recuperare gli atti delle notifiche associata all'AAR da radd alternative per operatore {string} senza successo")
+    public void tentativoDiRecuperareGliAttiDelleNotificheAssociataAllAARDaRaddAlternativePerOperatoreSenzaSuccesso(String raddOperatorType) {
+        this.expectedStartTransactionException = Assertions.assertThrows(HttpClientErrorException.class,
+                () -> vengonoVisualizzatiSiaGliAttiSiaLeAttestazioniOpponibiliRiferitiAllaNotificaAssociataAllAARDaRaddAlternativePerOperatoreStandard(raddOperatorType));
     }
 
     @And("Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR con lo stesso operationId dal raddista {string}")
@@ -508,6 +524,22 @@ public class RaddAltSteps {
             }
             default -> throw new IllegalArgumentException();
         }
+    }
+
+    @When("tentativo di recuperare gli aar delle notifiche in stato irreperibile da operatore radd {string} senza successo")
+    public void siEsegueUnTentativoDiRecuperareGliAarDelleNotificheInStatoIrreperibileDaOperatoreRaddSenzaSuccesso(String raddOperatorType) {
+        this.expectedStartTransactionException = Assertions.assertThrows(HttpClientErrorException.class,
+                () -> vengonoRecuperatiGliAttiDelleNotificheInStatoIrreperibileDaOperatoreRaddType(raddOperatorType));
+    }
+
+    @And("il tentativo genera un errore {int} {string} con il messaggio {string}")
+    public void lErroreDelRecuperoDegliAarDelleNotificheGenereUnErroreConIlMessaggio(int errorCode, String errorType, String errorMessage) {
+        Assertions.assertNotNull(expectedStartTransactionException);
+        Assertions.assertNotNull(expectedStartTransactionException.getStatusCode());
+        Assertions.assertNotNull(expectedStartTransactionException.getMessage());
+        Assertions.assertEquals(errorCode, expectedStartTransactionException.getStatusCode().value());
+        Assertions.assertEquals(errorType, expectedStartTransactionException.getStatusText());
+        Assertions.assertTrue(expectedStartTransactionException.getMessage().contains(errorMessage));
     }
 
     @And("viene chiusa la transazione per il recupero degli aar su radd alternative")

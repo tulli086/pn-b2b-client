@@ -9,6 +9,7 @@ import it.pagopa.pn.client.b2b.pa.polling.impl.*;
 import it.pagopa.pn.client.b2b.pa.service.IPnPaB2bClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddAlternativeClient;
 import it.pagopa.pn.client.b2b.pa.service.IPnRaddFsuClient;
+import it.pagopa.pn.client.b2b.pa.service.utils.RaddOperator;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RegistryUploadResponse;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadRequest;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.internalb2bradd.model.DocumentUploadResponse;
@@ -778,7 +779,7 @@ public class PnPaB2bUtils {
         return new Pair<>(key, sha256);
     }
 
-    public Pair<String, String> preloadRaddOperatoreAlternativeDocument(String resourcePath, boolean usePresignedUrl, String operationId, String uidRaddOperator) throws IOException {
+    public Pair<String, String> preloadRaddOperatoreAlternativeDocument(String resourcePath, boolean usePresignedUrl, String operationId, RaddOperator uidRaddOperator) throws IOException {
         String sha256 = computeSha256(resourcePath);
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.DocumentUploadResponse documentUploadResponse = getDocumentUploadResponsePerOperatore(operationId, uidRaddOperator, sha256);
 
@@ -796,13 +797,9 @@ public class PnPaB2bUtils {
         return new Pair<>(key, sha256);
     }
 
-    private it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.DocumentUploadResponse getDocumentUploadResponsePerOperatore(String operationId, String uidRaddOperator, String sha256) {
-        return Optional.ofNullable(uidRaddOperator)
-                .map(data -> getPreLoadRaddOperatorAlternativeResponse(sha256, operationId, uidRaddOperator))
-                .orElse(new it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.DocumentUploadResponse()
-                        .fileKey("123")
-                        .secret("123")
-                        .url("..."));
+    private it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model.DocumentUploadResponse getDocumentUploadResponsePerOperatore(String operationId, RaddOperator raddOperator, String sha256) {
+        raddAltClient.setAuthTokenRadd(raddOperator.getIssuerType());
+        return getPreLoadRaddOperatorAlternativeResponse(sha256, operationId, raddOperator.getUid());
     }
 
     private DocumentUploadResponse getPreLoadRaddResponse(String sha256) {

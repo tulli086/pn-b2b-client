@@ -35,7 +35,6 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     And lato destinatario la notifica può essere correttamente recuperata da "Mario Cucumber" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "DELIVERED"
 
   #capire come configurare/riprendere caso in cui MAX-Print request ha valore definito > & != 0
   @raddTechnicalAnnex
@@ -51,7 +50,7 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     When L'operatore scansiona il qrCode e stampa gli atti per il numero di volte consentito
     And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-    Then Viene restituito un messaggio di errore "Limite di * stampe superato" con codice di errore 3 su radd alternative
+    Then Viene restituito un messaggio di errore "Limite di 10 stampe superato" con codice di errore 3 su radd alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
 
 #OPERATORE UPLOADER
@@ -86,9 +85,10 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
     And la persona fisica "Signor casuale" chiede di verificare ad operatore radd "UPLOADER" la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    And si inizia il processo di caricamento per radd "UPLOADER" dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "UPLOADER"
-    And il recupero degli aar genera un errore "Campo fileKey obbligatorio mancante" con codice 4 su radd alternative
+    When tentativo di recuperare gli aar delle notifiche in stato irreperibile da operatore radd "UPLOADER" senza successo
+    #Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "UPLOADER"
+    #And il recupero degli aar genera un errore "Campo fileKey obbligatorio mancante" con codice 4 su radd alternative
+    And il tentativo genera un errore 400 "Bad Request" con il messaggio "Campo fileKey obbligatorio mancante"
 
   @raddTechnicalAnnex
   Scenario: [ADEG-RADD-TRANS_ACT-1] PF - Operatore RADD_UPLOADER - Start di una ACT transaction con fileKey presente - ricezione OK
@@ -118,14 +118,13 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
     Then L'operatore "UPLOADER" scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    And si inizia il processo di caricamento per radd "UPLOADER" dei documento di identità del cittadino ma non si porta a conclusione su radd alternative
-    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "UPLOADER"
-    And l'operazione di download degli atti genera un errore "Campo fileKey obbligatorio mancante" con codice 4 su radd alternative
+    When tentativo di recuperare gli atti delle notifiche associata all'AAR da radd alternative per operatore "UPLOADER" senza successo
+    And il tentativo genera un errore 400 "Bad Request" con il messaggio "Campo fileKey obbligatorio mancante"
 
-  # OPERATORE STANDARD
+  # OPERATORE STANDARD / Senza ruolo
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_AOR-3] Operatore RADD_STANDARD - Start di una AOR transaction senza fileKey presente - ricezione OK
+  Scenario Outline: [ADEG-RADD-TRANS_AOR-3] Operatore RADD_STANDARD / senza Ruolo - Start di una AOR transaction senza fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -135,13 +134,17 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    And la persona fisica "Signor casuale" chiede di verificare ad operatore radd "STANDARD" la presenza di notifiche
+    And la persona fisica "Signor casuale" chiede di verificare ad operatore radd "<operatorType>" la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "STANDARD"
+    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "<operatorType>"
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
+    Examples:
+      | operatorType |
+      | STANDARD     |
+      | WITHOUT_ROLE |
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_AOR-4] Operatore RADD_STANDARD - Start di una AOR transaction con fileKey presente - ricezione Errore
+  Scenario Outline: [ADEG-RADD-TRANS_AOR-4] Operatore RADD_STANDARD / senza ruolo - Start di una AOR transaction con fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
@@ -151,15 +154,18 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    And la persona fisica "Signor casuale" chiede di verificare ad operatore radd "STANDARD" la presenza di notifiche
+    And la persona fisica "Signor casuale" chiede di verificare ad operatore radd "<operatorType>" la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    #devo rivedere il metodo sotto qui
     And vengono caricati i documento di identità del cittadino su radd alternative per errore
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "STANDARD"
-    And il recupero degli aar genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
+    When tentativo di recuperare gli aar delle notifiche in stato irreperibile da operatore radd "<operatorType>" senza successo
+    And il tentativo genera un errore 400 "Bad Request" con il messaggio "Campo fileKey inaspettato"
+    Examples:
+      | operatorType |
+      | STANDARD     |
+      | WITHOUT_ROLE |
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-3] Operatore RADD_STANDARD - Start di una ACT transaction senza fileKey presente - ricezione OK
+  Scenario Outline: [ADEG-RADD-TRANS_ACT-3] Operatore RADD_STANDARD / senza ruolo - Start di una ACT transaction senza fileKey presente - ricezione OK
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
@@ -168,13 +174,17 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-    Then L'operatore "STANDARD" scansione il qrCode per recuperare gli atti da radd alternative
+    Then L'operatore "<operatorType>" scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "STANDARD"
+    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "<operatorType>"
     And l'operazione di download degli atti si conclude correttamente su radd alternative
+    Examples:
+      | operatorType |
+      | STANDARD     |
+      | WITHOUT_ROLE |
 
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-4] Operatore RADD_STANDARD - Start di una ACT transaction con fileKey presente - ricezione Errore
+  Scenario Outline: [ADEG-RADD-TRANS_ACT-4] Operatore RADD_STANDARD - Start di una ACT transaction con fileKey presente - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
@@ -183,14 +193,19 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-    Then L'operatore "STANDARD" scansione il qrCode per recuperare gli atti da radd alternative
+    Then L'operatore "<operatorType>" scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative per errore
-    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "STANDARD"
-    And l'operazione di download degli atti genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
+    When tentativo di recuperare gli atti delle notifiche associata all'AAR da radd alternative per operatore "<operatorType>" senza successo
+    And il tentativo genera un errore 400 "Bad Request" con il messaggio "Campo fileKey inaspettato"
+    Examples:
+      | operatorType |
+      | STANDARD     |
+      | WITHOUT_ROLE |
 
+  #UPLOAD ERROR
   @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-5] Operatore RADD_STANDARD - Tentativo di eseguire documentUpload - ricezione Errore
+  Scenario Outline: [ADEG-RADD-TRANS_ACT-5] Operatore senza ruolo / standard - Tentativo di eseguire documentUpload - ricezione Errore
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
@@ -199,88 +214,11 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
     And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
     When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-    Then L'operatore "STANDARD" scansione il qrCode per recuperare gli atti da radd alternative
+    Then L'operatore "<operatorType>" scansione il qrCode per recuperare gli atti da radd alternative
     And la scansione si conclude correttamente su radd alternative
-    And l'operatore "STANDARD" tenta di caricare i documento di identità del cittadino su radd alternative senza successo
-
-# OPERATORE NON CENSITO
-
-  @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_AOR-5] Operatore non censito - Start di una AOR transaction senza fileKey presente - ricezione OK
-    Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber |
-      | senderDenomination    | Comune di palermo               |
-      | physicalCommunication | AR_REGISTERED_LETTER            |
-    And destinatario Signor casuale e:
-      | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    And la persona fisica "Signor casuale" chiede di verificare ad operatore radd "WITHOUT_ROLE" la presenza di notifiche
-    And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "WITHOUT_ROLE"
-    And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
-
-  @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_AOR-6] Operatore senza ruolo - Start di una AOR transaction con fileKey presente - ricezione Errore
-    Given viene generata una nuova notifica
-      | subject               | notifica analogica con cucumber |
-      | senderDenomination    | Comune di palermo               |
-      | physicalCommunication | AR_REGISTERED_LETTER            |
-    And destinatario Signor casuale e:
-      | digitalDomicile         | NULL                                         |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    And la persona fisica "Signor casuale" chiede di verificare ad operatore radd "WITHOUT_ROLE" la presenza di notifiche
-    And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
-    And vengono caricati i documento di identità del cittadino su radd alternative per errore
-    Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "WITHOUT_ROLE"
-    And il recupero degli aar genera un errore "Campo fileKey inaspettato" con codice 5 su radd alternative
-    #capire il codice errore se c'è
-
-  @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-6] Operatore senza ruolo - Start di una ACT transaction senza fileKey presente - ricezione OK
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber radd alternative  |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
-    When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-    Then L'operatore "WITHOUT_ROLE" scansione il qrCode per recuperare gli atti da radd alternative
-    And la scansione si conclude correttamente su radd alternative
-    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "WITHOUT_ROLE"
-    And l'operazione di download degli atti si conclude correttamente su radd alternative
-
-  @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-7] Operatore senza ruolo - Start di una ACT transaction con fileKey presente - ricezione Errore
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber radd alternative  |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
-    When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-    Then L'operatore "WITHOUT_ROLE" scansione il qrCode per recuperare gli atti da radd alternative
-    And la scansione si conclude correttamente su radd alternative
-    And vengono caricati i documento di identità del cittadino su radd alternative per errore
-    Then Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative per operatore "WITHOUT_ROLE"
-    And l'operazione di download degli atti genera un errore "Campo fileKey inaspettato" con codice 4 su radd alternative
-    #capire il codice errore se c'è
-
-  @raddTechnicalAnnex
-  Scenario: [ADEG-RADD-TRANS_ACT-8] Operatore senza ruolo - Tentativo di eseguire documentUpload - ricezione Errore
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber radd alternative  |
-      | senderDenomination | Comune di Palermo           |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
-    When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-    Then L'operatore "WITHOUT_ROLE" scansione il qrCode per recuperare gli atti da radd alternative
-    And la scansione si conclude correttamente su radd alternative
-    And l'operatore "WITHOUT_ROLE" tenta di caricare i documento di identità del cittadino su radd alternative senza successo
+    And l'operatore "<operatorType>" tenta di caricare i documento di identità del cittadino su radd alternative senza successo
+    And il caricamente ha prodotto une errore http 403 su radd alternative
+    Examples:
+    | operatorType |
+    | WITHOUT_ROLE |
+    | STANDARD     |
