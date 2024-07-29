@@ -29,8 +29,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
+
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -1056,7 +1056,7 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
         Integer contoDocumento = 0;
 
         for (String attachmentUrl : documentiPec.get(0).getDigitalNotificationRequest().getAttachmentUrls()) {
-            contoDocumento = attachmentUrl.contains(tipologia) ? contoDocumento + 1 : contoDocumento;
+            contoDocumento += attachmentUrl.contains(tipologia) ? 1 : 0;
         }
 
         try {
@@ -1069,11 +1069,45 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
         }
     }
 
+    //TODO Matteo
+    @And("si verifica il contenuto degli attachments da inviare al destinatario {int} con {int} allegati")
+    public void checkDocumentInviatiPaper(Integer destinatario, Integer allegati) {
+        try {
+            this.documentiPec = pnExternalChannelsServiceClientImpl.getReceivedMessages(sharedSteps.getIunVersionamento(), destinatario);
+            Assertions.assertNotNull(documentiPec);
+            log.info("documenti analogici : {}", documentiPec);
+            Assertions.assertEquals(allegati, documentiPec.get(0).getPaperEngageRequest().getAttachments().size());
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() + "Verifica Allegati analogici in errore ";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+    @And("si verifica che il {int} documento arrivato sia di tipo {string}")
+    public void checkIndexedDocument(Integer documentIndex, String tipologia) {
+        ReceivedMessage firstDocumentReceived = documentiPec.get(0);
+        Assertions.assertNotNull(firstDocumentReceived.getPaperEngageRequest());
+        Assertions.assertNotNull(firstDocumentReceived.getPaperEngageRequest().getAttachments());
+        Assertions.assertTrue(firstDocumentReceived.getPaperEngageRequest().getAttachments().get(documentIndex - 1).getDocumentType().equals(tipologia));
+        log.info(firstDocumentReceived.toString());
+    }
+
+    @And("si verifica che i restanti documenti siano nell'ordine giusto")
+    public void checkOrderRemainingDocuments() {
+        ReceivedMessage firstDocumentReceived = documentiPec.get(0);
+        Assertions.assertNotNull(firstDocumentReceived.getPaperEngageRequest());
+        Assertions.assertNotNull(firstDocumentReceived.getPaperEngageRequest().getAttachments());
+        for (int i = 1; i < firstDocumentReceived.getPaperEngageRequest().getAttachments().size() - 1; i++) {
+            PaperEngageRequestAttachments attachment = firstDocumentReceived.getPaperEngageRequest().getAttachments().get(i);
+            log.info(attachment.toString());
+//            Assertions.assertTrue(documentiPec.get(0).getPaperEngageRequest().);
+        }
+    }
+    //TODO fine Matteo
 
 
     @Value("${b2b.sender.mail}")
     private String senderEmail;
-
 
 
     private void sendEmail() {

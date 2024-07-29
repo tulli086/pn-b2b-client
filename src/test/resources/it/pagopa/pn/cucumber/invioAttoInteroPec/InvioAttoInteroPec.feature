@@ -22,12 +22,41 @@ Feature: Invio atto intero via PEC (fase 2 - estensione F24)
       | document           | DOC_1_PG; DOC_2_PG          |
     And destinatario Cucumber Society e:
       | digitalDomicile_address | test@pecOk.it |
-      | payment     | NULL              |
+      | payment                 | NULL          |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "DIGITAL_SUCCESS_WORKFLOW"
     And si verifica il contenuto degli attacchment da inviare nella pec del destinatario 0 con 3 allegati
     And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
     And si verifica il contenuto della pec abbia 2 attachment di tipo "NOTIFICATION_ATTACHMENTS"
+
+  @invioAttoInteroPec #Matteo
+  Scenario: [ALLEGATI-PEC_WI-2_2.1] PG - Verifica PEC contenente allegati (Più Atti, AAR) di una notifica mono destinatario digitale
+    Given viene generata una nuova notifica
+      | subject            | invio notifica con cucumber |
+      | senderDenomination | Comune di Palermo           |
+      | document           | DOC_1_PG; DOC_2_PG          |
+    And destinatario Mario Gherkin e:
+      | digitalDomicile              | NULL                 |
+      | physicalAddress_address      | Via@ok_890           |
+      | physicalAddress_municipality | BARI                 |
+      | physicalAddress_province     | BA                   |
+      | physicalAddress_zip          | 70129                |
+      | payment_f24                  | PAYMENT_F24_FLAT     |
+      | title_payment                | F24_STANDARD_GHERKIN |
+    When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
+    Then vengono letti gli eventi fino all'elemento di timeline della notifica "ANALOG_SUCCESS_WORKFLOW"
+    And si verifica il contenuto degli attachments da inviare al destinatario 0 con 5 allegati
+#    And si verifica il contenuto della pec abbia 1 attachment di tipo "AAR"
+#    And si verifica il contenuto della pec abbia 2 attachment di tipo "NOTIFICATION_ATTACHMENTS"
+  # Certificare che il primo documento sia sempre l'AAR anche se inviato in ordine differente.
+    And si verifica che il 1 documento arrivato sia di tipo "AAR"
+    And si verifica che il 2 documento arrivato sia di tipo "ATTO"
+    And si verifica che il 3 documento arrivato sia di tipo "ATTO"
+    And si verifica che il 4 documento arrivato sia di tipo "ATTO"
+    And si verifica che il 5 documento arrivato sia di tipo "ATTO"
+  # Certificare che gli altri documenti seguano sempre l'ordinamento rispettato.
+#    And si verifica che i restanti documenti siano nell'ordine giusto
+
 
   @invioAttoInteroPec
   Scenario: [ALLEGATI-PEC_WI-2_3] PF - Verifica PEC contenente allegati (Atto, AAR, Avviso PagoPA) di una notifica mono destinatario digitale con solo avviso PagoPa
