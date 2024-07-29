@@ -18,7 +18,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -29,12 +31,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.*;
 import org.springframework.web.client.RestTemplate;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -77,8 +84,13 @@ public class PnPaB2bUtils {
 
 
     @Autowired
-    public PnPaB2bUtils(ApplicationContext ctx, IPnPaB2bClient client, RestTemplate restTemplate, IPnRaddFsuClient raddFsuClient,
-                        IPnRaddAlternativeClient raddAltClient, PnPollingFactory pollingFactory) {
+    public PnPaB2bUtils(ApplicationContext ctx,
+                        IPnPaB2bClient client,
+                        @Qualifier("defaultRestTemplate") RestTemplate restTemplate,
+                        IPnRaddFsuClient raddFsuClient,
+                        IPnRaddAlternativeClient raddAltClient,
+                        PnPollingFactory pollingFactory) {
+
         this.restTemplate = restTemplate;
         this.ctx = ctx;
         this.client = client;
@@ -430,6 +442,31 @@ public class PnPaB2bUtils {
         PnPollingResponseV23 pollingResponseV23 = validationStatusAcceptedShortV23.waitForEvent( response.getNotificationRequestId(), PnPollingParameter.builder().value (ACCEPTED).build());
         return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification();
     }
+
+
+    public FullSentNotificationV23 waitForRequestAcceptationExtraRapid( NewNotificationResponse response) {
+
+        PnPollingServiceValidationStatusAcceptedExtraRapidV23 validationStatusAcceptedExtraRapidV23 = (PnPollingServiceValidationStatusAcceptedExtraRapidV23) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_ACCEPTATION_EXTRA_RAPID_V23);
+        PnPollingResponseV23 pollingResponseV23 = validationStatusAcceptedExtraRapidV23.waitForEvent(response.getNotificationRequestId(), PnPollingParameter.builder().value(ACCEPTED).build());
+
+        return pollingResponseV23.getNotification() == null ? null : pollingResponseV23.getNotification() ;
+    }
+
+    public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification searchForRequestV1( it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse response) {
+
+        log.info("Request status for " + response.getNotificationRequestId() );
+        it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationRequestStatusResponse status = null;
+
+        status = client.getNotificationRequestStatusV1( response.getNotificationRequestId() );
+
+        log.info("New Notification Request status {}", status.getNotificationRequestStatus());
+
+        String iun = status.getIun();
+
+        return iun == null? null : client.getSentNotificationV1( iun );
+    }
+
+
 
     public it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.FullSentNotification waitForRequestAcceptationV1(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v1.NewNotificationResponse response) {
         PnPollingServiceValidationStatusV1 validationStatusV1 = (PnPollingServiceValidationStatusV1) pollingFactory.getPollingService(PnPollingStrategy.VALIDATION_STATUS_V1);
@@ -1197,5 +1234,41 @@ public class PnPaB2bUtils {
 
     private void attachmentSetDigestsV20(it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationPaymentAttachment notificationPaymentAttachment, String sha256) {
         notificationPaymentAttachment.digests(new it.pagopa.pn.client.b2b.pa.generated.openapi.clients.externalb2bpa.model_v2.NotificationAttachmentDigests().sha256(sha256));
+    }
+
+    public boolean downloadUrlAndCheckContent(String strUrl, String contentType) {
+
+        try {
+            URL url = new URL(strUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            for (Map.Entry<String, List<String>> entry : connection.getHeaderFields().entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+                return StringUtils.equals(connection.getHeaderField("Content-Type"), contentType);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String getOffsetDateTimeFromDate(Instant date) {
+        ZoneId zoneId = ZoneId.of("Europe/Rome");
+        OffsetDateTime offsetDateTime = OffsetDateTime.ofInstant(date, zoneId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        return offsetDateTime.truncatedTo(java.time.temporal.ChronoUnit.SECONDS).format(formatter);
+    }
+
+    public int convertToSeconds(String timeStr) {
+        int number = Integer.parseInt(timeStr.substring(0, timeStr.length() - 1));
+        char unit = timeStr.toLowerCase().charAt(timeStr.length() - 1);
+
+        if (unit == 'm') {
+            return number * 60;
+        } else if (unit == 'h') {
+            return number * 3600;
+        } else {
+            throw new IllegalArgumentException("Unità di misura non supportata");
+        }
     }
 }

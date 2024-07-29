@@ -3,7 +3,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
   Background:
     Given viene rimossa se presente la pec di piattaforma di "Mario Gherkin"
 
-  @CostoCartaceoComplete
+  @costoAnalogicoAgosto24
   Scenario Outline: [CALCOLO-COSTO_RS-20GR_1] Invio notifica e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | <SUBJECT>         |
@@ -23,17 +23,21 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
     Examples:
       | CAP   | COSTO | MUNICIPALITY | PROVINCE | SUBJECT                        |
       | 60010 | 402   | OSTRA        | AN       | notifica analogica FSU         |
-      | 04100 | 340   | LE FERRIERE  | LT       | notifica analogica RECAPITISTA |
-      | 00123 | 313   | ROMA         | RM       | notifica analogica RECAPITISTA |
+      | 04100 | 341   | LE FERRIERE  | LT       | notifica analogica RECAPITISTA |
+      | 00123 | 314   | ROMA         | RM       | notifica analogica RECAPITISTA |
       | 00018 | 402   | CRETONE      | RM       | notifica analogica RECAPITISTA |
       | 70124 | 274   | BARI         | BA       | notifica analogica RECAPITISTA |
       | 60012 | 344   | MONTERADO    | AN       | notifica analogica RECAPITISTA |
-      | 60126 | 294   | ANCONA       | AN       | notifica analogica RECAPITISTA |
+      | 60126 | 295   | ANCONA       | AN       | notifica analogica RECAPITISTA |
       | 80022 | 344   | ARZANO       | NA       | notifica analogica RECAPITISTA |
-      | 84124 | 294   | SALERNO      | SA       | notifica analogica RECAPITISTA |
-      | 80129 | 274     | NAPOLI       | NA       | notifica analogica RECAPITISTA |
+      | 84124 | 295   | SALERNO      | SA       | notifica analogica RECAPITISTA |
+      | 80129 | 274   | NAPOLI       | NA       | notifica analogica RECAPITISTA |
 
-  @CostoCartaceoComplete
+      | 27062 | 402   | CAMPOSPINOSO ALBAREDO   | PV       | notifica analogica RECAPITISTA |
+      | 92038 | 344   | MONTEVAGO               | AG       | notifica analogica RECAPITISTA |
+      | 92044 | 344   | PALMA DI MONTECHIARO    | AG       | notifica analogica RECAPITISTA |
+
+  @costoAnalogicoAgosto24
   Scenario: [CALCOLO-COSTO_RS-20GR_2] Invio notifica ZONE_1 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -50,7 +54,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And viene verificato il costo = "737" della notifica
 
-  @CostoCartaceoComplete
+  @costoAnalogicoAgosto24
   Scenario: [CALCOLO-COSTO_RS-20GR_3] Invio notifica ZONE_2 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
@@ -67,7 +71,7 @@ Feature: calcolo costo notifica in base hai grammi con notifiche RS
     And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_SIMPLE_REGISTERED_LETTER"
     And viene verificato il costo = "852" della notifica
 
-  @CostoCartaceoComplete
+  @costoAnalogicoAgosto24
   Scenario: [CALCOLO-COSTO_RS-20GR_4] Invio notifica ZONE_3 e verifica calcolo del costo su raccomandata con peso <= 20gr
     Given viene generata una nuova notifica
       | subject            | notifica analogica con cucumber |
