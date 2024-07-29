@@ -31,6 +31,7 @@ import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -1100,7 +1101,7 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
         for (int i = 1; i < firstDocumentReceived.getPaperEngageRequest().getAttachments().size() - 1; i++) {
             PaperEngageRequestAttachments attachment = firstDocumentReceived.getPaperEngageRequest().getAttachments().get(i);
             log.info(attachment.toString());
-//            Assertions.assertTrue(documentiPec.get(0).getPaperEngageRequest().);
+            Assertions.assertTrue(documentiPec.get(0).getPaperEngageRequest().getAttachments().get(i).getOrder().equals(new BigDecimal(i)));
         }
     }
     //TODO fine Matteo
