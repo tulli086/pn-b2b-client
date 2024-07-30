@@ -28,8 +28,8 @@ Feature: Radd Alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     And lato destinatario la notifica può essere correttamente recuperata da "<CITIZEN>" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
-    And lato desinatario "<CITIZEN>" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
+    And lato desinatario "<CITIZEN>" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
       | details          | NOT_NULL |
       | details_recIndex | 0        |
     Examples:
@@ -217,28 +217,6 @@ Feature: Radd Alternative
     And Il cittadino "Mario Gherkin" come destinatario 0 mostra il QRCode "appartenente a terzo"
     When L'operatore scansione il qrCode per recuperare gli atti da radd alternative
     Then Viene restituito un messaggio di errore "CF non valido" con codice di errore 10 su radd alternative
-
-#  caso non piu valido con le nuove feature di stampa multipla
-#
-#  @raddAlt @zip
-#  Scenario: [RADD-ALT_ACT-9] PF - Restituzione errore - Documenti già stampati
-#    Given viene generata una nuova notifica
-#      | subject            | invio notifica con cucumber radd alternative  |
-#      | senderDenomination | Comune di Palermo           |
-#    And destinatario Mario Cucumber
-#    And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
-#    And vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_DIGITAL_DOMICILE"
-#    And vengono letti gli eventi fino all'elemento di timeline della notifica "REFINEMENT"
-#    When Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-#    And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-#    And la scansione si conclude correttamente su radd alternative
-#    And vengono caricati i documento di identità del cittadino su radd alternative
-#    And Vengono visualizzati sia gli atti sia le attestazioni opponibili riferiti alla notifica associata all'AAR da radd alternative
-#    And l'operazione di download degli atti si conclude correttamente su radd alternative
-#    And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
-#    And Il cittadino "Mario Cucumber" come destinatario 0 mostra il QRCode "corretto"
-#    And L'operatore scansione il qrCode per recuperare gli atti da radd alternative
-#    And Viene restituito un messaggio di errore "Stampa già eseguita" con codice di errore 3 su radd alternative
 
   #da verificare se il mesaggio dovrebbe essere - notifica annullata dalla PA
   @raddAlt @zip @raddTechnicalAnnex
