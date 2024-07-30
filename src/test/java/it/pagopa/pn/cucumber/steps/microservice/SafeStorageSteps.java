@@ -8,17 +8,29 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsSearchResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsSearchResponseFileKeys;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.ErrorDetail;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Tags;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -126,7 +138,8 @@ public class SafeStorageSteps {
     @Then("La chiamata genera un errore con status code {int}")
     public void checkForStatusCode(Integer statusCode) {
         Assertions.assertNotNull(this.indicizzazioneStepsPojo.getHttpException());
-        Assertions.assertEquals(this.indicizzazioneStepsPojo.getHttpException().getRawStatusCode(), statusCode);
+        Assertions.assertEquals(statusCode,
+            this.indicizzazioneStepsPojo.getHttpException().getRawStatusCode());
     }
 
     @And("Il messaggio di errore riporta la dicitura {string}")
