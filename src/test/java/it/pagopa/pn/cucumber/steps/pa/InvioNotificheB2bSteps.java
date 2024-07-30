@@ -5,6 +5,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import it.pagopa.pn.client.b2b.generated.openapi.clients.externalchannels.model.mock.pec.PaperEngageRequest;
 import it.pagopa.pn.client.b2b.generated.openapi.clients.externalchannels.model.mock.pec.PaperEngageRequestAttachments;
 import it.pagopa.pn.client.b2b.generated.openapi.clients.externalchannels.model.mock.pec.ReceivedMessage;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
@@ -1071,6 +1072,24 @@ private List<NotificationSearchRow> searchNotificationWebFromADate(OffsetDateTim
             Assertions.assertEquals(allegati, documentiPec.get(0).getPaperEngageRequest().getAttachments().size());
         } catch (AssertionFailedError assertionFailedError) {
             String message = assertionFailedError.getMessage() + "Verifica Allegati analogici in errore ";
+            throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+        }
+    }
+
+    @And("si verifica che il contenuto degli attachments da inviare in via cartacea abbia {int} attachment di tipo {string}")
+    public void presenceAttachmentAnalogicFlow(Integer numeroDocumenti, String tipologia) {
+        List<String> attachmentsUri = Optional.ofNullable(documentiPec.get(0))
+                .map(ReceivedMessage::getPaperEngageRequest)
+                .map(PaperEngageRequest::getAttachments)
+                .orElse(List.of())
+                .stream()
+                .map(PaperEngageRequestAttachments::getUri)
+                .filter(uri -> uri.contains(tipologia))
+                .toList();
+        try {
+            Assertions.assertEquals(numeroDocumenti, attachmentsUri.size());
+        } catch (AssertionFailedError assertionFailedError) {
+            String message = assertionFailedError.getMessage() + "Verifica Allegati Cartacei in errore ";
             throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
         }
     }
