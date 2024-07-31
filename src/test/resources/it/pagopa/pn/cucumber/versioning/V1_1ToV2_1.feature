@@ -107,19 +107,6 @@ Feature: verifica compatibilità tra v1.1 a v2.1
     And la notifica può essere correttamente recuperata dal sistema tramite codice IUN con OpenApi V1
 
   @version
-  Scenario: [B2B-PA-SEND_VERSION_V1_V21_10] Invio notifica digitale mono destinatario e mono pagamento V2.1 con annullamento e recupero tramite codice IUN V1.1 (p.fisica)_scenario positivo
-    Given viene generata una nuova notifica
-      | subject            | invio notifica con cucumber |
-      | senderDenomination | Comune di milano            |
-    And destinatario Mario Cucumber
-    And la notifica viene inviata tramite api b2b dal "Comune_1" e si attende che lo stato diventi ACCEPTED e successivamente annullata
-    When vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_CANCELLATION_REQUEST"
-    Then vengono letti gli eventi fino allo stato della notifica "CANCELLED"
-    And vengono letti gli eventi e verificho che l'utente 0 non abbia associato un evento "NOTIFICATION_CANCELLATION_REQUEST" V1
-    And vengono letti gli eventi fino allo stato della notifica "CANCELLED" V1
-
-
-  @version
   Scenario: [B2B-PA-SEND_VERSION_V1_V21_11]  Invio notifica digitale mono destinatario e mono pagamento V1.1 e recupero visualizzazione notifica e verifica amount e effectiveDate V2.1
     Given viene generata una nuova notifica V1
       | subject            | invio notifica con cucumber |
