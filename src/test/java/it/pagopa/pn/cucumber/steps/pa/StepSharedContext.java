@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 public class StepSharedContext {
     private PnPollingResponseV23 pnPollingResponse;
 
-    public StepSharedContext(PnPollingResponseV23 pnPollingResponse) {
-        this.pnPollingResponse = pnPollingResponse;
+    public StepSharedContext() {
+        this.pnPollingResponse = new PnPollingResponseV23();
     }
 
     public PnPollingResponseV23 getPnPollingResponse() {
