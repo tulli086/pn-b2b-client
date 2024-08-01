@@ -29,9 +29,9 @@ Feature: Radd Alternative
     And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     And lato destinatario la notifica può essere correttamente recuperata da "<CITIZEN>" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
-    And lato desinatario "<CITIZEN>" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
       | details          | NOT_NULL |
       | details_recIndex | 0        |
+    And lato desinatario "<CITIZEN>" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
     Examples:
       | CITIZEN       | CF               |
       | Mario Cucumber | FRMTTR76M06B715E |

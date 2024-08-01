@@ -36,7 +36,6 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And lato destinatario la notifica può essere correttamente recuperata da "Mario Cucumber" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "Mario Cucumber" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
 
-  #capire come configurare/riprendere caso in cui MAX-Print request ha valore definito > & != 0
   @raddTechnicalAnnex
   Scenario: [ADEG-RADD-PRINT_ACTS-3] PF - Restituzione errore - Stampa limitata di documenti disponibili associati con raggiungimento limite raggiunto
     Given viene generata una nuova notifica

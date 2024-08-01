@@ -7,8 +7,9 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.impl.PnRaddAlternativeClientImpl;
-import it.pagopa.pn.client.b2b.pa.service.utils.SettableAuthTokenRadd;
+import it.pagopa.pn.client.b2b.pa.service.utils.RaddOperator;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.*;
+import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCRUD.Address;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.*;
 import it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.VerifyRequestResponse;
 import it.pagopa.pn.cucumber.steps.SharedSteps;
@@ -23,11 +24,10 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,6 +44,7 @@ public class AnagraficaRaddAltSteps {
     private final SharedSteps sharedSteps;
     private final PnPaB2bUtils pnPaB2bUtils;
     private final DataTableTypeRaddAlt dataTableTypeRaddAlt;
+    //private final ConditionFilteredUtil conditionFilteredUtil;
 
     private String fileCsvName;
     private String shaCSV;
@@ -55,22 +56,26 @@ public class AnagraficaRaddAltSteps {
 
     private String uid = getDefaultValue(RADD_UID.key);
 
-    private static final Integer NUM_CHECK_STATE_CSV = 20;
+    private static final Integer NUM_CHECK_STATE_CSV = 100;
     private static final Integer WAITING_STATE_CSV = 15000;
 
+    private String pageIndex = null;
+    private List<Address> addresses = new ArrayList<>();
+
     @Autowired
-    public AnagraficaRaddAltSteps(PnRaddAlternativeClientImpl raddAltClient, PnPaB2bUtils pnPaB2bUtils,
-                                  SharedSteps sharedSteps, DataTableTypeRaddAlt dataTableTypeRaddAlt) {
+    public AnagraficaRaddAltSteps(PnRaddAlternativeClientImpl raddAltClient, PnPaB2bUtils pnPaB2bUtils, SharedSteps sharedSteps,
+          DataTableTypeRaddAlt dataTableTypeRaddAlt/*, ConditionFilteredUtil conditionFilteredUtil*/) {
         this.raddAltClient = raddAltClient;
         this.sharedSteps = sharedSteps;
         this.pnPaB2bUtils = pnPaB2bUtils;
         this.dataTableTypeRaddAlt = dataTableTypeRaddAlt;
+        //this.conditionFilteredUtil = conditionFilteredUtil;
     }
 
     @When("viene caricato il csv con dati:")
     public void vieneGeneratoIlCsv(List<Map<String, String>> dataCsv) throws IOException {
         log.info("dataCsv: {}", dataCsv);
-        creazioneCsv(dataCsv,true);
+        creazioneCsv(dataCsv,true, addresses);
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
 
         RegistryUploadResponse responseUploadCsv = raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
@@ -93,12 +98,12 @@ public class AnagraficaRaddAltSteps {
 
     @When("viene caricato il csv con formatto {string} con restituzione errore con dati:")
     public void vieneGeneratoIlCsvConResituzioneErrore(String formatoCsv, List<Map<String, String>> dataCsv) throws IOException {
-        creazioneCsv(dataCsv, formatoCsv.equalsIgnoreCase("corretto"));
+        creazioneCsv(dataCsv, formatoCsv.equalsIgnoreCase("corretto"), null);
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
 
         try {
             RegistryUploadResponse responseUploadCsv = raddAltClient.uploadRegistryRequests(this.uid, registryUploadRequest);
-            if(responseUploadCsv!=null) {
+            if (responseUploadCsv!=null) {
                 this.requestid = responseUploadCsv.getRequestId();
                 pnPaB2bUtils.preloadRadCSVDocument("classpath:/" + this.fileCsvName,this.shaCSV,responseUploadCsv,true);
             }
@@ -109,7 +114,7 @@ public class AnagraficaRaddAltSteps {
 
     @When("viene caricato il csv 2 volte con dati:")
     public void vieneGeneratoIlCsvConResituzioneErrore(List<Map<String, String>> dataCsv) throws IOException {
-        creazioneCsv(dataCsv, true);
+        creazioneCsv(dataCsv, true, addresses);
         RegistryUploadRequest registryUploadRequest = new RegistryUploadRequest().checksum(this.shaCSV);
         RegistryUploadResponse responseUploadCsv = null;
 
@@ -227,10 +232,8 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-
     @When("viene richiesta la lista degli sportelli caricati dal csv con dati errati:")
     public void vieneRichiestolaListaDeiSportelliRaddDelCsvDatiErrati(Map<String, String> dataSportello) {
-
         try {
             it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse sportello = raddAltClient.retrieveRequestItems(
                     getValue(dataSportello, RADD_UID.key)
@@ -246,27 +249,19 @@ public class AnagraficaRaddAltSteps {
 
     @When("si controlla che il sportello sia in stato {string}")
     public void vieneCercatoloSportelloEControlloStato(String status) {
-        vieneCercatoloSportelloEControlloStatoConStato(status, null);
-    }
-
-    @When("si controlla che il sportello sia in stato {string} con il messaggio {string}")
-    public void vieneCercatoloSportelloEControlloStatoConStato(String status, String message) {
-
         RegistryRequestResponse dato = IntStream.range(0, NUM_CHECK_STATE_CSV)
                 .mapToObj(numCheck -> {
                     return getRequestResponse(status);
                 })
                 .filter(Objects::nonNull)
-                .filter(data -> data.getStatus() != null && data.getStatus().equalsIgnoreCase(status))
                 .findFirst()
                 .orElse(null);
 
-        if (dato != null) log.info("sportello status corretto: '{}'", dato);
+        log.info("sportello trovato: '{}'", dato);
 
         try {
             Assertions.assertNotNull(dato);
             Assertions.assertEquals(status, dato.getStatus());
-            if (message != null) Assertions.assertTrue(dato.getError().contains(message));
             this.requestid = dato.getRequestId();
             this.registryId = dato.getRegistryId();
 
@@ -275,33 +270,59 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-    @When("si controlla che il sportello sia in stato {string} con il messaggio:")
-    public void vieneCercatoloSportelloEControlloStatoConMessaggio(String status, List<String> errorMessages) {
-
+    @Then("si controlla che lo sportello allo stato index sia in stato status con il messaggio errorMessage:")
+    public void siControllaCheIlSportelloSiaInStatoConIlMessaggio(List<Map<String, String>> csvData) {
         List<RegistryRequestResponse> dato = IntStream.range(0, NUM_CHECK_STATE_CSV)
-                .mapToObj(numCheck -> getRequestResponse(status))
-                .filter(Objects::nonNull)
-                .filter(data -> data.getStatus() != null && data.getStatus().equalsIgnoreCase(status))
-                .limit(errorMessages.size())
-                .collect(Collectors.toList());
-
+            .mapToObj(numCheck -> getRequestResponse(csvData))
+            .flatMap(Collection::stream)
+            .filter(Objects::nonNull)
+            .filter(distinctByKey(data -> data))
+            .limit(csvData.size())
+            .collect(Collectors.toList());
         try {
+            log.info("sportelli trovati: '{}'", dato);
             Assertions.assertNotNull(dato);
             Assertions.assertFalse(dato.isEmpty());
-            Assertions.assertTrue(dato.size() == errorMessages.size());
-            log.info("sportello status corretto: '{}'", dato);
+            Assertions.assertEquals(csvData.size(), dato.size());
 
-            dato.stream()
-                    .forEach(sportello -> {
-                        Assertions.assertEquals(status, sportello.getStatus());
-                        Assertions.assertTrue(errorMessages.contains(sportello.getError()));
-                    });
             Assertions.assertNotNull(dato);
-            this.requestid = dato.get(0).getRequestId();
-            this.registryId = dato.get(0).getRegistryId();
+            this.requestid = dato.stream().map(RegistryRequestResponse::getRequestId)
+                    .filter(Objects::nonNull).findFirst().orElse(this.requestid);
+            this.registryId = dato.stream().map(RegistryRequestResponse::getRegistryId)
+                    .filter(Objects::nonNull).findFirst().orElse(this.registryId);
 
         } catch (AssertionFailedError assertionFailedError) {
-            throwAssertFailerForSportelloIssue(assertionFailedError, dato.get(0));
+            throwAssertFailerForSportelloIssue(assertionFailedError, dato);
+        }
+    }
+
+    @Then("si controlla che gli sportelli inseriti siano nello status giusto:")
+    public void siControllaCheGliSportelliInseritiSianoNelloStatusGiusto(List<Map<String, String>> csvData) {
+        List<RegistryRequestResponse> dato = new ArrayList<>();
+
+        while (pageIndex == null || !pageIndex.isEmpty()) {
+            List<RegistryRequestResponse> requestResponses = getRequestResponse(csvData);
+            requestResponses.stream()
+                    .filter(Objects::nonNull)
+                    .filter(distinctByKey(data -> data))
+                    .limit(csvData.size())
+                    .forEach(dato::add);
+        }
+
+        try {
+            log.info("sportelli trovati: '{}'", dato);
+            Assertions.assertNotNull(dato);
+            Assertions.assertFalse(dato.isEmpty());
+            Assertions.assertEquals(csvData.size(), dato.size());
+
+            Assertions.assertNotNull(dato);
+            this.requestid = dato.stream().map(RegistryRequestResponse::getRequestId)
+                    .filter(Objects::nonNull).findFirst().orElse(this.requestid);
+            this.registryId = dato.stream().map(RegistryRequestResponse::getRegistryId)
+                    .filter(Objects::nonNull).findFirst().orElse(this.registryId);
+
+        } catch (AssertionFailedError assertionFailedError) {
+            throwAssertFailerForSportelloIssue(assertionFailedError, dato);
         }
     }
 
@@ -309,6 +330,11 @@ public class AnagraficaRaddAltSteps {
         waitFor(WAITING_STATE_CSV);
         RegistryRequestResponse registryRequestResponse = getRegistryRequestResponse(status);
         if (status.equalsIgnoreCase(ACCEPTED)) waitFor(WAITING_ACCEPTED_STATE);
+        return registryRequestResponse;
+    }
+
+    private List<RegistryRequestResponse> getRequestResponse(List<Map<String, String>> csvData) {
+        List<RegistryRequestResponse> registryRequestResponse = getRegistryRequestResponse(csvData);
         return registryRequestResponse;
     }
 
@@ -323,36 +349,34 @@ public class AnagraficaRaddAltSteps {
                 .orElse(null);
     }
 
+    private List<RegistryRequestResponse> getRegistryRequestResponse(List<Map<String, String>> csvData) {
+        return retrieveSportello().getItems().stream()
+            .filter(elem -> elem.getRequestId() != null && elem.getStatus() != null && elem.getOriginalRequest() != null)
+            .filter(elem -> elem.getRequestId().equalsIgnoreCase(this.requestid))
+            .filter(elem -> checkStatusAndMessageValid(elem, csvData, addresses))
+            .collect(Collectors.toList());
+    }
+
     private it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse retrieveSportello() {
-        return raddAltClient.retrieveRequestItems(
+        RequestResponse response = raddAltClient.retrieveRequestItems(
                 this.uid
                 ,  this.requestid
                 , 100
-                , null);
+                , pageIndex);
+        pageIndex = Optional.ofNullable(response.getNextPagesKey())
+                .filter(data -> !data.isEmpty())
+                .map(data -> data.get(0))
+                .orElse("");
+        return response;
     }
 
-    /*@When("si controlla che il sportello sia in stato REJECTED con errore {string} con dati:")
-    public void vieneCercatoloSportelloEControlloStatoAReject( String errore, @Transpose CreateRegistryRequest dataSportello) {
-
-        RegistryRequestResponse dato = this.sportelliCsvRaddista.getItems().stream()
-                .filter(elem -> elem.getOriginalRequest()
-                        .getOriginalAddress()
-                        .getCity().equalsIgnoreCase(dataSportello.getAddress().getCity()))
-                .findAny()
-                .orElse(null);
-
-        try {
-
-            Assertions.assertNotNull(dato);
-            Assertions.assertEquals(dato.getStatus(),"REJECTED");
-            Assertions.assertTrue(dato.getError().contains(errore));
-
-        } catch (AssertionFailedError assertionFailedError) {
-            throwAssertFailerForSportelloIssue(assertionFailedError, dato);
-        }
-    }*/
-
     private void throwAssertFailerForSportelloIssue(AssertionFailedError assertionFailedError, RegistryRequestResponse dato) {
+        String message = assertionFailedError.getMessage() +
+                " {sportello: " + (dato == null ? "NULL" : dato) + " requestId: " + this.requestid + " }";
+        throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
+    }
+
+    private void throwAssertFailerForSportelloIssue(AssertionFailedError assertionFailedError, List<RegistryRequestResponse> dato) {
         String message = assertionFailedError.getMessage() +
                 " {sportello: " + (dato == null ? "NULL" : dato) + " requestId: " + this.requestid + " }";
         throw new AssertionFailedError(message, assertionFailedError.getExpected(), assertionFailedError.getActual(), assertionFailedError.getCause());
@@ -407,8 +431,8 @@ public class AnagraficaRaddAltSteps {
         try {
             raddAltClient.updateRegistry(
                     getValue(datiAggiornamento, RADD_UID.key),
-                    getValue(datiAggiornamento, RADD_REGISTRYID.key)==null?null:
-                            getValue(datiAggiornamento, RADD_REGISTRYID.key).equalsIgnoreCase("corretto")? this.registryId: getValue(datiAggiornamento, RADD_REGISTRYID.key),
+                    getValue(datiAggiornamento, RADD_REGISTRYID.key) == null ? null :
+                            getValue(datiAggiornamento, RADD_REGISTRYID.key).equalsIgnoreCase("corretto")? this.registryId : getValue(datiAggiornamento, RADD_REGISTRYID.key),
                     aggiornamentoSportelloRadd);
         } catch (HttpStatusCodeException e) {
             this.sharedSteps.setNotificationError(e);
@@ -545,11 +569,11 @@ public class AnagraficaRaddAltSteps {
         }
     }
 
-    public void creazioneCsv(List<Map<String, String>> dataCsv, boolean formatoCsv) throws IOException {
+    public void creazioneCsv(List<Map<String, String>> dataCsv, boolean formatoCsv, List<Address> addresses) throws IOException {
         this.fileCsvName = "file" + generateRandomNumber() + ".csv";
         String fileCaricamento = "target/classes/" + this.fileCsvName;
 
-        List<CreateRegistryRequest> csvData = dataTableTypeRaddAlt.convertToListRegistryRequestData(dataCsv);
+        List<CreateRegistryRequest> csvData = dataTableTypeRaddAlt.convertToListRegistryRequestData(dataCsv, addresses);
 
         List<String[]> data = new ArrayList<>();
 
@@ -589,22 +613,16 @@ public class AnagraficaRaddAltSteps {
             }
         }
 
-
         this.shaCSV = pnPaB2bUtils.computeSha256("classpath:/" + this.fileCsvName);
     }
 
     @Then("viene cambiato raddista con {string}")
-    public void changeRaddista(String raddista) {
-        switch (raddista.toLowerCase()) {
-            case "issuer_1" -> raddAltClient.setAuthTokenRadd(SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_1);
-            case "issuer_2" -> raddAltClient.setAuthTokenRadd(SettableAuthTokenRadd.AuthTokenRaddType.ISSUER_2);
-            default -> throw new IllegalArgumentException();
-        }
+    public void changeRaddista(String raddOperatorType) {
+        setOperatorRaddJWT(raddOperatorType);
     }
 
     @After("@puliziaSportelli")
     public void cancellazioneSportello() {
-
         raddAltClient.deleteRegistry(this.uid, this.registryId, dataTableTypeRaddAlt.setData("now"));
     }
 
@@ -622,7 +640,8 @@ public class AnagraficaRaddAltSteps {
                     , null
                     , null);
             for (RegistryRequestResponse sportelli : sportello.getItems()) {
-                raddAltClient.deleteRegistry(this.uid, sportelli.getRegistryId(), dataTableTypeRaddAlt.setData("now"));
+                 if (sportelli.getStatus().equalsIgnoreCase("ACCEPTED"))
+                        raddAltClient.deleteRegistry(this.uid, sportelli.getRegistryId(), dataTableTypeRaddAlt.setData("now"));
             }
         }
     }
@@ -633,6 +652,52 @@ public class AnagraficaRaddAltSteps {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean checkStatusAndMessageValid(RegistryRequestResponse elem, List<Map<String, String>> csvData, List<Address> addresses) {
+        it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.Address addressReceived = elem.getOriginalRequest().getOriginalAddress();
+        return csvData.stream()
+                .anyMatch(data -> {
+                    String index = data.get("index");
+                    return checkStatus(elem, data) && checkInCaseOfError(elem, data)
+                            && (addressReceived == null || sameAddress(addresses.get(Integer.parseInt(index)), addressReceived));
+                });
+    }
+
+    private boolean checkStatus(RegistryRequestResponse elem, Map<String, String > data) {
+        String status = data.get("status");
+        return elem.getStatus().equalsIgnoreCase(status);
+    }
+
+    private boolean checkInCaseOfError(RegistryRequestResponse elem, Map<String, String > data) {
+        String errorMessage = data.get("errorMessage");
+        String status = data.get("status");
+        return  !status.equalsIgnoreCase("REJECTED") || errorMessage == null || (elem.getError() != null && elem.getError().equalsIgnoreCase(errorMessage));
+    }
+
+    private boolean sameAddress(Address expectedAddress,
+                                it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.Address actualAddress) {
+        return  ((actualAddress.getAddressRow() == null || actualAddress.getAddressRow().equalsIgnoreCase(expectedAddress.getAddressRow()))
+                && (actualAddress.getCap() == null || actualAddress.getCap().equalsIgnoreCase(expectedAddress.getCap()))
+                && (actualAddress.getCity() == null || actualAddress.getCity().equalsIgnoreCase(expectedAddress.getCity()))
+                && (actualAddress.getPr() == null || actualAddress.getPr().equalsIgnoreCase(expectedAddress.getPr()))
+                && (actualAddress.getCountry() == null || actualAddress.getCountry().equalsIgnoreCase(expectedAddress.getCountry())));
+
+    }
+
+    public <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> {
+            Object key = keyExtractor.apply(t);
+            if (key == null) key = new Object();
+            return map.putIfAbsent(key, Boolean.TRUE) == null;
+        };
+    }
+
+    private RaddOperator setOperatorRaddJWT(String raddOperatorType) {
+        RaddOperator raddOperator = RaddOperator.valueOf(raddOperatorType);
+        raddAltClient.setAuthTokenRadd(raddOperator.getIssuerType());
+        return raddOperator;
     }
 
 }
