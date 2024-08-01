@@ -350,7 +350,7 @@ public class AnagraficaRaddAltSteps {
     }
 
     private List<RegistryRequestResponse> getRegistryRequestResponse(List<Map<String, String>> csvData) {
-        return retrieveSportello().getItems().stream()
+        return retrieveSportelloFromCSV().getItems().stream()
             .filter(elem -> elem.getRequestId() != null && elem.getStatus() != null && elem.getOriginalRequest() != null)
             .filter(elem -> elem.getRequestId().equalsIgnoreCase(this.requestid))
             .filter(elem -> checkStatusAndMessageValid(elem, csvData, addresses))
@@ -358,6 +358,14 @@ public class AnagraficaRaddAltSteps {
     }
 
     private it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse retrieveSportello() {
+        return raddAltClient.retrieveRequestItems(
+                this.uid
+                ,  this.requestid
+                , 100
+                , null);
+    }
+
+    private it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.RequestResponse retrieveSportelloFromCSV() {
         RequestResponse response = raddAltClient.retrieveRequestItems(
                 this.uid
                 ,  this.requestid
@@ -657,11 +665,11 @@ public class AnagraficaRaddAltSteps {
     public boolean checkStatusAndMessageValid(RegistryRequestResponse elem, List<Map<String, String>> csvData, List<Address> addresses) {
         it.pagopa.pn.client.b2b.radd.generated.openapi.clients.externalb2braddalt.model_AnagraficaCsv.Address addressReceived = elem.getOriginalRequest().getOriginalAddress();
         return csvData.stream()
-                .anyMatch(data -> {
-                    String index = data.get("index");
-                    return checkStatus(elem, data) && checkInCaseOfError(elem, data)
-                            && (addressReceived == null || sameAddress(addresses.get(Integer.parseInt(index)), addressReceived));
-                });
+            .anyMatch(data -> {
+                String index = data.get("index");
+                return checkStatus(elem, data) && checkInCaseOfError(elem, data)
+                        && (addressReceived == null || sameAddress(addresses.get(Integer.parseInt(index)), addressReceived));
+            });
     }
 
     private boolean checkStatus(RegistryRequestResponse elem, Map<String, String > data) {
@@ -682,7 +690,6 @@ public class AnagraficaRaddAltSteps {
                 && (actualAddress.getCity() == null || actualAddress.getCity().equalsIgnoreCase(expectedAddress.getCity()))
                 && (actualAddress.getPr() == null || actualAddress.getPr().equalsIgnoreCase(expectedAddress.getPr()))
                 && (actualAddress.getCountry() == null || actualAddress.getCountry().equalsIgnoreCase(expectedAddress.getCountry())));
-
     }
 
     public <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {

@@ -85,8 +85,6 @@ Feature: Adeguamento RADD alle modifiche dell’allegato tecnico - Stampa degli 
     And la persona fisica "Signor casuale" chiede di verificare ad operatore radd "UPLOADER" la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     When tentativo di recuperare gli aar delle notifiche in stato irreperibile da operatore radd "UPLOADER" senza successo
-    #Then Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisicagiuridica su radd alternative da operatore radd "UPLOADER"
-    #And il recupero degli aar genera un errore "Campo fileKey obbligatorio mancante" con codice 4 su radd alternative
     And il tentativo genera un errore 400 "Bad Request" con il messaggio "Campo fileKey obbligatorio mancante"
 
   @raddTechnicalAnnex
