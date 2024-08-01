@@ -289,7 +289,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | physicalAddress_province     | MT              |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo di 754 e il peso di 10 nei details del'elemento di timeline letto
+    And viene verificato il costo di 755 e il peso di 10 nei details del'elemento di timeline letto
 
   @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_6] inserimento sportello RADD con startValidity avanti di giorni (controllo manuale che il sportello non sia attivo)
@@ -315,7 +315,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | physicalAddress_province     | NA          |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo di 760 e il peso di 20 nei details del'elemento di timeline letto
+    And viene verificato il costo di 761 e il peso di 20 nei details del'elemento di timeline letto
 
   @raddAnagrafica @puliziaSportelli
   Scenario: [RADD_ANAGRAFICA_CRUD_7] modifica sportello RADD con dati corretti controllo successo modifica
@@ -485,7 +485,7 @@ Feature: Radd Alternative Anagrafica Sportelli
       | physicalAddress_province     | NA         |
     When la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     Then vengono letti gli eventi fino all'elemento di timeline della notifica "SEND_ANALOG_DOMICILE"
-    And viene verificato il costo di 754 e il peso di 10 nei details del'elemento di timeline letto
+    And viene verificato il costo di 755 e il peso di 10 nei details del'elemento di timeline letto
 
 
   @raddAnagrafica  @puliziaSportelli
