@@ -8,29 +8,17 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnSafeStoragePrivateClient;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsMassiveUpdateResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsSearchResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsSearchResponseFileKeys;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.AdditionalFileTagsUpdateRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.ErrorDetail;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationRequest;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.FileCreationResponse;
-import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.Tags;
+import it.pagopa.pn.client.web.generated.openapi.clients.safeStorage.model.*;
 import it.pagopa.pn.cucumber.utils.IndicizzazioneStepsPojo;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class SafeStorageSteps {
@@ -86,6 +74,39 @@ public class SafeStorageSteps {
         request.setDocumentType(type);
         request.setTags(tagList.stream().collect(Collectors.toMap(
                 tag -> tag.split(":")[0], tag -> Arrays.asList(tag.split(":")[1].split(",")))));
+        try {
+            FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(sha256, "SHA256", request);
+            loadToPresignedUrl(fileCreationResponse, sha256, resourcePath);
+        } catch (HttpClientErrorException httpExc) {
+            this.indicizzazioneStepsPojo.setHttpException(httpExc);
+        }
+    }
+
+    @And("gli si associano {int} valori diversi a un singolo tag")
+    public void associateValuesToSingleTag(Integer tagNumber) {
+        Integer limitPerRequestUat = 100;
+        String fileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(0).getKey();
+        int iterations = tagNumber / limitPerRequestUat;
+        for (int i = 0; i < iterations; i++) {
+            this.indicizzazioneStepsPojo.setUpdateSingleResponseEntity(safeStorageClient.additionalFileTagsUpdateWithHttpInfo(
+                    fileKey, "pn-test", createUpdateRequest(i, limitPerRequestUat)));
+        }
+    }
+
+    @Given("Viene caricato un nuovo documento di tipo {string} con un tag avente {int} valori associati")
+    public void uploadNewDocumentWithTags(String type, Integer tagNumber) {
+        String resourcePath = type.equals("PN_LEGAL_FACTS_ST") ? "classpath:/long_file.pdf" : "classpath:/multa.pdf";
+        String sha256 = computeSha(resourcePath);
+        FileCreationRequest request = new FileCreationRequest();
+        request.setContentType("application/pdf");
+        request.setStatus("SAVED");
+        request.setDocumentType(type);
+        List<String> values = new LinkedList<>();
+        for (int i = 0; i < tagNumber; i++) {
+            values.add("test" + i);
+        }
+        request.setTags(new HashMap<>());
+        request.getTags().put("global_multivalue", values);
         try {
             FileCreationResponse fileCreationResponse = this.safeStorageClient.createFile(sha256, "SHA256", request);
             loadToPresignedUrl(fileCreationResponse, sha256, resourcePath);
@@ -189,6 +210,19 @@ public class SafeStorageSteps {
         try {
             this.indicizzazioneStepsPojo.setUpdateSingleResponseEntity(safeStorageClient.additionalFileTagsUpdateWithHttpInfo(
                     fileKey, "pn-test", createUpdateRequest(data)));
+        } catch (HttpClientErrorException e) {
+            log.info("Errore durante l'aggiornamento del documento: {}", e.getMessage());
+            this.indicizzazioneStepsPojo.setHttpException(e);
+        }
+    }
+
+    @When("Si modifica il documento {int} associando {int} valori a un singolo tag")
+    public void updateDocument(Integer documentIndex, Integer tagNumber) {
+        Assertions.assertTrue(documentIndex <= this.indicizzazioneStepsPojo.getCreatedFiles().size());
+        String fileKey = this.indicizzazioneStepsPojo.getCreatedFiles().get(documentIndex - 1).getKey();
+        try {
+            this.indicizzazioneStepsPojo.setUpdateSingleResponseEntity(safeStorageClient.additionalFileTagsUpdateWithHttpInfo(
+                    fileKey, "pn-test", createUpdateRequest(0, tagNumber)));
         } catch (HttpClientErrorException e) {
             log.info("Errore durante l'aggiornamento del documento: {}", e.getMessage());
             this.indicizzazioneStepsPojo.setHttpException(e);
@@ -333,6 +367,17 @@ public class SafeStorageSteps {
                 request.putDELETEItem(tag.split(":")[0], Arrays.stream(tag.split(":")[1].split(",")).toList());
             }
         });
+        return request;
+    }
+
+    private AdditionalFileTagsUpdateRequest createUpdateRequest(Integer iterationNumber, Integer tagNumber) {
+        AdditionalFileTagsUpdateRequest request = new AdditionalFileTagsUpdateRequest();
+        List<String> values = new ArrayList<>();
+        for (int i = 0; i < tagNumber; i++) {
+            int currentValue = iterationNumber * 100;
+            values.add("test" + (currentValue + i + 1));
+        }
+        request.putSETItem("global_multivalue", values);
         return request;
     }
 

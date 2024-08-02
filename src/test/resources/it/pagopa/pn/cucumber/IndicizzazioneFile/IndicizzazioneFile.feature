@@ -134,6 +134,15 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagPerRequest' reached"
 
+  @uat
+  @aggiuntaTag
+  @indicizzazioneSafeStorage
+  Scenario: [INDEX_SS_CREATE_7.2] Create ERROR - MaxValuesPerTagPerRequest
+    Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS" con un tag avente 101 valori associati
+    Then La chiamata genera un errore con status code 400
+    And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagPerRequest' reached"
+
+
   ########################################################### UPDATE SINGLE ###################################################################
 
   @aggiuntaTag
@@ -235,6 +244,17 @@ Feature: test preliminari indicizzazione File safeStorage
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagDocument' reached. Current value: 6. Max value: 5"
 
+  @uat
+  @aggiuntaTag
+  @indicizzazioneSafeStorage
+  Scenario: [INDEX_SS_UPDATE_SINGLE_9.1] UpdateSingle ERROR - MaxValuesPerTagDocument
+    Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS"
+    And gli si associano 1000 valori diversi a un singolo tag
+    When Si modifica il documento 1 secondo le seguenti operazioni
+      | global_multivalue:test1001 | SET |
+    Then La chiamata genera un errore con status code 400
+    And Il messaggio di errore riporta la dicitura "Limit 'MaxValuesPerTagDocument' reached. Current value: 1001. Max value: 1000"
+
   @test
   @aggiuntaTag
   @indicizzazioneSafeStorage
@@ -254,6 +274,15 @@ Feature: test preliminari indicizzazione File safeStorage
     Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS"
     When Si modifica il documento 1 secondo le seguenti operazioni
       | global_multivalue:test1,test2,test3,test4,test5,test6, test7 | SET |
+    Then La chiamata genera un errore con status code 400
+    And Il messaggio di errore riporta la dicitura "Number of values for tag global_multivalue exceeds maxValues limit"
+
+  @uat
+  @aggiuntaTag
+  @indicizzazioneSafeStorage
+  Scenario: [INDEX_SS_UPDATE_SINGLE_11.2] UpdateSingle ERROR - MaxValuesPerTagPerRequest
+    Given Viene caricato un nuovo documento di tipo "PN_NOTIFICATION_ATTACHMENTS"
+    When Si modifica il documento 1 associando 101 valori a un singolo tag
     Then La chiamata genera un errore con status code 400
     And Il messaggio di errore riporta la dicitura "Number of values for tag global_multivalue exceeds maxValues limit"
 
