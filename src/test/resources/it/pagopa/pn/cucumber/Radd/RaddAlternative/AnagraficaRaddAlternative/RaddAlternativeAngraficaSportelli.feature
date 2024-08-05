@@ -69,7 +69,8 @@ Feature: Radd Alternative Anagrafica Sportelli
       | address_radd_row | address_radd_cap | address_radd_province | address_radd_city | address_radd_country |
       | via posto        | 75010            | MT                    | GARAGUSO          | ITALIA               |
       | vai posto2       | 75010            | MT                    | GORGOGLIONE       | ITALIA               |
-    Then viene controllato lo stato di caricamento del csv a "REJECTED"
+    Then viene controllato lo stato di caricamento del csv a "DONE"
+    Then si controlla che il sportello sia in stato "REJECTED"
 
   @raddAnagrafica @raddAlternativeCsv
   Scenario: [RADD_ANAGRAFICA_CSV_STATO_4] caricamento CSV con campi a null dove c'è obbligatorietà verifica stato a REJECTED
