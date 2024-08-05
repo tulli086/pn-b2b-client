@@ -6,7 +6,7 @@ Feature: Radd Alternative
   # [RADD-ALT_ACT-37], [RADD-ALT_ACT-38], [RADD-ALT_ACT-39]
   # Assert:
   # stato Avvenuto Accesso non presente in timeline sia lato destinatario che lato PA
-  @raddAlt @authFleet @zip
+  @raddAlt @authFleet @zip @raddAltAct
   Scenario Outline: [RADD-ALT_ACT-1] PF/PA - stampa e consegna documenti disponibili associati - visualizzazione in timeline avvenuta consegna tramite RADD (NOTIFICATION_RADD_RETRIEVED)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative |
@@ -26,12 +26,12 @@ Feature: Radd Alternative
     And l'operazione di download degli atti si conclude correttamente su radd alternative
     And viene conclusa la visualizzati di atti ed attestazioni della notifica su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
-    And lato destinatario la notifica può essere correttamente recuperata da "<CITIZEN>" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
+    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     And viene verificato che l'elemento di timeline "NOTIFICATION_VIEWED" non esista
       | details          | NOT_NULL |
       | details_recIndex | 0        |
+    And lato destinatario la notifica può essere correttamente recuperata da "<CITIZEN>" e verifica presenza dell'evento di timeline NOTIFICATION_RADD_RETRIEVED
     And lato desinatario "<CITIZEN>" viene verificato che l'elemento di timeline NOTIFICATION_VIEWED non esista
-    And vengono letti gli eventi fino all'elemento di timeline della notifica "NOTIFICATION_RADD_RETRIEVED"
     Examples:
       | CITIZEN       | CF               |
       | Mario Cucumber | FRMTTR76M06B715E |
