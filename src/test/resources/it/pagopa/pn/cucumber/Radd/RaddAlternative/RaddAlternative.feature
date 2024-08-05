@@ -774,29 +774,23 @@ Feature: Radd Alternative
 
   #[RADD-ALT_AOR-24], [RADD-ALT_AOR-25], [RADD-ALT_AOR-26], [RADD-ALT_AOR-26_1]
   @raddAlt @zip
-  Scenario Outline: [RADD-ALT_AOR-23] PF - Visualizzazione link AAR disponibili con consegna documenti al cittadino successivi alla stampa documenti per notifiche associate al CF corretto (irreperibile totale)
+  Scenario: [RADD-ALT_AOR-23] PF - Visualizzazione link AAR disponibili con consegna documenti al cittadino successivi alla stampa documenti per notifiche associate al CF corretto (irreperibile totale)
     Given viene generata una nuova notifica
       | subject               | notifica analogica con cucumber |
       | senderDenomination    | Comune di palermo               |
       | physicalCommunication | AR_REGISTERED_LETTER            |
-    And destinatario
-      | denomination            | <CITIZEN>                                    |
-      | taxId                   | <CF>                                         |
+    And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                         |
       | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR |
     And la notifica viene inviata tramite api b2b dal "Comune_Multi" e si attende che lo stato diventi ACCEPTED
     And vengono letti gli eventi fino all'elemento di timeline della notifica "COMPLETELY_UNREACHABLE"
-    And la persona fisica "<CITIZEN>" chiede di verificare la presenza di notifiche
+    And la persona fisica "Signor casuale" chiede di verificare la presenza di notifiche
     And La verifica della presenza di notifiche in stato irreperibile per il cittadino si conclude correttamente su radd alternative
     And vengono caricati i documento di identità del cittadino su radd alternative
     And Vengono recuperati gli aar delle notifiche in stato irreperibile della persona fisica su radd alternative
     And il recupero degli aar in stato irreperibile si conclude correttamente su radd alternative
     And viene chiusa la transazione per il recupero degli aar su radd alternative
     And la chiusura delle transazione per il recupero degli aar non genera errori su radd alternative
-    Examples:
-      | CITIZEN              | CF               |
-      | signor RaddCasuale | FRMTTR76M06B715E |
-      | Leonardo Da Vinci  | DVNLRD52D15M059P |
 
 
   @raddAlt @authFleet
@@ -804,11 +798,11 @@ Feature: Radd Alternative
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
-      | feePolicy          | DELIVERY_MODE               |
+      | physicalCommunication |  AR_REGISTERED_LETTER    |
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                          |
-      | physicalAddress_address | Via NationalRegistries @fail-Irreperibile_AR  |
+      | physicalAddress_address | Via@FAIL-Irreperibile_AR                      |
       | payment_pagoPaForm      | SI                                            |
       | payment_f24             | PAYMENT_F24_STANDARD                          |
       | title_payment           | F24_STANDARD_CLMCST42R12D969Z                 |
