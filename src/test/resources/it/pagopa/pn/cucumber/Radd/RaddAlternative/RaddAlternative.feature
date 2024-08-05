@@ -6,7 +6,7 @@ Feature: Radd Alternative
   # [RADD-ALT_ACT-37], [RADD-ALT_ACT-38], [RADD-ALT_ACT-39]
   # Assert:
   # stato Avvenuto Accesso non presente in timeline sia lato destinatario che lato PA
-  @raddAlt @authFleet @zip @raddAltAct
+  @raddAlt @authFleet @zip
   Scenario Outline: [RADD-ALT_ACT-1] PF/PA - stampa e consegna documenti disponibili associati - visualizzazione in timeline avvenuta consegna tramite RADD (NOTIFICATION_RADD_RETRIEVED)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative |
