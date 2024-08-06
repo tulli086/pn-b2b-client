@@ -53,7 +53,7 @@ public class PnRaddAlternativeClientImpl implements IPnRaddAlternativeClient {
                                        @Value("${pn.external.bearer-token-radd-2}") String raddista2,
                                        @Value("${pn.external.bearer-token-radd-non-censito}") String raddistaNonCensito,
                                        @Value("${pn.external.bearer-token-radd-dati-errati}") String raddistaDatiErrati,
-                                       @Value("${pn.external.bearer-token-radd-2}") String raddista3,
+                                       @Value("${pn.external.bearer-token-radd-3}") String raddista3,
                                        @Value("${pn.external.bearer-token-radd-jwt-scaduto}") String raddistaJwtScaduto,
                                        @Value("${pn.external.bearer-token-radd-aud-erratto}") String raddistaAudErrato,
                                        @Value("${pn.external.bearer-token-radd-kid-diverso}") String raddistaJwtKidDiverso,
