@@ -798,7 +798,7 @@ Feature: Radd Alternative
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber radd alternative  |
       | senderDenomination | Comune di Palermo           |
-      | physicalCommunication |  AR_REGISTERED_LETTER    |
+      | feePolicy          | DELIVERY_MODE               |
       | paFee              | 0                           |
     And destinatario Signor casuale e:
       | digitalDomicile         | NULL                                          |
