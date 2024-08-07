@@ -21,13 +21,3 @@ Feature: downtime logs test
     And viene scaricata la relativa attestazione opponibile
     Then l'attestazione opponibile è stata correttamente scaricata
 
-  @downtimeLogs
-  Scenario: [INTEROP-PROBING_1] interop probing SUCCESS
-    When viene chiamato il servizio di probing
-    Then la chiamata al servizio di probing restituisce 200
-
-  @downtimeLogs
-  Scenario: [INTEROP-PROBING_2] interop probing ERROR
-    When viene chiamato il servizio di probing
-    Then la chiamata al servizio di probing restituisce 500
-

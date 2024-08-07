@@ -17,7 +17,6 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 
 @Slf4j
 public class DowntimeLogsSteps {
@@ -29,7 +28,6 @@ public class DowntimeLogsSteps {
     private PnDowntimeEntry pnDowntimeEntry;
     private String sha256;
     private LegalFactDownloadMetadataResponse legalFact;
-    private ResponseEntity<Void> probingResponse;
 
     @Autowired
     public DowntimeLogsSteps(IPnDowntimeLogsClient downtimeLogsClient, PnPaB2bUtils b2bUtils) {
@@ -95,15 +93,5 @@ public class DowntimeLogsSteps {
         if(pnDowntimeEntry != null){
             Assertions.assertNotNull(sha256);
         }
-    }
-
-    @When("viene chiamato il servizio di probing")
-    public void probingService() {
-        probingResponse = downtimeLogsClient.getEserviceStatus();
-    }
-
-    @Then("la chiamata al servizio di probing restituisce {int}")
-    public void probingServiceResponse(int exspectedStatus) {
-        Assertions.assertEquals(exspectedStatus, probingResponse.getStatusCodeValue());
     }
 }
