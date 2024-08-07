@@ -12,6 +12,7 @@ import it.pagopa.pn.cucumber.utils.GroupPosition;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpStatusCodeException;
+
 import java.util.List;
 
 
@@ -192,6 +193,26 @@ public class ApikeyManagerSteps {
         System.out.println("New ApiKey: " + responseNewApiKey);
     }
 
+    @Given("Viene creata una nuova apiKey con nome {string} per il comune {string} con il primo gruppo disponibile")
+    public void createApiKeyWithGivenName(String apiKeyName, String comune) {
+        setBearerToken(comune);
+        requestNewApiKey = new RequestNewApiKey().name(apiKeyName);
+        responseNewApiKeyTaxId = this.sharedSteps.getSenderTaxIdFromProperties(comune);
+        firstGroupUsed = this.sharedSteps.getGroupIdByPa(comune, GroupPosition.FIRST);
+        requestNewApiKey.setGroups(List.of(firstGroupUsed));
+        try {
+            responseNewApiKey = this.apiKeyManagerClient.newApiKey(requestNewApiKey);
+            System.out.println("New ApiKey: " + responseNewApiKey);
+        } catch (HttpStatusCodeException e) {
+            this.httpStatusCodeException = e;
+        }
+    }
+
+    @Then("La chiamata restituisce un errore con status code {int}")
+    public void checkForError(Integer statusCode) {
+        Assertions.assertNotNull(this.httpStatusCodeException);
+        Assertions.assertEquals(statusCode, this.httpStatusCodeException.getRawStatusCode());
+    }
 
 
     @Given("Viene creata una nuova apiKey per il comune {string} con due gruppi")

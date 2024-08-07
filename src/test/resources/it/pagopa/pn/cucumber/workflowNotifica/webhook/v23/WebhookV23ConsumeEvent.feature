@@ -59,6 +59,16 @@ Feature: avanzamento notifiche webhook b2b V23
     And viene modificato lo stato dell'apiKey in "BLOCK"
     And l'apiKey viene cancellata
 
+  @webhoockV23 @cleanWebhook @webhook1
+  Scenario Outline: [B2B-STREAM_ES1.3_127.1] Creazione di una nuova apiKey con nome contenente solo spazi
+    Given Viene creata una nuova apiKey con nome <apiKeyName> per il comune "Comune_1" con il primo gruppo disponibile
+    Then La chiamata restituisce un errore con status code 500
+    Examples:
+      | apiKeyName |
+      | " "        |
+      | "     "    |
+      | ""         |
+
   @webhookV23 @precondition @cleanWebhook @webhook1
   Scenario: [B2B-STREAM_ES1.1_158] Consumo di uno stream notifica con gruppi appartenenti ad un sottinsieme dei gruppi dell'apikey utilizzata.
     Given viene generata una nuova notifica
