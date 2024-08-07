@@ -80,8 +80,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnLegalFactTokenProperty.class,
         PnLegalFactTokens.class,
         PnParser.class,
-        PnExternalChannelsServiceClientImpl.class
-
+        PnExternalChannelsServiceClientImpl.class,
+        PnSafeStoragePrivateClientImpl.class
 })
 @EnableScheduling
 @EnableConfigurationProperties
