@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpStatusCodeException;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -488,6 +487,11 @@ public class AvanzamentoNotificheB2bSteps {
         readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
     }
 
+    @Then("viene verificato che per l'elemento di timeline della notifica {string} non ci siano duplicati")
+    public void checkTimeLineEventWithoutDuplicates(String timelineEventCategory) {
+        checkTimeLineEventDuplicates(timelineEventCategory);
+    }
+
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} abbia notificationCost ugauale a {string}")
     public void TimelineElementOfNotification(String timelineEventCategory, String cost) {
         TimelineElementV23 event = readingEventUpToTheTimelineElementOfNotificationForCategory(timelineEventCategory);
@@ -648,6 +652,23 @@ public class AvanzamentoNotificheB2bSteps {
             sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
         }
         return pnPollingResponseV23.getTimelineElement();
+    }
+
+    public void checkTimeLineEventDuplicates(String timelineEventCategory) {
+        int countTimeLineEventCategory = 0;
+
+        for (TimelineElementV23 timelineElementV23 : sharedSteps.getSentNotification().getTimeline()) {
+            if (timelineEventCategory.equals(timelineElementV23.getCategory())) {
+                countTimeLineEventCategory++;
+            }
+        }
+
+        try {
+            Assertions.assertTrue(countTimeLineEventCategory <= 1,
+                    "L'elemento di timeline della notifica '" + timelineEventCategory + "' è presente solo una volta.");
+        } catch (AssertionFailedError assertionFailedError) {
+            sharedSteps.throwAssertFailerWithIUN(assertionFailedError);
+        }
     }
 
     @Then("vengono letti gli eventi fino all'elemento di timeline della notifica {string} V1")
