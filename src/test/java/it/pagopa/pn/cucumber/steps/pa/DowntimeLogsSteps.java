@@ -4,17 +4,20 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import it.pagopa.pn.client.b2b.web.generated.openapi.clients.externalDowntimeLogs.model.*;
 import it.pagopa.pn.client.b2b.pa.PnPaB2bUtils;
 import it.pagopa.pn.client.b2b.pa.service.IPnDowntimeLogsClient;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.externalDowntimeLogs.model.LegalFactDownloadMetadataResponse;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.externalDowntimeLogs.model.PnDowntimeEntry;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.externalDowntimeLogs.model.PnDowntimeHistoryResponse;
+import it.pagopa.pn.client.b2b.web.generated.openapi.clients.externalDowntimeLogs.model.PnFunctionality;
 import java.io.ByteArrayInputStream;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 @Slf4j
 public class DowntimeLogsSteps {
@@ -26,6 +29,7 @@ public class DowntimeLogsSteps {
     private PnDowntimeEntry pnDowntimeEntry;
     private String sha256;
     private LegalFactDownloadMetadataResponse legalFact;
+    private ResponseEntity<Void> probingResponse;
 
     @Autowired
     public DowntimeLogsSteps(IPnDowntimeLogsClient downtimeLogsClient, PnPaB2bUtils b2bUtils) {
@@ -91,5 +95,15 @@ public class DowntimeLogsSteps {
         if(pnDowntimeEntry != null){
             Assertions.assertNotNull(sha256);
         }
+    }
+
+    @When("viene chiamato il servizio di probing")
+    public void probingService() {
+        probingResponse = downtimeLogsClient.getEserviceStatus();
+    }
+
+    @Then("la chiamata al servizio di probing restituisce {int}")
+    public void probingServiceResponse(int exspectedStatus) {
+        Assertions.assertEquals(exspectedStatus, probingResponse.getStatusCodeValue());
     }
 }
