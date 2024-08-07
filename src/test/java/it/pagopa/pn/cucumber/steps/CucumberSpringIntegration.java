@@ -72,7 +72,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         PnPollingServiceStatusExtraRapidV23.class,
         PnPollingServiceTimelineExtraRapidV23.class,
         MailSenderConfig.class,
-        PnExternalChannelsServiceClientImpl.class
+        PnExternalChannelsServiceClientImpl.class,
+        PnSafeStoragePrivateClientImpl.class
 
 })
 @EnableScheduling
