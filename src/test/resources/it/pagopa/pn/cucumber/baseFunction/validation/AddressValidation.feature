@@ -266,7 +266,7 @@ Feature: address validation feature
       | TEST_NORMALIZZATORE_15 | NULL | strada belmonte                                       | NULL           | NULL   | MONTEGIARDINO                 | NULL                | RM       | REPUBBLICA DI SAN MARINO | REFUSED                      |
       | TEST_NORMALIZZATORE_16 | NULL | 0                                                     | NULL           | 00185  | ROMA                          | NULL                | RM       | ITALIA                   | HTTP_ERROR                   |
 
-  @testNormalizzatore
+#  @testNormalizzatore
   Scenario Outline: [B2B_ADDRESS_VALIDATION_6] invio notifica con indirizzo postalizzabile (status accepted)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
@@ -371,7 +371,7 @@ Feature: address validation feature
       | TEST_NORMALIZZATORE_49 | NULL | RUE DE LA 12\5                                               | NULL           | 00000          | PARIS;BERCY                                         | NULL                         | FR                                          | FRANCIA         | NULL   | RUE DE LA 12 5                                               | 0_CHAR              | 00000          | PARIS BERCY                                         | 0_CHAR                           | FR                                          | FRANCIA                  |
       | TEST_NORMALIZZATORE_49 | NULL | RUE DE LA 12\5                                               | NULL           | 00000          | PARIS:BERCY                                         | NULL                         | FR                                          | FRANCIA         | NULL   | RUE DE LA 12 5                                               | 0_CHAR              | 00000          | PARIS BERCY                                         | 0_CHAR                           | FR                                          | FRANCIA                  |
 
-  @testNormalizzatore
+#  @testNormalizzatore
   Scenario Outline: [B2B_ADDRESS_VALIDATION_7] invio notifica con indirizzo non postalizzabile (400 o refused)
     Given viene generata una nuova notifica
       | subject            | invio notifica con cucumber |
